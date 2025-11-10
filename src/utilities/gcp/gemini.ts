@@ -15,7 +15,7 @@
  */
 
 import { Throttle } from "@/utilities/_/async/throttle";
-import { log } from "@/utilities/_/logger";
+import { log, Logger } from "@/utilities/_/logger";
 import { message } from "@/utilities/_/logger/log";
 import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
@@ -40,6 +40,11 @@ export const ai = await (async (ai) => {
 	 * Shared throttles by model name for rate limiting API requests.
 	 */
 	const throttles = new Map<string, ReturnType<typeof Throttle>>();
+
+	/**
+	 * Cached logger instances by model name.
+	 */
+	const loggers = new Map<string, Logger>();
 
 
 	return Object.assign(ai, { // patch to work around known issues
@@ -176,21 +181,21 @@ export const ai = await (async (ai) => {
 						async function callModel() {
 							return await retry(
 								throttle,
-								params.model,
 								() => generateContent({
 									...params,
 									contents: conversationHistory,
 									config: { ...configWithoutSchema, tools }
 								}, ...rest),
 								{
-									monitor: (error) => {
+
+									recover: (error) => {
 										if ( error instanceof ApiError && error.status === 429 ) {
 
-											const retryDelay = (error as any).error?.details
+											const delay = (error as any).error?.details
 												?.find((d: any) => d["@type"]?.includes("RetryInfo"))
 												?.retryDelay;
 
-											const match = retryDelay?.match(/^(\d+(?:\.\d+)?)s$/);
+											const match = delay?.match(/^(\d+(?:\.\d+)?)s$/);
 
 											return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
 
@@ -199,7 +204,26 @@ export const ai = await (async (ai) => {
 											return undefined;
 
 										}
+									},
+
+									monitor: (attempt, attempts, elapsed) => {
+
+										const log = loggers.get(params.model) ?? loggers
+											.set(params.model, logger(params.model))
+											.get(params.model)!;
+
+										const count = attempts > 0 ? `${attempt+1}/${attempts}` : `${attempt+1}`;
+
+										if ( elapsed === undefined ) {
+											log.error`request attempt ${count} aborted`;
+										} else if ( attempt > 0 ) {
+											log.warning`request attempt ${count} rejected with delay ${elapsed} ms`;
+										} else {
+											log.info`request attempt ${count} submitted with delay ${elapsed} ms`;
+										}
+
 									}
+
 								}
 							);
 						}
@@ -391,44 +415,51 @@ export function embedding(response: EmbedContentResponse) {
  * throttle per model to coordinate rate limiting across all requests.
  *
  * @param throttle Throttle instance for rate limiting
- * @param model Model name for logging
  * @param task Async function to execute
  * @param options Retry options
  * @param options.attempts Maximum retry attempts (0 = unlimited, default: 0)
- * @param options.monitor Optional callback to determine if an error is retryable and extract
+ * @param options.recover Callback to determine if an error is retryable and extract
  *                        API-specified delay. Returns `undefined` for non-retryable errors (will be thrown),
  *                        or a number (in milliseconds) for retryable errors:
  *                        0 = use default backoff, >0 = use API-specified delay
+ * @param options.monitor Optional callback invoked on each attempt: receives current attempt (zero-indexed),
+ *                        maximum attempts, and elapsed time since retry started:
+ *                        - undefined = failed (non-retryable error or max attempts exhausted)
+ *                        - number (with current === 0 or elapsed === 0) = submitted (about to execute)
+ *                        - number (with current > 0) = rejected (retryable error, will retry)
  *
  * @returns Result of the function call
  *
- * @throws Original error if non-retryable (monitor returns undefined) or max attempts exceeded
+ * @throws Original error if non-retryable (recover returns undefined) or max attempts exceeded
  */
 async function retry<T>(
 	throttle: ReturnType<typeof Throttle>,
-	model: string,
 	task: () => Promise<T>,
 	{
 
 		attempts = 0,
 
+		recover,
 		monitor
 
 	}: {
 
 		attempts?: number
 
-		monitor?: (error: unknown) => undefined | number
+		recover?: (error: unknown) => undefined | number
+		monitor?: (attempt: number, attempts: number, elapsed: undefined | number) => void
 
 	} = {}
 ): Promise<T> {
 
+	const start = Date.now();
+
 	for (let attempt = 0; attempts === 0 || attempt < attempts; attempt++) {
 		try {
 
-			const delay = await throttle.queue(true);
+			await throttle.queue(true);
 
-			logger.info`${model} / request attempt ${attempt+1} submitted with delay ${delay} ms`;
+			monitor?.(attempt, attempts, Date.now()-start);
 
 			const result = await task();
 
@@ -438,30 +469,32 @@ async function retry<T>(
 
 		} catch ( error ) {
 
-			const apiDelay = monitor?.(error);
+			const delay = recover?.(error);
 
-			if ( apiDelay === undefined ) {
-
-				// non-retryable error
+			if ( delay === undefined ) { // non-retryable error
 
 				throttle.adapt(false);
 
+				monitor?.(attempt, attempts, undefined);
+
 				throw error;
 
-			} else {
+			} else { // retryable error with API-specified or default delay
 
-				// retryable error with API-specified or default delay
+				if ( delay > 0 ) {
+					throttle.adapt(delay);
+				} else {
+					throttle.adapt(false);
+				}
 
-				const delay = apiDelay > 0
-					? throttle.adapt(apiDelay)
-					: throttle.adapt(false);
-
-				logger.warning`${model} / request attempt ${attempt+1} rejected with delay ${delay} ms`;
+				monitor?.(attempt, attempts, Date.now()-start);
 
 			}
 
 		}
 	}
+
+	monitor?.(attempts, attempts, undefined);
 
 	throw new Error(`request aborted after ${attempts} attempts`);
 

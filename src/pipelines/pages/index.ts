@@ -57,26 +57,26 @@ import { JSDOM } from "jsdom";
  */
 export interface Page {
 
-	/** Absolute URL of the crawled page */
-	readonly url: string;
-
-	/** Page title extracted from HTML or derived from URL */
-	readonly title: string;
-
-	/** Main content converted to markdown format with boilerplate removed */
-	readonly content: string;
-
-	/** Links extracted from the page with absolute URLs */
-	readonly links: readonly Link[];
-
-
 	/** Timestamp when the page was fetched (milliseconds since epoch) */
 	readonly fetched: number;
 
 	/** Content uuid for detecting changes between crawls */
 	readonly digest: string;
 
+
+	/** Absolute URL of the crawled page */
+	readonly url: string;
+
+	/** Page title extracted from HTML or derived from URL */
+	readonly title: string;
+
 	readonly summary: string;
+
+	/** Main content converted to markdown format with boilerplate removed */
+	readonly content: string;
+
+	/** Links extracted from the page with absolute URLs */
+	readonly links: readonly Link[];
 
 }
 

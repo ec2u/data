@@ -18,7 +18,8 @@ import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
 import { Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
-import { guard, log, message, time } from "@/utilities/_/logger/log";
+import { log } from "@/utilities/_/logger";
+import { guard, message, time } from "@/utilities/_/logger/log";
 import { md } from "@/utilities/core/tags";
 import { ai, json } from "@/utilities/gcp/gemini";
 import { Units } from "@/utilities/hub";
@@ -31,9 +32,12 @@ import { forEach, toArray } from "@metreeca/pipe/sinks";
 import { filter, flatMap, map, peek } from "@metreeca/pipe/tasks";
 
 
+const logger = log(import.meta.url);
+
 const tools = [
 	fetchPage({ cache: pages.lookup })
 ];
+
 
 
 if ( import.meta.main ) {
@@ -176,9 +180,9 @@ export async function expand(lead?: Partial<Unit>): Promise<void | readonly Part
 					await units.insert({ ...lead, expanded: Date.now() });
 
 				}))
-		), (count, elapsed) => log.info(expand.name, // !!! broken count
+			), (count, elapsed) => logger.info // !!! broken count
 			`identified <${count}> units in <${message(elapsed)}> ms`
-		));
+		);
 
 	}
 

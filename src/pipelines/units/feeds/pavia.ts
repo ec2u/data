@@ -76,21 +76,21 @@ export async function scan(url?: string): Promise<unknown> {
 						properties: {
 							formal: {
 								type: Type.STRING,
-								description: `REQUIRED - The full official name of the research unit. MUST NOT include the
-								acronym in this field. Example: 'Laboratory for Computational Biology' not 'Laboratory
-								for Computational Biology (LCB)'`
+								description: `REQUIRED - The full official name of the research unit. MUST NOT include
+								the acronym in this field. Example: 'Laboratory for Computational Biology' not 
+								Laboratory for Computational Biology (LCB)'`
 							},
 							acronym: {
 								type: Type.STRING,
-								description: `OPTIONAL - The acronym or short form of the research unit name. Only include if
-					 			explicitly mentioned in the source. Omit this field entirely if not available. Example:
-					 			'LCB'`
+								description: `OPTIONAL - The acronym or short form of the research unit name. Only
+								include if explicitly mentioned in the source. Omit this field entirely if not
+								available. Example: 'LCB'`
 							},
 							website: {
 								type: Type.STRING,
-								description: `OPTIONAL - The complete URL of the research unit's homepage or main web presence.
-								Must be a valid URL starting with http:// or https://. Omit this field entirely if not
-								available. Example: 'https://lab.university.edu'`
+								description: `OPTIONAL - The complete URL of the research unit's homepage or main web
+								presence. Must be a valid URL starting with http:// or https://. Omit this field
+								entirely if not available. Example: 'https://lab.university.edu'`
 							}
 						},
 						required: [
