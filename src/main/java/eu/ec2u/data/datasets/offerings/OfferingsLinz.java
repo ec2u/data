@@ -55,6 +55,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.courses.Courses.COURSES;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
+import static eu.ec2u.data.datasets.taxonomies.TopicsEC2UStakeholders.LLL;
 import static eu.ec2u.data.datasets.universities.University.LINZ;
 import static eu.ec2u.data.datasets.universities.University.uuid;
 import static java.lang.String.format;
@@ -190,6 +191,11 @@ public final class OfferingsLinz implements Runnable {
                 .inProgram(set(json.select("inProgram.*.identifier").strings().map(v ->
                         new ProgramFrame(true).id(PROGRAMS.id().resolve(uuid(LINZ, v)))
                 )))
+
+                .audience(set(json.select("audience").strings()
+                        .filter(v -> v.equalsIgnoreCase("Lifelong Learning"))
+                        .map(v -> LLL)
+                ))
 
         );
     }

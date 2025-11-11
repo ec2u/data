@@ -51,11 +51,16 @@ public final class TopicsEC2UStakeholders implements Runnable {
             .alternative(map(entry(EN, "EC2U Stakeholders")))
             .description(map(entry(EN, """
                     Standardized terminology for categorizing people and organizations roles within the EC2U Alliance.
-                    """)))
+                    """
+            )))
             .issued(LocalDate.parse("2025-05-01"))
             .rights(Datasets.COPYRIGHT)
             .publisher(Organizations.EC2U)
             .license(set(Datasets.CCBYNCND40));
+
+    public static final TopicFrame LLL=new TopicFrame(true).id(
+            EC2U_STAKEHOLDERS.id().resolve("teaching/students/continuing-education")
+    );
 
 
     public static void main(final String... args) {

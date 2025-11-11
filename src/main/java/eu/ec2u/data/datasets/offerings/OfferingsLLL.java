@@ -61,7 +61,7 @@ import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.data.datasets.courses.Course.review;
 import static eu.ec2u.data.datasets.courses.Courses.COURSES;
 import static eu.ec2u.data.datasets.persons.Persons.PERSONS;
-import static eu.ec2u.data.datasets.taxonomies.TopicsEC2UStakeholders.EC2U_STAKEHOLDERS;
+import static eu.ec2u.data.datasets.taxonomies.TopicsEC2UStakeholders.LLL;
 import static eu.ec2u.data.datasets.taxonomies.TopicsISCED2011.*;
 import static eu.ec2u.data.datasets.universities.Universities.UNIVERSITIES;
 import static eu.ec2u.data.datasets.universities.University.PARTNERS;
@@ -76,10 +76,6 @@ import static java.util.function.Predicate.not;
 public final class OfferingsLLL extends Transform<CourseFrame> implements Runnable {
 
     private static final String DATA_URL="offerings-lll-url"; // vault label
-
-    private static final TopicFrame LLL=new TopicFrame(true).id(
-            EC2U_STAKEHOLDERS.id().resolve("teaching/students/continuing-education")
-    );
 
 
     private static final Pattern SUBJECT_PATTERN=Pattern.compile("^\\s*(\\d{2,4})");

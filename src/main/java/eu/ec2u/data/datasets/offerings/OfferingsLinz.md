@@ -7,6 +7,10 @@
 
 - data extracted from dedicated REST/JSON APIs
 
+## 2025-11-11
+
+- Update courses pipeline to read `audience: "[Lifelong Learner"]` from the course description
+
 ## 2025-04-28
 
 - Update courses pipeline to read `educationalLevel` directly from the course description
