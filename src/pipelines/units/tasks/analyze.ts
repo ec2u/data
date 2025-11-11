@@ -21,17 +21,17 @@ import { listTopics } from "@/pipelines/topics/tools/listTopics";
 import { matchTopics } from "@/pipelines/topics/tools/matchTopics";
 import { matches, merge, stale, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
-import { log } from "@/utilities/core/logger";
-import { guard, message, time } from "@/utilities/core/logger/log";
 import { md } from "@/utilities/core/tags";
 import { ai, json } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
 import { isString } from "@metreeca/core";
-import { pipe } from "@metreeca/pipe";
-import { items } from "@metreeca/pipe/feeds";
-import { forEach } from "@metreeca/pipe/sinks";
-import { flatMap, map, peek } from "@metreeca/pipe/tasks";
+import { pipe } from "@metreeca/flow";
+import { items } from "@metreeca/flow/feeds";
+import { forEach } from "@metreeca/flow/sinks";
+import { flatMap, map, peek } from "@metreeca/flow/tasks";
+import { log } from "@metreeca/post";
+import { guard, message, time } from "@metreeca/post/tools";
 
 
 const logger = log(import.meta.url);

@@ -15,9 +15,15 @@
  */
 
 import { visit } from "@/pipelines/pages";
-import { log, message } from "@/utilities/core/logger/log";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
+
+import { log } from "@metreeca/post";
+
+import { message } from "@metreeca/post/tools";
 import dedent from "dedent";
+
+
+const logger = log(import.meta.url);
 
 /**
  * @module
@@ -124,13 +130,13 @@ export function fetchPage(opts: Parameters<typeof visit>[1]={}): CallableTool {
 
 				const { url }=call.args as { url: string };
 
-				log.info(name, `calling ${name}(${JSON.stringify(call.args)})`);
+				logger.info`calling ${name}(${JSON.stringify(call.args)})`;
 
 				try {
 
 					const page = await visit(url, opts);
 
-					log.info(name, `fetched <${url}> (${page.content.length} chars)`);
+					logger.info`fetched <${url}> (${page.content.length} chars)`;
 
 					return {
 						functionResponse: {
@@ -141,7 +147,7 @@ export function fetchPage(opts: Parameters<typeof visit>[1]={}): CallableTool {
 
 				} catch ( error ) {
 
-					log.error(name, `failed to fetch <${url}>: ${message(error)}`);
+					logger.error`failed to fetch <${url}>: ${message(error)}`;
 
 					return {
 						functionResponse: {

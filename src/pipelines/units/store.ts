@@ -16,12 +16,17 @@
 
 import { normalize as normalizeUrl } from "@/pipelines/pages/index";
 import { Unit } from "@/pipelines/units/index";
-import { log, message, time } from "@/utilities/core/logger/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { Entity } from "@google-cloud/datastore/build/src/entity";
 import { PropertyFilter } from "@google-cloud/datastore/build/src/filter";
 import { immutable, isString } from "@metreeca/core";
+
+import { log } from "@metreeca/post";
+import { message, time } from "@metreeca/post/tools";
+
+
+const logger = log(import.meta.url);
 
 const kind = "Unit";
 const batch = 100;
@@ -88,11 +93,11 @@ export const units = immutable({
 
 						} else if ( entities.length > 1 ) {
 
-							log.warn(units.lookup.name, `multiple matches for <${JSON.stringify({
+							logger.warning`multiple matches for <${JSON.stringify({
 								parent: key.parent,
 								university: key.university,
 								website: key.website
-							})}>`);
+							})}>`;
 
 							return undefined;
 						}
@@ -114,11 +119,11 @@ export const units = immutable({
 
 						} else if ( entities.length > 1 ) {
 
-							log.warn(units.lookup.name, `multiple matches for <${JSON.stringify({
+							logger.warning`multiple matches for <${JSON.stringify({
 								parent: key.parent,
 								university: key.university,
 								formal: key.formal
-							})}>`);
+							})}>`;
 
 							return undefined;
 						}
@@ -130,9 +135,7 @@ export const units = immutable({
 
 			return undefined;
 
-		}, (value, elapsed) => value && log.info(units.lookup.name,
-			`fetched unit <${typeof key === "string" ? key : JSON.stringify(key)}> in <${message(elapsed)}> ms`
-		));
+		}, (value, elapsed) => value && logger.info`fetched unit <${typeof key === "string" ? key : JSON.stringify(key)}> in <${message(elapsed)}> ms`);
 
 	},
 
@@ -241,9 +244,7 @@ export const units = immutable({
 
 			return entities.map(clean);
 
-		}, (value, elapsed) => log.info(units.select.name,
-			`retrieved <${message(value.length)}> units in <${message(elapsed)}> ms`
-		));
+		}, (value, elapsed) => logger.info`retrieved <${message(value.length)}> units in <${message(elapsed)}> ms`);
 
 	},
 
@@ -277,9 +278,7 @@ export const units = immutable({
 
 			return itemsArray;
 
-		}, (value, elapsed) => log.info(units.insert.name,
-			`inserted <${message(value.length)}> units in <${message(elapsed)}> ms`
-		));
+		}, (value, elapsed) => logger.info`inserted <${message(value.length)}> units in <${message(elapsed)}> ms`);
 
 	},
 
@@ -312,9 +311,7 @@ export const units = immutable({
 
 			}
 
-		}, (removedItems, elapsed) => log.info(units.remove.name,
-			`removed <${message(removedItems.length)}> units in <${message(elapsed)}> ms`
-		));
+		}, (removedItems, elapsed) => logger.info`removed <${message(removedItems.length)}> units in <${message(elapsed)}> ms`);
 
 	}
 

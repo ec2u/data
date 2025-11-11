@@ -22,11 +22,15 @@
  */
 
 import { Page } from "@/pipelines/pages/index";
-import { log, message, time } from "@/utilities/core/logger/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { immutable } from "@metreeca/core";
 
+import { log } from "@metreeca/post";
+import { message, time } from "@metreeca/post/tools";
+
+
+const logger = log(import.meta.url);
 
 const kind="Page";
 const batch=100;
@@ -48,7 +52,7 @@ export const pages=immutable({
 
 				try {
 
-					log.info(pages.lookup.name, `looking up <${url}>`);
+					logger.info`looking up <${url}>`;
 
 					const key=datastore.key([kind, uuid(url)]);
 					const [entity]=await datastore.get(key);
@@ -63,7 +67,7 @@ export const pages=immutable({
 
 						const value=await fetcher(url);
 
-						log.info(pages.lookup.name, `caching <${url}>`);
+						logger.info`caching <${url}>`;
 
 						const data={
 							value: JSON.stringify(value)
@@ -81,7 +85,7 @@ export const pages=immutable({
 
 				} catch ( e ) {
 
-					log.error(pages.lookup.name, `unable to look up <${url}>: ${(message(e))}`);
+					logger.error`unable to look up <${url}>: ${message(e)}`;
 
 					reject(e);
 
@@ -124,9 +128,9 @@ export const pages=immutable({
 
 			}
 
-		}, (removedItems, elapsed) => log.info(pages.remove.name,
+			}, (removedItems, elapsed) => logger.info
 			`removed <${message(removedItems.length)}> pages in <${message(elapsed)}> ms`
-		));
+		);
 
 	}
 

@@ -15,10 +15,13 @@
  */
 
 import { Topic } from "@/pipelines/topics";
-import { log, message } from "@/utilities/core/logger/log";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
+import { log } from "@metreeca/post";
+import { message } from "@metreeca/post/tools";
 import dedent from "dedent";
 
+
+const logger = log(import.meta.url);
 
 /**
  * Topic listing tool for Gemini API.
@@ -89,7 +92,7 @@ export function listTopics(opts: {
 					focus?: string
 				};
 
-				log.info(name, `calling ${name}(${JSON.stringify(call.args)})`);
+				logger.info`calling ${name}(${JSON.stringify(call.args)})`;
 
 				try {
 
@@ -101,9 +104,9 @@ export function listTopics(opts: {
 
 					const filtered = (await topics).filter(t => !focus || t.lineage.includes(focus));
 
-					log.info(name, `listed ${filtered.length} topics from <${scheme}>${
+					logger.info`listed ${filtered.length} topics from <${scheme}>${
 						focus ? ` with focus <${focus}>` : ""
-					}`);
+					}`;
 
 					return {
 						functionResponse: {
@@ -120,7 +123,7 @@ export function listTopics(opts: {
 
 				} catch ( error ) {
 
-					log.error(name, `failed to list topics: ${message(error)}`);
+					logger.error`failed to list topics: ${message(error)}`;
 
 					return {
 						functionResponse: {

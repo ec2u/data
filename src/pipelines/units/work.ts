@@ -16,10 +16,10 @@
 
 
 import { units } from "@/pipelines/units/store";
-import { pipe } from "@metreeca/pipe";
-import { items } from "@metreeca/pipe/feeds";
-import { forEach } from "@metreeca/pipe/sinks";
-import { filter, peek } from "@metreeca/pipe/tasks";
+import { pipe } from "@metreeca/flow";
+import { items } from "@metreeca/flow/feeds";
+import { forEach } from "@metreeca/flow/sinks";
+import { filter, peek } from "@metreeca/flow/tasks";
 
 units.remove();
 

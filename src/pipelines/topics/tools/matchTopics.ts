@@ -15,10 +15,15 @@
  */
 
 import { match, Topic } from "@/pipelines/topics";
-import { log, message } from "@/utilities/core/logger/log";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
+
+import { log } from "@metreeca/post";
+
+import { message } from "@metreeca/post/tools";
 import dedent from "dedent";
 
+
+const logger = log(import.meta.url);
 
 /**
  * Topic matching tool for Gemini API.
@@ -130,7 +135,7 @@ export function matchTopics(opts: {
 					narrowing?: number
 				};
 
-				log.info(name, `calling ${name}(${JSON.stringify(call.args)})`);
+				logger.info`calling ${name}(${JSON.stringify(call.args)})`;
 
 				try {
 
@@ -149,9 +154,9 @@ export function matchTopics(opts: {
 						narrowing
 					});
 
-					log.info(name, `matched ${matches.length} topics for query <${text}> ${
+					logger.info`matched ${matches.length} topics for query <${text}> ${
 						JSON.stringify(matches.map(t => t.id))
-					}`);
+					}`;
 
 					return {
 						functionResponse: {
@@ -168,7 +173,7 @@ export function matchTopics(opts: {
 
 				} catch ( error ) {
 
-					log.error(name, `failed to match topics: ${message(error)}`);
+					logger.error`failed to match topics: ${message(error)}`;
 
 					return {
 						functionResponse: {

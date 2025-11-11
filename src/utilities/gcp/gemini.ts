@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { log, Logger } from "@/utilities/core/logger";
-import { message } from "@/utilities/core/logger/log";
 import { md } from "@/utilities/core/tags";
 import { secret } from "@/utilities/gcp/secrets";
 import {
@@ -28,7 +26,10 @@ import {
 	Part
 } from "@google/genai";
 import { isString } from "@metreeca/core";
-import { Throttle } from "@metreeca/pipe/async";
+import { Throttle } from "@metreeca/flow/async";
+import { log, Logger } from "@metreeca/post";
+
+import { message } from "@metreeca/post/tools";
 
 
 const logger = log(import.meta.url);

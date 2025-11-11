@@ -43,10 +43,13 @@
  *   `separateMarkdown` option for integrated processing.
  */
 
-import { log } from "@/utilities/core/logger/log";
 import { uuid } from "@/utilities/node/uuid";
+import { log } from "@metreeca/post";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
+
+
+const logger = log(import.meta.url);
 
 
 /**
@@ -265,7 +268,7 @@ export async function visit(url: string, {
 
 	return cache(normalize(url), async function (url: string) {
 
-		log.info(visit.name, `fetching <${url}>`);
+		logger.info`fetching <${url}>`;
 
 		const response=await get(url);
 		const dom=await html(response);
@@ -275,7 +278,7 @@ export async function visit(url: string, {
 		const text=pageContent.contentMarkdown || "";
 		const title=pageContent.title || url;
 
-		log.info(visit.name, `summarizing <${url}>`);
+		logger.info`summarizing <${url}>`;
 
 		const summary=await summarist?.({ url, title, content: text })
 			|| pageContent.description

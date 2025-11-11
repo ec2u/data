@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Core Libraries
 
-- [@metreeca/pipe](https://github.com/metreeca/pipe) - TypeScript library for processing async iterables with
+- [@metreeca/flow](https://github.com/metreeca/pipe) - TypeScript library for processing async iterables with
   composable, type-safe pipelines
 
 ## Utilities

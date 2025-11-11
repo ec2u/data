@@ -16,12 +16,16 @@
 
 import { Topic } from "@/pipelines/topics/index";
 import { compress, decompress } from "@/utilities/ai/embeddings";
-import { log, message, time } from "@/utilities/core/logger/log";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { PropertyFilter } from "@google-cloud/datastore";
 import { immutable, isString } from "@metreeca/core";
 
+import { log } from "@metreeca/post";
+import { message, time } from "@metreeca/post/tools";
+
+
+const logger = log(import.meta.url);
 
 const kind="Topic";
 const batch=100;
@@ -114,9 +118,7 @@ export const topics=immutable({
 
 			}
 
-		}, (value, elapsed) => value && log.info(topics.lookup.name,
-			`fetched topic <${typeof key === "string" ? key : JSON.stringify(key)}> in <${message(elapsed)}> ms`
-		));
+		}, (value, elapsed) => value && logger.info`fetched topic <${typeof key === "string" ? key : JSON.stringify(key)}> in <${message(elapsed)}> ms`);
 
 	},
 
@@ -145,9 +147,7 @@ export const topics=immutable({
 					embedding: decompress(embedding as string)
 				}));
 
-			}, (value, elapsed) => log.info(topics.select.name,
-				`retrieved <${message(value.length)}> topics${(scheme ? ` from <${scheme}>` : "")} in <${message(elapsed)}> ms`
-			)
+			}, (value, elapsed) => logger.info`retrieved <${message(value.length)}> topics${scheme ? ` from <${scheme}>` : ""} in <${message(elapsed)}> ms`
 		);
 
 	},
@@ -173,9 +173,7 @@ export const topics=immutable({
 
 			return items;
 
-		}, (value, elapsed) => log.info(topics.insert.name,
-			`inserted <${message(value.length)}> topics in <${message(elapsed)}> ms`
-		));
+		}, (value, elapsed) => logger.info`inserted <${message(value.length)}> topics in <${message(elapsed)}> ms`);
 
 	},
 
@@ -208,9 +206,9 @@ export const topics=immutable({
 
 			}
 
-		}, (removedItems, elapsed) => log.info(topics.remove.name,
+			}, (removedItems, elapsed) => logger.info
 			`removed <${message(removedItems.length)}> topics in <${message(elapsed)}> ms`
-		));
+		);
 
 	}
 
