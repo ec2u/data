@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(mvn dependency:tree:*)",
+      "Bash(rg:*)",
+      "Bash(mvn test:*)",
+      "Bash(sed:*)",
+      "Bash(java:*)",
+      "Bash(mvn compile:*)",
+      "WebFetch(domain:openiris.io)",
+      "WebFetch(domain:fisica.dip.unipv.it)",
+      "mcp__ide__getDiagnostics",
+      "Bash(mvn:*)",
+      "Bash(git checkout:*)",
+      "WebSearch",
+      "WebFetch(domain:docs.claude.com)",
+      "WebFetch(domain:mcpcat.io)",
+      "WebFetch(domain:www.anthropic.com)",
+      "Bash(gcloud scheduler jobs list:*)",
+      "Bash(gcloud app logs read:*)",
+      "Bash(gcloud logging read:*)",
+      "Bash(git gc:*)",
+      "Skill(markdown-writer)",
+      "WebFetch(domain:docs.github.com)",
+      "WebFetch(domain:www.umu.se)",
+      "Bash(curl:*)",
+      "WebFetch(domain:github.com)"
+    ],
+    "deny": []
+  },
+  "enableAllProjectMcpServers": false
+}
