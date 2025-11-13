@@ -32,6 +32,7 @@ import eu.ec2u.data.datasets.offerings.Offerings;
 import eu.ec2u.data.datasets.organizations.Organizations;
 import eu.ec2u.work.Page;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Optional;
@@ -116,10 +117,12 @@ public interface Courses extends Dataset {
                             - document language as guessed from its content as a 2-letter ISO tag
                             - course teaching language as stated in thedocument as a 2-letter ISO tag
                             - course code
-                            - course duration as an ISO day-time-based duration value (PdDThHmM, all components optional)
-                            - course study workload as an ISO day-time-based duration value (PdDThHmM, all components optional)
+                            - course duration as an ISO day-time-based duration value
+                              (PdDThHmM, at least one component required)
+                            - course study workload as an ISO day-time-based duration value
+                              (PdDThHmM, at least one component required)
                             - course tuition fees (free/paid)
-                            - course attendance mode (offline/online/mixed)\s
+                            - course attendance mode (offline/online/mixed)
                             - full description of admission requirements
                             
                             Make absolutely sure to ignore properties that are not explicitly specified in the document.
@@ -146,11 +149,13 @@ public interface Courses extends Dataset {
                                   },
                                   "duration": {
                                     "type": "string",
-                                    "pattern": "^P(\\\\d+D)?(T(\\\\d+H)?(\\\\d+M)?)?$"
+                                    "pattern": "^P(\\\\d+D)?(T(\\\\d+H)?(\\\\d+M)?)?$",
+                                    "minLength": 2
                                   },
                                   "workload": {
                                     "type": "string",
-                                    "pattern": "^P(\\\\d+D)?(T(\\\\d+H)?(\\\\d+M)?)?$"
+                                    "pattern": "^P(\\\\d+D)?(T(\\\\d+H)?(\\\\d+M)?)?$",
+                                    "minLength": 2
                                   },
                                   "fees": {
                                     "type": "string",
@@ -195,8 +200,15 @@ public interface Courses extends Dataset {
 
                                 .courseCode(json.get("code").string().orElse(null))
 
-                                .timeRequired(json.get("duration").duration().orElse(null))
-                                .courseWorkload(json.get("workload").duration().orElse(null))
+                                .timeRequired(json.get("duration").duration()
+                                        .filter(not(Duration::isZero))
+                                        .orElse(null)
+                                )
+
+                                .courseWorkload(json.get("workload").duration()
+                                        .filter(not(Duration::isZero))
+                                        .orElse(null)
+                                )
 
                                 .inLanguage(json.get("teaching").string()
                                         .map(Collections::set)
