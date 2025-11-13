@@ -28,9 +28,11 @@ import com.metreeca.mesh.pipe.Store;
 import java.net.URI;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
@@ -40,7 +42,8 @@ import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
-import static com.metreeca.shim.Collections.*;
+import static com.metreeca.shim.Collections.map;
+import static com.metreeca.shim.Collections.set;
 import static com.metreeca.shim.Futures.joining;
 import static com.metreeca.shim.URIs.uri;
 import static com.metreeca.shim.URIs.uuid;
@@ -79,7 +82,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
 
     private final URI pipeline;
 
-    private final boolean incremental;
+    private final Integer incremental;
 
     private final Function<Page, Optional<T>> insert;
     private final Function<Page, Optional<T>> remove;
@@ -105,7 +108,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
     public PageKeeper(final URI pipeline) {
         this(
                 pipeline,
-                false,
+                null,
                 page -> Optional.empty(),
                 page -> Optional.empty(),
                 set(),
@@ -116,7 +119,7 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
 
     private PageKeeper(
             final URI pipeline,
-            final boolean incremental,
+            final Integer incremental,
             final Function<Page, Optional<T>> insert,
             final Function<Page, Optional<T>> remove,
             final Collection<? extends Valuable> annexes,
@@ -156,13 +159,35 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
      * Configures the incremental processing mode.
      *
      * <p>Incremental mode disables removal of stale resources: only new or modified pages from the
-     * {@linkplain  #apply(Set) supplied URLs}  are processed; other existing pages are retained without updates./p>
+     * {@linkplain  #apply(Set) supplied URLs}  are processed; other existing pages are retained without updates.</p>
      *
      * @param incremental {@code true} to enable incremental processing, {@code false} otherwise
      *
      * @return a new PageKeeper instance with the specified incremental mode
      */
     public PageKeeper<T> incremental(final boolean incremental) {
+        return new PageKeeper<>(
+                pipeline,
+                incremental ? 0 : null,
+                insert,
+                remove,
+                annexes,
+                executor
+        );
+    }
+
+    /**
+     * Configures the incremental processing mode with batching.
+     *
+     * <p>Incremental mode disables removal of stale resources: only new or modified pages from the
+     * {@linkplain  #apply(Set) supplied URLs}  are processed; other existing pages are retained without updates.
+     * Resources are processed and inserted in batches of the specified size.</p>
+     *
+     * @param incremental the batch size for processing insertions (0 for unbatched incremental mode)
+     *
+     * @return a new PageKeeper instance with the specified incremental batch mode
+     */
+    public PageKeeper<T> incremental(final int incremental) {
         return new PageKeeper<>(
                 pipeline,
                 incremental,
@@ -349,66 +374,60 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
         );
 
 
-        final List<Value> insertions=list(Stream.concat(
+        final List<CompletableFuture<List<Value>>> futures=urls.stream()
 
-                urls.stream()
+                .map(url -> async(executor, () -> Optional.of(url)
 
-                        .map(url -> async(executor, () -> Optional.of(url)
+                        .map(URI::toString) // !!!
+                        .flatMap(new GET<>(new HTML()))
+                        .flatMap(new Focus())
+                        .map(new Untag())
+                        .stream()
 
-                                .map(URI::toString) // !!!
-                                .flatMap(new GET<>(new HTML()))
-                                .flatMap(new Focus())
-                                .map(new Untag())
-                                .stream()
+                        .flatMap(body -> {
 
-                                .flatMap(body -> {
+                            final Instant now=Instant.now();
+                            final String hash=uuid(body);
 
-                                    final Instant now=Instant.now();
-                                    final String hash=uuid(body);
+                            final boolean clean=Optional.ofNullable(pages.get(url))
+                                    .map(page -> page.hash().equals(hash))
+                                    .orElse(false);
 
-                                    final boolean clean=Optional.ofNullable(pages.get(url))
-                                            .map(page -> page.hash().equals(hash))
-                                            .orElse(false);
+                            if ( clean ) { return Stream.empty(); } else {
 
-                                    if ( clean ) { return Stream.empty(); } else {
+                                final PageFrame page=new PageFrame()
+                                        .id(url)
+                                        .fetched(now)
+                                        // !!! created
+                                        // !!! updated
+                                        // !!! etag
+                                        .hash(hash)
+                                        .pipeline(pipeline);
 
-                                        final PageFrame page=new PageFrame()
-                                                .id(url)
-                                                .fetched(now)
-                                                // !!! created
-                                                // !!! updated
-                                                // !!! etag
-                                                .hash(hash)
-                                                .pipeline(pipeline);
+                                return requireNonNull(insert.apply(page.body(body)), "null insert factory value")
 
-                                        return requireNonNull(insert.apply(page.body(body)), "null insert factory value")
+                                        .map(Valuable::toValue)
+                                        .stream()
 
-                                                .map(Valuable::toValue)
-                                                .stream()
+                                        .flatMap(value -> value.id().stream().flatMap(id -> Stream.of(
+                                                value,
+                                                page.resource(id).toValue()
+                                        )));
 
-                                                .flatMap(value -> value.id().stream().flatMap(id -> Stream.of(
-                                                        value,
-                                                        page.resource(id).toValue()
-                                                )));
+                            }
 
-                                    }
+                        })
 
-                                })
+                        .toList()
 
-                                .toList()
+                ))
 
-                        ))
-
-                        .collect(joining())
-                        .flatMap(Collection::stream),
-
-                annexes.stream()
-                        .map(Valuable::toValue)
-
-        ));
+                .toList();
 
 
-        final List<Value> removals=incremental ? list() : list(pages.values().stream()
+
+
+        final Stream<Value> removals=pages.values().stream()
 
                 .filter(not(page -> urls.contains(page.id())))
 
@@ -416,16 +435,137 @@ public final class PageKeeper<T extends Valuable> implements Function<Set<URI>, 
                         .flatMap(t -> Stream.of(t, page))
                 )
 
-                .map(Valuable::toValue)
+                .map(Valuable::toValue);
 
-        );
+        if ( incremental == null ) {
 
-        store.modify(
-                array(insertions),
-                array(removals)
-        );
+            final Stream<Value> insertions=Stream.concat(
+                    futures.stream().collect(joining()).flatMap(Collection::stream),
+                    annexes.stream().map(Valuable::toValue)
+            );
 
-        return insertions.size()+removals.size();
+            return store.modify(
+                    array(insertions),
+                    array(removals)
+            );
+
+        } else {
+
+            // Batch futures, not values (since many futures return empty lists)
+            final int inserted=batch(completing(futures), incremental)
+                    .map(batch -> array(
+                            batch.stream().flatMap(Collection::stream)
+                    ))
+                    .filter(not(Value::isEmpty))
+                    .mapToInt(store::insert)
+                    .sum();
+
+            // Insert annexes once at the end
+            if ( !annexes.isEmpty() ) {
+                return inserted+store.insert(array(annexes.stream().map(Valuable::toValue)));
+            }
+
+            return inserted;
+
+        }
+
     }
 
+
+    /**
+     * Streams future results in completion order.
+     *
+     * <p>Unlike {@code joining()}, this method streams results as they complete rather than
+     * waiting for all futures to finish. This enables incremental processing where downstream
+     * operations can begin as soon as any future completes.</p>
+     *
+     * @param futures the list of futures
+     *
+     * @return a stream of results in completion order
+     */
+    private static <T> Stream<T> completing(final List<CompletableFuture<T>> futures) {
+
+        if ( futures.isEmpty() ) {
+            return Stream.empty();
+        }
+
+        final Iterator<T> results=new Iterator<>() {
+
+            private final List<CompletableFuture<T>> pending=new ArrayList<>(futures);
+
+            @Override
+            public boolean hasNext() {
+                return !pending.isEmpty();
+            }
+
+            @Override
+            public T next() {
+
+                // Wait for any future to complete
+                CompletableFuture.anyOf(pending.toArray(CompletableFuture[]::new)).join();
+
+                // Find and return first completed future
+                for (int i=0; i < pending.size(); i++) {
+                    final CompletableFuture<T> future=pending.get(i);
+                    if ( future.isDone() ) {
+                        pending.remove(i);
+                        return future.join();
+                    }
+                }
+
+                throw new NoSuchElementException("no completed future found");
+
+            }
+
+        };
+
+        return StreamSupport.stream(
+                Spliterators.spliteratorUnknownSize(results, Spliterator.ORDERED),
+                false
+        );
+    }
+
+
+    /**
+     * Transforms a stream into a stream of batches, eagerly emitting batches as they fill.
+     *
+     * <p>This enables true streaming: batches are produced as the source stream is consumed,
+     * allowing downstream operations to begin immediately without waiting for all input.</p>
+     *
+     * @param source    the source stream
+     * @param batchSize the batch size (0 for single batch containing all elements)
+     *
+     * @return a stream of batches emitted eagerly
+     */
+    private static <T> Stream<List<T>> batch(final Stream<T> source, final int batchSize) {
+
+        if ( batchSize == 0 ) {
+            return Stream.of(source.toList());
+        }
+
+        final Iterator<T> iterator=source.iterator();
+
+        final Iterator<List<T>> batches=new Iterator<>() {
+
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public List<T> next() {
+                final List<T> batch=new ArrayList<>(batchSize);
+                for (int i=0; i < batchSize && iterator.hasNext(); i++) {
+                    batch.add(iterator.next());
+                }
+                return batch;
+            }
+
+        };
+
+        return StreamSupport.stream(
+                Spliterators.spliteratorUnknownSize(batches, Spliterator.ORDERED),
+                false
+        );
+    }
 }
