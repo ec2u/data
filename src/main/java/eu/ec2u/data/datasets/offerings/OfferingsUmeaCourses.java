@@ -97,7 +97,6 @@ public final class OfferingsUmeaCourses implements Runnable {
                         ))
 
                 )))
-
                 .flatMap(optional(new Fetch()))
                 .flatMap(optional(new Parse<>(new JSON())))
 
@@ -105,6 +104,7 @@ public final class OfferingsUmeaCourses implements Runnable {
                 .flatMap(optional(lenient(URIs::uri)))
 
                 .collect(collectingAndThen(toSet(), new PageKeeper<CourseFrame>(PIPELINE)
+                        // .incremental(100) // enable for initial bootstrapping
                         .insert(page -> new Courses.Scanner().apply(page, new CourseFrame().university(UMEA)))
                         .remove(page -> Optional.of(new CourseFrame(true).id(page.resource())))
                 ))

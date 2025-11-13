@@ -106,6 +106,7 @@ public final class OfferingsUmeaPrograms implements Runnable {
                 .flatMap(optional(lenient(URIs::uri)))
 
                 .collect(collectingAndThen(toSet(), new PageKeeper<ProgramFrame>(PIPELINE)
+                        // .incremental(100) // enable for initial bootstrapping
                         .insert(page -> new Programs.Scanner().apply(page, new ProgramFrame().university(UMEA)))
                         .remove(page -> Optional.of(new ProgramFrame(true).id(page.resource()))
                 )))
