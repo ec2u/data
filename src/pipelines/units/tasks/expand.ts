@@ -28,7 +28,7 @@ import { guard, log, message, time } from "@metreeca/core/logger";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { forEach, toArray } from "@metreeca/flow/sinks";
-import { filter, flatMap, map, peek } from "@metreeca/flow/tasks";
+import { filter, flatMap, map } from "@metreeca/flow/tasks";
 
 
 const logger = log(import.meta.url);
@@ -168,7 +168,6 @@ export async function expand(lead?: Partial<Unit>): Promise<void | readonly Part
 				}), {
 					parallel: true
 				}))
-				(peek(v => console.info(v)))
 				(forEach(async ({ lead, items }) => {
 
 					for (const item of items) {

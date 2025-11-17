@@ -17,8 +17,8 @@ This is NOT an automated test suite - it's human-readable documentation for LLM-
 # Inbox
 
 - Multi-language handling: Verify behavior when unit websites switch between languages
-- Topic matching accuracy: Monitor false positives/negatives in taxonomy matching
 - Website exploration depth: Balance between thoroughness and API call efficiency
+- Keyword quality: Ensure extracted keywords represent major and noteworthy research areas
 
 # Guidelines
 
@@ -27,20 +27,20 @@ This is NOT an automated test suite - it's human-readable documentation for LLM-
 When asked to validate this prompt:
 
 1. **Create and run test driver**:
-    - Write temporary `.test.ts` file with test code
+  - Write temporary `.test.ts` file with test code
    - Import `analyze` function from `analyze.ts`
-    - Configure test with sample Lead object containing profile/website URLs
-    - Execute `npx tsx .test.ts` to generate output
+  - Configure test with sample Lead object containing profile/website URLs
+  - Execute `npx tsx .test.ts` to generate output
    - Delete `.test.ts` after the complete testing process is finished
 
 2. **Perform independent verification**:
-    - Use WebFetch to retrieve target pages from the Lead
-    - Manually extract reference data from source pages
-    - Identify expected information (formal name, typology, topics, email, summary)
-    - CRITICAL: This reference data is ground truth for evaluation
+  - Use WebFetch to retrieve target pages from the Lead
+  - Manually extract reference data from source pages
+  - Identify expected information (formal name, email, summary, description, keywords)
+  - CRITICAL: This reference data is ground truth for evaluation
 
 3. **Compare and validate**:
-    - Compare script output against independent findings
+  - Compare script output against independent findings
    - Verify structured output matches Unit schema requirements
    - Check all documented test cases for regressions
 
@@ -67,9 +67,9 @@ When asked to improve or fix the prompt:
 2. **Make incremental changes**: Modify the prompt iteratively until new requirements are met
 
 3. **Validate without regressions**: Test that ALL requirements (new and existing) are satisfied
-    - Run complete test suite
-    - If any test fails, modify prompt and retest
-    - Continue until all test cases pass
+  - Run complete test suite
+  - If any test fails, modify prompt and retest
+  - Continue until all test cases pass
 
 ---
 
@@ -96,14 +96,14 @@ report
 **Expected Behavior**:
 
 - Extract formal, official name of the unit
-- Include unit typology (e.g., "Department of Biology", "Computational Physics Laboratory")
+- Include unit type descriptor (e.g., "Department of Biology", "Computational Physics Laboratory")
 - Translate name to English
 - Ensure name is standalone and uniquely identifies the unit
 - Never include university or parent unit references
 - Never report official name as short name
 - Never report acronym as short name
 
-**Validation**: Verify extracted name is standalone, includes typology, uses English, and uniquely identifies
+**Validation**: Verify extracted name is standalone, includes type descriptor, uses English, and uniquely identifies
 the unit
 
 ## Personal Information Exclusion
@@ -135,48 +135,9 @@ prominent
 - Never use personal email addresses as institutional addresses
 - Never invent or infer email addresses
 - Remove anti-spam cloaking (e.g., "name(at)example.edu" becomes "name@example.edu")
-- Report "Not defined" if no institutional email found
+- Omit email field if no institutional email found
 
 **Validation**: Verify extracted email addresses appear on source pages and are institutional addresses
-
-## Typology Topic Matching
-
-**Input**: Research unit with classification type (e.g., "Department", "Laboratory")
-
-**Expected Behavior**:
-
-- Call `matchTopics` to find best-matching topic ID for unit type
-- Use scheme: `https://data.ec2u.eu/taxonomies/organizations/`
-- Use focus: `https://data.ec2u.eu/taxonomies/organizations/university-unit`
-- Set limit: 1
-- Set threshold: 0.5
-- Report topic ID as typology value
-- Report "Not defined" if no match meets threshold
-
-**Validation**: Verify `matchTopics` called with correct parameters and threshold respected
-
-## Research Topic Matching
-
-**Input**: Research unit with multiple research keywords/areas
-
-**Expected Behavior**:
-
-- Call `matchTopics` once per keyword (not combined)
-- Each call uses individual keyword as query text
-- Use scheme: `https://data.ec2u.eu/taxonomies/euroscivoc/`
-- Set limit: 1 per keyword
-- Set threshold: 0.6
-- Make parallel calls for efficiency (batch all keywords)
-- Deduplicate resulting topic IDs
-- Omit keywords with no match meeting threshold
-
-**Root Cause**: Instructions to "call matchTopics for each keyword" were misinterpreted as combining all
-keywords into one text string.
-
-**Validation**: Count `matchTopics` calls and verify each uses single keyword, not combined text
-
-**CRITICAL**: When modifying the prompt, ensure instructions explicitly state "call matchTopics ONCE per
-keyword" with parallel execution guidance
 
 ## Formal Name Must Include Explicit Type Descriptor
 
@@ -187,13 +148,15 @@ keyword" with parallel execution guidance
 
 **Expected Behavior**:
 
-- Formal name MUST include explicit type descriptor aligned with typology classification
-- Incomplete names MUST be extended with appropriate type designation
+- Formal name MUST include explicit type descriptor
+- Incomplete names MUST be extended with appropriate type designation inferred from context
 - Type descriptors: Facility, Laboratory, Department, Institute, Research Group, Centre, School, Faculty
-- "Computing Cluster" + `facility/computing` → "Computing Facility"
-- "Computing Services" + `centre/service` → "Computing Service Center" or "Computing Services Centre"
-- "Data Science" + `laboratory` → "Data Science Laboratory"
-- "Bioinformatics" + `research-group` → "Bioinformatics Research Group"
+- Use functional context clues to determine appropriate descriptor:
+  - Infrastructure/shared resources → "Facility" or "Center"
+  - Experimental/analytical work → "Laboratory"
+  - Primary academic division → "Department"
+  - Collaborative research team → "Research Group"
+  - Specialized research/service unit → "Centre"
 
 **Root Cause**: LLMs prefer verbatim extraction over reformulation. Explicit instruction with examples required to
 extend incomplete names.
@@ -201,31 +164,31 @@ extend incomplete names.
 **Validation**:
 
 - Verify formal name contains explicit type descriptor (Facility, Center, Laboratory, etc.)
-- Check type descriptor aligns with classification path (facility → Facility/Center, laboratory → Laboratory/Lab)
 - Confirm name extension applied when website name lacks type clarity
+- Verify descriptor choice aligns with functional context from website
 - Ensure domain-specific terms preserved ("Computing", "Data Science") while adding type
 
 **Test Examples**:
 
-1. "Computing Cluster" (facility/computing) → "Computing Facility" ✓
-2. "Department of Physics" (department) → "Department of Physics" ✓ (already complete)
-3. "Computing Services" (centre/service) → "Computing Services Centre" or "Computing Service Center" ✓
+1. "Computing Cluster" (infrastructure context) → "Computing Facility" ✓
+2. "Department of Physics" → "Department of Physics" ✓ (already complete)
+3. "Computing Services" (service provision context) → "Computing Services Centre" ✓
+4. Website describes experimental analytical work called "Mass Spec" → "Mass Spectrometry Laboratory" ✓
 
 **CRITICAL**: When modifying the prompt, ensure:
 
-- Name extension policy explicitly documented with examples
-- Type descriptor alignment table maintained
+- Name extension policy based on functional context, not classification
+- Type descriptor list maintained
 - Examples show both correct (with descriptors) and incorrect (missing descriptors) patterns
-- Ambiguous terms like "Services", "Cluster" flagged as requiring extension
+- Guidance on inferring descriptors from context clues (organizational hierarchy, functional descriptions)
 
-## Parallel Tool Execution
+## Parallel Page Fetching
 
-**Input**: Multiple independent pages to fetch or keywords to match
+**Input**: Multiple independent pages to fetch
 
 **Expected Behavior**:
 
 - Batch independent `fetchPage` calls in parallel
-- Batch independent `matchTopics` calls in parallel
 - Avoid sequential execution unless results are interdependent
 - Maximize efficiency by reducing total round trips
 
@@ -239,8 +202,8 @@ extend incomplete names.
 
 - Prioritize pages based on relevance to analysis goals
 - Stop when sufficient information gathered for:
-    - Unit identity (name, acronym, email)
-    - Research topics and activities
+  - Unit identity (name, acronym, email)
+  - Research topics and activities
 - Avoid exhaustive crawling of all linked pages
 - Ignore PDFs and other linked documents
 
@@ -264,60 +227,51 @@ extend incomplete names.
 
 **Validation**: Verify summary length, description structure, neutral tone, and standalone readability
 
+## Keywords Generation
+
+**Input**: Any research unit lead
+
+**Expected Behavior**:
+
+- Extract 5-15 free-form keywords depending on unit breadth
+- Focus on MAJOR research areas
+- Highlight NOTEWORTHY specialty areas
+- Sort by INCREASING specificity
+- Keep keywords concise (1-3 words each)
+- Avoid overly generic terms ("research", "science")
+- Prefer specific disciplinary terms
+
+**Validation**: Verify keywords represent major and noteworthy research areas, sorted by increasing specificity
+
 ## Structured Output Generation
 
 **Input**: Analysis report (plaintext)
 
 **Expected Behavior**:
 
-- `structure()` function extracts data into Unit schema
-- Include all required fields: formal, type, topics, summary, description, keywords
+- Extract data into structured JSON output matching Unit schema
+- Include all required fields: formal, summary, description, keywords
 - Include optional fields (short, acronym, identifier, email) only if defined
 - Match schema field types (strings, arrays of strings)
-- Topics array contains valid topic IDs
 - Keywords array contains free-form terms
 
 **Validation**: Verify structured output matches Unit type definition with all required fields present
 
-## Typology Classification Accuracy
+## Optional Fields Handling
 
-**Issue**: Original keyword-only matching ("Cluster") lost critical context, causing misclassifications:
+**Input**: Research unit with missing optional information (no short name, acronym, identifier, or email)
 
-- "Computing Cluster" → matched `group` instead of `facility/computing`
-- Departments → matched `school/medical`, `school/business` instead of `department`
-- Overall failure rate: ~50% in classification.csv
+**Expected Behavior**:
 
-**Solutions Tested**:
+- Omit optional fields entirely from output when not found
+- NEVER include fields with "Not defined" or placeholder values
+- NEVER include empty strings for optional fields
+- Only include optional fields when actual values are found on website
 
-1. **Full Context** (FAILED): Used complete name+summary in `matchTopics` → prioritized domain over structure
-2. **Minimal Context** (INCONSISTENT): Keyword extraction → unreliable embedding matches, cache issues
-3. **Static List** (100%): Load all typologies at startup, pass in contents → adds tokens to every request
-4. **Multi-Candidate** (75%): Retrieve top-5 via `matchTopics` → model sometimes ignored candidates
-5. **Dynamic Retrieval** (100% - IMPLEMENTED): Model calls `listTopics` tool on demand
+**Root Cause**: LLMs may generate placeholder values to "complete" the schema. Explicit omission required.
 
-**Implemented Solution** (analyze.ts, listTopics.ts, analyze.ai):
+**Validation**: Verify optional fields are completely absent from output when not found, not present with placeholder
+values
 
-Created `listTopics` tool for dynamic retrieval:
-
-```typescript
-// Tool registration (analyze.ts:34-35)
-listTopics({ topics: scheme => topics.select({ scheme }) })
-```
-
-Model calls `listTopics` to retrieve 28 typologies as structured objects (id, label, definition).
-
-**Key Principles**:
-
-- Model calls `listTopics(scheme, focus)` to retrieve complete typology list
-- DO NOT call `matchTopics` for typology classification
-- Focus on ORGANIZATIONAL STRUCTURE (department, school, lab), not domain (medical, business)
-- "Department of X" → Always `department`, regardless of X's domain
-
-**Test Results**: 100% accuracy on Computing Cluster, Dept Political Sciences, Dept Medicine, Dept Mathematics
-
-**Root Cause**: Taxonomy has both structural types (`department`) and domain-qualified types (`school/medical`).
-Semantic matching without explicit guidance conflates these dimensions.
-
-**Validation**: Verify model calls `listTopics` with scheme `https://data.ec2u.eu/taxonomies/organizations/` and focus
-`https://data.ec2u.eu/taxonomies/organizations/university-unit`, retrieves 28 topics, departments classified as
-`department` not `school/*`.
+**CRITICAL**: When modifying the prompt, ensure optional field handling remains explicit with clear omission
+instructions

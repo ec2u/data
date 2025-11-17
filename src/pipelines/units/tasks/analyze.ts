@@ -16,29 +16,23 @@
 
 import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
-import { topics } from "@/pipelines/topics/store";
-import { listTopics } from "@/pipelines/topics/tools/listTopics";
-import { matchTopics } from "@/pipelines/topics/tools/matchTopics";
 import { matches, merge, stale, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
 import { md } from "@/utilities/core/tags";
 import { ai, json } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
-import { isString } from "@metreeca/core";
 import { guard, log, message, time } from "@metreeca/core/logger";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { forEach } from "@metreeca/flow/sinks";
-import { flatMap, map, peek } from "@metreeca/flow/tasks";
+import { flatMap, map } from "@metreeca/flow/tasks";
 
 
 const logger = log(import.meta.url);
 
 const tools = [
-	fetchPage({ cache: pages.lookup }),
-	matchTopics({ topics: scheme => topics.select({ scheme }) }),
-	listTopics({ topics: scheme => topics.select({ scheme }) })
+	fetchPage({ cache: pages.lookup })
 ];
 
 
@@ -56,7 +50,7 @@ export async function analyze(lead?: Partial<Unit>) {
 
 	if ( lead ) {
 
-		return await validate(json<Partial<Unit>>(await ai.models.generateContent({
+		return json<Partial<Unit>>(await ai.models.generateContent({
 			model: "gemini-2.5-flash",
 			contents: md`
 				profile: ${lead.profile ?? "Not provided"}
@@ -99,7 +93,7 @@ export async function analyze(lead?: Partial<Unit>) {
 						identifier: {
 							type: Type.STRING,
 							description: md`
-								Internal identifier of the research unit (OPTIONAL - omit if not actually found on website)
+								Internal identifier of the research unit (OPTIONAL - omit if not found on website)
 							`
 						},
 						email: {
@@ -107,20 +101,6 @@ export async function analyze(lead?: Partial<Unit>) {
 							description: md`
 								Institutional email address of the research unit
 								(OPTIONAL - omit if not actually found on website)
-							`
-						},
-						type: {
-							type: Type.STRING,
-							description: md`
-								Formal topic ID from the organizations taxonomy - MUST be a complete URL preserved exactly
-								as found (e.g., 'https://data.ec2u.eu/...')
-							`
-						},
-						topics: {
-							type: Type.ARRAY,
-							items: { type: Type.STRING },
-							description: md`
-								List of topic IDs from matchTopics results - use exact IDs returned by the tool
 							`
 						},
 						summary: {
@@ -139,21 +119,19 @@ export async function analyze(lead?: Partial<Unit>) {
 							type: Type.ARRAY,
 							items: { type: Type.STRING },
 							description: md`
-								List of keywords research topics and fields
+								List of keywords describing research areas and fields
 							`
 						}
 					},
 					required: [
 						"formal",
-						"type",
-						"topics",
 						"summary",
 						"description",
 						"keywords"
 					]
 				}
 			}
-		})));
+		}));
 
 	} else {
 
@@ -173,7 +151,6 @@ export async function analyze(lead?: Partial<Unit>) {
 			), {
 				parallel: true
 			}))
-			(peek(v => console.info(v)))
 			(forEach(units.insert))
 		), (count, elapsed) => {
 			logger.info`processed <${count}> units in <${message(elapsed)}> ms`;
@@ -181,45 +158,4 @@ export async function analyze(lead?: Partial<Unit>) {
 
 	}
 
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Validates extracted unit data to ensure correct taxonomy usage.
- *
- * - Typology must come from organizations taxonomy (https://data.ec2u.eu/taxonomies/organizations/)
- * - Topics must exist in EuroSciVoc taxonomy (verified via lookup)
- *
- * @param result Extracted unit data from AI model
- * @returns Validated result with incorrect taxonomy entries removed
- */
-async function validate(result: Partial<Unit>): Promise<Partial<Unit>> {
-
-	const organizations = "https://data.ec2u.eu/taxonomies/organizations/";
-	const euroscivoc = "https://data.ec2u.eu/taxonomies/euroscivoc/";
-
-	async function check(id: string, scheme: string): Promise<string | undefined> {
-		if ( await topics.lookup({ id, scheme }) ) {
-
-			return id;
-
-		} else {
-
-			logger.warning`invalid entry <${id}> for scheme <${scheme}>`;
-
-			return undefined;
-
-		}
-	}
-
-	return {
-
-		...result,
-
-		type: result.type ? await check(result.type, organizations) : undefined,
-		topics: (await Promise.all((result.topics || []).map(id => check(id, euroscivoc)))).filter(isString)
-
-	};
 }

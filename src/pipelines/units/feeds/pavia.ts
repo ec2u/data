@@ -28,7 +28,7 @@ import { log, message, time } from "@metreeca/core/logger";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { forEach } from "@metreeca/flow/sinks";
-import { flatMap, map, peek } from "@metreeca/flow/tasks";
+import { flatMap, map } from "@metreeca/flow/tasks";
 
 
 const logger = log(import.meta.url);
@@ -128,7 +128,6 @@ export async function scan(url?: string): Promise<unknown> {
 			), {
 				parallel: true
 			}))
-			(peek(v => console.info(v)))
 			(forEach(async item => {
 
 				const current = await units.lookup(item);

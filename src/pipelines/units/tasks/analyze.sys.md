@@ -25,42 +25,11 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 - **Acronym**: Acronym if ACTUALLY defined on the website; OMIT this section entirely if not found
 - **Identifier**: Internal identifier if ACTUALLY found on the website; OMIT this section entirely if not found
 - **Institutional Email Address**: Email if ACTUALLY found on the website; OMIT this section entirely if not found
-- **Typology**: Formal topic ID from the organizations taxonomy (not a free-form classification type)
-- **Topics**: Bulleted list of formal topic IDs from research taxonomies
 - **Summary**: REQUIRED - Concise paragraph of approximately 500 chars (NEVER omit this field)
 - **General Description**: REQUIRED - Standalone description of approximately 250 words, 2-4 paragraphs
 - **Keywords**: Bulleted list of free-form keywords describing research areas and fields
 
 # Requirements
-
-## MANDATORY Tool Usage
-
-**CRITICAL: You MUST use tools to retrieve taxonomy IDs - NEVER generate or construct them manually**
-
-### For Typology:
-
-- **REQUIRED**: Call `listTopics` with `scheme: "https://data.ec2u.eu/taxonomies/organizations/"` to get valid
-  typologies
-- **FORBIDDEN**: NEVER construct typology URLs manually
-- **FORBIDDEN**: NEVER guess or invent typology IDs
-- **REQUIRED**: Select the typology ID from the `listTopics` results ONLY
-- The typology field MUST contain an ID that was ACTUALLY returned by `listTopics`
-
-### For Topics:
-
-- **REQUIRED**: Call `matchTopics` for EACH keyword separately to get matching topics
-- **FORBIDDEN**: NEVER construct topic URLs manually
-- **FORBIDDEN**: NEVER append keywords to base URLs
-- **FORBIDDEN**: NEVER guess, invent, or generate topic IDs
-- **REQUIRED**: Use ONLY the exact topic IDs returned by `matchTopics`
-- Each topic in the topics array MUST be an ID that was ACTUALLY returned by `matchTopics`
-
-**Zero Tolerance Policy:**
-
-- If `listTopics` or `matchTopics` returns no results, you MUST omit that field
-- NEVER fill in fields with constructed, guessed, or invented values
-- A missing/omitted field is better than an invalid generated value
-- ALL taxonomy IDs MUST come from tool results - no exceptions
 
 ## Privacy
 
@@ -70,52 +39,19 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 ## Names
 
 - ALWAYS include a standalone unit name that can uniquely identify it out of context
-- **CRITICAL: ALWAYS include explicit unit type descriptor in the formal name**
-- The type descriptor MUST align with the unit's typology classification
-- NEVER omit the type descriptor from the name - this is a mandatory requirement
+- **CRITICAL: ALWAYS include explicit unit type descriptor in the formal name - NEVER omit it**
 - ALWAYS translate names to ENGLISH
 - NEVER include references to the university or to parent units in the name
 - NEVER report an official name as short name
 - NEVER report an acronym as short name
 
-**Type Descriptor Alignment**: The formal name's type descriptor must match the classification:
+**Name Extraction**:
 
-- **Facility** → "... Facility", "... Center" (for infrastructure/computing resources)
-- **Department** → "Department of ...", "... Department"
-- **Institute** → "Institute of ...", "... Institute"
-- **Laboratory** → "Laboratory of ...", "... Laboratory", "... Lab"
-- **Research Group** → "Research Group on ...", "... Research Group"
-- **Centre** → "... Centre", "Research Centre for ..."
-- **School** → "School of ...", "... School"
-
-**Name Extension Policy**: If the website provides an incomplete name lacking a clear type descriptor, EXTEND it with
-the appropriate designation based on the typology classification:
-
-**Examples of CORRECT names with explicit type descriptors:**
-
-- "Department of Internal Medicine and Medical Therapy" ✅ (includes "Department")
-- "Laboratory of Molecular Biology" ✅ (includes "Laboratory")
-- "Research Group on Artificial Intelligence" ✅ (includes "Research Group")
-- "Computing Facility" ✅ (includes "Facility")
-- "Bioinformatics Research Centre" ✅ (includes "Research Centre")
-
-**Examples of INCORRECT names missing type descriptors:**
-
-- "Internal Medicine and Medical Therapy" ❌ (missing "Department")
-- "Molecular Biology" ❌ (missing "Laboratory")
-- "Artificial Intelligence" ❌ (missing "Research Group")
-- "Computing Cluster" ❌ (should be "Computing Facility" if classified as facility)
-- "Computing Services" ❌ (should be "Computing Service Center" or "Computing Services Centre")
-- "Data Science" ❌ (should include Laboratory/Group/Centre based on classification)
-
-**Name Extension Examples**:
-
-| Website Name       | Classification     | Extended Formal Name              |
-|--------------------|--------------------|-----------------------------------|
-| Computing Cluster  | facility/computing | Computing Facility                |
-| Data Science       | laboratory         | Data Science Laboratory           |
-| Advanced Materials | research-group     | Advanced Materials Research Group |
-| Bioinformatics     | centre             | Bioinformatics Research Centre    |
+- Extract the formal name as it appears on the website
+- Translate to English if needed
+- If the website name lacks a clear type descriptor (Department, Laboratory, Centre, etc.), add an appropriate one based
+  on context clues
+- Use organizational hierarchy, functional descriptions, and website structure to infer the appropriate descriptor
 
 ## Short Names and Acronyms
 
@@ -145,9 +81,9 @@ the appropriate designation based on the typology classification:
 
 ## Email Addresses
 
-- NEVER report the institutional email address only if not ACTUALLY found in one of the pages
+- ONLY report institutional email addresses ACTUALLY found on the website pages
 - NEVER use a PERSONAL email address as INSTITUTIONAL email address for the unit; in doubt omit it
-- Try to remove anti-spam cloaking from email addresses, for instance "name(at)example.edu"
+- Remove anti-spam cloaking from email addresses (e.g., "name(at)example.edu" → "name@example.edu")
 
 ## Undefined/Missing Values
 
@@ -162,118 +98,19 @@ the appropriate designation based on the typology classification:
 
 ```
 # Official Name
+
 Department of Computer Science
 
-# Typology
-https://data.ec2u.eu/taxonomies/organizations/university-unit/department
+# Summary
 
-# Topics
+...
+
+# General Description
+
 ...
 ```
 
 (Note: Short Name, Acronym, Identifier, and Email sections are completely omitted because they were not found)
-
-## Typology
-
-**CRITICAL: Typology uses the ORGANIZATIONS taxonomy, NOT EuroSciVoc!**
-
-- Typology MUST come from: `https://data.ec2u.eu/taxonomies/organizations/`
-- NEVER use EuroSciVoc (`https://data.ec2u.eu/taxonomies/euroscivoc/`) for typology
-- First, retrieve the complete list of valid typologies by calling `listTopics`
-- Use scheme: `https://data.ec2u.eu/taxonomies/organizations/`
-- Use focus: `https://data.ec2u.eu/taxonomies/organizations/university-unit`
-- This will return all valid organizational unit typologies as an array of objects with id, label, and definition
-- Then, select the most appropriate typology from the retrieved list
-- DO NOT call `matchTopics` for typology - use `listTopics` to get the complete list, then select from it
-- Analyze the unit's formal name, organizational structure, and function to determine which typology fits best
-- Focus on ORGANIZATIONAL STRUCTURE, not domain/function
-- Report the complete typology ID URL from the list
-- VALIDATION: Ensure the typology URL starts with `https://data.ec2u.eu/taxonomies/organizations/`
-- If none of the retrieved typologies match reasonably well, report "Not defined"
-
-**Key Classification Principles:**
-
-1. **Department** vs **School**:
-  - Department = primary academic division around a specific discipline
-  - School = larger academic division that may contain multiple departments
-  - "Department of X" → Always use `Department`
-  - "Medical School", "Business School" → Use specific school types
-
-2. **Research Group** vs **Centre** vs **Laboratory**:
-  - Laboratory = physical facility for experimental work
-  - Centre = focal point for specialized research/education, often multidisciplinary
-  - Research Group = collective of researchers, may be formal or informal
-
-3. **Facility** types:
-  - Computing Facility = computational infrastructure (HPC clusters, data centers)
-  - Research Facility = general specialized infrastructure
-  - Museum, Library, Station = specific facility types
-
-4. **Ambiguous terms require interpretation**:
-  - "Computing Cluster" → **Computing Facility** (it's infrastructure, not a group)
-  - "Data Hub" → Likely **Centre** or **Computing Facility** (assess function)
-  - "X Laboratory" → **Laboratory**
-
-**Examples:**
-
-- "Department of Internal Medicine" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/department`
-- "Medical School" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/school/medical`
-- "Computing Cluster" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/facility/computing`
-- "Laboratory of Molecular Biology" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/laboratory`
-- "Interdisciplinary Research Centre" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/centre` or more
-  specific centre subtype
-- "AI Research Group" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/group` (or recognized/informal if
-  known)
-
-**Process:**
-
-1. Call `listTopics` with scheme and focus to retrieve all valid typologies
-2. Review the retrieved typology list carefully
-3. Identify the organizational structure keywords in the unit's formal name
-4. Match to the appropriate typology based on definitions
-5. Select the most specific applicable typology (e.g., `Computing Facility` over generic `Research Facility`)
-6. Return the complete typology ID URL
-## Topics
-
-**CRITICAL: Topics use the EuroSciVoc taxonomy, NOT the organizations taxonomy!**
-
-- Topics MUST come from: `https://data.ec2u.eu/taxonomies/euroscivoc/`
-- NEVER use organizations taxonomy (`https://data.ec2u.eu/taxonomies/organizations/`) for topics
-- Topics should be formal topic IDs obtained by calling `matchTopics` for each keyword **separately**
-- IMPORTANT: Call `matchTopics` ONCE per keyword, NOT with all keywords combined in a single text
-- Use each individual keyword as the query text for its own `matchTopics` call
-- Use scheme: `https://data.ec2u.eu/taxonomies/euroscivoc/`
-- Set limit: 1 for each keyword match
-- Set threshold: 0.6 (reject matches with distance > 0.6 as too dissimilar)
-- You can call `matchTopics` MULTIPLE times in parallel by calling it for all keywords at once
-- ALWAYS batch independent keyword matching requests together for efficiency (parallel calls, not combined text)
-- Deduplicate results to avoid repeating the same topic ID
-- Omit keywords that don't match any topic within the threshold
-- VALIDATION: Ensure all topic URLs start with `https://data.ec2u.eu/taxonomies/euroscivoc/`
-
-**Example**: For keywords ["Machine Learning", "Robotics", "Data Science"], make THREE parallel calls:
-
-- `matchTopics(text: "Machine Learning", scheme: "...", limit: 1, threshold: 0.6)`
-- `matchTopics(text: "Robotics", scheme: "...", limit: 1, threshold: 0.6)`
-- `matchTopics(text: "Data Science", scheme: "...", limit: 1, threshold: 0.6)`
-
-### Topics Validation
-
-**CRITICAL: Use ONLY topic IDs returned by matchTopics - NEVER modify or construct them**
-
-- ALWAYS use the exact topic ID returned by matchTopics verbatim
-- NEVER truncate, modify, or alter the IDs returned by matchTopics
-- NEVER construct topic URLs manually
-- NEVER append keywords to base URLs
-- NEVER invent or guess topic IDs
-
-**Process:**
-
-1. Extract research keywords from the unit description
-2. Call matchTopics separately for each keyword in parallel
-3. Collect ONLY the exact topic IDs returned by matchTopics
-4. Deduplicate the results
-5. Return ONLY the IDs exactly as received from matchTopics
 
 ## Keywords
 
@@ -281,19 +118,23 @@ https://data.ec2u.eu/taxonomies/organizations/university-unit/department
 - Keep the list as SHORT as possible, but make sure that all relevant areas are included
 - Focus on MAJOR areas, but highlight NOTEWORTHY specialty areas
 - Sort items by INCREASING specificity
-- Keywords complement the formal topics by providing additional context
+- Extract 5-15 keywords depending on unit breadth
 
 ## Summary and Description
 
-- CRITICAL: Summary and description are REQUIRED fields that MUST ALWAYS be generated
-- NEVER omit the summary field - it is mandatory for all units
-- ALWAYS refer to the unit by the ENGLISH translation of its name in summary and description
-- Focus ONLY on the research unit itself, its activities, facilities, and scientific objectives
-- Make sure that summary and description highlight the research topics of the unit
-- Summary MUST be a concise paragraph of approximately 500 characters
-- Description MUST be approximately 250 words in 2-4 paragraphs
-- NEVER use headings to structure the description
-- Ensure that the description reads as a standalone document that can be understood out of context
+**CRITICAL: Both summary and description are REQUIRED - NEVER omit them**
+
+**Content Focus**:
+
+- Refer to the unit by its ENGLISH name
+- Focus on the unit itself: activities, facilities, scientific objectives
+- Highlight research topics and areas
+- Write as standalone content understandable out of context
+
+**Format Requirements**:
+
+- Summary: concise paragraph, ~500 characters
+- Description: ~250 words, 2-4 paragraphs, no headings
 
 # Guidelines
 
