@@ -99,12 +99,46 @@ If no structural subunits are found after thorough exploration, return an empty 
 - Conduct specific research activities
 - Examples: "Didactics of Physics Group", "History of Physics Group", "Laboratory of X"
 
+**CRITICAL: Identifying Functional Units**
+
+Functional units can be identified through multiple signals:
+
+**1. Explicit organizational designation** - Units clearly labeled as functional entities (examples include but not
+limited to):
+
+- Laboratories, labs ("laboratorio", "laboratory", "labor")
+- Research groups ("gruppo di ricerca", "research group", "Forschungsgruppe")
+- Research centers that belong to the unit ("centro di ricerca", "research center")
+- Divisions, sections, departments
+- Any clear designation indicating a functional organizational entity
+
+**2. Membership evidence** - Strong organizational structure indicators:
+
+- **Leadership sections**: Sections identifying leaders, principal investigators, directors, or responsible persons
+  - Semantic indicators in any language: "responsible", "leader", "director", "coordinator", "head", "principal
+    investigator"
+  - Examples: "Responsabili", "Principal Investigators", "Group Leaders", "Director", "Head", "Coordinatore", "Leiter"
+- **Member lists**: Sections listing group members, team members, researchers, or staff
+  - Semantic indicators in any language: "members", "team", "group", "researchers", "staff", "personnel"
+  - Examples: "Membri del gruppo", "Group Members", "Team", "Researchers", "Staff", "Personnel", "Mitglieder", "Équipe"
+- **Named individuals**: Multiple specific researcher names listed (not just single person)
+
+**Detection principle**: If a page shows leadership AND members, OR is explicitly designated as a lab/group/center, it
+is a functional unit - report it as a subunit. Recognize organizational signals by semantic meaning, not exact wording.
+
 **Detection strategy:**
 
-1. When you encounter a research line page (e.g., "Didactics, History and Foundations")
-2. **MUST explore that page** to look for actual functional units underneath
-3. If it contains subunits (groups, labs), **report those subunits**, NOT the line
-4. If it's a standalone unit with no subunits, then it's functional and should be reported
+1. When you encounter a page that might be a research line or functional unit:
+2. **Check for functional unit signals** (any of the following or similar indicators):
+  - **Explicit designation**: Is it labeled as a laboratory, lab, research group, center, or similar functional entity?
+  - **Membership evidence**: Are there sections showing leadership AND members?
+  - Leadership: semantic indicators like "responsible", "leader", "director", "coordinator", "head", or similar roles
+  - Members: semantic indicators like "members", "team", "group", "researchers", "staff", "personnel", or similar
+    designations
+3. **If ANY functional signal exists** (designation OR membership evidence), it's a functional unit - report it
+4. **If no functional signals**, explore that page to look for actual functional units underneath
+5. If it contains subunits (groups, labs), **report those subunits**, NOT the thematic line
+6. If it's standalone with no functional signals and no subunits, skip it (it's just a thematic grouping)
 
 **CRITICAL: External Collaborations vs Internal Subunits**
 
@@ -157,7 +191,10 @@ The following are **NOT subunits** - they are external collaborations:
 
 - Identify ONLY functional structural subunits (not thematic groupings, collaborations, parent units, individual people,
   or true university-wide centers)
-- **NEVER report research lines or thematic groupings as units** - explore them to find actual functional units
+- **Check for functional unit signals**: Explicit designation (lab, group, center) OR membership evidence (leadership +
+  members)
+- **NEVER report research lines or thematic groupings as units** UNLESS they show functional signals (designation OR
+  membership evidence)
 - **NEVER report individual people's pages** (staff profiles, personal pages, team member pages)
 - **NEVER report external collaborating organizations** (international experiments, consortia, multi-institutional
   projects)
@@ -172,7 +209,11 @@ The following are **NOT subunits** - they are external collaborations:
     - At least one URL (profile or website) as evidence of online presence
     - A summary (~100 chars) describing focus, research areas, and purpose
     - Website URL when available on the profile page (subdomains or external links)
-  - Evidence of being a functional unit (dedicated members, specific research focus, not just a thematic grouping)
+  - Evidence of being a functional unit through one or more signals:
+    - Explicit designation (laboratory, lab, research group, center)
+    - Membership evidence (leadership + members)
+    - Dedicated research focus with own page/website
+    - Listed as structural component of parent unit
 - Report URLs verbatim (exactly as found)
 - **CRITICAL:** All formal names, short names, and summaries MUST be translated to English
 
@@ -190,10 +231,16 @@ The following are **NOT subunits** - they are external collaborations:
    to find actual labs/groups
 6. **CRITICAL: When you find a research line page** (e.g., "Didactics, History and Foundations"), you MUST:
   - Fetch that page
-  - Look for links to actual functional units underneath
-  - Report those functional units, NOT the research line
-  - If no subunits exist, skip the research line (don't report it)
+  - **Check for functional unit signals**:
+    - Is it explicitly labeled as a laboratory, lab, research group, or center?
+    - Does it have membership evidence (leadership sections + member lists)?
+  - **If ANY functional signal exists**, it's a functional unit - report it
+  - **If no functional signals**, look for links to actual functional units underneath
+  - Report those functional units, NOT the thematic line
+  - If no subunits and no functional signals exist, skip the research line (don't report it)
 7. **Fetch each identified functional unit's profile page** to extract website links and verify it's an actual unit
+  - **Check for functional signals** (explicit designation as lab/group OR membership evidence) as proof of functional
+    status
 8. **Check for external collaboration indicators** (different domains, multi-institutional projects)
 
 **Key principles:**

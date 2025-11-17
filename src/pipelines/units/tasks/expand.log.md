@@ -362,3 +362,44 @@ partnerships.
 
 **CRITICAL**: When modifying the prompt, ensure external collaboration exclusion remains explicit with domain checking
 and language indicators
+
+## Functional Unit Signals
+
+**Input
+**: https://fisica.dip.unipv.it/it/ricerca/linee-e-gruppi-di-ricerca/fisica-teorica-della-materia/fisica-teorica-della-materia
+
+**Description**: Research group page with explicit evidence of organizational structure through named leadership and
+membership lists (e.g., "Responsabili: Lucio Andreani, Dario Gerace, Marco Liscidini" and "Membri del gruppo: Davide
+Nigro, Francesco Scala, Simone Zanotti").
+
+**Expected Behavior**:
+
+- MUST recognize functional units through multiple signals (any one is sufficient):
+  - **Explicit designation**: Labeled as laboratory, lab, research group, or center
+  - **Membership evidence**: Sections showing leadership AND members
+- Key membership indicators (recognize by semantic meaning in any language):
+  - Leadership/responsible persons: semantic indicators like "responsible", "leader", "director", "coordinator",
+    "head", "principal investigator"
+  - Member lists: semantic indicators like "members", "team", "group", "researchers", "staff", "personnel"
+  - Multiple named individuals (not just single person)
+- Pages with ANY functional signal are actual functional units, NOT thematic groupings
+- MUST report these as subunits with their profile URL
+- Use semantic understanding to identify functional signals regardless of exact wording or language
+- Summary should describe research focus, not list people
+
+**Key Issues Tested**:
+
+- Distinguishing functional units from thematic research lines using multiple signals
+- Recognizing explicit designations (laboratory, lab, research group, center) as functional unit signals
+- Recognizing organizational structure indicators (leadership + members) as functional unit signals
+- Proper classification when functional signals are present despite thematic page titles/URLs
+- Language-agnostic detection using semantic understanding
+
+**Root Cause**: Without explicit guidance about functional unit signals, models may misclassify actual research groups
+and laboratories as thematic research lines, especially when the page title or URL contains thematic terms (e.g.,
+"research lines", "linee di ricerca", "lignes de recherche"). Models need clear guidance that either explicit
+designation OR membership evidence is sufficient proof.
+
+**CRITICAL**: When modifying the prompt, ensure that multiple functional unit signals are explicitly recognized across
+all languages: (1) explicit designation as lab/group/center, OR (2) membership evidence with leadership + members. Any
+one signal is sufficient. Emphasize semantic understanding over exact keyword matching.
