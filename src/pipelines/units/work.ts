@@ -16,17 +16,5 @@
 
 
 import { units } from "@/pipelines/units/store";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { forEach } from "@metreeca/flow/sinks";
-import { filter, peek } from "@metreeca/flow/tasks";
 
 units.remove();
-
-const numberPromise = pipe(
-	(items(units.select()))
-	(filter(u => !u.university || !u.parent))
-	(peek(console.info))
-	(forEach(units.remove))
-		.then(console.info)
-);

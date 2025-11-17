@@ -21,7 +21,7 @@ import { createHash, randomUUID } from "crypto";
  *
  * Behavior depends on whether text is provided:
  *
- * - when text is provided, generates a deterministic UUID v3 (MD5-based)
+ * - when text is provided, generates a deterministic UUID v5 (SHA-1-based)
  * - when text is not provided, generates a random UUID v4
  *
  * @param text the string to generate a UUID from (optional)
@@ -32,11 +32,11 @@ export function uuid(text?: string): string {
 
 	if ( text ) {
 
-		const hash=createHash("md5").update(text, "utf8").digest();
+		const hash = createHash("sha1").update(text, "utf8").digest();
 
-		// set version 3 and variant bits per RFC 4122
+		// set version 5 and variant bits per RFC 4122
 
-		hash[6]=(hash[6]&0x0f)|0x30;
+		hash[6] = (hash[6]&0x0f)|0x50;
 		hash[8]=(hash[8]&0x3f)|0x80;
 
 		// format as 8-4-4-4-12

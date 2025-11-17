@@ -26,10 +26,8 @@ import {
 	Part
 } from "@google/genai";
 import { isString } from "@metreeca/core";
+import { log, Logger, message } from "@metreeca/core/logger";
 import { Throttle } from "@metreeca/flow/async";
-import { log, Logger } from "@metreeca/post";
-
-import { message } from "@metreeca/post/tools";
 
 
 const logger = log(import.meta.url);
@@ -174,7 +172,7 @@ export const ai = await (async (ai) => {
 										backoff: 1.10,
 										recover: 0.95
 									}),
-									logger: logger(params.model)
+									logger: logger.getChild(params.model)
 								})
 								.get(params.model)!;
 

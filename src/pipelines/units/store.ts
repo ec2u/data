@@ -22,8 +22,7 @@ import { Entity } from "@google-cloud/datastore/build/src/entity";
 import { PropertyFilter } from "@google-cloud/datastore/build/src/filter";
 import { immutable, isString } from "@metreeca/core";
 
-import { log } from "@metreeca/post";
-import { message, time } from "@metreeca/post/tools";
+import { log, message, time } from "@metreeca/core/logger";
 
 
 const logger = log(import.meta.url);

@@ -25,9 +25,7 @@ import { Page } from "@/pipelines/pages/index";
 import { datastore } from "@/utilities/gcp/datatsore";
 import { uuid } from "@/utilities/node/uuid";
 import { immutable } from "@metreeca/core";
-
-import { log } from "@metreeca/post";
-import { message, time } from "@metreeca/post/tools";
+import { log, message, time } from "@metreeca/core/logger";
 
 
 const logger = log(import.meta.url);

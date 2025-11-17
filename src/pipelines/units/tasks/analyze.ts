@@ -26,12 +26,11 @@ import { ai, json } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
 import { isString } from "@metreeca/core";
+import { guard, log, message, time } from "@metreeca/core/logger";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { forEach } from "@metreeca/flow/sinks";
 import { flatMap, map, peek } from "@metreeca/flow/tasks";
-import { log } from "@metreeca/post";
-import { guard, message, time } from "@metreeca/post/tools";
 
 
 const logger = log(import.meta.url);
@@ -159,26 +158,26 @@ export async function analyze(lead?: Partial<Unit>) {
 	} else {
 
 		return time(() => pipe(
-				(items(units.select({ analyzed: Date.now()-stale })))
-				(flatMap(lead => pipe(
-					items(lead)
-					(map(guard(analyze)))
-					(map(item => merge(lead, {
+			(items(units.select({ analyzed: Date.now()-stale })))
+			(flatMap(lead => pipe(
+				items(lead)
+				(map(guard(analyze)))
+				(map(item => merge(lead, {
 
-						...item,
+					...item,
 
-						updated: matches(lead, item) ? lead.updated : Date.now(),
-						analyzed: Date.now()
+					updated: matches(lead, item) ? lead.updated : Date.now(),
+					analyzed: Date.now()
 
-					})))
-				), {
-					parallel: true
-				}))
-				(peek(v => console.info(v)))
-				(forEach(units.insert))
-			), (count, elapsed) => logger.info
-				`processed <${count}> units in <${message(elapsed)}> ms`
-		);
+				})))
+			), {
+				parallel: true
+			}))
+			(peek(v => console.info(v)))
+			(forEach(units.insert))
+		), (count, elapsed) => {
+			logger.info`processed <${count}> units in <${message(elapsed)}> ms`;
+		});
 
 	}
 

@@ -51,7 +51,8 @@
       "Read(//Users/Alessandro/Metreeca/Packages/Pipe/**)",
       "WebFetch(domain:tc39.es)",
       "WebFetch(domain:fisica.dip.unipv.it)",
-      "WebFetch(domain:logtape.org)"
+      "WebFetch(domain:logtape.org)",
+      "Skill(prompt-engineer)"
     ],
     "deny": [],
     "ask": []

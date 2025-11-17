@@ -16,8 +16,7 @@
 
 import { Topic } from "@/pipelines/topics";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
-import { log } from "@metreeca/post";
-import { message } from "@metreeca/post/tools";
+import { log, message } from "@metreeca/core/logger";
 import dedent from "dedent";
 
 

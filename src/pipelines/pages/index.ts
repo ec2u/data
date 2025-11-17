@@ -44,7 +44,7 @@
  */
 
 import { uuid } from "@/utilities/node/uuid";
-import { log } from "@metreeca/post";
+import { log } from "@metreeca/core/logger";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
 
