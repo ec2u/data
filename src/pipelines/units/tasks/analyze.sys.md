@@ -45,6 +45,18 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 - NEVER report an official name as short name
 - NEVER report an acronym as short name
 
+**Titulations and Dedications**:
+
+- If the unit has a titulation/dedication (named after a person, place, or concept), move it to the END and place in
+  quotes
+- Format: `[Type Descriptor] [Functional Name] "[Titulation]"`
+- Examples:
+  - "Cesare Bonacossa Center for the Study of Extra-European Peoples" →
+    "Center for the Study of Extra-European Peoples \"Cesare Bonacossa\""
+  - "Lazzaro Spallanzani Department of Biology" →
+    "Department of Biology and Biotechnology \"Lazzaro Spallanzani\""
+  - "John Smith Laboratory of Physics" → "Laboratory of Physics \"John Smith\""
+
 **Name Extraction**:
 
 - Extract the formal name as it appears on the website
