@@ -124,14 +124,14 @@ export interface Summarist {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Normalizes a URL by ensuring it has a pathname.
+ * Normalizes a URL by ensuring it has a pathname and uses HTTPS protocol.
  *
- * Converts URLs with empty pathnames to include a root path ("/"), ensuring consistent URL format for comparison
- * and caching operations.
+ * Converts URLs with empty pathnames to include a root path ("/") and upgrades HTTP to HTTPS,
+ * ensuring consistent URL format for comparison and caching operations.
  *
  * @param url - The URL to normalize
  *
- * @returns The normalized URL with guaranteed pathname
+ * @returns The normalized URL with guaranteed pathname and HTTPS protocol
  */
 export function normalize(url: string): string {
 
@@ -139,6 +139,10 @@ export function normalize(url: string): string {
 
 	if ( parsed.pathname === "" ) {
 		parsed.pathname="/";
+	}
+
+	if ( parsed.protocol === "http:" ) {
+		parsed.protocol = "https:";
 	}
 
 	return parsed.href;

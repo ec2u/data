@@ -139,8 +139,9 @@ export async function scan(url?: string): Promise<unknown> {
 				);
 
 			}))
-			), (count, elapsed) => logger.info
-			`identified <${count}> units in <${message(elapsed)}> ms`
+			), (count, elapsed) => {
+				logger.info`identified <${count}> units in <${message(elapsed)}> ms`;
+			}
 		);
 
 	}
