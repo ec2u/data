@@ -70,25 +70,52 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 ## Names
 
 - ALWAYS include a standalone unit name that can uniquely identify it out of context
-- CRITICAL: ALWAYS include the unit typology in the name (e.g., "Department", "Laboratory", "Research Group")
-- NEVER omit the typology from the name - this is a mandatory requirement
+- **CRITICAL: ALWAYS include explicit unit type descriptor in the formal name**
+- The type descriptor MUST align with the unit's typology classification
+- NEVER omit the type descriptor from the name - this is a mandatory requirement
 - ALWAYS translate names to ENGLISH
 - NEVER include references to the university or to parent units in the name
 - NEVER report an official name as short name
 - NEVER report an acronym as short name
 
-**Examples of CORRECT names with typology:**
+**Type Descriptor Alignment**: The formal name's type descriptor must match the classification:
+
+- **Facility** → "... Facility", "... Center" (for infrastructure/computing resources)
+- **Department** → "Department of ...", "... Department"
+- **Institute** → "Institute of ...", "... Institute"
+- **Laboratory** → "Laboratory of ...", "... Laboratory", "... Lab"
+- **Research Group** → "Research Group on ...", "... Research Group"
+- **Centre** → "... Centre", "Research Centre for ..."
+- **School** → "School of ...", "... School"
+
+**Name Extension Policy**: If the website provides an incomplete name lacking a clear type descriptor, EXTEND it with
+the appropriate designation based on the typology classification:
+
+**Examples of CORRECT names with explicit type descriptors:**
 
 - "Department of Internal Medicine and Medical Therapy" ✅ (includes "Department")
 - "Laboratory of Molecular Biology" ✅ (includes "Laboratory")
 - "Research Group on Artificial Intelligence" ✅ (includes "Research Group")
-- "Institute for Advanced Studies" ✅ (includes "Institute")
+- "Computing Facility" ✅ (includes "Facility")
+- "Bioinformatics Research Centre" ✅ (includes "Research Centre")
 
-**Examples of INCORRECT names missing typology:**
+**Examples of INCORRECT names missing type descriptors:**
 
 - "Internal Medicine and Medical Therapy" ❌ (missing "Department")
 - "Molecular Biology" ❌ (missing "Laboratory")
 - "Artificial Intelligence" ❌ (missing "Research Group")
+- "Computing Cluster" ❌ (should be "Computing Facility" if classified as facility)
+- "Computing Services" ❌ (should be "Computing Service Center" or "Computing Services Centre")
+- "Data Science" ❌ (should include Laboratory/Group/Centre based on classification)
+
+**Name Extension Examples**:
+
+| Website Name       | Classification     | Extended Formal Name              |
+|--------------------|--------------------|-----------------------------------|
+| Computing Cluster  | facility/computing | Computing Facility                |
+| Data Science       | laboratory         | Data Science Laboratory           |
+| Advanced Materials | research-group     | Advanced Materials Research Group |
+| Bioinformatics     | centre             | Bioinformatics Research Centre    |
 
 ## Short Names and Acronyms
 

@@ -70,7 +70,7 @@ export async function analyze(lead?: Partial<Unit>) {
 				systemInstruction: await file(".sys.md", import.meta.url),
 				tools,
 				automaticFunctionCalling: {
-					maximumRemoteCalls: 50
+					maximumRemoteCalls: 100
 				},
 				responseMimeType: "application/json",
 				responseSchema: {
@@ -79,7 +79,7 @@ export async function analyze(lead?: Partial<Unit>) {
 						formal: {
 							type: Type.STRING,
 							description: md`
-								Formal name of the research unit - MUST include the unit typology
+								Formal name of the research unit - MUST include explicit unit type descriptor
 								(e.g., 'Laboratory of...', 'Department of...', 'Research Group on...')
 							`
 						},

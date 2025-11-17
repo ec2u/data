@@ -38,7 +38,6 @@ const tools = [
 ];
 
 
-
 if ( import.meta.main ) {
 	expand();
 }
@@ -128,7 +127,9 @@ export async function expand(lead?: Partial<Unit>): Promise<void | readonly Part
 
 							// 1. Lead must have at least one domain
 
-							if ( !leadProfileDomain && !leadWebsiteDomain ) { return false; }
+							if ( !leadProfileDomain && !leadWebsiteDomain ) {
+								return false;
+							}
 
 							// 2. If lead has both, they must match
 

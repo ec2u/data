@@ -178,6 +178,46 @@ keywords into one text string.
 **CRITICAL**: When modifying the prompt, ensure instructions explicitly state "call matchTopics ONCE per
 keyword" with parallel execution guidance
 
+## Formal Name Must Include Explicit Type Descriptor
+
+**Issue**: Units with domain-specific names that lack clear organizational type indicators (e.g., "Computing Cluster",
+"Data Science", "Computing Services") don't clearly communicate what kind of organizational entity they represent.
+
+**Input**: Research unit where website provides name without explicit type descriptor
+
+**Expected Behavior**:
+
+- Formal name MUST include explicit type descriptor aligned with typology classification
+- Incomplete names MUST be extended with appropriate type designation
+- Type descriptors: Facility, Laboratory, Department, Institute, Research Group, Centre, School, Faculty
+- "Computing Cluster" + `facility/computing` → "Computing Facility"
+- "Computing Services" + `centre/service` → "Computing Service Center" or "Computing Services Centre"
+- "Data Science" + `laboratory` → "Data Science Laboratory"
+- "Bioinformatics" + `research-group` → "Bioinformatics Research Group"
+
+**Root Cause**: LLMs prefer verbatim extraction over reformulation. Explicit instruction with examples required to
+extend incomplete names.
+
+**Validation**:
+
+- Verify formal name contains explicit type descriptor (Facility, Center, Laboratory, etc.)
+- Check type descriptor aligns with classification path (facility → Facility/Center, laboratory → Laboratory/Lab)
+- Confirm name extension applied when website name lacks type clarity
+- Ensure domain-specific terms preserved ("Computing", "Data Science") while adding type
+
+**Test Examples**:
+
+1. "Computing Cluster" (facility/computing) → "Computing Facility" ✓
+2. "Department of Physics" (department) → "Department of Physics" ✓ (already complete)
+3. "Computing Services" (centre/service) → "Computing Services Centre" or "Computing Service Center" ✓
+
+**CRITICAL**: When modifying the prompt, ensure:
+
+- Name extension policy explicitly documented with examples
+- Type descriptor alignment table maintained
+- Examples show both correct (with descriptors) and incorrect (missing descriptors) patterns
+- Ambiguous terms like "Services", "Cluster" flagged as requiring extension
+
 ## Parallel Tool Execution
 
 **Input**: Multiple independent pages to fetch or keywords to match
