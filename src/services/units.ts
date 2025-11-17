@@ -14,85 +14,75 @@
  * limitations under the License.
  */
 
+/**
+ * REST API endpoints for educational unit resources.
+ *
+ * Provides endpoints for listing and retrieving units with support for filtering by update timestamp and university.
+ *
+ * @module
+ */
+
 import { units } from "@/pipelines/units/store";
-import { FastifyPluginAsync } from "fastify";
+import { Router } from "express";
+
 
 /**
- * Fastify plugin providing REST API endpoints for unit resources.
+ * Express router providing unit resource endpoints.
+ *
+ * **Endpoints:**
+ *
+ * - `GET /units/` - Lists units with optional filtering and pagination
+ * - `GET /units/:code` - Retrieves a specific unit by code
  */
-export const unitsRoutes: FastifyPluginAsync = async (fastify) => {
+export default ["/units", Router()
 
-	fastify.get("/", {
-		schema: {
-			description: "List units with optional query parameters for filtering",
-			tags: ["units"],
-			querystring: {
-				type: "object",
-				properties: {
-					updated: {
-						type: "integer",
-						description: "Filter by update timestamp (milliseconds from epoch)"
-					},
-					university: {
-						type: "string",
-						description: "Filter by university IRI (absolute IRI of the university)"
-					},
-					offset: {
-						type: "integer",
-						description: "Pagination offset",
-						minimum: 0
-					},
-					limit: {
-						type: "integer",
-						description: "Maximum number of results",
-						minimum: 1
-					}
-				}
-			}
-		}
-	}, async (request) => {
+	.get("/", async (request, response) => {
 
-		const { updated, university, offset, limit } = request.query as {
+		const {
+
+			updated,
+			university,
+			offset,
+			limit
+
+		}: {
+
 			updated?: string;
 			university?: string;
 			offset?: string;
 			limit?: string;
-		};
 
-		return await units.select({
+		} = request.query;
+
+		return response.json(await units.select({
 			updated: updated ? parseInt(updated, 10) : 1, // return only current processed units
 			university,
 			offset: offset ? parseInt(offset, 10) : undefined,
 			limit: limit ? parseInt(limit, 10) : undefined
-		});
-	});
+		}));
 
-	fastify.get("/:code", {
-		schema: {
-			description: "Retrieve a specific unit by its code (ID)",
-			tags: ["units"],
-			params: {
-				type: "object",
-				required: ["code"],
-				properties: {
-					code: {
-						type: "string",
-						description: "The unit identifier"
-					}
-				}
-			}
-		}
-	}, async (request, reply) => {
+	})
 
-		const { code } = request.params as { code: string };
+	.get("/:code", async (request, response) => {
+
+		const {
+
+			code
+
+		}: {
+
+			code: string
+
+		} = request.params;
 
 		const unit = await units.lookup(code);
 
 		if ( !unit ) {
-			return reply.code(404).send({ error: "Unit not found" });
+			return response.status(404).json({ error: "unit not found" });
 		}
 
-		return unit;
-	});
+		return response.json(unit);
 
-};
+	})
+
+] as const;
