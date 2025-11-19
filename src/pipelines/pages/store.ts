@@ -14,60 +14,67 @@
  * limitations under the License.
  */
 
-/**
- * @module DatastoreCache
- *
- * Provides Google Cloud Datastore-backed cache implementation for persistent,
- * distributed caching across multiple instances with promise stampede prevention.
- */
-
 import { Page } from "@/pipelines/pages/index";
-import { datastore } from "@/utilities/gcp/datatsore";
+import { datastore } from "@/utilities/gcp/datastore";
 import { uuid } from "@/utilities/node/uuid";
-import { immutable } from "@metreeca/core";
 import { log, message, time } from "@metreeca/core/logger";
 
 
 const logger = log(import.meta.url);
 
-const kind="Page";
-const batch=100;
+const kind = "Page";
+const batch = 100;
 
-const cache=new Map<string, Promise<Page>>();
+const cache = new Map<string, Promise<Page>>();
+
+
+if ( import.meta.main ) {
+	await remove();
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const pages=immutable({
+export const pages = Object.freeze({
 
-	async lookup(url: string, fetcher: (url: string) => Page | Promise<Page>): Promise<Page> {
+	lookup,
+	remove
 
-		const promise=cache.get(url);
+});
 
-		if ( promise ) { return promise; } else {
 
-			const promise=new Promise<Page>(async (resolve, reject) => {
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				try {
+async function lookup(url: string, fetcher: (url: string) => Page | Promise<Page>): Promise<Page> {
+
+	const promise = cache.get(url);
+
+	if ( promise ) { return promise; } else {
+
+		const promise = new Promise<Page>(async (resolve, reject) => {
+
+			try {
+
+				const result = await time(async () => {
 
 					logger.info`looking up <${url}>`;
 
-					const key=datastore.key([kind, uuid(url)]);
-					const [entity]=await datastore.get(key);
+					const key = datastore.key([kind, uuid(url)]);
+					const [entity] = await datastore.get(key);
 
 					if ( entity ) {
 
 						if ( entity.value !== undefined ) {
-							resolve(JSON.parse(entity.value));
+							return JSON.parse(entity.value);
 						}
 
 					} else {
 
-						const value=await fetcher(url);
+						const value = await fetcher(url);
 
 						logger.info`caching <${url}>`;
 
-						const data={
+						const data = {
 							value: JSON.stringify(value)
 						};
 
@@ -77,29 +84,35 @@ export const pages=immutable({
 							excludeFromIndexes: Object.keys(data)
 						});
 
-						resolve(value);
+						return value;
 
 					}
 
-				} catch ( e ) {
+				}, (value, elapsed) => value && logger.info`looked up page <${url}> in <${message(elapsed)}> ms`);
 
-					logger.error`unable to look up <${url}>: ${message(e)}`;
-
-					reject(e);
-
+				if ( result ) {
+					resolve(result);
 				}
-			});
 
-			cache.set(url, promise);
+			} catch ( e ) {
 
-			return promise;
-		}
+				logger.error`unable to look up <${url}>: ${message(e)}`;
 
-	},
+				reject(e);
 
-	async remove(items?: Page | readonly Page[]): Promise<void> {
+			}
+		});
 
-		await time(async () => {
+		cache.set(url, promise);
+
+		return promise;
+	}
+
+}
+
+async function remove(items?: Page | readonly Page[]): Promise<void> {
+
+	await time(async () => {
 
 			if ( items ) { // Selective removal: delete only the specified items
 
@@ -126,10 +139,9 @@ export const pages=immutable({
 
 			}
 
-			}, (removedItems, elapsed) => logger.info
-			`removed <${message(removedItems.length)}> pages in <${message(elapsed)}> ms`
-		);
+		}, (removedItems, elapsed) => {
+			logger.info`removed <${message(removedItems.length)}> pages in <${message(elapsed)}> ms`;
+		}
+	);
 
-	}
-
-});
+}

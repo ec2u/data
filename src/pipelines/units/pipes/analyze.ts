@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { matches, merge, stale } from "@/pipelines/units";
+import { matches, merge } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
 import { index } from "@/pipelines/units/tasks";
 import { analyze } from "@/pipelines/units/tasks/analyze";
@@ -26,7 +26,24 @@ import { forEach } from "@metreeca/flow/sinks";
 import { flatMap, map } from "@metreeca/flow/tasks";
 
 
+// ============================================================================
+// WARNING: TLS CERTIFICATE VERIFICATION DISABLED
+// ============================================================================
+// This disables SSL/TLS certificate verification for ALL HTTPS requests
+// in this Node.js process. This is required because some university servers
+// (*.dip.unipv.it) have misconfigured certificates (incomplete chain).
+//
+// SECURITY RISK: This makes the application vulnerable to man-in-the-middle
+// attacks. Only use this in trusted network environments.
+//
+// TO RE-ENABLE: Comment out or remove the line below.
+// ============================================================================
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+// ============================================================================
+
+
 const logger = log(import.meta.url);
+
 
 if ( import.meta.main ) {
 	_analyze();
@@ -38,8 +55,11 @@ if ( import.meta.main ) {
 export async function _analyze(): Promise<number> {
 
 	return time(() => pipe(
-		(items(units.select({ analyzed: Date.now()-stale })))
-			// (items(units.select()))
+		// (items(units.select({ analyzed: Date.now()-stale }))) // !!!
+
+		(items(units.select()))
+			// (filter(({ formal }) => formal?.includes("Department")))
+
 			(flatMap(lead => pipe(
 				items(lead)
 				(map(guard(analyze)))

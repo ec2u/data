@@ -16,11 +16,11 @@
 
 import { normalize as normalizeUrl } from "@/pipelines/pages/index";
 import { Unit } from "@/pipelines/units/index";
-import { datastore } from "@/utilities/gcp/datatsore";
+import { datastore } from "@/utilities/gcp/datastore";
 import { uuid } from "@/utilities/node/uuid";
 import { Entity } from "@google-cloud/datastore/build/src/entity";
 import { PropertyFilter } from "@google-cloud/datastore/build/src/filter";
-import { immutable, isString } from "@metreeca/core";
+import { isString } from "@metreeca/core";
 
 import { log, message, time } from "@metreeca/core/logger";
 
@@ -45,13 +45,28 @@ const indexed = new Set([
 ]);
 
 
+if ( import.meta.main ) {
+	await remove();
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const units = immutable({
+export const units = Object.freeze({
 
-	async lookup(key: string | Partial<Unit>): Promise<undefined | Unit> {
+	lookup,
+	select,
+	insert,
+	remove
 
-		return time(async () => {
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+async function lookup(key: string | Partial<Unit>): Promise<undefined | Unit> {
+
+	return time(async () => {
 
 			if ( isString(key) ) {
 
@@ -134,35 +149,39 @@ export const units = immutable({
 
 			return undefined;
 
-		}, (value, elapsed) => value && logger.info`fetched unit <${typeof key === "string" ? key : JSON.stringify(key)}> in <${message(elapsed)}> ms`);
+		}, (value, elapsed) => {
+			value && logger.info
+				`fetched unit <${typeof key === "string" ? key : JSON.stringify(key)}> in <${message(elapsed)}> ms`;
+		}
+	);
 
-	},
+}
 
-	async select({
+async function select({
 
-		updated,
-		analyzed,
-		expanded,
+	updated,
+	analyzed,
+	expanded,
 
-		university,
+	university,
 
-		offset,
-		limit
+	offset,
+	limit
 
-	}: {
+}: {
 
-		readonly updated?: number;
-		readonly analyzed?: number;
-		readonly expanded?: number;
+	readonly updated?: number;
+	readonly analyzed?: number;
+	readonly expanded?: number;
 
-		readonly university?: string;
+	readonly university?: string;
 
-		readonly offset?: number;
-		readonly limit?: number;
+	readonly offset?: number;
+	readonly limit?: number;
 
-	} = {}): Promise<readonly Unit[]> {
+} = {}): Promise<readonly Unit[]> {
 
-		return time(async () => {
+	return time(async () => {
 
 			let query = datastore.createQuery(kind);
 
@@ -243,78 +262,81 @@ export const units = immutable({
 
 			return entities.map(clean);
 
-		}, (value, elapsed) => logger.info`retrieved <${message(value.length)}> units in <${message(elapsed)}> ms`);
+		}, (value, elapsed) => {
+			logger.info`retrieved <${message(value.length)}> units in <${message(elapsed)}> ms`;
+		}
+	);
 
-	},
+}
 
-	async insert(items: Unit | readonly Unit[]): Promise<readonly Unit[]> {
+async function insert(items: Unit | readonly Unit[]): Promise<readonly Unit[]> {
 
-		return time(async () => {
+	return time(async () => {
+
+		const itemsArray = Array.isArray(items) ? items : [items];
+
+		for (let i = 0; i < itemsArray.length; i += batch) {
+			await datastore.upsert(itemsArray.slice(i, i+batch).map(item => {
+
+				const data = {
+					...item,
+					updated: item.updated ?? 0,
+					analyzed: item.analyzed ?? 0,
+					expanded: item.expanded ?? 0,
+					formal_: item.formal && normalizeName(item.formal),
+					profile: item.profile && normalizeUrl(item.profile),
+					website: item.website && normalizeUrl(item.website)
+				};
+
+				return {
+					key: datastore.key([kind, uuid(item.id)]),
+					data,
+					excludeFromIndexes: Object.keys(data).filter(field => !indexed.has(field))
+				};
+
+			}));
+		}
+
+		return itemsArray;
+
+	}, (value, elapsed) => logger.info`inserted <${message(value.length)}> units in <${message(elapsed)}> ms`);
+
+}
+
+async function remove(items?: Unit | readonly Unit[]): Promise<void> {
+
+	await time(async () => {
+
+		if ( items ) { // Selective removal: delete only the specified items
 
 			const itemsArray = Array.isArray(items) ? items : [items];
 
 			for (let i = 0; i < itemsArray.length; i += batch) {
-				await datastore.upsert(itemsArray.slice(i, i+batch).map(item => {
-
-					const data = {
-						...item,
-						updated: item.updated ?? 0,
-						analyzed: item.analyzed ?? 0,
-						expanded: item.expanded ?? 0,
-						formal_: item.formal && normalizeName(item.formal),
-						profile: item.profile && normalizeUrl(item.profile),
-						website: item.website && normalizeUrl(item.website)
-					};
-
-					return {
-						key: datastore.key([kind, uuid(item.id)]),
-						data,
-						excludeFromIndexes: Object.keys(data).filter(field => !indexed.has(field))
-					};
-
-				}));
+				const keys = itemsArray.slice(i, i+batch).map(item => datastore.key([kind, uuid(item.id)]));
+				await datastore.delete(keys);
 			}
 
 			return itemsArray;
 
-		}, (value, elapsed) => logger.info`inserted <${message(value.length)}> units in <${message(elapsed)}> ms`);
+		} else { // Remove all: query all keys and delete them
 
-	},
+			const [entities] = await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
 
-	async remove(items?: Unit | readonly Unit[]): Promise<void> {
-
-		await time(async () => {
-
-			if ( items ) { // Selective removal: delete only the specified items
-
-				const itemsArray = Array.isArray(items) ? items : [items];
-
-				for (let i = 0; i < itemsArray.length; i += batch) {
-					const keys = itemsArray.slice(i, i+batch).map(item => datastore.key([kind, uuid(item.id)]));
-					await datastore.delete(keys);
+			if ( entities.length !== 0 ) {
+				for (let i = 0; i < entities.length; i += batch) {
+					await datastore.delete(entities.slice(i, i+batch).map(entity => entity[datastore.KEY]));
 				}
-
-				return itemsArray;
-
-			} else { // Remove all: query all keys and delete them
-
-				const [entities] = await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
-
-				if ( entities.length !== 0 ) {
-					for (let i = 0; i < entities.length; i += batch) {
-						await datastore.delete(entities.slice(i, i+batch).map(entity => entity[datastore.KEY]));
-					}
-				}
-
-				return entities;
-
 			}
 
-		}, (removedItems, elapsed) => logger.info`removed <${message(removedItems.length)}> units in <${message(elapsed)}> ms`);
+			return entities;
 
-	}
+		}
 
-});
+	}, (value, elapsed) => {
+		logger.info`removed <${message(value.length)}> units in <${message(elapsed)}> ms`;
+	});
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

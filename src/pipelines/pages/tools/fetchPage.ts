@@ -20,9 +20,6 @@ import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import { log, message } from "@metreeca/core/logger";
 import dedent from "dedent";
 
-
-const logger = log(import.meta.url);
-
 /**
  * @module
  *
@@ -75,6 +72,12 @@ const logger = log(import.meta.url);
  * @see {@link https://ai.google.dev/gemini-api/docs/function-calling Standard Function Calling Guide}
  */
 
+
+const logger = log(import.meta.url);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * Web page fetching tool for Gemini API.
  *
@@ -85,9 +88,9 @@ const logger = log(import.meta.url);
  *
  * @returns CallableTool instance for automatic function calling
  */
-export function fetchPage(opts: Parameters<typeof visit>[1]={}): CallableTool {
+export function fetchPage(opts: Parameters<typeof visit>[1] = {}): CallableTool {
 
-	const name="fetchPage" as const;
+	const name = "fetchPage" as const;
 
 	return {
 
@@ -126,7 +129,7 @@ export function fetchPage(opts: Parameters<typeof visit>[1]={}): CallableTool {
 		callTool: async (functionCalls: FunctionCall[]): Promise<Part[]> => await Promise.all(
 			functionCalls.filter(call => call.name === name).map(async (call): Promise<Part> => {
 
-				const { url }=call.args as { url: string };
+				const { url } = call.args as { url: string };
 
 				logger.info`calling ${name}(${JSON.stringify(call.args)})`;
 
@@ -145,7 +148,9 @@ export function fetchPage(opts: Parameters<typeof visit>[1]={}): CallableTool {
 
 				} catch ( error ) {
 
-					logger.error`failed to fetch <${url}>: ${message(error)}`;
+					logger.error`failed to fetch <${url}>: ${message(error)}${
+						error instanceof Error && error.cause ? ` (caused by: ${message(error.cause)})` : ""
+					}`;
 
 					return {
 						functionResponse: {
