@@ -38,12 +38,18 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 
 ## Names
 
-- ALWAYS include a standalone unit name that can uniquely identify it out of context
-- **CRITICAL: ALWAYS include explicit unit type descriptor in the formal name - NEVER omit it**
-- ALWAYS translate names to ENGLISH
-- NEVER include references to the university or to parent units in the name
-- NEVER report an official name as short name
-- NEVER report an acronym as short name
+**CRITICAL: The following naming rules MUST be followed:**
+
+- **ALWAYS include explicit unit type descriptor in the formal name - NEVER omit it**
+  - WRONG: "Molecular Biology" (missing type descriptor)
+  - CORRECT: "Department of Molecular Biology" or "Laboratory of Molecular Biology"
+- **ALWAYS translate names to ENGLISH**
+  - WRONG: "Dipartimento di Fisica" (Italian)
+  - CORRECT: "Department of Physics"
+- **NEVER include references to the university or to parent units in the name**
+  - WRONG: "University of XYZ Department of Chemistry"
+  - WRONG: "Faculty of Science - Physics Laboratory"
+  - CORRECT: "Department of Chemistry" or "Laboratory of Physics"
 
 **Titulations and Dedications**:
 

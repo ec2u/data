@@ -30,13 +30,13 @@ When asked to validate this prompt:
 
 - Write temporary `.test.ts` file with test code
 - Import `classify` function from implementation
-- Configure test with sample unit objects (formal, summary, description)
+- Configure test with sample unit objects (formal, summary)
 - Execute `npx tsx .test.ts` to generate output
 - Delete `.test.ts` after the complete testing process is finished
 
 2. **Perform independent verification**:
 
-- Retrieve taxonomy from Google Sheets or via `listTopics` API
+- Retrieve taxonomy from Google Sheets or via `matchTopics` API
 - Review organizational structure keywords in unit names
 - Apply disambiguation rules manually
 - Identify expected typology based on definitions
@@ -47,7 +47,8 @@ When asked to validate this prompt:
 - Compare script output against independent classification
 - Verify typology URL starts with correct taxonomy base
 - Check all documented test cases for regressions
-- Ensure model called `listTopics` (not `matchTopics`)
+- Ensure model called `matchTopics` with correct parameters (limit=5, formal+summary)
+- Verify model applied classification rules to select from top-5 candidates
 
 ## Maintenance Principles
 
@@ -82,23 +83,31 @@ When asked to improve or fix the prompt:
 
 ## Tool Usage Requirement
 
-**Input**: Unit information requiring typology classification
+**Input**: Unit information requiring typology classification (formal name and summary)
 
 **Expected Behavior**:
 
-- Model MUST call `listTopics` tool with scheme `https://data.ec2u.eu/taxonomies/organizations/` and focus
-  `https://data.ec2u.eu/taxonomies/organizations/university-unit`
-- Model MUST NOT call `matchTopics` for typology classification
-- Model MUST select typology from the list returned by `listTopics`
+- Model MUST call `matchTopics` tool with:
+  - `text`: combined formal name and summary (joined with `\n\n`)
+  - `scheme: "https://data.ec2u.eu/taxonomies/organizations/"`
+  - `focus: "https://data.ec2u.eu/taxonomies/organizations/university-unit"`
+  - `limit: 5` (retrieve top 5 candidates)
+  - `tolerance: 0.15` (relative tolerance from best match)
+  - `narrowing: 1.05` (slightly penalize over-specific typologies)
+- Model MUST review the top 5 returned candidates
+- Model MUST apply classification rules to select the best match from candidates
+- Model MUST select typology from the list returned by `matchTopics`
 - Model MUST NOT construct, guess, or invent typology URLs
 
-**Root Cause**: Semantic matching via `matchTopics` conflates organizational structure with research domain (e.g.,
-matching "Department of Medicine" to `school/medical` instead of `department`).
+**Rationale**: Hybrid approach combining semantic similarity (for candidate generation) with rule-based selection
+(for structural correctness). Semantic matching identifies relevant candidates; classification rules ensure structural
+signals (e.g., "Department") override content signals (e.g., "Medicine").
 
-**Validation**: Verify model calls `listTopics` and retrieves complete typology list before classification
+**Validation**: Verify model calls `matchTopics` with correct parameters, retrieves top 5 candidates, and applies
+classification rules to select the best match
 
-**CRITICAL**: When modifying the prompt, ensure `listTopics` usage remains mandatory and `matchTopics` is explicitly
-forbidden for typology
+**CRITICAL**: When modifying the prompt, ensure the hybrid approach is maintained - semantic matching for candidates,
+rule-based selection for final choice
 
 ## Department Classification
 
@@ -106,14 +115,17 @@ forbidden for typology
 
 **Expected Behavior**:
 
-- Always classify as `university-unit/department`
-- NEVER classify as `school/medical`, `school/business`, or other domain-specific types
+- Model retrieves top-5 candidates via `matchTopics` (may include `school/medical`, `department`, etc.)
+- Model applies type descriptor mapping rule: "Department" → `department`
+- Final classification is ALWAYS `university-unit/department`
+- NEVER select `school/medical`, `school/business`, or other domain-specific types from candidates
 - Focus on organizational structure ("Department"), not domain ("Medicine", "Business")
 
 **Root Cause**: Taxonomy contains both structural types (`department`) and domain-qualified types (`school/medical`).
-Semantic matching prioritizes domain over structure without explicit guidance.
+Pure semantic matching prioritizes domain over structure. Hybrid approach corrects this via explicit rules.
 
-**Validation**: Verify all departments classify as `department` regardless of domain
+**Validation**: Verify all departments classify as `department` regardless of domain, even when `school/*` appears in
+top-5 candidates
 
 **Test Examples**:
 
@@ -128,14 +140,17 @@ Semantic matching prioritizes domain over structure without explicit guidance.
 
 **Expected Behavior**:
 
-- Analyze summary and description to determine primary function
-- **Research Centre**: Active research programs, publications, funded projects
-- **Service Centre**: Provides services/resources (testing, analysis, computing, language services)
-- **Study and Documentation Centre**: Documentation, archives, historical preservation
-- **Interdepartmental Research Centre**: Research coordination across departments
-- Select most specific applicable subtype
+- Model retrieves top-5 candidates via `matchTopics` (may include various `centre/*` subtypes)
+- Model analyzes summary to determine primary function
+- Model applies disambiguation rules to select most specific subtype:
+  - **Research Centre**: Active research programs, publications, funded projects
+  - **Service Centre**: Provides services/resources (testing, analysis, computing, language services)
+  - **Study and Documentation Centre**: Documentation, archives, historical preservation
+  - **Interdepartmental Research Centre**: Research coordination across departments
+- Final classification selects most specific applicable subtype from candidates
 
-**Validation**: Verify centre subtypes are correctly distinguished based on primary function
+**Validation**: Verify centre subtypes are correctly distinguished based on primary function, and most specific subtype
+is selected when multiple appear in candidates
 
 **Test Examples**:
 
@@ -151,11 +166,15 @@ Semantic matching prioritizes domain over structure without explicit guidance.
 
 **Expected Behavior**:
 
+- Model retrieves top-5 candidates via `matchTopics`
+- Model identifies infrastructure keywords in formal name and summary
 - **Computing Facility**: HPC clusters, computational infrastructure
 - Classify "Computing Cluster", "Computing Services", "HPC Center" as `facility/computing`
 - Focus on infrastructure provision, not research activities
+- Apply disambiguation to prefer `facility` over `centre` or `group` when infrastructure is primary function
 
-**Validation**: Verify infrastructure units classified as facilities, not centres or groups
+**Validation**: Verify infrastructure units classified as facilities, not centres or groups, even when ambiguous names
+like "Computing Cluster" might suggest other types
 
 **Test Examples**:
 
@@ -185,11 +204,15 @@ Semantic matching prioritizes domain over structure without explicit guidance.
 
 **Expected Behavior**:
 
-- Select the MOST SPECIFIC applicable typology
-- `centre/research/interdepartmental` over generic `centre/research`
-- `facility/computing` over generic `facility`
+- Model retrieves top-5 candidates via `matchTopics` (may include multiple specificity levels)
+- Model applies specificity preference rule: select MOST SPECIFIC applicable typology
+- Examples:
+  - `centre/research/interdepartmental` over generic `centre/research` or `centre`
+  - `facility/computing` over generic `facility`
+  - `centre/research/study-documentation` over generic `centre/research`
+- Specific subtypes provide more precise organizational classification
 
-**Validation**: Verify most specific subtype selected when multiple levels apply
+**Validation**: Verify most specific subtype selected when multiple levels appear in top-5 candidates
 
 ## Missing or Ambiguous Information
 
@@ -197,11 +220,14 @@ Semantic matching prioritizes domain over structure without explicit guidance.
 
 **Expected Behavior**:
 
-- Report "Not defined" if no typology reasonably matches
+- Model calls `matchTopics` to retrieve top-5 candidates
+- If `matchTopics` returns no results, report "Not defined"
+- If candidates returned but none match classification rules, report "Not defined"
 - Do NOT guess or construct typology URLs
+- Do NOT force-select a candidate if classification rules indicate none are appropriate
 - Prefer reporting missing typology over incorrect classification
 
-**Validation**: Verify model does not generate typologies when uncertain
+**Validation**: Verify model does not generate typologies when uncertain, even when candidates are available
 
 ## Official Name Alignment
 
@@ -218,40 +244,54 @@ Semantic matching prioritizes domain over structure without explicit guidance.
 
 ## Typology Classification Accuracy
 
-**Issue**: Original keyword-only matching ("Cluster") lost critical context, causing misclassifications:
+**Issue**: Original approaches had accuracy problems across different dimensions:
 
-- "Computing Cluster" → matched `group` instead of `facility/computing`
-- Departments → matched `school/medical`, `school/business` instead of `department`
-- Overall failure rate: ~50% in initial classification attempts
+- Keyword-only matching: "Computing Cluster" → matched `group` instead of `facility/computing`
+- Pure semantic matching: Departments → matched `school/medical`, `school/business` instead of `department`
+- Formal name only (semantic): 61.5% accuracy baseline
+- Formal + summary (semantic): 57.7% accuracy (worse - content noise dilutes structural signals)
 
 **Solutions Tested**:
 
-1. **Full Context** (FAILED): Used complete name+summary in `matchTopics` → prioritized domain over structure
-2. **Minimal Context** (INCONSISTENT): Keyword extraction → unreliable embedding matches, cache issues
-3. **Static List** (100%): Load all typologies at startup, pass in contents → adds tokens to every request
-4. **Multi-Candidate** (75%): Retrieve top-5 via `matchTopics` → model sometimes ignored candidates
-5. **Dynamic Retrieval** (100% - IMPLEMENTED): Model calls `listTopics` tool on demand
+1. **Full Context Semantic** (FAILED - 51.9%): Used complete name+summary+description → domain overwhelms structure
+2. **Minimal Context** (INCONSISTENT): Keyword extraction → unreliable embedding matches
+3. **Static List** (100% but impractical): Load all typologies → adds excessive tokens to every request
+4. **Multi-Candidate Semantic** (75%): Retrieve top-5 via `matchTopics` → model sometimes ignored candidates
+5. **Dynamic Retrieval** (100% on small set): Model calls `listTopics` tool → perfect on test set
+6. **Hybrid Semantic + Rules** (90.4% in top-5 - IMPLEMENTED): Semantic matching for candidates, rules for selection
 
 **Implemented Solution**:
 
-Created `listTopics` tool for dynamic retrieval. Model calls `listTopics` to retrieve all typologies as structured
-objects (id, label, definition).
+Hybrid approach combining strengths of semantic matching and rule-based classification:
+
+1. **Semantic candidate generation**: Call `matchTopics` with formal name + summary to retrieve top-5 candidates
+  - Parameters: `limit=5`, `tolerance=0.15`, `narrowing=1.05`
+  - 90.4% of correct answers appear in top-5 (verified on 52 University of Pavia units)
+
+2. **Rule-based selection**: Model applies classification principles to select best match from candidates
+  - Type descriptor mapping prioritizes structural signals ("Department" → `department`)
+  - Disambiguation rules resolve conflicts between semantic match and formal name
+  - Specificity preference ensures most appropriate subtype is selected
 
 **Key Principles**:
 
-- Model calls `listTopics(scheme, focus)` to retrieve complete typology list
-- DO NOT call `matchTopics` for typology classification
+- Semantic matching provides candidates, classification rules select the winner
 - Focus on ORGANIZATIONAL STRUCTURE (department, school, lab), not domain (medical, business)
 - "Department of X" → Always `department`, regardless of X's domain
+- If formal name indicates one type but semantic match suggests another, prefer formal name's type descriptor
 
-**Test Results**: 100% accuracy on Computing Cluster, Dept Political Sciences, Dept Medicine, Dept Mathematics
+**Performance Data** (52 University of Pavia units):
 
-**Root Cause**: Taxonomy has both structural types (`department`) and domain-qualified types (`school/medical`).
-Semantic matching without explicit guidance conflates these dimensions.
+- Formal name only (pure semantic): 61.5% rank-1, 86.5% in top-3
+- Formal + summary (pure semantic): 57.7% rank-1, 90.4% in top-5
+- Expected with hybrid approach: >70% (semantic candidates + rule-based selection)
 
-**Validation**: Verify model calls `listTopics` with scheme `https://data.ec2u.eu/taxonomies/organizations/` and focus
-`https://data.ec2u.eu/taxonomies/organizations/university-unit`, retrieves typologies, departments classified as
-`department` not `school/*`.
+**Root Cause**: Taxonomy has both structural types (`department`) and domain-qualified types (`school/medical`). Pure
+semantic matching conflates these dimensions. Hybrid approach uses semantic similarity for candidate generation while
+preserving structural reasoning via explicit rules.
 
-**CRITICAL**: When modifying the prompt, ensure `listTopics` usage remains mandatory and structural vs domain
-distinction is explicit
+**Validation**: Verify model calls `matchTopics` with correct parameters (limit=5, formal+summary), retrieves top-5
+candidates, applies classification rules, and departments classify as `department` not `school/*`.
+
+**CRITICAL**: When modifying the prompt, maintain the hybrid approach - semantic matching must generate candidates, but
+classification rules must govern final selection. Never allow pure semantic ranking without rule application.

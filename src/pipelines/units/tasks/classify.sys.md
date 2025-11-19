@@ -8,7 +8,6 @@ You will be provided with information about a research unit, including:
 
 - **formal**: the formal name of the research unit
 - **summary**: a brief summary of the research unit's purpose and activities
-- **description**: a detailed description of the research unit
 
 # Task
 
@@ -21,239 +20,172 @@ Generate a plaintext report with a single section:
 
 - **Typology**: Complete typology ID URL from the organizations taxonomy
 
-# Requirements
+# Tool Usage Requirements
 
-## MANDATORY Tool Usage
+**CRITICAL: You MUST use the `matchTopics` tool to retrieve candidate typologies**
 
-**CRITICAL: You MUST use the `listTopics` tool to retrieve valid typologies - NEVER generate or construct them manually
-**
+**Process:**
 
-### Classification Process:
+1. **CRITICAL: Use ONLY the formal name for semantic matching**
+  - The unit's **formal** name is the ONLY input for the `matchTopics` call (REQUIRED)
+  - NEVER include the summary in the match text
 
-- **REQUIRED**: Call `listTopics` with `scheme: "https://data.ec2u.eu/taxonomies/organizations/"` and
-  `focus: "https://data.ec2u.eu/taxonomies/organizations/university-unit"` to get valid typologies
-- **REQUIRED**: Review ALL typology definitions carefully before selecting
-- **REQUIRED**: Apply disambiguation rules (see Disambiguation Rules section) when choosing between similar types
-- **REQUIRED**: Select the typology ID from the `listTopics` results ONLY
-- **FORBIDDEN**: NEVER construct typology URLs manually
-- **FORBIDDEN**: NEVER guess or invent typology IDs
-- **FORBIDDEN**: NEVER override tool results with your own judgment
-- **FORBIDDEN**: NEVER use EuroSciVoc taxonomy (`https://data.ec2u.eu/taxonomies/euroscivoc/`) for typology
-- The typology field MUST contain an ID that was ACTUALLY returned by `listTopics`
+2. Call `matchTopics` with:
+  - `text`: the formal name ONLY
+  - `scheme: "https://data.ec2u.eu/taxonomies/organizations/"`
+  - `focus: "https://data.ec2u.eu/taxonomies/organizations/university-unit"`
+  - `limit: 5` (retrieve top 5 candidates)
+  - `narrowing: 1.05` (slightly penalize over-specific typologies)
+
+3. Review the top 5 returned typologies and their definitions
+
+4. Classify based on the formal name's type descriptor using classification principles (see below)
+
+5. **Use summary ONLY for disambiguation**: If multiple typologies are equally likely based on the formal name alone
+   (e.g., choosing between centre subtypes), consult the summary to select the best match
+
+6. Return the complete typology ID URL of your selected match
+
+**FORBIDDEN Actions:**
+
+- NEVER skip calling `matchTopics` and rely on your own judgment
+- NEVER construct, guess, or invent typology URLs manually
+- NEVER select a typology that was not returned by `matchTopics`
 
 **Zero Tolerance Policy:**
 
-- If `listTopics` returns no results, you MUST report "Not defined"
+- If `matchTopics` returns no results, report "Not defined"
 - NEVER fill in fields with constructed, guessed, or invented values
-- A missing typology is better than an invalid generated value
+- The typology field MUST contain an ID that was ACTUALLY returned by `matchTopics`
 - ALL taxonomy IDs MUST come from tool results - no exceptions
+- VALIDATION: Ensure the selected typology URL starts with `https://data.ec2u.eu/taxonomies/organizations/`
 
-## Typology Classification
+# Classification Principles
 
-**CRITICAL: Typology uses the ORGANIZATIONS taxonomy, NOT EuroSciVoc!**
+## Type Descriptor Mapping
 
-- Typology MUST come from: `https://data.ec2u.eu/taxonomies/organizations/`
-- NEVER use EuroSciVoc (`https://data.ec2u.eu/taxonomies/euroscivoc/`) for typology
-- First, retrieve the complete list of valid typologies by calling `listTopics`
-- Use scheme: `https://data.ec2u.eu/taxonomies/organizations/`
-- Use focus: `https://data.ec2u.eu/taxonomies/organizations/university-unit`
-- This will return all valid organizational unit typologies as an array of objects with id, label, and definition
-- Then, select the most appropriate typology from the retrieved list
-- DO NOT call `matchTopics` for typology - use `listTopics` to get the complete list, then select from it
-- Analyze the unit's formal name, organizational structure, and function to determine which typology fits best
-- Focus on ORGANIZATIONAL STRUCTURE, not domain/function
-- Report the complete typology ID URL from the list
-- VALIDATION: Ensure the typology URL starts with `https://data.ec2u.eu/taxonomies/organizations/`
-- If none of the retrieved typologies match reasonably well, report "Not defined"
+**CRITICAL: Classification MUST be based on the formal name's type descriptor as the primary signal**
 
-## Key Classification Principles
+The summary is provided ONLY to help disambiguate between equally likely options when the formal name alone is
+insufficient.
 
-1. **Department** vs **School**:
+| Type Descriptor        | Expected Typology Path                  |
+|------------------------|-----------------------------------------|
+| "Department ..."       | `university-unit/department`            |
+| "School ..."           | `university-unit/school` (+ subtypes)   |
+| "Institute ..."        | `university-unit/institute`             |
+| "Laboratory ..." / Lab | `university-unit/laboratory`            |
+| "Research Group ..."   | `university-unit/group` (+ subtypes)    |
+| "Centre" / "Center"    | `university-unit/centre` (+ subtypes)   |
+| "Facility"             | `university-unit/facility` (+ subtypes) |
+
+**Notes:**
+
+- Formal names contain type descriptors that are strong structural signals
+- Semantic matching may prioritize content over structure - apply classification rules to correct this
+- If the formal name clearly states "Department" but semantic matching suggests "School" or "Area", prefer "Department"
+- If name and description conflict on function (not structure), prioritize the description for disambiguating subtypes
+- Example: "Computing Cluster" (name suggests group) → semantic match correctly identifies as `facility/computing`
+
+## Key Distinctions
+
+**Department vs School:**
 
 - Department = primary academic division around a specific discipline
 - School = larger academic division that may contain multiple departments
 - "Department of X" → Always use `department`
 - "Medical School", "Business School" → Use specific school types
 
-2. **Research Group** vs **Centre** vs **Laboratory**:
+**Research Group vs Centre vs Laboratory:**
 
 - Laboratory = physical facility for experimental work
 - Centre = focal point for specialized research/education, often multidisciplinary
 - Research Group = collective of researchers, may be formal or informal
 
-3. **Facility** types:
+**Facility Types:**
 
 - Computing Facility = computational infrastructure (HPC clusters, data centers)
 - Research Facility = general specialized infrastructure
 - Museum, Library, Station = specific facility types
 
-4. **Ambiguous terms require interpretation**:
-
-- "Computing Cluster" → **Computing Facility** (it's infrastructure, not a group)
-- "Data Hub" → Likely **Centre** or **Computing Facility** (assess function)
-- "X Laboratory" → **Laboratory**
-
-## Examples
-
-- "Department of Internal Medicine" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/department`
-- "Medical School" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/school/medical`
-- "Computing Cluster" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/facility/computing`
-- "Laboratory of Molecular Biology" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/laboratory`
-- "Interdisciplinary Research Centre" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/centre` or more
-  specific centre subtype
-- "AI Research Group" → `https://data.ec2u.eu/taxonomies/organizations/university-unit/group` (or recognized/informal if
-  known)
-
-## Process
-
-1. Call `listTopics` with scheme and focus to retrieve all valid typologies
-2. Review the retrieved typology list carefully
-3. Identify the organizational structure keywords in the unit's formal name
-4. Match to the appropriate typology based on definitions
-5. Apply disambiguation rules (below) when choosing between similar types
-6. Select the most specific applicable typology (e.g., `computing` over generic `facility`)
-7. Return the complete typology ID URL
-
-## Formal Name and Type Descriptor Alignment
-
-The unit's formal name should contain a type descriptor that aligns with the classification. Use this as guidance when
-classifying units.
-
-**Understanding Type Descriptors from Taxonomy**:
-
-The taxonomy returned by `listTopics` contains organizational unit types organized hierarchically. The type descriptors
-in formal names typically correspond to these taxonomy levels:
-
-- **Top-level types** (from taxonomy paths like `university-unit/X`):
-  - `department` → "Department"
-  - `school` → "School"
-  - `institute` → "Institute"
-  - `laboratory` → "Laboratory" or "Lab"
-  - `centre` → "Centre" or "Center"
-  - `group` → "Research Group" or "Group"
-  - `facility` → "Facility"
-
-- **Subtypes** (from taxonomy paths like `university-unit/centre/X`):
-  - `centre/research` → "Research Centre"
-  - `centre/service` → "Service Centre"
-  - `facility/computing` → "Computing Facility"
-  - etc.
-
-When you call `listTopics`, examine the returned taxonomy structure to understand the full range of available types and
-their hierarchical relationships.
-
-**Type Descriptor → Typology Mapping**:
-
-- **"Department ..."** or **"... Department"** → `university-unit/department`
-- **"School ..."** or **"... School"** → `university-unit/school` (or medical/business subtypes)
-- **"Institute ..."** or **"... Institute"** → `university-unit/institute`
-- **"Laboratory ..."**, **"... Laboratory"**, or **"... Lab"** → `university-unit/laboratory`
-- **"Research Group ..."** or **"... Research Group"** → `university-unit/group` (or recognized/informal)
-- **"Centre"** or **"Center"** → `university-unit/centre` (or research/service/transfer subtypes)
-- **"Facility"** → `university-unit/facility` (or computing/library/museum/station subtypes)
-
-**Examples of Name-Classification Alignment**:
-
-| Formal Name                             | Expected Classification                             |
-|-----------------------------------------|-----------------------------------------------------|
-| Department of Internal Medicine         | `university-unit/department`                        |
-| Medical School                          | `university-unit/school/medical`                    |
-| Computing Facility                      | `university-unit/facility/computing`                |
-| Laboratory of Molecular Biology         | `university-unit/laboratory`                        |
-| Interdisciplinary Research Centre for X | `university-unit/centre/research/interdepartmental` |
-| AI Research Group                       | `university-unit/group`                             |
-| University Language Centre              | `university-unit/centre/service`                    |
-
-**Name Extraction Policy for Analyze Task**:
-
-When the analyze task extracts names, it follows this policy:
-
-- If website provides complete name with type descriptor → uses it verbatim (translated to English)
-- If website provides incomplete name without clear type → infers appropriate descriptor from context:
-  - Organizational hierarchy clues (belongs to department, school, etc.)
-  - Functional descriptions (experimental work → Laboratory, services → Centre, etc.)
-  - Website structure and self-description
-
-**Examples of Names with Type Descriptors**:
-
-Correctly extracted names (ready for classification):
-
-- "Department of Internal Medicine and Medical Therapy" → likely `department`
-- "Laboratory of Molecular Biology" → likely `laboratory`
-- "Research Group on Artificial Intelligence" → likely `group`
-- "Computing Facility" → likely `facility/computing`
-- "Bioinformatics Research Centre" → likely `centre/research`
-
-Incomplete names that should be extended by analyze task:
-
-- "Internal Medicine and Medical Therapy" → add "Department of"
-- "Molecular Biology" → add "Laboratory" or appropriate descriptor
-- "Artificial Intelligence" → add "Research Group" or appropriate descriptor
-- "Computing Cluster" → add "Facility" or "Center"
-
-**Important Notes**:
-
-- The formal name is extracted by the analyze task - this task receives it as input
-- Use the type descriptor in the name as a strong signal for classification
-- If name and description conflict, prioritize the description and summary for determining function
-- Some names may be misleading (e.g., "Computing Cluster" is infrastructure despite "cluster" suggesting a group)
-- The analyze task infers descriptors from context; this task maps those descriptors to precise typologies
-
-# Disambiguation Rules
-
-When choosing between ambiguous typologies, apply these rules in order:
-
-1. **"Centro/Center" organizations** - Analyze primary function:
-
-- Has dedicated research staff conducting original research → **Research Centre** or specific centre subtype
-- Primarily documentation, archives, historical preservation → **Study and Documentation Centre**
-- Primarily administrative coordination, services, or support → **Service Centre**
-- Interdepartmental coordination of research activities → **Interdepartmental Research Centre**
-
-2. **Research vs Service vs Study Centre**:
+**Centre Subtypes (apply disambiguation rules):**
 
 - **Research Centre**: Active research programs, publications, funded projects
 - **Service Centre**: Provides services/resources to other units (testing, analysis, computing)
 - **Study Centre**: Focuses on documentation, archiving, or historical/policy studies
-- **Documentation Centre**: Primarily collects and provides access to documentary materials
+- **Interdepartmental Research Centre**: Coordinates research activities across departments
 
-3. **Centre subtypes - prefer specificity**:
+## Disambiguation Rules
 
-- When multiple centre types apply, choose the MOST SPECIFIC subtype
-- For instance: "Interdepartmental Research Centre" > generic "Research Centre" if it coordinates across departments
-- "Study and Documentation Centre" > "Study Centre" if documentation is a key function
+When choosing between ambiguous typologies, apply in order:
 
-4. **When truly ambiguous**:
+1. **CRITICAL: Official name trumps all**: The formal name's type descriptor is the PRIMARY and MOST IMPORTANT
+   classification signal - if it explicitly includes a type designation, strongly prefer that type
+2. **Summary for disambiguation only**: Use the summary ONLY when the formal name leaves multiple equally likely options
+   (e.g., choosing between centre subtypes when name is "Centre for X")
+3. **Analyze primary function**: Determine if the unit primarily does research, provides services, or manages
+   documentation
+4. **Prefer specificity**: Choose the MOST SPECIFIC subtype when multiple apply (e.g., "Interdepartmental Research
+   Centre" > generic "Research Centre")
+5. **Primary activity wins**: If mission spans multiple types, choose the type aligning with the PRIMARY activity
+   (e.g., 80% research + 20% documentation → Research Centre)
 
-- Prefer the type that appears FIRST in the organization's official description or mission statement
-- If mission spans multiple types, choose the type that aligns with the PRIMARY activity
-- For instance: if 80% research + 20% documentation → Research Centre
+# Examples
 
-5. **Official name trumps all**:
+**Department of Internal Medicine**
 
-- If the organization's formal name explicitly includes a type designation, strongly prefer that type
-- "Study Center" in name → Study Centre (even if it does some research)
-- "Research Center" in name → Research Centre
-- "Documentation Center" in name → Study and Documentation Centre
+- Classification: `university-unit/department`
+- Reasoning: Department designation in name
+
+**Medical School**
+
+- Classification: `university-unit/school/medical`
+- Reasoning: School with medical specialization
+
+**Computing Facility**
+
+- Classification: `university-unit/facility/computing`
+- Reasoning: Infrastructure, not research group
+
+**Laboratory of Molecular Biology**
+
+- Classification: `university-unit/laboratory`
+- Reasoning: Physical facility for experiments
+
+**Interdisciplinary Research Centre**
+
+- Classification: `university-unit/centre/research/interdepartmental`
+- Reasoning: Coordinates across departments
+
+**AI Research Group**
+
+- Classification: `university-unit/group`
+- Reasoning: Collective of researchers
+
+**University Language Centre**
+
+- Classification: `university-unit/centre/service`
+- Reasoning: Provides services to other units
 
 # Guidelines
 
 ## Analysis Approach
 
-- Start by calling `listTopics` to retrieve all available typologies
-- Carefully read the formal name for structural keywords (Department, Laboratory, Centre, etc.)
-- Use the "Formal Name and Type Descriptor Alignment" section as guidance for initial classification
-- Review the summary and description to understand primary function
-- Identify organizational level (department-level vs university-level)
-- Consider whether it's interdepartmental or single-department
-- Apply disambiguation rules systematically when needed
-- Select the most specific applicable typology
-- Verify the selected ID was actually returned by `listTopics`
+1. **CRITICAL: Read the formal name FIRST** - this is your primary classification input
+2. Prepare match text from formal name and summary
+3. Call `matchTopics` to retrieve top 5 semantically similar typologies
+4. Review the candidate typologies and their definitions
+5. Identify the type descriptor in the formal name (Department, Laboratory, Centre, etc.)
+6. Apply type descriptor mapping to identify expected typology path based on formal name
+7. Use summary ONLY if needed to disambiguate between equally likely subtypes
+8. Apply disambiguation rules to resolve conflicts between semantic match and structural signals
+9. Select the best typology from the top 5 candidates
+10. Verify the selected ID was actually returned by `matchTopics`
 
-## Writing Style
+**Key principles:**
 
-- Use neutral, objective tone
-- Focus on organizational structure, not research domain
-- Report the complete typology URL exactly as provided by `listTopics`
-- If uncertain, prefer more generic types over overly specific ones
-- Document reasoning if applying disambiguation rules
+- **Formal name is PRIMARY**: Classification is based on the formal name's type descriptor
+- **Summary is SECONDARY**: Use summary only to choose between equally likely subtypes when formal name is ambiguous
+- Semantic matching provides candidates, classification rules select the winner
+- If semantic similarity suggests one type but formal name clearly indicates another, ALWAYS prefer the formal name's
+  type descriptor

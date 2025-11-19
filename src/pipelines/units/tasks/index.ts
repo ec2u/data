@@ -32,27 +32,6 @@ const tools = [
 ];
 
 
-if ( import.meta.main ) {
-	// Example usage for testing
-	const sample: Partial<Unit> = {
-		formal: "Department of Computer Science",
-		summary: "An academic department focused on computer science education and research.",
-		description: "The Department of Computer Science is a primary academic division dedicated to teaching and research in computing, algorithms, software engineering, and related fields.",
-		keywords: [
-			"Computer Science",
-			"Software Engineering",
-			"Algorithms",
-			"Artificial Intelligence",
-			"Data Science"
-		]
-	};
-
-	index(sample).then(result => {
-		console.log(JSON.stringify(result, null, 2));
-	});
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -63,41 +42,42 @@ if ( import.meta.main ) {
  */
 export async function index(unit: Partial<Unit>): Promise<{ topics: string[] }> {
 
-	const result = json<{ topics: string[] }>(await ai.models.generateContent({
-		model: "gemini-2.5-flash",
-		contents: md`
+	return {
+		...unit, ...(await validate(json<{ topics: string[] }>(await ai.models.generateContent({
+			model: "gemini-2.5-flash",
+			contents: md`
 			formal: ${unit.formal ?? "Not provided"}
 			summary: ${unit.summary ?? "Not provided"}
 			description: ${unit.description ?? "Not provided"}
 			keywords: ${unit.keywords?.join(", ") ?? "Not provided"}
 		`,
-		config: {
-			seed: 0,
-			temperature: 0,
-			systemInstruction: await file(".sys.md", import.meta.url),
-			tools,
-			automaticFunctionCalling: {
-				maximumRemoteCalls: 50
-			},
-			responseMimeType: "application/json",
-			responseSchema: {
-				type: Type.OBJECT,
-				properties: {
-					topics: {
-						type: Type.ARRAY,
-						items: { type: Type.STRING },
-						description: md`
+			config: {
+				seed: 0,
+				temperature: 0,
+				systemInstruction: await file(".sys.md", import.meta.url),
+				tools,
+				automaticFunctionCalling: {
+					maximumRemoteCalls: 50
+				},
+				responseMimeType: "application/json",
+				responseSchema: {
+					type: Type.OBJECT,
+					properties: {
+						topics: {
+							type: Type.ARRAY,
+							items: { type: Type.STRING },
+							description: md`
 							List of topic IDs from matchTopics results - use exact IDs returned by the tool,
 							one matchTopics call per keyword
 						`
-					}
-				},
-				required: ["topics"]
+						}
+					},
+					required: ["topics"]
+				}
 			}
-		}
-	}));
+		}))))
+	};
 
-	return await validate(result);
 }
 
 

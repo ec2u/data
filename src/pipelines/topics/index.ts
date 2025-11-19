@@ -40,7 +40,7 @@ export async function index(text: string): Promise<readonly number[]> {
 		model: "text-embedding-004", //  see https://ai.google.dev/models
 		contents: text,
 		config: {
-			taskType: "SEMANTIC_SIMILARITY" // see https://ai.google.dev/gemini-api/docs/embeddings#supported-task-types
+			taskType: "CLASSIFICATION" // see https://ai.google.dev/gemini-api/docs/embeddings#supported-task-types
 		}
 	}));
 }
@@ -107,15 +107,17 @@ export async function match(text: string, {
 		throw new RangeError(`negative narrowing <${narrowing}>`);
 	}
 
-	const embedding=await index(text); // !!!
+	const embedding = await index(text);
 
-	const sorted=topics
+	const sorted = topics
 		.filter(topic => focus === undefined || topic.lineage.includes(focus))
-		.map(topic => [topic, distance(embedding, topic.embedding)*(narrowing ? Math.pow(narrowing, topic.lineage.length-1) : 1)] as [Topic, number])
+		.map(topic => [topic,
+			distance(embedding, topic.embedding)*(narrowing ? Math.pow(narrowing, topic.lineage.length-1) : 1)
+		] as const)
 		.filter(([, d]) => threshold === undefined || d <= threshold)
 		.sort((x, y) => x[1]-y[1]);
 
-	const best=sorted[0]?.[1];
+	const best = sorted[0]?.[1];
 
 	return sorted
 		.filter(([, d]) => tolerance === undefined || d <= best+Math.max(1-best, 0)*tolerance)

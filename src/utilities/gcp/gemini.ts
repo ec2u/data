@@ -26,8 +26,8 @@ import {
 	Part
 } from "@google/genai";
 import { isString } from "@metreeca/core";
+import { Throttle } from "@metreeca/core/async";
 import { log, Logger, message } from "@metreeca/core/logger";
-import { Throttle } from "@metreeca/flow/async";
 
 
 const logger = log(import.meta.url);

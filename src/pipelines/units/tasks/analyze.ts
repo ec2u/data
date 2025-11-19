@@ -16,146 +16,102 @@
 
 import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
-import { matches, merge, stale, Unit } from "@/pipelines/units";
-import { units } from "@/pipelines/units/store";
+import { Unit } from "@/pipelines/units";
 import { md } from "@/utilities/core/tags";
 import { ai, json } from "@/utilities/gcp/gemini";
 import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
-import { guard, log, message, time } from "@metreeca/core/logger";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { forEach } from "@metreeca/flow/sinks";
-import { flatMap, map } from "@metreeca/flow/tasks";
-
-
-const logger = log(import.meta.url);
 
 const tools = [
 	fetchPage({ cache: pages.lookup })
 ];
 
 
-if ( import.meta.main ) {
-	analyze();
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function analyze(): Promise<number>;
-export async function analyze(lead: Partial<Unit>): Promise<Partial<Unit>>;
+export async function analyze(lead: Partial<Unit>): Promise<Partial<Unit>> {
 
-export async function analyze(lead?: Partial<Unit>) {
-
-	if ( lead ) {
-
-		return json<Partial<Unit>>(await ai.models.generateContent({
-			model: "gemini-2.5-flash",
-			contents: md`
+	return json<Partial<Unit>>(await ai.models.generateContent({
+		model: "gemini-2.5-flash",
+		contents: md`
 				profile: ${lead.profile ?? "Not provided"}
 				website: ${lead.website ?? "Not provided"}
 				name: ${lead.formal ?? lead.short ?? "Not provided"}
 				summary: ${lead.summary ?? "Not provided"}
 			`,
-			config: {
-				seed: 0,
-				temperature: 0,
-				systemInstruction: await file(".sys.md", import.meta.url),
-				tools,
-				automaticFunctionCalling: {
-					maximumRemoteCalls: 100
-				},
-				responseMimeType: "application/json",
-				responseSchema: {
-					type: Type.OBJECT,
-					properties: {
-						formal: {
-							type: Type.STRING,
-							description: md`
+		config: {
+			seed: 0,
+			temperature: 0,
+			systemInstruction: await file(".sys.md", import.meta.url),
+			tools,
+			automaticFunctionCalling: {
+				maximumRemoteCalls: 100
+			},
+			responseMimeType: "application/json",
+			responseSchema: {
+				type: Type.OBJECT,
+				properties: {
+					formal: {
+						type: Type.STRING,
+						description: md`
 								Formal name of the research unit - MUST include explicit unit type descriptor
 								(e.g., 'Laboratory of...', 'Department of...', 'Research Group on...')
 							`
-						},
-						short: {
-							type: Type.STRING,
-							description: md`
+					},
+					short: {
+						type: Type.STRING,
+						description: md`
 								Short name of the research unit (OPTIONAL - omit if not actually found on website,
 								or if it equals the formal name or acronym)
 							`
-						},
-						acronym: {
-							type: Type.STRING,
-							description: md`
+					},
+					acronym: {
+						type: Type.STRING,
+						description: md`
 								Acronym of the research unit (OPTIONAL - omit if not actually found on website)
 							`
-						},
-						identifier: {
-							type: Type.STRING,
-							description: md`
+					},
+					identifier: {
+						type: Type.STRING,
+						description: md`
 								Internal identifier of the research unit (OPTIONAL - omit if not found on website)
 							`
-						},
-						email: {
-							type: Type.STRING,
-							description: md`
+					},
+					email: {
+						type: Type.STRING,
+						description: md`
 								Institutional email address of the research unit
 								(OPTIONAL - omit if not actually found on website)
 							`
-						},
-						summary: {
-							type: Type.STRING,
-							description: md`
+					},
+					summary: {
+						type: Type.STRING,
+						description: md`
 								REQUIRED - Summary of the research unit (~500 chars) - NEVER omit this field
 							`
-						},
-						description: {
-							type: Type.STRING,
-							description: md`
+					},
+					description: {
+						type: Type.STRING,
+						description: md`
 								General description in markdown format
 							`
-						},
-						keywords: {
-							type: Type.ARRAY,
-							items: { type: Type.STRING },
-							description: md`
+					},
+					keywords: {
+						type: Type.ARRAY,
+						items: { type: Type.STRING },
+						description: md`
 								List of keywords describing research areas and fields
 							`
-						}
-					},
-					required: [
-						"formal",
-						"summary",
-						"description",
-						"keywords"
-					]
-				}
+					}
+				},
+				required: [
+					"formal",
+					"summary",
+					"description",
+					"keywords"
+				]
 			}
-		}));
-
-	} else {
-
-		return time(() => pipe(
-			(items(units.select({ analyzed: Date.now()-stale })))
-			(flatMap(lead => pipe(
-				items(lead)
-				(map(guard(analyze)))
-				(map(item => merge(lead, {
-
-					...item,
-
-					updated: matches(lead, item) ? lead.updated : Date.now(),
-					analyzed: Date.now()
-
-				})))
-			), {
-				parallel: true
-			}))
-			(forEach(units.insert))
-		), (count, elapsed) => {
-			logger.info`processed <${count}> units in <${message(elapsed)}> ms`;
-		});
-
-	}
+		}
+	}));
 
 }
