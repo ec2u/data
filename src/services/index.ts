@@ -18,6 +18,7 @@ import { apis } from "@/services/apis";
 import { log } from "@metreeca/core/logger";
 import type { NextFunction, Request, Response } from "express";
 import express from "express";
+import jobs from "./jobs";
 import units from "./units";
 
 const logger = log(import.meta.url);
@@ -35,6 +36,9 @@ express()
 
 	.use(...apis)
 	.use(...units)
+
+	.use(...jobs)
+
 
 	.listen(port, host, () => {
 		logger.info`server listening on ${url}`;

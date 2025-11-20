@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { secret } from "@/metreeca/gcp/secrets";
+import { secret } from "@/work/gcp/secrets";
 import SparqlClient from "sparql-http-client";
 
 export const base="https://data.ec2u.eu/";
