@@ -163,3 +163,33 @@ subtitles) preserved in their original form
 
 **CRITICAL**: When modifying this prompt, ensure translation instructions explicitly require English output regardless
 of source language
+
+## Complete Extraction from Interdepartmental Research Centers
+
+**Input
+**: https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-ricerca-interdipartimentali
+
+**Expected Behavior**:
+
+- Extract ALL 19 interdepartmental research centers listed on the page
+- Each center must have: formal name (translated to English) and website URL if available
+- Systematic scanning required - the page contains multiple sections and entries that may not be in a single list
+- No centers should be omitted
+
+**Past Issues**:
+
+- Centro Interdipartimentale di Ricerca per la Storia della Tecnica Elettrica (CIRSTE) was completely missing
+- Several centers were present but not all entries were captured
+
+**Root Cause**: Generic instruction "Make ABSOLUTELY sure to report all units" is insufficient. LLMs need explicit
+procedural guidance: systematic scanning steps, verification requirements, and completeness checks.
+
+**Validation**:
+
+1. Use WebFetch to retrieve the page independently
+2. Manually count all interdepartmental research centers listed
+3. Verify extraction output contains exactly the same number of centers
+4. Cross-check each center name appears in the output
+
+**CRITICAL**: When modifying this prompt, ensure completeness verification includes explicit procedural steps:
+systematic scanning, counting, and verification requirements. Vague imperatives like "make sure" are insufficient
