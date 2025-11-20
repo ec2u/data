@@ -21,9 +21,23 @@ import { uuid } from "@/work/node/uuid";
 import { Entity } from "@google-cloud/datastore/build/src/entity";
 import { PropertyFilter } from "@google-cloud/datastore/build/src/filter";
 import { isString } from "@metreeca/core";
-
 import { log, message, time } from "@metreeca/core/logger";
 
+
+/**
+ * Minimum token length for fuzzy matching.
+ * Filters out short function words (articles, prepositions, conjunctions) across languages.
+ */
+const FuzzyTokenThreshold = 3;
+
+/**
+ * Jaccard similarity threshold for fuzzy name matching (0=none, 1=identical).
+ * Handles minor LLM-generated variations in formal names.
+ */
+const FuzzyMatchThreshold = 0.95;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const logger = log(import.meta.url);
 
@@ -39,8 +53,8 @@ const indexed = new Set([
 	"parent",
 	"university",
 
-	"formal_",
-	"website"
+	"website",
+	"signature"
 
 ]);
 
@@ -88,92 +102,142 @@ async function lookup(key: string | Partial<Unit>): Promise<undefined | Unit> {
 
 	return time(async () => {
 
-			if ( isString(key) ) {
+		if ( isString(key) ) {
 
-				const [entity] = await datastore.get(datastore.key([kind, uuid(key)]));
+			const [entity] = await datastore.get(datastore.key([kind, uuid(key)]));
+
+			if ( entity ) {
+				return clean(entity);
+			} else {
+				return undefined;
+			}
+
+		} else {
+
+			if ( key.id ) {
+
+				const [entity] = await datastore.get(datastore.key([kind, uuid(key.id)]));
 
 				if ( entity ) {
 					return clean(entity);
-				} else {
-					return undefined;
 				}
 
-			} else {
-
-				if ( key.id ) {
-
-					const [entity] = await datastore.get(datastore.key([kind, uuid(key.id)]));
-
-					if ( entity ) {
-						return clean(entity);
-					}
-
-				}
-
-				if ( key.parent && key.university ) {
-
-					if ( key.website ) {
-
-						const query = datastore.createQuery(kind)
-							.filter(new PropertyFilter("website", "=", normalizeUrl(key.website)))
-							.filter(new PropertyFilter("parent", "=", key.parent))
-							.filter(new PropertyFilter("university", "=", key.university));
-
-						const [entities] = await datastore.runQuery(query);
-
-						if ( entities.length === 1 ) {
-
-							return clean(entities[0]);
-
-						} else if ( entities.length > 1 ) {
-
-							logger.warning`multiple matches for <${JSON.stringify({
-								parent: key.parent,
-								university: key.university,
-								website: key.website
-							})}>`;
-
-							return undefined;
-						}
-
-					}
-
-					if ( key.formal ) {
-
-						const query = datastore.createQuery(kind)
-							.filter(new PropertyFilter("formal_", "=", normalizeName(key.formal)))
-							.filter(new PropertyFilter("parent", "=", key.parent))
-							.filter(new PropertyFilter("university", "=", key.university));
-
-						const [entities] = await datastore.runQuery(query);
-
-						if ( entities.length === 1 ) {
-
-							return clean(entities[0]);
-
-						} else if ( entities.length > 1 ) {
-
-							logger.warning`multiple matches for <${JSON.stringify({
-								parent: key.parent,
-								university: key.university,
-								formal: key.formal
-							})}>`;
-
-							return undefined;
-						}
-
-					}
-
-				}
 			}
 
-			return undefined;
+			if ( key.parent && key.university ) {
 
-		}, (value, elapsed) => {
-			value && logger.info
-				`fetched unit <${typeof key === "string" ? key : JSON.stringify(key)}> in <${message(elapsed)}> ms`;
+				if ( key.website ) {
+
+					const query = datastore.createQuery(kind)
+						.filter(new PropertyFilter("website", "=", normalizeUrl(key.website)))
+						.filter(new PropertyFilter("parent", "=", key.parent))
+						.filter(new PropertyFilter("university", "=", key.university));
+
+					const [entities] = await datastore.runQuery(query);
+
+					if ( entities.length === 1 ) {
+
+						return clean(entities[0]);
+
+					} else if ( entities.length > 1 ) {
+
+						logger.warning`multiple matches for <${JSON.stringify({
+							parent: key.parent,
+							university: key.university,
+							website: key.website
+						})}>`;
+
+						return undefined;
+					}
+
+				}
+
+				if ( key.formal ) {
+
+					const tokens = tokenize(key.formal);
+
+					const query = datastore.createQuery(kind)
+						.filter(new PropertyFilter("signature", "=", signature(tokens)))
+						.filter(new PropertyFilter("parent", "=", key.parent))
+						.filter(new PropertyFilter("university", "=", key.university));
+
+					const [entities] = await datastore.runQuery(query);
+
+					if ( entities.length === 1 ) {
+
+						return clean(entities[0]);
+
+					} else if ( entities.length > 1 ) {
+
+						logger.warning`multiple matches for <${JSON.stringify({
+							parent: key.parent,
+							university: key.university,
+							formal: key.formal
+						})}>`;
+
+						return undefined;
+
+					} else {
+
+						// Fuzzy matching fallback: no exact signature match found
+						// Query all units with same parent/university and compute similarity
+
+						const fallbackQuery = datastore.createQuery(kind)
+							.filter(new PropertyFilter("parent", "=", key.parent))
+							.filter(new PropertyFilter("university", "=", key.university));
+
+						const [candidates] = await datastore.runQuery(fallbackQuery);
+
+						const matches = candidates
+							.filter(candidate => candidate.formal) // Only consider units with formal names
+							.map(candidate => ({
+								entity: candidate,
+								tokens: tokenize(candidate.formal as string),
+								similarity: 0
+							}))
+							.map(item => ({
+								...item,
+								similarity: jaccard(tokens, item.tokens)
+							}))
+							.filter(item => item.similarity >= FuzzyMatchThreshold);
+
+						if ( matches.length === 1 ) {
+
+							logger.info`fuzzy match for <${JSON.stringify({
+								parent: key.parent,
+								university: key.university,
+								formal: key.formal,
+								matched: matches[0].entity.formal,
+								similarity: matches[0].similarity
+							})}>`;
+
+							return clean(matches[0].entity);
+
+						} else if ( matches.length > 1 ) {
+
+							logger.warning`multiple fuzzy matches for <${JSON.stringify({
+								parent: key.parent,
+								university: key.university,
+								formal: key.formal,
+								matches: matches.map(m => ({ formal: m.entity.formal, similarity: m.similarity }))
+							})}>`;
+
+							return undefined;
+						}
+
+					}
+
+				}
+
+			}
 		}
-	);
+
+		return undefined;
+
+	}, (value, elapsed) => {
+		value && logger.info
+			`fetched unit <${typeof key === "string" ? key : JSON.stringify(key)}> in <${message(elapsed)}> ms`;
+	});
 
 }
 
@@ -335,9 +399,9 @@ async function insert(items: Unit | readonly Unit[]): Promise<readonly Unit[]> {
 					updated: item.updated ?? 0,
 					analyzed: item.analyzed ?? 0,
 					expanded: item.expanded ?? 0,
-					formal_: item.formal && normalizeName(item.formal),
 					profile: item.profile && normalizeUrl(item.profile),
-					website: item.website && normalizeUrl(item.website)
+					website: item.website && normalizeUrl(item.website),
+					signature: item.formal && signature(tokenize(item.formal))
 				};
 
 				return {
@@ -416,31 +480,69 @@ async function remove(items?: Unit | readonly Unit[]): Promise<void> {
  */
 function clean(entity: Entity): Unit {
 
-	const { [datastore.KEY]: _, formal_, ...item } = entity;
+	const { [datastore.KEY]: _, signature, ...item } = entity;
 
 	return item;
 }
 
+
 /**
- * Normalizes a unit name label for duplicate detection and matching.
+ * Tokenizes a name into a set of normalized words, filtering by length.
+ * Applies the same normalization as normalizeName() before tokenizing.
+ * Language-agnostic: uses word length rather than stopword lists.
  *
- * Creates a canonical form by removing diacritical marks, normalizing whitespace,
- * and converting to uppercase to enable case-insensitive and accent-insensitive comparisons.
+ * @param name - The name to tokenize
  *
- * @param name - The unit name to normalize
- *
- * @returns The normalized name with diacritics removed, whitespace normalized, and uppercase letters
- *
- * @example
- * label("École Polytechnique")  // "ECOLE POLYTECHNIQUE"
- * label("Bio-Chemistry & Physics")  // "BIO CHEMISTRY PHYSICS"
- * label("Computer   Science")  // "COMPUTER SCIENCE"
+ * @returns Set of normalized, filtered tokens
  */
-function normalizeName(name: string): string {
-	return name
+function tokenize(name: string): Set<string> {
+	return new Set(name
 		.normalize("NFD")
 		.replace(/[\u0300-\u036f]/g, "")
 		.replace(/[^\p{L}\p{N}]+/gu, " ")
 		.toUpperCase()
-		.trim();
+		.trim()
+		.split(/\s+/)
+		.filter(token => token.length > FuzzyTokenThreshold)
+	);
+}
+
+/**
+ * Computes a signature string from a set of tokens for exact matching.
+ * The signature is a sorted, space-separated string.
+ *
+ * @param tokens - Set of normalized tokens
+ *
+ * @returns Sorted, space-separated token string
+ */
+function signature(tokens: Set<string>): string {
+	return [...tokens].sort().join(" ");
+}
+
+/**
+ * Computes Jaccard similarity between two sets of tokens.
+ * Returns a value between 0 (no overlap) and 1 (identical sets).
+ *
+ * @param a - First token set
+ * @param b - Second token set
+ *
+ * @returns Jaccard similarity coefficient (intersection size / union size)
+ */
+function jaccard(a: Set<string>, b: Set<string>): number {
+	if ( a.size === 0 && b.size === 0 ) { // both empty = identical
+
+		return 1.0;
+
+	} else if ( a.size === 0 || b.size === 0 ) { // one empty = no similarity
+
+		return 0.0;
+
+	} else {
+
+		const intersection = new Set([...a].filter(token => b.has(token)));
+		const union = new Set([...a, ...b]);
+
+		return intersection.size/union.size;
+
+	}
 }

@@ -26,7 +26,8 @@ Before submitting your output, verify:
 - [ ] Count of extracted units matches the count visible on source page
 - [ ] All sections of the webpage have been processed
 - [ ] No units were skipped or omitted
-- [ ] All formal names are translated to English
+- [ ] All formal names are translated to English using British spelling
+- [ ] No location details or contextual information added to formal names
 - [ ] Acronyms are included ONLY when explicitly stated on the page
 - [ ] Website URLs are included when available
 - [ ] No historical or decommissioned units are included
@@ -65,7 +66,8 @@ Follow these steps to ensure complete extraction:
 
 - Verify each extracted unit has the required information (formal name)
 - Verify optional fields (acronym, website) are included only when explicitly available
-- Confirm all names are properly translated to English
+- Confirm all names are properly translated to English using British spelling
+- Verify no location details or contextual information was added to formal names
 - Ensure no historical or decommissioned units were included
 
 # Requirements
@@ -79,7 +81,28 @@ Follow these steps to ensure complete extraction:
 ## Formal Name
 
 - ALWAYS translate formal names to English if the original name is in another language
+- MANDATORY: Use British English spelling in all translations
+  - "centre" NOT "center"
+  - "theatre" NOT "theater"
+  - "organisation" NOT "organization"
+  - "behaviour" NOT "behavior"
+- Extract ONLY the unit's name EXACTLY as it appears in the source
+  - Translate naturally to English, but DO NOT add words that aren't in the source name
+  - DO NOT infer or add terms like "Facility", "Center", "Laboratory", "Institute" based on surrounding context
+  - DO NOT add location details (e.g., "at the Department of...")
+  - DO NOT add descriptive information beyond what is in the name itself
+  - Example source: "Computing Cluster" → Output: "Computing Cluster" (NOT "Computing Cluster Facility")
+  - Example CORRECT: "3DMetal@UniPV Laboratory"
+  - Example WRONG: "3DMetal@UniPV Laboratory, at the Department of Civil Engineering and Architecture"
+- When translating to English:
+  - Translate ONLY the words that constitute the original name
+  - Do not expand by adding institutional or categorical terms absent from the original
+  - If the original name is "Cluster di Calcolo", translate as "Computing Cluster", NOT as "Computing Cluster Facility"
+  - The surrounding text may describe the unit as a "facility" or "center", but only include such terms if they are part
+    of the actual name itself
 - DO NOT include acronyms in the formal name field
+- Preserve proper names and quoted subtitles exactly as they appear
+  - Example: 'Department of Biology "Lazzaro Spallanzani"' (keep quotes and proper name)
 
 ## Acronym
 

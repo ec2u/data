@@ -36,7 +36,8 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 1. **CHECK Official Name**: Read every word OUTSIDE of quotes - is it English? If ANY word outside quotes is not
    English, STOP and translate it. Words INSIDE quotes (titulations) can remain in original language.
 2. **CHECK Short Name**: Read every word - is it English? If ANY word is not English, STOP and translate it
-3. If you find ANY non-English words outside of titulation quotes, you MUST translate them before proceeding
+3. **CHECK British Spelling**: Verify all content uses British spelling (centre, theatre, organisation, behaviour)
+4. If you find ANY non-English words outside of titulation quotes, you MUST translate them before proceeding
 
 # Requirements
 
@@ -57,6 +58,11 @@ Generate a plaintext report with the following structure (each item as an H1 hea
   - WRONG: "Physik-Institut" (German)
   - CORRECT: "Department of Physics"
   - **If you write a single non-English word in any name field, you have FAILED this requirement**
+- **MANDATORY: Use British English spelling in all translations**
+  - "centre" NOT "center"
+  - "theatre" NOT "theater"
+  - "organisation" NOT "organization"
+  - "behaviour" NOT "behavior"
 - **ALWAYS include explicit unit type descriptor in the formal name - NEVER omit it**
   - WRONG: "Molecular Biology" (missing type descriptor)
   - CORRECT: "Department of Molecular Biology" or "Laboratory of Molecular Biology"

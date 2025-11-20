@@ -164,6 +164,56 @@ subtitles) preserved in their original form
 **CRITICAL**: When modifying this prompt, ensure translation instructions explicitly require English output regardless
 of source language
 
+## Use British English Spelling
+
+**Input**: Any page with units requiring translation
+
+**Expected Behavior**:
+
+- All translated names must use British English spelling consistently
+- Common words: "centre" not "center", "theatre" not "theater", "organisation" not "organization"
+- This applies to all translated formal names across all unit types
+
+**Past Issues**:
+
+- "Interdepartmental Multimedia Research Center on Ancient Theater" and "Interdepartmental Multimedia Research Center on
+  Ancient Theatre" were created as separate entities
+- American vs British spelling variations created duplicates despite identical content
+
+**Root Cause**: No explicit spelling standard specified. LLMs may default to American English or vary between
+extractions.
+
+**Validation**: Verify all extracted formal names use British English spelling (centre, theatre, organisation,
+behaviour, etc.)
+
+**CRITICAL**: When modifying this prompt, explicitly mandate British English spelling to prevent spelling-based
+duplicates
+
+## Extract Only Unit Names Without Location Details
+
+**Input**: Any page with unit listings
+
+**Expected Behavior**:
+
+- Extract ONLY the unit's name as it appears in the source
+- DO NOT add location information (e.g., "at the Department of...")
+- DO NOT add contextual details beyond the unit's name
+- Example: Extract "3DMetal@UniPV Laboratory" NOT "3DMetal@UniPV Laboratory, at the Department of Civil Engineering and
+  Architecture"
+
+**Past Issues**:
+
+- "3DMetal@UniPV Laboratory" and "3DMetal@UniPV Laboratory, at the Department of Civil Engineering and Architecture"
+  were created as separate entities
+- LLM inconsistently added location context to some units but not others
+
+**Root Cause**: No clear guidance on what to include in formal name field. LLMs may add contextual information they find
+relevant.
+
+**Validation**: Verify extracted formal names contain only the unit name without location or departmental context
+
+**CRITICAL**: When modifying this prompt, explicitly specify to extract only the unit name without location details
+
 ## Complete Extraction from Interdepartmental Research Centers
 
 **Input
