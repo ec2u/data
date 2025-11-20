@@ -55,7 +55,8 @@
       "Skill(prompt-engineer)",
       "WebFetch(domain:next-dot-ec2u-data.ey.r.appspot.com)",
       "Bash(wc:*)",
-      "WebFetch(domain:docs.google.com)"
+      "WebFetch(domain:docs.google.com)",
+      "WebFetch(domain:docs.cloud.google.com)"
     ],
     "deny": [],
     "ask": []

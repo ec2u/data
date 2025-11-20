@@ -76,6 +76,7 @@ export function dump<T>(path: string, {
 	append?: boolean
 
 } = {}): (data: T) => T {
+
 	return (data: T) => {
 
 		writeFileSync(
@@ -86,4 +87,5 @@ export function dump<T>(path: string, {
 
 		return data;
 	};
+
 }

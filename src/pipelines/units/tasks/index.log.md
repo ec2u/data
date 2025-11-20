@@ -16,9 +16,7 @@ This is NOT an automated test suite - it's human-readable documentation for LLM-
 
 # Inbox
 
-- Threshold tuning: Monitor false positives/negatives at 0.6 threshold
-- Keyword extraction: Verify major vs specialty areas properly balanced
-- Parallel execution: Ensure independent calls are batched efficiently
+- Threshold tuning: Monitor false positives/negatives at 0.6 threshold in production usage
 
 # Guidelines
 
@@ -230,3 +228,62 @@ API calls.
 turns
 
 **CRITICAL**: When modifying the prompt, ensure parallel execution guidance remains explicit
+
+## All Keywords Fail to Match
+
+**Input**: Unit with keywords that have no good taxonomy matches (all distances > 0.6)
+
+**Expected Behavior**:
+
+- Attempt to match all keywords via `matchTopics`
+- Reject all matches exceeding 0.6 threshold
+- Return empty Topics list
+- Include note: "No topics matched within threshold"
+- Do NOT lower threshold to force matches
+- Do NOT invent fallback topic IDs
+
+**Validation**: Verify output contains empty Topics list with explanatory note, not constructed IDs
+
+**CRITICAL**: Ensure Zero Tolerance Policy prevents fallback to generated IDs
+
+## Empty Keywords List
+
+**Input**: Unit with empty keywords list and sparse summary/description
+
+**Expected Behavior**:
+
+- Attempt to extract keywords from summary and description
+- If extraction yields no usable keywords, return empty Topics list
+- Include explanatory note
+- Do NOT use unit name as fallback keyword
+- Do NOT generate generic research terms
+
+**Validation**: Verify model attempts extraction from alternative sources before returning empty result
+
+## Tool Errors
+
+**Input**: `matchTopics` returns error (network failure, invalid parameters, etc.)
+
+**Expected Behavior**:
+
+- Report the error clearly
+- Do NOT attempt to generate fallback topic IDs
+- Do NOT proceed with partial results if some calls succeeded
+- Request manual intervention
+- Maintain Zero Tolerance Policy even during errors
+
+**Validation**: Verify error handling doesn't compromise requirement to use only tool-returned IDs
+
+## Sparse Keyword Extraction
+
+**Input**: Unit with generic keywords list ["research", "innovation", "collaboration"]
+
+**Expected Behavior**:
+
+- Recognize keywords as overly generic
+- Extract more specific terms from summary/description
+- Prioritize disciplinary terms over broad categories
+- Still call `matchTopics` for generic terms but expect weak matches
+- Filter by 0.6 threshold as usual
+
+**Validation**: Verify model supplements generic keywords with specific disciplinary terms from description

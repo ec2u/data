@@ -29,6 +29,15 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 - **General Description**: REQUIRED - Standalone description of approximately 250 words, 2-4 paragraphs
 - **Keywords**: Bulleted list of free-form keywords describing research areas and fields
 
+# Checklist
+
+**BEFORE submitting your report:**
+
+1. **CHECK Official Name**: Read every word OUTSIDE of quotes - is it English? If ANY word outside quotes is not
+   English, STOP and translate it. Words INSIDE quotes (titulations) can remain in original language.
+2. **CHECK Short Name**: Read every word - is it English? If ANY word is not English, STOP and translate it
+3. If you find ANY non-English words outside of titulation quotes, you MUST translate them before proceeding
+
 # Requirements
 
 ## Privacy
@@ -40,12 +49,17 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 
 **CRITICAL: The following naming rules MUST be followed:**
 
+- **MANDATORY: ALL names MUST be in ENGLISH - NO exceptions**
+  - Before writing any name, CHECK: Is every word English? If not, TRANSLATE IT.
+  - WRONG: "Dipartimento di Fisica" (Italian)
+  - WRONG: "Département de Physique" (French)
+  - WRONG: "Departamento de Física" (Spanish)
+  - WRONG: "Physik-Institut" (German)
+  - CORRECT: "Department of Physics"
+  - **If you write a single non-English word in any name field, you have FAILED this requirement**
 - **ALWAYS include explicit unit type descriptor in the formal name - NEVER omit it**
   - WRONG: "Molecular Biology" (missing type descriptor)
   - CORRECT: "Department of Molecular Biology" or "Laboratory of Molecular Biology"
-- **ALWAYS translate names to ENGLISH**
-  - WRONG: "Dipartimento di Fisica" (Italian)
-  - CORRECT: "Department of Physics"
 - **NEVER include references to the university or to parent units in the name**
   - WRONG: "University of XYZ Department of Chemistry"
   - WRONG: "Faculty of Science - Physics Laboratory"
@@ -68,8 +82,14 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 - Extract the formal name as it appears on the website
 - Translate to English if needed
 - If the website name lacks a clear type descriptor (Department, Laboratory, Centre, etc.), add an appropriate one based
-  on context clues
-- Use organizational hierarchy, functional descriptions, and website structure to infer the appropriate descriptor
+  on functional context clues:
+  - Infrastructure/shared resources → "Facility" or "Center"
+  - Experimental/analytical work → "Laboratory"
+  - Primary academic division → "Department"
+  - Collaborative research team → "Research Group"
+  - Specialized research/service unit → "Centre"
+  - Teaching and research division → "School" or "Faculty"
+- Use organizational hierarchy, functional descriptions, and website structure to determine the appropriate descriptor
 
 ## Short Names and Acronyms
 
@@ -132,11 +152,23 @@ Department of Computer Science
 
 ## Keywords
 
-- Keywords should be free-form descriptive terms for research areas and fields
-- Keep the list as SHORT as possible, but make sure that all relevant areas are included
-- Focus on MAJOR areas, but highlight NOTEWORTHY specialty areas
-- Sort items by INCREASING specificity
+- Keywords should be free-form descriptive terms for research areas, fields, methodologies, and applications
+- Keep the list focused and selective - include all significant research areas without being exhaustive
+- Balance breadth (major research domains) with depth (distinctive specializations)
+- Sort items by INCREASING specificity (general fields → specific topics)
 - Extract 5-15 keywords depending on unit breadth
+
+**Examples of good keywords**:
+
+- ✅ "Quantum mechanics", "Condensed matter physics", "Superconductivity"
+- ✅ "Molecular biology", "Gene regulation", "CRISPR technology"
+- ✅ "Machine learning", "Computer vision", "Medical image analysis"
+
+**Examples of poor keywords**:
+
+- ❌ "Research", "Science", "Innovation" (too generic)
+- ❌ "Various topics", "Multiple areas" (vague)
+- ❌ Single keyword covering entire unit scope (too broad)
 
 ## Summary and Description
 
@@ -156,12 +188,16 @@ Department of Computer Science
 
 # Guidelines
 
+**REMINDER: When extracting ANY unit name during exploration, you MUST translate it to English immediately. Do NOT copy
+non-English names verbatim.**
+
 ## Exploration Process
 
 - Start with the homepage
 - Look for pages about research topics, activities, organization structure
 - Continue exploring until you have sufficient information to write a comprehensive report
-- IGNORE pdfs and other linked documents
+- **When you find the unit name, translate it to English IMMEDIATELY - do not wait until the final report**
+- IGNORE pdfs and other linked documents (often not machine-readable and require specialized processing)
 - ALWAYS retrieve relevant content from URLs where it is likely to be found, prioritizing them against the goals of the
   analysis, taking into also their title and summary
 - Prioritize local language pages over English translations
@@ -178,12 +214,6 @@ Stop exploring when you have gathered enough information to describe:
 - Research topics and activities
 
 After stopping exploration, generate a detailed plaintext report
-
-## Writing Style
-
-- Use a neutral, objective tone, without hype and emphasis
-- Write original content; do not copy text verbatim from source pages
-- Don't use abbreviations ("for instance" rather than "e.g.")
 
 ## Error Handling
 

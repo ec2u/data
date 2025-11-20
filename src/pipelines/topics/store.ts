@@ -15,7 +15,7 @@
  */
 
 import { Topic } from "@/pipelines/topics/index";
-import { compress, decompress } from "@/utilities/ai/embeddings";
+import { compress, decompress } from "@/utilities/ai/vectors";
 import { datastore } from "@/utilities/gcp/datastore";
 import { uuid } from "@/utilities/node/uuid";
 import { PropertyFilter } from "@google-cloud/datastore";

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { distance } from "@/utilities/ai/embeddings";
+import { distance } from "@/utilities/ai/vectors";
 import { ai, embedding } from "@/utilities/gcp/gemini";
 
 export interface Topic {
@@ -63,7 +63,8 @@ export async function index(text: string): Promise<readonly number[]> {
  *        where depth is {@code lineage.length - 1}. Values > 1 penalize deeper topics; values < 1 favor them.
  *        (must be non-negative)
  *
- * @return topics ordered by increasing distance from the query text, filtered and limited according to parameters
+ * @return tuples of [topic, score] ordered by increasing distance from the query text, where score is the adjusted
+ *         cosine distance; filtered and limited according to parameters
  *
  * @throws RangeError if {@code limit}, {@code threshold}, {@code tolerance}, or {@code narrowing} is negative
  */
@@ -89,7 +90,7 @@ export async function match(text: string, {
 	tolerance?: number
 	narrowing?: number
 
-}): Promise<readonly Topic[]> {
+}): Promise<readonly (readonly [Topic, number])[]> {
 
 	if ( limit !== undefined && limit < 0 ) {
 		throw new RangeError(`negative limit <${limit}>`);
@@ -121,7 +122,6 @@ export async function match(text: string, {
 
 	return sorted
 		.filter(([, d]) => tolerance === undefined || d <= best+Math.max(1-best, 0)*tolerance)
-		.slice(0, limit)
-		.map(([topic]) => topic);
+		.slice(0, limit);
 
 }

@@ -55,7 +55,7 @@ export function matchTopics(opts: {
 				description: dedent`
 					Matches topics against a text query using semantic similarity based on cosine distance.
 					Returns an array of matching topics ordered by increasing distance (most relevant first),
-					with each topic containing its id, label, and definition properties.
+					with each topic containing id, label, definition, and distance (adjusted cosine distance; lower is better) properties.
 					Supports optional filtering by hierarchy focus, distance threshold, tolerance from best match,
 					and depth-based narrowing adjustment.
 				`,
@@ -153,17 +153,18 @@ export function matchTopics(opts: {
 					});
 
 					logger.info`matched ${matches.length} topics for query <${text}> ${
-						JSON.stringify(matches.map(t => t.id))
+						JSON.stringify(matches.map(([topic]) => topic.id))
 					}`;
 
 					return {
 						functionResponse: {
 							name: name,
 							response: {
-								matches: matches.map(topic => ({
+								matches: matches.map(([topic, distance]) => ({
 									id: topic.id,
 									label: topic.label,
-									definition: topic.definition
+									definition: topic.definition,
+									distance
 								}))
 							}
 						}
