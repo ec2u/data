@@ -178,11 +178,13 @@ of source language
 
 **Past Issues**:
 
-- Centro Interdipartimentale di Ricerca per la Storia della Tecnica Elettrica (CIRSTE) was completely missing
-- Several centers were present but not all entries were captured
+- Centro Interdipartimentale di Ricerca per la Storia della Tecnica Elettrica (CIRSTE) was completely missing from
+  extraction
+- The page lists 19 centers but only 18 were extracted (excluding duplicates and misclassifications)
 
 **Root Cause**: Generic instruction "Make ABSOLUTELY sure to report all units" is insufficient. LLMs need explicit
-procedural guidance: systematic scanning steps, verification requirements, and completeness checks.
+procedural guidance: systematic scanning steps, verification requirements, and completeness checks. The missing center
+demonstrates that even with four-step verification procedures, a center can still be overlooked during extraction.
 
 **Validation**:
 

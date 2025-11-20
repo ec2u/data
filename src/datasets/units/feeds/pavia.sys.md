@@ -56,6 +56,10 @@ Follow these steps to ensure complete extraction:
 - Verify your extraction count matches the source count
 - If there's a mismatch, identify which units were missed and add them
 - Scan for any units that might be in unexpected locations (sidebars, footnotes, separate sections)
+- Create a checklist of all unit names from the source page
+- Cross-check each name on your checklist against your extraction output
+- Mark each verified unit on your checklist
+- Any unchecked items on your checklist represent missing units that must be added
 
 ## Step 4: Quality Check
 
