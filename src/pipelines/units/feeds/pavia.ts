@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+import { ai, json } from "@/metreeca/gcp/gemini";
+import { file } from "@/metreeca/node/files";
+import { uuid } from "@/metreeca/node/uuid";
 import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
 import { matches, merge, Unit } from "@/pipelines/units";
 import { units } from "@/pipelines/units/store";
-import { ai, json } from "@/utilities/gcp/gemini";
 import { pavia, Units } from "@/utilities/hub";
-import { file } from "@/utilities/node/files";
-import { uuid } from "@/utilities/node/uuid";
 import { Type } from "@google/genai";
 
 import { log, message, time } from "@metreeca/core/logger";

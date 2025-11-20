@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { sparql } from "@/metreeca/core/tags";
 import { index, Topic } from "@/pipelines/topics";
 import { topics } from "@/pipelines/topics/store";
-import { sparql } from "@/utilities/core/tags";
 import { hub } from "@/utilities/hub";
 import type { Term } from "@rdfjs/types";
 

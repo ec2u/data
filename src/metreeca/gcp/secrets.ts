@@ -23,7 +23,7 @@
  * @see {@link https://cloud.google.com/nodejs/docs/reference/secret-manager/latest/secret-manager/v1.secretmanagerserviceclient} SecretManagerServiceClient
  */
 
-import { project } from "@/utilities/gcp/index";
+import { project } from "@/metreeca/gcp/index";
 import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
 import { error } from "@metreeca/core";
 

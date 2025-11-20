@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+import { md } from "@/metreeca/core/tags";
+import { ai, json } from "@/metreeca/gcp/gemini";
+import { file } from "@/metreeca/node/files";
 import { pages } from "@/pipelines/pages/store";
 import { fetchPage } from "@/pipelines/pages/tools/fetchPage";
 import { Unit } from "@/pipelines/units";
-import { md } from "@/utilities/core/tags";
-import { ai, json } from "@/utilities/gcp/gemini";
-import { file } from "@/utilities/node/files";
 import { Type } from "@google/genai";
 
 const tools = [

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { compress, decompress } from "@/metreeca/ai/vectors";
+import { datastore } from "@/metreeca/gcp/datastore";
+import { uuid } from "@/metreeca/node/uuid";
 import { Topic } from "@/pipelines/topics/index";
-import { compress, decompress } from "@/utilities/ai/vectors";
-import { datastore } from "@/utilities/gcp/datastore";
-import { uuid } from "@/utilities/node/uuid";
 import { PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";
 

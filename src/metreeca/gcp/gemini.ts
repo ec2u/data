@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { md } from "@/utilities/core/tags";
-import { secret } from "@/utilities/gcp/secrets";
+import { md } from "@/metreeca/core/tags";
+import { secret } from "@/metreeca/gcp/secrets";
 import {
 	ApiError,
 	CallableTool,

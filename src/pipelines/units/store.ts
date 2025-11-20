@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { datastore } from "@/metreeca/gcp/datastore";
+import { uuid } from "@/metreeca/node/uuid";
 import { normalize as normalizeUrl } from "@/pipelines/pages/index";
 import { Unit } from "@/pipelines/units/index";
-import { datastore } from "@/utilities/gcp/datastore";
-import { uuid } from "@/utilities/node/uuid";
 import { Entity } from "@google-cloud/datastore/build/src/entity";
 import { PropertyFilter } from "@google-cloud/datastore/build/src/filter";
 import { isString } from "@metreeca/core";
@@ -52,6 +52,12 @@ if ( import.meta.main ) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Datastore operations for managing academic units.
+ *
+ * Provides CRUD operations for unit persistence in Google Cloud Datastore,
+ * including lookup by ID or properties, filtered selection, upsert, and removal.
+ */
 export const units = Object.freeze({
 
 	lookup,
@@ -64,6 +70,20 @@ export const units = Object.freeze({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Looks up a unit in the datastore by ID or matching properties.
+ *
+ * Supports multiple lookup strategies:
+ *
+ * - By ID string: Direct key-based retrieval
+ * - By partial properties: Query-based matching using `website`, `formal`, `parent`, and `university`
+ *
+ * When querying by properties, returns `undefined` if multiple matches are found to avoid ambiguity.
+ *
+ * @param key Unit ID string or partial unit properties for matching
+ *
+ * @returns The matched unit, or `undefined` if not found or ambiguous
+ */
 async function lookup(key: string | Partial<Unit>): Promise<undefined | Unit> {
 
 	return time(async () => {
@@ -157,6 +177,26 @@ async function lookup(key: string | Partial<Unit>): Promise<undefined | Unit> {
 
 }
 
+/**
+ * Selects units from the datastore based on processing state and filters.
+ *
+ * Filtering by processing timestamps:
+ *
+ * - `0`: Exact match (unprocessed items)
+ * - Positive value: Greater than or equal (current items)
+ * - Negative value: Less than or equal to absolute value (deleted items)
+ *
+ * Results are ordered by the primary filter field, or by `__key__` if no filters are specified.
+ *
+ * @param updated Filter by update timestamp
+ * @param analyzed Filter by analysis timestamp
+ * @param expanded Filter by expansion timestamp
+ * @param university Filter by university identifier
+ * @param offset Number of results to skip for pagination
+ * @param limit Maximum number of results to return
+ *
+ * @returns Array of units matching the specified criteria
+ */
 async function select({
 
 	updated,
@@ -269,6 +309,18 @@ async function select({
 
 }
 
+/**
+ * Inserts or updates units in the datastore.
+ *
+ * Performs upsert operations, creating new units or updating existing ones based on their ID.
+ * Processing timestamps (`updated`, `analyzed`, `expanded`) default to `0` if not specified.
+ * Name and URL fields are normalized for consistent querying.
+ * Operations are batched automatically for efficiency.
+ *
+ * @param items Single unit or array of units to insert
+ *
+ * @returns Array of inserted units
+ */
 async function insert(items: Unit | readonly Unit[]): Promise<readonly Unit[]> {
 
 	return time(async () => {
@@ -299,10 +351,21 @@ async function insert(items: Unit | readonly Unit[]): Promise<readonly Unit[]> {
 
 		return itemsArray;
 
-	}, (value, elapsed) => logger.info`inserted <${message(value.length)}> units in <${message(elapsed)}> ms`);
+	}, (value, elapsed) => {
+		logger.info`inserted <${message(value.length)}> units in <${message(elapsed)}> ms`;
+	});
 
 }
 
+/**
+ * Removes units from the datastore.
+ *
+ * When `items` is provided, deletes only the specified units.
+ * When `items` is omitted, removes ALL units from the datastore.
+ * Operations are batched automatically for efficiency.
+ *
+ * @param items Optional single unit, array of units, or undefined to remove all units
+ */
 async function remove(items?: Unit | readonly Unit[]): Promise<void> {
 
 	await time(async () => {
@@ -324,7 +387,7 @@ async function remove(items?: Unit | readonly Unit[]): Promise<void> {
 
 			if ( entities.length !== 0 ) {
 				for (let i = 0; i < entities.length; i += batch) {
-					await datastore.delete(entities.slice(i, i+batch).map(entity => entity[datastore.KEY]));
+					await datastore.delete(entities.slice(i, i+batch).map((entity: Entity) => entity[datastore.KEY]));
 				}
 			}
 

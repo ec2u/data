@@ -1,5 +1,5 @@
 /*
- * Copyright © 2025 Metreeca srl
+ * Copyright © 2020-2025 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { secret } from "@/utilities/gcp/secrets";
+import { secret } from "@/metreeca/gcp/secrets";
 import SparqlClient from "sparql-http-client";
 
 export const base="https://data.ec2u.eu/";

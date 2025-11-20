@@ -19,6 +19,7 @@ import { units } from "@/pipelines/units/store";
 import { index } from "@/pipelines/units/tasks";
 import { analyze } from "@/pipelines/units/tasks/analyze";
 import { classify } from "@/pipelines/units/tasks/classify";
+import { pavia } from "@/utilities/hub";
 import { guard, log, message, time } from "@metreeca/core/logger";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -57,8 +58,7 @@ export async function _analyze(): Promise<number> {
 	return time(() => pipe(
 		// (items(units.select({ analyzed: Date.now()-stale }))) // !!!
 
-		(items(units.select()))
-			// (filter(({ formal }) => formal?.includes("Department")))
+		(items(units.select({ university: pavia })))
 
 			(flatMap(lead => pipe(
 				items(lead)

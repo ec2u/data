@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { uuid } from "@/metreeca/node/uuid";
 import { units } from "@/pipelines/units/store";
 import { expand } from "@/pipelines/units/tasks/expand";
 import { Units } from "@/utilities/hub";
-import { uuid } from "@/utilities/node/uuid";
 import { guard, log, message, time } from "@metreeca/core/logger";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";

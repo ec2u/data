@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { distance } from "@/utilities/ai/vectors";
-import { ai, embedding } from "@/utilities/gcp/gemini";
+import { distance } from "@/metreeca/ai/vectors";
+import { ai, embedding } from "@/metreeca/gcp/gemini";
 
 export interface Topic {
 

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { datastore } from "@/metreeca/gcp/datastore";
+import { uuid } from "@/metreeca/node/uuid";
 import { Page } from "@/pipelines/pages/index";
-import { datastore } from "@/utilities/gcp/datastore";
-import { uuid } from "@/utilities/node/uuid";
 import { log, message, time } from "@metreeca/core/logger";
 
 

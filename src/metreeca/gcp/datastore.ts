@@ -20,7 +20,7 @@
  * Provides utility methods for Google Cloud Datastore operations.
  */
 
-import { project } from "@/utilities/gcp/index";
+import { project } from "@/metreeca/gcp/index";
 import { Datastore, or, PropertyFilter } from "@google-cloud/datastore";
 
 export { PropertyFilter, or };
