@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-import { pages } from "@/datasets/pages/store";
-import { fetchPage } from "@/datasets/pages/tools/fetchPage";
-import { matches, merge, Unit } from "@/datasets/units";
-import { units } from "@/datasets/units/store";
-import { pavia, Units } from "@/utilities/hub";
-import { ai, json } from "@/work/gcp/gemini";
-import { file } from "@/work/node/files";
-import { uuid } from "@/work/node/uuid";
+import { pages } from "@/datasets/pages/store.js";
+import { fetchPage } from "@/datasets/pages/tools/fetchPage.js";
+import { matches, merge, Unit } from "@/datasets/units/index.js";
+import { units } from "@/datasets/units/store.js";
+import { pavia, Units } from "@/utilities/hub/index.js";
+import { ai, json } from "@/work/gcp/gemini.js";
+import { file } from "@/work/node/files.js";
+import { uuid } from "@/work/node/uuid.js";
 import { Type } from "@google/genai";
-import { log, message, time } from "@metreeca/core/logger";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { forEach } from "@metreeca/flow/sinks";
-import { flatMap, map } from "@metreeca/flow/tasks";
+import { message, time } from "@metreeca/core/report";
+import { pipe } from "@metreeca/pipe";
+import { items } from "@metreeca/pipe/feeds";
+import { forEach } from "@metreeca/pipe/sinks";
+import { flatMap, map } from "@metreeca/pipe/tasks";
+import { log } from "@metreeca/tape";
 
 
 const logger = log(import.meta.url);
+
 
 const university = pavia;
 

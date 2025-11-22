@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { md } from "@/work/core/tags";
-import { secret } from "@/work/gcp/secrets";
+import { md } from "@/work/core/tags.js";
+import { secret } from "@/work/gcp/secrets.js";
 import {
 	ApiError,
 	CallableTool,
@@ -27,7 +27,8 @@ import {
 } from "@google/genai";
 import { isString } from "@metreeca/core";
 import { Throttle } from "@metreeca/core/async";
-import { log, Logger, message } from "@metreeca/core/logger";
+import { message } from "@metreeca/core/report";
+import { log, Logger } from "@metreeca/tape";
 
 
 const logger = log(import.meta.url);

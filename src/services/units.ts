@@ -22,7 +22,7 @@
  * @module
  */
 
-import { units } from "@/datasets/units/store";
+import { units } from "@/datasets/units/store.js";
 import { Router } from "express";
 
 

@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import { apis } from "@/services/apis";
-import { log } from "@metreeca/core/logger";
+import { apis } from "@/services/apis.js";
+import { log } from "@metreeca/tape";
 import type { NextFunction, Request, Response } from "express";
 import express from "express";
-import jobs from "./jobs";
-import units from "./units";
+import jobs from "./jobs.js";
+import units from "./units.js";
+
 
 const logger = log(import.meta.url);
+
 
 const host = process.env.HOST || "0.0.0.0";
 const port = parseInt(process.env.PORT || "8080", 10);

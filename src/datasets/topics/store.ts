@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { Topic } from "@/datasets/topics/index";
-import { compress, decompress } from "@/work/ai/vectors";
-import { datastore } from "@/work/gcp/datastore";
-import { uuid } from "@/work/node/uuid";
+import { Topic } from "@/datasets/topics/index.js";
+import { compress, decompress } from "@/work/ai/vectors.js";
+import { datastore } from "@/work/gcp/datastore.js";
+import { uuid } from "@/work/node/uuid.js";
 import { PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";
-
-import { log, message, time } from "@metreeca/core/logger";
+import { message, time } from "@metreeca/core/report";
+import { log } from "@metreeca/tape";
 
 
 const logger = log(import.meta.url);

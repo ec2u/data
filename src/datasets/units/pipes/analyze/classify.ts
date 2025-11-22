@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { topics } from "@/datasets/topics/store";
-import { matchTopics } from "@/datasets/topics/tools/matchTopics";
-import { Unit } from "@/datasets/units";
-import { md } from "@/work/core/tags";
-import { ai, json } from "@/work/gcp/gemini";
-import { file } from "@/work/node/files";
+import { topics } from "@/datasets/topics/store.js";
+import { matchTopics } from "@/datasets/topics/tools/matchTopics.js";
+import { Unit } from "@/datasets/units/index.js";
+import { md } from "@/work/core/tags.js";
+import { ai, json } from "@/work/gcp/gemini.js";
+import { file } from "@/work/node/files.js";
 import { Type } from "@google/genai";
-import { log } from "@metreeca/core/logger";
+import { log } from "@metreeca/tape";
 
 
 const scheme = "https://data.ec2u.eu/taxonomies/organizations/";
@@ -30,6 +30,7 @@ const scheme = "https://data.ec2u.eu/taxonomies/organizations/";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const logger = log(import.meta.url);
+
 
 const tools = [
 	matchTopics({ topics: scheme => topics.select({ scheme }) })

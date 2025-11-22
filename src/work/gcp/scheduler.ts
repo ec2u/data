@@ -30,11 +30,14 @@
  * - `SCHEDULER_SERVICE_ACCOUNT`: Optional service account email to restrict access
  */
 
-import { log } from "@metreeca/core/logger";
+import { log } from "@metreeca/tape";
 import { type NextFunction, type Request, type Response, Router } from "express";
 import { OAuth2Client } from "google-auth-library";
 
+
 const logger = log(import.meta.url);
+
+
 const oauth2Client = new OAuth2Client();
 const schedulerEmail = process.env.SCHEDULER_SERVICE_ACCOUNT;
 const serviceUrl = process.env.URL;

@@ -21,7 +21,7 @@
  */
 
 import openapi from "swagger-ui-express";
-import units from "./units.json";
+import units from "./units.json" with { type: "json" };
 
 export const apis = ["/apis", openapi.serve, openapi.setup({
 

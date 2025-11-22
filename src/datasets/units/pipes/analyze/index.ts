@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-import { matches, merge } from "@/datasets/units";
-import { analyze } from "@/datasets/units/pipes/analyze/analyze";
-import { annotate } from "@/datasets/units/pipes/analyze/annotate";
-import { classify } from "@/datasets/units/pipes/analyze/classify";
-import { units } from "@/datasets/units/store";
-import { pavia } from "@/utilities/hub";
-import { guard, log, message, time } from "@metreeca/core/logger";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { forEach } from "@metreeca/flow/sinks";
-import { flatMap, map } from "@metreeca/flow/tasks";
+import { matches, merge } from "@/datasets/units/index.js";
+import { analyze } from "@/datasets/units/pipes/analyze/analyze.js";
+import { annotate } from "@/datasets/units/pipes/analyze/annotate.js";
+import { classify } from "@/datasets/units/pipes/analyze/classify.js";
+import { units } from "@/datasets/units/store.js";
+import { pavia } from "@/utilities/hub/index.js";
+import { message, time } from "@metreeca/core/report";
+import { pipe } from "@metreeca/pipe";
+import { items } from "@metreeca/pipe/feeds";
+import { forEach } from "@metreeca/pipe/sinks";
+import { flatMap, map } from "@metreeca/pipe/tasks";
+import { log } from "@metreeca/tape";
 
 
 // ============================================================================
@@ -46,13 +47,13 @@ const logger = log(import.meta.url);
 
 
 if ( import.meta.main ) {
-	_analyze();
+	execute();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function _analyze(): Promise<number> {
+export default async function execute(): Promise<number> {
 
 	return time(() => pipe(
 		// (items(units.select({ analyzed: Date.now()-stale }))) // !!!
@@ -61,9 +62,9 @@ export async function _analyze(): Promise<number> {
 
 			(flatMap(lead => pipe(
 				items(lead)
-				(map(guard(analyze)))
-				(map(guard(classify)))
-				(map(guard(annotate)))
+				(map(log(analyze)))
+				(map(log(classify)))
+				(map(log(annotate)))
 				(map(item => merge(lead, {
 
 					...item,

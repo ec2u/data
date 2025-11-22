@@ -43,8 +43,8 @@
  *   `separateMarkdown` option for integrated processing.
  */
 
-import { uuid } from "@/work/node/uuid";
-import { log } from "@metreeca/core/logger";
+import { uuid } from "@/work/node/uuid.js";
+import { log } from "@metreeca/tape";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
 

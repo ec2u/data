@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { visit } from "@/datasets/pages";
+import { visit } from "@/datasets/pages/index.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
-
-import { log, message } from "@metreeca/core/logger";
+import { message } from "@metreeca/core/report";
+import { log } from "@metreeca/tape";
 import dedent from "dedent";
 
 /**

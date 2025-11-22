@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import { match, Topic } from "@/datasets/topics";
+import { match, Topic } from "@/datasets/topics/index.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
-
-import { log, message } from "@metreeca/core/logger";
+import { message } from "@metreeca/core/report";
+import { log } from "@metreeca/tape";
 import dedent from "dedent";
 
 
 const logger = log(import.meta.url);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Topic matching tool for Gemini API.
@@ -55,9 +58,9 @@ export function matchTopics(opts: {
 				description: dedent`
 					Matches topics against a text query using semantic similarity based on cosine distance.
 					Returns an array of matching topics ordered by increasing distance (most relevant first),
-					with each topic containing id, label, definition, and distance (adjusted cosine distance; lower is better) properties.
-					Supports optional filtering by hierarchy focus, distance threshold, tolerance from best match,
-					and depth-based narrowing adjustment.
+					with each topic containing id, label, definition, and distance (adjusted cosine distance; lower is
+					better) properties. Supports optional filtering by hierarchy focus, distance threshold, tolerance
+					from best match, and depth-based narrowing adjustment.
 				`,
 
 				parameters: {

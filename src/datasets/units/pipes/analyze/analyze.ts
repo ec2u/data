@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { pages } from "@/datasets/pages/store";
-import { fetchPage } from "@/datasets/pages/tools/fetchPage";
-import { Unit } from "@/datasets/units";
-import { md } from "@/work/core/tags";
-import { ai, json } from "@/work/gcp/gemini";
-import { file } from "@/work/node/files";
+import { pages } from "@/datasets/pages/store.js";
+import { fetchPage } from "@/datasets/pages/tools/fetchPage.js";
+import { Unit } from "@/datasets/units/index.js";
+import { md } from "@/work/core/tags.js";
+import { ai, json } from "@/work/gcp/gemini.js";
+import { file } from "@/work/node/files.js";
 import { Type } from "@google/genai";
 
 const tools = [

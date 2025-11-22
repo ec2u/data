@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { normalize as normalizeUrl } from "@/datasets/pages/index";
-import { Unit } from "@/datasets/units/index";
-import { datastore } from "@/work/gcp/datastore";
-import { uuid } from "@/work/node/uuid";
-import { Entity } from "@google-cloud/datastore/build/src/entity";
-import { PropertyFilter } from "@google-cloud/datastore/build/src/filter";
+import { normalize as normalizeUrl } from "@/datasets/pages/index.js";
+import { Unit } from "@/datasets/units/index.js";
+import { datastore } from "@/work/gcp/datastore.js";
+import { uuid } from "@/work/node/uuid.js";
+import { Entity, PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";
-import { log, message, time } from "@metreeca/core/logger";
+import { message, time } from "@metreeca/core/report";
+import { log } from "@metreeca/tape";
 
 
 /**
@@ -40,6 +40,7 @@ const FuzzyMatchThreshold = 0.95;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const logger = log(import.meta.url);
+
 
 const kind = "Unit";
 const batch = 100;

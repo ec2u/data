@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { Page } from "@/datasets/pages/index";
-import { datastore } from "@/work/gcp/datastore";
-import { uuid } from "@/work/node/uuid";
-import { log, message, time } from "@metreeca/core/logger";
+import { Page } from "@/datasets/pages/index.js";
+import { datastore } from "@/work/gcp/datastore.js";
+import { uuid } from "@/work/node/uuid.js";
+import { message, time } from "@metreeca/core/report";
+import { log } from "@metreeca/tape";
 
 
 const logger = log(import.meta.url);

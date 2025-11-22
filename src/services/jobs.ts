@@ -22,22 +22,17 @@
  * @module
  */
 
-import { _analyze } from "@/datasets/units/pipes/analyze";
-import { expand } from "@/datasets/units/pipes/expand";
-import { job, Scheduler } from "@/work/gcp/scheduler";
+import analyze from "@/datasets/units/pipes/analyze/index.js";
+import { expandAll } from "@/datasets/units/pipes/expand/index.js";
+import { job, Scheduler } from "@/work/gcp/scheduler.js";
 
 
 /**
  * Express router providing scheduler endpoints.
- *
- * **Endpoints:**
- *
- * - `POST /scheduler/analyze` - Triggers unit analysis pipeline (Cloud Scheduler only)
- * - `POST /scheduler/expand` - Triggers unit expansion pipeline (Cloud Scheduler only)
  */
 export default ["/jobs", Scheduler()
 
-	.post("/analyze", job(_analyze))
-	.post("/expand", job(expand))
+	.post("/analyze", job(analyze))
+	.post("/expand", job(expandAll))
 
 ] as const;

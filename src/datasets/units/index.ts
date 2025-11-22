@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { duration } from "@/work/core/temporal";
+import { duration } from "@/work/core/temporal.js";
 
 
 export const stale: number = 30*duration.day;
