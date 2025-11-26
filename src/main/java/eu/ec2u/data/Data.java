@@ -138,7 +138,7 @@ public final class Data extends Delegator {
                 .set(path(), () -> Paths.get(PRODUCTION ? "/tmp" : "data"))
                 .set(cache(), () -> new FileCache().ttl(ofDays(1)))
                 .set(fetcher(), () -> PRODUCTION ? new URLFetcher() : new CacheFetcher().ignore(
-                        "http://localhost:2025/", // local ai crawler microservice
+                        "http://localhost:8080/", // local dev servers
                         "https://docs.google.com/spreadsheets/"
                 ))
 

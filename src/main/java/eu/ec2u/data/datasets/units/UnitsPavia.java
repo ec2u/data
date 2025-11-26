@@ -54,8 +54,8 @@ import static java.util.Map.entry;
 
 public final class UnitsPavia implements Runnable {
 
-    private static final String API_URL="units-coimbra-url";
-    private static final String API_KEY="units-coimbra-key";
+    private static final String API_URL="units-pavia-url";
+    private static final String API_KEY="units-pavia-key";
 
 
     public static void main(final String... args) {
@@ -89,7 +89,7 @@ public final class UnitsPavia implements Runnable {
 
     private Stream<Value> units() {
 
-        final String url="http://localhost:2025/units/"; // !!! final String url=vault.get(API_URL);
+        final String url="http://localhost:8080/units/"; // !!! final String url=vault.get(API_URL);
 
         return Stream.of("%s?%s".formatted(url, PAVIA.id()))
                 .flatMap(optional(new GET<>(new JSON())))
