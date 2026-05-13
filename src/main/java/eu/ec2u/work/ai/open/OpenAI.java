@@ -174,6 +174,10 @@ public final class OpenAI {
 
             } catch ( final RateLimitException e ) {
 
+                if ( e.code().filter("insufficient_quota"::equals).isPresent() ) {
+                    throw e;
+                }
+
                 final long delay=e.headers().values("retry-after-ms").stream()
                         .flatMap(optional(lenient(Long::parseLong)))
                         .findFirst()
