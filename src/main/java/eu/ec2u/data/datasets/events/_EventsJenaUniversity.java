@@ -156,8 +156,9 @@ public final class _EventsJenaUniversity implements Runnable {
                                 .map(XPath::new)
 
                                 .map(path -> entry(
-                                        path.links("//div[@class='pagination']/button[contains(@name, 'page')]/@href"),
-                                        path.links("//ol/li[p]/a/@href")
+                                        path.strings("//div[@class='pagination']/button[@name='page' and not(@disabled)]/@value")
+                                                .map(page -> home+"?page="+page+"&block=body-0"),
+                                        path.links("//ol/li/article/a/@href")
                                 ))
 
                         ))
