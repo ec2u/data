@@ -15,6 +15,7 @@
  */
 
 import { classes } from "@metreeca/view";
+import { HelpCircleIcon } from "@metreeca/view/widgets/icon";
 import React, { createElement, useState } from "react";
 
 import "./ai.css";
@@ -44,8 +45,9 @@ export function DataAI({
 	}, children && <>
 
         <span>✦</span>
-
         <span>AI-Generated Content</span>
+
+        <a title={"Learn More"} href={"/about/ai"}><HelpCircleIcon/></a>
 
     </>);
 

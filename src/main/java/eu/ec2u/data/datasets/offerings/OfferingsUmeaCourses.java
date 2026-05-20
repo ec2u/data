@@ -16,10 +16,12 @@
 
 package eu.ec2u.data.datasets.offerings;
 
-import com.metreeca.flow.http.actions.GET;
+import com.metreeca.flow.http.actions.Fetch;
+import com.metreeca.flow.http.actions.Parse;
+import com.metreeca.flow.http.actions.Query;
+import com.metreeca.flow.json.formats.JSON;
 import com.metreeca.flow.services.Logger;
-import com.metreeca.flow.xml.XPath;
-import com.metreeca.flow.xml.formats.HTML;
+import com.metreeca.flow.services.Vault;
 import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.courses.CourseFrame;
@@ -31,11 +33,14 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.http.Request.POST;
 import static com.metreeca.flow.services.Logger.logger;
+import static com.metreeca.flow.services.Vault.vault;
+import static com.metreeca.mesh.Value.*;
+import static com.metreeca.mesh.meta.Values.string;
 import static com.metreeca.shim.Lambdas.lenient;
 import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.Streams.optional;
-import static com.metreeca.shim.Streams.traverse;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
@@ -45,6 +50,8 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
 
 public final class OfferingsUmeaCourses implements Runnable {
+
+    private static final String OFFERINGS_URL="offerings-umea-url";
 
     private static final URI PIPELINE=uri("java:%s".formatted(OfferingsUmeaCourses.class.getName()));
 
@@ -56,26 +63,45 @@ public final class OfferingsUmeaCourses implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private final Vault vault=service(vault());
     private final Logger logger=service(logger());
 
 
     @Override
     public void run() {
-        time(() -> Stream
+        time(() -> Stream.of(vault.get(OFFERINGS_URL))
 
-                .of("https://www.umu.se/utbildning/sok/?edu=c")
+                .flatMap(optional(new Query(request -> request
 
-                .flatMap(traverse(
+                        .method(POST)
 
-                        url -> Stream.of(url)
-                                .flatMap(optional(new GET<>(new HTML())))
-                                .map(XPath::new),
+                        .header("Content-Type", "application/json")
+                        .header("Accept", "application/json")
 
-                        path -> path.links("//ul[@class='pagination text-center']//a/@href"),
-                        path -> path.links("//a[contains(@class,'eduName')]/@href")
+                        .body(new JSON(), object(
+                                field("Query", string("")),
+                                field("Skip", string("0")),
+                                field("Take", string("10000")),
+                                field("QueryPrefix", string("hepp")),
+                                field("Filters", array(
+                                        object(
+                                                field("Type", integer(2)),
+                                                field("Value", string("1305560umucms,1305559umucms"))
+                                        ),
+                                        object(
+                                                field("Type", integer(5)),
+                                                field("Name", string("contentlabel")),
+                                                field("Value", string("kurs"))
+                                        )
+                                ))
+                        ))
 
-                ))
+                )))
 
+                .flatMap(optional(new Fetch()))
+                .flatMap(optional(new Parse<>(new JSON())))
+
+                .flatMap(v -> v.select("hits.*.url").strings())
                 .flatMap(optional(lenient(URIs::uri)))
 
                 .collect(collectingAndThen(toSet(), new PageKeeper<CourseFrame>(PIPELINE)

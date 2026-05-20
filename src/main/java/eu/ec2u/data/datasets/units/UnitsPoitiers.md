@@ -1,20 +1,20 @@
-# Sites
+# Sources
 
-* none
+- none
 
 # Integration
 
-* data loaded from a REST/JSON API provided by a national catalog
-* APi docs @ https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/console
+- data loaded from a REST/JSON API provided by a national catalog
+- APi docs @ https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/console
 
 ## 2024-04-24
 
-* upgrade to REST/JSON API provided by RNSR national catalog
-    * https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/records?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles
+- upgrade to REST/JSON API provided by RNSR national catalog
+  - https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/records?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles
 
 ## 2022-12-10
 
-* Initial integration from manually curated Google Sheet
+- Initial integration from manually curated Google Sheet
 
 # Samples
 
@@ -112,4 +112,3 @@ Source pointers provided by UniPoitiesr on 2024-04-09.
 
     - json :
       http://api.archives-ouvertes.fr/ref/structure/?q=parentDocid_i:54493&fq=valid_s:VALID
-

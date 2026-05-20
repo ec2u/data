@@ -1,65 +1,65 @@
-# Site
+# Sources
 
-* general university events
-    * https://www.uni-jena.de/16965/kommende-veranstaltungen
-    * https://www.uni-jena.de/en/16965/events
-* International Office
-    * https://www.uni-jena.de/17425/veranstaltungskalender
-    * https://www.uni-jena.de/en/17425/upcoming-events
-* International Office Calendar (specifically for incoming students)
-    * https://www.uni-jena.de/81092/kalender-studium-international
-    * https://www.uni-jena.de/en/81092/calendar-studium-international
-* EC2U-specific
-    * https://www.uni-jena.de/120659/ec2u-veranstaltungen
-    * https://www.uni-jena.de/en/120659/ec2u-veranstaltungen
-* Graduate Academy
-    * https://www.uni-jena.de/17210/veranstaltungen
-    * https://www.uni-jena.de/en/17210/events
+- general university events
+  - https://www.uni-jena.de/16965/kommende-veranstaltungen
+  - https://www.uni-jena.de/en/16965/events
+- International Office
+  - https://www.uni-jena.de/17425/veranstaltungskalender
+  - https://www.uni-jena.de/en/17425/upcoming-events
+- International Office Calendar (specifically for incoming students)
+  - https://www.uni-jena.de/81092/kalender-studium-international
+  - https://www.uni-jena.de/en/81092/calendar-studium-international
+- EC2U-specific
+  - https://www.uni-jena.de/120659/ec2u-veranstaltungen
+  - https://www.uni-jena.de/en/120659/ec2u-veranstaltungen
+- Graduate Academy
+  - https://www.uni-jena.de/17210/veranstaltungen
+  - https://www.uni-jena.de/en/17210/events
 
 Both German and English endpoints are scanned, generating independent events. Matching and merging localised
 descriptions of the same events was deemed too complex and brittle.
 
 # Integration
 
-* Event info extracted by LLM from event catalog and linked event pages
+- Event info extracted by LLM from event catalog and linked event pages
 
 ## 2025-05-08
 
-* migrated to LLM extraction
+- migrated to LLM extraction
 
 ---
 
 # Legacy API
 
-* JSON-LD + schema.org
-    * page-level metadata
-    * no general structured index
+- JSON-LD + schema.org
+  - page-level metadata
+  - no general structured index
 
 # Integration
 
-* no structured event index
-    * event URLs are scraped crawling from the entry page
-* data extracted from schema.org-based event description embedded into each page as
+- no structured event index
+  - event URLs are scraped crawling from the entry page
+- data extracted from schema.org-based event description embedded into each page as
   a `<script type="application/ld+json">` HTML head element
 
 ## 2024-10-08
 
-* fix XPath expressions for page link scraping
-* add English event publishers
+- fix XPath expressions for page link scraping
+- add English event publishers
 
 ## 2023-01-10
 
-* remove legacy patch for malformed date time zones
+- remove legacy patch for malformed date time zones
 
 ## 2022-06-12
 
-* fix XPath expressions for page link scraping
+- fix XPath expressions for page link scraping
 
 ## 2022-05-19
 
-* prevent generation of duplicate events when dates are modified (#6)
-    * EC2U event IRIs are now generated on the basis of Jena event URLs
-    * events published by multiple calendars are recognized and collapsed
+- prevent generation of duplicate events when dates are modified (#6)
+  - EC2U event IRIs are now generated on the basis of Jena event URLs
+  - events published by multiple calendars are recognized and collapsed
 
 # Samples
 
@@ -150,4 +150,3 @@ descriptions of the same events was deemed too complex and brittle.
   "isAccessibleForFree": false
 }
 ```
-

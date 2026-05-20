@@ -1,8 +1,8 @@
 /.env
 /.idea/
 /.vscode/
-/.claude/
 
+/@/
 /data/
 /target/
 /node_modules/

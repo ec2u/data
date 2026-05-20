@@ -1,43 +1,43 @@
-# Sites
+# Sources
 
-* https://apps.uc.pt/courses/
+- https://apps.uc.pt/courses/
 
 # Integration
 
-* data extracted from dedicated REST/JSON API
+- data extracted from dedicated REST/JSON API
 
 ## Inbox
 
-* Lifelong Learning, our API already sends this information in the "categoriaCursoTipo" field with the value "
+- Lifelong Learning, our API already sends this information in the "categoriaCursoTipo" field with the value "
   FORMACAO_LONGO_VIDA".
 
 ## 2024-05-03
 
-* Ingest offerings identifiers
+- Ingest offerings identifiers
 
 ## 2023-03-07
 
-* Classify entries as programs/courses according to the `cicloTipo` field:
-  * `PRIMEIRO/SEGUNDO/TERCEIRO` ›› degree programs
-  * `NAO_CONFERENTE_GRAU` ›› courses
+- Classify entries as programs/courses according to the `cicloTipo` field:
+  - `PRIMEIRO/SEGUNDO/TERCEIRO` ›› degree programs
+  - `NAO_CONFERENTE_GRAU` ›› courses
 
 ## 2023-01-17
 
-* Integrate `schema:inLanguage`
+- Integrate `schema:inLanguage`
 
 ## 2023-01-12
 
-* Add additional parameters to exclude non-current courses (`obterInformacaoFichaCurso`/`devolverSoCursosComFichaCurso`)
-* Select academic year dynamically on the current date
-* Integrate additional data
-  * `schema:learningResourceType`
-  * `schema:numberOfCredits`
-  * ``schema:timeRequired`
-  * `schema:teaches`
-  * `schem:assesses`
-  * `schema:coursePrerequisites`
-  * `schema:competencyRequired`
-  * `schema:educationalCredentialAwarded`
+- Add additional parameters to exclude non-current courses (`obterInformacaoFichaCurso`/`devolverSoCursosComFichaCurso`)
+- Select academic year dynamically on the current date
+- Integrate additional data
+  - `schema:learningResourceType`
+  - `schema:numberOfCredits`
+  - ``schema:timeRequired`
+  - `schema:teaches`
+  - `schem:assesses`
+  - `schema:coursePrerequisites`
+  - `schema:competencyRequired`
+  - `schema:educationalCredentialAwarded`
 
 ## 2022-10-07
 
@@ -59,7 +59,7 @@
 
 ## 2022-09-27
 
-* Initial integration
+- Initial integration
 
 # Feeds
 

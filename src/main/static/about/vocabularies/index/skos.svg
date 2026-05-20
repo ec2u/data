@@ -16,7 +16,7 @@
   -->
 
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/"
+<svg version="1.1"
         xmlns="http://www.w3.org/2000/svg" viewBox="495 408 350 272" width="350" height="272">
     <defs>
         <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker"

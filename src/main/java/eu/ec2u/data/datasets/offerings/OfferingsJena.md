@@ -1,28 +1,28 @@
-# Sites
+# Sources
 
-* https://www.uni-jena.de/en/study-programme
+- https://www.uni-jena.de/en/study-programme
 
 # Integration
 
-* program catalog
-    * scraped from main site page
+- program catalog
+  - scraped from main site page
 
-* program details
-    * page-level JSON-LD + **scheme:AboutPage** metadata
-    * no detailed **schema:EducationalOccupationalProgram **description
+- program details
+  - page-level JSON-LD + **scheme:AboutPage** metadata
+  - no detailed **schema:EducationalOccupationalProgram **description
 
 ## Inbox
 
-* `educationalLevel` isn’t populated any longer
-* ingest language from `"inLanguage": "en-GB"`
+- `educationalLevel` isn't populated any longer
+- ingest language from `"inLanguage": "en-GB"`
 
 ## 2024-04-03
 
-* fix root XPath crawling expression
+- fix root XPath crawling expression
 
 ## 2023-03-02
 
-* Initial integration
+- Initial integration
 
 # Samples
 
@@ -93,4 +93,3 @@ GET https://www.uni-jena.de/en/bsc-applied-computer-science
 }
 </script>
 ```
-

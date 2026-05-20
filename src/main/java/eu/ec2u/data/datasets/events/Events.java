@@ -289,7 +289,9 @@ public interface Events extends Dataset {
                 final Optional<String> venueName=venueName(json);
                 final Optional<String> venueAddress=venueAddress(json);
 
-                final Optional<SchemaLocationFrame> location=attendanceURL.map(au -> new SchemaLocationFrame()
+                final Optional<SchemaLocationFrame> location=attendanceURL
+
+                        .map(au -> new SchemaLocationFrame()
                                 .VirtualLocation(new SchemaVirtualLocationFrame()
                                         .url(set(au))
                                 )

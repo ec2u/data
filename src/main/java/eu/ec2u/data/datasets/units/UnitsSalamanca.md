@@ -1,48 +1,48 @@
-# Sites
+# Sources
 
-* https://usal.es/institutos-investigacion
-* https://investigacion.usal.es/es/empresas/gir
+- https://usal.es/institutos-investigacion
+- https://investigacion.usal.es/es/empresas/gir
 
 # Integration
 
-* general research unit data extracted from dedicated REST/JSON API
-* research unit ‹› virtual institute associations extracted from manually curated Google Sheet
+- general research unit data extracted from dedicated REST/JSON API
+- research unit ‹› virtual institute associations extracted from manually curated Google Sheet
 
 ## Pending
 
-* waiting for API extensions
-    * research centres
-    * description
-    * extended contact data
+- waiting for API extensions
+  - research centres
+  - description
+  - extended contact data
 
 ## 2022-10-20
 
-* automated ingestion of research unit ‹› virtual institute associations
+- automated ingestion of research unit ‹› virtual institute associations
 
 ## 2022-10-06
 
-* extract institute data
-* add branch/RIS3 classification
-* add homepage link
-* add virtual institute membership
+- extract institute data
+- add branch/RIS3 classification
+- add homepage link
+- add virtual institute membership
 
 ## 2022-09-26
 
-* extract department data
+- extract department data
 
 ## 2022-09-23
 
-* add `org:classification` data
+- add `org:classification` data
 
 ## 2022-09-07
 
-* initial integration from REST/JSON API
+- initial integration from REST/JSON API
 
 # Feeds
 
 ## REST/JSON API
 
-* based on the same database feeding https://investigacion.usal.es/GIR
+- based on the same database feeding https://investigacion.usal.es/GIR
 
 ```http
 GET {{units-salamanca-url}}
@@ -107,4 +107,4 @@ Authorization: Basic {{units-salamanca-key}}
 
 ## ~~Microdata~~
 
-* no annotations, but USAL available to add if required and under guidance
+- no annotations, but USAL available to add if required and under guidance

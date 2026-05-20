@@ -1,26 +1,26 @@
-# Sites
+# Sources
 
-* https://guias.usal.es/
+- https://guias.usal.es/
 
 # Integration
 
-* data extracted from a set of dedicated REST/JSON APIs
+- data extracted from a set of dedicated REST/JSON APIs
 
 ## 2023-03-29
 
-* remove patches for clashing offer names
+- remove patches for clashing offer names
 
 ## 2023-03-02
 
-* integrate programs and programs-courses APIs
+- integrate programs and programs-courses APIs
 
 ## 2023-01-17
 
-* Integrate `schema:timeRequired`
+- Integrate `schema:timeRequired`
 
 ## 2023-01-12
 
-* Initial integration
+- Initial integration
 
 # Feeds
 
