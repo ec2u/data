@@ -29,8 +29,9 @@ import com.metreeca.flow.services.Cache.FileCache;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.flow.text.services.Translator.CacheTranslator;
 
-import com.openai.models.chat.completions.ChatCompletionCreateParams;
-import com.openai.models.embeddings.EmbeddingCreateParams;
+import com.google.genai.types.GenerateContentConfig;
+import com.google.genai.types.HttpOptions;
+import com.google.genai.types.ThinkingConfig;
 import eu.ec2u.data.datasets.Datasets;
 import eu.ec2u.data.datasets.courses.Courses;
 import eu.ec2u.data.datasets.documents.Documents;
@@ -44,17 +45,16 @@ import eu.ec2u.data.datasets.universities.Universities;
 import eu.ec2u.data.services.Pipelines;
 import eu.ec2u.data.services.Resources;
 import eu.ec2u.work.ai.Embedder.CacheEmbedder;
-import eu.ec2u.work.ai.open.OpenAI;
-import eu.ec2u.work.ai.open.OpenAnalyzer;
-import eu.ec2u.work.ai.open.OpenEmbedder;
-import eu.ec2u.work.ai.open.OpenTranslator;
+import eu.ec2u.work.ai.gemini.Gemini;
+import eu.ec2u.work.ai.gemini.GeminiAnalyzer;
+import eu.ec2u.work.ai.gemini.GeminiEmbedder;
+import eu.ec2u.work.ai.gemini.GeminiTranslator;
 import eu.ec2u.work.ai.store.StoreTranslator;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
 import java.net.URI;
 import java.nio.file.Paths;
-import java.time.Duration;
 
 import static com.metreeca.flow.Locator.path;
 import static com.metreeca.flow.Locator.service;
@@ -74,7 +74,7 @@ import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static eu.ec2u.work.ai.Embedder.embedder;
-import static eu.ec2u.work.ai.open.OpenAI.openai;
+import static eu.ec2u.work.ai.gemini.Gemini.gemini;
 import static java.lang.String.format;
 import static java.time.Duration.ofDays;
 import static java.util.logging.Level.INFO;
@@ -115,16 +115,12 @@ public final class Data extends Delegator {
         return repository;
     }
 
-    private static void chat(final ChatCompletionCreateParams.Builder builder) {
+    private static void generate(final GenerateContentConfig.Builder builder) {
         builder
-                .model("gpt-4o-mini")
                 .seed(0)
-                .temperature(0)
-                .maxCompletionTokens(4096);
-    }
-
-    private static void embedding(final EmbeddingCreateParams.Builder builder) {
-        builder.model("text-embedding-3-small");
+                .temperature(0.0f)
+                .maxOutputTokens(4096)
+                .thinkingConfig(ThinkingConfig.builder().thinkingBudget(0)); // cost: no reasoning tokens
     }
 
 
@@ -150,13 +146,15 @@ public final class Data extends Delegator {
                         .base(DATA)
                 )
 
-                .set(openai(), () -> new OpenAI(service(vault()).get("openai-key"), builder -> builder
-                        .timeout(Duration.ofSeconds(60))
+                .set(gemini(), () -> new Gemini(service(vault()).get("gemini-key"), builder -> builder
+                        .httpOptions(HttpOptions.builder().timeout(60*1000).build())
                 ))
 
-                .set(translator(), () -> new CacheTranslator(new StoreTranslator(new OpenTranslator(Data::chat))))
-                .set(analyzer(), () -> new OpenAnalyzer(Data::chat))
-                .set(embedder(), () -> new CacheEmbedder(new OpenEmbedder(Data::embedding)));
+                .set(translator(), () -> new CacheTranslator(new StoreTranslator(
+                        new GeminiTranslator("gemini-2.5-flash-lite", Data::generate)
+                )))
+                .set(analyzer(), () -> new GeminiAnalyzer("gemini-2.5-flash-lite", Data::generate))
+                .set(embedder(), () -> new CacheEmbedder(new GeminiEmbedder("gemini-embedding-001")));
 
     }
 
