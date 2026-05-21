@@ -1,17 +1,16 @@
 ---
 name: "Bug Report"
 about: "Create a report to help us improve"
-title: "What's wrong with @ec2u/data?"
-labels: "Issue"
-assignees: ""
+title: "What's wrong with the EC2U Knowledge Hub?"
+type: "Bug"
 ---
-
 
 **environment**
 
-- @ec2u/data: *version*
+- area: *backend / frontend / data / deployment*
+- dataset / endpoint: *name or URL, if applicable*
+- browser: *name/version, if applicable*
 - operating system: *name/version*
-- browser: *vendor/version*
 
 **steps to reproduce**
 
@@ -33,7 +32,3 @@ assignees: ""
 **notes**
 
 *Would you share any observation or additional context about the bug?*
-
-**screenshots /recordings**
-
-*Are you able to document the issue with screenshot and/or recordings?*

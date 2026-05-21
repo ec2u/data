@@ -1,11 +1,9 @@
 ---
 name: "Feature Request"
 about: "Suggest an idea for this project"
-title: "What's missing from @ec2u/data?"
-labels: "Story"
-assignees: ""
+title: "What's missing from the EC2U Knowledge Hub?"
+type: "Feature"
 ---
-
 
 **challenge / use case**
 
@@ -22,7 +20,3 @@ assignees: ""
 **notes**
 
 *Would you share any consideration or additional context about the request?*
-
-**screenshots / wireframes**
-
-*Are you able to document the request with screenshots and/or wireframes?*
