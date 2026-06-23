@@ -43,7 +43,32 @@ uses Maven to orchestrate both Java compilation and frontend bundling via the fr
 - **Secrets**: GraphDB credentials, OpenAI API key, and sensitive parameters for accessing data sources stored in
   Google Cloud Secret Manager
 
+# Issue Tracking
+
+Issues live in `ec2u/data` and belong to the Knowledge Hub project (`github.com/orgs/ec2u/projects/8`).
+
+## Titles
+
+- No type prefix: the kind of work is carried by the GitHub **Type** field (Feature/Task/Bug), never repeated in the
+  title.
+- No dataset or university breadcrumb prefixes (for example `Events › Pavia › …`): that scope is carried by labels.
+- Write each title as a readable, standalone description of the work.
+
+## Labels
+
+- **Type** is set via the GitHub **Type** field, not via labels.
+- `set:<dataset>` (light green `c2e0c6`) tags the major KH dataset(s) an issue touches: `set:courses`,
+  `set:programs`, `set:events`, `set:documents`, `set:persons`, `set:units`, `set:organizations`,
+  `set:universities`. Apply one per affected dataset.
+- `uni:<city>` (light blue `c5def5`) tags university-specific issues: `uni:coimbra`, `uni:iasi`, `uni:jena`,
+  `uni:linz`, `uni:pavia`, `uni:poitiers`, `uni:salamanca`, `uni:turku`, `uni:umea`. Omit for cross-university work.
+
 # Development
+
+## Branching
+
+Branch issue work off `next` (the integration branch), not `main`. Issue branches follow the
+`{type}/gh-{number}-{slug}` convention and merge back into `next`.
 
 ## Workflow
 
