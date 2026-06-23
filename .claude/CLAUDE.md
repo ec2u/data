@@ -51,10 +51,11 @@ the authoritative, non-technical status record for that source and must read as 
 
 ## Structure
 
-- **Front matter** — YAML with `title` (breadcrumb `University › Dataset`, or `University › Dataset › Source` for one
-  feed among several), `summary`, `description`, plus `university`, `dataset`, `status` (`active`, or `planned` for a
-  source not yet integrated), and `version` (the current version's start date). No H1 heading: the title lives in the
-  front matter.
+- **Front matter** — YAML with `title`, `summary`, `description`, and `status` (`active`, or `planned` for a source not
+  yet integrated). The `title` is a breadcrumb following the harvester class-name segments, `Dataset › University`
+  (e.g. `Events › Turku › University`, `Events › Iași › University › 360`, `Events › Pavia › Ghislieri`). No H1 heading:
+  the title lives in the front matter. Do not duplicate the university or dataset (already in the title) or a version
+  date (already the newest version section) as separate keys.
 - **Intro** — one short paragraph noting that the most recent version is listed first and superseded versions are kept
   below (drop the superseded clause when there is only one version).
 - **One section per major version**, newest first, headed `# <YYYY-MM-DD> – <name>` where the date is the version's
@@ -62,12 +63,21 @@ the authoritative, non-technical status record for that source and must read as 
   adjusting the data model) and **patches** (bug fixes) stay as change-log entries within the current version. Each
   section holds, in order:
   - a one-line description of the integration approach (no `Integration` heading);
-  - a sources table with `Source` and `Notes` columns, listing that version's sources (no `Sources` heading);
+  - a sources table (no `Sources` heading), **one row per URL**, with columns:
+    - `Source` — the full URL **inline** (no reference links);
+    - `Description` — the source name followed by a lowercase ISO language tag in brackets, e.g.
+      `General university events [de]`, `International Office [en]`;
+    - `Notes` — optional, included only when a row needs an extra remark;
   - a change log: a plain bullet list (no heading), newest first, each `- **<YYYY-MM-DD>** – <change>`, ending with an
     `initial integration` entry dated to the version's start.
 - Use en dashes (`–`) as the date/label separator; ISO dates and list bullets keep hyphens; no em dashes.
-- Write source URLs as Markdown **reference-style links** (`[label][id]`) with all `[id]: …` definitions collected in
-  one block at the bottom of the file, so table cells stay short and lines fit within 120 columns.
+- Inline source URLs make some table rows exceed 120 columns; that is accepted for these reports. Run the IDE formatter
+  (`mcp__idea__reformat_file`) after editing rather than hand-aligning.
+- Preserve the whole source URL. Show it inline when it has no query string. When a URL has a query string (regardless
+  of length) or is otherwise overly long, use a Markdown **reference-style link**: a shortened display label
+  (host + path + `…`, e.g. `[data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/…][rnsr-all]`) as the link text and
+  the complete, unaltered URL in a `[id]: <full-url>` definition collected at the bottom of the file. Only the displayed
+  label is shortened, never the actual URL.
 - Do not keep sample payloads, pending/TODO sections (track those as issues), or a separate `Legacy` block (superseded
   versions are their own sections). A retired alternative source that never had its own version may be noted as a
   struck-through entry under a short trailing `## Notes`.
@@ -82,6 +92,24 @@ the authoritative, non-technical status record for that source and must read as 
 - Confluence is reachable through the Atlassian Rovo MCP connector (read/write page scopes; available from the desktop
   app). Fetch and update pages with the `mcp__claude_ai_Atlassian_Rovo__*` tools, using cloud id
   `d5be8c79-ba10-4633-b4c5-f9ccaae17563`.
+
+### Status page cell requirements
+
+Each dataset × university cell on the **Knowledge Hub - Status** page must carry, in order:
+
+- a GitHub block-card link to the report on `main`
+  (`<div data-type="block-card" data-url="https://github.com/ec2u/data/blob/main/.../<File>.md">…</div>`); the matching
+  university-events report goes in the **University** row, non-university feeds (e.g. the Pavia colleges) in the **Other**
+  row;
+- a **brief one-line summary** of the current integration approach, consistent in wording across cells of the same kind
+  (for example, all manually-curated documents read "initial integration with data loaded from a manually curated
+  sheet", with population caveats phrased identically: "created but yet to be populated");
+- a **background colour** matching the integration status per the Services page status legend
+  (https://ec2u.atlassian.net/wiki/spaces/infrastructure/pages/248709121/Services#Status):
+  `#e3fcef` green = Operational service, `#fffae6` yellow = Demonstrator available, `#ffebe6` pink = Activity underway,
+  `#eae6ff` purple = No information available / Activity not started.
+
+Leave task-list items (`data-type="task-list"`) and Contacts expandos (`<details>`) untouched when editing cells.
 
 **Commit checklist**: when a commit changes how a source is harvested, update that source's integration-notes `.md`
 and the Confluence **Knowledge Hub - Status** page in the same change before committing.

@@ -1,11 +1,8 @@
 ---
-title: Poitiers › Offerings
+title: Offerings › Poitiers
 summary: Integration status for Poitiers offerings
 description: Integration status for the Poitiers university offerings dataset.
-university: Poitiers
-dataset: Offerings
 status: active
-version: 2023
 ---
 
 Authoritative integration status for the Poitiers offerings dataset.

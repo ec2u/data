@@ -1,11 +1,8 @@
 ---
-title: Jena › Units
+title: Units › Jena
 summary: Integration status for Jena research units
 description: Integration status for the Jena university research units dataset.
-university: Jena
-dataset: Units
 status: active
-version: 2022-12-13
 ---
 
 Authoritative integration status for the Jena university research units dataset.

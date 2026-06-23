@@ -1,9 +1,7 @@
 ---
-title: Pavia › Events › Borromeo
+title: Events › Pavia › Borromeo
 summary: Integration status for Pavia Borromeo events
 description: Integration status for the Pavia Almo Collegio Borromeo events source.
-university: Pavia
-dataset: Events
 status: planned
 ---
 
@@ -13,10 +11,8 @@ Authoritative integration status for the Pavia Almo Collegio Borromeo events sou
 
 Not yet integrated: no crawling entry point and calendar subscriptions available only on a month-by-month basis.
 
-| Source                           | Notes                                                                  |
-|----------------------------------|------------------------------------------------------------------------|
-| [eventi][borromeo-eventi]        | Almo Collegio Borromeo / Calendario; Almo Collegio Borromeo / Calendar |
+| Source                                  | Description |
+|-----------------------------------------|-------------|
+| https://www.collegioborromeo.it/eventi/ | eventi [it] |
 
 - integration not yet implemented
-
-[borromeo-eventi]: https://www.collegioborromeo.it/eventi/
