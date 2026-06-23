@@ -1,11 +1,8 @@
 ---
-title: Coimbra › Documents
+title: Documents › Coimbra
 summary: Integration status for Coimbra documents
 description: Integration status for the Coimbra university institutional documents dataset.
-university: Coimbra
-dataset: Documents
 status: active
-version: 2023-07-12
 ---
 
 Authoritative integration status for the Coimbra institutional documents dataset.

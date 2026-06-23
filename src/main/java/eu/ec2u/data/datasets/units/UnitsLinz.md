@@ -1,11 +1,8 @@
 ---
-title: Linz › Units
+title: Units › Linz
 summary: Integration status for Linz research units
 description: Integration status for the Linz university research units dataset.
-university: Linz
-dataset: Units
 status: active
-version: 2024-04-16
 ---
 
 Authoritative integration status for the Linz university research units dataset.

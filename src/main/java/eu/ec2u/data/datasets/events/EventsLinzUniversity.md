@@ -1,11 +1,8 @@
 ---
-title: Linz › Events
+title: Events › Linz › University
 summary: Integration status for Linz events
 description: Integration status for the Linz university events dataset.
-university: Linz
-dataset: Events
 status: active
-version: 2024-11-13
 ---
 
 Authoritative integration status for the Linz university events dataset.
@@ -14,10 +11,8 @@ Authoritative integration status for the Linz university events dataset.
 
 Event info extracted by AI from the event catalogue and linked event pages.
 
-| Source                      | Notes                                                                               |
-|-----------------------------|-------------------------------------------------------------------------------------|
-| [news & events][jku-events] | University of Linz / News & Events; Universität Linz / Nachrichten & Veranstaltungen |
+| Source                                 | Description        |
+|----------------------------------------|--------------------|
+| https://www.jku.at/news-events/events/ | news & events [de] |
 
 - **2024-11-13** – initial integration
-
-[jku-events]: https://www.jku.at/news-events/events/

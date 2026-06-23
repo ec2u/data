@@ -1,11 +1,8 @@
 ---
-title: Turku › Documents
+title: Documents › Turku
 summary: Integration status for Turku documents
 description: Integration status for the Turku university institutional documents dataset.
-university: Turku
-dataset: Documents
 status: active
-version: 2023-07-12
 ---
 
 Authoritative integration status for the Turku institutional documents dataset.

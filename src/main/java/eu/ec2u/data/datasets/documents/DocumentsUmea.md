@@ -1,11 +1,8 @@
 ---
-title: Umeå › Documents
+title: Documents › Umeå
 summary: Integration status for Umeå documents
 description: Integration status for the Umeå university institutional documents dataset.
-university: Umeå
-dataset: Documents
 status: active
-version: 2025-05-22
 ---
 
 Authoritative integration status for the Umeå institutional documents dataset.

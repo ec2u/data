@@ -1,11 +1,8 @@
 ---
-title: Jena › Documents
+title: Documents › Jena
 summary: Integration status for Jena documents
 description: Integration status for the Jena university institutional documents dataset.
-university: Jena
-dataset: Documents
 status: active
-version: 2023-07-12
 ---
 
 Authoritative integration status for the Jena institutional documents dataset.

@@ -1,11 +1,8 @@
 ---
-title: Iași › Units
+title: Units › Iași
 summary: Integration status for Iași research units
 description: Integration status for the Iași university research units dataset.
-university: Iași
-dataset: Units
 status: active
-version: 2022-10-20
 ---
 
 Authoritative integration status for the Iași university research units dataset.

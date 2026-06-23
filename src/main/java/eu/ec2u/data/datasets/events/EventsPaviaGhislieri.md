@@ -1,9 +1,7 @@
 ---
-title: Pavia › Events › Ghislieri
+title: Events › Pavia › Ghislieri
 summary: Integration status for Pavia Ghislieri events
 description: Integration status for the Pavia Ghislieri Foundation events source.
-university: Pavia
-dataset: Events
 status: planned
 ---
 
@@ -13,10 +11,8 @@ Authoritative integration status for the Pavia Ghislieri Foundation events sourc
 
 Not yet integrated: no easily crawlable event catalogue and detailed event info available only as PDF.
 
-| Source                                  | Notes                                                                           |
-|-----------------------------------------|---------------------------------------------------------------------------------|
-| [Calendario Eventi][ghislieri-calendar] | Fondazione Ghislieri / Calendario Eventi; Ghislieri Foundation / Events Calendar |
+| Source                                      | Description            |
+|---------------------------------------------|------------------------|
+| https://www.ghislieri.it/calendario-eventi/ | Calendario Eventi [it] |
 
 - integration not yet implemented
-
-[ghislieri-calendar]: https://www.ghislieri.it/calendario-eventi/

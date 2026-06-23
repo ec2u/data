@@ -1,11 +1,8 @@
 ---
-title: Turku › Units
+title: Units › Turku
 summary: Integration status for Turku research units
 description: Integration status for the Turku university research units dataset.
-university: Turku
-dataset: Units
 status: active
-version: 2022-12-13
 ---
 
 Authoritative integration status for the Turku university research units dataset.
