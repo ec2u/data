@@ -43,6 +43,24 @@ uses Maven to orchestrate both Java compilation and frontend bundling via the fr
 - **Secrets**: GraphDB credentials, OpenAI API key, and sensitive parameters for accessing data sources stored in
   Google Cloud Secret Manager
 
+# Data Source Integration Notes
+
+Each data source harvester carries an integration-notes Markdown file alongside it (for example,
+`src/main/java/eu/ec2u/data/datasets/offerings/OfferingsJena.md` next to `OfferingsJena.java`), recording sources,
+integration approach, dated change log, an `Inbox` of pending items, and sample payloads.
+
+- Keep the relevant `.md` up to date after every change that affects how a source is harvested (source URLs, selectors,
+  mapped fields, known issues).
+- Keep the consolidated summary in sync: the **Knowledge Hub - Status** page on Confluence
+  (https://ec2u.atlassian.net/wiki/x/b4FKF, space *Infrastructure*, page id `340427119`), a dataset × university
+  integration matrix.
+- Confluence is reachable through the Atlassian Rovo MCP connector (read/write page scopes; available from the desktop
+  app). Fetch and update pages with the `mcp__claude_ai_Atlassian_Rovo__*` tools, using cloud id
+  `d5be8c79-ba10-4633-b4c5-f9ccaae17563`.
+
+**Commit checklist**: when a commit changes how a source is harvested, update that source's integration-notes `.md`
+and the Confluence **Knowledge Hub - Status** page in the same change before committing.
+
 # Issue Tracking
 
 Issues live in `ec2u/data` and belong to the Knowledge Hub project (`github.com/orgs/ec2u/projects/8`).
