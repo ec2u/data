@@ -1,13 +1,23 @@
-# Sources
+---
+title: Umeå › Events
+summary: Integration status for Umeå events
+description: Integration status for the Umeå university events dataset.
+university: Umeå
+dataset: Events
+status: active
+version: 2025-05-16
+---
 
-- https://www.umu.se/en/events/
-  - Umeå University / Events
-  - Umeå universitet / Kalender
+Authoritative integration status for the Umeå university events dataset.
 
-# Integration
+# 2025-05-16 – AI extraction
 
-- Event info extracted by LLM from event catalog and linked event pages
+Event info extracted by AI from the event catalogue and linked event pages.
 
-## 2025-05-16
+| Source                    | Notes                                                |
+|---------------------------|------------------------------------------------------|
+| [events][umu-events]      | Umeå University / Events; Umeå universitet / Kalender |
 
-- initial integration
+- **2025-05-16** – initial integration
+
+[umu-events]: https://www.umu.se/en/events/

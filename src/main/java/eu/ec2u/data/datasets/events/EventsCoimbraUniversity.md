@@ -1,36 +1,28 @@
-# Sources
-
-- https://agenda.coimbra.pt/
-  - Coimbra Agenda
-  - Agenda Coimbra
-
-# Integration
-
-- Event catalog extracted by scanning the site event search service
-- Event info extracted by LLM from event pages
-
-## 2025-05-08
-
-- migrated from https://agenda.uc.pt/ to https://agenda.coimbra.pt/
-
+---
+title: Coimbra › Events
+summary: Integration status for Coimbra events
+description: Integration status for the Coimbra university events dataset.
+university: Coimbra
+dataset: Events
+status: active
+version: 2022-02-26
 ---
 
-# Alternate Sources
+Authoritative integration status for the Coimbra university events dataset.
 
-## REST/JSON API
+# 2022-02-26 – AI extraction
 
-### Home page events
+Event catalogue extracted by scanning the site event search service; event info extracted by AI from event pages.
+An alternate REST/JSON API is available at the [content API][content-api] (home page events at
+`/v1/agenda/events/homepage`, search at `/v1/agenda/events/search`, event detail at `/v1/agenda/events/{event_key}`).
 
-GET /v1/agenda/events/homepage
-curl --location 'https://content.fw.uc.pt/v1/agenda/events/homepage'
+| Source                        | Notes                          |
+|-------------------------------|--------------------------------|
+| [agenda Coimbra][agenda-pt]   | Coimbra Agenda; Agenda Coimbra |
 
-### Search all events
+- **2025-05-08** – migrated from [agenda.uc.pt][agenda-uc] to [agenda.coimbra.pt][agenda-pt]
+- **2022-02-26** – initial integration
 
-GET /v1/agenda/events/search
-curl
---location 'https://content.fw.uc.pt/v1/agenda/events/search?page=1&limit=20&category=conference&start_date=2025-01-01&end_date=2025-06-01'
-
-### Event detail
-
-GET /v1/agenda/events/{event_key}
-curl --location 'https://content.fw.uc.pt/v1/agenda/events/ 017poxwx7b7650xz'
+[content-api]: https://content.fw.uc.pt
+[agenda-pt]: https://agenda.coimbra.pt/
+[agenda-uc]: https://agenda.uc.pt/

@@ -1,11 +1,21 @@
-# Sources
+---
+title: Iași › Units
+summary: Integration status for Iași research units
+description: Integration status for the Iași university research units dataset.
+university: Iași
+dataset: Units
+status: active
+version: 2022-10-20
+---
 
-- none
+Authoritative integration status for the Iași university research units dataset.
 
-# Integration
+# 2022-10-20 – Curated Google Sheet
 
-- data loaded from manually curated Google Sheet
+Data loaded from a manually curated Google Sheet.
 
-## 2022-10-20
+| Source | Notes |
+|--------|-------|
+| none   |       |
 
-- Initial integration
+- **2022-10-20** – initial integration

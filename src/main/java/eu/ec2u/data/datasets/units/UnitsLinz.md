@@ -1,11 +1,21 @@
-# Sources
+---
+title: Linz › Units
+summary: Integration status for Linz research units
+description: Integration status for the Linz university research units dataset.
+university: Linz
+dataset: Units
+status: active
+version: 2024-04-16
+---
 
-- none
+Authoritative integration status for the Linz university research units dataset.
 
-# Integration
+# 2024-04-16 – Curated Google Sheet
 
-- data loaded from manually curated Google Sheet
+Data loaded from a manually curated Google Sheet.
 
-## 2024-04-16
+| Source | Notes |
+|--------|-------|
+| none   |       |
 
-- Initial integration
+- **2024-04-16** – initial integration
