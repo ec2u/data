@@ -28,10 +28,6 @@
 - access key stored on GCP Secret Manager
 - required contact address provided by MMT
 
-## Pending
-
-- review availability of image links
-
 ## 2022-06-07
 
 - fix conflicting labels for online locations

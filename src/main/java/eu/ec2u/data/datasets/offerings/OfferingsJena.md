@@ -11,11 +11,6 @@
   - page-level JSON-LD + **scheme:AboutPage** metadata
   - no detailed **schema:EducationalOccupationalProgram **description
 
-## Inbox
-
-- `educationalLevel` isn't populated any longer
-- ingest language from `"inLanguage": "en-GB"`
-
 ## 2024-04-03
 
 - fix root XPath crawling expression
