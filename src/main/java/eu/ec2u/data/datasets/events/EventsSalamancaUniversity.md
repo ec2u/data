@@ -1,12 +1,23 @@
-# Sources
+---
+title: Salamanca › Events
+summary: Integration status for Salamanca events
+description: Integration status for the Salamanca university events dataset.
+university: Salamanca
+dataset: Events
+status: active
+version: 2025-05-09
+---
 
-- https://eventum.usal.es/
+Authoritative integration status for the Salamanca university events dataset.
 
-# Integration
+# 2025-05-09 – AI extraction
 
-- Event catalog retrieved from iCal calendar
-- Event info extracted by LLM from event pages
+Event catalogue retrieved from the iCal calendar; event info extracted by AI from event pages.
 
-## 2025-05-09
+| Source             | Notes |
+|--------------------|-------|
+| [Eventum][eventum] |       |
 
-- Initial integration
+- **2025-05-09** – initial integration
+
+[eventum]: https://eventum.usal.es/

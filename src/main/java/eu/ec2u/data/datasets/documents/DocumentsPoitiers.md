@@ -1,11 +1,17 @@
-# Sources
+---
+title: Poitiers › Documents
+summary: Integration status for Poitiers documents
+description: Integration status for the Poitiers university institutional documents dataset.
+university: Poitiers
+dataset: Documents
+status: active
+version: 2023-07-12
+---
 
-- none
+Authoritative integration status for the Poitiers institutional documents dataset.
 
-# Integration
+# 2023-07-12 – Curated sheet
 
-- data loaded from manually curated Google Sheet
+Data loaded from a manually curated Google Sheet.
 
-## 2023-07-12
-
-- Initial integration
+- **2023-07-12** – initial integration

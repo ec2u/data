@@ -1,13 +1,27 @@
-# Sources
+---
+title: Pavia › Units
+summary: Integration status for Pavia research units
+description: Integration status for the Pavia university research units dataset.
+university: Pavia
+dataset: Units
+status: active
+version: 2024-11-11
+---
 
-- https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti
-- https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-servizio-dateneo
-- https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-ricerca-interdipartimentali
+Authoritative integration status for the Pavia university research units dataset.
 
-# Integration
+# 2024-11-11 – LLM extraction
 
-- Structured data extracted by LLM from sites and linked pages
+Structured data extracted by LLM from sites and linked pages.
 
-## 2024-11-11
+| Source                                            | Notes |
+|---------------------------------------------------|-------|
+| [departments][dipartimenti]                       |       |
+| [service centres][centri-servizio]                |       |
+| [interdepartmental centres][centri-interdip]      |       |
 
-- Initial integration
+- **2024-11-11** – initial integration
+
+[dipartimenti]: https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti
+[centri-servizio]: https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-servizio-dateneo
+[centri-interdip]: https://portale.unipv.it/it/ricerca/strutture-di-ricerca/centri-di-ricerca/centri-di-ricerca-interdipartimentali

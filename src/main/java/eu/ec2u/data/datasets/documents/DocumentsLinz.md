@@ -1,11 +1,17 @@
-# Sources
+---
+title: Linz › Documents
+summary: Integration status for Linz documents
+description: Integration status for the Linz university institutional documents dataset.
+university: Linz
+dataset: Documents
+status: active
+version: 2025-05-22
+---
 
-- none
+Authoritative integration status for the Linz institutional documents dataset.
 
-# Integration
+# 2025-05-22 – Curated sheet
 
-- data loaded from manually curated Google Sheet
+Data loaded from a manually curated Google Sheet.
 
-## 2025-05-22
-
-- Initial integration
+- **2025-05-22** – initial integration

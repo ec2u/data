@@ -1,27 +1,39 @@
-# Sources
+---
+title: Poitiers › Events
+summary: Integration status for Poitiers events
+description: Integration status for the Poitiers university events dataset, current and superseded source versions.
+university: Poitiers
+dataset: Events
+status: active
+version: 2025-05-07
+---
 
-- https://www.univ-poitiers.fr/c/actualites/
-  - University of Poitiers / News and Events
-  - Université de Poitiers / Actualités et événements
+Authoritative integration status for the Poitiers university events dataset. The most recent version is listed first;
+superseded versions are kept below for the record.
 
-# Integration
+# 2025-05-07 – AI extraction
 
-- Event info extracted by LLM from event catalog @ https://www.univ-poitiers.fr/searchevents/ and linked event pages
+Event info extracted by AI from the [event catalogue][poitiers-search] and linked event pages.
 
-## 2025-05-07
+| Source                      | Notes                                                                                      |
+|-----------------------------|--------------------------------------------------------------------------------------------|
+| [actualités][poitiers-actu] | University of Poitiers / News and Events; Université de Poitiers / Actualités et événements |
 
-- migrated to LLM extraction
+- **2025-05-07** – migrated to AI extraction
 
-## 2024-04-24
+# 2022-02-26 – RSS adapter
 
-- extend to https://www.univ-poitiers.fr/feed
-- fix location IRI generation
+Custom RSS adapter parsing the source feed and its extended custom fields.
 
-## 2022-05-30
+| Source                      | Notes                                                                                      |
+|-----------------------------|--------------------------------------------------------------------------------------------|
+| [actualités][poitiers-actu] | University of Poitiers / News and Events; Université de Poitiers / Actualités et événements |
 
-- updated RSS feed URL
-- extract `schema:image`
+- **2024-04-24** – extended to [the feed][poitiers-feed]; fixed location IRI generation
+- **2022-05-30** – updated RSS feed URL; extract `schema:image`
+- **2022-05-20** – migrated to custom RSS adapter to take advantage of extended custom fields
+- **2022-02-26** – initial integration
 
-## 2022-05-20
-
-- migrated to custom RSS adapter to take advantage of extended custom fields
+[poitiers-search]: https://www.univ-poitiers.fr/searchevents/
+[poitiers-actu]: https://www.univ-poitiers.fr/c/actualites/
+[poitiers-feed]: https://www.univ-poitiers.fr/feed

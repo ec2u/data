@@ -45,9 +45,34 @@ uses Maven to orchestrate both Java compilation and frontend bundling via the fr
 
 # Data Source Integration Notes
 
-Each data source harvester carries an integration-notes Markdown file alongside it (for example,
-`src/main/java/eu/ec2u/data/datasets/offerings/OfferingsJena.md` next to `OfferingsJena.java`), recording sources,
-integration approach, dated change log, an `Inbox` of pending items, and sample payloads.
+Each data source harvester carries a standalone integration-notes Markdown file alongside it (for example,
+`src/main/java/eu/ec2u/data/datasets/events/EventsTurkuUniversity.md` next to `EventsTurkuUniversity.java`). The file is
+the authoritative, non-technical status record for that source and must read as a brief standalone document.
+
+## Structure
+
+- **Front matter** — YAML with `title` (breadcrumb `University › Dataset`, or `University › Dataset › Source` for one
+  feed among several), `summary`, `description`, plus `university`, `dataset`, `status` (`active`, or `planned` for a
+  source not yet integrated), and `version` (the current version's start date). No H1 heading: the title lives in the
+  front matter.
+- **Intro** — one short paragraph noting that the most recent version is listed first and superseded versions are kept
+  below (drop the superseded clause when there is only one version).
+- **One section per major version**, newest first, headed `# <YYYY-MM-DD> – <name>` where the date is the version's
+  start. A new **major** version means the source was completely changed; **minor** reworks (tweaking the source set,
+  adjusting the data model) and **patches** (bug fixes) stay as change-log entries within the current version. Each
+  section holds, in order:
+  - a one-line description of the integration approach (no `Integration` heading);
+  - a sources table with `Source` and `Notes` columns, listing that version's sources (no `Sources` heading);
+  - a change log: a plain bullet list (no heading), newest first, each `- **<YYYY-MM-DD>** – <change>`, ending with an
+    `initial integration` entry dated to the version's start.
+- Use en dashes (`–`) as the date/label separator; ISO dates and list bullets keep hyphens; no em dashes.
+- Write source URLs as Markdown **reference-style links** (`[label][id]`) with all `[id]: …` definitions collected in
+  one block at the bottom of the file, so table cells stay short and lines fit within 120 columns.
+- Do not keep sample payloads, pending/TODO sections (track those as issues), or a separate `Legacy` block (superseded
+  versions are their own sections). A retired alternative source that never had its own version may be noted as a
+  struck-through entry under a short trailing `## Notes`.
+
+## Maintenance
 
 - Keep the relevant `.md` up to date after every change that affects how a source is harvested (source URLs, selectors,
   mapped fields, known issues).

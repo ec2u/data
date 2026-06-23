@@ -1,61 +1,35 @@
-# Sources
+---
+title: Coimbra › Units
+summary: Integration status for Coimbra research units
+description: Integration status for the Coimbra research units dataset, current and superseded sources.
+university: Coimbra
+dataset: Units
+status: active
+version: 2022-04-19
+---
 
-- https://www.uc.pt/iii/investigacao/unidades-i-d-e-laboratorios-associados/
+Authoritative integration status for the Coimbra university research units dataset. The most recent version is listed
+first; superseded versions are kept below for the record.
 
-# Integration
+# 2022-04-19 – Dedicated API
 
-- data loaded from dedicated API
+Data loaded from a dedicated API.
 
-## 2022-05-03
+| Source                                  | Notes |
+|-----------------------------------------|-------|
+| [R&D units][rd-units]                   |       |
 
-- Ingest description and head name
+- **2022-05-03** – ingest description and head name
+- **2022-04-19** – initial integration, upgrade to dedicated API
 
-## 2022-04-19
+# 2021-12-13 – Curated spreadsheet
 
-- upgrade to dedicated API
--
+Data loaded from a manually curated spreadsheet.
 
-## 2022-12-13
+| Source | Notes |
+|--------|-------|
+| none   |       |
 
-- Initial integration from manually curated spreadsheet
+- **2021-12-13** – initial integration from manually curated spreadsheet
 
-# Samples
-
-```json
-[
-  {
-    "id": "6",
-    "name_pt": "Instituto de Estudos Filosóficos",
-    "knowledge_branch_pt": "Artes e Humanidades",
-    "type_pt": "Instituto",
-    "acronym_pt": "IEF",
-    "web_url": "https://www.uc.pt/fluc/uidief/",
-    "email": "iestudosfilosoficos@gmail.com",
-    "head": "Mário Avelino Santiago de Carvalho",
-    "surname": "Mário",
-    "forename": "Carvalho",
-    "name_en": "Institute for Philosophical Studies",
-    "knowledge_branch_en": "Arts and Humanities",
-    "type_en": "Institute",
-    "acronym_en": "IEF",
-    "logo_Base64": "",
-    "description_en": "The IEF is dedicated to research in Philosophy. Based at the…",
-    "description_pt": "",
-    "topics": [
-      {
-        "name_pt": "História da Filosofia e da Ética",
-        "name_en": "History of Philosophy and Ethics"
-      },
-      {
-        "name_pt": " Estética, Filosofia da Arte",
-        "name_en": " Aesthetics, Philosophy of Art"
-      },
-      {
-        "name_pt": " Filosofia da Técnica",
-        "name_en": " Philosophy of Technics"
-      }
-    ]
-  },
-  …
-]
-```
+[rd-units]: https://www.uc.pt/iii/investigacao/unidades-i-d-e-laboratorios-associados/

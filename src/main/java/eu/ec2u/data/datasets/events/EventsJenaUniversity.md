@@ -1,152 +1,70 @@
-# Sources
-
-- general university events
-  - https://www.uni-jena.de/16965/kommende-veranstaltungen
-  - https://www.uni-jena.de/en/16965/events
-- International Office
-  - https://www.uni-jena.de/17425/veranstaltungskalender
-  - https://www.uni-jena.de/en/17425/upcoming-events
-- International Office Calendar (specifically for incoming students)
-  - https://www.uni-jena.de/81092/kalender-studium-international
-  - https://www.uni-jena.de/en/81092/calendar-studium-international
-- EC2U-specific
-  - https://www.uni-jena.de/120659/ec2u-veranstaltungen
-  - https://www.uni-jena.de/en/120659/ec2u-veranstaltungen
-- Graduate Academy
-  - https://www.uni-jena.de/17210/veranstaltungen
-  - https://www.uni-jena.de/en/17210/events
-
-Both German and English endpoints are scanned, generating independent events. Matching and merging localised
-descriptions of the same events was deemed too complex and brittle.
-
-# Integration
-
-- Event info extracted by LLM from event catalog and linked event pages
-
-## 2025-05-08
-
-- migrated to LLM extraction
-
+---
+title: Jena › Events
+summary: Integration status for Jena events
+description: Integration status for the Jena university events dataset, current and superseded source versions.
+university: Jena
+dataset: Events
+status: active
+version: 2025-05-08
 ---
 
-# Legacy API
+Authoritative integration status for the Jena university events dataset. The most recent version is listed first;
+superseded versions are kept below for the record.
 
-- JSON-LD + schema.org
-  - page-level metadata
-  - no general structured index
+# 2025-05-08 – AI extraction
 
-# Integration
+Event info extracted by AI from the event catalogue and linked event pages. Both German and English endpoints are
+scanned, generating independent events; matching and merging localised descriptions of the same events was deemed too
+complex and brittle.
 
-- no structured event index
-  - event URLs are scraped crawling from the entry page
-- data extracted from schema.org-based event description embedded into each page as
-  a `<script type="application/ld+json">` HTML head element
+| Source                                            | Notes                        |
+|---------------------------------------------------|------------------------------|
+| General university events                         | [DE][gen-de]; [EN][gen-en]   |
+| International Office                              | [DE][io-de]; [EN][io-en]     |
+| International Office Calendar (incoming students) | [DE][ioc-de]; [EN][ioc-en]   |
+| EC2U-specific                                     | [DE][ec2u-de]; [EN][ec2u-en] |
+| Graduate Academy                                  | [DE][grad-de]; [EN][grad-en] |
 
-## 2024-10-08
+- **2025-05-08** – migrated to AI extraction
 
-- fix XPath expressions for page link scraping
-- add English event publishers
+# 2022-03-05 – schema.org scraping
 
-## 2023-01-10
+No structured event index: event URLs are scraped by crawling from the entry page, and data is extracted from the
+schema.org-based event description embedded into each page as a `<script type="application/ld+json">` HTML head element
+(JSON-LD + schema.org, page-level metadata only, no general structured index).
 
-- remove legacy patch for malformed date time zones
+| Source                                            | Notes                        |
+|---------------------------------------------------|------------------------------|
+| General university events                         | [DE][gen-de]; [EN][gen-en]   |
+| International Office                              | [DE][io-de]; [EN][io-en]     |
+| International Office Calendar (incoming students) | [DE][ioc-de]; [EN][ioc-en]   |
+| EC2U-specific                                     | [DE][ec2u-de]; [EN][ec2u-en] |
+| Graduate Academy                                  | [DE][grad-de]; [EN][grad-en] |
 
-## 2022-06-12
+- **2024-10-08** – fixed XPath expressions for page link scraping; added English event publishers
+- **2023-01-10** – removed legacy patch for malformed date time zones
+- **2022-06-12** – fixed XPath expressions for page link scraping
+- **2022-05-19** – prevented generation of duplicate events when dates are modified (#6)
+	- EC2U event IRIs are now generated on the basis of Jena event URLs
+	- events published by multiple calendars are recognized and collapsed
+- **2022-03-05** – initial integration
 
-- fix XPath expressions for page link scraping
+[gen-de]: https://www.uni-jena.de/16965/kommende-veranstaltungen
 
-## 2022-05-19
+[gen-en]: https://www.uni-jena.de/en/16965/events
 
-- prevent generation of duplicate events when dates are modified (#6)
-  - EC2U event IRIs are now generated on the basis of Jena event URLs
-  - events published by multiple calendars are recognized and collapsed
+[io-de]: https://www.uni-jena.de/17425/veranstaltungskalender
 
-# Samples
+[io-en]: https://www.uni-jena.de/en/17425/upcoming-events
 
-```xml
+[ioc-de]: https://www.uni-jena.de/81092/kalender-studium-international
 
-<div class="entry_wrapper unijena">
-    <div class="date">
-        <time datetime="2022-06-13T16:00:00+02:00">13. Jun 2022</time>
-    </div>
-    <div class="time_categories_wrapper">
-        <div class="time_categories">
-            16:00 Uhr ·
-            <span>Informationsveranstaltung</span>
-        </div>
-        <div class="edge_wrapper">
-            <div class="edge"></div>
-        </div>
-    </div>
-    <div class="title">
-        <a href="https://www.uni-jena.de/kommende-veranstaltungen/praktikum-im-ausland-eu-praktikum-thueringen"
-                hreflang="de">
-            Praktikum im Ausland - internationale Berufserfahrung sammeln
-        </a>
-        <div class="edge_wrapper">
-            <div class="edge"></div>
-        </div>
-    </div>
-    <div class="short">
-        Wie finde ich einen Praktikumsplatz und welche Unterstützung bekomme ich?
-    </div>
-    <div class="additional">
-        <div class="icons">
-            <img loading="lazy" decoding="async" title="Der Zugang zu dieser Veranstaltung ist barrierefrei."
-                    alt="Der Zugang zu dieser Veranstaltung ist barrierefrei."
-                    src="/skin/_global/_images/blocks/event_overview_accessible.png"
-                    srcset="/skin/_global/_images/blocks/event_overview_accessible.svg">
-        </div>
-    </div>
-</div>
-```
+[ioc-en]: https://www.uni-jena.de/en/81092/calendar-studium-international
 
-```xml
+[ec2u-de]: https://www.uni-jena.de/120659/ec2u-veranstaltungen
 
-<script type="application/ld+json">
-    {"@context":"https:\/\/schema.org","@type":"Event","name":"Polymict crystalline impact breccias from the Nördlinger
-    Ries impact structure, Germany - shock effects and mixing of target rocks","description":"Prof. Dr. Claudia Trepmann
-    (LMU München, Department für Geo– und
-    Umweltwissenschaften)","url":"https:\/\/www.uni-jena.de\/kommende-veranstaltungen\/polymict-crystalline-impact-breccias-from-the-noerdlinger-ries-impact-structure-germany-shock-effects-and-mixing-of-target-rocks","inLanguage":"de-DE","startDate":"2022-05-19T16:15:00+0200","endDate":"2022-05-19T17:15:00+0200","location":[{"@type":"Place","address":{"@type":"PostalAddress","addressLocality":"jena","postalCode":"07749","streetAddress":"Burgweg
-    11"}}],"organizer":[{"@type":"Organization","legalName":"Institut für
-    Geowissenschaften"}],"speaker":[{"@type":"Person","givenName":"Claudia","familyName":"Trepmann"}],"isAccessibleForFree":false}
-</script>
-```
+[ec2u-en]: https://www.uni-jena.de/en/120659/ec2u-veranstaltungen
 
-```json
-{
-  "@context": "https:\/\/schema.org",
-  "@type": "Event",
-  "name": "Polymict crystalline impact breccias from the Nördlinger Ries impact structure, Germany - shock effects and mixing of target rocks",
-  "description": "Prof. Dr. Claudia Trepmann (LMU München, Department für Geo– und Umweltwissenschaften)",
-  "url": "https:\/\/www.uni-jena.de\/kommende-veranstaltungen\/polymict-crystalline-impact-breccias-from-the-noerdlinger-ries-impact-structure-germany-shock-effects-and-mixing-of-target-rocks",
-  "inLanguage": "de-DE",
-  "startDate": "2022-05-19T16:15:00+0200",
-  "endDate": "2022-05-19T17:15:00+0200",
-  "location": [
-    {
-      "@type": "Place",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "jena",
-        "postalCode": "07749",
-        "streetAddress": "Burgweg 11"
-      }
-    }
-  ],
-  "organizer": [
-    {
-      "@type": "Organization",
-      "legalName": "Institut für Geowissenschaften"
-    }
-  ],
-  "speaker": [
-    {
-      "@type": "Person",
-      "givenName": "Claudia",
-      "familyName": "Trepmann"
-    }
-  ],
-  "isAccessibleForFree": false
-}
-```
+[grad-de]: https://www.uni-jena.de/17210/veranstaltungen
+
+[grad-en]: https://www.uni-jena.de/en/17210/events

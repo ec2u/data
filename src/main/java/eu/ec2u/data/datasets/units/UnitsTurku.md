@@ -1,11 +1,21 @@
-# Sources
+---
+title: Turku › Units
+summary: Integration status for Turku research units
+description: Integration status for the Turku university research units dataset.
+university: Turku
+dataset: Units
+status: active
+version: 2022-12-13
+---
 
-- none
+Authoritative integration status for the Turku university research units dataset.
 
-# Integration
+# 2022-12-13 – Curated Google Sheet
 
-- data loaded from manually curated Google Sheet
+Data loaded from a manually curated Google Sheet.
 
-## 2022-12-13
+| Source | Notes |
+|--------|-------|
+| none   |       |
 
-- Initial integration
+- **2022-12-13** – initial integration
