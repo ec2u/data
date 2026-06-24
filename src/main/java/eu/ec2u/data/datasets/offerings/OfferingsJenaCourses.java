@@ -130,12 +130,19 @@ public final class OfferingsJenaCourses implements Runnable {
     private Stream<CourseFrame> courses() {
         return children(ROOT).map(node -> new Module(node, node.endsWith("abschl=96")))
 
+                // .filter(Module::guest) // !!! harvest only the guest-studies (Gaststudium) branch
+
+                .skip(0)
+                .limit(10)
+
                 .map(abschluss -> async(() -> programmes(abschluss)))
                 .collect(joining())
                 .flatMap(Collection::stream)
 
                 .collect(toMap(CourseFrame::id, identity(), OfferingsJenaCourses::merge)) // dedupe by module number
-                .values().stream();
+
+                .values()
+                .stream();
     }
 
     private List<CourseFrame> programmes(final Module abschluss) { // studiengang
