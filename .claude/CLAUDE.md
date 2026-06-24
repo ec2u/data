@@ -78,6 +78,11 @@ the authoritative, non-technical status record for that source and must read as 
   (host + path + `…`, e.g. `[data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/…][rnsr-all]`) as the link text and
   the complete, unaltered URL in a `[id]: <full-url>` definition collected at the bottom of the file. Only the displayed
   label is shortened, never the actual URL.
+- **Source analysis (optional, closing)** — the file may end with a general prose discussion of the source and how it is
+  structured (the originating system, and how its catalogue/feed/tree is organised). Place it **last**, flowing directly
+  after the change log with **no section heading and no divider**. Keep it general: exclude harvester implementation
+  details (crawl mechanics, request parameters and node ids, EC2U field-by-field mapping tables, and implementation
+  plans) — those belong in the code or in tracked issues, not in the status record.
 - Do not keep sample payloads, pending/TODO sections (track those as issues), or a separate `Legacy` block (superseded
   versions are their own sections). A retired alternative source that never had its own version may be noted as a
   struck-through entry under a short trailing `## Notes`.
