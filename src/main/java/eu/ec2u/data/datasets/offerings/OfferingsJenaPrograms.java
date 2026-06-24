@@ -40,6 +40,7 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.async;
@@ -58,7 +59,7 @@ import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.Streams.optional;
 
 import static eu.ec2u.data.Data.exec;
-import static eu.ec2u.data.datasets.Localized.EN;
+import static eu.ec2u.data.datasets.Localized.DE;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsISCED2011.*;
@@ -68,12 +69,14 @@ import static java.lang.String.format;
 
 public final class OfferingsJenaPrograms implements Runnable {
 
-    private static final String SITE_URL="https://www.uni-jena.de/en/study-programme";
+    private static final String SITE_URL="https://www.uni-jena.de/3860/studienangebot";
 
     private static final IRI ABOUT_PAGE=Schema.term("AboutPage");
     private static final IRI HEADLINE=Schema.term("headline");
     private static final IRI ABSTRACT=Schema.term("abstract");
     private static final IRI EDUCATIONAL_LEVEL=Schema.term("educationalLevel");
+
+    private static final Pattern DIGITS=Pattern.compile("\\d+");
 
     private static final Map<String, Topic> LEVELS=Map.ofEntries(
             entry("Bachelor of Arts", LEVEL_6),
@@ -174,7 +177,7 @@ public final class OfferingsJenaPrograms implements Runnable {
     private Optional<ProgramFrame> program(final Rover rover) {
         return rover.traverse(Schema.term("url")).uri().flatMap(url -> review(new ProgramFrame()
 
-                .id(PROGRAMS.id().resolve(uuid(JENA, url.toString())))
+                .id(PROGRAMS.id().resolve(uuid(JENA, code(url.toString()))))
                 .university(JENA)
 
                 .url(set(url))
@@ -189,12 +192,30 @@ public final class OfferingsJenaPrograms implements Runnable {
     }
 
 
+    /**
+     * Extracts the language-neutral page code from a programme detail URL.
+     *
+     * <p>uni-jena.de catalogue URLs embed a numeric page code (for example {@code /10100/b-a-ef-arabistik}) that is
+     * stable across the English and German views; minting programme ids from it avoids re-keying every IRI when the
+     * source language changes.</p>
+     *
+     * @param url the programme detail URL
+     *
+     * @return the first all-digit path segment of {@code url} (the page code), or {@code url} itself when absent
+     */
+    private static String code(final String url) {
+        return Stream.of(url.split("/"))
+                .filter(segment -> DIGITS.matcher(segment).matches())
+                .findFirst()
+                .orElse(url);
+    }
+
     private static Optional<Map<Locale, String>> name(final Rover rover) {
-        return rover.traverse(HEADLINE).string().map(v -> map(entry(EN, v)));
+        return rover.traverse(HEADLINE).string().map(v -> map(entry(DE, v)));
     }
 
     private static Optional<Map<Locale, String>> description(final Rover rover) {
-        return rover.traverse(ABSTRACT).string().map(v -> map(entry(EN, v)));
+        return rover.traverse(ABSTRACT).string().map(v -> map(entry(DE, v)));
     }
 
     private static Optional<Topic> educationalLevel(final Rover rover) {
@@ -202,7 +223,7 @@ public final class OfferingsJenaPrograms implements Runnable {
     }
 
     private static Optional<Map<Locale, String>> educationalCredentialAwarded(final Rover rover) {
-        return rover.traverse(EDUCATIONAL_LEVEL).string().map(v -> map(entry(EN, v)));
+        return rover.traverse(EDUCATIONAL_LEVEL).string().map(v -> map(entry(DE, v)));
     }
 
 }
