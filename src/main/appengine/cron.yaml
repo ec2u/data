@@ -45,9 +45,9 @@ cron:
     url: /pipelines/offerings/jena/programs
     schedule: 1 of month 01:05
 
-  - description: "offerings › jena › courses - monthly crawling"
-    url: /pipelines/offerings/jena/courses
-    schedule: 1 of month 01:10
+#  - description: "offerings › jena › courses - monthly crawling"
+#    url: /pipelines/offerings/jena/courses
+#    schedule: 1 of month 01:10
 
   - description: "offerings › linz - monthly crawling"
     url: /pipelines/offerings/linz/programs

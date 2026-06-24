@@ -28,6 +28,7 @@ import eu.ec2u.data.datasets.courses.Course;
 import eu.ec2u.data.datasets.courses.CourseFrame;
 import eu.ec2u.data.datasets.taxonomies.TopicFrame;
 
+import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.time.Duration;
@@ -35,6 +36,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.async;
@@ -42,6 +44,7 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -49,6 +52,7 @@ import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Futures.joining;
 import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.Streams.optional;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.DE;
@@ -72,6 +76,8 @@ import static java.util.function.Predicate.not;
  * ({@code inProgram}) are deferred to phase 2 (gh-53).</p>
  */
 public final class OfferingsJenaCourses implements Runnable {
+
+    private static final URI PIPELINE=uri("java:%s".formatted(OfferingsJenaCourses.class.getName()));
 
     private static final String ROOT="auswahlBaum"; // catalogue tree root nodeID
 
@@ -116,26 +122,35 @@ public final class OfferingsJenaCourses implements Runnable {
 
     @Override
     public void run() {
-        time(() -> store.modify(
 
-                array(courses()
+        final int batch=10;
 
-                        .skip(0)
-                        .limit(100)
-                        // .filter(Module::guest) // !!! to harvest only guest studies
+        IntStream.range(0, 5000/batch).forEach(n -> {
 
-                        .map(module -> async(() -> course(module)))
-                        .collect(joining())
-                        .flatMap(Optional::stream)
-                ),
+            time(() -> store.modify(
 
-                value(query(new CourseFrame(true))
-                        .where("university", criterion().any(JENA))
-                )
+                    array(courses()
 
-        )).apply((elapsed, resources) -> logger.info(this, format(
-                "synced <%,d> resources in <%,d> ms", resources, elapsed
-        )));
+                            .skip(batch*n)
+                            .limit(batch)
+                            // .filter(Module::guest) // !!! to harvest only guest studies
+
+                            .map(module -> async(() -> course(module)))
+                            .collect(joining())
+                            .flatMap(Optional::stream)
+                    ),
+
+                    value(query(new CourseFrame(true))
+                            .where("dataset", criterion().any(uri(uri("urn:void")))) // !!! disable removal
+                            .where("university", criterion().any(JENA))
+                            .where("pipeline", criterion().any(uri(PIPELINE)))
+                    )
+
+            )).apply((elapsed, resources) -> logger.info(this, format(
+                    "synced <%,d> resources in <%,d> ms", resources, elapsed
+            )));
+
+        });
     }
 
 
@@ -186,6 +201,7 @@ public final class OfferingsJenaCourses implements Runnable {
 
                                 .id(COURSES.id().resolve(uuid(JENA, matcher.group(1))))
                                 .university(JENA)
+                                .pipeline(PIPELINE)
 
                                 .identifier(matcher.group(1))
                                 .name(map(entry(DE, matcher.group(2))))
