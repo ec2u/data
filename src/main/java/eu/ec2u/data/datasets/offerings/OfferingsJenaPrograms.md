@@ -26,6 +26,6 @@ Programme catalogue scraped from the site Studienangebot page; programme details
 
 - **2026-06-24** – migration to the German catalogue:
 	- switch source to the German Studienangebot (268 programmes vs 223 English)
-	- mint language-neutral ids from the numeric page code
+	- mint language-neutral IRIs from the numeric page code
 - **2024-04-03** – fix root XPath crawling expression
 - **2023-03-02** – initial integration
