@@ -46,6 +46,7 @@ export const Course=immutable({
 	generated: optional(boolean),
 
 	name: required(text),
+	description: optional(text),
 
 	url: multiple(id),
 
@@ -175,6 +176,7 @@ export function DataCourse() {
 		<TileFrame placeholder={Courses[icon]} as={({
 
 			name,
+			description,
 
 			inProgram,
 			about,
@@ -191,6 +193,10 @@ export function DataCourse() {
 			return <>
 
 				<dfn>{toTextString(name)}</dfn>
+
+				{description && (!teaches || toTextString(description) !== toTextString(teaches))
+					&& <TileMark>{toTextString(description)}</TileMark>
+				}
 
 				<TilePanel stack>
 
