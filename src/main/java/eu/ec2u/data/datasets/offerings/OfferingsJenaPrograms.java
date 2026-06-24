@@ -66,6 +66,7 @@ import static eu.ec2u.data.datasets.taxonomies.TopicsISCED2011.*;
 import static eu.ec2u.data.datasets.universities.University.JENA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
 import static java.lang.String.format;
+import static java.util.Comparator.comparingInt;
 
 public final class OfferingsJenaPrograms implements Runnable {
 
@@ -74,18 +75,43 @@ public final class OfferingsJenaPrograms implements Runnable {
     private static final IRI ABOUT_PAGE=Schema.term("AboutPage");
     private static final IRI HEADLINE=Schema.term("headline");
     private static final IRI ABSTRACT=Schema.term("abstract");
-    private static final IRI EDUCATIONAL_LEVEL=Schema.term("educationalLevel");
 
     private static final Pattern DIGITS=Pattern.compile("\\d+");
 
-    private static final Map<String, Topic> LEVELS=Map.ofEntries(
-            entry("Bachelor of Arts", LEVEL_6),
-            entry("Bachelor of Science", LEVEL_6),
-            entry("Master of Arts", LEVEL_7),
-            entry("Master of Education", LEVEL_7),
-            entry("Master of Science", LEVEL_7),
-            entry("state examination", LEVEL_9),
-            entry("Diploma/church board examination", LEVEL_9)
+    private static final Map<String, String> DEGREES=Map.ofEntries( // detail-URL slug prefix → degree label
+            entry("erweiterung-g", "Erweiterungsprüfung Lehramt Gymnasium"),
+            entry("erweiterung-r", "Erweiterungsprüfung Lehramt Regelschule"),
+            entry("gymnasium", "Staatsexamen Lehramt Gymnasium"),
+            entry("regelschule", "Staatsexamen Lehramt Regelschule"),
+            entry("staatsexamen", "Staatsexamen"),
+            entry("zertifikat", "Zertifikat"),
+            entry("diplom", "Diplom"),
+            entry("llm-oec", "LL.M. oec."),
+            entry("mba", "MBA"),
+            entry("m-ed", "M.Ed."),
+            entry("m-sc", "M.Sc."),
+            entry("m-a", "M.A."),
+            entry("b-sc", "B.Sc."),
+            entry("b-a", "B.A.")
+    );
+
+    private static final Map<String, String> ROLES=Map.ofEntries( // multi-subject role token → label
+            entry("kf", "Kernfach"),
+            entry("ef", "Ergänzungsfach")
+    );
+
+    private static final Map<String, Topic> DEGREE_LEVELS=Map.ofEntries( // degree slug prefix → ISCED 2011 level
+            entry("b-a", LEVEL_6),
+            entry("b-sc", LEVEL_6),
+            entry("m-a", LEVEL_7),
+            entry("m-sc", LEVEL_7),
+            entry("m-ed", LEVEL_7),
+            entry("mba", LEVEL_7),
+            entry("llm-oec", LEVEL_7),
+            entry("staatsexamen", LEVEL_7),
+            entry("gymnasium", LEVEL_7),
+            entry("regelschule", LEVEL_7),
+            entry("diplom", LEVEL_7)
     );
 
 
@@ -175,34 +201,35 @@ public final class OfferingsJenaPrograms implements Runnable {
     }
 
     private Optional<ProgramFrame> program(final Rover rover) {
-        return rover.traverse(Schema.term("url")).uri().flatMap(url -> review(new ProgramFrame()
+        return rover.traverse(Schema.term("url")).uri().flatMap(url -> {
 
-                .id(PROGRAMS.id().resolve(uuid(JENA, code(url.toString()))))
-                .university(JENA)
+            final String slug=slug(url.toString());
 
-                .url(set(url))
+            final Optional<String> key=degreeKey(slug);
+            final Optional<String> degree=key.map(value -> degree(slug, value));
 
-                .name(name(rover).orElse(null))
-                .description(description(rover).orElse(null))
+            return review(new ProgramFrame()
 
-                .educationalLevel(educationalLevel(rover).orElse(null))
-                .educationalCredentialAwarded(educationalCredentialAwarded(rover).orElse(null))
+                    .id(PROGRAMS.id().resolve(uuid(JENA, code(url.toString()))))
+                    .university(JENA)
 
-        ));
+                    .url(set(url))
+
+                    .name(name(rover, degree).orElse(null))
+                    .description(description(rover).orElse(null))
+
+                    .educationalLevel(key.map(DEGREE_LEVELS::get).orElse(null))
+                    .educationalCredentialAwarded(degree.map(value -> map(entry(DE, value))).orElse(null))
+
+            );
+        });
     }
 
 
-    /**
-     * Extracts the language-neutral page code from a programme detail URL.
-     *
-     * <p>uni-jena.de catalogue URLs embed a numeric page code (for example {@code /10100/b-a-ef-arabistik}) that is
-     * stable across the English and German views; minting programme ids from it avoids re-keying every IRI when the
-     * source language changes.</p>
-     *
-     * @param url the programme detail URL
-     *
-     * @return the first all-digit path segment of {@code url} (the page code), or {@code url} itself when absent
-     */
+    private static String slug(final String url) {
+        return url.substring(url.lastIndexOf('/')+1);
+    }
+
     private static String code(final String url) {
         return Stream.of(url.split("/"))
                 .filter(segment -> DIGITS.matcher(segment).matches())
@@ -210,20 +237,31 @@ public final class OfferingsJenaPrograms implements Runnable {
                 .orElse(url);
     }
 
-    private static Optional<Map<Locale, String>> name(final Rover rover) {
-        return rover.traverse(HEADLINE).string().map(v -> map(entry(DE, v)));
+    private static Optional<Map<Locale, String>> name(final Rover rover, final Optional<String> degree) {
+        return rover.traverse(HEADLINE).string()
+                .map(subject -> degree.map(value -> subject+" – "+value).orElse(subject))
+                .map(qualified -> map(entry(DE, qualified)));
     }
 
     private static Optional<Map<Locale, String>> description(final Rover rover) {
         return rover.traverse(ABSTRACT).string().map(v -> map(entry(DE, v)));
     }
 
-    private static Optional<Topic> educationalLevel(final Rover rover) {
-        return rover.traverse(EDUCATIONAL_LEVEL).string().map(LEVELS::get);
+    private static String degree(final String slug, final String key) {
+
+        final String rest=slug.substring(key.length());
+
+        return ROLES.entrySet().stream()
+                .filter(fach -> rest.startsWith("-"+fach.getKey()+"-") || rest.equals("-"+fach.getKey()))
+                .findFirst()
+                .map(fach -> DEGREES.get(key)+", "+fach.getValue())
+                .orElseGet(() -> DEGREES.get(key));
     }
 
-    private static Optional<Map<Locale, String>> educationalCredentialAwarded(final Rover rover) {
-        return rover.traverse(EDUCATIONAL_LEVEL).string().map(v -> map(entry(DE, v)));
+    private static Optional<String> degreeKey(final String slug) {
+        return DEGREES.keySet().stream()
+                .filter(key -> slug.equals(key) || slug.startsWith(key+"-"))
+                .max(comparingInt(String::length));
     }
 
 }
