@@ -20,6 +20,12 @@ uses Maven to orchestrate both Java compilation and frontend bundling via the fr
 - **Data processing**: `eu.ec2u.data.Boot` runs data ingestion pipelines for all datasets
 - **Datasets**: Each dataset type (courses, events, documents, etc.) has its own package under `eu.ec2u.data.datasets`
 - **RDF/Semantic Web**: Uses RDF4J for semantic data storage and SPARQL queries, connected to GraphDB
+- **Harvester pipeline**: Every source harvester follows the same two-pass shape: an `items()` pass produces a lazy
+  `Stream` of entry points, and an `item()` pass maps each to a frame, run in parallel via `async`, joined with
+  `Futures.joining()` (e.g. `items().map(item -> async(() -> item(item))).collect(joining()).flatMap(Optional::stream)`;
+  see `OfferingsSalamanca`). Keep helpers stream-based; materialise (`toList()`, `toMap()`) only inside an `async` body
+  or for a genuinely critical step such as dedup. The `items()` crawl is sequential; parallelism lives in the `item()`
+  pass, so processing interleaves with crawling as the join pulls each lazy entry point.
 
 ## Frontend Architecture (TypeScript/React)
 
