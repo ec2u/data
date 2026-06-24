@@ -66,7 +66,7 @@ import static eu.ec2u.data.datasets.universities.University.JENA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
 import static java.lang.String.format;
 
-public final class OfferingsJena implements Runnable {
+public final class OfferingsJenaPrograms implements Runnable {
 
     private static final String SITE_URL="https://www.uni-jena.de/en/study-programme";
 
@@ -87,7 +87,7 @@ public final class OfferingsJena implements Runnable {
 
 
     public static void main(final String... args) {
-        exec(() -> new OfferingsJena().run());
+        exec(() -> new OfferingsJenaPrograms().run());
     }
 
 

@@ -61,7 +61,8 @@ public interface Pipelines {
                     .path("/units/umea", execute(new UnitsUmea()))
 
                     .path("/offerings/coimbra", execute(new OfferingsCoimbra()))
-                    .path("/offerings/jena", execute(new OfferingsJena()))
+                    .path("/offerings/jena/programs", execute(new OfferingsJenaPrograms()))
+                    .path("/offerings/jena/courses", execute(new OfferingsJenaCourses()))
                     .path("/offerings/linz", execute(new OfferingsLinz()))
                     .path("/offerings/pavia", execute(new OfferingsPavia()))
                     .path("/offerings/pavia/doctorates", execute(new OfferingsPaviaDoctorates()))
