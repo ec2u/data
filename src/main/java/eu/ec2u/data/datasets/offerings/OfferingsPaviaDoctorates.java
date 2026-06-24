@@ -17,12 +17,15 @@
 package eu.ec2u.data.datasets.offerings;
 
 
+import com.metreeca.flow.Locator;
 import com.metreeca.flow.http.actions.GET;
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.xml.actions.Focus;
 import com.metreeca.flow.xml.actions.Untag;
 import com.metreeca.flow.xml.formats.HTML;
+import com.metreeca.mesh.Value;
 import com.metreeca.mesh.pipe.Store;
+import com.metreeca.shim.Futures;
 import com.metreeca.shim.Locales;
 
 import eu.ec2u.data.datasets.programs.ProgramFrame;
@@ -44,7 +47,6 @@ import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
 import static com.metreeca.shim.Collections.*;
-import static com.metreeca.shim.Futures.joining;
 import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.Streams.optional;
 import static com.metreeca.shim.URIs.uri;
@@ -83,16 +85,17 @@ public final class OfferingsPaviaDoctorates implements Runnable {
     public void run() {
         time(() -> store.modify(
 
-                        array(doctorates()),
+                array(doctorates()
+                        .map(json -> async(() -> doctorate(json)))
+                        .collect(Futures.joining())
+                        .flatMap(Optional::stream)),
 
-                        value(query(new ProgramFrame(true))
-                                .where("university", criterion().any(PAVIA))
-                                .where("pipeline", criterion().any(uri(PIPELINE)))
-                        )
-
+                value(query(new ProgramFrame(true))
+                        .where("university", criterion().any(PAVIA))
+                        .where("pipeline", criterion().any(uri(PIPELINE)))
                 )
 
-        ).apply((elapsed, resources) -> logger.info(this, format(
+        )).apply((elapsed, resources) -> logger.info(this, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed
         )));
     }
@@ -100,7 +103,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<ProgramFrame> doctorates() {
+    private Stream<Value> doctorates() {
         return Stream.of(PAGE_URL)
 
                 .flatMap(optional(new GET<>(new HTML())))
@@ -156,40 +159,36 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                         """
                 )))
 
-                .flatMap(json -> json.get("programs").values())
-
-                .map(json -> async(() -> {
-
-                    final Locale locale=json.get("nameLanguage").string()
-                            .map(Locales::locale)
-                            .orElse(PAVIA.locale());
-
-                    return json.get("url").string().flatMap(url -> review(doctorate(url, new ProgramFrame()
-
-                            .generated(true)
-
-                            .id(PROGRAMS.id().resolve(uuid(PAVIA, url)))
-                            .university(PAVIA)
-                            .pipeline(PIPELINE)
-
-                            .name(map(json.get("name").string().stream().map(name ->
-                                    entry(locale, (locale.equals(PAVIA.locale()) ? "Dottorato in" : "Doctorate in ")+name)
-                            )))
-
-                            .url(set(uri(url)))
-
-                            .educationalLevel(TopicsISCED2011.LEVEL_8)
-                            .educationalCredentialAwarded(map(entry(PAVIA.locale(), "Dottorato di Ricerca"))))
-
-                    ));
-
-                }))
-
-                .collect(joining())
-                .flatMap(Optional::stream);
+                .flatMap(json -> json.get("programs").values());
     }
 
-    private ProgramFrame doctorate(final String url, final ProgramFrame doctorate) { // !!! migrate to Programs.Scanner
+    private Optional<ProgramFrame> doctorate(final Value json) {
+
+        final Locale locale=json.get("nameLanguage").string()
+                .map(Locales::locale)
+                .orElse(PAVIA.locale());
+
+        return json.get("url").string().flatMap(url -> review(doctorate(url, new ProgramFrame()
+
+                .generated(true)
+
+                .id(PROGRAMS.id().resolve(uuid(PAVIA, url)))
+                .university(PAVIA)
+                .pipeline(PIPELINE)
+
+                .name(map(json.get("name").string().stream().map(name ->
+                        entry(locale, (locale.equals(PAVIA.locale()) ? "Dottorato in" : "Doctorate in ")+name)
+                )))
+
+                .url(set(uri(url)))
+
+                .educationalLevel(TopicsISCED2011.LEVEL_8)
+                .educationalCredentialAwarded(map(entry(PAVIA.locale(), "Dottorato di Ricerca"))))
+
+        ));
+    }
+
+    private ProgramFrame doctorate(final String url, final ProgramFrame doctorate) {
         return Optional.of(url)
 
                 .flatMap(new GET<>(new HTML()))
