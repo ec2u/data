@@ -36,6 +36,7 @@ import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDSettings;
 
 import java.io.StringReader;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -50,6 +51,7 @@ import static com.metreeca.flow.rdf.Rover.reverse;
 import static com.metreeca.flow.rdf.formats.RDF.rdf;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -57,6 +59,7 @@ import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Futures.joining;
 import static com.metreeca.shim.Loggers.time;
 import static com.metreeca.shim.Streams.optional;
+import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.DE;
@@ -69,6 +72,8 @@ import static java.lang.String.format;
 import static java.util.Comparator.comparingInt;
 
 public final class OfferingsJenaPrograms implements Runnable {
+
+    private static final URI PIPELINE=uri("java:%s".formatted(OfferingsJenaPrograms.class.getName()));
 
     private static final String SITE_URL="https://www.uni-jena.de/3860/studienangebot";
 
@@ -130,10 +135,15 @@ public final class OfferingsJenaPrograms implements Runnable {
     public void run() {
         time(() -> store.modify(
 
-                array(programs()),
+                array(programs()
+                        .map(rover -> async(() -> program(rover)))
+                        .collect(joining())
+                        .flatMap(Optional::stream)
+                ),
 
                 value(query(new ProgramFrame(true))
                         .where("university", criterion().any(JENA))
+                        .where("pipeline", criterion().any(uri(PIPELINE)))
                 )
 
         )).apply((elapsed, resources) -> logger.info(this, format(
@@ -144,7 +154,7 @@ public final class OfferingsJenaPrograms implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<ProgramFrame> programs() {
+    private Stream<Rover> programs() { // lazily list the study-programme detail pages as JSON-LD entry points
         return Stream
 
                 .of(SITE_URL)
@@ -159,45 +169,39 @@ public final class OfferingsJenaPrograms implements Runnable {
                         .links("//li[@data-filter]/a/@href")
                 )
 
-                .map(page -> async(() -> Optional.of(page)
+                .flatMap(page -> rover(page).stream());
+    }
 
-                        // extract JSON-LD
+    private Optional<Rover> rover(final String page) { // extract the JSON-LD model from a detail page
+        return Optional.of(page)
 
-                        .flatMap(new GET<>(new HTML()))
+                .flatMap(new GET<>(new HTML()))
 
-                        .map(XPath::new).flatMap(xpath -> xpath
-                                .string("//script[@type='application/ld+json']")
-                        )
+                .map(XPath::new).flatMap(xpath -> xpath
+                        .string("//script[@type='application/ld+json']")
+                )
 
-                        .flatMap(json -> {
+                .flatMap(json -> {
 
-                            try ( final StringReader reader=new StringReader(json) ) {
+                    try ( final StringReader reader=new StringReader(json) ) {
 
-                                final RDFParser parser=new JSONLDParser();
+                        final RDFParser parser=new JSONLDParser();
 
-                                parser.set(JSONLDSettings.SECURE_MODE, false); // ;( load external resources
+                        parser.set(JSONLDSettings.SECURE_MODE, false); // ;( load external resources
 
-                                final Collection<Statement> model=Schema.normalize(rdf(reader, SITE_URL, parser));
+                        final Collection<Statement> model=Schema.normalize(rdf(reader, SITE_URL, parser));
 
-                                return Optional.of(Rover.rover(model).focus(ABOUT_PAGE).traverse(reverse(RDF.TYPE)));
+                        return Optional.of(Rover.rover(model).focus(ABOUT_PAGE).traverse(reverse(RDF.TYPE)));
 
-                            } catch ( final FormatException e ) {
+                    } catch ( final FormatException e ) {
 
-                                logger.warning(this, e.getMessage());
+                        logger.warning(this, e.getMessage());
 
-                                return Optional.empty();
+                        return Optional.empty();
 
-                            }
+                    }
 
-                        })
-
-                        .flatMap(this::program)
-
-                ))
-
-                .collect(joining())
-                .flatMap(Optional::stream);
-
+                });
     }
 
     private Optional<ProgramFrame> program(final Rover rover) {
@@ -212,6 +216,7 @@ public final class OfferingsJenaPrograms implements Runnable {
 
                     .id(PROGRAMS.id().resolve(uuid(JENA, code(url.toString()))))
                     .university(JENA)
+                    .pipeline(PIPELINE)
 
                     .url(set(url))
 
