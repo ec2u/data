@@ -31,10 +31,8 @@ import eu.ec2u.data.datasets.taxonomies.TopicFrame;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -63,9 +61,7 @@ import static java.lang.Math.round;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Comparator.comparingInt;
-import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Jena course harvester.
@@ -90,12 +86,21 @@ public final class OfferingsJenaCourses implements Runnable {
 
 
     /**
+     * A crawled tree node.
+     *
+     * @param node  the {@code nodeID} tree node path
+     * @param label the node's display label (the bold module code at the leaf level)
+     */
+    private record Crawled(String node, String label) { }
+
+    /**
      * A module as placed in the catalogue tree.
      *
      * @param node  the full {@code konto:pordnr} tree node path
      * @param guest whether the placement sits under the {@code abschl=96} (Gaststudium) branch
      */
     private record Module(String node, boolean guest) { }
+
 
 
     public static void main(final String... args) {
@@ -113,7 +118,16 @@ public final class OfferingsJenaCourses implements Runnable {
     public void run() {
         time(() -> store.modify(
 
-                array(courses()),
+                array(courses()
+
+                        .skip(0)
+                        .limit(100)
+                        // .filter(Module::guest) // !!! to harvest only guest studies
+
+                        .map(module -> async(() -> course(module)))
+                        .collect(joining())
+                        .flatMap(Optional::stream)
+                ),
 
                 value(query(new CourseFrame(true))
                         .where("university", criterion().any(JENA))
@@ -127,101 +141,92 @@ public final class OfferingsJenaCourses implements Runnable {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<CourseFrame> courses() {
-        return children(ROOT).map(node -> new Module(node, node.endsWith("abschl=96")))
+    private Stream<Module> courses() { // lazily walk the catalogue tree to the module entry points
 
-                // .filter(Module::guest) // !!! harvest only the guest-studies (Gaststudium) branch
+        final Set<String> guests=set(guests()); // module codes available to guests, resolved up front
 
-                .skip(0)
-                .limit(10)
+        final Predicate<String> blank=String::isBlank;
+        final Predicate<String> fresh=new HashSet<String>()::add;
 
-                .map(abschluss -> async(() -> programmes(abschluss)))
-                .collect(joining())
-                .flatMap(Collection::stream)
-
-                .collect(toMap(CourseFrame::id, identity(), OfferingsJenaCourses::merge)) // dedupe by module number
-
-                .values()
-                .stream();
+        return modules(children(ROOT))
+                .filter(module -> blank.or(fresh).test(module.label())) // dedupe by code, pre-fetch
+                .map(module -> new Module(module.node(), guests.contains(module.label())));
     }
 
-    private List<CourseFrame> programmes(final Module abschluss) { // studiengang
-        return children(abschluss.node()).map(node -> new Module(node, abschluss.guest()))
-                .map(programme -> async(() -> versions(programme)))
-                .collect(joining())
-                .flatMap(Collection::stream)
-                .toList();
+    private Stream<String> guests() { // module codes listed under the Gaststudium (abschl=96) branch
+        return modules(children(ROOT)
+                .filter(degree -> degree.node().endsWith("abschl=96")))
+                .map(Crawled::label)
+                .filter(not(String::isBlank));
     }
 
-    private List<CourseFrame> versions(final Module programme) { // current PO only
-        return children(programme.node())
-                .max(comparingInt(OfferingsJenaCourses::pversion))
-                .map(node -> new Module(node, programme.guest()))
-                .map(this::modules)
-                .orElseGet(List::of);
+    private Stream<Crawled> modules(final Stream<Crawled> degrees) { // walk degree types down to the module nodes
+        return degrees
+
+                .flatMap(degree -> children(degree.node())) // studiengang
+
+                .flatMap(programme -> children(programme.node()) // current PO only
+                        .max(comparingInt(crawled -> pversion(crawled.node())))
+                        .stream()
+                )
+
+                .flatMap(version -> children(version.node())); // konto:pordnr
     }
 
-    private List<CourseFrame> modules(final Module version) { // konto:pordnr
-        return children(version.node()).map(node -> new Module(node, version.guest()))
-                .map(module -> async(() -> course(module).flatMap(Course::review)))
-                .collect(joining())
-                .flatMap(Optional::stream)
-                .toList();
-    }
 
     private Optional<CourseFrame> course(final Module module) {
         return new GET<>(new HTML()).apply(panel(module.node()))
 
                 .map(XPath::new)
 
-                .flatMap(panel -> field(panel, "Name des Moduls").flatMap(name -> {
+                .flatMap(panel -> field(panel, "Name des Moduls")
+                        .map(MODULE::matcher)
+                        .filter(Matcher::matches)
+                        .map(matcher -> new CourseFrame()
 
-                    final Matcher matcher=MODULE.matcher(name);
+                                .id(COURSES.id().resolve(uuid(JENA, matcher.group(1))))
+                                .university(JENA)
 
-                    return matcher.matches() ? Optional.of(new CourseFrame()
+                                .identifier(matcher.group(1))
+                                .name(map(entry(DE, matcher.group(2))))
+                                .courseCode(field(panel, "Modulcode").orElse(null))
 
-                            .id(COURSES.id().resolve(uuid(JENA, matcher.group(1))))
-                            .university(JENA)
+                                .description(localized(field(panel, "Inhalte")))
+                                .teaches(localized(field(panel, "Lern- und Qualifikationsziele")))
+                                .assesses(localized(field(panel, "Voraussetzungen für die Vergabe von Leistungspunkten")))
+                                .competencyRequired(localized(field(panel, "Vorkenntnisse")))
+                                .coursePrerequisites(localized(field(panel, "Voraussetzungen für die Zulassung zum Modul")))
 
-                            .identifier(matcher.group(1))
-                            .name(map(entry(DE, matcher.group(2))))
-                            .courseCode(field(panel, "Modulcode").orElse(null))
+                                .numberOfCredits(field(panel, "ECTS Punkte")
+                                        .flatMap(OfferingsJenaCourses::decimal).orElse(null)
+                                )
+                                .courseWorkload(field(panel, "Arbeitsaufwand Summe (Workload)")
+                                        .flatMap(OfferingsJenaCourses::hours).orElse(null)
+                                )
 
-                            .description(localized(field(panel, "Inhalte")))
-                            .teaches(localized(field(panel, "Lern- und Qualifikationsziele")))
-                            .assesses(localized(field(panel, "Voraussetzungen für die Vergabe von Leistungspunkten")))
-                            .competencyRequired(localized(field(panel, "Vorkenntnisse")))
-                            .coursePrerequisites(localized(field(panel, "Voraussetzungen für die Zulassung zum Modul")))
+                                .inLanguage(set(language(panel)))
 
-                            .numberOfCredits(field(panel, "ECTS Punkte")
-                                    .flatMap(OfferingsJenaCourses::decimal).orElse(null)
-                            )
-                            .courseWorkload(field(panel, "Arbeitsaufwand Summe (Workload)")
-                                    .flatMap(OfferingsJenaCourses::hours).orElse(null)
-                            )
+                                .audience(module.guest() ? set(LLL) : set())
 
-                            .inLanguage(set(language(panel)))
+                        )
+                )
 
-                            .audience(module.guest() ? set(LLL) : set())
-
-                    ) : Optional.empty();
-                }));
-    }
-
-    private static CourseFrame merge(final CourseFrame retained, final Course discarded) { // union guest audience
-        return retained.audience(set(Stream.concat(retained.audience().stream(), discarded.audience().stream())));
+                .flatMap(Course::review);
     }
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Stream<String> children(final String node) { // child node paths of a tree node (expand=0)
+    private Stream<Crawled> children(final String node) { // child nodes of a tree node (expand=0)
         return Stream.of(tree(node))
                 .flatMap(optional(new GET<>(new HTML())))
                 .map(XPath::new)
-                .flatMap(xpath -> xpath.links("//li[@class='treelist']/a[@class='regular']/@href"))
-                .map(OfferingsJenaCourses::node)
-                .flatMap(Optional::stream)
+                .flatMap(xpath -> xpath.paths("//li[@class='treelist']/a[@class='regular']"))
+                .flatMap(link -> link.string("@href")
+                        .flatMap(OfferingsJenaCourses::node)
+                        .map(child -> new Crawled(child, link.string("b").orElse("").strip()))
+                        .stream()
+                )
                 .distinct();
     }
 
@@ -230,26 +235,44 @@ public final class OfferingsJenaCourses implements Runnable {
 
     private static String tree(final String node) {
         return "https://friedolin.uni-jena.de/qisserver/rds"
-                +"?state=modulBeschrGast&moduleParameter=modDescr&struct=auswahlBaum&navigation=Y"
-                +"&next=tree.vm&nextdir=qispos/modulBeschr/gast"
-                +"&nodeID="+URLEncoder.encode(node, UTF_8)+"&expand=0&lastState=modulBeschrGast&asi=";
+                +"?state=modulBeschrGast"
+                +"&moduleParameter=modDescr"
+                +"&struct=auswahlBaum"
+                +"&navigation=Y"
+                +"&next=tree.vm"
+                +"&nextdir=qispos/modulBeschr/gast"
+                +"&nodeID="+URLEncoder.encode(node, UTF_8)
+                +"&expand=0"
+                +"&lastState=modulBeschrGast"
+                +"&asi=";
     }
 
     private static String panel(final String node) {
         return "https://friedolin.uni-jena.de/qisserver/rds"
-                +"?state=modulBeschrGast&moduleParameter=modDescr&struct=auswahlBaum"
-                +"&nextdir=qispos/modulBeschr/gast&next=redTree.vm&createInfoTree=Y&create=blobs"
-                +"&nodeID="+URLEncoder.encode(node, UTF_8)+"&expand=1&lastState=modulBeschrGast&asi=";
+                +"?state=modulBeschrGast"
+                +"&moduleParameter=modDescr"
+                +"&struct=auswahlBaum"
+                +"&nextdir=qispos/modulBeschr/gast"
+                +"&next=redTree.vm"
+                +"&createInfoTree=Y"
+                +"&create=blobs"
+                +"&nodeID="+URLEncoder.encode(node, UTF_8)
+                +"&expand=1"
+                +"&lastState=modulBeschrGast"
+                +"&asi=";
     }
 
     private static Optional<String> node(final String href) {
-        final Matcher matcher=NODE.matcher(href);
-        return matcher.find() ? Optional.of(URLDecoder.decode(matcher.group(1), UTF_8)) : Optional.empty();
+        return Optional.of(NODE.matcher(href))
+                .filter(Matcher::find)
+                .map(matcher -> URLDecoder.decode(matcher.group(1), UTF_8));
     }
 
     private static int pversion(final String node) {
-        final Matcher matcher=PVERSION.matcher(node);
-        return matcher.find() ? Integer.parseInt(matcher.group(1)) : 0;
+        return Optional.of(PVERSION.matcher(node))
+                .filter(Matcher::find)
+                .map(matcher -> Integer.parseInt(matcher.group(1)))
+                .orElse(0);
     }
 
 
@@ -262,13 +285,14 @@ public final class OfferingsJenaCourses implements Runnable {
                 .filter(not("--"::equals));
     }
 
-    private static java.util.Map<Locale, String> localized(final Optional<String> value) {
+    private static Map<Locale, String> localized(final Optional<String> value) {
         return value.map(v -> map(entry(DE, v))).orElse(null);
     }
 
     private static Optional<Double> decimal(final String value) {
-        final Matcher matcher=DECIMAL.matcher(value);
-        return matcher.find() ? Optional.of(Double.parseDouble(matcher.group().replace(',', '.'))) : Optional.empty();
+        return Optional.of(DECIMAL.matcher(value))
+                .filter(Matcher::find)
+                .map(matcher -> Double.parseDouble(matcher.group().replace(',', '.')));
     }
 
     private static Optional<Duration> hours(final String value) {
@@ -276,7 +300,10 @@ public final class OfferingsJenaCourses implements Runnable {
     }
 
     private static String language(final XPath panel) {
-        return field(panel, "Unterrichtssprache").flatMap(Locales::fuzzy).map(Locale::getLanguage).orElse("de");
+        return field(panel, "Unterrichtssprache")
+                .flatMap(Locales::fuzzy)
+                .map(Locale::getLanguage)
+                .orElse("de");
     }
 
 }
