@@ -88,10 +88,12 @@ public interface Program extends Offering, SchemaEducationalOccupationalProgram 
 
     static ProgramFrame educationalLevel(final ProgramFrame offering) {
         return offering.educationalLevel(Optional.ofNullable(offering.educationalLevel())
-                .or(() -> Optional.of(embeddable(offering)).stream()
-                        .flatMap(isced2011())
-                        .findFirst()
-                )
+                // ;( ISCED-2011 AI classification disabled (botched, e.g. ISCED 0); keep source value only
+                // ;( see https://github.com/ec2u/data/issues/59
+                // .or(() -> Optional.of(embeddable(offering)).stream()
+                //         .flatMap(isced2011())
+                //         .findFirst()
+                // )
                 .orElse(null)
         );
     }
