@@ -199,15 +199,25 @@ public final class OfferingsCoimbra implements Runnable {
     }
 
 
+    private static Year academicYear() {
+        return LocalDate.now().getMonth().compareTo(Month.JULY) >= 0
+                ? Year.now()
+                : Year.now().minusYears(1);
+    }
+
+    private static String year() {
+        final Year year=academicYear();
+        return format("%s/%s", year, year.plusYears(1));
+    }
+
+
     private Stream<Value> offerings() {
 
         final String url=vault.get(API_URL);
         final String id=vault.get(API_ID);
         final String token=service(vault()).get(API_TOKEN);
 
-        final Year year=LocalDate.now().getMonth().compareTo(Month.JULY) >= 0
-                ? Year.now()
-                : Year.now().minusYears(1);
+        final Year year=academicYear();
 
         return Stream.of(url+"/obtemCursosBloco")
 
@@ -281,6 +291,9 @@ public final class OfferingsCoimbra implements Runnable {
                 .university(COIMBRA)
 
                 .courseCode(String.valueOf(id))
+
+                .year(year())
+
                 .url(set(url(json)))
 
                 .name(map(name(json)))

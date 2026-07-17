@@ -317,8 +317,13 @@ public final class OfferingsPavia implements Runnable {
                             new IllegalArgumentException("missing cdsCod")
                     );
 
+                    final String year=cds.string("ns2:aaOffId")
+                            .map(Integer::valueOf)
+                            .map(y -> "%d/%d".formatted(y, y+1))
+                            .orElse(null);
+
                     return cds.paths("ns2:regdid/ns2:pds/ns2:af")
-                            .map(af -> async(() -> course(af, program)));
+                            .map(af -> async(() -> course(af, year, program)));
 
                 }))
 
@@ -383,7 +388,7 @@ public final class OfferingsPavia implements Runnable {
     }
 
 
-    private Optional<CourseFrame> course(final XPath af, final String program) {
+    private Optional<CourseFrame> course(final XPath af, final String year, final String program) {
         return af.strings("ns2:afGenCod")
 
                 .map(course -> new CourseFrame()
@@ -395,6 +400,9 @@ public final class OfferingsPavia implements Runnable {
                         .university(PAVIA)
 
                         .courseCode(course)
+
+                        .year(year)
+                        .term(set(term(af)))
 
                         .name(map(name(af)))
 
@@ -480,6 +488,20 @@ public final class OfferingsPavia implements Runnable {
                     return mode;
 
                 });
+    }
+
+    private Stream<Course.Term> term(final XPath af) {
+        return af.string("ns2:tipoCicloCod").stream()
+                .map(code -> switch ( code ) {
+
+                    case "A1" -> Course.Term.AnnualTerm;
+                    case "S1" -> Course.Term.FirstTerm;
+                    case "S2" -> Course.Term.SecondTerm;
+
+                    default -> null;
+
+                })
+                .flatMap(Stream::ofNullable);
     }
 
 

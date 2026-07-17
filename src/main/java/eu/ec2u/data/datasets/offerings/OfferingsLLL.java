@@ -24,10 +24,12 @@ import com.metreeca.mesh.pipe.Store;
 import com.metreeca.shim.Locales;
 import com.metreeca.shim.URIs;
 
+import eu.ec2u.data.datasets.courses.Course;
 import eu.ec2u.data.datasets.courses.CourseFrame;
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
 import eu.ec2u.data.datasets.persons.Person;
 import eu.ec2u.data.datasets.persons.PersonFrame;
+import eu.ec2u.data.datasets.programs.Program;
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.TopicFrame;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
@@ -40,6 +42,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -87,21 +90,10 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
     );
 
 
-    private static final Pattern YEAR_PATTERN=Pattern.compile("\\d{4}/\\d{4}");
     private static final Pattern CODE_PATTERN=Pattern.compile("\\S+");
     private static final Pattern ISCEDF_PATTERN=Pattern.compile("\\d{3,}");
     private static final Pattern SCALE_PATTERN=Pattern.compile("0-\\d+|[^/]+(?:/[^/]+)+");
 
-
-    enum Term {
-
-        AnnualTerm,
-        FirstTerm,
-        SecondTerm,
-        SummerTerm,
-        OpenTerm
-
-    }
 
     enum Test {
 
@@ -137,17 +129,33 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
 
         final String url=vault.get(DATA_URL);
 
-        time(() -> store.modify(
+        time(() -> {
 
-                array(Stream.of(url)
-                        .flatMap(this)
-                ),
+            final List<CourseFrame> courses=list(Stream.of(url).flatMap(this));
 
-                Value.value(query(new CourseFrame(true))
-                        .where("pipeline", criterion().any(uri(PIPELINE)))
-                )
+            return store.modify(
 
-        )).apply((elapsed, resources) -> logger.info(this, format(
+                    array(courses.stream()
+                            .flatMap(course -> course.inProgram().stream())
+                            .map(ProgramFrame::new)
+                            .distinct()
+                    ),
+
+                    Value.value(query(new ProgramFrame(true))
+                            .where("pipeline", criterion().any(uri(PIPELINE)))
+                    )
+
+            )+store.modify(
+
+                    array(courses.stream()),
+
+                    Value.value(query(new CourseFrame(true))
+                            .where("pipeline", criterion().any(uri(PIPELINE)))
+                    )
+
+            );
+
+        }).apply((elapsed, resources) -> logger.info(this, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed
         )));
 
@@ -164,8 +172,8 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
                                 .audience(set(LLL))
 
                                 .university(university)
-                                // !!! Year (academic year)
-                                // !!! Term (semester)
+                                .year(year(record).orElse(null))
+                                .term(set(term(record)))
 
                                 .name(map(title(record, university)))
                                 .inProgram(set(program(record, university)))
@@ -247,21 +255,25 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
 
     private Optional<String> year(final CSVRecord record) {
         return value(record, "Year")
-                .filter(YEAR_PATTERN.asMatchPredicate());
+                .flatMap(Course::year);
     }
 
-    private Optional<Term> term(final CSVRecord record) {
-        return value(record, "Term").map(value -> switch ( value ) {
+    private Stream<Course.Term> term(final CSVRecord record) {
+        return value(record, "Term").stream()
+                .flatMap(v -> split(v, ","))
+                .map(value -> switch ( value ) {
 
-            case "annual" -> Term.AnnualTerm;
-            case "first" -> Term.FirstTerm;
-            case "second" -> Term.SecondTerm;
-            case "summer" -> Term.SummerTerm;
-            case "open" -> Term.OpenTerm;
+                    case "annual" -> Course.Term.AnnualTerm;
+                    case "first" -> Course.Term.FirstTerm;
+                    case "second" -> Course.Term.SecondTerm;
+                    case "summer" -> Course.Term.SummerTerm;
+                    case "open" -> Course.Term.OpenTerm;
 
-            default -> null;
 
-        });
+                    default -> null;
+
+                })
+                .flatMap(Stream::ofNullable);
     }
 
     private Stream<Entry<Locale, String>> title(final CSVRecord record, final University university) {
@@ -279,12 +291,14 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
         return english.or(() -> local)
                 .map(key -> new ProgramFrame()
                         .id(PROGRAMS.id().resolve(uuid(university, key)))
+                        .pipeline(PIPELINE)
                         .university(university)
                         .name(map(Stream.concat(
                                 english.map(v -> entry(EN, v)).stream(),
                                 local.map(v -> entry(university.locale(), v)).stream()
                         )))
                 )
+                .flatMap(Program::review)
                 .stream();
     }
 
@@ -378,6 +392,7 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
                 .flatMap(s -> split(s, ","))
                 .filter(ISCEDF_PATTERN.asMatchPredicate()) // !!! review
                 .flatMap(code -> Stream.of(code, code.substring(0, 3))) // !!! which level? top? 2nd? all broader?
+                .distinct()
                 .map(TopicsISCEDF2013::code)
                 .map(id -> new TopicFrame(true).id(id));
     }

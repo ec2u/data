@@ -21,6 +21,7 @@ from program pages.
 | [portale.unipv.it/it/…/laureati-medici][spec-medici]                       | medics schools [it]     | specialisation schools (LLM)               |
 | [portale.unipv.it/it/…/laureati-non-medici][spec-non-medici]               | non-medics schools [it] | specialisation schools (LLM)               |
 
+- **2026-07-17** – map academic year (`ec2u:year`) and term (`ec2u:term`) from the UGov `aaOffId` and `tipoCicloCod`
 - **2024-11-07** – doctorate and specialisation schools integration
 - **2024-10-31** – UGov integration
 - **2024-10-30** – migration to ESSE3; initial integration

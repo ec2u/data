@@ -12,25 +12,25 @@ of event information for search engines and event applications.
 
 ![schem.org event data model](index/schema-event.svg)
 
-| term                               | type                           | #    | description                                       |
-|------------------------------------|--------------------------------|------|---------------------------------------------------|
-| **[schema:Event]**                 | [schema:Thing]                 |      | An event happening at a certain time and location |
-| [schema:name]                      | text                           | 0..1 | name of the event                                 |
-| [schema:disambiguatingDescription] | text                           | 0..1 | short disambiguating description of the event     |
-| [schema:description]               | text                           | 0..1 | description of the event                          |
-| [schema:image]                     | [schema:ImageObject]           | 0..1 | links to an image of the event                    |
-| [schema:url]                       | URI                            | 1..* | links to web pages describing the event           |
-| [schema:startDate]                 | dateTime                       | 1    | start date and time of the event                  |
-| [schema:endDate]                   | dateTime                       | 0..1 | end date and time of the event                    |
-| [schema:duration]                  | duration                       | 0..1 | duration of the event                             |
-| [schema:inLanguage]                | string                         | 0..1 | language of the event                             |
-| [schema:isAccessibleForFree]       | boolean                        | 0..1 | whether the event is accessible for free          |
+| term                               | type                             | #    | description                                       |
+|------------------------------------|----------------------------------|------|---------------------------------------------------|
+| **[schema:Event]**                 | [schema:Thing]                   |      | An event happening at a certain time and location |
+| [schema:name]                      | text                             | 0..1 | name of the event                                 |
+| [schema:disambiguatingDescription] | text                             | 0..1 | short disambiguating description of the event     |
+| [schema:description]               | text                             | 0..1 | description of the event                          |
+| [schema:image]                     | [schema:ImageObject]             | 0..1 | links to an image of the event                    |
+| [schema:url]                       | URI                              | 1..* | links to web pages describing the event           |
+| [schema:startDate]                 | dateTime                         | 1    | start date and time of the event                  |
+| [schema:endDate]                   | dateTime                         | 0..1 | end date and time of the event                    |
+| [schema:duration]                  | duration                         | 0..1 | duration of the event                             |
+| [schema:inLanguage]                | string                           | 0..1 | language of the event                             |
+| [schema:isAccessibleForFree]       | boolean                          | 0..1 | whether the event is accessible for free          |
 | [schema:eventAttendanceMode]       | [EventAttendanceModeEnumeration] | 0..1 | attendance mode of the event                      |
 | [schema:eventStatus]               | [EventStatusType]                | 0..1 | status of the event                               |
-| [schema:publisher]                 | [schema:Organization]          | 0..1 | links to the organization publishing the event    |
-| [schema:location][schema-location] | [schema:Location][location]    | 0..1 | links to the location of the event                |
-| [schema:about]                     | [skos:Concept]                 | *    | links to topics covered by the event              |
-| [schema:audience]                  | [skos:Concept]                 | *    | links to the intended audience of the event       |
+| [schema:publisher]                 | [schema:Organization]            | 0..1 | links to the organization publishing the event    |
+| [schema:location][schema-location] | [schema:Location][location]      | 0..1 | links to the location of the event                |
+| [schema:about]                     | [skos:Concept]                   | *    | links to topics covered by the event              |
+| [schema:audience]                  | [skos:Concept]                   | *    | links to the intended audience of the event       |
 
 [Schema.org]: https://schema.org/
 

@@ -16,8 +16,7 @@
 
 
 import { Languages } from "@ec2u/data/languages";
-import { Courses } from "@ec2u/data/pages/courses/courses";
-import { toEventAttendanceModeString } from "@ec2u/data/pages/things/things";
+import { Courses, toCourseModeString, toCourseTermString } from "@ec2u/data/pages/courses/courses";
 import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
@@ -48,6 +47,9 @@ export const Course=immutable({
 	name: required(text),
 
 	url: multiple(id),
+
+	year: optional(string),
+	term: multiple(string),
 
 	courseCode: optional(string),
 	inLanguage: multiple(string),
@@ -112,6 +114,8 @@ export function DataCourse() {
 			provider,
 
 			url,
+			year,
+			term,
 			courseCode,
 			educationalLevel,
 			audience,
@@ -127,6 +131,20 @@ export function DataCourse() {
 			<TileInfo>{{
 
 				"University": university && <TileLink>{university}</TileLink>,
+
+				"Year": year && <span>{year}</span>,
+
+				"Term": term?.length && <ul>{term
+					.map(term => toCourseTermString(term))
+					.filter(term => term)
+					.sort((x, y) => x.localeCompare(y))
+					.map(term => <li key={term}>{term}</li>)
+				}</ul>,
+
+			}}</TileInfo>
+
+			<TileInfo>{{
+
 				"Provider": provider && <span>{toFrameString(provider)}</span>
 
 			}}</TileInfo>
@@ -135,7 +153,7 @@ export function DataCourse() {
 
 				"Code": courseCode && <span>{courseCode}</span>,
 
-				"Level": educationalLevel && <TileLink>{educationalLevel}</TileLink>,
+				"Attendance": courseMode && <span>{toCourseModeString(courseMode)}</span>,
 
 				"Language": inLanguage?.length && <ul>{inLanguage
 					.map(tag => toTextString(Languages[tag]))
@@ -144,19 +162,16 @@ export function DataCourse() {
 					.map(language => <li key={language}>{language}</li>)
 				}</ul>,
 
-				"Attendance": courseMode && <span>{toEventAttendanceModeString(courseMode)}</span>,
+				"Fees for Externals": isAccessibleForFree === true ? "Free"
+					: isAccessibleForFree === false ? "Paid"
+						: undefined,
+
+				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
 
 				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>,
 				"Workload": courseWorkload && <span>{toDurationString(duration.decode(courseWorkload))}</span>,
-				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>
 
-			}}</TileInfo>
-
-			<TileInfo>{{
-
-				"Fees": isAccessibleForFree === true ? "Free for Externals"
-					: isAccessibleForFree === false ? "Paid for Externals"
-						: undefined
+				"Level": educationalLevel && <TileLink>{educationalLevel}</TileLink>
 
 			}}</TileInfo>
 

@@ -54,6 +54,26 @@ import static java.util.function.Predicate.not;
 @Namespace("[ec2u]")
 public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
 
+    String YEAR_FORMAT="^\\d{4}/\\d{4}$";
+    java.util.regex.Pattern YEAR_PATTERN=java.util.regex.Pattern.compile(YEAR_FORMAT);
+
+
+    static Optional<String> year(final String value) {
+        return Optional.ofNullable(value).filter(YEAR_PATTERN.asMatchPredicate());
+    }
+
+
+    enum Term {
+
+        AnnualTerm,
+        FirstTerm,
+        SecondTerm,
+        SummerTerm,
+        OpenTerm
+
+    }
+
+
     static Optional<CourseFrame> review(final CourseFrame course) {
 
         if ( course == null ) {
@@ -103,6 +123,12 @@ public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
     default Courses dataset() {
         return COURSES;
     }
+
+
+    @Pattern(YEAR_FORMAT)
+    String year();
+
+    Set<Term> term();
 
 
     @Override
