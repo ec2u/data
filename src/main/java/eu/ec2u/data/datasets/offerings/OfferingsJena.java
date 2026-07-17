@@ -25,6 +25,7 @@ import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.xml.XPath;
 import com.metreeca.flow.xml.formats.HTML;
 import com.metreeca.mesh.pipe.Store;
+import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;
@@ -36,6 +37,7 @@ import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDSettings;
 
 import java.io.StringReader;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -49,6 +51,7 @@ import static com.metreeca.flow.rdf.Rover.reverse;
 import static com.metreeca.flow.rdf.formats.RDF.rdf;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -69,6 +72,8 @@ import static java.lang.String.format;
 public final class OfferingsJena implements Runnable {
 
     private static final String SITE_URL="https://www.uni-jena.de/en/study-programme";
+
+    private static final URI PIPELINE=URIs.uri("java:%s".formatted(OfferingsJena.class.getName()));
 
     private static final IRI ABOUT_PAGE=Schema.term("AboutPage");
     private static final IRI HEADLINE=Schema.term("headline");
@@ -104,7 +109,7 @@ public final class OfferingsJena implements Runnable {
                 array(programs()),
 
                 value(query(new ProgramFrame(true))
-                        .where("university", criterion().any(JENA))
+                        .where("pipeline", criterion().any(uri(PIPELINE)))
                 )
 
         )).apply((elapsed, resources) -> logger.info(this, format(
@@ -173,6 +178,8 @@ public final class OfferingsJena implements Runnable {
 
     private Optional<ProgramFrame> program(final Rover rover) {
         return rover.traverse(Schema.term("url")).uri().flatMap(url -> review(new ProgramFrame()
+
+                .pipeline(PIPELINE)
 
                 .id(PROGRAMS.id().resolve(uuid(JENA, url.toString())))
                 .university(JENA)

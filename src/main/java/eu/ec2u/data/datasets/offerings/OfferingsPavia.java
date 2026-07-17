@@ -31,6 +31,7 @@ import com.metreeca.flow.xml.formats.XML;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.pipe.Store;
 import com.metreeca.shim.Locales;
+import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.courses.Course;
 import eu.ec2u.data.datasets.courses.CourseFrame;
@@ -47,6 +48,7 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.net.URI;
 import java.time.*;
 import java.util.*;
 import java.util.Map.Entry;
@@ -62,6 +64,7 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -90,6 +93,8 @@ public final class OfferingsPavia implements Runnable {
     private static final String API_URL="offerings-pavia-url";
     private static final String API_USR="offerings-pavia-usr";
     private static final String API_PWD="offerings-pavia-pwd";
+
+    private static final URI PIPELINE=URIs.uri("java:%s".formatted(OfferingsPavia.class.getName()));
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,7 +179,7 @@ public final class OfferingsPavia implements Runnable {
                                     ),
 
                                     value(query(new ProgramFrame(true))
-                                            .where("university", criterion().any(PAVIA))
+                                            .where("pipeline", criterion().any(uri(PIPELINE)))
                                     )
                             )),
 
@@ -187,7 +192,7 @@ public final class OfferingsPavia implements Runnable {
                                     ),
 
                                     value(query(new CourseFrame(true))
-                                            .where("university", criterion().any(PAVIA))
+                                            .where("pipeline", criterion().any(uri(PIPELINE)))
                                     )
 
                             ))
@@ -234,6 +239,8 @@ public final class OfferingsPavia implements Runnable {
 
     private Optional<ProgramFrame> program(final Value json) {
         return json.get("cdsCod").string().flatMap(code -> review(new ProgramFrame()
+
+                .pipeline(PIPELINE)
 
                 // !!! "logisticaExistsFlg": 1,
                 // !!! "offertaExistsFlg": 1,
@@ -392,6 +399,8 @@ public final class OfferingsPavia implements Runnable {
         return af.strings("ns2:afGenCod")
 
                 .map(course -> new CourseFrame()
+
+                        .pipeline(PIPELINE)
 
                         // !!! <ns2:inRegdidFlg>true</ns2:inRegdidFlg>
                         // !!! <ns2:nonErogabileFlg>false</ns2:nonErogabileFlg>

@@ -43,6 +43,7 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -64,6 +65,8 @@ public final class OfferingsLinz implements Runnable {
 
     private static final String PROGRAMS_URL="programs-linz-url";
     private static final String COURSES_URL="courses-linz-url";
+
+    private static final URI PIPELINE=URIs.uri("java:%s".formatted(OfferingsLinz.class.getName()));
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +96,7 @@ public final class OfferingsLinz implements Runnable {
                                 ),
 
                                 value(query(new ProgramFrame(true))
-                                        .where("university", criterion().any(LINZ))
+                                        .where("pipeline", criterion().any(uri(PIPELINE)))
                                 )
 
                         )),
@@ -105,7 +108,7 @@ public final class OfferingsLinz implements Runnable {
                                 ),
 
                                 value(query(new CourseFrame(true))
-                                        .where("university", criterion().any(LINZ))
+                                        .where("pipeline", criterion().any(uri(PIPELINE)))
                                 )
 
                         ))
@@ -138,6 +141,8 @@ public final class OfferingsLinz implements Runnable {
 
     private Optional<ProgramFrame> program(final Value json) {
         return json.get("identifier").strings().findFirst().flatMap(code -> review(new ProgramFrame()
+
+                .pipeline(PIPELINE)
 
                 .id(PROGRAMS.id().resolve(uuid(LINZ, code)))
                 .university(LINZ)
@@ -174,6 +179,8 @@ public final class OfferingsLinz implements Runnable {
 
     private Optional<CourseFrame> course(final Value json) {
         return json.get("courseCode").string().map(code -> new CourseFrame()
+
+                .pipeline(PIPELINE)
 
                 .id(COURSES.id().resolve(uuid(LINZ, code)))
                 .university(LINZ)

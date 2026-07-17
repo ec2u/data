@@ -51,6 +51,7 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -76,6 +77,8 @@ public final class OfferingsCoimbra implements Runnable {
     private static final String API_URL="offerings-coimbra-url";
     private static final String API_ID="offerings-coimbra-id";
     private static final String API_TOKEN="offerings-coimbra-token";
+
+    private static final URI PIPELINE=URIs.uri("java:%s".formatted(OfferingsCoimbra.class.getName()));
 
 
     private static final Pattern NOT_LETTERS_PATTERN=Pattern.compile("[^\\p{L}]+");
@@ -157,7 +160,7 @@ public final class OfferingsCoimbra implements Runnable {
                                 ),
 
                                 value(query(new ProgramFrame(true))
-                                        .where("university", criterion().any(COIMBRA))
+                                        .where("pipeline", criterion().any(uri(PIPELINE)))
                                 )
 
                         )),
@@ -176,7 +179,7 @@ public final class OfferingsCoimbra implements Runnable {
                                 ),
 
                                 value(query(new CourseFrame(true))
-                                        .where("university", criterion().any(COIMBRA))
+                                        .where("pipeline", criterion().any(uri(PIPELINE)))
                                 )
 
                         ))
@@ -262,6 +265,8 @@ public final class OfferingsCoimbra implements Runnable {
     private Optional<ProgramFrame> program(final Value json) {
         return json.get("cursoId").integral().flatMap(id -> review(new ProgramFrame()
 
+                .pipeline(PIPELINE)
+
                 .id(PROGRAMS.id().resolve(uuid(COIMBRA, String.valueOf(id))))
                 .university(COIMBRA)
 
@@ -286,6 +291,7 @@ public final class OfferingsCoimbra implements Runnable {
     private Optional<CourseFrame> course(final Value json) {
         return json.get("cursoId").integral().flatMap(id -> review(new CourseFrame()
 
+                .pipeline(PIPELINE)
 
                 .id(COURSES.id().resolve(uuid(COIMBRA, String.valueOf(id))))
                 .university(COIMBRA)
