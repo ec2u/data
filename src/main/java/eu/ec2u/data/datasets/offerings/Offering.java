@@ -97,7 +97,7 @@ public interface Offering extends Resource, SchemaLearningResource {
     Organization provider();
 
     @Pattern("^"+TopicsISCED2011.PATH+".*$") // !!! @Prefix
-    Topic educationalLevel();
+    Set<Topic> educationalLevel();
 
     @Pattern("^"+TopicsISCEDF2013.PATH+".*$") // !!! @Prefix
     Set<Topic> about();

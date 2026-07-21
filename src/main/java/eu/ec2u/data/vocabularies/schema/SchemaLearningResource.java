@@ -52,7 +52,7 @@ public interface SchemaLearningResource extends SchemaThing {
 
     SchemaOrganization provider();
 
-    SKOSConcept educationalLevel();
+    Set<? extends SKOSConcept> educationalLevel();
 
     Set<? extends SKOSConcept> about();
 

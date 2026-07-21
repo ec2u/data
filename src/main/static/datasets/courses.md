@@ -16,7 +16,7 @@ model.
 | ec2u:year                         | string as {`YYYY/YYYY`}                                   | 0..1 | the academic year in which the course is offered (for instance, `2026/2027`) |
 | ec2u:term                         | [ec2u:Term]                                               | *    | the academic term(s) in which the course is offered                          |
 | [schema:provider]                 | [ec2u:Organization]                                       | 1    | link to the organization providing the course                                |
-| [schema:educationalLevel]         | [ec2u:Topic]                                              | 0..1 | link to the educational level in the [ISCED 2011] taxonomy                   |
+| [schema:educationalLevel]         | [ec2u:Topic]                                              | *    | links to educational levels in the [ISCED 2011] taxonomy                     |
 | [schema:about]                    | [ec2u:Topic]                                              | *    | links to educational and training fields in the [ISCED-F 2013] taxonomy      |
 | [schema:audience]                 | [ec2u:Topic]                                              | *    | links to intended audience groups in the [EC2U Stakeholders] taxonomy        |
 | ‹inProgram› = ^[schema:hasCourse] | [ec2u:Program]                                            | *    | links to programs including the course                                       |

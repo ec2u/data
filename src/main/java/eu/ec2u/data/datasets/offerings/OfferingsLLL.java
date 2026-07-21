@@ -186,7 +186,7 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
                         .numberOfCredits(credits(record).orElse(null))
                         .timeRequired(duration(record).orElse(null))
                         .courseWorkload(workload(record).orElse(null))
-                        .educationalLevel(isced2011(record).orElse(null))
+                        .educationalLevel(set(isced2011(record)))
                         .about(set(Stream.concat(iscedf2013(record), sdg(record))))
 
                         // !!! Badge
@@ -375,8 +375,11 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
                 .map(this::hours);
     }
 
-    private Optional<TopicFrame> isced2011(final CSVRecord record) {
-        return value(record, "ISCED-2011", lenient(Integer::valueOf))
+    private Stream<TopicFrame> isced2011(final CSVRecord record) {
+        return value(record, "ISCED-2011").stream()
+                .flatMap(v -> split(v, ","))
+                .map(lenient(Integer::valueOf))
+                .flatMap(Optional::stream)
                 .filter(code -> code >= 4 && code <= 9)
                 .map(TopicsISCED2011::level);
     }

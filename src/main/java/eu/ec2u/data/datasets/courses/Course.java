@@ -146,7 +146,7 @@ public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
     Organization provider();
 
     @Pattern("^"+TopicsISCED2011.PATH+".*$") // !!! @Prefix
-    Topic educationalLevel();
+    Set<Topic> educationalLevel();
 
     @Pattern("^"+TopicsISCEDF2013.PATH+".*$") // !!! @Prefix
     Set<Topic> about();

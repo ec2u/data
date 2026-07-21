@@ -189,7 +189,7 @@ public final class OfferingsJena implements Runnable {
                 .name(name(rover).orElse(null))
                 .description(description(rover).orElse(null))
 
-                .educationalLevel(educationalLevel(rover).orElse(null))
+                .educationalLevel(set(educationalLevel(rover).stream()))
                 .educationalCredentialAwarded(educationalCredentialAwarded(rover).orElse(null))
 
         ));

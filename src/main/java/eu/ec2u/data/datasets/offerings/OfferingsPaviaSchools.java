@@ -203,7 +203,7 @@ public final class OfferingsPaviaSchools implements Runnable {
                                 .orElse(null)
                         )
 
-                        .educationalLevel(TopicsISCED2011.LEVEL_8)
+                        .educationalLevel(set(TopicsISCED2011.LEVEL_8))
                         .educationalCredentialAwarded(map(entry(PAVIA.locale(), "Diploma di Specializzazione")))
 
                         .teaches(map(teaches(json)))

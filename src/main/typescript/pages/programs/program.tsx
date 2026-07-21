@@ -64,7 +64,7 @@ export const Program=immutable({
 		label: required(text)
 	}),
 
-	educationalLevel: optional({
+	educationalLevel: multiple({
 		id: required(id),
 		label: required(text)
 	}),
@@ -119,7 +119,9 @@ export function DataProgram() {
 
 				"Code": identifier && <span>{identifier}</span>,
 
-				"Level": educationalLevel && <TileLink>{educationalLevel}</TileLink>,
+				"Level": educationalLevel?.length && <ul>{educationalLevel.slice().sort(entryCompare).map(level =>
+					<li key={level.id}><TileLink>{level}</TileLink></li>
+				)}</ul>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
 				"Duration": timeToComplete && <span>{toPeriodString(period.decode(timeToComplete))}</span>
 

@@ -75,7 +75,7 @@ export const Course=immutable({
 		label: required(text)
 	}),
 
-	educationalLevel: optional({
+	educationalLevel: multiple({
 		id: required(id),
 		label: required(text)
 	}),
@@ -118,7 +118,6 @@ export function DataCourse() {
 			year,
 			term,
 			courseCode,
-			educationalLevel,
 			audience,
 			inLanguage,
 			numberOfCredits,
@@ -170,9 +169,7 @@ export function DataCourse() {
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
 
 				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>,
-				"Workload": courseWorkload && <span>{toDurationString(duration.decode(courseWorkload))}</span>,
-
-				"Level": educationalLevel && <TileLink>{educationalLevel}</TileLink>
+				"Workload": courseWorkload && <span>{toDurationString(duration.decode(courseWorkload))}</span>
 
 			}}</TileInfo>
 
@@ -194,6 +191,7 @@ export function DataCourse() {
 			description,
 
 			inProgram,
+			educationalLevel,
 			about,
 
 			teaches,
@@ -212,6 +210,14 @@ export function DataCourse() {
 				{description && <p>{toTextString(description)}</p>}
 
 				<TilePanel stack>
+
+					{educationalLevel && <TileLabel name={"Level"}>{
+
+						<ul>{educationalLevel.slice().sort(entryCompare).map(level =>
+							<li key={level.id}><TileLink>{level}</TileLink></li>
+						)}</ul>
+
+					}</TileLabel>}
 
 					{about && <TileLabel name={"Subjects"}>{
 

@@ -165,7 +165,7 @@ public final class OfferingsPoitiers implements Runnable {
 
                         .name(map(name(json, code)))
 
-                        .educationalLevel(educationalLevel(json).orElse(null))
+                        .educationalLevel(set(educationalLevel(json).stream()))
                         .numberOfCredits(numberOfCredits(json).orElse(null))
 
                         .provider(provider(json).orElse(null))

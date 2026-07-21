@@ -15,7 +15,7 @@ model.
 | **ec2u:Program**                             | [ec2u:Resource], [schema:EducationalOccupationalProgram] |      | EC2U Knowledge Hub program                                                            |
 | [schema:hasCourse]               | [ec2u:Course]                                                                                | *    | links to courses included in the program                                              |
 | [schema:provider]                  | [ec2u:Organization]                                                                    | 1    | link to the organization providing the program                                        |
-| [schema:educationalLevel] | [ec2u:Topic]                                                                                  | 0..1 | link to the educational level in the [ISCED 2011] taxonomy                |
+| [schema:educationalLevel] | [ec2u:Topic]                                                                                  | *    | links to educational levels in the [ISCED 2011] taxonomy                  |
 | [schema:about]                        | [ec2u:Topic]                                                                                  | *    | links to educational and training fields in the [ISCED-F 2013] taxonomy |
 
 [Schema.org]: https://schema.org/

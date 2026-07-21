@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-752 792 695 187" width="695" height="187">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-752 792 695 187" width="695" height="187">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20" color="black">
       <g>
@@ -18,13 +18,13 @@
       </g>
     </marker>
   </defs>
-  <g id="programs" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1" stroke-opacity="1">
+  <g id="programs" fill-opacity="1" stroke="none" stroke-opacity="1" fill="none" stroke-dasharray="none">
     <title>programs</title>
     <rect fill="white" x="-752" y="792" width="695" height="187"/>
     <g id="programs_Layer_1">
       <title>Layer 1</title>
       <g id="Line_38">
-        <path d="M -400.8394 855.8835 L -397.4894 855.8835 L -379.7394 855.8835 L -379.7394 882.3405 L -235.8699 882.3405" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+        <path d="M -400.8394 855.8835 L -397.4894 855.8835 L -379.7394 855.8835 L -379.7394 882.3405 L -242.7199 882.3405" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Line_37">
         <path d="M -400.8394 855.8835 L -379.7394 855.8835 L -379.7394 829.4265 L -235.47438 829.4265" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
@@ -89,9 +89,9 @@
         <path d="M -400.8394 855.8835 L -392.7394 855.8835 L -237.1199 856.014 L -235.8699 856.014" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Graphic_15">
-        <rect x="-361.9126" y="849.4609" width="122.77148" height="13" fill="white"/>
-        <text transform="translate(-358.9126 850.4609)" fill="black">
-          <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:educationalLevel 0..1</tspan>
+        <rect x="-353.49787" y="849.4634" width="112.05762" height="13" fill="white"/>
+        <text transform="translate(-350.49787 850.4634)" fill="black">
+          <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:educationalLevel *</tspan>
         </text>
       </g>
       <g id="Group_39">

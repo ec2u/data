@@ -275,7 +275,7 @@ public final class OfferingsCoimbra implements Runnable {
 
                 .name(map(name(json)))
 
-                .educationalLevel(educationalLevel(json).orElse(null))
+                .educationalLevel(set(educationalLevel(json).stream()))
                 .numberOfCredits(numberOfCredits(json).orElse(null))
                 .timeToComplete(period(json).orElse(null))
 
@@ -304,7 +304,7 @@ public final class OfferingsCoimbra implements Runnable {
 
                 .name(map(name(json)))
 
-                .educationalLevel(educationalLevel(json).orElse(null))
+                .educationalLevel(set(educationalLevel(json).stream()))
                 .numberOfCredits(numberOfCredits(json).orElse(null))
                 .timeRequired(duration(json).orElse(null))
 

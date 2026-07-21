@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-670 894 638 313" width="638" height="313">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-670 894 638 313" width="638" height="313">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20" color="black">
       <g>
@@ -18,7 +18,7 @@
       </g>
     </marker>
   </defs>
-  <g id="courses" stroke-dasharray="none" fill="none" stroke="none" fill-opacity="1" stroke-opacity="1">
+  <g id="courses" fill-opacity="1" stroke="none" stroke-opacity="1" fill="none" stroke-dasharray="none">
     <title>courses</title>
     <rect fill="white" x="-670" y="894" width="638" height="313"/>
     <g id="courses_Layer_1">
@@ -116,9 +116,9 @@
         <path d="M -375.3464 1026.5347 L -354.2464 1026.5347 L -354.2464 1013.4787 L -212.55007 1013.4787" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Graphic_49">
-        <rect x="-334.82086" y="1006.9787" width="122.77148" height="13" fill="white"/>
-        <text transform="translate(-331.82086 1007.9787)" fill="black">
-          <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:educationalLevel 0..1</tspan>
+        <rect x="-326.7098" y="1006.9787" width="112.05762" height="13" fill="white"/>
+        <text transform="translate(-323.7098 1007.9787)" fill="black">
+          <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:educationalLevel *</tspan>
         </text>
       </g>
       <g id="Group_47">

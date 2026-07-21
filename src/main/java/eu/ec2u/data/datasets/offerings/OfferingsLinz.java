@@ -154,7 +154,7 @@ public final class OfferingsLinz implements Runnable {
                 .description(map(text(json.get("description"))))
 
                 .numberOfCredits(numberOfCredits(json).orElse(null))
-                .educationalLevel(educationalLevel(json).orElse(null))
+                .educationalLevel(set(educationalLevel(json).stream()))
 
         ));
     }
@@ -192,7 +192,7 @@ public final class OfferingsLinz implements Runnable {
                 .description(map(text(json.get("description"))))
 
                 .numberOfCredits(numberOfCredits(json).orElse(null))
-                .educationalLevel(educationalLevel(json).orElse(null))
+                .educationalLevel(set(educationalLevel(json).stream()))
 
                 .inProgram(set(json.select("inProgram.*.identifier").strings().map(v ->
                         new ProgramFrame(true).id(PROGRAMS.id().resolve(uuid(LINZ, v)))

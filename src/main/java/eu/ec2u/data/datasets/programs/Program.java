@@ -88,11 +88,11 @@ public interface Program extends Offering, SchemaEducationalOccupationalProgram 
 
     static ProgramFrame educationalLevel(final ProgramFrame offering) {
         return offering.educationalLevel(Optional.ofNullable(offering.educationalLevel())
-                .or(() -> Optional.of(embeddable(offering)).stream()
+                .filter(not(Set::isEmpty))
+                .orElseGet(() -> set(Stream.of(embeddable(offering))
                         .flatMap(isced2011())
-                        .findFirst()
-                )
-                .orElse(null)
+                        .limit(1)
+                ))
         );
     }
 
@@ -123,7 +123,7 @@ public interface Program extends Offering, SchemaEducationalOccupationalProgram 
     Organization provider();
 
     @Pattern("^"+TopicsISCED2011.PATH+".*$") // !!! @Prefix
-    Topic educationalLevel();
+    Set<Topic> educationalLevel();
 
     @Pattern("^"+TopicsISCEDF2013.PATH+".*$") // !!! @Prefix
     Set<Topic> about();

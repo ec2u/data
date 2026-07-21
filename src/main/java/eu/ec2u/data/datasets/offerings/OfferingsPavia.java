@@ -253,7 +253,7 @@ public final class OfferingsPavia implements Runnable {
 
                 .name(map(name(json)))
 
-                .educationalLevel(json.get("tipoCorsoCod").string().map(CODE_TO_LEVEL::get).orElse(null))
+                .educationalLevel(set(json.get("tipoCorsoCod").string().map(CODE_TO_LEVEL::get).stream()))
 
                 .provider(provider(json).orElse(null))
         ));

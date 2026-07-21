@@ -178,7 +178,7 @@ public final class OfferingsPaviaDoctorates implements Runnable {
 
                             .url(set(uri(url)))
 
-                            .educationalLevel(TopicsISCED2011.LEVEL_8)
+                            .educationalLevel(set(TopicsISCED2011.LEVEL_8))
                             .educationalCredentialAwarded(map(entry(PAVIA.locale(), "Dottorato di Ricerca"))))
 
                     ));

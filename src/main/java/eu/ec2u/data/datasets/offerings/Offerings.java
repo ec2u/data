@@ -171,12 +171,12 @@ public interface Offerings {
                                         .map(v -> entry(locale, v))
                                 ))
 
-                                .educationalLevel(json.get("level").number()
+                                .educationalLevel(set(json.get("level").number()
                                         .map(Number::intValue)
                                         .map(v -> Math.max(1, Math.min(9, v)))
                                         .map(TopicsISCED2011::level)
-                                        .orElse(null)
-                                );
+                                        .stream()
+                                ));
 
                     });
         }

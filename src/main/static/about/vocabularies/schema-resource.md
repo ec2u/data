@@ -23,7 +23,7 @@ representation of educational content for search engines and educational applica
 | [schema:teaches]                                        | text                  | 0..1 | description of what the learning resource teaches         |
 | [schema:assesses]                                       | text                  | 0..1 | description of what the learning resource assesses        |
 | [schema:competencyRequired]                             | text                  | 0..1 | competency required for the learning resource             |
-| [schema:educationalLevel]                               | [skos:Concept]        | 0..1 | links to the educational level of the learning resource   |
+| [schema:educationalLevel]                               | [skos:Concept]        | *    | links to the educational levels of the learning resource  |
 | [schema:about]                                          | [skos:Concept]        | *    | links to topics covered by the learning resource          |
 | [schema:provider]                                       | [schema:Organization] | 0..1 | links to the organization providing the learning resource |
 
