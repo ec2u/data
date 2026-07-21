@@ -79,6 +79,7 @@ import static java.lang.Math.round;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
+import static java.util.stream.IntStream.rangeClosed;
 
 public final class OfferingsLLL extends Transform<CourseFrame> implements Runnable {
 
@@ -91,7 +92,7 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
 
 
     private static final Pattern CODE_PATTERN=Pattern.compile("\\S+");
-    private static final Pattern ISCEDF_PATTERN=Pattern.compile("\\d{3,}");
+    private static final Pattern ISCEDF_PATTERN=Pattern.compile("\\d{2,4}");
     private static final Pattern SCALE_PATTERN=Pattern.compile("0-\\d+|[^/]+(?:/[^/]+)+");
 
 
@@ -385,13 +386,10 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
     }
 
     private Stream<TopicFrame> iscedf2013(final CSVRecord record) {
-        return Stream.concat(
-                        value(record, "ISCED-F 2013 (3)").stream(), // !!! remove
-                        value(record, "ISCED-F 2013").stream()
-                )
+        return value(record, "ISCED-F 2013").stream()
                 .flatMap(s -> split(s, ","))
-                .filter(ISCEDF_PATTERN.asMatchPredicate()) // !!! review
-                .flatMap(code -> Stream.of(code, code.substring(0, 3))) // !!! which level? top? 2nd? all broader?
+                .filter(ISCEDF_PATTERN.asMatchPredicate())
+                .flatMap(code -> rangeClosed(2, code.length()).mapToObj(length -> code.substring(0, length)))
                 .distinct()
                 .map(TopicsISCEDF2013::code)
                 .map(id -> new TopicFrame(true).id(id));

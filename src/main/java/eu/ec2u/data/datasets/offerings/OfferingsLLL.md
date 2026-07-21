@@ -12,6 +12,8 @@ Authoritative integration status for the cross-alliance Lifelong Learning (LLL) 
 Data loaded from a manually curated cross-alliance Google Sheet, one row per course, mapped to `ec2u:Course`
 entries; the sheet field reference is documented at https://ec2u.atlassian.net/wiki/x/AYDCTg.
 
+- **2026-07-21** – read ISCED-F 2013 codes from a single column, accepting 2 to 4 digit codes and expanding each to all
+  its broader levels
 - **2026-07-17** – map academic year (`ec2u:year`) and term (`ec2u:term`, comma-separated `annual`/`first`/`second`/
   `summer`/`open`)
 - **2026-07-17** – initial integration of the restructured spreadsheet
