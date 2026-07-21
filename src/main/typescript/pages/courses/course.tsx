@@ -118,7 +118,6 @@ export function DataCourse() {
 			year,
 			term,
 			courseCode,
-			audience,
 			inLanguage,
 			numberOfCredits,
 			timeRequired,
@@ -193,6 +192,7 @@ export function DataCourse() {
 			inProgram,
 			educationalLevel,
 			about,
+			audience,
 
 			teaches,
 			coursePrerequisites,
@@ -211,6 +211,22 @@ export function DataCourse() {
 
 				<TilePanel stack>
 
+					{inProgram && <TileLabel name={"Programs"}>{
+
+						<ul>{inProgram.slice().sort(entryCompare).map(program =>
+							<li key={program.id}><TileLink>{program}</TileLink></li>
+						)}</ul>
+
+					}</TileLabel>}
+
+					{audience && <TileLabel name={"Audience"}>{
+
+						<ul>{audience.slice().sort(entryCompare).map(audience =>
+							<li key={audience.id}><TileLink>{audience}</TileLink></li>
+						)}</ul>
+
+					}</TileLabel>}
+
 					{educationalLevel && <TileLabel name={"Level"}>{
 
 						<ul>{educationalLevel.slice().sort(entryCompare).map(level =>
@@ -223,14 +239,6 @@ export function DataCourse() {
 
 						<ul>{about.slice().sort(entryCompare).map(about =>
 							<li key={about.id}><TileLink>{about}</TileLink></li>
-						)}</ul>
-
-					}</TileLabel>}
-
-					{inProgram && <TileLabel name={"Programs"}>{
-
-						<ul>{inProgram.slice().sort(entryCompare).map(program =>
-							<li key={program.id}><TileLink>{program}</TileLink></li>
 						)}</ul>
 
 					}</TileLabel>}
