@@ -57,9 +57,10 @@ export const Course=immutable({
 	timeRequired: optional(duration),
 	courseWorkload: optional(duration),
 
+	description: optional(text),
 	teaches: optional(text),
-	assesses: optional(text),
 	coursePrerequisites: optional(text),
+	assesses: optional(text),
 	competencyRequired: optional(text),
 	educationalCredentialAwarded: optional(text),
 	occupationalCredentialAwarded: optional(text),
@@ -190,13 +191,14 @@ export function DataCourse() {
 		<TileFrame placeholder={Courses[icon]} as={({
 
 			name,
+			description,
 
 			inProgram,
 			about,
 
 			teaches,
-			assesses,
 			coursePrerequisites,
+			assesses,
 			competencyRequired,
 			educationalCredentialAwarded,
 			occupationalCredentialAwarded
@@ -206,6 +208,8 @@ export function DataCourse() {
 			return <>
 
 				<dfn>{toTextString(name)}</dfn>
+
+				{description && <p>{toTextString(description)}</p>}
 
 				<TilePanel stack>
 
@@ -232,8 +236,8 @@ export function DataCourse() {
 					"Educational Credential Awarded": educationalCredentialAwarded,
 					"Occupational Credential Awarded": occupationalCredentialAwarded,
 					"General Objectives": teaches,
-					"Learning Objectives and Intended Skills": assesses,
 					"Admission Requirements": coursePrerequisites,
+					"Learning Objectives and Intended Skills": assesses,
 					"Examination Requirements": competencyRequired
 
 				}).map(([
