@@ -18,6 +18,7 @@ package eu.ec2u.data.vocabularies.schema;
 
 import com.metreeca.mesh.meta.jsonld.Frame;
 
+import eu.ec2u.data.vocabularies.foaf.FOAFPerson;
 import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
 import eu.ec2u.data.vocabularies.skos.SKOSConcept;
 
@@ -33,6 +34,8 @@ public interface SchemaCourseInstance extends SchemaThing {
 
     EventAttendanceModeEnumeration courseMode();
 
+
+    Set<? extends FOAFPerson> instructor();
 
     Set<? extends SKOSConcept> about();
 

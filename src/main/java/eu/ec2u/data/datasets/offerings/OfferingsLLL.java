@@ -135,6 +135,18 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
             return store.modify(
 
                     array(courses.stream()
+                            .flatMap(course -> course.instructor().stream())
+                            .map(PersonFrame::new)
+                            .distinct()
+                    ),
+
+                    Value.value(query(new PersonFrame(true))
+                            .where("pipeline", criterion().any(uri(PIPELINE)))
+                    )
+
+            )+store.modify(
+
+                    array(courses.stream()
                             .flatMap(course -> course.inProgram().stream())
                             .map(ProgramFrame::new)
                             .distinct()
@@ -177,7 +189,7 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
                         .name(map(title(record, university)))
                         .inProgram(set(program(record, university)))
                         .provider(provider(record, university).orElse(null))
-                        // !!! .instructor(instructor(record, university).orElse(null))
+                        .instructor(set(instructor(record, university)))
 
                         .courseCode(code(record).orElse(null))
                         .courseMode(mode(record).orElse(null))
@@ -319,7 +331,8 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
         return value(record, "Instructor").stream()
                 .flatMap(v -> split(v, ";"))
                 .map(name -> Person.person(university, name))
-                .flatMap(Optional::stream);
+                .flatMap(Optional::stream)
+                .map(person -> person.pipeline(PIPELINE));
     }
 
     private Optional<String> code(final CSVRecord record) {

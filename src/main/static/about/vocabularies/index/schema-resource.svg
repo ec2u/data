@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-511 296 582 490" width="582" height="490">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-511 304 642 482" width="642" height="482">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20" color="black">
       <g>
@@ -20,7 +20,7 @@
   </defs>
   <g id="schema-resource" fill-opacity="1" stroke="none" stroke-opacity="1" fill="none" stroke-dasharray="none">
     <title>schema-resource</title>
-    <rect fill="white" x="-511" y="296" width="582" height="490"/>
+    <rect fill="white" x="-511" y="304" width="642" height="482"/>
     <g id="schema-resource_Layer_1">
       <title>Layer 1</title>
       <g id="Line_577">
@@ -164,17 +164,17 @@
       <g id="Group_529">
         <g id="Graphic_531">
           <a xl:href="https://schema.org/CourseInstance">
-            <rect x="-144.77632" y="393.16024" width="184.09863" height="17.94169" fill="white"/>
-            <rect x="-144.77632" y="393.16024" width="184.09863" height="17.94169" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-            <text transform="translate(-101.54146 396.6311)" fill="black">
+            <rect x="-87.7895" y="393.16024" width="184.09863" height="17.94169" fill="white"/>
+            <rect x="-87.7895" y="393.16024" width="184.09863" height="17.94169" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            <text transform="translate(-44.55464 396.6311)" fill="black">
               <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:CourseInstance</tspan>
             </text>
           </a>
         </g>
         <g id="Graphic_530">
-          <rect x="-144.77632" y="411.10193" width="184.09863" height="28" fill="white"/>
-          <rect x="-144.77632" y="411.10193" width="184.09863" height="28" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-          <text transform="translate(-138.77632 414.10193)" fill="black">
+          <rect x="-87.7895" y="411.10193" width="184.09863" height="28" fill="white"/>
+          <rect x="-87.7895" y="411.10193" width="184.09863" height="28" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(-81.7895 414.10193)" fill="black">
             <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:isAccessibleForFree : boolean [0..1]</tspan>
             <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">schema:courseWorkload : duration [0..1]</tspan>
           </text>
@@ -183,9 +183,9 @@
       <g id="Group_526">
         <g id="Graphic_528">
           <a xl:href="schema-event.svg">
-            <rect x="-147.446" y="324.87742" width="189.43799" height="28.047194" fill="white"/>
-            <rect x="-147.446" y="324.87742" width="189.43799" height="28.047194" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-            <text transform="translate(-141.446 327.901)" fill="#a5a5a5">
+            <rect x="-90.45918" y="332.16674" width="189.43799" height="28.047194" fill="white"/>
+            <rect x="-90.45918" y="332.16674" width="189.43799" height="28.047194" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+            <text transform="translate(-84.45918 335.19034)" fill="#a5a5a5">
               <tspan font-family="Roboto" font-size="9" fill="#a5a5a5" x="58.84497" y="9" xml:space="preserve">«enumeration»</tspan>
               <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="20" xml:space="preserve">schema:EventAttendanceModeEnumeration</tspan>
             </text>
@@ -193,26 +193,44 @@
         </g>
       </g>
       <g id="Graphic_524">
-        <rect x="-105.60493" y="362.49204" width="105.75586" height="13" fill="white"/>
-        <text transform="translate(-102.60493 363.49204)" fill="black">
+        <rect x="-48.618115" y="370.5603" width="105.75586" height="13" fill="white"/>
+        <text transform="translate(-45.618115 371.5603)" fill="black">
           <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:courseMode 0..1</tspan>
         </text>
       </g>
-      <g id="Line_589">
-        <line x1="-52.727" y1="393.16024" x2="-52.727" y2="359.7746" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
-      </g>
       <g id="Line_592">
-        <path d="M -52.73945 439.10193 L -52.73945 447.20193 L -52.718157 493.15145 L -52.718157 494.40145" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+        <path d="M 4.2598143 439.10193 L 4.2598143 460.20193 L -52.727 460.20193 L -52.727 494.40145" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
       </g>
       <g id="Graphic_593">
-        <rect x="-93.46064" y="462.0661" width="81.46729" height="24" fill="white"/>
-        <text transform="translate(-90.46064 463.0661)" fill="black">
+        <rect x="-93.46064" y="466.6797" width="81.46729" height="24" fill="white"/>
+        <text transform="translate(-90.46064 467.6797)" fill="black">
           <tspan font-family="Roboto" font-size="9" fill="black" x="6.495117" y="9" xml:space="preserve">schema:about *</tspan>
           <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="20" xml:space="preserve">schema:audience *</tspan>
         </text>
       </g>
       <g id="Line_597">
-        <line x1="-144.77632" y1="416.1311" x2="-329.11197" y2="416.1311" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+        <line x1="-87.7895" y1="416.1311" x2="-329.11197" y2="416.1311" marker-end="url(#UMLInheritance_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Line_598">
+        <line x1="4.2598143" y1="393.16024" x2="4.2598143" y2="367.06394" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_599">
+        <a xl:href="foaf.svg">
+          <rect x="30.561816" y="525.25144" width="59.41699" height="17" fill="white"/>
+          <rect x="30.561816" y="525.25144" width="59.41699" height="17" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+          <text transform="translate(36.561816 528.25144)" fill="#a5a5a5">
+            <tspan font-family="Roboto" font-weight="bold" font-size="9" fill="#a5a5a5" x="0" y="9" xml:space="preserve">foaf:Person</tspan>
+          </text>
+        </a>
+      </g>
+      <g id="Line_600">
+        <path d="M 4.2598143 439.10193 L 4.2598143 460.20193 L 60.27031 460.20193 L 60.27031 518.40144" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      </g>
+      <g id="Graphic_601">
+        <rect x="18.293017" y="468.50496" width="83.95459" height="13" fill="white"/>
+        <text transform="translate(21.293017 469.50496)" fill="black">
+          <tspan font-family="Roboto" font-size="9" fill="black" x="0" y="9" xml:space="preserve">schema:instructor *</tspan>
+        </text>
       </g>
     </g>
   </g>

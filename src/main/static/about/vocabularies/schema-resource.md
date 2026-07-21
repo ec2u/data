@@ -54,6 +54,7 @@ representation of educational content for search engines and educational applica
 | [schema:isAccessibleForFree] | boolean                          | 0..1 | whether the course instance is accessible for free                                                                   |
 | [schema:courseMode]          | [EventAttendanceModeEnumeration] | 0..1 | attendance mode of the course instance                                                                               |
 | [schema:courseWorkload]      | duration                         | 0..1 | workload of the course instance                                                                                      |
+| [schema:instructor]          | [foaf:Person]                    | *    | links to the instructors of the course instance                                                                      |
 | [schema:about]               | [skos:Concept]                   | *    | links to topics covered by the course instance                                                                       |
 | [schema:audience]            | [skos:Concept]                   | *    | links to the intended audience of the course instance                                                                |
 
@@ -116,5 +117,9 @@ representation of educational content for search engines and educational applica
 [EventAttendanceModeEnumeration]: https://schema.org/EventAttendanceModeEnumeration
 
 [schema:courseWorkload]: https://schema.org/courseWorkload
+
+[schema:instructor]: https://schema.org/instructor
+
+[foaf:Person]: foaf.md#person
 
 [schema:audience]: https://schema.org/audience

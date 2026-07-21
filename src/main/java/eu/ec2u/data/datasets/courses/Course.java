@@ -25,6 +25,7 @@ import com.metreeca.mesh.meta.shacl.Pattern;
 import eu.ec2u.data.datasets.Reference;
 import eu.ec2u.data.datasets.offerings.Offering;
 import eu.ec2u.data.datasets.organizations.Organization;
+import eu.ec2u.data.datasets.persons.Person;
 import eu.ec2u.data.datasets.programs.Program;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
@@ -137,6 +138,9 @@ public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
 
     @Reverse("schema:hasCourse")
     Set<Program> inProgram();
+
+    @Override
+    Set<? extends Person> instructor();
 
 
     //̸// !!! Factor to Offering ///////////////////////////////////////////////////////////////////////////////////////

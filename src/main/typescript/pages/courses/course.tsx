@@ -23,7 +23,7 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { decimal } from "@metreeca/core/decimal";
 import { duration, toDurationString } from "@metreeca/core/duration";
-import { entryCompare } from "@metreeca/core/entry";
+import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { toFrameString } from "@metreeca/core/frame";
 import { id, toIdString } from "@metreeca/core/id";
 import { string } from "@metreeca/core/string";
@@ -75,6 +75,11 @@ export const Course=immutable({
 		label: required(text)
 	}),
 
+	instructor: multiple({
+		id: required(id),
+		label: required(text)
+	}),
+
 	educationalLevel: multiple({
 		id: required(id),
 		label: required(text)
@@ -113,6 +118,7 @@ export function DataCourse() {
 
 			university,
 			provider,
+			instructor,
 
 			url,
 			year,
@@ -144,7 +150,11 @@ export function DataCourse() {
 
 			<TileInfo>{{
 
-				"Provider": provider && <span>{toFrameString(provider)}</span>
+				"Provider": provider && <span>{toFrameString(provider)}</span>,
+
+				"Instructor": instructor?.length && <ul>{instructor.slice().sort(entryCompare).map(instructor =>
+					<li key={instructor.id}>{toEntryString(instructor)}</li>
+				)}</ul>
 
 			}}</TileInfo>
 
