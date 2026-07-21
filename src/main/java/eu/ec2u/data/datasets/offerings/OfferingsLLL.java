@@ -108,7 +108,8 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
     enum Grade {
 
         VoteGrade,
-        JudgementGrade
+        JudgementGrade,
+        CertificationGrade
 
     }
 
@@ -194,6 +195,7 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
                                 // !!! Badge
                                 .url(set(url(record).stream()))
 
+                                .description(description(record).orElse(null))
                                 .teaches(syllabus(record).orElse(null))
                                 .coursePrerequisites(prerequisites(record).orElse(null))
 
@@ -413,6 +415,11 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
                 .or(() -> value(record, "URL (Local)", URIs::fuzzy));
     }
 
+    private Optional<Map<Locale, String>> description(final CSVRecord record) {
+        return value(record, "Description")
+                .map(v -> map(entry(EN, v)));
+    }
+
     private Optional<Map<Locale, String>> syllabus(final CSVRecord record) {
         return value(record, "Syllabus")
                 .map(v -> map(entry(EN, v)));
@@ -446,6 +453,7 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
 
                     case "vote" -> Grade.VoteGrade;
                     case "judgement" -> Grade.JudgementGrade;
+                    case "certification" -> Grade.CertificationGrade;
 
                     default -> null;
 
