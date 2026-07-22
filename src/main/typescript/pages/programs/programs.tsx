@@ -82,7 +82,7 @@ export function DataPrograms() {
 				useOptions(programs, "university", { type: entry({ id: "", label: required(text) }) })
 			}</TileOptions>
 
-			<TileOptions placeholder={"Level"}>{
+			<TileOptions placeholder={"Level"} compact>{
 				useOptions(programs, "educationalLevel", { type: entry({ id: "", label: required(text) }) })
 			}</TileOptions>
 

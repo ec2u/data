@@ -32,6 +32,7 @@ import eu.ec2u.data.datasets.offerings.Offerings;
 import eu.ec2u.data.datasets.organizations.Organizations;
 import eu.ec2u.work.Page;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Optional;
@@ -146,11 +147,11 @@ public interface Courses extends Dataset {
                                   },
                                   "duration": {
                                     "type": "string",
-                                    "pattern": "^P(\\\\d+D)?(T(\\\\d+H)?(\\\\d+M)?)?$"
+                                    "pattern": "^P(\\\\d+D(T(\\\\d+H)?(\\\\d+M)?)?|T(\\\\d+H(\\\\d+M)?|\\\\d+M))$"
                                   },
                                   "workload": {
                                     "type": "string",
-                                    "pattern": "^P(\\\\d+D)?(T(\\\\d+H)?(\\\\d+M)?)?$"
+                                    "pattern": "^P(\\\\d+D(T(\\\\d+H)?(\\\\d+M)?)?|T(\\\\d+H(\\\\d+M)?|\\\\d+M))$"
                                   },
                                   "fees": {
                                     "type": "string",
@@ -195,8 +196,15 @@ public interface Courses extends Dataset {
 
                                 .courseCode(json.get("code").string().orElse(null))
 
-                                .timeRequired(json.get("duration").duration().orElse(null))
-                                .courseWorkload(json.get("workload").duration().orElse(null))
+                                .timeRequired(json.get("duration").duration()
+                                        .filter(not(Duration::isZero)) // ;( empty durations are stored as <P>
+                                        .orElse(null)
+                                )
+
+                                .courseWorkload(json.get("workload").duration()
+                                        .filter(not(Duration::isZero)) // ;( empty durations are stored as <P>
+                                        .orElse(null)
+                                )
 
                                 .inLanguage(json.get("teaching").string()
                                         .map(Collections::set)

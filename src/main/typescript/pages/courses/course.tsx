@@ -221,17 +221,21 @@ export function DataCourse() {
 
 				{description && <p>{toTextString(description)}</p>}
 
-				{educationalCredentialAwarded && <TileLabel name={"Educational Credential Awarded"}>
+				<TilePanel stack>
 
-                    <DataCredential credential={educationalCredentialAwarded}/>
+					{educationalCredentialAwarded && <TileLabel name={"Educational Credential Awarded"}>
 
-                </TileLabel>}
+                        <DataCredential credential={educationalCredentialAwarded}/>
 
-				{occupationalCredentialAwarded && <TileLabel name={"Occupational Credential Awarded"}>
+                    </TileLabel>}
 
-                    <DataCredential credential={occupationalCredentialAwarded}/>
+					{occupationalCredentialAwarded && <TileLabel name={"Occupational Credential Awarded"}>
 
-                </TileLabel>}
+                        <DataCredential credential={occupationalCredentialAwarded}/>
+
+                    </TileLabel>}
+
+				</TilePanel>
 
 				<TilePanel stack>
 

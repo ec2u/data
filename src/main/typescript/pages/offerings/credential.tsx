@@ -45,13 +45,16 @@ export function DataCredential({
 
 }) {
 
+	const name=credential.name ? toTextString(credential.name) : "";
+	const description=credential.description ? toTextString(credential.description) : "";
+
 	return createElement("data-credential", {}, <>
 
 		<div>
 
 			<span>{credential.credentialCategory}</span>
 
-			{credential.name && <span>{toTextString(credential.name)}</span>}
+			{name && <span>{name}</span>}
 
 			{credential.url?.length && credential.url.map(item =>
 				<a key={item} href={item}>{toIdString(item, { compact: true })}</a>
@@ -59,7 +62,7 @@ export function DataCredential({
 
 		</div>
 
-		{credential.description && <TileMark>{toTextString(credential.description)}</TileMark>}
+		{description && <TileMark>{description}</TileMark>}
 
 	</>);
 

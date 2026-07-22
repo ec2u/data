@@ -168,17 +168,22 @@ export function DataProgram() {
 					&& <p>{toTextString(description)}</p>
 				}
 
-				{educationalCredentialAwarded && <TileLabel name={"Educational Credential Awarded"}>
 
-                    <DataCredential credential={educationalCredentialAwarded}/>
+				<TilePanel stack>
 
-                </TileLabel>}
+					{educationalCredentialAwarded && <TileLabel name={"Educational Credential Awarded"}>
 
-				{occupationalCredentialAwarded && <TileLabel name={"Occupational Credential Awarded"}>
+                        <DataCredential credential={educationalCredentialAwarded}/>
 
-                    <DataCredential credential={occupationalCredentialAwarded}/>
+                    </TileLabel>}
 
-                </TileLabel>}
+					{occupationalCredentialAwarded && <TileLabel name={"Occupational Credential Awarded"}>
+
+                        <DataCredential credential={occupationalCredentialAwarded}/>
+
+                    </TileLabel>}
+
+				</TilePanel>
 
 				<TilePanel stack>
 

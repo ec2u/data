@@ -24,6 +24,7 @@ import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredentialF
 import eu.ec2u.work.Page;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -161,7 +162,7 @@ public interface Offerings {
                                 .educationalCredentialAwarded(json.get("educationalCredential").string()
                                         .flatMap(name -> review(locale, new SchemaEducationalOccupationalCredentialFrame()
                                                 .credentialCategory(Degree)
-                                                .name(map(entry(locale, name)))
+                                                .name(named(locale, name))
                                         ))
                                         .orElse(null)
                                 )
@@ -169,7 +170,7 @@ public interface Offerings {
                                 .occupationalCredentialAwarded(json.get("occupationalCredential").string()
                                         .flatMap(name -> review(locale, new SchemaEducationalOccupationalCredentialFrame()
                                                 .credentialCategory(Degree)
-                                                .name(map(entry(locale, name)))
+                                                .name(named(locale, name))
                                         ))
                                         .orElse(null)
                                 )
@@ -197,6 +198,18 @@ public interface Offerings {
                                 ));
 
                     });
+        }
+
+
+        /**
+         * Localises a name, ignoring blank values: credentials may legitimately be nameless, but an empty name would
+         * be stored as an empty literal.
+         */
+        private Map<Locale, String> named(final Locale locale, final String name) {
+            return map(Optional.of(name)
+                    .filter(not(String::isBlank))
+                    .map(v -> entry(locale, v))
+            );
         }
 
     }
