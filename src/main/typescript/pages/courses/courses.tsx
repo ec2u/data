@@ -15,7 +15,6 @@
  */
 
 import { Languages } from "@ec2u/data/languages";
-import { toEventAttendanceModeString } from "@ec2u/data/pages/things/things";
 import { DataInfo } from "@ec2u/data/views/info";
 
 import { DataPage } from "@ec2u/data/views/page";
@@ -26,7 +25,7 @@ import { duration } from "@metreeca/core/duration";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { string } from "@metreeca/core/string";
-import { text, toTextString } from "@metreeca/core/text";
+import { text, toTextString } from "@metreeca/core/text.js";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
 import { useOptions } from "@metreeca/data/models/options";
@@ -70,6 +69,50 @@ export const Courses=immutable({
 });
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const CourseTerm: { [term: string]: typeof text.model } = {
+
+	Annual: {
+		en: "Annual"
+	},
+
+	First: {
+		en: "First Semester"
+	},
+
+	Second: {
+		en: "Second Semester"
+	},
+
+	Summer: {
+		en: "Summer"
+	},
+
+	Open: {
+		en: "Open"
+	}
+
+};
+const CourseMode: { [mode: string]: typeof text.model } = {
+
+	OfflineEventAttendanceMode: {
+		en: "Presence"
+	},
+
+	OnlineEventAttendanceMode: {
+		en: "Online"
+	},
+
+	MixedEventAttendanceMode: {
+		en: "Hybrid"
+	}
+
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export function DataCourses() {
 
 	const courses=useCollection(Courses, "members");
@@ -86,25 +129,41 @@ export function DataCourses() {
 				useOptions(courses, "university", { type: entry({ id: "", label: required(text) }) })
 			}</TileOptions>
 
-			<TileOptions placeholder={"Level"}>{
-				useOptions(courses, "educationalLevel", { type: entry({ id: "", label: required(text) }) })
+			<TileOptions placeholder={"Year"} compact>{
+				useOptions(courses, "year", { type: string })
+			}</TileOptions>
+
+			<TileOptions placeholder={"Term"} compact as={toCourseTermString}>{
+				useOptions(courses, "term", { type: string })
+			}</TileOptions>
+
+			<TileOptions placeholder={"Attendance"} compact as={toCourseModeString}>{
+				useOptions(courses, "courseMode", { type: string })
 			}</TileOptions>
 
 			<TileOptions placeholder={"Language"} compact as={value => toTextString(Languages[value])}>{
 				useOptions(courses, "inLanguage", { type: string })
 			}</TileOptions>
 
-			<TileOptions placeholder={"Attendance"} compact as={toEventAttendanceModeString}>{
-				useOptions(courses, "courseMode", { type: string })
-			}</TileOptions>
-
-			<TileOptions placeholder={"Duration"} compact>{
-				useOptions(courses, "timeRequired", { type: duration, size: 10 }) // !!! duration >> range
+			<TileOptions placeholder={"Fees for Externals"} compact as={value => value ? "Free" : "Paid"}>{
+				useOptions(courses, "isAccessibleForFree", { type: boolean })
 			}</TileOptions>
 
 			<TileRange placeholder={"Credits"} compact>{
 				useRange(courses, "numberOfCredits", { type: decimal })
 			}</TileRange>
+
+			<TileOptions placeholder={"Duration"} compact>{
+				useOptions(courses, "timeRequired", { type: duration, size: 10 }) // !!! duration >> range
+			}</TileOptions>
+
+			<TileOptions placeholder={"Level"} compact>{
+				useOptions(courses, "educationalLevel", { type: entry({ id: "", label: required(text) }) })
+			}</TileOptions>
+
+			<TileOptions placeholder={"Credentials"} compact>{
+				useOptions(courses, "educationalCredentialAwarded.credentialCategory", { type: string })
+			}</TileOptions>
 
 			<TileOptions placeholder={"Subjects"} compact>{
 				useOptions(courses, "about", { type: entry({ id: "", label: required(text) }), size: 10 })
@@ -112,10 +171,6 @@ export function DataCourses() {
 
 			<TileOptions placeholder={"Audience"} compact>{
 				useOptions(courses, "audience", { type: entry({ id: "", label: required(text) }) })
-			}</TileOptions>
-
-			<TileOptions placeholder={"Free for Externals"} compact>{
-				useOptions(courses, "isAccessibleForFree", { type: boolean })
 			}</TileOptions>
 
 		</>}
@@ -155,3 +210,13 @@ export function DataCourses() {
 	</DataPage>;
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function toCourseTermString(term: keyof typeof CourseTerm) {
+	return toTextString(CourseTerm[term]);
+}
+
+export function toCourseModeString(courseMode: keyof typeof CourseMode) {
+	return toTextString(CourseMode[courseMode]);
+}

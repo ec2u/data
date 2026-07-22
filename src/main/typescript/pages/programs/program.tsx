@@ -15,6 +15,7 @@
  */
 
 
+import { Credential, DataCredential } from "@ec2u/data/pages/offerings/credential.js";
 import { Programs } from "@ec2u/data/pages/programs/programs";
 import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
@@ -47,24 +48,24 @@ export const Program=immutable({
 	description: optional(text),
 
 	identifier: optional(string),
-	url: multiple(string),
+	url: multiple(id),
 
 	numberOfCredits: optional(decimal),
 	timeToComplete: optional(period),
 
 	teaches: optional(text),
-	assesses: optional(text),
 	programPrerequisites: optional(text),
+	assesses: optional(text),
 	competencyRequired: optional(text),
-	educationalCredentialAwarded: optional(text),
-	occupationalCredentialAwarded: optional(text),
+	educationalCredentialAwarded: optional(Credential),
+	occupationalCredentialAwarded: optional(Credential),
 
 	university: optional({
 		id: required(id),
 		label: required(text)
 	}),
 
-	educationalLevel: optional({
+	educationalLevel: multiple({
 		id: required(id),
 		label: required(text)
 	}),
@@ -90,7 +91,7 @@ export const Program=immutable({
 export function DataProgram() {
 
 	const [program]=useResource(Program);
-	;
+
 
 	return <DataPage name={[Programs, {}]} info={<DataAI>{program?.generated}</DataAI>}
 
@@ -101,16 +102,19 @@ export function DataProgram() {
 
 			identifier,
 			url,
-			educationalLevel,
 			numberOfCredits,
 			timeToComplete
-
 
 		}) => <>
 
 			<TileInfo>{{
 
-				"University": university && <TileLink>{university}</TileLink>,
+				"University": university && <TileLink>{university}</TileLink>
+
+			}}</TileInfo>
+
+			<TileInfo>{{
+
 				"Provider": provider && <span>{toFrameString(provider)}</span>
 
 			}}</TileInfo>
@@ -119,8 +123,8 @@ export function DataProgram() {
 
 				"Code": identifier && <span>{identifier}</span>,
 
-				"Level": educationalLevel && <TileLink>{educationalLevel}</TileLink>,
 				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
+
 				"Duration": timeToComplete && <span>{toPeriodString(period.decode(timeToComplete))}</span>
 
 			}}</TileInfo>
@@ -143,11 +147,12 @@ export function DataProgram() {
 			description,
 
 			hasCourse,
+			educationalLevel,
 			about,
 
 			teaches,
-			assesses,
 			programPrerequisites,
+			assesses,
 			competencyRequired,
 
 			educationalCredentialAwarded,
@@ -160,18 +165,27 @@ export function DataProgram() {
 				<dfn>{toTextString(name)}</dfn>
 
 				{description && (!teaches || toTextString(description) !== toTextString(teaches))
-					&& <TileMark>{toTextString(description)}</TileMark>
+					&& <p>{toTextString(description)}</p>
 				}
+
 
 				<TilePanel stack>
 
-					{about && <TileLabel name={"Subjects"}>
+					{educationalCredentialAwarded && <TileLabel name={"Educational Credential Awarded"}>
 
-                        <ul>{about.slice().sort(entryCompare).map(course =>
-							<li key={course.id}><TileLink>{course}</TileLink></li>
-						)}</ul>
+                        <DataCredential credential={educationalCredentialAwarded}/>
 
                     </TileLabel>}
+
+					{occupationalCredentialAwarded && <TileLabel name={"Occupational Credential Awarded"}>
+
+                        <DataCredential credential={occupationalCredentialAwarded}/>
+
+                    </TileLabel>}
+
+				</TilePanel>
+
+				<TilePanel stack>
 
 					{hasCourse && <TileLabel name={"Courses"}>
 
@@ -181,33 +195,49 @@ export function DataProgram() {
 
                     </TileLabel>}
 
+					{educationalLevel && <TileLabel name={"Level"}>
+
+                        <ul>{educationalLevel.slice().sort(entryCompare).map(level =>
+							<li key={level.id}><TileLink>{level}</TileLink></li>
+						)}</ul>
+
+                    </TileLabel>}
+
+					{about && <TileLabel name={"Subjects"}>
+
+                        <ul>{about.slice().sort(entryCompare).map(about =>
+							<li key={about.id}><TileLink>{about}</TileLink></li>
+						)}</ul>
+
+                    </TileLabel>}
+
 				</TilePanel>
 
-				<TilePanel stack>{Object.entries({
+				<TilePanel stack>
 
-					"Educational Credential Awarded": educationalCredentialAwarded,
-					"Occupational Credential Awarded": occupationalCredentialAwarded,
-					"General Objectives": teaches,
-					"Learning Objectives and Intended Skills": assesses,
-					"Admission Requirements": programPrerequisites,
-					"Graduation Requirements": competencyRequired
+					{Object.entries({
 
-				}).map(([
+						"Contents and Structure": teaches,
+						"Admission Requirements": programPrerequisites,
+						"Learning Objectives and Intended Skills": assesses,
+						"Graduation Requirements": competencyRequired
 
-					term,
-					data
+					}).map(([
 
-				]) => data && <TileLabel key={term} name={term}>
+						term,
+						data
 
-                    <TileMark>{toTextString(data)}</TileMark>
+					]) => data && <TileLabel key={term} name={term}>
 
-                </TileLabel>)
+                        <TileMark>{toTextString(data)}</TileMark>
 
-				}</TilePanel>
+                    </TileLabel>)}
+
+				</TilePanel>
 
 			</>;
-		}
-		}>{program}</TileFrame>
+
+		}}>{program}</TileFrame>
 
 	</DataPage>;
 

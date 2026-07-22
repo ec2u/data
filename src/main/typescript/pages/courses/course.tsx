@@ -16,15 +16,15 @@
 
 
 import { Languages } from "@ec2u/data/languages";
-import { Courses } from "@ec2u/data/pages/courses/courses";
-import { toEventAttendanceModeString } from "@ec2u/data/pages/things/things";
+import { Courses, toCourseModeString, toCourseTermString } from "@ec2u/data/pages/courses/courses";
+import { Credential, DataCredential } from "@ec2u/data/pages/offerings/credential.js";
 import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
 import { boolean } from "@metreeca/core/boolean";
 import { decimal } from "@metreeca/core/decimal";
 import { duration, toDurationString } from "@metreeca/core/duration";
-import { entryCompare } from "@metreeca/core/entry";
+import { entryCompare, toEntryString } from "@metreeca/core/entry";
 import { toFrameString } from "@metreeca/core/frame";
 import { id, toIdString } from "@metreeca/core/id";
 import { string } from "@metreeca/core/string";
@@ -49,18 +49,23 @@ export const Course=immutable({
 
 	url: multiple(id),
 
+	year: optional(string),
+	term: multiple(string),
+
 	courseCode: optional(string),
 	inLanguage: multiple(string),
 	numberOfCredits: optional(decimal),
 	timeRequired: optional(duration),
 	courseWorkload: optional(duration),
 
+	description: optional(text),
 	teaches: optional(text),
-	assesses: optional(text),
 	coursePrerequisites: optional(text),
+	assesses: optional(text),
 	competencyRequired: optional(text),
-	educationalCredentialAwarded: optional(text),
-	occupationalCredentialAwarded: optional(text),
+
+	educationalCredentialAwarded: optional(Credential),
+	occupationalCredentialAwarded: optional(Credential),
 
 	university: optional({
 		id: required(id),
@@ -72,7 +77,12 @@ export const Course=immutable({
 		label: required(text)
 	}),
 
-	educationalLevel: optional({
+	instructor: multiple({
+		id: required(id),
+		label: required(text)
+	}),
+
+	educationalLevel: multiple({
 		id: required(id),
 		label: required(text)
 	}),
@@ -110,11 +120,12 @@ export function DataCourse() {
 
 			university,
 			provider,
+			instructor,
 
 			url,
+			year,
+			term,
 			courseCode,
-			educationalLevel,
-			audience,
 			inLanguage,
 			numberOfCredits,
 			timeRequired,
@@ -127,7 +138,25 @@ export function DataCourse() {
 			<TileInfo>{{
 
 				"University": university && <TileLink>{university}</TileLink>,
-				"Provider": provider && <span>{toFrameString(provider)}</span>
+
+				"Year": year && <span>{year}</span>,
+
+				"Term": term?.length && <ul>{term
+					.map(term => toCourseTermString(term))
+					.filter(term => term)
+					.sort((x, y) => x.localeCompare(y))
+					.map(term => <li key={term}>{term}</li>)
+				}</ul>,
+
+			}}</TileInfo>
+
+			<TileInfo>{{
+
+				"Provider": provider && <span>{toFrameString(provider)}</span>,
+
+				"Instructor": instructor?.length && <ul>{instructor.slice().sort(entryCompare).map(instructor =>
+					<li key={instructor.id}>{toEntryString(instructor)}</li>
+				)}</ul>
 
 			}}</TileInfo>
 
@@ -135,7 +164,7 @@ export function DataCourse() {
 
 				"Code": courseCode && <span>{courseCode}</span>,
 
-				"Level": educationalLevel && <TileLink>{educationalLevel}</TileLink>,
+				"Attendance": courseMode && <span>{toCourseModeString(courseMode)}</span>,
 
 				"Language": inLanguage?.length && <ul>{inLanguage
 					.map(tag => toTextString(Languages[tag]))
@@ -144,19 +173,14 @@ export function DataCourse() {
 					.map(language => <li key={language}>{language}</li>)
 				}</ul>,
 
-				"Attendance": courseMode && <span>{toEventAttendanceModeString(courseMode)}</span>,
+				"Fees for Externals": isAccessibleForFree === true ? "Free"
+					: isAccessibleForFree === false ? "Paid"
+						: undefined,
+
+				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>,
 
 				"Duration": timeRequired && <span>{toDurationString(duration.decode(timeRequired))}</span>,
-				"Workload": courseWorkload && <span>{toDurationString(duration.decode(courseWorkload))}</span>,
-				"Credits": numberOfCredits && <span>{numberOfCredits.toFixed(1)}</span>
-
-			}}</TileInfo>
-
-			<TileInfo>{{
-
-				"Fees": isAccessibleForFree === true ? "Free for Externals"
-					: isAccessibleForFree === false ? "Paid for Externals"
-						: undefined
+				"Workload": courseWorkload && <span>{toDurationString(duration.decode(courseWorkload))}</span>
 
 			}}</TileInfo>
 
@@ -175,13 +199,16 @@ export function DataCourse() {
 		<TileFrame placeholder={Courses[icon]} as={({
 
 			name,
+			description,
 
 			inProgram,
+			educationalLevel,
 			about,
+			audience,
 
 			teaches,
-			assesses,
 			coursePrerequisites,
+			assesses,
 			competencyRequired,
 			educationalCredentialAwarded,
 			occupationalCredentialAwarded
@@ -192,15 +219,25 @@ export function DataCourse() {
 
 				<dfn>{toTextString(name)}</dfn>
 
+				{description && <p>{toTextString(description)}</p>}
+
 				<TilePanel stack>
 
-					{about && <TileLabel name={"Subjects"}>{
+					{educationalCredentialAwarded && <TileLabel name={"Educational Credential Awarded"}>
 
-						<ul>{about.slice().sort(entryCompare).map(about =>
-							<li key={about.id}><TileLink>{about}</TileLink></li>
-						)}</ul>
+                        <DataCredential credential={educationalCredentialAwarded}/>
 
-					}</TileLabel>}
+                    </TileLabel>}
+
+					{occupationalCredentialAwarded && <TileLabel name={"Occupational Credential Awarded"}>
+
+                        <DataCredential credential={occupationalCredentialAwarded}/>
+
+                    </TileLabel>}
+
+				</TilePanel>
+
+				<TilePanel stack>
 
 					{inProgram && <TileLabel name={"Programs"}>{
 
@@ -210,29 +247,53 @@ export function DataCourse() {
 
 					}</TileLabel>}
 
+					{audience && <TileLabel name={"Audience"}>{
+
+						<ul>{audience.slice().sort(entryCompare).map(audience =>
+							<li key={audience.id}><TileLink>{audience}</TileLink></li>
+						)}</ul>
+
+					}</TileLabel>}
+
+					{educationalLevel && <TileLabel name={"Level"}>{
+
+						<ul>{educationalLevel.slice().sort(entryCompare).map(level =>
+							<li key={level.id}><TileLink>{level}</TileLink></li>
+						)}</ul>
+
+					}</TileLabel>}
+
+					{about && <TileLabel name={"Subjects"}>{
+
+						<ul>{about.slice().sort(entryCompare).map(about =>
+							<li key={about.id}><TileLink>{about}</TileLink></li>
+						)}</ul>
+
+					}</TileLabel>}
+
 				</TilePanel>
 
-				<TilePanel stack>{Object.entries({
+				<TilePanel stack>
 
-					"Educational Credential Awarded": educationalCredentialAwarded,
-					"Occupational Credential Awarded": occupationalCredentialAwarded,
-					"General Objectives": teaches,
-					"Learning Objectives and Intended Skills": assesses,
-					"Admission Requirements": coursePrerequisites,
-					"Examination Requirements": competencyRequired
+					{Object.entries({
 
-				}).map(([
+						"Contents and Structure": teaches,
+						"Admission Requirements": coursePrerequisites,
+						"Learning Objectives and Intended Skills": assesses,
+						"Examination Requirements": competencyRequired
 
-					term,
-					data
+					}).map(([
 
-				]) => data && <TileLabel key={term} name={term}>
+						term,
+						data
 
-                    <TileMark>{toTextString(data)}</TileMark>
+					]) => data && <TileLabel key={term} name={term}>
 
-                </TileLabel>)
+                        <TileMark>{toTextString(data)}</TileMark>
 
-				}</TilePanel>
+                    </TileLabel>)}
+
+				</TilePanel>
 
 			</>;
 

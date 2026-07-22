@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2025 EC2U Alliance
+ * Copyright © 2020-2026 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,22 +24,26 @@ import com.metreeca.mesh.pipe.Store;
 import com.metreeca.shim.Locales;
 import com.metreeca.shim.URIs;
 
+import eu.ec2u.data.datasets.courses.Course;
 import eu.ec2u.data.datasets.courses.CourseFrame;
+import eu.ec2u.data.datasets.organizations.OrganizationFrame;
+import eu.ec2u.data.datasets.persons.Person;
 import eu.ec2u.data.datasets.persons.PersonFrame;
+import eu.ec2u.data.datasets.programs.Program;
+import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.TopicFrame;
+import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCEDF2013;
 import eu.ec2u.data.datasets.taxonomies.TopicsSDGs;
 import eu.ec2u.data.datasets.universities.University;
+import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredentialFrame;
 import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
 import org.apache.commons.csv.CSVRecord;
 
 import java.net.URI;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Matcher;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -60,30 +64,54 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.EN;
 import static eu.ec2u.data.datasets.courses.Course.review;
 import static eu.ec2u.data.datasets.courses.Courses.COURSES;
-import static eu.ec2u.data.datasets.persons.Persons.PERSONS;
+import static eu.ec2u.data.datasets.offerings.Offering.review;
+import static eu.ec2u.data.datasets.organizations.Organizations.ORGANIZATIONS;
+import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsEC2UStakeholders.EC2U_STAKEHOLDERS;
-import static eu.ec2u.data.datasets.taxonomies.TopicsISCED2011.*;
 import static eu.ec2u.data.datasets.universities.Universities.UNIVERSITIES;
 import static eu.ec2u.data.datasets.universities.University.PARTNERS;
 import static eu.ec2u.data.datasets.universities.University.uuid;
+import static eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredential.CredentialCategory.Badge;
 import static eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration.*;
 import static java.lang.Math.floor;
 import static java.lang.Math.round;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.IntStream.rangeClosed;
 
 public final class OfferingsLLL extends Transform<CourseFrame> implements Runnable {
 
-    private static final String DATA_URL="offerings-lll-url"; // vault label
+    private static final String DATA_URL="offerings-lll-url-next"; // vault label
+    private static final URI PIPELINE=URIs.uri("java:%s".formatted(OfferingsLLL.class.getName()));
 
     private static final TopicFrame LLL=new TopicFrame(true).id(
             EC2U_STAKEHOLDERS.id().resolve("teaching/students/continuing-education")
     );
 
 
-    private static final Pattern SUBJECT_PATTERN=Pattern.compile("^\\s*(\\d{2,4})");
-    private static final Pattern FUZZY_DECIMAL_PATTERN=Pattern.compile("^\\s*(\\d+(?:\\.\\d+)?)");
+    private static final Pattern CODE_PATTERN=Pattern.compile("\\S+");
+    private static final Pattern ISCEDF_PATTERN=Pattern.compile("\\d{2,4}");
+    private static final Pattern SCALE_PATTERN=Pattern.compile("0-\\d+|[^/]+(?:/[^/]+)+");
+
+
+    enum Test {
+
+        Written,
+        Quiz,
+        Oral,
+        Coursework
+
+    }
+
+    enum Grade {
+
+        Vote,
+        Judgement,
+        Certification
+
+    }
 
 
     public static void main(final String... args) {
@@ -103,17 +131,45 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
 
         final String url=vault.get(DATA_URL);
 
-        time(() -> store.modify(
+        time(() -> {
 
-                array(Stream.of(url)
-                        .flatMap(this)
-                ),
+            final List<CourseFrame> courses=list(Stream.of(url).flatMap(this));
 
-                Value.value(query(new CourseFrame(true))
-                        .where("seeAlso", criterion().any(uri(LLL.id()))) // ;( hack to clear the LLL set // !!! use loader()
-                )
+            return store.modify(
 
-        )).apply((elapsed, resources) -> logger.info(this, format(
+                    array(courses.stream()
+                            .flatMap(course -> course.instructor().stream())
+                            .map(PersonFrame::new)
+                            .distinct()
+                    ),
+
+                    Value.value(query(new PersonFrame(true))
+                            .where("pipeline", criterion().any(uri(PIPELINE)))
+                    )
+
+            )+store.modify(
+
+                    array(courses.stream()
+                            .flatMap(course -> course.inProgram().stream())
+                            .map(ProgramFrame::new)
+                            .distinct()
+                    ),
+
+                    Value.value(query(new ProgramFrame(true))
+                            .where("pipeline", criterion().any(uri(PIPELINE)))
+                    )
+
+            )+store.modify(
+
+                    array(courses.stream()),
+
+                    Value.value(query(new CourseFrame(true))
+                            .where("pipeline", criterion().any(uri(PIPELINE)))
+                    )
+
+            );
+
+        }).apply((elapsed, resources) -> logger.info(this, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed
         )));
 
@@ -122,50 +178,48 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
     @Override
     protected Stream<CourseFrame> process(final CSVRecord record, final Collection<CSVRecord> records) {
         return university(record).flatMap(university -> id(record, university)
-                .filter(id -> value(record, "Disabled").filter(not(String::isBlank)).isEmpty())
+                .filter(not(id -> disabled(record)))
                 .flatMap(id -> review(new CourseFrame()
 
                         .id(id)
-                        .university(university)
-
+                        .pipeline(PIPELINE)
                         .audience(set(LLL))
-                        .seeAlso(set(LLL.id())) // ;( tag course as in the LLL set // !!! use loader()
 
-                        // !!! Department (in English)
+                        .university(university)
+                        .year(year(record).orElse(null))
+                        .term(set(term(record)))
 
-                        .educationalLevel(educationalLevel(record).orElse(null))
+                        .name(map(title(record, university)))
+                        .inProgram(set(program(record, university)))
+                        .provider(provider(record, university).orElse(null))
+                        .instructor(set(instructor(record, university)))
 
-                        // !!! Study degree course (in English)
+                        .courseCode(code(record).orElse(null))
+                        .courseMode(mode(record).orElse(null))
+                        .inLanguage(set(language(record)))
+                        .isAccessibleForFree(fee(record).orElse(null))
+                        .numberOfCredits(credits(record).orElse(null))
+                        .timeRequired(duration(record).orElse(null))
+                        .courseWorkload(workload(record).orElse(null))
+                        .educationalLevel(set(isced2011(record)))
+                        .about(set(Stream.concat(iscedf2013(record), sdg(record))))
 
-                        .courseCode(courseCode(record).orElse(null))
+                        .educationalCredentialAwarded(badge(record)
+                                .flatMap(badge -> review(university.locale(),
+                                        new SchemaEducationalOccupationalCredentialFrame()
+                                                .credentialCategory(Badge)
+                                                .url(set(badge))
+                                ))
+                                .orElse(null)
+                        )
 
-                        .name(map(name(record, university)))
-
-                        .isAccessibleForFree(isAccessibleForFree(record).orElse(null))
-
-                        // !!! Semester (First/Second)
-
-                        .timeRequired(timeRequired(record).orElse(null))
-                        .courseWorkload(courseWorkload(record).orElse(null))
-
-                        // !!! Test type (Written/Oral/Both)
-                        // !!! Type evaluation (Vote/Judgement)
-                        // !!! Description type evaluation (If it is a vote write the range in numbers, e.g. 0-30)
-
-                        // !!! .instructor(instructor(record, university).orElse(null))
-
-                        // !!! Academic year in which the course is being offered
-
-                        .inLanguage(set(inLanguage(record).stream()))
-                        .about(set(Stream.concat(sdgs(record), subjects(record))))
-
-                        .courseMode(courseMode(record).orElse(null))
-
-                        .teaches(teaches(record).orElse(null))
-                        .coursePrerequisites(coursePrerequisites(record).orElse(null))
-
-                        .numberOfCredits(numberOfCredits(record).orElse(null))
                         .url(set(url(record).stream()))
+
+                        .description(description(record).orElse(null))
+                        .teaches(syllabus(record).orElse(null))
+                        .coursePrerequisites(prerequisites(record).orElse(null))
+                        .assesses(assessment(record).orElse(null))
+                        .competencyRequired(examination(record).orElse(null))
 
                 ))
         ).stream();
@@ -174,27 +228,11 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private Optional<University> university(final CSVRecord record) {
+    private Optional<URI> id(final CSVRecord record, final University university) {
 
-        final Optional<URI> university=value(record, "University")
-                .map(u -> u.toLowerCase(ROOT))
-                .map(u -> UNIVERSITIES.id().resolve(u));
-
-        if ( university.isEmpty() ) {
-            warning(record, "no university name provided");
-        }
-
-        return university.flatMap(id -> PARTNERS.stream()
-                .filter(u -> u.id().equals(id))
-                .findFirst()
-        );
-    }
-
-    private Optional<URI> id(final CSVRecord record, final University university) { // !!! enforce uniqueness
-
-        final Optional<String> identifier=value(record, "University Course code");
-        final Optional<String> titleEnglish=value(record, "Course Title (in English)");
-        final Optional<String> titleLocal=value(record, "Course Title (original)");
+        final Optional<String> identifier=value(record, "Code");
+        final Optional<String> titleEnglish=value(record, "Title (English)");
+        final Optional<String> titleLocal=value(record, "Title (Local)");
 
         if ( titleEnglish.isEmpty() && titleLocal.isEmpty() ) {
 
@@ -213,120 +251,277 @@ public final class OfferingsLLL extends Transform<CourseFrame> implements Runnab
         }
     }
 
-    private Optional<TopicFrame> educationalLevel(final CSVRecord record) {
-        return value(record, "Study Course Level (BA/MA/Postgraduate)")
-                .map(v -> v.equals("BA") ? LEVEL_6
-                        : v.equals("MA") ? LEVEL_7
-                        : v.equals("Postgraduate") ? LEVEL_8
-                        : LEVEL_9
-                );
+
+    private boolean disabled(final CSVRecord record) {
+        return value(record, "-")
+                .filter(not(String::isBlank))
+                .isPresent();
     }
 
-    private Optional<String> courseCode(final CSVRecord record) {
-        return value(record, "University Course code");
-    }
+    private Optional<University> university(final CSVRecord record) {
 
-    private Stream<Map.Entry<Locale, String>> name(final CSVRecord record, final University university) {
-        return Stream.concat(
-                value(record, "Course Title (in English)").map(v -> entry(EN, v)).stream(),
-                value(record, "Course Title (original)").map(v -> entry(university.locale(), v)).stream()
+        final Optional<URI> university=value(record, "University")
+                .map(u -> u.toLowerCase(ROOT))
+                .map(u -> UNIVERSITIES.id().resolve(u));
+
+        if ( university.isEmpty() ) {
+            warning(record, "no university name provided");
+        }
+
+        return university.flatMap(id -> PARTNERS.stream()
+                .filter(u -> u.id().equals(id))
+                .findFirst()
         );
     }
 
-    private Optional<Boolean> isAccessibleForFree(final CSVRecord record) {
-        return value(record, "Fee to attend this course for external users (Yes/No)")
-                .map(value -> value.equalsIgnoreCase("no"));
+    private Optional<String> year(final CSVRecord record) {
+        return value(record, "Year")
+                .flatMap(Course::year);
     }
 
-    private Optional<Duration> timeRequired(final CSVRecord record) {
-        return value(record, "Teaching hours", OfferingsLLL::decimal)
-                .map(this::duration);
+    private Stream<Course.Term> term(final CSVRecord record) {
+        return value(record, "Term").stream()
+                .flatMap(v -> split(v, ","))
+                .map(value -> switch ( value ) {
+
+                    case "annual" -> Course.Term.Annual;
+                    case "first" -> Course.Term.First;
+                    case "second" -> Course.Term.Second;
+                    case "summer" -> Course.Term.Summer;
+                    case "open" -> Course.Term.Open;
+
+
+                    default -> null;
+
+                })
+                .flatMap(Stream::ofNullable);
     }
 
-    private Optional<Duration> courseWorkload(final CSVRecord record) {
-        return value(record, "Individual study hours", OfferingsLLL::decimal)
-                .map(this::duration);
+    private Stream<Entry<Locale, String>> title(final CSVRecord record, final University university) {
+        return Stream.concat(
+                value(record, "Title (English)").map(v -> entry(EN, v)).stream(),
+                value(record, "Title (Local)").map(v -> entry(university.locale(), v)).stream()
+        );
     }
 
-    private Optional<PersonFrame> instructor(final CSVRecord record, final University university) {
-        return value(record, "Professor Surname")
-                .flatMap(surname ->
-                        value(record, "Professor First Name").map(forename -> new PersonFrame()
+    private Stream<ProgramFrame> program(final CSVRecord record, final University university) {
 
-                                .id(PERSONS.id().resolve(uuid(university, format("%s, %s", surname, forename))))
-                                .university(university)
+        final Optional<String> english=value(record, "Program (English)");
+        final Optional<String> local=value(record, "Program (Local)");
 
-                                .givenName(forename)
-                                .familyName(surname)
+        return english.or(() -> local)
+                .map(key -> new ProgramFrame()
+                        .id(PROGRAMS.id().resolve(uuid(university, key)))
+                        .pipeline(PIPELINE)
+                        .university(university)
+                        .name(map(Stream.concat(
+                                english.map(v -> entry(EN, v)).stream(),
+                                local.map(v -> entry(university.locale(), v)).stream()
+                        )))
+                )
+                .flatMap(Program::review)
+                .stream();
+    }
 
-                        )
+    private Optional<OrganizationFrame> provider(final CSVRecord record, final University university) {
+
+        final Optional<String> english=value(record, "Provider (English)");
+        final Optional<String> local=value(record, "Provider (Local)");
+
+        return english.or(() -> local)
+                .map(key -> new OrganizationFrame()
+                        .id(ORGANIZATIONS.id().resolve(uuid(university, key)))
+                        .university(university)
+                        .prefLabel(map(Stream.concat(
+                                english.map(v -> entry(EN, v)).stream(),
+                                local.map(v -> entry(university.locale(), v)).stream()
+                        )))
                 );
     }
 
-    private Optional<String> inLanguage(final CSVRecord record) {
-        return value(record, "Course Language")
-                .flatMap(Locales::fuzzy)
+    private Stream<PersonFrame> instructor(final CSVRecord record, final University university) {
+        return value(record, "Instructor").stream()
+                .flatMap(v -> split(v, ";"))
+                .map(name -> Person.person(university, name))
+                .flatMap(Optional::stream)
+                .map(person -> person.pipeline(PIPELINE));
+    }
+
+    private Optional<String> code(final CSVRecord record) {
+        return value(record, "Code")
+                .filter(CODE_PATTERN.asMatchPredicate());
+    }
+
+    private Optional<EventAttendanceModeEnumeration> mode(final CSVRecord record) {
+        return value(record, "Mode").map(value -> switch ( value ) {
+
+            case "presence" -> OfflineEventAttendanceMode;
+            case "online" -> OnlineEventAttendanceMode;
+            case "hybrid" -> MixedEventAttendanceMode;
+
+            default -> null;
+
+        });
+    }
+
+    private Stream<String> language(final CSVRecord record) {
+        return value(record, "Language").stream()
+                .flatMap(v -> split(v, ","))
+                .map(Locales::fuzzy)
+                .flatMap(Optional::stream)
                 .map(Locale::getLanguage);
     }
 
-    private Stream<TopicFrame> sdgs(final CSVRecord record) {
-        return values(record, "SDG Number (if SDGs related)", lenient(Integer::valueOf))
-                .map(n -> new TopicFrame(true).id(TopicsSDGs.code(n)));
+    private Optional<Boolean> fee(final CSVRecord record) {
+        return value(record, "Fee").map(value -> switch ( value ) {
+
+            case "no" -> true;
+            case "yes" -> false;
+
+            default -> null;
+
+        });
     }
 
-    private Stream<TopicFrame> subjects(final CSVRecord record) {
-        return value(record, "If available write the Detailed field number classification of the course according to ISCED table https://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-and-training-2013-en.pdf    ")
-                .or(() -> value(record, "Narrow field number classification of the course according to ISCED table https://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-and-training-2013-en.pdf"))
-                .stream()
-                .flatMap(s -> split(s, ";"))
-                .map(SUBJECT_PATTERN::matcher) // remove trailing description
-                .filter(Matcher::find)
-                .map(matcher -> matcher.group(1))
+    private Optional<Double> credits(final CSVRecord record) {
+        return value(record, "Credits", lenient(Double::valueOf))
+                .filter(credits -> credits > 0);
+    }
+
+    private Optional<Duration> duration(final CSVRecord record) {
+        return value(record, "Duration", lenient(Double::valueOf))
+                .filter(hours -> hours > 0)
+                .map(this::hours);
+    }
+
+    private Optional<Duration> workload(final CSVRecord record) {
+        return value(record, "Workload", lenient(Double::valueOf))
+                .filter(hours -> hours > 0)
+                .map(this::hours);
+    }
+
+    private Stream<TopicFrame> isced2011(final CSVRecord record) {
+        return value(record, "ISCED-2011").stream()
+                .flatMap(v -> split(v, ","))
+                .map(lenient(Integer::valueOf))
+                .flatMap(Optional::stream)
+                .filter(code -> code >= 4 && code <= 9)
+                .map(TopicsISCED2011::level);
+    }
+
+    private Stream<TopicFrame> iscedf2013(final CSVRecord record) {
+        return value(record, "ISCED-F 2013").stream()
+                .flatMap(s -> split(s, ","))
+                .filter(ISCEDF_PATTERN.asMatchPredicate())
+                .flatMap(code -> rangeClosed(2, code.length()).mapToObj(length -> code.substring(0, length)))
+                .distinct()
                 .map(TopicsISCEDF2013::code)
                 .map(id -> new TopicFrame(true).id(id));
     }
 
-    private Optional<EventAttendanceModeEnumeration> courseMode(final CSVRecord record) {
-        return value(record, "Teaching method (on-line/ in presence/ hybrid)")
-                .map(mode -> mode.toUpperCase(ROOT))
-                .map(mode -> mode.contains("LINE") ? OnlineEventAttendanceMode
-                        : mode.contains("PRESENCE") || mode.contains("SITE") ? OfflineEventAttendanceMode
-                        : mode.contains("HYBRID") ? MixedEventAttendanceMode
-                        : null
-                );
+    private Stream<TopicFrame> sdg(final CSVRecord record) {
+        return value(record, "SDG").stream()
+                .flatMap(v -> split(v, ","))
+                .map(lenient(Integer::valueOf))
+                .flatMap(Optional::stream)
+                .filter(n -> n >= 1 && n <= 17)
+                .map(n -> new TopicFrame(true).id(TopicsSDGs.code(n)));
     }
 
-    private Optional<Map<Locale, String>> teaches(final CSVRecord record) {
-        return value(record, "Short syllabus (max 100 words)")
-                .map(v -> map(entry(EN, v)));
-    }
-
-    private Optional<Map<Locale, String>> coursePrerequisites(final CSVRecord record) {
-        return value(record, "Prerequisites\n(Fill if you answered YES at Col.I. Use no more than 30 words)")
-                .filter(not(v -> v.equalsIgnoreCase("none")))
-                .map(v -> map(entry(EN, v)));
-    }
-
-    private Optional<Double> numberOfCredits(final CSVRecord record) {
-        return value(record, "Number of ECTS", OfferingsLLL::decimal);
+    private Optional<URI> badge(final CSVRecord record) {
+        return value(record, "Badge", URIs::fuzzy);
     }
 
     private Optional<URI> url(final CSVRecord record) {
-        return value(record, "Link to the course site/description", URIs::fuzzy);
+        return value(record, "URL (English)", URIs::fuzzy)
+                .or(() -> value(record, "URL (Local)", URIs::fuzzy));
+    }
+
+    private Optional<Map<Locale, String>> description(final CSVRecord record) {
+        return value(record, "Description")
+                .map(v -> map(entry(EN, v)));
+    }
+
+    private Optional<Map<Locale, String>> syllabus(final CSVRecord record) {
+        return value(record, "Syllabus")
+                .map(v -> map(entry(EN, v)));
+    }
+
+    private Optional<Map<Locale, String>> prerequisites(final CSVRecord record) {
+        return value(record, "Prerequisites")
+                .map(v -> map(entry(EN, v)));
+    }
+
+    private Optional<Map<Locale, String>> assessment(final CSVRecord record) {
+        return value(record, "Assessment")
+                .map(v -> map(entry(EN, v)));
+    }
+
+    private Optional<Map<Locale, String>> examination(final CSVRecord record) {
+
+        final String rows=Stream.of(
+                        row("Format", test(record).map(Test::name).collect(joining(", "))),
+                        row("Grade", grade(record).map(Grade::name).collect(joining(", "))),
+                        row("Scale", scale(record).orElse(""))
+                )
+                .flatMap(Optional::stream)
+                .collect(joining());
+
+        return Optional.of(rows)
+                .filter(not(String::isEmpty))
+                .map(table -> """
+                        | Assessment | Type |
+                        |---|---|
+                        """+table)
+                .map(v -> map(entry(EN, v)));
+    }
+
+    private Optional<String> row(final String label, final String value) {
+        return Optional.of(value)
+                .filter(not(String::isEmpty))
+                .map(v -> "| %s | %s |\n".formatted(label, v));
+    }
+
+    private Stream<Test> test(final CSVRecord record) {
+        return value(record, "Test").stream()
+                .flatMap(v -> split(v, ","))
+                .map(value -> switch ( value ) {
+
+                    case "written" -> Test.Written;
+                    case "quiz" -> Test.Quiz;
+                    case "oral" -> Test.Oral;
+                    case "coursework" -> Test.Coursework;
+
+                    default -> null;
+
+                })
+                .flatMap(Stream::ofNullable);
+    }
+
+    private Stream<Grade> grade(final CSVRecord record) {
+        return value(record, "Grade").stream()
+                .flatMap(v -> split(v, ","))
+                .map(value -> switch ( value ) {
+
+                    case "vote" -> Grade.Vote;
+                    case "judgement" -> Grade.Judgement;
+                    case "certification" -> Grade.Certification;
+
+                    default -> null;
+
+                })
+                .flatMap(Stream::ofNullable);
+    }
+
+    private Optional<String> scale(final CSVRecord record) {
+        return value(record, "Scale")
+                .filter(SCALE_PATTERN.asMatchPredicate());
     }
 
 
-    private static Optional<Double> decimal(final String text) {
-        return Optional.of(text)
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                .map(FUZZY_DECIMAL_PATTERN::matcher)
-                .filter(Matcher::find)
-                .map(matcher -> matcher.group(1))
-
-                .map(Double::parseDouble);
-    }
-
-    private Duration duration(final double value) {
+    private Duration hours(final double value) {
 
         final long hours=round(floor(value));
         final long minutes=round(floor(60*value));

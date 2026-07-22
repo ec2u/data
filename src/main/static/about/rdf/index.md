@@ -133,9 +133,9 @@ Class specifications are detailed in tabular format, according to the following 
 
 | term         | type                                                                                                                             | #              | definition                                                                                                                                                                                                                   |
 |--------------|----------------------------------------------------------------------------------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **ex:Class** | [ex:BaseClass](#classes) *inherited class membership specified as cross-links to the specification of the relevant base classes* |                | *class definition*                                                                                                                                                                                                           |
+| **ex:Class** | [ex:BaseClass] *inherited class membership specified as cross-links to the specification of the relevant base classes* |                | *class definition*                                                                                                                                                                                                           |
 | ex:property  | datatype {constraint}                                                                                                            | {multiplicity} | *literal property specification with expected datatype, multiplicity and additional constraints*                                                                                                                             |
-| ex:property  | [ex:RelatedClass](#classes)&#10;{constraint}                                                                                     | {multiplicity} | *entity property specification with expected instance class, multiplicity and additional constraints; class membership for related entities is specified as a cross-links to the specification of the relevant target class* |
+| ex:property  | [ex:RelatedClass]&#10;{constraint}                                                                                     | {multiplicity} | *entity property specification with expected instance class, multiplicity and additional constraints; class membership for related entities is specified as a cross-links to the specification of the relevant target class* |
 
 Additional property constraints are specified
 as [SHACL core constraints components.](https://www.w3.org/TR/shacl/#core-components)
@@ -161,22 +161,22 @@ query engines and easily mapped to native datatypes in most programming language
 
 | datatype | description                                                                                 | RDF                                                               | JSON                             | Java                         |
 |----------|---------------------------------------------------------------------------------------------|:------------------------------------------------------------------|:---------------------------------|------------------------------|
-| boolean  | `true` / `false` flag                                                                       | [xsd:boolean](https://www.w3.org/TR/xmlschema-2/#boolean)         | `boolean`                        | `Boolean`                    |
-| integer  | arbitrary precision integer number (for instance,  `123` )                                  | [xsd:integer](https://www.w3.org/TR/xmlschema-2/#integer)         | `integral number`                | `BigInteger`                 |
-| decimal  | arbitrary precision decimal number (for instance, `123.456`)                                | [xsd:decimal](https://www.w3.org/TR/xmlschema-2/#decimal)         | `decimal number`                 | `BigDecimal`                 |
-| string   | textual content                                                                             | [xsd:string](https://www.w3.org/TR/xmlschema-2/#string)           | `string`                         | `String`                     |
-| uri      | absolute URI                                                                                | [xsd:anyURI](https://www.w3.org/TR/xmlschema-2/#anyURI)           | `“http://example.net/”`          | `URI`                        |
-|          | relative URI                                                                                | [xsd:anyURI](https://www.w3.org/TR/xmlschema-2/#anyURI)           | `"/path"`                        | `URI`                        |
-| year     | [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) year                                     | [xsd:gYear](https://www.w3.org/TR/xmlschema-2/#gYear)             | `“yyyy”`                         | `Year`                       |
-| date     | [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date                                     | [xsd:date](https://www.w3.org/TR/xmlschema-2/#date)               | `"yyyy-MM-dd"`                   | `LocalDate`                  |
-| time     | local  [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date                              | [xsd:time](https://www.w3.org/TR/xmlschema-2/#time)               | `"hh:mm:ss"`                     | `LocalTime`                  |
-|          | offset  [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date                             | [xsd:time](https://www.w3.org/TR/xmlschema-2/#time)               | `"hh:mm:ss+hh:mm"`               | `OffsetTime`                 |
-| dateTime | local [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time                          | [xsd:dateTime](https://www.w3.org/TR/xmlschema-2/#dateTime)       | `"yyyy-MM-ddThh:mm:s.sss"`       | `LocalDateTime`              |
-|          | offset [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time                         | [xsd:dateTime](https://www.w3.org/TR/xmlschema-2/#dateTime)       | `"yyyy-MM-ddThh:mm:s.sss+hh:mm"` | `OffsetDateTime`             |
-| instant  | UTC [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date-time with millisecond precision | [xsd:dateTime](https://www.w3.org/TR/xmlschema-2/#dateTime)       | `"yyyy-MM-ddThh:mm:s.sssZ"`      | `Instant`                    |
-| period   | date-based  [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) duration                     | [xsd:duration](https://www.w3.org/TR/xmlschema-2/#duration)       | `"PyYMMdD"`                      | `Period`                     |
-| duration | time-based  [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) duration                     | [xsd:duration](https://www.w3.org/TR/xmlschema-2/#duration)       | `"PdDThHmMs.sssS"`               | `Duration`                   |
-| text     | localised human-readable textual content                                                    | [rdf:langString](https://www.w3.org/TR/rdf-schema/#ch_langstring) | `{ "locale": "text" }`           | ``Map<Locale, String>``      |
+| boolean  | `true` / `false` flag                                                                       | [xsd:boolean]         | `boolean`                        | `Boolean`                    |
+| integer  | arbitrary precision integer number (for instance,  `123` )                                  | [xsd:integer]         | `integral number`                | `BigInteger`                 |
+| decimal  | arbitrary precision decimal number (for instance, `123.456`)                                | [xsd:decimal]         | `decimal number`                 | `BigDecimal`                 |
+| string   | textual content                                                                             | [xsd:string]           | `string`                         | `String`                     |
+| uri      | absolute URI                                                                                | [xsd:anyURI]           | `“http://example.net/”`          | `URI`                        |
+|          | relative URI                                                                                | [xsd:anyURI]           | `"/path"`                        | `URI`                        |
+| year     | [ISO 8601] year                                     | [xsd:gYear]             | `“yyyy”`                         | `Year`                       |
+| date     | [ISO 8601] date                                     | [xsd:date]               | `"yyyy-MM-dd"`                   | `LocalDate`                  |
+| time     | local  [ISO 8601] date                              | [xsd:time]               | `"hh:mm:ss"`                     | `LocalTime`                  |
+|          | offset  [ISO 8601] date                             | [xsd:time]               | `"hh:mm:ss+hh:mm"`               | `OffsetTime`                 |
+| dateTime | local [ISO 8601] date-time                          | [xsd:dateTime]       | `"yyyy-MM-ddThh:mm:s.sss"`       | `LocalDateTime`              |
+|          | offset [ISO 8601] date-time                         | [xsd:dateTime]       | `"yyyy-MM-ddThh:mm:s.sss+hh:mm"` | `OffsetDateTime`             |
+| instant  | UTC [ISO 8601] date-time with millisecond precision | [xsd:dateTime]       | `"yyyy-MM-ddThh:mm:s.sssZ"`      | `Instant`                    |
+| period   | date-based  [ISO 8601] duration                     | [xsd:duration]       | `"PyYMMdD"`                      | `Period`                     |
+| duration | time-based  [ISO 8601] duration                     | [xsd:duration]       | `"PdDThHmMs.sssS"`               | `Duration`                   |
+| text     | localised human-readable textual content                                                    | [rdf:langString] | `{ "locale": "text" }`           | ``Map<Locale, String>``      |
 |          |                                                                                             |                                                                   | `{ "locale": ["text", …] }`      | ``Map<Locale, Set<String>>`` |
 
 > [!WARNING]
@@ -214,3 +214,31 @@ standard:
 > [!NOTE]
 > Property multiplicities are not specified by the W3C standard: they are introduced to simplify
 > application-level taxonomy management.
+
+[ex:BaseClass]: #classes
+
+[ex:RelatedClass]: #classes
+
+[xsd:boolean]: https://www.w3.org/TR/xmlschema-2/#boolean
+
+[xsd:integer]: https://www.w3.org/TR/xmlschema-2/#integer
+
+[xsd:decimal]: https://www.w3.org/TR/xmlschema-2/#decimal
+
+[xsd:string]: https://www.w3.org/TR/xmlschema-2/#string
+
+[xsd:anyURI]: https://www.w3.org/TR/xmlschema-2/#anyURI
+
+[ISO 8601]: https://en.wikipedia.org/wiki/ISO_8601
+
+[xsd:gYear]: https://www.w3.org/TR/xmlschema-2/#gYear
+
+[xsd:date]: https://www.w3.org/TR/xmlschema-2/#date
+
+[xsd:time]: https://www.w3.org/TR/xmlschema-2/#time
+
+[xsd:dateTime]: https://www.w3.org/TR/xmlschema-2/#dateTime
+
+[xsd:duration]: https://www.w3.org/TR/xmlschema-2/#duration
+
+[rdf:langString]: https://www.w3.org/TR/rdf-schema/#ch_langstring

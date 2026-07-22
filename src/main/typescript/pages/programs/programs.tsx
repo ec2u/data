@@ -20,6 +20,7 @@ import { immutable, multiple, optional, required } from "@metreeca/core";
 import { entry, toEntryString } from "@metreeca/core/entry";
 import { id } from "@metreeca/core/id";
 import { period } from "@metreeca/core/period";
+import { string } from "@metreeca/core/string";
 import { text, toTextString } from "@metreeca/core/text";
 import { useCollection } from "@metreeca/data/models/collection";
 import { useKeywords } from "@metreeca/data/models/keywords";
@@ -81,7 +82,7 @@ export function DataPrograms() {
 				useOptions(programs, "university", { type: entry({ id: "", label: required(text) }) })
 			}</TileOptions>
 
-			<TileOptions placeholder={"Level"}>{
+			<TileOptions placeholder={"Level"} compact>{
 				useOptions(programs, "educationalLevel", { type: entry({ id: "", label: required(text) }) })
 			}</TileOptions>
 
@@ -133,4 +134,3 @@ export function DataPrograms() {
 
 	</DataPage>;
 }
-

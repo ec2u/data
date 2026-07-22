@@ -25,6 +25,7 @@ import com.metreeca.mesh.meta.shacl.Pattern;
 import eu.ec2u.data.datasets.Reference;
 import eu.ec2u.data.datasets.offerings.Offering;
 import eu.ec2u.data.datasets.organizations.Organization;
+import eu.ec2u.data.datasets.persons.Person;
 import eu.ec2u.data.datasets.programs.Program;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
@@ -54,6 +55,26 @@ import static java.util.function.Predicate.not;
 @Namespace("[ec2u]")
 public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
 
+    String YEAR_FORMAT="^\\d{4}/\\d{4}$";
+    java.util.regex.Pattern YEAR_PATTERN=java.util.regex.Pattern.compile(YEAR_FORMAT);
+
+
+    static Optional<String> year(final String value) {
+        return Optional.ofNullable(value).filter(YEAR_PATTERN.asMatchPredicate());
+    }
+
+
+    enum Term {
+
+        Annual,
+        First,
+        Second,
+        Summer,
+        Open
+
+    }
+
+
     static Optional<CourseFrame> review(final CourseFrame course) {
 
         if ( course == null ) {
@@ -80,8 +101,6 @@ public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
                 .teaches(translator.texts(course.teaches(), source, EN))
                 .assesses(translator.texts(course.assesses(), source, EN))
                 .competencyRequired(translator.texts(course.competencyRequired(), source, EN))
-                .educationalCredentialAwarded(translator.texts(course.educationalCredentialAwarded(), source, EN))
-                .occupationalCredentialAwarded(translator.texts(course.occupationalCredentialAwarded(), source, EN))
                 .coursePrerequisites(translator.texts(course.coursePrerequisites(), source, EN));
     }
 
@@ -105,12 +124,21 @@ public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
     }
 
 
+    @Pattern(YEAR_FORMAT)
+    String year();
+
+    Set<Term> term();
+
+
     @Override
     Set<Topic> audience();
 
 
     @Reverse("schema:hasCourse")
     Set<Program> inProgram();
+
+    @Override
+    Set<? extends Person> instructor();
 
 
     //̸// !!! Factor to Offering ///////////////////////////////////////////////////////////////////////////////////////
@@ -120,7 +148,7 @@ public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
     Organization provider();
 
     @Pattern("^"+TopicsISCED2011.PATH+".*$") // !!! @Prefix
-    Topic educationalLevel();
+    Set<Topic> educationalLevel();
 
     @Pattern("^"+TopicsISCEDF2013.PATH+".*$") // !!! @Prefix
     Set<Topic> about();

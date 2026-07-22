@@ -22,6 +22,7 @@ import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.services.Vault;
 import com.metreeca.mesh.Value;
 import com.metreeca.mesh.pipe.Store;
+import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.courses.CourseFrame;
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
@@ -32,6 +33,7 @@ import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.net.URI;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -67,6 +69,8 @@ public final class OfferingsPoitiers implements Runnable {
     private static final String API_ID="offers-poitiers-id";
     private static final String API_TOKEN="offers-poitiers-token";
 
+    private static final URI PIPELINE=URIs.uri("java:%s".formatted(OfferingsPoitiers.class.getName()));
+
 
     public static void main(final String... args) {
         exec(() -> new OfferingsPoitiers().run());
@@ -91,7 +95,7 @@ public final class OfferingsPoitiers implements Runnable {
                                 array(programs()),
 
                                 value(query(new ProgramFrame(true))
-                                        .where("university", criterion().any(POITIERS))
+                                        .where("pipeline", criterion().any(Value.uri(PIPELINE)))
                                 )
 
                         ))
@@ -152,6 +156,8 @@ public final class OfferingsPoitiers implements Runnable {
     private Optional<ProgramFrame> program(final Value json) {
         return json.get("code").string().flatMap(code -> review(new ProgramFrame()
 
+                        .pipeline(PIPELINE)
+
                         .id(PROGRAMS.id().resolve(uuid(POITIERS, code)))
                         .university(POITIERS)
 
@@ -159,7 +165,7 @@ public final class OfferingsPoitiers implements Runnable {
 
                         .name(map(name(json, code)))
 
-                        .educationalLevel(educationalLevel(json).orElse(null))
+                        .educationalLevel(set(educationalLevel(json).stream()))
                         .numberOfCredits(numberOfCredits(json).orElse(null))
 
                         .provider(provider(json).orElse(null))

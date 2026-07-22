@@ -70,6 +70,8 @@ public final class OfferingsSalamanca implements Runnable {
     private static final String COURSES_URL="offerings-salamanca-courses-url";
     private static final String PROGRAMS_COURSES_URL="offerings-salamanca-programs-courses-url";
 
+    private static final URI PIPELINE=uri("java:%s".formatted(OfferingsSalamanca.class.getName()));
+
 
     private static final Map<String, Duration> DURATIONS=map(
             entry("A", Duration.ofDays(365)),
@@ -106,7 +108,7 @@ public final class OfferingsSalamanca implements Runnable {
                                     ),
 
                                     value(query(new ProgramFrame(true))
-                                            .where("university", criterion().any(SALAMANCA))
+                                            .where("pipeline", criterion().any(Value.uri(PIPELINE)))
                                     )
 
                             )),
@@ -118,7 +120,7 @@ public final class OfferingsSalamanca implements Runnable {
                                     ),
 
                                     value(query(new CourseFrame(true))
-                                            .where("university", criterion().any(SALAMANCA))
+                                            .where("pipeline", criterion().any(Value.uri(PIPELINE)))
                                     )
 
                             ))
@@ -164,6 +166,8 @@ public final class OfferingsSalamanca implements Runnable {
     private Optional<ProgramFrame> program(final Value json) {
         return json.get("programCode").string().flatMap(code -> review(new ProgramFrame()
 
+                .pipeline(PIPELINE)
+
                 .id(programID(code))
                 .university(SALAMANCA)
 
@@ -206,6 +210,8 @@ public final class OfferingsSalamanca implements Runnable {
 
     private Optional<CourseFrame> course(final Value json) {
         return json.get("code").string().map(code -> new CourseFrame()
+
+                .pipeline(PIPELINE)
 
                 .id(courseId(code))
                 .university(SALAMANCA)
