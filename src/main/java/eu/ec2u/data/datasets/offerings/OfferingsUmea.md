@@ -17,6 +17,8 @@ LLM from linked pages.
 |-------------------------------------------------------------------|---------------------------|
 | https://www.umu.se/utbildning/valj-utbildning/program-och-kurser/ | programs and courses [sv] |
 
+- **2026-07-21** – extract a prospective-student description (`schema:description`) alongside the summary, and focus
+  `schema:teaches` on goals, structure and contents
 - **2025-11-05** – migrated from paginated HTML scraping to REST/JSON API (website now uses Vue.js SPA with dynamic
   content)
 	- initial implementation used sitemap-based discovery, then migrated to direct API access

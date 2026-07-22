@@ -73,23 +73,23 @@ export const Courses=immutable({
 
 const CourseTerm: { [term: string]: typeof text.model } = {
 
-	AnnualTerm: {
+	Annual: {
 		en: "Annual"
 	},
 
-	FirstTerm: {
+	First: {
 		en: "First Semester"
 	},
 
-	SecondTerm: {
+	Second: {
 		en: "Second Semester"
 	},
 
-	SummerTerm: {
+	Summer: {
 		en: "Summer"
 	},
 
-	OpenTerm: {
+	Open: {
 		en: "Open"
 	}
 
@@ -159,6 +159,10 @@ export function DataCourses() {
 
 			<TileOptions placeholder={"Level"} compact>{
 				useOptions(courses, "educationalLevel", { type: entry({ id: "", label: required(text) }) })
+			}</TileOptions>
+
+			<TileOptions placeholder={"Credentials"} compact>{
+				useOptions(courses, "educationalCredentialAwarded.credentialCategory", { type: string })
 			}</TileOptions>
 
 			<TileOptions placeholder={"Subjects"} compact>{

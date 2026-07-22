@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="463 220 562 180" width="562" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" viewBox="463 220 562 180" width="562" height="180">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="UMLInheritance_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -22 38 44" markerWidth="38" markerHeight="44" color="black">
       <g>
@@ -13,7 +13,7 @@
       </g>
     </marker>
   </defs>
-  <g id="organizations" fill-opacity="1" stroke="none" stroke-opacity="1" fill="none" stroke-dasharray="none">
+  <g id="organizations" stroke="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke-dasharray="none">
     <title>organizations</title>
     <rect fill="white" x="463" y="220" width="562" height="180"/>
     <g id="organizations_Layer_1">

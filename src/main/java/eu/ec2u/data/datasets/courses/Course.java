@@ -66,11 +66,11 @@ public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
 
     enum Term {
 
-        AnnualTerm,
-        FirstTerm,
-        SecondTerm,
-        SummerTerm,
-        OpenTerm
+        Annual,
+        First,
+        Second,
+        Summer,
+        Open
 
     }
 
@@ -101,8 +101,6 @@ public interface Course extends Offering, SchemaCourse, SchemaCourseInstance {
                 .teaches(translator.texts(course.teaches(), source, EN))
                 .assesses(translator.texts(course.assesses(), source, EN))
                 .competencyRequired(translator.texts(course.competencyRequired(), source, EN))
-                .educationalCredentialAwarded(translator.texts(course.educationalCredentialAwarded(), source, EN))
-                .occupationalCredentialAwarded(translator.texts(course.occupationalCredentialAwarded(), source, EN))
                 .coursePrerequisites(translator.texts(course.coursePrerequisites(), source, EN));
     }
 

@@ -17,6 +17,8 @@
 package eu.ec2u.data.datasets.offerings;
 
 import com.metreeca.flow.Xtream;
+import com.metreeca.flow.json.actions.Validate;
+import com.metreeca.flow.text.services.Translator;
 import com.metreeca.mesh.meta.jsonld.Embedded;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.jsonld.Namespace;
@@ -29,6 +31,7 @@ import eu.ec2u.data.datasets.taxonomies.Taxonomies;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCEDF2013;
+import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredentialFrame;
 import eu.ec2u.data.vocabularies.schema.SchemaLearningResource;
 import eu.ec2u.work.ai.Embedder;
 
@@ -37,6 +40,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.text.services.Translator.translator;
 import static com.metreeca.shim.Collections.set;
 
 import static eu.ec2u.data.datasets.Localized.EN;
@@ -64,6 +69,32 @@ public interface Offering extends Resource, SchemaLearningResource {
         return new Taxonomies.Matcher(EC2U_STAKEHOLDERS)
                 .narrowing(1.1)
                 .tolerance(0.1);
+    }
+
+
+    static Optional<SchemaEducationalOccupationalCredentialFrame> review(
+            final Locale source, final SchemaEducationalOccupationalCredentialFrame credential
+    ) {
+
+        if ( credential == null ) {
+            throw new NullPointerException("null credential");
+        }
+
+        return Optional.of(credential)
+                .map(c -> translate(c, source))
+                .flatMap(new Validate<>());
+    }
+
+
+    private static SchemaEducationalOccupationalCredentialFrame translate(
+            final SchemaEducationalOccupationalCredentialFrame credential, final Locale source
+    ) {
+
+        final Translator translator=service(translator());
+
+        return credential
+                .name(translator.texts(credential.name(), source, EN))
+                .description(translator.texts(credential.description(), source, EN));
     }
 
 

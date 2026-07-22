@@ -27,6 +27,7 @@ import com.metreeca.shim.Locales;
 
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
+import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredentialFrame;
 import eu.ec2u.work.ai.Analyzer;
 
 import java.net.URI;
@@ -50,10 +51,12 @@ import static com.metreeca.shim.Streams.optional;
 import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
+import static eu.ec2u.data.datasets.offerings.Offering.review;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.datasets.universities.University.PAVIA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
+import static eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredential.CredentialCategory.Degree;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.lang.String.format;
 import static java.util.function.Predicate.not;
@@ -179,7 +182,10 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                             .url(set(uri(url)))
 
                             .educationalLevel(set(TopicsISCED2011.LEVEL_8))
-                            .educationalCredentialAwarded(map(entry(PAVIA.locale(), "Dottorato di Ricerca"))))
+                            .educationalCredentialAwarded(review(PAVIA.locale(), new SchemaEducationalOccupationalCredentialFrame()
+                                    .credentialCategory(Degree)
+                                    .name(map(entry(PAVIA.locale(), "Dottorato di Ricerca")))
+                            ).orElse(null)))
 
                     ));
 
@@ -201,9 +207,10 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                         
                         - document language as guessed from its content as a 2-letter ISO tag
                         - plain text summary of about 500 characters
-                        - general objectives
+                        - goals, structure and contents
                         - acquired competency or intended learning outcomes
                         - admission requirements
+                        - graduation or completion requirements
                         
                         Make absolutely sure to leave empty properties that are not explicitly specified in the document.
                         Describe properties extensively, using markdown as required.
@@ -227,6 +234,9 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                                 "type": "string"
                               },
                               "requirements": {
+                                "type": "string"
+                              },
+                              "graduation": {
                                 "type": "string"
                               }
                             },
@@ -268,6 +278,11 @@ public final class OfferingsPaviaDoctorates implements Runnable {
                             ))
 
                             .programPrerequisites(map(json.get("requirements").string().stream()
+                                    .filter(not(String::isEmpty))
+                                    .map(v -> entry(locale, v))
+                            ))
+
+                            .competencyRequired(map(json.get("graduation").string().stream()
                                     .filter(not(String::isEmpty))
                                     .map(v -> entry(locale, v))
                             ));

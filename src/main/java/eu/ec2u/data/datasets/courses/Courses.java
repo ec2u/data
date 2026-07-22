@@ -219,6 +219,7 @@ public interface Courses extends Dataset {
                                 .url(set(page.id()))
 
                                 .name(offering.name())
+                                .description(offering.description())
                                 .disambiguatingDescription(offering.disambiguatingDescription())
 
                                 .numberOfCredits(offering.numberOfCredits())

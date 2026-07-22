@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="79 85 674 396" width="674" height="396">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" viewBox="79 85 674 396" width="674" height="396">
   <defs>
     <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20" color="black">
       <g>
@@ -13,7 +13,7 @@
       </g>
     </marker>
   </defs>
-  <g id="schema-service" fill-opacity="1" stroke="none" stroke-opacity="1" fill="none" stroke-dasharray="none">
+  <g id="schema-service" stroke="none" stroke-opacity="1" fill="none" fill-opacity="1" stroke-dasharray="none">
     <title>schema-service</title>
     <rect fill="white" x="79" y="85" width="674" height="396"/>
     <g id="schema-service_Layer_1">

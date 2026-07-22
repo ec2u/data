@@ -80,8 +80,6 @@ public interface Program extends Offering, SchemaEducationalOccupationalProgram 
                 .teaches(translator.texts(program.teaches(), source, EN))
                 .assesses(translator.texts(program.assesses(), source, EN))
                 .competencyRequired(translator.texts(program.competencyRequired(), source, EN))
-                .educationalCredentialAwarded(translator.texts(program.educationalCredentialAwarded(), source, EN))
-                .occupationalCredentialAwarded(translator.texts(program.occupationalCredentialAwarded(), source, EN))
                 .programPrerequisites(translator.texts(program.programPrerequisites(), source, EN));
     }
 

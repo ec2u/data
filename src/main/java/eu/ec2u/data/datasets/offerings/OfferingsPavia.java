@@ -54,6 +54,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.async;
@@ -418,9 +419,10 @@ public final class OfferingsPavia implements Runnable {
                         .timeRequired(timeRequired(af).orElse(null))
                         .courseWorkload(courseWorkload(af).orElse(null))
 
-                        .teaches(map(text(af, "CONTENUTI")))
+                        .teaches(texts(af, "CONTENUTI", "METODI_DID", "TESTI_RIF"))
                         .assesses(map(text(af, "OBIETT_FORM")))
                         .coursePrerequisites(map(text(af, "PREREQ")))
+                        .competencyRequired(map(text(af, "MOD_VER_APPR")))
 
                         // !!! <ns2:settCod>M-STO/04</ns2:settCod> to ISCED-F-2013?
 
@@ -503,9 +505,9 @@ public final class OfferingsPavia implements Runnable {
         return af.string("ns2:tipoCicloCod").stream()
                 .map(code -> switch ( code ) {
 
-                    case "A1" -> Course.Term.AnnualTerm;
-                    case "S1" -> Course.Term.FirstTerm;
-                    case "S2" -> Course.Term.SecondTerm;
+                    case "A1" -> Course.Term.Annual;
+                    case "S1" -> Course.Term.First;
+                    case "S2" -> Course.Term.Second;
 
                     default -> null;
 
@@ -515,6 +517,17 @@ public final class OfferingsPavia implements Runnable {
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Map<Locale, String> texts(final XPath af, final String... entries) {
+        return map(Stream.of(entries)
+                .flatMap(entry -> text(af, entry))
+                .collect(Collectors.groupingBy(Entry::getKey, LinkedHashMap::new,
+                        Collectors.mapping(Entry::getValue, Collectors.joining("\n\n"))
+                ))
+                .entrySet()
+                .stream()
+        );
+    }
 
     private Stream<Entry<Locale, String>> text(final XPath af, final String entry) {
 

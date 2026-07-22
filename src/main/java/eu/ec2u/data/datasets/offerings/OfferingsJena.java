@@ -29,6 +29,7 @@ import com.metreeca.shim.URIs;
 
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;
+import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredentialFrame;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -62,11 +63,13 @@ import static com.metreeca.shim.Streams.optional;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.EN;
+import static eu.ec2u.data.datasets.offerings.Offering.review;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsISCED2011.*;
 import static eu.ec2u.data.datasets.universities.University.JENA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
+import static eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredential.CredentialCategory.Degree;
 import static java.lang.String.format;
 
 public final class OfferingsJena implements Runnable {
@@ -190,7 +193,13 @@ public final class OfferingsJena implements Runnable {
                 .description(description(rover).orElse(null))
 
                 .educationalLevel(set(educationalLevel(rover).stream()))
-                .educationalCredentialAwarded(educationalCredentialAwarded(rover).orElse(null))
+                .educationalCredentialAwarded(educationalCredentialAwarded(rover)
+                        .flatMap(name -> review(EN, new SchemaEducationalOccupationalCredentialFrame()
+                                .credentialCategory(Degree)
+                                .name(name)
+                        ))
+                        .orElse(null)
+                )
 
         ));
     }

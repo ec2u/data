@@ -26,13 +26,13 @@ model.
 
 Academic term in which a course is offered.
 
-| value        | description                  |
-|--------------|------------------------------|
-| `AnnualTerm` | the full academic year       |
-| `FirstTerm`  | the first (autumn) semester  |
-| `SecondTerm` | the second (spring) semester |
-| `SummerTerm` | a summer school              |
-| `OpenTerm`   | open enrolment               |
+| value    | description                  |
+|----------|------------------------------|
+| `Annual` | the full academic year       |
+| `First`  | the first (autumn) semester  |
+| `Second` | the second (spring) semester |
+| `Summer` | a summer school              |
+| `Open`   | open enrolment               |
 
 [ec2u:Resource]: ./index.md#resource
 

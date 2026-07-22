@@ -14,18 +14,18 @@ representation of educational content for search engines and educational applica
 
 # Learning Resource
 
-| term                                                    | type                  | #    | description                                               |
-|---------------------------------------------------------|-----------------------|------|-----------------------------------------------------------|
-| **[schema:LearningResource][schema-learning-resource]** | [schema:Thing]        |      | A creative work that provides educational value           |
-| [schema:numberOfCredits]                                | decimal               | 0..1 | number of credits awarded for the learning resource       |
-| [schema:educationalCredentialAwarded]                   | text                  | 0..1 | educational credential awarded by the learning resource   |
-| [schema:occupationalCredentialAwarded]                  | text                  | 0..1 | occupational credential awarded by the learning resource  |
-| [schema:teaches]                                        | text                  | 0..1 | description of what the learning resource teaches         |
-| [schema:assesses]                                       | text                  | 0..1 | description of what the learning resource assesses        |
-| [schema:competencyRequired]                             | text                  | 0..1 | competency required for the learning resource             |
-| [schema:educationalLevel]                               | [skos:Concept]        | *    | links to the educational levels of the learning resource  |
-| [schema:about]                                          | [skos:Concept]        | *    | links to topics covered by the learning resource          |
-| [schema:provider]                                       | [schema:Organization] | 0..1 | links to the organization providing the learning resource |
+| term                                                    | type                                                   | #    | description                                                           |
+|---------------------------------------------------------|--------------------------------------------------------|------|-----------------------------------------------------------------------|
+| **[schema:LearningResource][schema-learning-resource]** | [schema:Thing]                                         |      | A creative work that provides educational value                       |
+| [schema:numberOfCredits]                                | decimal                                                | 0..1 | number of credits awarded for the learning resource                   |
+| [schema:teaches]                                        | text                                                   | 0..1 | goals, structure and contents of the learning resource                |
+| [schema:assesses]                                       | text                                                   | 0..1 | competences acquired through the learning resource                    |
+| [schema:competencyRequired]                             | text                                                   | 0..1 | what must be demonstrated to complete the resource                    |
+| [schema:educationalCredentialAwarded]                   | [schema:EducationalOccupationalCredential][credential] | 0..1 | links to the educational credential awarded by the learning resource  |
+| [schema:occupationalCredentialAwarded]                  | [schema:EducationalOccupationalCredential][credential] | 0..1 | links to the occupational credential awarded by the learning resource |
+| [schema:educationalLevel]                               | [skos:Concept]                                         | *    | links to the educational levels of the learning resource              |
+| [schema:about]                                          | [skos:Concept]                                         | *    | links to topics covered by the learning resource                      |
+| [schema:provider]                                       | [schema:Organization]                                  | 0..1 | links to the organization providing the learning resource             |
 
 # Educational Occupational Program
 
@@ -33,7 +33,7 @@ representation of educational content for search engines and educational applica
 |---------------------------------------------|----------------------------------------------|------|--------------------------------------------------------------------------------------------------|
 | **[schema:EducationalOccupationalProgram]** | [schema:LearningResource][learning-resource] |      | A program offered by an institution which determines the learning progress to achieve an outcome |
 | [schema:timeToComplete]                     | duration                                     | 0..1 | expected time to complete the program                                                            |
-| [schema:programPrerequisites]               | text                                         | 0..1 | prerequisites for the program                                                                    |
+| [schema:programPrerequisites]               | text                                         | 0..1 | what a candidate must satisfy to be admitted to the program                                      |
 | [schema:hasCourse]                          | [schema:Course][course]                      | *    | links to courses that are part of the program                                                    |
 
 # Course
@@ -44,7 +44,7 @@ representation of educational content for search engines and educational applica
 | [schema:courseCode]                | string                                       | 0..1 | identifier of the course                                                          |
 | [schema:inLanguage]                | string                                       | *    | language of the course                                                            |
 | [schema:timeRequired]              | duration                                     | 0..1 | time required for the course                                                      |
-| [schema:coursePrerequisites]       | text                                         | 0..1 | prerequisites for the course                                                      |
+| [schema:coursePrerequisites]       | text                                         | 0..1 | what a candidate must satisfy to be admitted to the course                        |
 
 # Course Instance
 
@@ -57,6 +57,23 @@ representation of educational content for search engines and educational applica
 | [schema:instructor]          | [foaf:Person]                    | *    | links to the instructors of the course instance                                                                      |
 | [schema:about]               | [skos:Concept]                   | *    | links to topics covered by the course instance                                                                       |
 | [schema:audience]            | [skos:Concept]                   | *    | links to the intended audience of the course instance                                                                |
+
+# Educational Occupational Credential
+
+| term                                                              | type                 | # | description                                                                            |
+|-------------------------------------------------------------------|----------------------|---|----------------------------------------------------------------------------------------|
+| **[schema:EducationalOccupationalCredential][schema-credential]** | [schema:Thing]       |   | A credential awarded on completion of an educational or occupational course or program |
+| [schema:credentialCategory]                                       | [CredentialCategory] | 1 | category of the credential                                                             |
+
+# Credential Category
+
+Category of the credential awarded by a learning resource.
+
+| value         | description                                |
+|---------------|--------------------------------------------|
+| `Degree`      | an academic degree                         |
+| `Certificate` | a certificate of attendance or achievement |
+| `Badge`       | an Open Badge digital certification        |
 
 [Schema.org]: https://schema.org/
 
@@ -123,3 +140,11 @@ representation of educational content for search engines and educational applica
 [foaf:Person]: foaf.md#person
 
 [schema:audience]: https://schema.org/audience
+
+[schema-credential]: https://schema.org/EducationalOccupationalCredential
+
+[credential]: #educational-occupational-credential
+
+[schema:credentialCategory]: https://schema.org/credentialCategory
+
+[CredentialCategory]: #credential-category

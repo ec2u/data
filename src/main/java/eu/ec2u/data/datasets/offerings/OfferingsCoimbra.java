@@ -34,6 +34,7 @@ import eu.ec2u.data.datasets.courses.CourseFrame;
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
+import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredentialFrame;
 
 import java.net.URI;
 import java.time.*;
@@ -64,10 +65,12 @@ import static com.metreeca.shim.Streams.optional;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.courses.Course.review;
 import static eu.ec2u.data.datasets.courses.Courses.COURSES;
+import static eu.ec2u.data.datasets.offerings.Offering.review;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.datasets.universities.University.COIMBRA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
+import static eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredential.CredentialCategory.Degree;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
@@ -279,7 +282,11 @@ public final class OfferingsCoimbra implements Runnable {
                 .numberOfCredits(numberOfCredits(json).orElse(null))
                 .timeToComplete(period(json).orElse(null))
 
-                .educationalCredentialAwarded(map(educationalCredentialAwarded(json)))
+                .educationalCredentialAwarded(review(COIMBRA.locale(), new SchemaEducationalOccupationalCredentialFrame()
+                        .credentialCategory(Degree)
+                        .name(map(educationalCredentialAwarded(json)))
+                ).orElse(null))
+
                 .teaches(map(teaches(json)))
                 .assesses(map(assesses(json)))
                 .programPrerequisites(map(prerequisites(json)))
@@ -310,7 +317,11 @@ public final class OfferingsCoimbra implements Runnable {
 
                 .inLanguage(set(inLanguage(json)))
 
-                .educationalCredentialAwarded(map(educationalCredentialAwarded(json)))
+                .educationalCredentialAwarded(review(COIMBRA.locale(), new SchemaEducationalOccupationalCredentialFrame()
+                        .credentialCategory(Degree)
+                        .name(map(educationalCredentialAwarded(json)))
+                ).orElse(null))
+
                 .teaches(map(teaches(json)))
                 .assesses(map(assesses(json)))
                 .coursePrerequisites(map(prerequisites(json)))

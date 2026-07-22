@@ -16,6 +16,7 @@
 
 package eu.ec2u.data.vocabularies.schema;
 
+import com.metreeca.mesh.meta.jsonld.Embedded;
 import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.mesh.meta.shacl.MinInclusive;
 
@@ -43,11 +44,11 @@ public interface SchemaLearningResource extends SchemaThing {
     Map<Locale, String> competencyRequired();
 
 
-    @Localized
-    Map<Locale, String> educationalCredentialAwarded();
+    @Embedded
+    SchemaEducationalOccupationalCredential educationalCredentialAwarded();
 
-    @Localized
-    Map<Locale, String> occupationalCredentialAwarded();
+    @Embedded
+    SchemaEducationalOccupationalCredential occupationalCredentialAwarded();
 
 
     SchemaOrganization provider();

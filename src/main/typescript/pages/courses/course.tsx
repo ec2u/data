@@ -17,6 +17,7 @@
 
 import { Languages } from "@ec2u/data/languages";
 import { Courses, toCourseModeString, toCourseTermString } from "@ec2u/data/pages/courses/courses";
+import { Credential, DataCredential } from "@ec2u/data/pages/offerings/credential.js";
 import { DataAI } from "@ec2u/data/views/ai";
 import { DataPage } from "@ec2u/data/views/page";
 import { immutable, multiple, optional, required } from "@metreeca/core";
@@ -62,8 +63,9 @@ export const Course=immutable({
 	coursePrerequisites: optional(text),
 	assesses: optional(text),
 	competencyRequired: optional(text),
-	educationalCredentialAwarded: optional(text),
-	occupationalCredentialAwarded: optional(text),
+
+	educationalCredentialAwarded: optional(Credential),
+	occupationalCredentialAwarded: optional(Credential),
 
 	university: optional({
 		id: required(id),
@@ -219,6 +221,18 @@ export function DataCourse() {
 
 				{description && <p>{toTextString(description)}</p>}
 
+				{educationalCredentialAwarded && <TileLabel name={"Educational Credential Awarded"}>
+
+                    <DataCredential credential={educationalCredentialAwarded}/>
+
+                </TileLabel>}
+
+				{occupationalCredentialAwarded && <TileLabel name={"Occupational Credential Awarded"}>
+
+                    <DataCredential credential={occupationalCredentialAwarded}/>
+
+                </TileLabel>}
+
 				<TilePanel stack>
 
 					{inProgram && <TileLabel name={"Programs"}>{
@@ -255,27 +269,27 @@ export function DataCourse() {
 
 				</TilePanel>
 
-				<TilePanel stack>{Object.entries({
+				<TilePanel stack>
 
-					"Educational Credential Awarded": educationalCredentialAwarded,
-					"Occupational Credential Awarded": occupationalCredentialAwarded,
-					"General Objectives": teaches,
-					"Admission Requirements": coursePrerequisites,
-					"Learning Objectives and Intended Skills": assesses,
-					"Examination Requirements": competencyRequired
+					{Object.entries({
 
-				}).map(([
+						"Contents and Structure": teaches,
+						"Admission Requirements": coursePrerequisites,
+						"Learning Objectives and Intended Skills": assesses,
+						"Examination Requirements": competencyRequired
 
-					term,
-					data
+					}).map(([
 
-				]) => data && <TileLabel key={term} name={term}>
+						term,
+						data
 
-                    <TileMark>{toTextString(data)}</TileMark>
+					]) => data && <TileLabel key={term} name={term}>
 
-                </TileLabel>)
+                        <TileMark>{toTextString(data)}</TileMark>
 
-				}</TilePanel>
+                    </TileLabel>)}
+
+				</TilePanel>
 
 			</>;
 
