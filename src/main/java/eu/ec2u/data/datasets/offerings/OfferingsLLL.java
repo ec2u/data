@@ -83,7 +83,7 @@ import static java.util.stream.IntStream.rangeClosed;
 
 public final class OfferingsLLL extends Transform<CourseFrame> implements Runnable {
 
-    private static final String DATA_URL="offerings-lll-url-next"; // vault label
+    private static final String DATA_URL="offerings-lll-url"; // vault label
     private static final URI PIPELINE=URIs.uri("java:%s".formatted(OfferingsLLL.class.getName()));
 
     private static final TopicFrame LLL=new TopicFrame(true).id(
