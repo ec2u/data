@@ -14,36 +14,117 @@
  * limitations under the License.
  */
 
+/**
+ * Gemini API client and response accessors.
+ *
+ * Provides a shared {@link ai} client for the Gemini API, authenticated from Secret Manager, together with accessors
+ * for extracting text, JSON payloads and embedding vectors from model responses.
+ *
+ * @module
+ *
+ * @remarks
+ *
+ * Content generation, function calling and embedding are requested through the shared client, or through a separately
+ * configured one created with {@link GoogleGenAI}; both work around the quota and structured output limitations of the
+ * API. {@link text}, {@link json} and {@link embedding} take over from their responses, reporting the generated text,
+ * the JSON payload produced under a requested response schema, or the embedding vector, and failing on incomplete or
+ * malformed generations.
+ *
+ * @see {@link https://ai.google.dev/gemini-api/docs Gemini API}
+ * @see {@link https://googleapis.github.io/js-genai/release_docs/index.html Google GenAI SDK}
+ */
+
 import { md } from "@/work/core/tags.js";
 import { secret } from "@/work/gcp/secrets.js";
 import {
 	ApiError,
 	CallableTool,
 	Content,
+	ContentListUnion,
 	EmbedContentResponse,
 	GenerateContentResponse,
-	GoogleGenAI,
+	GoogleGenAI as Client,
+	GoogleGenAIOptions,
 	Part
 } from "@google/genai";
 import { isString } from "@metreeca/core";
-import { Throttle } from "@metreeca/core/async";
+import { createThrottle, Throttle } from "@metreeca/core/async";
 import { message } from "@metreeca/core/report";
 import { log, Logger } from "@metreeca/tape";
 
-
 const logger = log(import.meta.url);
+
+const BadRequest = 400;
+const TooManyRequests = 429;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const ai = await (async (ai) => {
+/**
+ * Shared Gemini API client.
+ *
+ * Created once at module load by {@link GoogleGenAI}, reading its key from the `googleai-key` secret, so importing
+ * this module requires Secret Manager access and its requests carry the workarounds documented there.
+ */
+export const ai = GoogleGenAI({
+
+	apiKey: await secret("googleai-key")
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates a Gemini API client patched to work around known API limitations.
+ *
+ * The client exposes the full {@link Client GoogleGenAI} surface with a patched `models.generateContent`, which drives
+ * function calling through a throttled loop and honours a requested response schema on every model. Requests without
+ * `config.tools` reach the SDK unchanged.
+ *
+ * @param options The client options, as accepted by the {@link Client GoogleGenAI} constructor
+ *
+ * @returns A patched client sharing throttling, logging and structured output capability among all requests naming
+ *          the same model, keyed by the exact model id, so the bare and `models/`-prefixed forms of a model id are
+ *          tracked independently
+ *
+ * @remarks
+ *
+ * The patch works around two API limitations affecting every request that carries `config.tools`:
+ *
+ * - **Quota control**: the SDK resolves function calls through an internal loop that neither throttles its requests
+ *   nor recovers from quota exhaustion, causing 429 failures during long tool sessions. Tool turns are driven here
+ *   instead, submitting one throttled request per turn against a per-model adaptive throttle that honours the
+ *   `RetryInfo` delay advertised by the API. Turns are unlimited unless `automaticFunctionCalling.maximumRemoteCalls`
+ *   bounds them, and only `CallableTool` tools are dispatched; requests setting `automaticFunctionCalling.disable`
+ *   are submitted through the same throttle, with their function calls left to the caller.
+ *
+ * - **Structured output**: the API accepts `responseMimeType`/`responseSchema` alongside `tools` only from the Gemini 3
+ *   generation onwards. A requested response schema is nonetheless honoured on every model: capable models receive it
+ *   with the request, while earlier ones return prose that a separate lightweight request converts into
+ *   schema-conformant JSON, at the cost of one extra generation. Capability is inferred from the model id and
+ *   corrected whenever the API rejects a submitted schema.
+ *
+ * @see {@link https://ai.google.dev/gemini-api/docs/function-calling Function calling}
+ * @see {@link https://ai.google.dev/gemini-api/docs/structured-output Structured output}
+ * @see {@link https://ai.google.dev/gemini-api/docs/rate-limits Rate limits}
+ * @see {@link https://github.com/googleapis/js-genai/issues/727 js-genai#727}
+ */
+export function GoogleGenAI(options: GoogleGenAIOptions) {
+
+	const ai = new Client(options);
 
 	/**
-	 * Shared throttle and logger instances by model name.
+	 * Request channels opened by {@link channel}, keyed by model id exactly as supplied by the caller and retained
+	 * for the lifetime of the client.
 	 */
-	const utilities = new Map<string, {
-		throttle: Throttle;
-		logger: Logger;
+	const channels = new Map<string, {
+
+		structured: boolean
+
+		logger: Logger
+		throttle: Throttle
+
 	}>();
 
 
@@ -55,29 +136,35 @@ export const ai = await (async (ai) => {
 
 				return async (...[{ config, ...params }, ...rest]: Parameters<typeof generateContent>) => {
 
+					const modelChannel = channel(params.model);
+
 					return config?.tools
 						? await structure(await execute())
 						: await generateContent(params, ...rest);
 
 
 					/**
-					 * Executes generateContent with automatic function calling when tools are configured.
+					 * Resolves a request carrying tools, driving function calling under quota throttling.
 					 *
-					 * The SDK's built-in automatic function calling (AFC) loop does not throttle requests
-					 * against quota limits and provides no recovery mechanism for quota exhaustion. This causes
-					 * unexpected 429 errors during long sessions with tools, as documented in other SDK
-					 * implementations:
+					 * The SDK resolves function calls through an internal loop that neither throttles its requests
+					 * nor recovers from quota exhaustion, so long tool sessions fail with unexpected 429 errors:
+					 * function declarations count towards the token limit, every turn issues a further request, and
+					 * tools such as Browser MCP or Google Search resubmit massive contexts on each one of them, as
+					 * reported for other SDKs:
 					 *
-					 * - googleapis/python-genai#17: 429 errors with Google Search tool
-					 * - google/adk-python#1057: 1.5M tokens in ~20 requests with Browser MCP (tools send
-					 *   entire DOM as context)
+					 * - googleapis/python-genai#17: 429 errors with the Google Search tool
+					 * - google/adk-python#1057: 1.5M tokens in ~20 requests with Browser MCP, which sends the
+					 *   entire DOM as context
 					 *
-					 * Function declarations count toward token limits, and automatic function calling triggers
-					 * multiple API requests per generateContent() call. Certain tools (Browser MCP, Google
-					 * Search) send massive contexts on every turn. To handle these issues, manual AFC loop
-					 * implementation with proper throttling and recovery is required.
+					 * Turns are driven by {@link afc} instead, one throttled request at a time (see {@link retry}),
+					 * and a requested response schema is submitted with them wherever the model accepts it. Requests
+					 * that disable automatic function calling take the same throttled route, but are submitted once
+					 * and reported as they come, function calls included.
 					 *
-					 * @returns The model response with function calls handled via manual function calling loop
+					 * @returns The final response of the function calling loop, or the single response to a request
+					 *          that disables it
+					 *
+					 * @throws Error if the function calling loop cannot be completed (see {@link afc})
 					 */
 					async function execute(): Promise<GenerateContentResponse> {
 
@@ -100,7 +187,7 @@ export const ai = await (async (ai) => {
 
 						if ( disable ) { // caller will handle function calling
 
-							return await generateContent({ ...params, config: configWithoutSchema }, ...rest);
+							return await retry(params.contents);
 
 						} else { // automatic function calling loop with quota throttling
 
@@ -108,6 +195,21 @@ export const ai = await (async (ai) => {
 
 						}
 
+						/**
+						 * Drives the function calling loop until the model returns a final response.
+						 *
+						 * Normalises the request contents into a conversation history, then alternates throttled
+						 * model requests (see {@link retry}) with tool dispatch: the function calls reported by the
+						 * model are submitted to every `CallableTool` declared in the request and the resulting
+						 * parts are appended to the history for the next turn, until a response reports no call.
+						 *
+						 * @returns The final model response, with the conversation history attached as
+						 *          `automaticFunctionCallingHistory`
+						 *
+						 * @throws Error if a response carries no model content, if a function is requested while no
+						 *         callable tool is declared, or if `maximumRemoteCalls` turns are exhausted without
+						 *         a final response
+						 */
 						async function afc() {
 
 							const callables = tools?.filter((tool): tool is CallableTool =>
@@ -162,31 +264,54 @@ export const ai = await (async (ai) => {
 							throw new Error(`maximum turns (${maximumRemoteCalls}) reached without completion`);
 						}
 
-						async function retry(history: Content[]) {
+						/**
+						 * Submits a single model request under the throttle of the target model.
+						 *
+						 * Every request carrying tools is submitted here, with the SDK function calling loop always
+						 * disabled, so each call performs exactly one request and turn management stays with
+						 * {@link afc}. A requested response schema is submitted only to models expected to accept it
+						 * alongside tools, leaving the conversion to {@link structure} on the others. A 429 rejection
+						 * is retried after the delay advertised by the API; a 400 rejection received while a response
+						 * schema is being submitted is taken as the model refusing it, closing the channel to schemas
+						 * (see {@link channel}) and retrying the same request at once without one.
+						 *
+						 * @param contents The conversation to submit
+						 *
+						 * @returns The model response to `contents`
+						 *
+						 * @throws ApiError if the request fails for a reason the throttle cannot recover from
+						 */
+						async function retry(contents: ContentListUnion) {
 
-							const { throttle, logger: mlogger } = utilities.get(params.model) ?? utilities
-								.set(params.model, {
-									throttle: Throttle({
-										minimum: 100,
-										maximum: 60*1000,
-										buildup: 1.10,
-										backoff: 1.10,
-										recover: 0.95
-									}),
-									logger: logger.getChild(params.model)
-								})
-								.get(params.model)!;
+							const { throttle, logger: mlogger } = modelChannel;
 
 							return await throttle.retry(
 								() => generateContent({
 									...params,
-									contents: history,
-									config: { ...configWithoutSchema, tools }
+									contents,
+
+									config: {
+
+										...configWithoutSchema,
+										tools,
+
+										// disable the SDK loop: it would resolve function calls without throttling,
+										// leaving this loop with nothing but the final response
+
+										automaticFunctionCalling: { disable: true },
+
+										// submit the response schema only to models accepting it alongside tools,
+										// leaving the conversion to `structure` on the others
+
+										...(modelChannel.structured ? { responseMimeType, responseSchema } : {})
+
+									}
+
 								}, ...rest),
 								{
 
 									recover: (error) => {
-										if ( error instanceof ApiError && error.status === 429 ) {
+										if ( error instanceof ApiError && error.status === TooManyRequests ) {
 
 											const delay = (error as any).error?.details
 												?.find((d: any) => d["@type"]?.includes("RetryInfo"))
@@ -195,6 +320,19 @@ export const ai = await (async (ai) => {
 											const match = delay?.match(/^(\d+(?:\.\d+)?)s$/);
 
 											return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
+
+										} else if ( error instanceof ApiError && error.status === BadRequest
+											&& modelChannel.structured ) {
+
+											// the model doesn't accept a response schema alongside tools: close the
+											// channel to schemas and immediately retry the same request without one,
+											// leaving the conversion to `structure`
+
+											modelChannel.structured = false;
+
+											mlogger.warning`response schema rejected with tools: converting separately`;
+
+											return 0;
 
 										} else {
 
@@ -224,20 +362,23 @@ export const ai = await (async (ai) => {
 					}
 
 					/**
-					 * Post-processes the response to structured JSON if requested and response is final.
+					 * Converts a final textual response into the requested structured JSON.
 					 *
-					 * The Gemini API rejects requests combining tools with `responseMimeType` "application/json":
-					 * this function works around the limitation by applying structured output conversion via a
-					 * separate model call after the initial model completes function calls and returns its final
-					 * textual response.
+					 * Models earlier than the Gemini 3 generation reject a `responseMimeType` of `"application/json"`
+					 * alongside `tools`, so they are served without the response schema and reply in prose: a
+					 * separate `gemini-2.5-flash-lite` request converts it into JSON conforming to the requested
+					 * schema, at the cost of one extra generation. Models that accept the schema with the request
+					 * produce the JSON themselves and bypass the conversion (see {@link channel}).
 					 *
-					 * @param response - The model response to post-process
+					 * @param response The model response to post-process
 					 *
-					 * @returns The response as-is if no schema requested or response contains function calls
-					 *          (intermediate response awaiting tool execution); otherwise, returns response with
-					 *          candidates replaced by structured JSON via separate model call.
+					 * @returns `response` with its candidates replaced by the converted JSON, or `response` as it
+					 *          stands if the model applied the schema itself, if no schema was requested, or if the
+					 *          response is still awaiting tool execution
 					 *
-					 * @see {@link https://github.com/googleapis/js-genai/issues/727}
+					 * @throws Error if the response to convert carries no text
+					 *
+					 * @see {@link https://github.com/googleapis/js-genai/issues/727 js-genai#727}
 					 */
 					async function structure(response: GenerateContentResponse) {
 
@@ -247,7 +388,7 @@ export const ai = await (async (ai) => {
 							part => part.functionCall
 						);
 
-						if ( !responseSchema || hasFunctionCalls ) {
+						if ( modelChannel.structured || !responseSchema || hasFunctionCalls ) {
 
 							return response;
 
@@ -328,29 +469,73 @@ export const ai = await (async (ai) => {
 
 	});
 
-})(new GoogleGenAI({
 
-	apiKey: await secret("googleai-key")
+	/**
+	 * Retrieves the request channel shared by all requests to a model, opening it on first request.
+	 *
+	 * Channels are keyed by model id exactly as supplied, so the bare and `models/`-prefixed forms of the same model
+	 * are throttled and logged independently. The `structured` flag records whether the model is currently expected to
+	 * accept a response schema alongside tools: the Gemini API supports the combination from the Gemini 3 generation
+	 * onwards, so the generation read from the last path segment of the id seeds the flag, while a rejection clears it
+	 * in place (see {@link retry}).
+	 *
+	 * @param model The target model name
+	 *
+	 * @returns The channel registered for `model`, retained for the lifetime of the client
+	 *
+	 * @see {@link https://ai.google.dev/gemini-api/docs/structured-output Structured output}
+	 */
+	function channel(model: string) {
 
-}));
+		const existing = channels.get(model);
+
+		if ( existing === undefined ) {
+
+			const generation = Number(model.split("/").pop()?.match(/^gemini-(\d+)/)?.[1] ?? 0);
+
+			const created = {
+
+				structured: generation >= 3,
+
+				logger: logger.getChild(model),
+
+				throttle: createThrottle({
+					minimum: 100,
+					maximum: 60*1000,
+					buildup: 1.10,
+					backoff: 1.10,
+					recover: 0.95
+				})
+
+			};
+
+			channels.set(model, created);
+
+			return created;
+
+		} else {
+
+			return existing;
+
+		}
+	}
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Extracts and validates text content from a Gemini API response.
+ * Reports the output text of a Gemini API response.
  *
- * Filters out non-text parts (thinking, function calls, etc.) to extract only output text.
+ * Thinking parts and function calls are skipped, so only the text generated for the caller is reported. Responses that
+ * completed a function calling session without producing output text are rejected as incomplete generations.
  *
- * When automatic function calling is used, validates that the final response contains output text.
- * A complete response should have text in `candidates[0].content.parts` after function calling completes.
- * If the final response has no output text, this indicates the generation was interrupted or incomplete.
+ * @param response The response of a `generateContent` request
  *
- * @param response Response from a generateContent call
+ * @returns The trimmed output text of `response`, joining the text of multiple parts with blank lines
  *
- * @returns Trimmed text content from the final response
- *
- * @throws Error if response validation fails or contains no output text
+ * @throws Error if `response` completed function calls without producing output text
  */
 export function text(response: GenerateContentResponse): string {
 
@@ -369,13 +554,18 @@ export function text(response: GenerateContentResponse): string {
 }
 
 /**
- * Extracts and parses JSON content from a Gemini API response.
+ * Reports the output text of a Gemini API response as a JSON payload.
  *
- * @param response Response from a generateContent call with JSON output
+ * The payload is parsed from the output text of the response, as produced under the requested response schema, and cast
+ * to `T` without further validation: callers needing guarantees must validate it themselves.
  *
- * @returns Parsed JSON object
+ * @typeParam T The expected shape of the JSON payload
  *
- * @throws Error if response validation fails, contains no output text, or has invalid JSON
+ * @param response The response of a `generateContent` request carrying a response schema
+ *
+ * @returns The JSON payload parsed from the output text of `response`
+ *
+ * @throws Error if `response` carries no output text or its text is not well-formed JSON
  */
 export function json<T>(response: GenerateContentResponse): T {
 	try {
@@ -388,11 +578,11 @@ export function json<T>(response: GenerateContentResponse): T {
 }
 
 /**
- * Extracts embedding vector from a Gemini API response.
+ * Reports the embedding vector of a Gemini API response.
  *
- * @param response Response from an embedContent call
+ * @param response The response of an `embedContent` request
  *
- * @returns Embedding vector as an array of numbers, or empty array if not present
+ * @returns The vector embedded for the first content of `response`, or an empty array if it carries none
  */
 export function embedding(response: EmbedContentResponse) {
 
