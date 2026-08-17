@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2025 EC2U Alliance
+ * Copyright © 2020-2026 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import { normalize as normalizeUrl } from "@/datasets/pages/index.js";
 import { Unit } from "@/datasets/units/index.js";
 import { datastore } from "@/work/gcp/datastore.js";
-import { uuid } from "@/work/node/uuid.js";
+import * as uuid from "uuid";
 import { Entity, PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";
 import { message, time } from "@metreeca/core/report";
@@ -43,6 +43,7 @@ const logger = log(import.meta.url);
 
 
 const kind = "Unit";
+const namespace = "75c5f4e5-09c3-46a8-9912-e212087e803d";
 const batch = 100;
 
 const indexed = new Set([
@@ -105,7 +106,7 @@ async function lookup(key: string | Partial<Unit>): Promise<undefined | Unit> {
 
 		if ( isString(key) ) {
 
-			const [entity] = await datastore.get(datastore.key([kind, uuid(key)]));
+			const [entity] = await datastore.get(datastore.key([kind, uuid.v5(key, namespace)]));
 
 			if ( entity ) {
 				return clean(entity);
@@ -117,7 +118,7 @@ async function lookup(key: string | Partial<Unit>): Promise<undefined | Unit> {
 
 			if ( key.id ) {
 
-				const [entity] = await datastore.get(datastore.key([kind, uuid(key.id)]));
+				const [entity] = await datastore.get(datastore.key([kind, uuid.v5(key.id, namespace)]));
 
 				if ( entity ) {
 					return clean(entity);
@@ -406,7 +407,7 @@ async function insert(items: Unit | readonly Unit[]): Promise<readonly Unit[]> {
 				};
 
 				return {
-					key: datastore.key([kind, uuid(item.id)]),
+					key: datastore.key([kind, uuid.v5(item.id, namespace)]),
 					data,
 					excludeFromIndexes: Object.keys(data).filter(field => !indexed.has(field))
 				};
@@ -440,7 +441,8 @@ async function remove(items?: Unit | readonly Unit[]): Promise<void> {
 			const itemsArray = Array.isArray(items) ? items : [items];
 
 			for (let i = 0; i < itemsArray.length; i += batch) {
-				const keys = itemsArray.slice(i, i+batch).map(item => datastore.key([kind, uuid(item.id)]));
+				const keys = itemsArray.slice(i, i+batch)
+					.map(item => datastore.key([kind, uuid.v5(item.id, namespace)]));
 				await datastore.delete(keys);
 			}
 

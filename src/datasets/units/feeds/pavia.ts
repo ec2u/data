@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2025 EC2U Alliance
+ * Copyright © 2020-2026 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import { units } from "@/datasets/units/store.js";
 import { pavia, Units } from "@/utilities/hub/index.js";
 import { ai, json } from "@/work/gcp/gemini.js";
 import { file } from "@/work/node/files.js";
-import { uuid } from "@/work/node/uuid.js";
+import * as uuid from "uuid";
 import { Type } from "@google/genai";
 import { message, time } from "@metreeca/core/report";
 import { pipe } from "@metreeca/pipe";
@@ -133,7 +133,7 @@ export async function bootstrap(url?: string): Promise<unknown> {
 
 				const current = await units.lookup(item);
 
-				await units.insert(!current ? { ...item, id: `${Units}${uuid()}` }
+				await units.insert(!current ? { ...item, id: `${Units}${uuid.v4()}` }
 					: !matches(current, item) ? merge(current, { ...item, analyzed: undefined, expanded: undefined })
 						: current
 				);

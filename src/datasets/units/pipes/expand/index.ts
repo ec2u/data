@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2025 EC2U Alliance
+ * Copyright © 2020-2026 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import { expand } from "@/datasets/units/pipes/expand/expand.js";
 import { units } from "@/datasets/units/store.js";
 import { Units } from "@/utilities/hub/index.js";
-import { uuid } from "@/work/node/uuid.js";
+import * as uuid from "uuid";
 import { message, time } from "@metreeca/core/report";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
@@ -66,7 +66,7 @@ export async function expandAll(): Promise<number> {
 
 				for (const item of items) {
 					if ( !await units.lookup(item) ) { // check and update atomically
-						await units.insert({ ...item, id: `${Units}${uuid()}` });
+						await units.insert({ ...item, id: `${Units}${uuid.v4()}` });
 					}
 				}
 

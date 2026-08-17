@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2025 EC2U Alliance
+ * Copyright © 2020-2026 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import { Page } from "@/datasets/pages/index.js";
 import { datastore } from "@/work/gcp/datastore.js";
-import { uuid } from "@/work/node/uuid.js";
+import * as uuid from "uuid";
 import { message, time } from "@metreeca/core/report";
 import { log } from "@metreeca/tape";
 
@@ -24,6 +24,7 @@ import { log } from "@metreeca/tape";
 const logger = log(import.meta.url);
 
 const kind = "Page";
+const namespace = "99cac6cb-0413-48e5-9882-1a928460cf44";
 const batch = 100;
 
 const cache = new Map<string, Promise<Page>>();
@@ -60,7 +61,7 @@ async function lookup(url: string, fetcher: (url: string) => Page | Promise<Page
 
 					logger.info`looking up <${url}>`;
 
-					const key = datastore.key([kind, uuid(url)]);
+					const key = datastore.key([kind, uuid.v5(url, namespace)]);
 					const [entity] = await datastore.get(key);
 
 					if ( entity ) {
@@ -120,7 +121,8 @@ async function remove(items?: Page | readonly Page[]): Promise<void> {
 				const itemsArray = Array.isArray(items) ? items : [items];
 
 				for (let i = 0; i < itemsArray.length; i += batch) {
-					const keys = itemsArray.slice(i, i+batch).map(item => datastore.key([kind, uuid(item.url)]));
+					const keys = itemsArray.slice(i, i+batch)
+						.map(item => datastore.key([kind, uuid.v5(item.url, namespace)]));
 					await datastore.delete(keys);
 				}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2025 Metreeca srl
+ * Copyright © 2026 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,11 @@
  */
 
 /**
- * Time duration constants in milliseconds.
- *
- * Provides commonly used time unit conversions for readability and consistency.
- *
- * @example
- * ```typescript
- * const timeout = 5 * duration.second;
- * const cacheExpiry = 30 * duration.day;
- * const refreshInterval = 2 * duration.hour;
- * ```
+ * Time and duration utilities.
  *
  * @remarks
  *
- * For more complex calendrical calculations (timezone handling, calendar systems, DST-aware arithmetic),
+ * For  complex calendrical calculations (timezone handling, calendar systems, DST-aware arithmetic),
  * consider using the Temporal API polyfills:
  *
  * - **@js-temporal/polyfill** (Official, 51.9 KB): Strict spec compliance from TC39 proposal champions
@@ -49,8 +40,23 @@
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal | MDN Temporal API}
  * @see {@link https://tc39.es/proposal-temporal/docs/ | TC39 Temporal Proposal}
+ *
+ * @module
  */
 
+/**
+ * Time duration constants in milliseconds.
+ *
+ * Provides commonly used time unit conversions for readability and consistency.
+ *
+ * @example
+ *
+ * ```typescript
+ * const timeout = 5 * duration.second;
+ * const cacheExpiry = 30 * duration.day;
+ * const refreshInterval = 2 * duration.hour;
+ * ```
+ */
 export const duration = {
 
 	second: 1000,

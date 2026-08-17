@@ -17,8 +17,6 @@ common interest.
 
 This project is licensed under the Apache 2.0 License – see [LICENSE](LICENSE) file for details.
 
-Managed datasets are licensed on a case-by-case basis by the copyright holder as specified in their factsheets.
-
 # Acknowledgements
 
 Development of the *EC2U Knowledge Hub* is funded by the European Commission under

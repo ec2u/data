@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2025 EC2U Alliance
+ * Copyright © 2020-2026 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,9 @@ const host = process.env.HOST || "0.0.0.0";
 const port = parseInt(process.env.PORT || "8080", 10);
 const url = process.env.URL || `http://${host === "0.0.0.0" ? "localhost" : host}:${port}`;
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 express()
 
 	.use(express.json())
@@ -51,6 +54,7 @@ express()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function request() {
+
 	return (request: Request, response: Response, next: NextFunction) => {
 
 		const requestId = crypto.randomUUID();
@@ -88,9 +92,11 @@ function request() {
 		next();
 
 	};
+
 }
 
 function error() {
+
 	return (error: Error, request: Request, response: Response, _: NextFunction) => {
 
 		logger.error("{method} {url} error: {error.name} - {error.message}", {
@@ -109,4 +115,5 @@ function error() {
 		}
 
 	};
+
 }

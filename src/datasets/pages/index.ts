@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2025 EC2U Alliance
+ * Copyright © 2020-2026 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,13 +43,15 @@
  *   `separateMarkdown` option for integrated processing.
  */
 
-import { uuid } from "@/work/node/uuid.js";
+import * as uuid from "uuid";
 import { log } from "@metreeca/tape";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
 
 
 const logger = log(import.meta.url);
+
+const digestNamespace = "69a672a9-cc1c-4a02-b2c3-300a338b2b10";
 
 
 /**
@@ -293,7 +295,7 @@ export async function visit(url: string, {
 			title: title,
 			content: text,
 			links: pageLinks,
-			digest: uuid(text),
+			digest: uuid.v5(text, digestNamespace),
 			fetched: Date.now(),
 			summary: summary.replaceAll(/\s+/g, " ")
 		};
