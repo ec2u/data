@@ -34,6 +34,7 @@
  * @see {@link https://googleapis.github.io/js-genai/release_docs/index.html Google GenAI SDK}
  */
 
+import { createCache } from "@/work/core/cache.js";
 import { md } from "@/work/core/tags.js";
 import { secret } from "@/work/gcp/secrets.js";
 import {
@@ -48,7 +49,7 @@ import {
 	Part
 } from "@google/genai";
 import { isString } from "@metreeca/core";
-import { createThrottle, Throttle } from "@metreeca/core/async";
+import { createThrottle, type Throttle } from "@metreeca/core/async";
 import { message } from "@metreeca/core/report";
 import { log, Logger } from "@metreeca/tape";
 
@@ -115,17 +116,48 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 	const ai = new Client(options);
 
 	/**
-	 * Request channels opened by {@link channel}, keyed by model id exactly as supplied by the caller and retained
-	 * for the lifetime of the client.
+	 * Retrieves the request channel shared by all requests to a model, opening it on first request.
+	 *
+	 * Channels are cached by model id exactly as supplied, so the bare and `models/`-prefixed forms of the same model
+	 * are throttled and logged independently. The `structured` flag records whether the model is currently expected to
+	 * accept a response schema alongside tools: the Gemini API supports the combination from the Gemini 3 generation
+	 * onwards, so the generation read from the last path segment of the id seeds the flag, while a rejection clears it
+	 * in place (see {@link retry}).
+	 *
+	 * @param model The target model name
+	 *
+	 * @returns The channel registered for `model`, retained for the lifetime of the client (see {@link createCache})
+	 *
+	 * @see {@link https://ai.google.dev/gemini-api/docs/structured-output Structured output}
 	 */
-	const channels = new Map<string, {
+	const channels = createCache<string, {
 
 		structured: boolean
 
 		logger: Logger
 		throttle: Throttle
 
-	}>();
+	}>(model => {
+
+		const generation = Number(model.split("/").pop()?.match(/^gemini-(\d+)/)?.[1] ?? 0);
+
+		return {
+
+			structured: generation >= 3,
+
+			logger: logger.getChild(model),
+
+			throttle: createThrottle({
+				minimum: 100,
+				maximum: 60*1000,
+				buildup: 1.10,
+				backoff: 1.10,
+				recover: 0.95
+			})
+
+		};
+
+	});
 
 
 	return Object.assign(ai, { // patch to work around known issues
@@ -136,7 +168,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 
 				return async (...[{ config, ...params }, ...rest]: Parameters<typeof generateContent>) => {
 
-					const modelChannel = channel(params.model);
+					const channel = channels(params.model);
 
 					return config?.tools
 						? await structure(await execute())
@@ -273,7 +305,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 						 * alongside tools, leaving the conversion to {@link structure} on the others. A 429 rejection
 						 * is retried after the delay advertised by the API; a 400 rejection received while a response
 						 * schema is being submitted is taken as the model refusing it, closing the channel to schemas
-						 * (see {@link channel}) and retrying the same request at once without one.
+						 * (see {@link channels}) and retrying the same request at once without one.
 						 *
 						 * @param contents The conversation to submit
 						 *
@@ -283,7 +315,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 						 */
 						async function retry(contents: ContentListUnion) {
 
-							const { throttle, logger: mlogger } = modelChannel;
+							const { throttle, logger: mlogger } = channel;
 
 							return await throttle.retry(
 								() => generateContent({
@@ -303,7 +335,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 										// submit the response schema only to models accepting it alongside tools,
 										// leaving the conversion to `structure` on the others
 
-										...(modelChannel.structured ? { responseMimeType, responseSchema } : {})
+										...(channel.structured ? { responseMimeType, responseSchema } : {})
 
 									}
 
@@ -322,13 +354,13 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 											return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
 
 										} else if ( error instanceof ApiError && error.status === BadRequest
-											&& modelChannel.structured ) {
+											&& channel.structured ) {
 
 											// the model doesn't accept a response schema alongside tools: close the
 											// channel to schemas and immediately retry the same request without one,
 											// leaving the conversion to `structure`
 
-											modelChannel.structured = false;
+											channel.structured = false;
 
 											mlogger.warning`response schema rejected with tools: converting separately`;
 
@@ -368,7 +400,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 					 * alongside `tools`, so they are served without the response schema and reply in prose: a
 					 * separate `gemini-2.5-flash-lite` request converts it into JSON conforming to the requested
 					 * schema, at the cost of one extra generation. Models that accept the schema with the request
-					 * produce the JSON themselves and bypass the conversion (see {@link channel}).
+					 * produce the JSON themselves and bypass the conversion (see {@link channels}).
 					 *
 					 * @param response The model response to post-process
 					 *
@@ -388,7 +420,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 							part => part.functionCall
 						);
 
-						if ( modelChannel.structured || !responseSchema || hasFunctionCalls ) {
+						if ( channel.structured || !responseSchema || hasFunctionCalls ) {
 
 							return response;
 
@@ -468,57 +500,6 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 		})
 
 	});
-
-
-	/**
-	 * Retrieves the request channel shared by all requests to a model, opening it on first request.
-	 *
-	 * Channels are keyed by model id exactly as supplied, so the bare and `models/`-prefixed forms of the same model
-	 * are throttled and logged independently. The `structured` flag records whether the model is currently expected to
-	 * accept a response schema alongside tools: the Gemini API supports the combination from the Gemini 3 generation
-	 * onwards, so the generation read from the last path segment of the id seeds the flag, while a rejection clears it
-	 * in place (see {@link retry}).
-	 *
-	 * @param model The target model name
-	 *
-	 * @returns The channel registered for `model`, retained for the lifetime of the client
-	 *
-	 * @see {@link https://ai.google.dev/gemini-api/docs/structured-output Structured output}
-	 */
-	function channel(model: string) {
-
-		const existing = channels.get(model);
-
-		if ( existing === undefined ) {
-
-			const generation = Number(model.split("/").pop()?.match(/^gemini-(\d+)/)?.[1] ?? 0);
-
-			const created = {
-
-				structured: generation >= 3,
-
-				logger: logger.getChild(model),
-
-				throttle: createThrottle({
-					minimum: 100,
-					maximum: 60*1000,
-					buildup: 1.10,
-					backoff: 1.10,
-					recover: 0.95
-				})
-
-			};
-
-			channels.set(model, created);
-
-			return created;
-
-		} else {
-
-			return existing;
-
-		}
-	}
 
 }
 
