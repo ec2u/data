@@ -20,7 +20,7 @@
  * Provides utility methods for Google Cloud Datastore operations.
  */
 
-import { project } from "@/work/gcp/index.js";
+import { project } from "@/_/gcp/index.js";
 import { Datastore, or, PropertyFilter } from "@google-cloud/datastore";
 
 export { PropertyFilter, or };

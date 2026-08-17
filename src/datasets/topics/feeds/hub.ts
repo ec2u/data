@@ -17,7 +17,7 @@
 import { index, Topic } from "@/datasets/topics/index.js";
 import { topics } from "@/datasets/topics/store.js";
 import { hub } from "@/utilities/hub/index.js";
-import { sparql } from "@/work/core/tags.js";
+import { sparql } from "@/_/core/tags.js";
 import type { Term } from "@rdfjs/types";
 
 

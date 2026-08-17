@@ -15,7 +15,7 @@
  */
 
 import { units } from "@/datasets/units/store.js";
-import { dump } from "@/work/node/files.js";
+import { dump } from "@/_/node/files.js";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { toArray } from "@metreeca/pipe/sinks";

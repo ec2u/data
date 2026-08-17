@@ -17,9 +17,9 @@
 import { topics } from "@/datasets/topics/store.js";
 import { matchTopics } from "@/datasets/topics/tools/matchTopics.js";
 import { Unit } from "@/datasets/units/index.js";
-import { md } from "@/work/core/tags.js";
-import { ai, json } from "@/work/gcp/gemini.js";
-import { file } from "@/work/node/files.js";
+import { md } from "@/_/core/tags.js";
+import { ai, json } from "@/_/gcp/gemini.js";
+import { file } from "@/_/node/files.js";
 import { Type } from "@google/genai";
 import { isString } from "@metreeca/core";
 import { log } from "@metreeca/tape";

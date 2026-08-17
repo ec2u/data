@@ -16,7 +16,7 @@
 
 import { normalize as normalizeUrl } from "@/datasets/pages/index.js";
 import { Unit } from "@/datasets/units/index.js";
-import { datastore } from "@/work/gcp/datastore.js";
+import { datastore } from "@/_/gcp/datastore.js";
 import * as uuid from "uuid";
 import { Entity, PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";

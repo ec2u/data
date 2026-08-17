@@ -34,9 +34,9 @@
  * @see {@link https://googleapis.github.io/js-genai/release_docs/index.html Google GenAI SDK}
  */
 
-import { createCache } from "@/work/core/cache.js";
-import { md } from "@/work/core/tags.js";
-import { secret } from "@/work/gcp/secrets.js";
+import { createCache } from "@/_/core/cache.js";
+import { md } from "@/_/core/tags.js";
+import { secret } from "@/_/gcp/secrets.js";
 import {
 	ApiError,
 	CallableTool,

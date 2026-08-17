@@ -15,7 +15,7 @@
  */
 
 import { Page } from "@/datasets/pages/index.js";
-import { datastore } from "@/work/gcp/datastore.js";
+import { datastore } from "@/_/gcp/datastore.js";
 import * as uuid from "uuid";
 import { message, time } from "@metreeca/core/report";
 import { log } from "@metreeca/tape";

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { secret } from "@/work/gcp/secrets.js";
+import { secret } from "@/_/gcp/secrets.js";
 import SparqlClient from "sparql-http-client";
 
 export const base="https://data.ec2u.eu/";

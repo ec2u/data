@@ -15,8 +15,8 @@
  */
 
 import { Topic } from "@/datasets/topics/index.js";
-import { compress, decompress } from "@/work/ai/vectors.js";
-import { datastore } from "@/work/gcp/datastore.js";
+import { compress, decompress } from "@/_/ai/vectors.js";
+import { datastore } from "@/_/gcp/datastore.js";
 import * as uuid from "uuid";
 import { PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";

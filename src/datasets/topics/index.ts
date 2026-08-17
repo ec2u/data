@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { distance } from "@/work/ai/vectors.js";
-import { ai, embedding } from "@/work/gcp/gemini.js";
+import { distance } from "@/_/ai/vectors.js";
+import { ai, embedding } from "@/_/gcp/gemini.js";
 
 export interface Topic {
 

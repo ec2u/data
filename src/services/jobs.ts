@@ -24,7 +24,7 @@
 
 import analyze from "@/datasets/units/pipes/analyze/index.js";
 import { expandAll } from "@/datasets/units/pipes/expand/index.js";
-import { job, Scheduler } from "@/work/gcp/scheduler.js";
+import { job, Scheduler } from "@/_/gcp/scheduler.js";
 
 
 /**
