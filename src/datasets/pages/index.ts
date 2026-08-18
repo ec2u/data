@@ -20,7 +20,6 @@
  * @module index
  */
 
-import type { Awaitable } from "@/_/core/async.js";
 import type { Markdown } from "@/_/core/markdown.js";
 import type { Instant } from "@/_/core/temporal.js";
 import type { Text } from "@/_/core/text.js";
@@ -72,13 +71,12 @@ export interface Page {
 
 
 /**
- * An absolute URL.
+ * Absolute URL.
  *
- * A scheme-qualified address, identifying a standalone resource without resolution against a base URL.
+ * A scheme-qualified web address, identifying a standalone resource without resolution against a base URL.
  *
  * > [!NOTE]
- * > This alias is for documentation purposes only: values are plain strings, with no validation or type-level
- * > enforcement.
+ * > For documentation purposes only: values are plain strings, with no validation or type-level enforcement.
  *
  * @see {@link https://www.rfc-editor.org/rfc/rfc3986#section-4.3 RFC 3986 § 4.3 Absolute URI}
  */
@@ -113,10 +111,10 @@ export interface Link {
  *
  * @param url The absolute URL of the page to be looked up
  *
- * @returns The immutable {@link Page} snapshot for `url`, reported either directly or as a promise rejected if the
- * page can't be looked up or retrieved
+ * @returns A promise reporting the immutable {@link Page} snapshot for `url`; rejected if the page can't be looked up
+ * or retrieved
  */
-export type Retriever = (url: Locator) => Awaitable<Page>;
+export type Retriever = (url: Locator) => Promise<Page>;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
