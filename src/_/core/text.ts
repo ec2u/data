@@ -42,8 +42,7 @@ export { default as dedent } from "dedent";
  * Human-readable text with no embedded markup.
  *
  * > [!NOTE]
- * > This alias is for documentation purposes only: values are plain strings, with no validation or type-level
- * > enforcement.
+ * > For documentation purposes only: values are plain strings, with no validation or type-level enforcement.
  */
 export type Text = string;
 

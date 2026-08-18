@@ -31,8 +31,7 @@ import { dedent } from "@/_/core/text.js";
  * Text marked up with CommonMark syntax.
  *
  * > [!NOTE]
- * > This alias is for documentation purposes only: values are plain strings, with no validation or type-level
- * > enforcement.
+ * > For documentation purposes only: values are plain strings, with no validation or type-level enforcement.
  *
  * @see {@link https://spec.commonmark.org/ CommonMark Specification}
  */

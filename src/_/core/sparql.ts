@@ -33,8 +33,7 @@ import { dedent } from "@/_/core/text.js";
  * A query written in the SPARQL query language.
  *
  * > [!NOTE]
- * > This alias is for documentation purposes only: values are plain strings, with no validation or type-level
- * > enforcement.
+ * > For documentation purposes only: values are plain strings, with no validation or type-level enforcement.
  *
  * @see {@link https://www.w3.org/TR/sparql11-query/ SPARQL 1.1 Query Language}
  */
