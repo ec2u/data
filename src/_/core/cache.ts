@@ -17,26 +17,8 @@
 /**
  * Lazy value caching.
  *
- * Provides {@link createCache} for deriving a memoising factory from a plain {@link Factory}, computing each value on
- * first request and reporting the same instance on every later request for the same key.
- *
  * @module
  */
-
-/**
- * Factory computing the value associated with a key.
- *
- * @typeParam K The type of the keys values are computed for
- * @typeParam V The type of the computed values
- *
- * @param key The key to compute a value for
- *
- * @returns The value associated with `key`
- */
-export type Factory<K, V> = (key: K) => V
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Creates a memoising value factory.
@@ -68,7 +50,7 @@ export type Factory<K, V> = (key: K) => V
  *
  * @see {@link https://tc39.es/ecma262/#sec-samevaluezero SameValueZero}
  */
-export function createCache<K, V>(factory: Factory<K, V>): Factory<K, V> {
+export function createCache<K, V>(factory: (key: K) => V): typeof factory {
 
 	const entries = new Map<K, { readonly value: V }>();
 
