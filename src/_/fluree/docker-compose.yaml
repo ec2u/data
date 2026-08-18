@@ -1,0 +1,18 @@
+services:
+
+  fluree:
+    image: fluree/server:4.1.5
+    container_name: ec2u-fluree
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    volumes:
+      - fluree-data:/var/lib/fluree
+    environment:
+      RUST_LOG: info
+      FLUREE_LISTEN_ADDR: 0.0.0.0:8090
+      FLUREE_CACHE_MAX_MB: 2048
+      FLUREE_INDEXING_ENABLED: "true"
+
+volumes:
+  fluree-data:
