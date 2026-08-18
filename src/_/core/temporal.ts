@@ -45,9 +45,10 @@
  */
 
 /**
- * Time duration constants in milliseconds.
+ * Time unit constants.
  *
- * Provides commonly used time unit conversions for readability and consistency.
+ * Reports the length of commonly used time units as {@link Duration} values, for composing readable time spans by
+ * multiplication. Calendar units are approximated by fixed lengths, with months taken as 30 days and years as 365.
  *
  * @example
  *
@@ -68,3 +69,24 @@ export const duration = {
 	year: 365*24*60*60*1000
 
 } as const;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A point in time.
+ *
+ * Reports an absolute timestamp as milliseconds elapsed since the Unix epoch, as reported by `Date.now()`, carrying no
+ * timezone or calendar information.
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now | MDN Date.now}
+ */
+export type Instant = number
+
+/**
+ * A length of time.
+ *
+ * Reports a time span as a plain count of milliseconds, typically as a multiple of the {@link duration} constants; as
+ * such, it doesn't account for calendar effects like leap years or daylight saving shifts.
+ */
+export type Duration = number
