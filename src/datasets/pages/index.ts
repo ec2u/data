@@ -35,36 +35,31 @@
  * @module index
  */
 
+import type { Instant } from "@/_/core/temporal.js";
+import { immutable } from "@metreeca/core/deep";
 import { log } from "@metreeca/tape";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
-import * as uuid from "uuid";
 
 
 const logger = log(import.meta.url);
-
-const digestNamespace = "69a672a9-cc1c-4a02-b2c3-300a338b2b10";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Web page retrieved and processed by {@link visit}.
+ * Web page snapshot.
  *
- * Reports the main page content as markdown, its outbound links and the metadata required to track crawl state and
- * detect content changes between crawls.
+ * Reports the main content of a page as markdown, alongside its title, summary and outbound {@link Link}s, as
+ * retrieved and processed by {@link visit}. Snapshots are deeply immutable and describe the page as of the time they
+ * were taken, so a later visit may well report different content for the same URL.
  */
 export interface Page {
 
 	/**
-	 * The time the page was retrieved, in milliseconds since the epoch.
+	 * The {@link Instant} the page was retrieved at.
 	 */
-	readonly fetched: number;
-
-	/**
-	 * A UUID derived from the page content, changing only if the content changes.
-	 */
-	readonly digest: string;
+	readonly fetched: Instant;
 
 
 	/**
@@ -157,8 +152,8 @@ export interface Summarist {
  * Normalises a page URL.
  *
  * Rewrites the URL to the canonical form used as a page identity throughout this module, upgrading the `http` scheme
- * to `https` and supplying a root path (`/`) if the URL doesn't include one, so that variants of the same address are
- * compared and stored as a single page.
+ * to `https` and applying the parsing rules of the URL standard, so that variants of the same address are compared
+ * and stored as a single page.
  *
  * @param url The URL to normalise
  *
@@ -171,10 +166,6 @@ export interface Summarist {
 export function normalize(url: string): string {
 
 	const parsed = new URL(url);
-
-	if ( parsed.pathname === "" ) {
-		parsed.pathname = "/";
-	}
 
 	if ( parsed.protocol === "http:" ) {
 		parsed.protocol = "https:";
@@ -279,7 +270,7 @@ export async function links(dom: JSDOM): Promise<readonly Link[]> {
 /**
  * Visits a web page.
  *
- * Retrieves the page, extracts its main content as markdown, its outbound links and its metadata, reporting them as a
+ * Retrieves the page and extracts its title, summary, main content as markdown and outbound links, reporting them as a
  * {@link Page} identified by the normalised page URL. Pages already held by the configured {@link Cache} are reported
  * without being retrieved again.
  *
@@ -290,7 +281,7 @@ export async function links(dom: JSDOM): Promise<readonly Link[]> {
  * @param options.summarist The generator of the page summary; if undefined, the summary is taken from the page meta
  * description, falling back to a truncated content excerpt
  *
- * @returns The processed page, with its summary reduced to a single line
+ * @returns The immutable snapshot of the processed page, with its summary reduced to a single line
  *
  * @throws Error If the page can't be retrieved, processed or summarised
  */
@@ -308,7 +299,7 @@ export async function visit(url: string, {
 
 } = {}): Promise<Page> {
 
-	return cache(normalize(url), async function (url: string) {
+	return cache(normalize(url), async url => {
 
 		logger.info`fetching <${url}>`;
 
@@ -317,19 +308,16 @@ export async function visit(url: string, {
 		const pageContent = await content(dom);
 		const pageLinks = await links(dom);
 
-		const text = pageContent.contentMarkdown || "";
 		const title = pageContent.title || url;
-
-		logger.info`summarizing <${url}>`;
+		const text = pageContent.contentMarkdown || "";
 
 		const summary = await summarist?.({ url, title, content: text })
 			|| pageContent.description
 			|| text.substring(0, 500-1)+"…";
 
-		return {
+		return immutable({
 
 			fetched: Date.now(),
-			digest: uuid.v5(text, digestNamespace),
 
 			url,
 			title,
@@ -337,7 +325,7 @@ export async function visit(url: string, {
 			content: text,
 			links: pageLinks
 
-		};
+		});
 
 	});
 
