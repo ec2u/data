@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import { normalize as normalizeUrl } from "@/datasets/pages/index.js";
-import { Unit } from "@/datasets/units/index.js";
 import { datastore } from "@/_/gcp/datastore.js";
-import * as uuid from "uuid";
+import { Unit } from "@/datasets/units/index.js";
 import { Entity, PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";
 import { message, time } from "@metreeca/core/report";
 import { log } from "@metreeca/tape";
+import * as uuid from "uuid";
 
 
 /**
@@ -94,7 +93,8 @@ export const units = Object.freeze({
  * - By ID string: Direct key-based retrieval
  * - By partial properties: Query-based matching using `website`, `formal`, `parent`, and `university`
  *
- * When querying by properties, returns `undefined` if multiple matches are found to avoid ambiguity.
+ * When querying by properties, returns `undefined` if multiple matches are found to avoid ambiguity. `website` is
+ * matched verbatim, so URLs must be supplied in the same form they were stored under.
  *
  * @param key Unit ID string or partial unit properties for matching
  *
@@ -131,7 +131,7 @@ async function lookup(key: string | Partial<Unit>): Promise<undefined | Unit> {
 				if ( key.website ) {
 
 					const query = datastore.createQuery(kind)
-						.filter(new PropertyFilter("website", "=", normalizeUrl(key.website)))
+						.filter(new PropertyFilter("website", "=", key.website))
 						.filter(new PropertyFilter("parent", "=", key.parent))
 						.filter(new PropertyFilter("university", "=", key.university));
 
@@ -380,7 +380,8 @@ async function select({
  *
  * Performs upsert operations, creating new units or updating existing ones based on their ID.
  * Processing timestamps (`updated`, `analyzed`, `expanded`) default to `0` if not specified.
- * Name and URL fields are normalized for consistent querying.
+ * Formal names are indexed as a normalized signature supporting fuzzy matching, while URLs are stored verbatim, as
+ * supplied by the caller.
  * Operations are batched automatically for efficiency.
  *
  * @param items Single unit or array of units to insert
@@ -401,8 +402,8 @@ async function insert(items: Unit | readonly Unit[]): Promise<readonly Unit[]> {
 					updated: item.updated ?? 0,
 					analyzed: item.analyzed ?? 0,
 					expanded: item.expanded ?? 0,
-					profile: item.profile && normalizeUrl(item.profile),
-					website: item.website && normalizeUrl(item.website),
+					profile: item.profile,
+					website: item.website,
 					signature: item.formal && signature(tokenize(item.formal))
 				};
 

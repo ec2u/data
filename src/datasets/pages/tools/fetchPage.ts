@@ -14,63 +14,32 @@
  * limitations under the License.
  */
 
-import { visit } from "@/datasets/pages/index.js";
-import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
-import { message } from "@metreeca/core/report";
-import { log } from "@metreeca/tape";
-import dedent from "dedent";
-
 /**
- * @module
+ * Web page fetching tool for the Gemini API.
  *
- * Gemini API tools using the CallableTool interface.
+ * Provides {@link fetchPage} for handing a {@link Retriever} to the model as a `fetchPage` function, so that a
+ * generation may explore linked pages on its own, without the caller mediating the retrievals.
  *
- * This module implements tools for the Gemini API using the
- * {@link https://googleapis.github.io/js-genai/release_docs/interfaces/types.CallableTool.html CallableTool}
- * interface from the `@google/genai` SDK (v1.22.0+).
+ * The tool is packaged as a
+ * {@link https://googleapis.github.io/js-genai/release_docs/interfaces/types.CallableTool.html CallableTool}, the
+ * `@google/genai` interface bundling the tool declaration (`tool()`) with its execution logic (`callTool()`), so that
+ * the SDK runs the function calling loop by itself rather than leaving the caller to handle the calls the model makes.
  *
- * ## CallableTool Interface
- *
- * `CallableTool` is an official SDK interface for automatic function calling that bundles both tool declaration
- * (`tool()` method) and execution logic (`callTool()` method). Unlike the standard function calling approach
- *     documented
- * at {@link https://ai.google.dev/gemini-api/docs/function-calling ai.google.dev/gemini-api/docs/function-calling},
- * which requires manual handling of function calls, `CallableTool` enables the SDK to automatically execute functions
- * when the model requests them.
- *
- * ### Automatic Function Calling Flow
- *
- * When using `CallableTool`, the SDK handles the complete function calling loop:
- *
- * 1. Model generates response with function calls
- * 2. SDK detects `functionCalls` in response
- * 3. SDK invokes `callTool()` on all CallableTool instances with all function calls
- * 4. Tools filter and process their matching calls, returning `Part[]` with function responses
- * 5. SDK appends function responses to conversation with `role: "user"`
- * 6. SDK continues generation with updated context
- * 7. Loop repeats until model stops calling functions or max rounds reached (default: 10)
- *
- * ### Key Characteristics
- *
- * - **Batch execution**: All `CallableTool` instances receive all function calls; each tool filters for its own calls
- * - **Automatic looping**: SDK manages multi-turn function calling without manual intervention
- * - **Response role**: Function responses are added with `role: "user"` (not `"function"`)
- * - **Error handling**: SDK throws errors for unknown functions; tools should handle execution errors gracefully
- * - **History tracking**: Optional `automaticFunctionCallingHistory` contains full conversation
- * - **Exclusive mode**: Cannot mix `CallableTool` with regular `Tool` objects (throws "Automatic function calling with
- *   CallableTools and Tools is not yet supported")
- *
- * ### Implementation Notes
- *
- * Feature introduced in SDK v1.11.0 (July 23, 2025) via
- * {@link https://github.com/googleapis/js-genai/pull/807 PR #807}, expanding automatic function calling beyond MCP
- * clients to any `CallableTool` implementation.
+ * > [!IMPORTANT]
+ * > A generation configured with callable tools can't also declare plain tools: the SDK rejects the combination.
  *
  * @see {@link https://googleapis.github.io/js-genai/release_docs/interfaces/types.CallableTool.html
  * Official CallableTool Documentation}
- * @see {@link https://github.com/googleapis/js-genai/pull/807 PR #807 - Enable CallableTool AFC}
  * @see {@link https://ai.google.dev/gemini-api/docs/function-calling Standard Function Calling Guide}
+ *
+ * @module
  */
+
+import { dedent } from "@/_/core/text.js";
+import { type Retriever, retrieve } from "@/datasets/pages/index.js";
+import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
+import { message } from "@metreeca/core/report";
+import { log } from "@metreeca/tape";
 
 
 const logger = log(import.meta.url);
@@ -81,19 +50,29 @@ const logger = log(import.meta.url);
 /**
  * Creates a web page fetching tool.
  *
- * Exposes {@link visit} to the Gemini API as a `fetchPage` function reporting the requested page as a page snapshot.
- * Pages that can't be retrieved are reported as an error response rather than raised, so that a failed call doesn't
- * interrupt the generation loop; repeated requests for the same URL are short-circuited only as far as the configured
- * store does.
+ * Exposes a {@link Retriever} to the Gemini API as a `fetchPage` function reporting the title, markdown content and
+ * outbound links of the requested page. Pages that can't be retrieved are reported as an error response rather than
+ * raised, so that a failed call doesn't interrupt the generation loop; repeated requests for the same URL are
+ * short-circuited only as far as the configured retriever does.
  *
- * @param opts The page lookup options passed to {@link visit} on every call; defaults to no options, so that every
- * request retrieves the page again
+ * @param options The page lookup options
+ * @param options.cache The {@link Retriever} consulted for the page on every call; defaults to {@link retrieve},
+ * retaining nothing, so that every request retrieves the page again
  *
- * @returns A `CallableTool` declaring the `fetchPage` function and handling the calls the model makes to it
+ * @returns A {@link https://googleapis.github.io/js-genai/release_docs/interfaces/types.CallableTool.html
+ * CallableTool} declaring the `fetchPage` function and handling the calls the model makes to it
  *
  * @see {@link https://ai.google.dev/gemini-api/docs/function-calling Function calling with the Gemini API}
  */
-export function fetchPage(opts: Parameters<typeof visit>[1] = {}): CallableTool {
+export function fetchPage({
+
+	cache = retrieve
+
+}: {
+
+	readonly cache?: Retriever
+
+} = {}): CallableTool {
 
 	const name = "fetchPage" as const;
 
@@ -107,7 +86,7 @@ export function fetchPage(opts: Parameters<typeof visit>[1] = {}): CallableTool 
 
 				description: dedent`
 					Fetches and extracts the main content from a web page.
-					Returns the page title, a summary, the full text content in markdown format, and a list of
+					Returns the page title, the full text content in markdown format, and a list of
 					outbound links with their URLs and anchor text. Use this function to explore pages that are
 					likely to contain information about the research unit's identity, activities, topics,
 					or child units.
@@ -140,7 +119,7 @@ export function fetchPage(opts: Parameters<typeof visit>[1] = {}): CallableTool 
 
 				try {
 
-					const page = await visit(url, opts);
+					const page = await cache(url);
 
 					logger.info`fetched <${url}> (${page.content.length} chars)`;
 

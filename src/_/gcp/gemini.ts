@@ -35,7 +35,7 @@
  */
 
 import { createCache } from "@/_/core/cache.js";
-import { md } from "@/_/core/tags.js";
+import { md } from "@/_/core/markdown.js";
 import { secret } from "@/_/gcp/secrets.js";
 import {
 	ApiError,

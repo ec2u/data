@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import { scrape } from "@/datasets/pages/index.js";
+import { md } from "@/_/core/markdown.js";
+import { retrieve } from "@/datasets/pages/index.js";
 import { pages } from "@/datasets/pages/store.js";
 import { fetchPage } from "@/datasets/pages/tools/fetchPage.js";
 import { Unit } from "@/datasets/units/index.js";
-import { md } from "@/_/core/tags.js";
 import { ai, json } from "@/_/gcp/gemini.js";
 import { file } from "@/_/node/files.js";
 import { Type } from "@google/genai";
 
 
 const tools = [
-	fetchPage({ cache: pages.lookup(scrape) })
+	fetchPage({ cache: pages.lookup(retrieve) })
 ];
 
 

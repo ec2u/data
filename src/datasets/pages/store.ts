@@ -18,8 +18,7 @@
  * Persistent web page storage.
  *
  * Provides {@link pages} for retaining {@link Page} snapshots in Google Cloud Datastore across runs, so that pages
- * already processed are reported without being retrieved again, and for discarding them once they go stale. Snapshots
- * are identified by the URL they are stored under, so callers must consistently use its normalised form.
+ * already processed are reported without being retrieved again, and for discarding them once they go stale.
  *
  * Executing this module as a script discards every retained page.
  *
@@ -28,7 +27,7 @@
  * @module
  */
 
-import type { Cache, Page } from "@/datasets/pages/index.js";
+import type { Retriever, Page } from "@/datasets/pages/index.js";
 import { createCache } from "@/_/core/cache.js";
 import { datastore } from "@/_/gcp/datastore.js";
 import * as uuid from "uuid";
@@ -53,8 +52,8 @@ if ( import.meta.main ) {
 /**
  * Datastore operations for retained web pages.
  *
- * Provides page {@link lookup}, retrieving and retaining pages on demand, and {@link remove removal} of retained
- * pages, either selectively or in bulk.
+ * Provides `lookup` for retrieving and retaining pages on demand and `remove` for discarding retained pages, either
+ * selectively or in bulk.
  */
 export const pages = Object.freeze({
 
@@ -67,21 +66,22 @@ export const pages = Object.freeze({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Creates a Datastore-backed page cache.
+ * Creates a Datastore-backed page store.
  *
  * Reports pages retained in Google Cloud Datastore under the requested URL, delegating to `fetcher` and retaining the
- * processed page when the store doesn't already hold one. Lookups are memoised for the lifetime of the returned cache,
+ * processed page when the store doesn't already hold one. Lookups are memoised for the lifetime of the returned store,
  * so that concurrent and repeated requests for the same URL share a single Datastore round trip; failures are memoised
  * as well, so a URL that fails once keeps reporting the same error.
  *
- * @param fetcher The function retrieving and processing pages the store doesn't already hold
+ * @param fetcher The {@link Retriever} retrieving and processing the pages the store doesn't already hold
  *
- * @returns A {@link Cache} reporting the retained page for a normalised URL, or the page reported by `fetcher` after
- * retaining it; the reported promise is rejected if the page can't be looked up, retrieved, processed or retained
+ * @returns A {@link Retriever} reporting the retained page for the requested URL, or the page reported by `fetcher`
+ * after retaining it; the reported promise is rejected if the page can't be looked up, retrieved, processed or
+ * retained
  *
  * @see {@link https://cloud.google.com/nodejs/docs/reference/datastore/latest Google Cloud Datastore}
  */
-function lookup(fetcher: (url: string) => Page | Promise<Page>): Cache {
+function lookup(fetcher: Retriever): Retriever {
 
 	return createCache(url => new Promise<Page>(async (resolve, reject) => {
 
@@ -142,7 +142,7 @@ function lookup(fetcher: (url: string) => Page | Promise<Page>): Cache {
  * Removes retained pages.
  *
  * Discards the stored snapshots of the given pages, or of every retained page if none is given, so that later lookups
- * retrieve them again, unless already memoised by a live {@link Cache}.
+ * retrieve them again, unless already memoised by a live {@link Retriever}.
  *
  * @param items The page or pages whose snapshots are to be discarded; if undefined, every retained page is discarded
  *

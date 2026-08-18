@@ -205,7 +205,7 @@ non-English names verbatim.**
 - **When you find the unit name, translate it to English IMMEDIATELY - do not wait until the final report**
 - IGNORE pdfs and other linked documents (often not machine-readable and require specialized processing)
 - ALWAYS retrieve relevant content from URLs where it is likely to be found, prioritizing them against the goals of the
-  analysis, taking into also their title and summary
+  analysis, taking into also their title
 - Prioritize local language pages over English translations
 - You can fetch MULTIPLE pages in parallel by calling `fetchPage` multiple times in a single turn
 - ALWAYS batch independent page requests together for efficiency

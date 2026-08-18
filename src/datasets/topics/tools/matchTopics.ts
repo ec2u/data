@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+import { dedent } from "@/_/core/text.js";
 import { match, Topic } from "@/datasets/topics/index.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import { message } from "@metreeca/core/report";
 import { log } from "@metreeca/tape";
-import dedent from "dedent";
 
 
 const logger = log(import.meta.url);

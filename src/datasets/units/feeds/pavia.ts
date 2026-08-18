@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { scrape } from "@/datasets/pages/index.js";
+import { retrieve } from "@/datasets/pages/index.js";
 import { pages } from "@/datasets/pages/store.js";
 import { fetchPage } from "@/datasets/pages/tools/fetchPage.js";
 import { matches, merge, Unit } from "@/datasets/units/index.js";
@@ -48,7 +48,7 @@ const roots = [
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const tools = [
-	fetchPage({ cache: pages.lookup(scrape) })
+	fetchPage({ cache: pages.lookup(retrieve) })
 ];
 
 
