@@ -15,7 +15,7 @@
  */
 
 import { Topic } from "@/datasets/topics/index.js";
-import { compress, decompress } from "@/_/ai/vectors.js";
+import { compress, decompress } from "@/_/ai/vector.js";
 import { datastore } from "@/_/gcp/datastore.js";
 import * as uuid from "uuid";
 import { PropertyFilter } from "@google-cloud/datastore";
