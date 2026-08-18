@@ -116,7 +116,7 @@ async function remove(items?: Page | readonly Page[]): Promise<void> {
 
 	await time(async () => {
 
-			if ( items ) { // Selective removal: delete only the specified items
+			if ( items ) { // selective removal: delete only the specified items
 
 				const itemsArray = Array.isArray(items) ? items : [items];
 
@@ -128,7 +128,7 @@ async function remove(items?: Page | readonly Page[]): Promise<void> {
 
 				return itemsArray;
 
-			} else { // Remove all: query all keys and delete them
+			} else { // remove all: query all keys and delete them
 
 				const [entities] = await datastore.runQuery(datastore.createQuery(kind).select("__key__"));
 
