@@ -15,38 +15,30 @@
  */
 
 /**
- * @module
+ * Web page crawling and markdown extraction.
  *
- * Web content extraction and markdown conversion utilities.
+ * Provides {@link visit} for retrieving a web page as a {@link Page} record reporting its title, summary, main
+ * content as markdown and outbound {@link Link}s, alongside the {@link normalize}, {@link get}, {@link html},
+ * {@link content} and {@link links} steps it is assembled from, for callers driving the pipeline themselves.
  *
- * Implements a clean content extraction pipeline that fetches web pages, extracts main article content while removing
- *     boilerplate elements (navigation, sidebars, ads, headers, footers), and converts the result to clean markdown
- *     format.
+ * Navigation, sidebars, ads, headers, footers and other boilerplate are stripped before conversion, so the reported
+ * content is limited to the main article body and reads more cleanly than a direct HTML to markdown translation.
+ * Retrieval and summarisation are pluggable: a {@link Cache} short-circuits repeated visits to the same URL, while a
+ * {@link Summarist} replaces the summary derived from page metadata.
  *
- * The pipeline uses:
+ * Companion modules build on these features: `store.ts` provides a Google Cloud Datastore-backed {@link Cache}, while
+ * `tools/fetchPage.ts` exposes {@link visit} as a Gemini function-calling tool.
  *
- * - Built-in `fetch` for HTTP requests with automatic redirect handling
- * - JSDOM for DOM manipulation in Node.js environment
- *   {@link https://github.com/jsdom/jsdom}
- * - Defuddle for intelligent content extraction, removing non-essential elements
- *   {@link https://github.com/kepano/defuddle}
+ * @see {@link https://github.com/jsdom/jsdom JSDOM}
+ * @see {@link https://github.com/kepano/defuddle Defuddle}
  *
- * This approach provides cleaner output than direct HTML-to-Markdown conversion
- * by filtering out template and boilerplate content before conversion.
- *
- * @remarks Version Compatibility
- *
- * - **JSDOM**: Must use v24.x (currently v24.1.3) due to Defuddle peer dependency.
- *   Defuddle requires `jsdom@^24.0.0`, incompatible with newer v27.x versions.
- * - **Defuddle**: Uses Node.js-optimized import (`defuddle/node`) with ES modules.
- *   Content extraction and markdown conversion handled by Defuddle's built-in
- *   `separateMarkdown` option for integrated processing.
+ * @module index
  */
 
-import * as uuid from "uuid";
 import { log } from "@metreeca/tape";
 import { Defuddle, DefuddleResponse } from "defuddle/node";
 import { JSDOM } from "jsdom";
+import * as uuid from "uuid";
 
 
 const logger = log(import.meta.url);
@@ -54,70 +46,106 @@ const logger = log(import.meta.url);
 const digestNamespace = "69a672a9-cc1c-4a02-b2c3-300a338b2b10";
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
- * Web page data extracted and processed by the crawler.
+ * Web page retrieved and processed by {@link visit}.
  *
- * Contains cleaned content in markdown format, extracted links, and metadata
- * for tracking crawl state and content changes.
+ * Reports the main page content as markdown, its outbound links and the metadata required to track crawl state and
+ * detect content changes between crawls.
  */
 export interface Page {
 
-	/** Timestamp when the page was fetched (milliseconds since epoch) */
+	/**
+	 * The time the page was retrieved, in milliseconds since the epoch.
+	 */
 	readonly fetched: number;
 
-	/** Content uuid for detecting changes between crawls */
+	/**
+	 * A UUID derived from the page content, changing only if the content changes.
+	 */
 	readonly digest: string;
 
 
-	/** Absolute URL of the crawled page */
+	/**
+	 * The absolute URL the page was retrieved from, normalised as by {@link normalize}.
+	 */
 	readonly url: string;
 
-	/** Page title extracted from HTML or derived from URL */
+	/**
+	 * The page title, falling back to the page URL if the document doesn't provide one.
+	 */
 	readonly title: string;
 
+	/**
+	 * A single-line summary of the page content.
+	 */
 	readonly summary: string;
 
-	/** Main content converted to markdown format with boilerplate removed */
+	/**
+	 * The main page content as markdown, with boilerplate and images removed.
+	 */
 	readonly content: string;
 
-	/** Links extracted from the page with absolute URLs */
+	/**
+	 * The outbound links of the page, in document order.
+	 */
 	readonly links: readonly Link[];
 
 }
 
 /**
- * Link data extracted from HTML anchor elements.
+ * Outbound link of a web page.
  */
 export interface Link {
 
+	/**
+	 * The absolute URL of the link target, resolved against the page URL.
+	 */
 	readonly href: string;
+
+	/**
+	 * The link anchor text, falling back to the alt text of a nested image; undefined if neither is available.
+	 */
 	readonly text?: string;
 
 }
 
 
 /**
- * Cache function for storing and retrieving processed web pages.
+ * Store retaining processed web pages across visits.
  *
- * Retrieves a cached page by URL or generates it using the provided fetcher function if not present in the cache.
- * Supports both synchronous and asynchronous cache implementations.
- *
- * @param url - The URL to look up in the cache
- * @param fetcher - Function to generate the page if not cached
- *
- * @returns The cached or newly generated page (may be returned synchronously or asynchronously)
+ * Decouples {@link visit} from the storage strategy: implementations may retain pages in memory, on disk or in a
+ * remote store, and are free to report them either synchronously or asynchronously.
  */
 export interface Cache {
 
+	/**
+	 * Looks up a stored page, processing it on demand if not already stored.
+	 *
+	 * @param url The normalised URL of the page to look up
+	 * @param fetcher The function retrieving and processing the page if the store doesn't already contain it
+	 *
+	 * @returns The stored page for `url`, or the page reported by `fetcher` after retaining it
+	 */
 	(url: string, fetcher: (url: string) => Page | Promise<Page>): Page | Promise<Page>;
 
 }
 
 /**
- * Function that generates a summary from page content.
+ * Generator of web page summaries.
+ *
+ * Replaces the summary {@link visit} derives from page metadata, for instance with an LLM-generated abstract.
  */
 export interface Summarist {
 
+	/**
+	 * Summarises the content of a page.
+	 *
+	 * @param page The URL, title and markdown content of the page to summarise
+	 *
+	 * @returns The summary generated for `page`
+	 */
 	(page: Pick<Page, "url" | "title" | "content">): Promise<string>;
 
 }
@@ -126,21 +154,26 @@ export interface Summarist {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Normalizes a URL by ensuring it has a pathname and uses HTTPS protocol.
+ * Normalises a page URL.
  *
- * Converts URLs with empty pathnames to include a root path ("/") and upgrades HTTP to HTTPS,
- * ensuring consistent URL format for comparison and caching operations.
+ * Rewrites the URL to the canonical form used as a page identity throughout this module, upgrading the `http` scheme
+ * to `https` and supplying a root path (`/`) if the URL doesn't include one, so that variants of the same address are
+ * compared and stored as a single page.
  *
- * @param url - The URL to normalize
+ * @param url The URL to normalise
  *
- * @returns The normalized URL with guaranteed pathname and HTTPS protocol
+ * @returns The normalised form of `url`
+ *
+ * @throws TypeError If `url` isn't a valid absolute URL
+ *
+ * @see {@link https://url.spec.whatwg.org/ WHATWG URL Standard}
  */
 export function normalize(url: string): string {
 
-	const parsed=new URL(url);
+	const parsed = new URL(url);
 
 	if ( parsed.pathname === "" ) {
-		parsed.pathname="/";
+		parsed.pathname = "/";
 	}
 
 	if ( parsed.protocol === "http:" ) {
@@ -151,15 +184,19 @@ export function normalize(url: string): string {
 }
 
 /**
- * Fetches content from the specified URL with error handling.
+ * Retrieves a web resource.
  *
- * @param url - The URL to fetch
- * @returns Promise resolving to the HTTP response
- * @throws Error if the request fails or returns non-ok status
+ * @param url The absolute URL of the resource to retrieve
+ *
+ * @returns The successful response reported for `url`, with redirects already followed
+ *
+ * @throws Error If the request fails or the server reports an unsuccessful HTTP status
+ *
+ * @see {@link https://fetch.spec.whatwg.org/ WHATWG Fetch Standard}
  */
 export async function get(url: string): Promise<Response> {
 
-	const response=await fetch(url);
+	const response = await fetch(url);
 
 	if ( !response.ok ) {
 		throw new Error(`failed to fetch <${url}> <${response.status} ${response.statusText}>`);
@@ -169,65 +206,60 @@ export async function get(url: string): Promise<Response> {
 }
 
 /**
- * Converts HTTP response to JSDOM instance for DOM manipulation.
+ * Parses an HTTP response into a DOM document.
  *
- * @param response - The HTTP response containing HTML content
- * @returns Promise resolving to JSDOM instance with parsed HTML
+ * @param response The response whose body is to be parsed as HTML
+ *
+ * @returns A DOM view of the `response` body, based at the final response URL, so that relative references are
+ * resolved against the address the content was actually served from
  */
 export async function html(response: Response): Promise<JSDOM> {
+
 	return new JSDOM(await response.text(), { url: response.url });
+
 }
 
 /**
- * Extracts clean content and converts to markdown using Defuddle.
+ * Extracts the main content of a document as markdown.
  *
- * @param dom - JSDOM instance containing the HTML document
- * @returns Promise resolving to extracted content with metadata and URL
+ * Strips navigation, sidebars, ads, headers, footers and other boilerplate, reporting the remaining article body as
+ * markdown, without images, alongside the metadata Defuddle derives from the document.
+ *
+ * @param dom The DOM document to extract content from
+ *
+ * @returns The extracted content and metadata, extended with the URL `dom` is based at
+ *
+ * @throws Error If the document can't be processed
  */
 export async function content(dom: JSDOM): Promise<DefuddleResponse & { url: string }> {
 
-	const url=dom.window.location.href;
+	const url = dom.window.location.href;
 
-	// ;( suppress defuddle's hardcoded console.log messages (https://github.com/kepano/defuddle/issues/92)
+	const result = await Defuddle(dom, url, {
+		separateMarkdown: true,
+		removeImages: true,
+		debug: false
+	});
 
-	const originalLog=console.log;
-
-	console.log=(msg, ...args) => {
-		if ( typeof msg !== "string" || !msg.includes("Initial parse returned very little content") ) {
-			originalLog(msg, ...args);
-		}
-	};
-
-	try {
-
-		const result=await Defuddle(dom, url, {
-			separateMarkdown: true,
-			removeImages: true,
-			debug: false
-		});
-
-		return { ...result, url: url };
-
-	} finally {
-		console.log=originalLog;
-	}
+	return { ...result, url };
 
 }
 
 /**
- * Extracts links from the DOM with their absolute URLs and text content.
+ * Extracts the outbound links of a document.
  *
- * Filters out internal fragment links (those starting with #) and handles image-only links
- * by using the img alt attribute as fallback text when no text content is available.
+ * Reports one {@link Link} for each anchor with an `href`, resolved to an absolute URL against the document base;
+ * links to fragments of the document itself are ignored, and anchors wrapping an image with no text of their own
+ * report the image alt text.
  *
- * @param dom - JSDOM instance containing the HTML document
+ * @param dom The DOM document to extract links from
  *
- * @returns Promise resolving to immutable array of link objects with href and text properties
+ * @returns An immutable array of frozen links, in document order
  */
-export async function links(dom: JSDOM): Promise<ReadonlyArray<Link>> {
+export async function links(dom: JSDOM): Promise<readonly Link[]> {
 
-	const base=dom.window.location.href;
-	const self=base+"#";
+	const base = dom.window.location.href;
+	const self = base+"#";
 
 	return Array.from(dom.window.document.querySelectorAll("a[href]"))
 
@@ -245,59 +277,66 @@ export async function links(dom: JSDOM): Promise<ReadonlyArray<Link>> {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Fetches and processes a single web page, extracting content and metadata.
+ * Visits a web page.
  *
- * Retrieves the page from the specified URL, extracts clean markdown content, links, and metadata. Uses caching to
- * avoid redundant fetches of the same URL. Optionally generates a summary using a provided summarist function,
- * falling back to the page's meta description or content excerpt.
+ * Retrieves the page, extracts its main content as markdown, its outbound links and its metadata, reporting them as a
+ * {@link Page} identified by the normalised page URL. Pages already held by the configured {@link Cache} are reported
+ * without being retrieved again.
  *
- * @param url - The URL of the page to visit
- * @param options - Configuration options for page processing
- * @param options.cache - Cache implementation for storing processed pages (default: pass-through)
- * @param options.summarist - Optional function to generate custom summaries from page content
+ * @param url The URL of the page to visit, normalised as by {@link normalize} before lookup and retrieval
+ * @param options The page processing options
+ * @param options.cache The store consulted before retrieving the page and updated with the processed one; defaults to
+ * a pass-through store retaining nothing, so every visit retrieves the page again
+ * @param options.summarist The generator of the page summary; if undefined, the summary is taken from the page meta
+ * description, falling back to a truncated content excerpt
  *
- * @returns Promise resolving to processed page with extracted content and metadata
+ * @returns The processed page, with its summary reduced to a single line
+ *
+ * @throws Error If the page can't be retrieved, processed or summarised
  */
 export async function visit(url: string, {
 
-	cache=(url, fetcher) => fetcher(url),
+	cache = (url, fetcher) => fetcher(url),
 
 	summarist
 
-}: Partial<{
+}: {
 
-	cache: Cache
+	readonly cache?: Cache
 
-	summarist: Summarist
+	readonly summarist?: Summarist
 
-}>={}): Promise<Page> {
+} = {}): Promise<Page> {
 
 	return cache(normalize(url), async function (url: string) {
 
 		logger.info`fetching <${url}>`;
 
-		const response=await get(url);
-		const dom=await html(response);
-		const pageContent=await content(dom);
-		const pageLinks=await links(dom);
+		const response = await get(url);
+		const dom = await html(response);
+		const pageContent = await content(dom);
+		const pageLinks = await links(dom);
 
-		const text=pageContent.contentMarkdown || "";
-		const title=pageContent.title || url;
+		const text = pageContent.contentMarkdown || "";
+		const title = pageContent.title || url;
 
 		logger.info`summarizing <${url}>`;
 
-		const summary=await summarist?.({ url, title, content: text })
+		const summary = await summarist?.({ url, title, content: text })
 			|| pageContent.description
 			|| text.substring(0, 500-1)+"…";
 
 		return {
-			url,
-			title: title,
-			content: text,
-			links: pageLinks,
-			digest: uuid.v5(text, digestNamespace),
+
 			fetched: Date.now(),
-			summary: summary.replaceAll(/\s+/g, " ")
+			digest: uuid.v5(text, digestNamespace),
+
+			url,
+			title,
+			summary: summary.replaceAll(/\s+/g, " "),
+			content: text,
+			links: pageLinks
+
 		};
 
 	});
