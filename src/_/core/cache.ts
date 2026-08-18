@@ -46,9 +46,16 @@ export type Factory<K, V> = (key: K) => V
  * Keys are matched by same-value-zero equality, as by `Map`, so object keys are matched by identity rather than
  * structurally.
  *
- * Values are retained for the lifetime of the returned factory, with no eviction or size bound, so the cache grows
- * with the number of distinct keys requested. `undefined` values are retained like any other and distinguished from
- * keys never requested; failed computations are not retained, so the next request for a failed key retries it.
+ * Values are retained for the lifetime of the returned factory: `undefined` is retained like any other value and
+ * distinguished from keys never requested.
+ *
+ * > [!WARNING]
+ * > Retained values are never evicted and their number isn't bounded, so the cache grows with the number of distinct
+ * > keys requested.
+ *
+ * > [!IMPORTANT]
+ * > Computations that throw are not retained, so the next request for a failed key retries it; failures reported as a
+ * > rejected promise are retained like any other value, so they are reported again to every later request.
  *
  * @typeParam K The type of the keys values are computed for
  * @typeParam V The type of the cached values

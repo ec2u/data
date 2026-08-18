@@ -17,16 +17,18 @@
 /**
  * Web page crawling and markdown extraction.
  *
- * Provides {@link visit} for retrieving a web page as a {@link Page} record reporting its title, summary, main
- * content as markdown and outbound {@link Link}s, alongside the {@link normalize}, {@link get}, {@link html},
- * {@link content} and {@link links} steps it is assembled from, for callers driving the pipeline themselves.
+ * Provides {@link scrape} for retrieving a web page as a {@link Page} record reporting its title, summary, main
+ * content as markdown and outbound {@link Link}s, and {@link visit} for reporting the same record through a
+ * {@link Cache}, alongside the {@link normalize}, {@link get}, {@link html}, {@link content} and {@link links} steps
+ * they are assembled from, for callers driving the pipeline themselves.
  *
  * Navigation, sidebars, ads, headers, footers and other boilerplate are stripped before conversion, so the reported
  * content is limited to the main article body and reads more cleanly than a direct HTML to markdown translation.
- * Retrieval and summarisation are pluggable: a {@link Cache} short-circuits repeated visits to the same URL, while a
- * {@link Summarist} replaces the summary derived from page metadata.
+ * Retrieval and summarisation are pluggable: a {@link Cache} decides whether a page is retrieved at all, so that
+ * repeated visits to the same URL are short-circuited, while a {@link Summarist} replaces the summary derived from
+ * page metadata.
  *
- * Companion modules build on these features: `store.ts` provides a Google Cloud Datastore-backed {@link Cache}, while
+ * Companion modules build on these features: `store.ts` creates a Google Cloud Datastore-backed {@link Cache}, while
  * `tools/fetchPage.ts` exposes {@link visit} as a Gemini function-calling tool.
  *
  * @see {@link https://github.com/jsdom/jsdom JSDOM}
@@ -35,6 +37,7 @@
  * @module index
  */
 
+import type { Factory } from "@/_/core/cache.js";
 import type { Instant } from "@/_/core/temporal.js";
 import { immutable } from "@metreeca/core/deep";
 import { log } from "@metreeca/tape";
@@ -50,16 +53,15 @@ const logger = log(import.meta.url);
 /**
  * Web page snapshot.
  *
- * Reports the main content of a page as markdown, alongside its title, summary and outbound {@link Link}s, as
- * retrieved and processed by {@link visit}. Snapshots are deeply immutable and describe the page as of the time they
- * were taken, so a later visit may well report different content for the same URL.
+ * Describes a page as of the time it was retrieved. Snapshots are deeply immutable and never refreshed, so a later
+ * visit may well report different content for the same URL.
  */
 export interface Page {
 
 	/**
 	 * The {@link Instant} the page was retrieved at.
 	 */
-	readonly fetched: Instant;
+	readonly retrieved: Instant;
 
 
 	/**
@@ -110,27 +112,19 @@ export interface Link {
 /**
  * Store retaining processed web pages across visits.
  *
- * Decouples {@link visit} from the storage strategy: implementations may retain pages in memory, on disk or in a
- * remote store, and are free to report them either synchronously or asynchronously.
+ * Decouples {@link visit} from the storage strategy: looking up a normalised page URL reports the retained page, or
+ * the page reported by the fetcher the store was created around, for instance {@link scrape}, after retaining it.
+ * Implementations are free to retain pages in memory, on disk or in a remote store, and to report them either
+ * synchronously or asynchronously.
+ *
+ * @see {@link Factory}
  */
-export interface Cache {
-
-	/**
-	 * Looks up a stored page, processing it on demand if not already stored.
-	 *
-	 * @param url The normalised URL of the page to look up
-	 * @param fetcher The function retrieving and processing the page if the store doesn't already contain it
-	 *
-	 * @returns The stored page for `url`, or the page reported by `fetcher` after retaining it
-	 */
-	(url: string, fetcher: (url: string) => Page | Promise<Page>): Page | Promise<Page>;
-
-}
+export type Cache = Factory<string, Page | Promise<Page>>;
 
 /**
  * Generator of web page summaries.
  *
- * Replaces the summary {@link visit} derives from page metadata, for instance with an LLM-generated abstract.
+ * Replaces the summary {@link scrape} derives from page metadata, for instance with an LLM-generated abstract.
  */
 export interface Summarist {
 
@@ -268,16 +262,14 @@ export async function links(dom: JSDOM): Promise<readonly Link[]> {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Visits a web page.
+ * Scrapes a web page.
  *
  * Retrieves the page and extracts its title, summary, main content as markdown and outbound links, reporting them as a
- * {@link Page} identified by the normalised page URL. Pages already held by the configured {@link Cache} are reported
- * without being retrieved again.
+ * {@link Page} identified by the normalised page URL. The page is always retrieved: wire this function into a
+ * {@link Cache} and go through {@link visit} to short-circuit repeated retrievals of the same URL.
  *
- * @param url The URL of the page to visit, normalised as by {@link normalize} before lookup and retrieval
+ * @param url The URL of the page to scrape, normalised as by {@link normalize} before retrieval
  * @param options The page processing options
- * @param options.cache The store consulted before retrieving the page and updated with the processed one; defaults to
- * a pass-through store retaining nothing, so every visit retrieves the page again
  * @param options.summarist The generator of the page summary; if undefined, the summary is taken from the page meta
  * description, falling back to a truncated content excerpt
  *
@@ -285,48 +277,72 @@ export async function links(dom: JSDOM): Promise<readonly Link[]> {
  *
  * @throws Error If the page can't be retrieved, processed or summarised
  */
-export async function visit(url: string, {
-
-	cache = (url, fetcher) => fetcher(url),
+export async function scrape(url: string, {
 
 	summarist
 
 }: {
 
-	readonly cache?: Cache
-
 	readonly summarist?: Summarist
 
 } = {}): Promise<Page> {
 
-	return cache(normalize(url), async url => {
+	const target = normalize(url);
 
-		logger.info`fetching <${url}>`;
+	logger.info`fetching <${target}>`;
 
-		const response = await get(url);
-		const dom = await html(response);
-		const pageContent = await content(dom);
-		const pageLinks = await links(dom);
+	const response = await get(target);
+	const dom = await html(response);
+	const pageContent = await content(dom);
+	const pageLinks = await links(dom);
 
-		const title = pageContent.title || url;
-		const text = pageContent.contentMarkdown || "";
+	const title = pageContent.title || target;
+	const text = pageContent.contentMarkdown || "";
 
-		const summary = await summarist?.({ url, title, content: text })
-			|| pageContent.description
-			|| text.substring(0, 500-1)+"…";
+	const summary = await summarist?.({ url: target, title, content: text })
+		|| pageContent.description
+		|| text.substring(0, 500-1)+"…";
 
-		return immutable({
+	return immutable({
 
-			fetched: Date.now(),
+		retrieved: Date.now(),
 
-			url,
-			title,
-			summary: summary.replaceAll(/\s+/g, " "),
-			content: text,
-			links: pageLinks
-
-		});
+		url: target,
+		title,
+		summary: summary.replaceAll(/\s+/g, " "),
+		content: text,
+		links: pageLinks
 
 	});
+
+}
+
+/**
+ * Visits a web page.
+ *
+ * Looks the page up in the configured {@link Cache} under its normalised URL, so that pages already retained are
+ * reported without being retrieved again; pages the cache doesn't hold are retrieved and processed on demand by the
+ * fetcher it was created around, which is also where summarisation is configured.
+ *
+ * @param url The URL of the page to visit, normalised as by {@link normalize} before lookup
+ * @param options The page lookup options
+ * @param options.cache The store consulted for the page; defaults to {@link scrape}, retaining nothing, so that every
+ * visit retrieves the page again
+ *
+ * @returns The immutable snapshot of the page reported by `options.cache`
+ *
+ * @throws Error If the page can't be looked up, retrieved, processed or summarised
+ */
+export async function visit(url: string, {
+
+	cache = scrape
+
+}: {
+
+	readonly cache?: Cache
+
+} = {}): Promise<Page> {
+
+	return cache(normalize(url));
 
 }

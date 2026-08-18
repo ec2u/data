@@ -79,14 +79,19 @@ const logger = log(import.meta.url);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Web page fetching tool for Gemini API.
+ * Creates a web page fetching tool.
  *
- * Creates a CallableTool that fetches and extracts content from web pages, maintaining a visited URL cache to prevent
- * duplicate requests within the same tool instance.
+ * Exposes {@link visit} to the Gemini API as a `fetchPage` function reporting the requested page as a page snapshot.
+ * Pages that can't be retrieved are reported as an error response rather than raised, so that a failed call doesn't
+ * interrupt the generation loop; repeated requests for the same URL are short-circuited only as far as the configured
+ * store does.
  *
- * @param opts Visit options including cache configuration for page content
+ * @param opts The page lookup options passed to {@link visit} on every call; defaults to no options, so that every
+ * request retrieves the page again
  *
- * @returns CallableTool instance for automatic function calling
+ * @returns A `CallableTool` declaring the `fetchPage` function and handling the calls the model makes to it
+ *
+ * @see {@link https://ai.google.dev/gemini-api/docs/function-calling Function calling with the Gemini API}
  */
 export function fetchPage(opts: Parameters<typeof visit>[1] = {}): CallableTool {
 

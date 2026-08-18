@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { scrape } from "@/datasets/pages/index.js";
 import { pages } from "@/datasets/pages/store.js";
 import { fetchPage } from "@/datasets/pages/tools/fetchPage.js";
 import { Unit } from "@/datasets/units/index.js";
@@ -23,7 +24,7 @@ import { file } from "@/_/node/files.js";
 import { Type } from "@google/genai";
 
 const tools = [
-	fetchPage({ cache: pages.lookup })
+	fetchPage({ cache: pages.lookup(scrape) })
 ];
 
 

@@ -14,7 +14,22 @@
  * limitations under the License.
  */
 
-import { Page } from "@/datasets/pages/index.js";
+/**
+ * Persistent web page storage.
+ *
+ * Provides {@link pages} for retaining {@link Page} snapshots in Google Cloud Datastore across runs, so that pages
+ * already processed are reported without being retrieved again, and for discarding them once they go stale. Snapshots
+ * are identified by the URL they are stored under, so callers must consistently use its normalised form.
+ *
+ * Executing this module as a script discards every retained page.
+ *
+ * @see {@link https://cloud.google.com/nodejs/docs/reference/datastore/latest Google Cloud Datastore}
+ *
+ * @module
+ */
+
+import type { Cache, Page } from "@/datasets/pages/index.js";
+import { createCache } from "@/_/core/cache.js";
 import { datastore } from "@/_/gcp/datastore.js";
 import * as uuid from "uuid";
 import { message, time } from "@metreeca/core/report";
@@ -27,8 +42,6 @@ const kind = "Page";
 const namespace = "99cac6cb-0413-48e5-9882-1a928460cf44";
 const batch = 100;
 
-const cache = new Map<string, Promise<Page>>();
-
 
 if ( import.meta.main ) {
 	await remove();
@@ -37,6 +50,12 @@ if ( import.meta.main ) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Datastore operations for retained web pages.
+ *
+ * Provides page {@link lookup}, retrieving and retaining pages on demand, and {@link remove removal} of retained
+ * pages, either selectively or in bulk.
+ */
 export const pages = Object.freeze({
 
 	lookup,
@@ -47,71 +66,88 @@ export const pages = Object.freeze({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-async function lookup(url: string, fetcher: (url: string) => Page | Promise<Page>): Promise<Page> {
+/**
+ * Creates a Datastore-backed page cache.
+ *
+ * Reports pages retained in Google Cloud Datastore under the requested URL, delegating to `fetcher` and retaining the
+ * processed page when the store doesn't already hold one. Lookups are memoised for the lifetime of the returned cache,
+ * so that concurrent and repeated requests for the same URL share a single Datastore round trip; failures are memoised
+ * as well, so a URL that fails once keeps reporting the same error.
+ *
+ * @param fetcher The function retrieving and processing pages the store doesn't already hold
+ *
+ * @returns A {@link Cache} reporting the retained page for a normalised URL, or the page reported by `fetcher` after
+ * retaining it; the reported promise is rejected if the page can't be looked up, retrieved, processed or retained
+ *
+ * @see {@link https://cloud.google.com/nodejs/docs/reference/datastore/latest Google Cloud Datastore}
+ */
+function lookup(fetcher: (url: string) => Page | Promise<Page>): Cache {
 
-	const promise = cache.get(url);
+	return createCache(url => new Promise<Page>(async (resolve, reject) => {
 
-	if ( promise ) { return promise; } else {
+		try {
 
-		const promise = new Promise<Page>(async (resolve, reject) => {
+			const result = await time(async () => {
 
-			try {
+				logger.info`looking up <${url}>`;
 
-				const result = await time(async () => {
+				const key = datastore.key([kind, uuid.v5(url, namespace)]);
+				const [entity] = await datastore.get(key);
 
-					logger.info`looking up <${url}>`;
+				if ( entity ) {
 
-					const key = datastore.key([kind, uuid.v5(url, namespace)]);
-					const [entity] = await datastore.get(key);
-
-					if ( entity ) {
-
-						if ( entity.value !== undefined ) {
-							return JSON.parse(entity.value);
-						}
-
-					} else {
-
-						const value = await fetcher(url);
-
-						logger.info`caching <${url}>`;
-
-						const data = {
-							value: JSON.stringify(value)
-						};
-
-						await datastore.save({
-							key,
-							data,
-							excludeFromIndexes: Object.keys(data)
-						});
-
-						return value;
-
+					if ( entity.value !== undefined ) {
+						return JSON.parse(entity.value);
 					}
 
-				}, (value, elapsed) => value && logger.info`looked up page <${url}> in <${message(elapsed)}> ms`);
+				} else {
 
-				if ( result ) {
-					resolve(result);
+					const value = await fetcher(url);
+
+					logger.info`caching <${url}>`;
+
+					const data = {
+						value: JSON.stringify(value)
+					};
+
+					await datastore.save({
+						key,
+						data,
+						excludeFromIndexes: Object.keys(data)
+					});
+
+					return value;
+
 				}
 
-			} catch ( e ) {
+			}, (value, elapsed) => value && logger.info`looked up page <${url}> in <${message(elapsed)}> ms`);
 
-				logger.error`unable to look up <${url}>: ${message(e)}`;
-
-				reject(e);
-
+			if ( result ) {
+				resolve(result);
 			}
-		});
 
-		cache.set(url, promise);
+		} catch ( e ) {
 
-		return promise;
-	}
+			logger.error`unable to look up <${url}>: ${message(e)}`;
+
+			reject(e);
+
+		}
+
+	}));
 
 }
 
+/**
+ * Removes retained pages.
+ *
+ * Discards the stored snapshots of the given pages, or of every retained page if none is given, so that later lookups
+ * retrieve them again, unless already memoised by a live {@link Cache}.
+ *
+ * @param items The page or pages whose snapshots are to be discarded; if undefined, every retained page is discarded
+ *
+ * @throws Error If the snapshots can't be discarded
+ */
 async function remove(items?: Page | readonly Page[]): Promise<void> {
 
 	await time(async () => {
