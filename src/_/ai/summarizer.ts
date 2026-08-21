@@ -24,7 +24,7 @@
  */
 
 import type { Awaitable } from "@/_/core/async.js";
-import type { Page } from "@/datasets/pages/index.js";
+import type { Page } from "@/_datasets/pages/index.js";
 
 
 /**

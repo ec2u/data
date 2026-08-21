@@ -35,7 +35,6 @@
  */
 
 import { createCache } from "@/_/core/cache.js";
-import { md } from "@/_/core/markdown.js";
 import { secret } from "@/_/gcp/secrets.js";
 import {
 	ApiError,
@@ -50,8 +49,8 @@ import {
 } from "@google/genai";
 import { isString } from "@metreeca/core";
 import { createThrottle, type Throttle } from "@metreeca/core/async";
-import { message } from "@metreeca/core/report";
-import { log, Logger } from "@metreeca/tape";
+import { markdown } from "@metreeca/core/strings";
+import { log, Logger, report } from "@metreeca/tape";
 
 const logger = log(import.meta.url);
 
@@ -437,7 +436,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 							const data = await generateContent({
 								model: "gemini-2.5-flash-lite",
 								contents: [input, urls.length > 0
-									? md`REFERENCE URLs found in source (use EXACTLY as written):
+									? markdown`REFERENCE URLs found in source (use EXACTLY as written):
 											${urls.map(url => `- ${url}`).join("\n")}
 									`
 									: "REFERENCE URLs found in source: (none identified)"
@@ -445,7 +444,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 								config: {
 									seed: 0,
 									temperature: 0,
-									systemInstruction: md`
+									systemInstruction: markdown`
 									
 										# ROLE
 										
@@ -554,7 +553,7 @@ export function json<T>(response: GenerateContentResponse): T {
 		return JSON.parse(text(response));
 
 	} catch ( e ) {
-		throw new Error(`malformed model response: ${message(e)}`);
+		throw new Error(`malformed model response: ${report(e)}`);
 	}
 }
 

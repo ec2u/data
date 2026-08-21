@@ -25,7 +25,7 @@
 
 import { project } from "@/_/gcp/index.js";
 import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
-import { error } from "@metreeca/core/report";
+import { error } from "@metreeca/core";
 
 const client=new SecretManagerServiceClient();
 

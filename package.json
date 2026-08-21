@@ -6,7 +6,7 @@
     "setup": "npm install",
     "build": "rm -rf lib && tsc",
     "check": "npx vitest run",
-    "serve": "npx tsx --watch src/services/index.ts"
+    "serve": "npx tsx --watch src/_services/index.ts"
   },
   "dependencies": {
     "@google-cloud/datastore": "^10.1.1",
@@ -15,19 +15,18 @@
     "@metreeca/core": "^0.9.19",
     "@metreeca/pipe": "^0.9.20",
     "@metreeca/tape": "^0.9.1",
-    "dedent": "^1.7.2",
+    "@metreeca/trio": "^0.1.0",
+    "@metreeca/wire-sparql": "^0.9.0",
+    "@metreeca/wire-sparql-http": "^0.9.0",
     "defuddle": "^0.19.2",
     "express": "^4.22.2",
     "jsdom": "^30.0.1",
-    "sparql-http-client": "^3.1.0",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^14.0.1"
   },
   "devDependencies": {
-    "@types/dedent": "^0.7.2",
     "@types/express": "^5.0.6",
     "@types/jsdom": "^30.0.0",
-    "@types/sparql-http-client": "^3.1.0",
     "@types/swagger-ui-express": "^4.1.8",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
