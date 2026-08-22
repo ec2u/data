@@ -22,65 +22,61 @@
  * @module
  */
 
-import { units } from "@/_datasets/units/store.js";
+import { _units } from "@/_datasets/units/store.js";
 import { Router } from "express";
 
 
-/**
- * Express router providing unit resource endpoints.
- *
- * **Endpoints:**
- *
- * - `GET /units/` - Lists units with optional filtering and pagination
- * - `GET /units/:code` - Retrieves a specific unit by code
- */
-export default Router()
+export function units(): Router {
+	return Router().use("/units", Router()
 
-	.get("/", async (request, response) => {
+		.get("/", async (request, response) => {
 
-		const {
+			const {
 
-			updated,
-			university,
-			offset,
-			limit
+				updated,
+				university,
+				offset,
+				limit
 
-		}: {
+			}: {
 
-			updated?: string;
-			university?: string;
-			offset?: string;
-			limit?: string;
+				updated?: string;
+				university?: string;
+				offset?: string;
+				limit?: string;
 
-		} = request.query;
+			} = request.query;
 
-		return response.json(await units.select({
-			updated: updated ? parseInt(updated, 10) : 1, // return only current processed units
-			university,
-			offset: offset ? parseInt(offset, 10) : undefined,
-			limit: limit ? parseInt(limit, 10) : undefined
-		}));
+			return response.json(await _units.select({
+				updated: updated ? parseInt(updated, 10) : 1, // return only current processed units
+				university,
+				offset: offset ? parseInt(offset, 10) : undefined,
+				limit: limit ? parseInt(limit, 10) : undefined
+			}));
 
-	})
+		})
 
-	.get("/:code", async (request, response) => {
+		.get("/:code", async (request, response) => {
 
-		const {
+			const {
 
-			code
+				code
 
-		}: {
+			}: {
 
-			code: string
+				code: string
 
-		} = request.params;
+			} = request.params;
 
-		const unit = await units.lookup(code);
+			const unit = await _units.lookup(code);
 
-		if ( !unit ) {
-			return response.status(404).json({ error: "unit not found" });
-		}
+			if ( !unit ) {
+				return response.status(404).json({ error: "unit not found" });
+			}
 
-		return response.json(unit);
+			return response.json(unit);
 
-	});
+		})
+
+	);
+}

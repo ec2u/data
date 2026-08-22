@@ -15,7 +15,7 @@
  */
 
 import { expand } from "@/_datasets/units/tasks/expand/expand.js";
-import { units } from "@/_datasets/units/store.js";
+import { _units } from "@/_datasets/units/store.js";
 import { Units } from "@/_/hub/index.js";
 import * as uuid from "uuid";
 import { pipe } from "@metreeca/pipe";
@@ -39,7 +39,7 @@ export async function expandAll(): Promise<number> {
 	return time(() => pipe(
 		// (items(units.select({ expanded: Date.now()-stale }))) // !!!
 
-		(items(units.select()))
+		(items(_units.select()))
 			// (filter(u => u.website === "https://fisica.dip.unipv.it/")) // !!!
 			(filter(u => u.website === "https://iii.dip.unipv.it/")) // !!!
 
@@ -64,12 +64,12 @@ export async function expandAll(): Promise<number> {
 			(forEach(async ({ lead, items }) => {
 
 				for (const item of items) {
-					if ( !await units.lookup(item) ) { // check and update atomically
-						await units.insert({ ...item, id: `${Units}${uuid.v4()}` });
+					if ( !await _units.lookup(item) ) { // check and update atomically
+						await _units.insert({ ...item, id: `${Units}${uuid.v4()}` });
 					}
 				}
 
-				await units.insert({ ...lead, expanded: Date.now() });
+				await _units.insert({ ...lead, expanded: Date.now() });
 
 			}))
 	), (count, elapsed) => { // !!! broken count

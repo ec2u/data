@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { units } from "@/_datasets/units/store.js";
+import { _units } from "@/_datasets/units/store.js";
 import { dump } from "@/_/node/files.js";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
@@ -22,7 +22,7 @@ import { toArray } from "@metreeca/pipe/sinks";
 
 
 pipe(
-	(items(units.select()))
+	(items(_units.select()))
 	// (filter(({ formal }) => formal?.includes("Department")))
 	(toArray())
 ).then(dump("work.json"));

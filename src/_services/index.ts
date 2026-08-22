@@ -16,10 +16,10 @@
 
 import { apis } from "@/_services/apis.js";
 import { log } from "@metreeca/tape";
-import type { NextFunction, Request, Response } from "express";
+import type { ErrorRequestHandler, RequestHandler } from "express";
 import express from "express";
-import jobs from "./jobs.js";
-import units from "./units.js";
+import { jobs } from "./jobs.js";
+import { units } from "./units.js";
 
 
 const logger = log(import.meta.url);
@@ -37,25 +37,24 @@ express()
 	.use(express.json())
 
 	.use(request())
+
+	.use(apis())
+	.use(units())
+
+	.use(jobs())
+
 	.use(error())
 
-	.use("/apis", ...apis)
-	.use("/units", units)
-
-	.use("/jobs", jobs)
-
-
-	.listen(port, host, () => {
-		logger.info`server listening on ${url}`;
-		logger.info`API documentation available at ${url}/apis`;
-	});
+	.listen(port, host, () =>
+		logger.info`server listening on ${url}`
+	);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function request() {
+function request(): RequestHandler {
 
-	return (request: Request, response: Response, next: NextFunction) => {
+	return (request, response, next) => {
 
 		const requestId = crypto.randomUUID();
 		const start = Date.now();
@@ -68,26 +67,17 @@ function request() {
 			requestId
 		});
 
-		const end = response.end.bind(response);
+		response.on("close", () => (response.statusCode >= 400 ? logger.warning : logger.debug)(
 
-		response.end = function (chunk?: any, ...args: any[]) {
-
-			const details = {
+			"{method} {url} {statusCode}", {
 				method: request.method,
 				url: request.url,
 				statusCode: response.statusCode,
 				duration: Date.now()-start,
 				requestId
-			};
-
-			if ( response.statusCode >= 400 ) {
-				logger.warning("{method} {url} {statusCode}", details);
-			} else {
-				logger.debug("{method} {url} {statusCode}", details);
 			}
 
-			return end(chunk, ...args);
-		};
+		));
 
 		next();
 
@@ -95,9 +85,9 @@ function request() {
 
 }
 
-function error() {
+function error(): ErrorRequestHandler {
 
-	return (error: Error, request: Request, response: Response, _: NextFunction) => {
+	return (error, request, response, _) => {
 
 		logger.error("{method} {url} error: {error.name} - {error.message}", {
 			error: {

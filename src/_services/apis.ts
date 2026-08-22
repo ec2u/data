@@ -20,21 +20,25 @@
  * @module
  */
 
+import { Router } from "express";
 import openapi from "swagger-ui-express";
 import units from "./units.json" with { type: "json" };
 
-export const apis = [openapi.serve, openapi.setup({
 
-	openapi: "3.0.0",
+export function apis(): Router {
+	return Router().use("/apis", openapi.serve, openapi.setup({
 
-	info: {
-		title: "EC2U Data Microservices API",
-		version: "1.0.0",
-		description: "REST API data ingestion microservices"
-	},
+		openapi: "3.0.0",
 
-	paths: {
-		...units
-	}
+		info: {
+			title: "EC2U Data Microservices API",
+			version: "1.0.0",
+			description: "REST API data ingestion microservices"
+		},
 
-})];
+		paths: {
+			...units
+		}
+
+	}));
+}

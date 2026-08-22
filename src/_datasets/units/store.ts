@@ -72,7 +72,7 @@ if ( import.meta.main ) {
  * Provides CRUD operations for unit persistence in Google Cloud Datastore,
  * including lookup by ID or properties, filtered selection, upsert, and removal.
  */
-export const units = Object.freeze({
+export const _units = Object.freeze({
 
 	lookup,
 	select,

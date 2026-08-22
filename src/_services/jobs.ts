@@ -25,12 +25,14 @@
 import analyze from "@/_datasets/units/tasks/analyze/index.js";
 import { expandAll } from "@/_datasets/units/tasks/expand/index.js";
 import { job, Scheduler } from "@/_/gcp/scheduler.js";
+import { Router } from "express";
 
 
-/**
- * Express router providing scheduler endpoints.
- */
-export default Scheduler()
+export function jobs() {
+	return Router().use("/jobs", Scheduler()
 
-	.post("/analyze", job(analyze))
-	.post("/expand", job(expandAll));
+		.post("/analyze", job(analyze))
+		.post("/expand", job(expandAll))
+
+	);
+}

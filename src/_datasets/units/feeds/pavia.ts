@@ -18,7 +18,7 @@ import { retrieve } from "@/_datasets/pages/index.js";
 import { pages } from "@/_datasets/pages/store.js";
 import { fetchPage } from "@/_datasets/pages/tools/fetchPage.js";
 import { matches, merge, Unit } from "@/_datasets/units/index.js";
-import { units } from "@/_datasets/units/store.js";
+import { _units } from "@/_datasets/units/store.js";
 import { pavia, Units } from "@/_/hub/index.js";
 import { ai, json } from "@/_/gcp/gemini.js";
 import { file } from "@/_/node/files.js";
@@ -131,9 +131,9 @@ export async function bootstrap(url?: string): Promise<unknown> {
 			}))
 			(forEach(async item => {
 
-				const current = await units.lookup(item);
+				const current = await _units.lookup(item);
 
-				await units.insert(!current ? { ...item, id: `${Units}${uuid.v4()}` }
+				await _units.insert(!current ? { ...item, id: `${Units}${uuid.v4()}` }
 					: !matches(current, item) ? merge(current, { ...item, analyzed: undefined, expanded: undefined })
 						: current
 				);

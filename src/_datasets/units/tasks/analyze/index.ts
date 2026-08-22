@@ -18,7 +18,7 @@ import { matches, merge } from "@/_datasets/units/index.js";
 import { analyze } from "@/_datasets/units/tasks/analyze/analyze.js";
 import { annotate } from "@/_datasets/units/tasks/analyze/annotate.js";
 import { classify } from "@/_datasets/units/tasks/analyze/classify.js";
-import { units } from "@/_datasets/units/store.js";
+import { _units } from "@/_datasets/units/store.js";
 import { pavia } from "@/_/hub/index.js";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
@@ -57,7 +57,7 @@ export default async function execute(): Promise<number> {
 	return time(() => pipe(
 		// (items(units.select({ analyzed: Date.now()-stale }))) // !!!
 
-		(items(units.select({ university: pavia })))
+		(items(_units.select({ university: pavia })))
 
 			(flatMap(lead => pipe(
 				items(lead)
@@ -75,7 +75,7 @@ export default async function execute(): Promise<number> {
 			), {
 				parallel: true
 			}))
-			(forEach(units.insert))
+			(forEach(_units.insert))
 	), (count, elapsed) => {
 		logger.info`processed <${count}> units in <${report(elapsed)}> ms`;
 	});
