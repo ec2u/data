@@ -15,7 +15,7 @@
  */
 
 import { secret } from "@/_/gcp/secrets.js";
-import { csv } from "@/taxonomies/csv.js";
+import { csv } from "@/taxonomies/_csv.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
