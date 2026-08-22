@@ -34,7 +34,7 @@ import { Router } from "express";
  * - `GET /units/` - Lists units with optional filtering and pagination
  * - `GET /units/:code` - Retrieves a specific unit by code
  */
-export default ["/units", Router()
+export default Router()
 
 	.get("/", async (request, response) => {
 
@@ -83,6 +83,4 @@ export default ["/units", Router()
 
 		return response.json(unit);
 
-	})
-
-] as const;
+	});

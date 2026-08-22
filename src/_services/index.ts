@@ -39,15 +39,15 @@ express()
 	.use(request())
 	.use(error())
 
-	.use(...apis)
-	.use(...units)
+	.use("/apis", ...apis)
+	.use("/units", units)
 
-	.use(...jobs)
+	.use("/jobs", jobs)
 
 
 	.listen(port, host, () => {
 		logger.info`server listening on ${url}`;
-		logger.info`API documentation available at ${url}${apis[0]}`;
+		logger.info`API documentation available at ${url}/apis`;
 	});
 
 

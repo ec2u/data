@@ -30,9 +30,7 @@ import { job, Scheduler } from "@/_/gcp/scheduler.js";
 /**
  * Express router providing scheduler endpoints.
  */
-export default ["/jobs", Scheduler()
+export default Scheduler()
 
 	.post("/analyze", job(analyze))
-	.post("/expand", job(expandAll))
-
-] as const;
+	.post("/expand", job(expandAll));
