@@ -15,18 +15,27 @@
  */
 
 import { secret } from "@/_/gcp/secrets.js";
-import { pipe, type Task } from "@metreeca/pipe";
+import { csv } from "@/taxonomies/csv.js";
+import { immutable } from "@metreeca/core/structures";
+import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { toArray } from "@metreeca/pipe/sinks";
-import { flatMap, map, peek, take } from "@metreeca/pipe/tasks";
-import { parse } from "csv-parse";
+import { map, take } from "@metreeca/pipe/tasks";
 
 
 const DataURL = "taxonomies-ec2u-isced-2011";
 
+const CSVFormat = immutable({
+
+	header: true,
+	skip: true,
+	trim: true
+
+});
+
 
 if ( import.meta.main ) {
-	run();
+	sync();
 }
 
 
@@ -44,7 +53,7 @@ type Concept = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function run() {
+export async function sync() {
 
 	const url = await secret(DataURL);
 
@@ -55,48 +64,11 @@ export async function run() {
 	const concepts = await pipe(
 		(items(url))
 		(map(fetch))
-		(csv<Concept>({ header: true, skip: true, trim: true }))
+		(csv<Concept>(CSVFormat))
 		(take(3))
 		(toArray())
 	);
 
 	console.log(concepts);
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type Record = {
-
-	readonly [label: string]: string
-
-}
-
-
-export function csv<R extends Record=Record>({
-
-	header,
-
-	skip,
-	trim
-
-}: {
-
-	readonly header?: boolean
-
-	readonly skip?: boolean
-	readonly trim?: boolean
-
-} = {}): Task<Response, R> {
-
-	return flatMap(async response => parse(await response.text(), {
-
-		columns: header === true,
-
-		skipEmptyLines: skip === true,
-		trim: trim === true
-
-	}));
 
 }
