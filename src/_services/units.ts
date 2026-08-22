@@ -23,6 +23,7 @@
  */
 
 import { _units } from "@/_datasets/units/store.js";
+import { NotFound } from "@/_/http.js";
 import { Router } from "express";
 
 
@@ -71,7 +72,7 @@ export function units(): Router {
 			const unit = await _units.lookup(code);
 
 			if ( !unit ) {
-				return response.status(404).json({ error: "unit not found" });
+				return response.status(NotFound).json({ error: "unit not found" });
 			}
 
 			return response.json(unit);

@@ -36,6 +36,7 @@
 
 import { createCache } from "@/_/core/cache.js";
 import { secret } from "@/_/gcp/secrets.js";
+import { BadRequest, TooManyRequests } from "@/_/http.js";
 import {
 	ApiError,
 	CallableTool,
@@ -54,8 +55,6 @@ import { log, Logger, report } from "@metreeca/tape";
 
 const logger = log(import.meta.url);
 
-const BadRequest = 400;
-const TooManyRequests = 429;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
