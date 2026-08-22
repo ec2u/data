@@ -15,24 +15,22 @@
  */
 
 /**
- * Google Cloud Scheduler integration utilities for Express.
+ * Google Cloud Scheduler integration for Express.
  *
- * Provides OIDC token verification middleware and job handler wrappers for securing endpoints triggered by Google
- * Cloud Scheduler.
+ * Provides {@link job}, a router factory exposing a pipeline action as an endpoint reachable only by authenticated
+ * Google Cloud Scheduler jobs.
  *
  * @module
  *
  * @remarks
  *
- * Authentication is configured via environment variables:
- *
- * - `URL`: The service URL used as the OIDC token audience
- * - `SCHEDULER_SERVICE_ACCOUNT`: Optional service account email to restrict access
+ * Authentication is configured through the `URL` and `SCHEDULER_SERVICE_ACCOUNT` environment variables, as documented
+ * under {@link job}.
  */
 
-import { Forbidden, InternalServerError, Unauthorized } from "@/_/http.js";
+import { Forbidden, OK, Unauthorized } from "@/_/core/http.js";
 import { log } from "@metreeca/tape";
-import { type NextFunction, type Request, type Response, Router } from "express";
+import { Router } from "express";
 import { OAuth2Client } from "google-auth-library";
 
 
@@ -47,135 +45,104 @@ const serviceUrl = process.env.URL;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Creates an Express router with OIDC authentication middleware for Cloud Scheduler endpoints.
+ * Creates an Express router executing a pipeline action on authenticated Cloud Scheduler requests.
  *
- * Verifies incoming requests contain valid OIDC tokens from Google Cloud Scheduler. Tokens are validated against the
- * configured service URL audience, and optionally restricted to a specific service account email.
+ * The router answers `POST` on its own root, accepting only requests carrying an OIDC bearer token issued by Google
+ * for the configured service URL audience, and optionally restricted to a single service account. Mount it with
+ * `use()`, which strips the mount prefix and leaves the router matching the bare mount path.
  *
- * @returns An Express {@link Router} with authentication middleware applied
+ * @param handler The pipeline action awaited on each authorised request; its result is not reported to the caller
+ *
+ * @returns An Express {@link Router} handling `POST` on its own root; requests with a different method or a deeper
+ *          path fall through to the surrounding stack
  *
  * @remarks
  *
- * Requests are rejected with:
+ * A completed action is reported with an empty `200 OK`, as Cloud Scheduler judges an attempt by its status code
+ * alone. A rejected action is left to propagate to the error middleware of the surrounding stack, which reports it
+ * and answers the request.
+ *
+ * Actions must complete within the attempt deadline configured on the triggering job, 3 minutes by default and 30
+ * minutes at most: Cloud Scheduler cancels a longer attempt and marks it failed, no matter how the action ends.
+ *
+ * Unauthorised requests are rejected with:
  *
  * - `401 Unauthorized`: Missing, malformed, or invalid OIDC token
- * - `403 Forbidden`: Valid token but from unexpected service account
+ * - `403 Forbidden`: Valid token, but from an unexpected service account
  *
  * Uses the following environment variables:
  *
  * - `URL`: Service URL for OIDC audience verification (required)
  * - `SCHEDULER_SERVICE_ACCOUNT`: Service account email to restrict access (optional)
+ *
+ * @see {@link https://cloud.google.com/scheduler/docs/http-target-auth Cloud Scheduler HTTP target authentication}
  */
-export function Scheduler() {
-	return Router().use(async (request, response, next) => {
+export function job(handler: () => Promise<unknown>): Router {
 
-		const token = /^Bearer (.+)$/i.exec(request.headers.authorization ?? "")?.[1];
+	return Router()
 
-		if ( token === undefined ) {
+		.use(async (request, response, next) => {
 
-			logger.warning("missing or invalid authorization header", {
-				method: request.method,
-				url: request.url,
-				ip: request.ip
-			});
+			const token = /^Bearer (.+)$/i.exec(request.headers.authorization ?? "")?.[1];
 
-			response.status(Unauthorized).json({ error: "unauthorized" });
+			if ( token === undefined ) {
 
-		} else {
-
-			try {
-
-				const ticket = await oauth2Client.verifyIdToken({
-					idToken: token,
-					audience: serviceUrl
+				logger.warning("missing or invalid authorization header", {
+					method: request.method,
+					url: request.url,
+					ip: request.ip
 				});
 
-				const payload = ticket.getPayload();
+				response.status(Unauthorized).json({ error: "unauthorized" });
 
-				if ( schedulerEmail && payload?.email !== schedulerEmail ) {
+			} else {
 
-					logger.warning("token from unexpected service account", {
-						expected: schedulerEmail,
-						actual: payload?.email,
+				try {
+
+					const ticket = await oauth2Client.verifyIdToken({
+						idToken: token,
+						audience: serviceUrl
+					});
+
+					const payload = ticket.getPayload();
+
+					if ( schedulerEmail && payload?.email !== schedulerEmail ) {
+
+						logger.warning("token from unexpected service account", {
+							expected: schedulerEmail,
+							actual: payload?.email,
+							method: request.method,
+							url: request.url
+						});
+
+						response.status(Forbidden).json({ error: "forbidden" });
+
+					}
+
+					next();
+
+				} catch ( error ) {
+
+					logger.error("token verification failed", {
+						error: error instanceof Error ? error.message : String(error),
 						method: request.method,
 						url: request.url
 					});
 
-					response.status(Forbidden).json({ error: "forbidden" });
+					response.status(Unauthorized).json({ error: "invalid token" });
 
 				}
 
-				next();
-
-			} catch ( error ) {
-
-				logger.error("token verification failed", {
-					error: error instanceof Error ? error.message : String(error),
-					method: request.method,
-					url: request.url
-				});
-
-				response.status(Unauthorized).json({ error: "invalid token" });
-
 			}
 
-		}
+		})
 
-	});
-}
+		.post("/", async (_request, response) => {
 
-/**
- * Wraps a pipeline handler function with consistent error handling and response formatting.
- *
- * Creates an Express route handler that executes the provided pipeline function, captures its result, and returns a
- * standardized JSON response including the action name, result, and timestamp.
- *
- * @param handler The async pipeline function to execute
- *
- * @returns An Express route handler function
- *
- * @remarks
- *
- * **Success response format:**
- *
- * ```json
- * {
- *   "action": "functionName",
- *   "result": <handler return value>,
- *   "timestamp": 1234567890
- * }
- * ```
- *
- * **Error handling:**
- *
- * - Catches all handler exceptions
- * - Logs errors with action name and stack trace
- * - Returns `500 Internal Server Error` with `{ "error": "action failed" }`
- */
-export function job(handler: () => Promise<unknown>) {
-	return async (_request: Request, response: Response) => {
+			await handler();
 
-		try {
+			return response.status(OK).send();
 
-			const result = await handler();
+		});
 
-			return response.json({
-				action: handler.name,
-				result,
-				timestamp: Date.now()
-			});
-
-		} catch ( error ) {
-
-			logger.error("pipeline action failed", {
-				action: handler.name,
-				error: error instanceof Error ? error.message : String(error),
-				stack: error instanceof Error ? error.stack : undefined
-			});
-
-			return response.status(InternalServerError).json({ error: "action failed" });
-
-		}
-
-	};
 }

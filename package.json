@@ -6,7 +6,7 @@
     "setup": "npm install",
     "build": "rm -rf lib && tsc",
     "check": "npx vitest run",
-    "serve": "npx tsx --watch src/_services/index.ts"
+    "serve": "npx tsx --watch src/_ports.ts"
   },
   "dependencies": {
     "@google-cloud/datastore": "^10.1.1",

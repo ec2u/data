@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { BadRequest, InternalServerError } from "@/_/http.js";
+import { BadRequest, InternalServerError } from "@/_/core/http.js";
+import { units } from "@/_services/units.js";
+import { universities } from "@/universities/_ports.js";
 import { log } from "@metreeca/tape";
 import type { ErrorRequestHandler, RequestHandler } from "express";
 import express from "express";
-import { jobs } from "./jobs.js";
-import { units } from "./units.js";
 
 
 const logger = log(import.meta.url);
@@ -38,9 +38,7 @@ express()
 
 	.use(request())
 
-	.use(units())
-
-	.use(jobs())
+	.use(universities())
 
 	.use(error())
 	.use(sanitise())

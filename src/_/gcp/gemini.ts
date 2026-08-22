@@ -36,7 +36,7 @@
 
 import { createCache } from "@/_/core/cache.js";
 import { secret } from "@/_/gcp/secrets.js";
-import { BadRequest, TooManyRequests } from "@/_/http.js";
+import { BadRequest, TooManyRequests } from "@/_/core/http.js";
 import {
 	ApiError,
 	CallableTool,

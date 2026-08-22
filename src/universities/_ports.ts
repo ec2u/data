@@ -15,24 +15,40 @@
  */
 
 /**
- * Scheduler endpoints for Cloud Scheduler triggered tasks.
+ * REST API endpoints for educational unit resources.
  *
- * Provides endpoints for running scheduled data processing pipelines with OIDC authentication.
+ * Provides endpoints for listing and retrieving units with support for filtering by update timestamp and university.
  *
  * @module
  */
 
-import analyze from "@/_datasets/units/tasks/analyze/index.js";
-import { expandAll } from "@/_datasets/units/tasks/expand/index.js";
-import { job, Scheduler } from "@/_/gcp/scheduler.js";
+import { job } from "@/_/gcp/scheduler.js";
 import { Router } from "express";
 
 
-export function jobs() {
-	return Router().use("/jobs", Scheduler()
+export function universities(): Router {
 
-		.post("/analyze", job(analyze))
-		.post("/expand", job(expandAll))
+	return Router()
 
-	);
+		.use("/universities", Router()
+
+			.get("/", async (request, response) => {
+
+				throw new Error(";( to be implemented"); // !!!
+
+			})
+
+			.get("/:code", async (request, response) => {
+
+				throw new Error(";( to be implemented"); // !!!
+
+			})
+		)
+
+		.use("/~universities", Router()
+
+			.use("/wikidata", job(() => Promise.resolve("tbi")))
+
+		);
+
 }
