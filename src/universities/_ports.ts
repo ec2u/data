@@ -47,7 +47,7 @@ export function universities(): Router {
 
 		.use("/~universities", Router()
 
-			.use("/wikidata", job(() => Promise.resolve("tbi")))
+			.use("/wikidata", job(() => Promise.resolve("tbi"))) // !!!
 
 		);
 
