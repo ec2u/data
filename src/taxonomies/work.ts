@@ -15,10 +15,22 @@
  */
 
 import { secret } from "@/_/gcp/secrets.js";
+import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { toArray } from "@metreeca/pipe/sinks";
 import { take } from "@metreeca/pipe/tasks";
 import { parse } from "csv-parse";
+
+
+const DataURL = "taxonomies-ec2u-isced-2011";
+
+
+if ( import.meta.main ) {
+	// !!!
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 interface Concept {
 
@@ -32,12 +44,13 @@ interface Concept {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const response=await fetch(await secret("taxonomies-ec2u-isced-2011"));
+const url = await secret(DataURL);
+const response = await fetch(url);
 
-const concepts=await items<Concept>(parse(await response.text(), {
-
-	columns: true, skip_empty_lines: true, trim: true
-
-}))(take(5))(toArray());
+const concepts = await pipe(
+	(items<Concept>(parse(await response.text(), { columns: true, skip_empty_lines: true, trim: true })))
+	(take(5))
+	(toArray())
+);
 
 console.log(concepts);
