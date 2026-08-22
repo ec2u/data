@@ -15,11 +15,11 @@
  */
 
 import { secret } from "@/_/gcp/secrets.js";
-import { pipe } from "@metreeca/pipe";
+import { pipe, type Task } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { toArray } from "@metreeca/pipe/sinks";
-import { take } from "@metreeca/pipe/tasks";
-import { parse } from "csv-parse";
+import { flatMap, map, take } from "@metreeca/pipe/tasks";
+import { type Options, parse } from "csv-parse";
 
 
 const DataURL = "taxonomies-ec2u-isced-2011";
@@ -45,12 +45,49 @@ interface Concept {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const url = await secret(DataURL);
-const response = await fetch(url);
+
+// !!! service injection
 
 const concepts = await pipe(
-	(items<Concept>(parse(await response.text(), { columns: true, skip_empty_lines: true, trim: true })))
-	(take(5))
+	(items(url))
+	(map(fetch)) // !!! caching
+	(csv<Concept>())
+	(take(3))
 	(toArray())
 );
 
 console.log(concepts);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates a task parsing CSV responses into records.
+ *
+ * @typeParam R The type of the parsed records
+ *
+ * @param options The `csv-parse` options, overriding the header-keyed defaults
+ *
+ * @returns A task flattening the body of each response into the records it holds
+ */
+function csv<R>(options: Options = {}): Task<Response, R> {
+	return flatMap(async response => parse(await response.text(), {
+
+		columns: true, skip_empty_lines: true, trim: true, ...options
+
+	}));
+}
+
+// !!! return type
+//
+//  with `columns`: Record<string, string> and no casting, each record is exactly a Record<string,
+//   string>.
+//
+//   Three things that break the guarantee, all reachable through the spread ...options:
+//
+//   - cast: true (or a CastingFunction) — values stop being strings.
+//   - columns: false — records become string[] instead of objects.
+//   - relax_column_count_less: true — short rows omit the trailing keys entirely, so a
+//     Record<string, string> index lies unless noUncheckedIndexedAccess is on. At the
+//     defaults a ragged row throws CSV_RECORD_INCONSISTENT_COLUMNS instead, which is why
+//     the plain shape holds today.
