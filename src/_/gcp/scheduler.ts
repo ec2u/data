@@ -117,9 +117,11 @@ export function job(handler: () => Promise<unknown>): Router {
 
 						response.status(Forbidden).json({ error: "forbidden" });
 
-					}
+					} else {
 
-					next();
+						next();
+
+					}
 
 				} catch ( error ) {
 
