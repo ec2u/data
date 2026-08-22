@@ -16,5 +16,3 @@
 
 
 export const ec2u = "https://data.ec2u.eu";
-export { InternalServerError } from "@/_/core/http.js";
-export { BadRequest } from "@/_/core/http.js";

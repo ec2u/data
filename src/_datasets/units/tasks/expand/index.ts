@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { Units } from "@/_datasets/units/index.js";
 import { expand } from "@/_datasets/units/tasks/expand/expand.js";
 import { _units } from "@/_datasets/units/store.js";
-import { Units } from "@/_/hub/index.js";
 import * as uuid from "uuid";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";

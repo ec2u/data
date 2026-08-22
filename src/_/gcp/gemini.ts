@@ -36,7 +36,6 @@
 
 import { createCache } from "@/_/core/cache.js";
 import { secret } from "@/_/gcp/secrets.js";
-import { BadRequest, TooManyRequests } from "@/_/core/http.js";
 import {
 	ApiError,
 	CallableTool,
@@ -50,6 +49,7 @@ import {
 } from "@google/genai";
 import { isString } from "@metreeca/core";
 import { createThrottle, type Throttle } from "@metreeca/core/async";
+import { BadRequest, TooManyRequests } from "@metreeca/core/http";
 import { markdown } from "@metreeca/core/strings";
 import { log, Logger, report } from "@metreeca/tape";
 

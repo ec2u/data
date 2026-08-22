@@ -15,11 +15,11 @@
  */
 
 import { matches, merge } from "@/_datasets/units/index.js";
+import { _units } from "@/_datasets/units/store.js";
 import { analyze } from "@/_datasets/units/tasks/analyze/analyze.js";
 import { annotate } from "@/_datasets/units/tasks/analyze/annotate.js";
 import { classify } from "@/_datasets/units/tasks/analyze/classify.js";
-import { _units } from "@/_datasets/units/store.js";
-import { pavia } from "@/_/hub/index.js";
+import { universities } from "@/universities/index.js";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { forEach } from "@metreeca/pipe/sinks";
@@ -57,25 +57,25 @@ export default async function execute(): Promise<number> {
 	return time(() => pipe(
 		// (items(units.select({ analyzed: Date.now()-stale }))) // !!!
 
-		(items(_units.select({ university: pavia })))
+		(items(_units.select({ university: universities.pavia })))
 
-			(flatMap(lead => pipe(
-				items(lead)
-				(map(log(analyze)))
-				(map(log(classify)))
-				(map(log(annotate)))
-				(map(item => merge(lead, {
+		(flatMap(lead => pipe(
+			items(lead)
+			(map(log(analyze)))
+			(map(log(classify)))
+			(map(log(annotate)))
+			(map(item => merge(lead, {
 
-					...item,
+				...item,
 
-					updated: matches(lead, item) ? lead.updated : Date.now(),
-					analyzed: Date.now()
+				updated: matches(lead, item) ? lead.updated : Date.now(),
+				analyzed: Date.now()
 
-				})))
-			), {
-				parallel: true
-			}))
-			(forEach(_units.insert))
+			})))
+		), {
+			parallel: true
+		}))
+		(forEach(_units.insert))
 	), (count, elapsed) => {
 		logger.info`processed <${count}> units in <${report(elapsed)}> ms`;
 	});

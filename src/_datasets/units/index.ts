@@ -15,6 +15,10 @@
  */
 
 import { duration } from "@/_/core/temporal.js";
+import { ec2u } from "@/index.js";
+
+
+export const Units = `${ec2u}/units/`;
 
 
 export const stale: number = 30*duration.day;

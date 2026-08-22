@@ -23,7 +23,7 @@
  */
 
 import { _units } from "@/_datasets/units/store.js";
-import { NotFound } from "@/_/core/http.js";
+import { NotFound } from "@metreeca/core/http";
 import { Router } from "express";
 
 

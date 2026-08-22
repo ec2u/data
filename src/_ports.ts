@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { BadRequest, InternalServerError } from "@/_/core/http.js";
 import { units } from "@/_services/units.js";
 import { universities } from "@/universities/_ports.js";
+import { BadRequest, InternalServerError } from "@metreeca/core/http";
 import { log } from "@metreeca/tape";
 import type { ErrorRequestHandler, RequestHandler } from "express";
 import express from "express";

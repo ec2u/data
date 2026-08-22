@@ -25,8 +25,9 @@
  * @module
  */
 
-import type { Awaitable } from "@/_/core/async.js";
+import { Awaitable } from "@metreeca/core/async";
 import type { Tag } from "@metreeca/core/language";
+
 
 /**
  * Translator of text between languages.

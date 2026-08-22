@@ -28,7 +28,7 @@
  * under {@link job}.
  */
 
-import { Forbidden, OK, Unauthorized } from "@/_/core/http.js";
+import { Forbidden, OK, Unauthorized } from "@metreeca/core/http";
 import { log } from "@metreeca/tape";
 import { Router } from "express";
 import { OAuth2Client } from "google-auth-library";
@@ -143,7 +143,7 @@ export function job(handler: () => Promise<unknown>): Router {
 
 			await handler();
 
-			return response.status(OK).send();
+			response.status(OK).send();
 
 		});
 

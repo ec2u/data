@@ -17,11 +17,11 @@
 import { retrieve } from "@/_datasets/pages/index.js";
 import { pages } from "@/_datasets/pages/store.js";
 import { fetchPage } from "@/_datasets/pages/tools/fetchPage.js";
-import { matches, merge, Unit } from "@/_datasets/units/index.js";
+import { matches, merge, Unit, Units } from "@/_datasets/units/index.js";
 import { _units } from "@/_datasets/units/store.js";
-import { pavia, Units } from "@/_/hub/index.js";
 import { ai, json } from "@/_/gcp/gemini.js";
 import { file } from "@/_/node/files.js";
+import { universities } from "@/universities/index.js";
 import * as uuid from "uuid";
 import { Type } from "@google/genai";
 import { pipe } from "@metreeca/pipe";
@@ -34,7 +34,7 @@ import { log, report, time } from "@metreeca/tape";
 const logger = log(import.meta.url);
 
 
-const university = pavia;
+const university = universities.pavia;
 
 const roots = [
 	"https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti",

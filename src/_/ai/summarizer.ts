@@ -23,8 +23,8 @@
  * @module
  */
 
-import type { Awaitable } from "@/_/core/async.js";
 import type { Page } from "@/_datasets/pages/index.js";
+import { Awaitable } from "@metreeca/core/async";
 
 
 /**
