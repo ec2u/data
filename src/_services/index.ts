@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { apis } from "@/_services/apis.js";
+import { BadRequest, InternalServerError } from "@/_/http.js";
 import { log } from "@metreeca/tape";
 import type { ErrorRequestHandler, RequestHandler } from "express";
 import express from "express";
@@ -38,12 +38,12 @@ express()
 
 	.use(request())
 
-	.use(apis())
 	.use(units())
 
 	.use(jobs())
 
 	.use(error())
+	.use(sanitise())
 
 	.listen(port, host, () =>
 		logger.info`server listening on ${url}`
@@ -52,31 +52,32 @@ express()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 function request(): RequestHandler {
 
 	return (request, response, next) => {
 
-		const requestId = crypto.randomUUID();
+		const trace = crypto.randomUUID();
 		const start = Date.now();
 
 		logger.info("{method} {url}", {
+			trace,
 			method: request.method,
 			url: request.url,
 			userAgent: request.get("User-Agent"),
-			ip: request.ip,
-			requestId
+			ip: request.ip
 		});
 
-		response.on("close", () => (response.statusCode >= 400 ? logger.warning : logger.debug)(
+		response.locals.trace = trace;
 
+		response.on("close", () => (response.statusCode >= BadRequest ? logger.warning : logger.debug)(
 			"{method} {url} {statusCode}", {
+				trace,
 				method: request.method,
 				url: request.url,
 				statusCode: response.statusCode,
-				duration: Date.now()-start,
-				requestId
+				duration: Date.now()-start
 			}
-
 		));
 
 		next();
@@ -87,9 +88,10 @@ function request(): RequestHandler {
 
 function error(): ErrorRequestHandler {
 
-	return (error, request, response, _) => {
+	return (error, request, response, next) => {
 
 		logger.error("{method} {url} error: {error.name} - {error.message}", {
+			trace: response.locals.trace,
 			error: {
 				name: error.name,
 				message: error.message,
@@ -97,11 +99,21 @@ function error(): ErrorRequestHandler {
 			},
 			method: request.method,
 			url: request.url,
-			statusCode: response.statusCode || 500
+			statusCode: response.statusCode || InternalServerError
 		});
 
+		next(error);
+
+	};
+
+}
+
+function sanitise(): ErrorRequestHandler {
+
+	return (error, request, response, next) => {
+
 		if ( !response.headersSent ) {
-			response.status(500).json({ error: "internal server error" });
+			response.status(InternalServerError).json({ error: "internal error" });
 		}
 
 	};

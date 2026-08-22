@@ -21,13 +21,11 @@
     "defuddle": "^0.19.2",
     "express": "^5.2.1",
     "jsdom": "^30.0.1",
-    "swagger-ui-express": "^5.0.1",
     "uuid": "^14.0.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/jsdom": "^30.0.0",
-    "@types/swagger-ui-express": "^4.1.8",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
     "vitest": "^4.1.10"
