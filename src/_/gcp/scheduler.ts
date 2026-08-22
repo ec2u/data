@@ -30,6 +30,7 @@
  * - `SCHEDULER_SERVICE_ACCOUNT`: Optional service account email to restrict access
  */
 
+import { Forbidden, InternalServerError, Unauthorized } from "@/_/http.js";
 import { log } from "@metreeca/tape";
 import { type NextFunction, type Request, type Response, Router } from "express";
 import { OAuth2Client } from "google-auth-library";
@@ -66,51 +67,57 @@ const serviceUrl = process.env.URL;
  * - `SCHEDULER_SERVICE_ACCOUNT`: Service account email to restrict access (optional)
  */
 export function Scheduler() {
-	return Router().use(async function (request: Request, response: Response, next: NextFunction) {
+	return Router().use(async (request, response, next) => {
 
-		const authHeader = request.headers.authorization;
+		const token = /^Bearer (.+)$/i.exec(request.headers.authorization ?? "")?.[1];
 
-		if ( !authHeader?.startsWith("Bearer ") ) {
-			logger.warning("Missing or invalid authorization header", {
+		if ( token === undefined ) {
+
+			logger.warning("missing or invalid authorization header", {
 				method: request.method,
 				url: request.url,
 				ip: request.ip
 			});
-			return response.status(401).json({ error: "unauthorized" });
-		}
 
-		const token = authHeader.substring(7);
+			response.status(Unauthorized).json({ error: "unauthorized" });
 
-		try {
+		} else {
 
-			const ticket = await oauth2Client.verifyIdToken({
-				idToken: token,
-				audience: serviceUrl
-			});
+			try {
 
-			const payload = ticket.getPayload();
+				const ticket = await oauth2Client.verifyIdToken({
+					idToken: token,
+					audience: serviceUrl
+				});
 
-			if ( schedulerEmail && payload?.email !== schedulerEmail ) {
-				logger.warning("Token from unexpected service account", {
-					expected: schedulerEmail,
-					actual: payload?.email,
+				const payload = ticket.getPayload();
+
+				if ( schedulerEmail && payload?.email !== schedulerEmail ) {
+
+					logger.warning("token from unexpected service account", {
+						expected: schedulerEmail,
+						actual: payload?.email,
+						method: request.method,
+						url: request.url
+					});
+
+					response.status(Forbidden).json({ error: "forbidden" });
+
+				}
+
+				next();
+
+			} catch ( error ) {
+
+				logger.error("token verification failed", {
+					error: error instanceof Error ? error.message : String(error),
 					method: request.method,
 					url: request.url
 				});
-				return response.status(403).json({ error: "forbidden" });
+
+				response.status(Unauthorized).json({ error: "invalid token" });
+
 			}
-
-			next();
-
-		} catch ( error ) {
-
-			logger.error("Token verification failed", {
-				error: error instanceof Error ? error.message : String(error),
-				method: request.method,
-				url: request.url
-			});
-
-			return response.status(401).json({ error: "invalid token" });
 
 		}
 
@@ -160,13 +167,13 @@ export function job(handler: () => Promise<unknown>) {
 
 		} catch ( error ) {
 
-			logger.error("Pipeline action failed", {
+			logger.error("pipeline action failed", {
 				action: handler.name,
 				error: error instanceof Error ? error.message : String(error),
 				stack: error instanceof Error ? error.stack : undefined
 			});
 
-			return response.status(500).json({ error: "action failed" });
+			return response.status(InternalServerError).json({ error: "action failed" });
 
 		}
 
