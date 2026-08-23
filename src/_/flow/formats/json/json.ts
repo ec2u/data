@@ -23,6 +23,7 @@
 import type { Object, Value } from "@metreeca/core";
 import type { Task } from "@metreeca/pipe";
 import { log, report } from "@metreeca/tape";
+import { text as decode } from "node:stream/consumers"; // aliased, as `parse()` names its own text
 
 
 const logger = log(import.meta.url);
@@ -63,26 +64,6 @@ export function json<V extends Value = Object>(): Task<string | Uint8Array, V> {
 	};
 
 
-	async function decode(chunks: AsyncIterable<string | Uint8Array>): Promise<string> {
-
-		// byte chunks are decoded in streaming mode, withholding a character split across a boundary until the next
-		// chunk completes it; text chunks bypass the decoder, releasing the withheld bytes first, so a sequence left
-		// truncated by the switch is reported where it occurred
-
-		const decoder = new TextDecoder();
-
-		const texts: string[] = [];
-
-		for await ( const chunk of chunks ) {
-
-			texts.push(typeof chunk === "string" ? decoder.decode()+chunk : decoder.decode(chunk, { stream: true }));
-
-		}
-
-		return texts.join("")+decoder.decode(); // the final flush releases bytes withheld at a boundary
-
-	}
-
 	function parse(text: string): readonly V[] {
 
 		try {
@@ -91,7 +72,7 @@ export function json<V extends Value = Object>(): Task<string | Uint8Array, V> {
 
 		} catch ( error ) {
 
-			logger.warn`(${text.length}) malformed document (${report(error)})`;
+			logger.warn`malformed document (${report(error)})`;
 
 			return [];
 

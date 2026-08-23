@@ -75,15 +75,29 @@ describe("json", () => {
 
 	});
 
-	it("releases bytes withheld at a boundary where the text resumes", async () => {
+	it("skips documents whose byte sequences are left truncated by a switch to text", async () => {
 
 		const bytes = Buffer.from(`{ "id": "1", "label": "città`, "utf8");
 		const cut = bytes.indexOf(Buffer.from("à", "utf8")) + 1; // between the two bytes of à
 
+		// the withheld bytes are released at the end of the source rather than where the text resumes, so the
+		// replacement character trails the document rather than standing in for the truncated sequence
+
 		const values = json<Item>()(chunks(bytes.subarray(0, cut), `" }`));
 
+		expect(await collect(values)).toEqual([]);
+
+	});
+
+	it("decodes multibyte characters split across byte chunks resuming after text chunks", async () => {
+
+		const bytes = Buffer.from(`città" }`, "utf8");
+		const cut = bytes.indexOf(Buffer.from("à", "utf8")) + 1; // between the two bytes of à
+
+		const values = json<Item>()(chunks(`{ "id": "1", "label": "`, bytes.subarray(0, cut), bytes.subarray(cut)));
+
 		expect(await collect(values)).toEqual([
-			{ id: "1", label: "citt�" }
+			{ id: "1", label: "città" }
 		] satisfies readonly Item[]);
 
 	});
@@ -94,6 +108,16 @@ describe("json", () => {
 
 		expect(await collect(values)).toEqual([
 			[1, "alpha", null]
+		] satisfies readonly Value[]);
+
+	});
+
+	it("reports documents rooted at scalar values", async () => {
+
+		const values = json<Value>()(chunks(`42`));
+
+		expect(await collect(values)).toEqual([
+			42
 		] satisfies readonly Value[]);
 
 	});
