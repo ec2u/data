@@ -23,6 +23,8 @@ import { items } from "@metreeca/pipe/feeds";
 import { forEach, toArray } from "@metreeca/pipe/sinks";
 import { take } from "@metreeca/pipe/tasks";
 import { log } from "@metreeca/tape";
+import { createFetch, type Middleware } from "@metreeca/core/fetch";
+import { createThrottle } from "@metreeca/core/async";
 
 
 const DataURL = "taxonomies-ec2u-isced-2011";
@@ -95,16 +97,18 @@ const logger = log(import.meta.url);
  * > Responses reporting an unsuccessful status are skipped and reported to the log, leaving the stream to run to
  * > completion.
  *
+ * @param middlewares The middlewares to be layered over the standard `fetch` function, in request processing order
+ *
  * @returns A task converting a stream of requests into a stream of response byte chunks
  *
  * @throws Error While iterating the returned stream, whatever the retrieval reports while connecting to a resource or
  *               receiving its response
  */
-function http(): Task<string | URL | Request, Uint8Array> {
+function http(... middlewares: readonly Middleware[]): Task<string | URL | Request, Uint8Array> {
 
 	return async function* (requests) {
 
-		const fetcher = fetch; // !!! via service locator
+		const fetcher = createFetch(...middlewares, () => fetch); // !!! via service locator
 
 		for await ( const request of requests ) {
 
@@ -123,6 +127,70 @@ function http(): Task<string | URL | Request, Uint8Array> {
 				logger.warn`${method} ${clip(url, URLLengthLimit)} >> ${response.status} ${response.statusText}`;
 
 			}
+
+		}
+
+	};
+
+}
+
+
+/**
+ * Creates a throttling middleware.
+ *
+ * The generated middleware paces the exchanges routed through it, waiting before each request for the throttle to
+ * grant it and reporting the outcome back, so that the baseline delay adapts to what the server replies: a successful
+ * exchange speeds up the client, a failed one slows it down, and a response asking for a delay through a `Retry-After`
+ * header field, in either the delta seconds or the HTTP date form, sets it explicitly.
+ *
+ * Requests are paced, not retried: a failed exchange is reported to the throttle and relayed to the caller as is.
+ *
+ * @param options The throttling options
+ * @param options.minimum The minimum delay between two exchanges in milliseconds; defaults to `0`
+ * @param options.maximum The maximum delay between two exchanges in milliseconds; `0` means no limit; defaults to `0`
+ * @param options.buildup The exponential factor scaling the delay on the number of pending exchanges; must be `>= 1`;
+ *                        defaults to `1`
+ * @param options.backoff The multiplicative factor increasing the delay on a failed exchange; must be `>= 1`; defaults
+ *                        to `1`
+ * @param options.recover The multiplicative factor decreasing the delay on a successful exchange; must be between `0`
+ *                        and `1`; defaults to `1`
+ *
+ * @returns A middleware pacing the exchanges routed through the wrapped fetch implementation
+ *
+ * @throws Error If any option is out of range
+ *
+ * @see {@link https://www.rfc-editor.org/rfc/rfc9110#section-10.2.3 RFC 9110 § 10.2.3 - Retry-After}
+ */
+function throttle(options: Parameters<typeof createThrottle>[0] = {}): Middleware {
+
+	const throttle = createThrottle(options);
+
+	return fetcher => async (request, init) => {
+
+		await throttle.queue(true); // paired with the `adapt()` reports below
+
+		try {
+
+			const response = await fetcher(request, init);
+
+			const retry = response.headers.get("Retry-After") ?? "";
+
+			// delta seconds, falling back to the HTTP date form; NaN or negative unless a delay is stated
+
+			const after = Number(retry) || (Date.parse(retry)-Date.now())/1000;
+
+			await (response.ok ? throttle.adapt(true)
+					: after > 0 ? throttle.adapt(1000*after)
+						: throttle.adapt(false)
+			);
+
+			return response;
+
+		} catch ( error ) {
+
+			await throttle.adapt(false);
+
+			throw error;
 
 		}
 
