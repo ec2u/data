@@ -17,7 +17,7 @@
 import { Buffer } from "node:buffer";
 import { setTimeout as delay } from "node:timers/promises";
 import { describe, expect, it } from "vitest";
-import { csv } from "./index.js";
+import { csv } from "./csv.js";
 
 
 type Row = {
@@ -88,7 +88,7 @@ function rows(count: number) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-describe("index", () => {
+describe("csv", () => {
 
 	it("yields a record for each data row", async () => {
 
