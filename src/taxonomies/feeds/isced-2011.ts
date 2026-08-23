@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { createReadStream } from "node:fs";
+import { stat } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import { secret } from "@/_/gcp/secrets.js";
 import { csv } from "@/_/flow/formats/csv/index.js";
 import { clip } from "@metreeca/core/strings";
@@ -23,7 +26,7 @@ import { items } from "@metreeca/pipe/feeds";
 import { forEach, toArray } from "@metreeca/pipe/sinks";
 import { take } from "@metreeca/pipe/tasks";
 import { log } from "@metreeca/tape";
-import { createFetch, type Middleware } from "@metreeca/core/fetch";
+import { createFetch, type Fetch, type Middleware } from "@metreeca/core/fetch";
 import { createThrottle } from "@metreeca/core/async";
 
 
@@ -94,8 +97,8 @@ const logger = log(import.meta.url);
  * stream.
  *
  * > [!WARNING]
- * > Responses reporting an unsuccessful status are skipped and reported to the log, leaving the stream to run to
- * > completion.
+ * > Requests stating a URL that is not absolute or is otherwise malformed, and responses reporting an unsuccessful
+ * > status, are skipped and reported to the log, leaving the stream to run to completion.
  *
  * @param middlewares The middlewares to be layered over the standard `fetch` function, in request processing order
  *
@@ -114,127 +117,31 @@ function http(... middlewares: readonly Middleware[]): Task<string | URL | Reque
 
 			const { method, url } = request instanceof Request ? request : { method: "GET", url: request.toString() };
 
-			logger.info`${method} ${clip(url, URLLengthLimit)}`;
+			const s = clip(url, URLLengthLimit);
 
-			const response = await fetcher(request);
+			if ( !URL.canParse(url) ) {
 
-			if ( response.ok ) {
-
-				yield* response.body ?? []; // a response reporting no body is read as an empty stream
+				logger.warn`${method} ${s} >> malformed resource URL`;
 
 			} else {
 
-				logger.warn`${method} ${clip(url, URLLengthLimit)} >> ${response.status} ${response.statusText}`;
+				logger.info`${method} ${s}`;
 
-			}
+				const response = await fetcher(request);
 
-		}
+				if ( response.ok ) {
 
-	};
-
-}
-
-
-/**
- * Creates a throttling middleware.
- *
- * The generated middleware paces the exchanges routed through it, waiting before each request for the throttle to
- * grant it and reporting the outcome back, so that the baseline delay adapts to what the server replies: a successful
- * exchange speeds up the client, a failed one slows it down, and a response asking for a delay through a `Retry-After`
- * header field, in either the delta seconds or the HTTP date form, sets it explicitly.
- *
- * Exchanges failing on a transient status, that is `408`, `429` or any `5xx`, are retried as the throttle directs, up
- * to the given number of attempts; every other unsuccessful exchange, and the last attempt of an exhausted one, is
- * relayed to the caller as is, so that status handling stays with the consumer.
- *
- * @param options The throttling options, as defined by {@link createThrottle}, extended with the retry budget
- * @param options.attempts The maximum number of attempts per exchange; `0` means no limit; defaults to `1`, that is to
- *                         no retries
- *
- * @returns A middleware pacing the exchanges routed through the wrapped fetch implementation
- *
- * @throws Error If any option is out of range
- *
- * @see {@link https://www.rfc-editor.org/rfc/rfc9110#section-10.2.3 RFC 9110 § 10.2.3 - Retry-After}
- */
-function throttle({ attempts = 1, ...options }: Parameters<typeof createThrottle>[0] & {
-
-	readonly attempts?: number
-
-} = {}): Middleware {
-
-
-	const throttle = createThrottle(options);
-
-	return fetcher => async (request, init) => {
-
-		try {
-
-			// the throttle queues each attempt and reports its outcome, pacing the retries as it paces the exchanges
-
-			return await throttle.retry(async () => {
-
-				const response = await fetcher(request, init);
-
-				if ( response.ok ) { // that is, a 2xx status
-
-					return response;
+					yield* response.body ?? []; // a response reporting no body is read as an empty stream
 
 				} else {
 
-					throw response; // reported as a failure to the retry loop, which drives off thrown values
+					logger.warn`${method} ${s} >> ${response.status} ${response.statusText}`;
 
 				}
-
-			}, {
-
-				attempts,
-
-				recover: error => error instanceof Response && transient(error) ? after(error) : undefined
-
-			});
-
-		} catch ( error ) {
-
-			// an unsuccessful response is relayed to the caller as is, whatever the last attempt left it at
-
-			if ( error instanceof Response ) {
-
-				return error;
-
-			} else {
-
-				throw error;
 
 			}
 
 		}
-
-
-		/**
-		 * Reports if a response is worth retrying, that is if the status marks the failure as transient.
-		 */
-		function transient({ status }: Response): boolean {
-
-			return status === 408 || status === 429 || status >= 500;
-
-		}
-
-		/**
-		 * Reports the delay a response asks to be waited for in milliseconds, or `0` if none is stated.
-		 */
-		function after({ headers }: Response): number {
-
-			const retry = headers.get("Retry-After") ?? "";
-
-			// delta seconds, falling back to the HTTP date form; NaN or negative unless a delay is stated
-
-			const seconds = Number(retry) || (Date.parse(retry)-Date.now())/1000;
-
-			return seconds > 0 ? 1000*seconds : 0;
-
-		}
-
 
 	};
 
