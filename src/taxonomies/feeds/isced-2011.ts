@@ -143,17 +143,13 @@ function http(... middlewares: readonly Middleware[]): Task<string | URL | Reque
  * exchange speeds up the client, a failed one slows it down, and a response asking for a delay through a `Retry-After`
  * header field, in either the delta seconds or the HTTP date form, sets it explicitly.
  *
- * Requests are paced, not retried: a failed exchange is reported to the throttle and relayed to the caller as is.
+ * Exchanges failing on a transient status, that is `408`, `429` or any `5xx`, are retried as the throttle directs, up
+ * to the given number of attempts; every other unsuccessful exchange, and the last attempt of an exhausted one, is
+ * relayed to the caller as is, so that status handling stays with the consumer.
  *
- * @param options The throttling options
- * @param options.minimum The minimum delay between two exchanges in milliseconds; defaults to `0`
- * @param options.maximum The maximum delay between two exchanges in milliseconds; `0` means no limit; defaults to `0`
- * @param options.buildup The exponential factor scaling the delay on the number of pending exchanges; must be `>= 1`;
- *                        defaults to `1`
- * @param options.backoff The multiplicative factor increasing the delay on a failed exchange; must be `>= 1`; defaults
- *                        to `1`
- * @param options.recover The multiplicative factor decreasing the delay on a successful exchange; must be between `0`
- *                        and `1`; defaults to `1`
+ * @param options The throttling options, as defined by {@link createThrottle}, extended with the retry budget
+ * @param options.attempts The maximum number of attempts per exchange; `0` means no limit; defaults to `1`, that is to
+ *                         no retries
  *
  * @returns A middleware pacing the exchanges routed through the wrapped fetch implementation
  *
@@ -161,38 +157,84 @@ function http(... middlewares: readonly Middleware[]): Task<string | URL | Reque
  *
  * @see {@link https://www.rfc-editor.org/rfc/rfc9110#section-10.2.3 RFC 9110 § 10.2.3 - Retry-After}
  */
-function throttle(options: Parameters<typeof createThrottle>[0] = {}): Middleware {
+function throttle({ attempts = 1, ...options }: Parameters<typeof createThrottle>[0] & {
+
+	readonly attempts?: number
+
+} = {}): Middleware {
+
 
 	const throttle = createThrottle(options);
 
 	return fetcher => async (request, init) => {
 
-		await throttle.queue(true); // paired with the `adapt()` reports below
-
 		try {
 
-			const response = await fetcher(request, init);
+			// the throttle queues each attempt and reports its outcome, pacing the retries as it paces the exchanges
 
-			const retry = response.headers.get("Retry-After") ?? "";
+			return await throttle.retry(async () => {
 
-			// delta seconds, falling back to the HTTP date form; NaN or negative unless a delay is stated
+				const response = await fetcher(request, init);
 
-			const after = Number(retry) || (Date.parse(retry)-Date.now())/1000;
+				if ( response.ok ) { // that is, a 2xx status
 
-			await (response.ok ? throttle.adapt(true)
-					: after > 0 ? throttle.adapt(1000*after)
-						: throttle.adapt(false)
-			);
+					return response;
 
-			return response;
+				} else {
+
+					throw response; // reported as a failure to the retry loop, which drives off thrown values
+
+				}
+
+			}, {
+
+				attempts,
+
+				recover: error => error instanceof Response && transient(error) ? after(error) : undefined
+
+			});
 
 		} catch ( error ) {
 
-			await throttle.adapt(false);
+			// an unsuccessful response is relayed to the caller as is, whatever the last attempt left it at
 
-			throw error;
+			if ( error instanceof Response ) {
+
+				return error;
+
+			} else {
+
+				throw error;
+
+			}
 
 		}
+
+
+		/**
+		 * Reports if a response is worth retrying, that is if the status marks the failure as transient.
+		 */
+		function transient({ status }: Response): boolean {
+
+			return status === 408 || status === 429 || status >= 500;
+
+		}
+
+		/**
+		 * Reports the delay a response asks to be waited for in milliseconds, or `0` if none is stated.
+		 */
+		function after({ headers }: Response): number {
+
+			const retry = headers.get("Retry-After") ?? "";
+
+			// delta seconds, falling back to the HTTP date form; NaN or negative unless a delay is stated
+
+			const seconds = Number(retry) || (Date.parse(retry)-Date.now())/1000;
+
+			return seconds > 0 ? 1000*seconds : 0;
+
+		}
+
 
 	};
 
