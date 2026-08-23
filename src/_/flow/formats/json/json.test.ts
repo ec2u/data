@@ -75,6 +75,19 @@ describe("json", () => {
 
 	});
 
+	it("releases bytes withheld at a boundary where the text resumes", async () => {
+
+		const bytes = Buffer.from(`{ "id": "1", "label": "città`, "utf8");
+		const cut = bytes.indexOf(Buffer.from("à", "utf8")) + 1; // between the two bytes of à
+
+		const values = json<Item>()(chunks(bytes.subarray(0, cut), `" }`));
+
+		expect(await collect(values)).toEqual([
+			{ id: "1", label: "citt�" }
+		] satisfies readonly Item[]);
+
+	});
+
 	it("reports documents rooted at values other than objects", async () => {
 
 		const values = json<Value>()(chunks(`[1, "alpha", null]`));
@@ -88,6 +101,14 @@ describe("json", () => {
 	it("reports no values if the source reports no chunks", async () => {
 
 		const values = json()(chunks());
+
+		expect(await collect(values)).toEqual([]);
+
+	});
+
+	it("reports no values if the source reports only whitespace", async () => {
+
+		const values = json()(chunks(" \n\t "));
 
 		expect(await collect(values)).toEqual([]);
 
