@@ -27,7 +27,7 @@
  * @module
  */
 
-import type { Retriever, Page } from "@/_datasets/pages/index.js";
+import type { Retriever, Page } from "@/pages/index.js";
 import { createCache } from "@/_/core/cache.js";
 import { datastore } from "@/_/gcp/datastore.js";
 import * as uuid from "uuid";

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { retrieve } from "@/_datasets/pages/index.js";
-import { pages } from "@/_datasets/pages/store.js";
-import { fetchPage } from "@/_datasets/pages/tools/fetchPage.js";
-import { Unit } from "@/_datasets/units/index.js";
+import { retrieve } from "@/pages/index.js";
+import { pages } from "@/pages/store.js";
+import { fetchPage } from "@/pages/tools/fetchPage.js";
+import { Unit } from "@/units/index.js";
 import { ai, json } from "@/_/gcp/gemini.js";
 import { file } from "@/_/node/files.js";
 import { Type } from "@google/genai";

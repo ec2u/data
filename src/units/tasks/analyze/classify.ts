@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { topics } from "@/_datasets/_topics/store.js";
-import { matchTopics } from "@/_datasets/_topics/tools/matchTopics.js";
-import { Unit } from "@/_datasets/units/index.js";
+import { topics } from "@/taxonomies/_topics/store.js";
+import { matchTopics } from "@/taxonomies/_topics/tools/matchTopics.js";
+import { Unit } from "@/units/index.js";
 import { ai, json } from "@/_/gcp/gemini.js";
 import { file } from "@/_/node/files.js";
 import { Type } from "@google/genai";

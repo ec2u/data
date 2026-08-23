@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { matches, merge } from "@/_datasets/units/index.js";
-import { _units } from "@/_datasets/units/store.js";
-import { analyze } from "@/_datasets/units/tasks/analyze/analyze.js";
-import { annotate } from "@/_datasets/units/tasks/analyze/annotate.js";
-import { classify } from "@/_datasets/units/tasks/analyze/classify.js";
+import { matches, merge } from "@/units/index.js";
+import { _units } from "@/units/store.js";
+import { analyze } from "@/units/tasks/analyze/analyze.js";
+import { annotate } from "@/units/tasks/analyze/annotate.js";
+import { classify } from "@/units/tasks/analyze/classify.js";
 import { universities } from "@/universities/index.js";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";

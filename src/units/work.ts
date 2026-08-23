@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { _units } from "@/_datasets/units/store.js";
+import { _units } from "@/units/store.js";
 import { dump } from "@/_/node/files.js";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";

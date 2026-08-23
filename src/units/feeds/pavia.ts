@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { retrieve } from "@/_datasets/pages/index.js";
-import { pages } from "@/_datasets/pages/store.js";
-import { fetchPage } from "@/_datasets/pages/tools/fetchPage.js";
-import { matches, merge, Unit, Units } from "@/_datasets/units/index.js";
-import { _units } from "@/_datasets/units/store.js";
+import { retrieve } from "@/pages/index.js";
+import { pages } from "@/pages/store.js";
+import { fetchPage } from "@/pages/tools/fetchPage.js";
+import { matches, merge, Unit, Units } from "@/units/index.js";
+import { _units } from "@/units/store.js";
 import { ai, json } from "@/_/gcp/gemini.js";
 import { file } from "@/_/node/files.js";
 import { universities } from "@/universities/index.js";

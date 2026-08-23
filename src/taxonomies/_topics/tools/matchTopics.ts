@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { match, Topic } from "@/_datasets/_topics/index.js";
+import { match, Topic } from "@/taxonomies/_topics/index.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import { dedent } from "@metreeca/core/strings";
 import { log, report } from "@metreeca/tape";

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { units } from "@/_services/units.js";
+import { units } from "@/units/_ports.js";
 import { universities } from "@/universities/_ports.js";
 import { BadRequest, InternalServerError } from "@metreeca/core/http";
 import { log } from "@metreeca/tape";

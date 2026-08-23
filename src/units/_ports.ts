@@ -22,7 +22,7 @@
  * @module
  */
 
-import { _units } from "@/_datasets/units/store.js";
+import { _units } from "@/units/store.js";
 import { NotFound } from "@metreeca/core/http";
 import { Router } from "express";
 

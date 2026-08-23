@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Topic } from "@/_datasets/_topics/index.js";
+import { Topic } from "@/taxonomies/_topics/index.js";
 import { compress, decompress } from "@/_/ai/vector.js";
 import { datastore } from "@/_/gcp/datastore.js";
 import * as uuid from "uuid";

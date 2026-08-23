@@ -15,7 +15,7 @@
  */
 
 import { datastore } from "@/_/gcp/datastore.js";
-import { Unit } from "@/_datasets/units/index.js";
+import { Unit } from "@/units/index.js";
 import { Entity, PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";
 import { log, report, time } from "@metreeca/tape";
