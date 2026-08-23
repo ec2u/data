@@ -17,7 +17,7 @@
 import { Buffer } from "node:buffer";
 import { setTimeout as delay } from "node:timers/promises";
 import { describe, expect, it } from "vitest";
-import { chunks, collect, source, SourceError } from "../index.test.js";
+import { chunks, collect, source, SourceError } from "../flow/index.test.js";
 import { csv } from "./csv.js";
 
 

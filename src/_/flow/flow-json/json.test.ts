@@ -17,7 +17,7 @@
 import type { Value } from "@metreeca/core";
 import { Buffer } from "node:buffer";
 import { describe, expect, it } from "vitest";
-import { chunks, collect, source, SourceError } from "../index.test.js";
+import { chunks, collect, source, SourceError } from "../flow/index.test.js";
 import { json } from "./json.js";
 
 

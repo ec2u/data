@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { csv } from "@/_/flow/formats/csv/index.js";
-import { fetch } from "@/_/flow/services/fetcher/fetch.js";
+import { csv } from "@/_/flow/flow-csv/index.js";
+import { fetch } from "@/_/flow/flow/fetcher/fetch.js";
 import { secret } from "@/_/gcp/secrets.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/pipe";
