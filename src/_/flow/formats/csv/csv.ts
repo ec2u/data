@@ -41,10 +41,6 @@ const logger = log(import.meta.url);
  * in memory and a consumer that stops early releases the source; some chunks are nonetheless read ahead of the
  * records actually consumed, and a source reporting the whole text at once is parsed in one go.
  *
- * Fields are separated and quoted as per RFC 4180 unless configured otherwise: neither is sniffed from the source.
- * Byte chunks are decoded by the task, so multibyte characters split across a chunk boundary are read correctly:
- * decoding upstream corrupts them.
- *
  * > [!WARNING]
  * > Records that cannot be parsed are skipped and reported to the log, leaving the stream to run to completion.
  *
@@ -63,9 +59,7 @@ const logger = log(import.meta.url);
  *
  * @returns A task converting a stream of CSV text or byte chunks into a stream of records
  *
- * @throws Error To the consumer, whatever the source reports while producing chunks
- *
- * @see {@link https://www.rfc-editor.org/rfc/rfc4180 RFC 4180 Common Format and MIME Type for CSV Files}
+ * @throws Error While iterating the returned stream, whatever the source reports while producing chunks
  */
 export function csv<R extends Record = Record>({
 
