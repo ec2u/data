@@ -17,7 +17,6 @@
 import type { Value } from "@metreeca/core";
 import { Buffer } from "node:buffer";
 import { describe, expect, it } from "vitest";
-import { chunks, collect, source, SourceError } from "../flow/index.test.js";
 import { json } from "./json.js";
 
 
@@ -30,13 +29,26 @@ type Item = {
 
 
 /**
- * Creates a counting JSON source reporting an array of items.
+ * Creates a source reporting the given chunks.
  */
-function items(count: number) {
-	return source(count, index => `${ index > 0 ? "," : "" }{"id":"${ index }","label":"label-${ index }"}`, {
-		head: "[",
-		tail: "]"
-	});
+async function* chunks(...values: readonly (string | Uint8Array)[]): AsyncIterable<string | Uint8Array> {
+	yield* values;
+}
+
+/**
+ * Drains a stream into an array.
+ *
+ * Hand-rolled rather than delegating to `collect()`: test files are excluded from `tsconfig.json`, so the IDE
+ * type-checks them against the default libraries, which don't include the `ESNext` array extensions.
+ */
+async function collect<V>(items: AsyncIterable<V>): Promise<readonly V[]> {
+
+	const collected: V[] = [];
+
+	for await ( const item of items ) { collected.push(item) } // draining a stream has no functional equivalent
+
+	return collected;
+
 }
 
 
@@ -152,24 +164,40 @@ describe("json", () => {
 
 			yield `{ "id": "1", `;
 
-			throw new SourceError("broken source");
+			throw new Error("broken source"); // told apart from failures reported by the task by its message
 
 		})();
 
-		await expect(collect(json()(failing))).rejects.toThrow(SourceError);
+		await expect(collect(json()(failing))).rejects.toThrow("broken source");
 
 	});
 
 	it("drains the source before reporting the value", async () => {
 
 		const count = 1_000;
-		const source = items(count);
+		const state = { pulled: 0 }; // records how far the task pulls the source
 
-		const values = json<readonly Item[]>()(source.chunks)[Symbol.asyncIterator]();
+		async function* items(): AsyncIterable<string> {
+
+			yield "[";
+
+			for ( const index of Array.from({ length: count }, (_, i) => i) ) { // generators have no functional equivalent
+
+				state.pulled=index+1;
+
+				yield `${ index > 0 ? "," : "" }{"id":"${ index }","label":"label-${ index }"}`;
+
+			}
+
+			yield "]";
+
+		}
+
+		const values = json<readonly Item[]>()(items())[Symbol.asyncIterator]();
 
 		await values.next();
 
-		expect(source.pulled()).toBe(count);
+		expect(state.pulled).toBe(count);
 
 	});
 

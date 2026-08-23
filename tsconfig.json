@@ -26,6 +26,8 @@
   "include": [
     "src"
   ],
+  // test files and other tagged sources are kept out of the build: the IDE then type-checks them against the default
+  // libraries rather than the ones configured above, so they must stick to APIs available without the ESNext entries
   "exclude": [
     "**/*.*.ts"
   ]

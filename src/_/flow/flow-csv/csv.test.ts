@@ -17,7 +17,6 @@
 import { Buffer } from "node:buffer";
 import { setTimeout as delay } from "node:timers/promises";
 import { describe, expect, it } from "vitest";
-import { chunks, collect, source, SourceError } from "../flow/index.test.js";
 import { csv } from "./csv.js";
 
 
@@ -30,10 +29,59 @@ type Row = {
 
 
 /**
- * Creates a counting CSV source reporting a header and data rows.
+ * Creates a source reporting the given chunks.
+ */
+async function* chunks(...values: readonly (string | Uint8Array)[]): AsyncIterable<string | Uint8Array> {
+	yield* values;
+}
+
+/**
+ * Drains a stream into an array.
+ *
+ * Hand-rolled rather than delegating to `collect()`: test files are excluded from `tsconfig.json`, so the IDE
+ * type-checks them against the default libraries, which don't include the `ESNext` array extensions.
+ */
+async function collect<V>(items: AsyncIterable<V>): Promise<readonly V[]> {
+
+	const collected: V[] = [];
+
+	for await ( const item of items ) { collected.push(item) } // draining a stream has no functional equivalent
+
+	return collected;
+
+}
+
+/**
+ * Creates a counting source reporting a header and data rows, recording the effects the task has on it.
  */
 function rows(count: number) {
-	return source(count, index => `${ index },label-${ index }\n`, { head: "id,label\n" });
+
+	const state = { pulled: 0, closed: false };
+
+	async function* generate(): AsyncIterable<string> {
+
+		yield "id,label\n";
+
+		try {
+
+			for ( const index of Array.from({ length: count }, (_, i) => i) ) { // generators have no functional equivalent
+
+				state.pulled=index+1;
+
+				yield `${ index },label-${ index }\n`;
+
+			}
+
+		} finally {
+
+			state.closed=true;
+
+		}
+
+	}
+
+	return { state, chunks: generate() };
+
 }
 
 
@@ -170,39 +218,39 @@ describe("csv", () => {
 
 			yield "id,label\n";
 
-			throw new SourceError("broken source");
+			throw new Error("broken source"); // told apart from failures reported by the task by its message
 
 		})();
 
-		await expect(collect(csv({ header: true })(failing))).rejects.toThrow(SourceError);
+		await expect(collect(csv({ header: true })(failing))).rejects.toThrow("broken source");
 
 	});
 
 	it("pulls from the source as records are consumed", async () => {
 
 		const count = 10_000;
-		const source = rows(count);
+		const { state, chunks: source } = rows(count);
 
-		const records = csv({ header: true })(source.chunks)[Symbol.asyncIterator]();
+		const records = csv({ header: true })(source)[Symbol.asyncIterator]();
 
 		await records.next();
 
-		expect(source.pulled()).toBeLessThan(count / 2);
+		expect(state.pulled).toBeLessThan(count / 2);
 
 	});
 
 	it("releases the source when the consumer stops early", async () => {
 
-		const source = rows(10_000);
+		const { state, chunks: source } = rows(10_000);
 
-		const records = csv({ header: true })(source.chunks)[Symbol.asyncIterator]();
+		const records = csv({ header: true })(source)[Symbol.asyncIterator]();
 
 		await records.next();
 		await records.return?.(); // as a downstream take() would, once satisfied
 
 		await delay(10); // teardown propagates upstream asynchronously
 
-		expect(source.closed()).toBeTruthy();
+		expect(state.closed).toBeTruthy();
 
 	});
 
