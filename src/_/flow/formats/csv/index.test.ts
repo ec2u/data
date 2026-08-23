@@ -17,7 +17,7 @@
 import { Buffer } from "node:buffer";
 import { setTimeout as delay } from "node:timers/promises";
 import { describe, expect, it } from "vitest";
-import { csv } from "./_csv.js";
+import { csv } from "./index.js";
 
 
 type Row = {
@@ -88,7 +88,7 @@ function rows(count: number) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-describe("csv", () => {
+describe("index", () => {
 
 	it("yields a record for each data row", async () => {
 
@@ -125,6 +125,36 @@ describe("csv", () => {
 
 	});
 
+	it("splits fields on a configured delimiter", async () => {
+
+		const records = csv<Row>({ header: true, delimiter: ";" })(chunks("id;label\n1;alpha\n"));
+
+		expect(await collect(records)).toEqual([
+			{ id: "1", label: "alpha" }
+		] satisfies readonly Row[]);
+
+	});
+
+	it("unwraps fields with a configured quote", async () => {
+
+		const records = csv<Row>({ header: true, quote: "'" })(chunks("id,label\n1,'alpha,beta'\n"));
+
+		expect(await collect(records)).toEqual([
+			{ id: "1", label: "alpha,beta" }
+		] satisfies readonly Row[]);
+
+	});
+
+	it("falls back to the default delimiter and quote if configured as empty", async () => {
+
+		const records = csv<Row>({ header: true, delimiter: "", quote: "" })(chunks("id,label\n1,\"alpha,beta\"\n"));
+
+		expect(await collect(records)).toEqual([
+			{ id: "1", label: "alpha,beta" }
+		] satisfies readonly Row[]);
+
+	});
+
 	it("trims field whitespace on request", async () => {
 
 		const records = csv<Row>({ header: true, trim: true })(chunks(" id , label \n 1 , alpha \n"));
@@ -146,13 +176,42 @@ describe("csv", () => {
 
 	});
 
-	it("skips malformed records", async () => {
+	it("skips records with mismatched field counts", async () => {
 
-		const records = csv<Row>({ header: true })(chunks("id,label\n1,alpha,extra\n2,beta\n"));
+		const records = csv<Row>({ header: true })(chunks("id,label\n1\n2,beta,extra\n3,gamma\n"));
 
 		expect(await collect(records)).toEqual([
-			{ id: "2", label: "beta" }
+			{ id: "3", label: "gamma" }
 		] satisfies readonly Row[]);
+
+	});
+
+	it("reports short records without their missing fields on request", async () => {
+
+		const records = csv<Row>({ header: true, flex: true })(chunks("id,label\n1\n2,beta\n"));
+
+		expect(await collect(records)).toEqual([
+			{ id: "1" },
+			{ id: "2", label: "beta" }
+		] satisfies readonly Partial<Row>[]);
+
+	});
+
+	it("discards fields beyond the header on request", async () => {
+
+		const records = csv<Row>({ header: true, flex: true })(chunks("id,label\n1,alpha,extra\n"));
+
+		expect(await collect(records)).toEqual([
+			{ id: "1", label: "alpha" }
+		] satisfies readonly Row[]);
+
+	});
+
+	it("skips records that cannot be parsed", async () => {
+
+		const records = csv<Row>({ header: true })(chunks("id,label\n1,\"alpha\"x\n"));
+
+		expect(await collect(records)).toEqual([]);
 
 	});
 

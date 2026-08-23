@@ -15,7 +15,7 @@
  */
 
 import { secret } from "@/_/gcp/secrets.js";
-import { csv } from "@/taxonomies/_csv.js";
+import { csv } from "@/_/flow/formats/csv/index.js";
 import { error } from "@metreeca/core";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/pipe";
