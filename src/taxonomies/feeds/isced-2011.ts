@@ -56,13 +56,13 @@ type Concept = {
 
 export async function sync() {
 
-	const url = await secret(DataURL);
+	const url = await secret(DataURL); // !!! vault
 
 	// !!! service injection
 	// !!! fetcher
 	// !!! caching
 
-	await pipe(
+	pipe(
 		(items(url))
 		(fetch())
 		(csv<Concept>(CSVFormat))
