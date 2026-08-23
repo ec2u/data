@@ -15,16 +15,27 @@
  */
 
 /**
- * @module DatastoreUtils
+ * Google Cloud Datastore integration.
  *
- * Provides utility methods for Google Cloud Datastore operations.
+ * Provides {@link datastore}, a shared entity store client, alongside the {@link PropertyFilter} and {@link or} query
+ * filter builders re-exported from the underlying client library.
+ *
+ * @module
+ *
+ * @see {@link https://cloud.google.com/nodejs/docs/reference/datastore/latest Datastore Node.js Client}
  */
 
-import { project } from "@/_/gcp/index.js";
 import { Datastore, or, PropertyFilter } from "@google-cloud/datastore";
 
 export { PropertyFilter, or };
 
-export const datastore=new Datastore({
-	projectId: project
-});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * The shared Google Cloud Datastore client.
+ *
+ * Operates on the datastore of the project the process is authenticated against, as discovered by the client at
+ * construction time from the ambient Google Cloud credentials.
+ */
+export const datastore=new Datastore();

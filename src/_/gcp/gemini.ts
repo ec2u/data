@@ -145,6 +145,15 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 
 			logger: logger.getChild(model),
 
+			// !!! the floor is a magic 600 rpm: derive it from the rpm published for the model, that is as
+			// !!! `60_000/rpm`, so that the pace is stated by the quota rather than guessed
+
+			// !!! a floor states requests per minute only: the token and daily quotas are not a function of
+			// !!! elapsed time and are left unguarded
+
+			// !!! quotas are enforced per project, while channels are opened per model: models running
+			// !!! concurrently overrun a shared quota, each pacing correctly on its own
+
 			throttle: createThrottle({
 				minimum: 100,
 				maximum: 60*1000,
@@ -431,6 +440,10 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 							}
 
 							const urls = [...new Set(input.match(/https?:\/\/[^\s\[\]()<>]+/g) || [])];
+
+							// !!! submitted through the bare SDK method: the conversion escapes the quota control this
+							// !!! patch exists to provide, reporting a raw 429 without the RetryInfo handling of
+							// !!! `retry()`; route it through the channel of the converting model
 
 							const data = await generateContent({
 								model: "gemini-2.5-flash-lite",
