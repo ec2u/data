@@ -12,6 +12,6 @@
     ]
   },
   "files": [
-    "src/pages/scraper.ts"
+    "src/pages/_scraper.ts"
   ]
 }
