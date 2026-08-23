@@ -27,6 +27,7 @@
 
 import { Awaitable } from "@metreeca/core/async";
 import type { Tag } from "@metreeca/core/language";
+import type { Text } from "@metreeca/core/strings";
 
 
 /**

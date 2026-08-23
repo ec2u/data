@@ -4,7 +4,7 @@
   "scripts": {
     "clean": "rm -rf lib node_modules",
     "setup": "npm install",
-    "build": "rm -rf lib && tsc",
+    "build": "rm -rf lib && tsc --build",
     "check": "npx vitest run",
     "serve": "npx tsx --watch src/_ports.ts"
   },

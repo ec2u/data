@@ -21,11 +21,13 @@
  */
 
 import type { Instant } from "@/_/core/temporal.js";
-import { Markdown, Text } from "@metreeca/core/strings";
+import { type Link, scrape } from "@/pages/scraper.js";
+import type { Markdown, Text } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import { log } from "@metreeca/tape";
-import { Defuddle, DefuddleResponse } from "defuddle/node";
-import { JSDOM } from "jsdom";
+
+
+export type { Link }; // the scraping vocabulary is part of the page snapshot contract
 
 
 const logger = log(import.meta.url);
@@ -81,23 +83,6 @@ export interface Page {
  */
 export type Locator = string;
 
-/**
- * Outbound link of a web page.
- */
-export interface Link {
-
-	/**
-	 * The absolute URL of the link target, resolved against the page URL.
-	 */
-	readonly href: Locator;
-
-	/**
-	 * The link anchor text, falling back to the alt text of a nested image; undefined if neither is available.
-	 */
-	readonly text?: string;
-
-}
-
 
 /**
  * Web page retriever.
@@ -134,68 +119,31 @@ export async function retrieve(url: Locator): Promise<Page> {
 
 	logger.info`retrieving <${url}>`;
 
-	const dom = await get(url);
-	const info = await analyze(dom);
-	const links = await relate(dom);
+	const response = await fetch(url);
 
-	const title = info.title || url;
-	const content = info.contentMarkdown || "";
+	if ( !response.ok ) {
+
+		const status = `${response.status} ${response.statusText}`;
+
+		logger.warning`failed to retrieve <${url}> <${status}>`;
+
+		throw new Error(`failed to retrieve <${url}> <${status}>`);
+
+	}
+
+	// scraped against the address the content was served from, so that relative links resolve as the browser would
+
+	const { title, content, links } = await scrape(await response.text(), response.url);
 
 	return immutable({
 
 		retrieved: Date.now(),
 
 		url,
-		title,
+		title: title || url,
 		content,
 		links
 
 	});
-
-
-	async function get(url: Locator): Promise<JSDOM> {
-
-		const response = await fetch(url);
-
-		if ( !response.ok ) {
-
-			const status = `${response.status} ${response.statusText}`;
-
-			logger.warning`failed to retrieve <${url}> <${status}>`;
-
-			throw new Error(`failed to retrieve <${url}> <${status}>`);
-
-		}
-
-		const text = await response.text();
-
-		return new JSDOM(text, { url: response.url });
-
-	}
-
-	async function analyze(dom: JSDOM): Promise<DefuddleResponse> {
-
-		const url = dom.window.location.href;
-
-		return await Defuddle(dom, url, {
-			separateMarkdown: true,
-			removeImages: true,
-			debug: false
-		});
-
-	}
-
-	async function relate(dom: JSDOM): Promise<readonly Link[]> {
-
-		const base = dom.window.location.href;
-		const self = base+"#";
-
-		return Array.from(dom.window.document.querySelectorAll<HTMLAnchorElement>("a[href]"))
-			.filter(link => !link.href.startsWith(self))
-			.map(link => immutable({
-				href: new URL(link.href, base).href,
-				text: link.textContent.trim() || link.querySelector("img")?.alt?.trim()
-			}));
-	}
 
 }

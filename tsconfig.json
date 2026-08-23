@@ -1,34 +1,19 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": "src",
-    "outDir": "lib",
-    "paths": {
-      "@/*": [
-        "*"
-      ]
-    },
-    "strict": true,
-    "target": "ES2022",
-    "lib": [
-      "ES2022",
-      "ESNext",
-      // @types/jsdom, pulled in by the flow tree, references lib.dom: fetch responses are then typed against the DOM
-      // ReadableStream, which declares async iteration only in lib.dom.asynciterable
-      // to be removed when the flow tree is decoupled and jsdom leaves the dependency graph
-      "DOM.AsyncIterable"
-    ],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "skipLibCheck": true
+    "incremental": true,
+    "tsBuildInfoFile": "lib/.main.tsbuildinfo"
   },
+  "references": [
+    {
+      "path": "./tsconfig.dom.json"
+    }
+  ],
   "include": [
     "src"
   ],
-  // test files and other tagged sources are kept out of the build: the IDE then type-checks them against the default
-  // libraries rather than the ones configured above, so they must stick to APIs available without the ESNext entries
   "exclude": [
-    "**/*.*.ts"
+    "**/*.*.ts",
+    "src/pages/scraper.ts"
   ]
 }

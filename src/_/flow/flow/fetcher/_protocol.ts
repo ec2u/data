@@ -308,7 +308,7 @@ function zip(archives: Fetch, unzip: Unzip): Fetch {
 /**
  * Reports the method and the target URL of an exchange, as submitted to a {@link Fetch} implementation.
  */
-function target(input: RequestInfo | URL, init?: RequestInit): { readonly method: string, readonly url: string } {
+function target(input: string | URL | Request, init?: RequestInit): { readonly method: string, readonly url: string } {
 
 	return {
 

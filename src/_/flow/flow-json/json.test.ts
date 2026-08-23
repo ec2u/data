@@ -38,8 +38,8 @@ async function* chunks(...values: readonly (string | Uint8Array)[]): AsyncIterab
 /**
  * Drains a stream into an array.
  *
- * Hand-rolled rather than delegating to `collect()`: test files are excluded from `tsconfig.json`, so the IDE
- * type-checks them against the default libraries, which don't include the `ESNext` array extensions.
+ * Hand-rolled rather than delegating to `Array.fromAsync()`, which the `ES2022` library the project compiles against
+ * doesn't provide.
  */
 async function collect<V>(items: AsyncIterable<V>): Promise<readonly V[]> {
 
