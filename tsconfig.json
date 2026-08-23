@@ -11,7 +11,11 @@
     "target": "ES2022",
     "lib": [
       "ES2022",
-      "ESNext"
+      "ESNext",
+      // @types/jsdom, pulled in by the flow tree, references lib.dom: fetch responses are then typed against the DOM
+      // ReadableStream, which declares async iteration only in lib.dom.asynciterable
+      // to be removed when the flow tree is decoupled and jsdom leaves the dependency graph
+      "DOM.AsyncIterable"
     ],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",

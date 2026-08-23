@@ -16,13 +16,13 @@
 
 import { secret } from "@/_/gcp/secrets.js";
 import { csv } from "@/_/flow/formats/csv/index.js";
+import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
-import { pipe } from "@metreeca/pipe";
+import { pipe, type Task } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { forEach, toArray } from "@metreeca/pipe/sinks";
-import { flatMap, map, take } from "@metreeca/pipe/tasks";
+import { take } from "@metreeca/pipe/tasks";
 import { log } from "@metreeca/tape";
-import type { ReadableStream } from "node:stream/web";
 
 
 const DataURL = "taxonomies-ec2u-isced-2011";
@@ -63,20 +63,69 @@ export async function sync() {
 	// !!! fetcher
 	// !!! caching
 
-	const concepts = await pipe(
+	await pipe(
 		(items(url))
-		(map(fetch))
-		(flatMap(r =>
-
-			// ;(cast) @types/node types the fetch body against undici, which omits the async iteration
-			// members web streams natively support
-
-			(r.body ?? undefined) as undefined | ReadableStream<Uint8Array>
-
-		))
+		(http())
 		(csv<Concept>(CSVFormat))
 		(take(3))
 		(forEach(console.log))
 	);
+
+}
+
+
+//// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const URLLengthLimit = 80;
+
+const logger = log(import.meta.url);
+
+/**
+ * Creates a resource retrieval task.
+ *
+ * The generated task reads a stream of requests as a stream of byte chunks, reporting the body of each response as its
+ * chunks are received; requests are given as accepted by `fetch()`, that is as URL strings, {@link URL} objects or
+ * {@link Request} objects.
+ *
+ * Chunks are pulled from the response as they are asked for, so resources of any size are handled without holding them
+ * in memory and a consumer that stops early cancels the response; a response reporting no body is read as an empty
+ * stream.
+ *
+ * > [!WARNING]
+ * > Responses reporting an unsuccessful status are skipped and reported to the log, leaving the stream to run to
+ * > completion.
+ *
+ * @returns A task converting a stream of requests into a stream of response byte chunks
+ *
+ * @throws Error While iterating the returned stream, whatever the retrieval reports while connecting to a resource or
+ *               receiving its response
+ */
+function http(): Task<string | URL | Request, Uint8Array> {
+
+	return async function* (requests) {
+
+		const fetcher = fetch; // !!! via service locator
+
+		for await ( const request of requests ) {
+
+			const { method, url } = request instanceof Request ? request : { method: "GET", url: request.toString() };
+
+			logger.info`${method} ${clip(url, URLLengthLimit)}`;
+
+			const response = await fetcher(request);
+
+			if ( response.ok ) {
+
+				yield* response.body ?? []; // a response reporting no body is read as an empty stream
+
+			} else {
+
+				logger.warn`${method} ${clip(url, URLLengthLimit)} >> ${response.status} ${response.statusText}`;
+
+			}
+
+		}
+
+	};
 
 }
