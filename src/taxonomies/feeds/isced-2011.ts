@@ -62,7 +62,7 @@ export async function sync() {
 	// !!! fetcher
 	// !!! caching
 
-	pipe(
+	await pipe(
 		(items(url))
 		(fetch())
 		(csv<Concept>(CSVFormat))
