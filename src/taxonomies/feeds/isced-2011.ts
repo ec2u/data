@@ -16,14 +16,12 @@
 
 import { secret } from "@/_/gcp/secrets.js";
 import { csv } from "@/_/flow/formats/csv/index.js";
-import { error } from "@metreeca/core";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
-import { toArray } from "@metreeca/pipe/sinks";
+import { forEach, toArray } from "@metreeca/pipe/sinks";
 import { flatMap, map, take } from "@metreeca/pipe/tasks";
 import { log } from "@metreeca/tape";
-import { Readable } from "node:stream";
 import type { ReadableStream } from "node:stream/web";
 
 
@@ -68,19 +66,17 @@ export async function sync() {
 	const concepts = await pipe(
 		(items(url))
 		(map(fetch))
-		(flatMap(r => Readable.fromWeb(
+		(flatMap(r =>
 
 			// ;(cast) @types/node types the fetch body against undici, which omits the async iteration
-			// members `Readable.fromWeb()` looks for
+			// members web streams natively support
 
-			(r.body ?? error("undefined response body")) as ReadableStream<Uint8Array>
+			(r.body ?? undefined) as undefined | ReadableStream<Uint8Array>
 
-		)))
+		))
 		(csv<Concept>(CSVFormat))
 		(take(3))
-		(toArray())
+		(forEach(console.log))
 	);
-
-	console.log(concepts);
 
 }
