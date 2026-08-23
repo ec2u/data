@@ -17,6 +17,7 @@
 import { Buffer } from "node:buffer";
 import { setTimeout as delay } from "node:timers/promises";
 import { describe, expect, it } from "vitest";
+import { chunks, collect, source, SourceError } from "../index.test.js";
 import { csv } from "./csv.js";
 
 
@@ -28,65 +29,13 @@ type Row = {
 }
 
 
-class SourceError extends Error {}
-
-
-async function* chunks(...values: readonly (string | Uint8Array)[]): AsyncIterable<string | Uint8Array> {
-	yield* values;
-}
-
-async function collect<V>(items: AsyncIterable<V>): Promise<readonly V[]> {
-
-	const collected: V[] = [];
-
-	for await ( const item of items ) { collected.push(item) } // draining a stream has no functional equivalent
-
-	return collected;
-
-}
-
 /**
- * Creates a counting CSV source reporting how far it was pulled and whether it was released.
+ * Creates a counting CSV source reporting a header and data rows.
  */
 function rows(count: number) {
-
-	const state = { pulled: 0, closed: false }; // records the effects the task has on the source
-
-	async function* generate(): AsyncIterable<string> {
-
-		yield "id,label\n";
-
-		try {
-
-			for ( const index of Array.from({ length: count }, (_, i) => i) ) {
-
-				state.pulled = index + 1;
-
-				yield `${ index },label-${ index }\n`;
-
-			}
-
-		} finally {
-
-			state.closed = true;
-
-		}
-
-	}
-
-	return {
-
-		chunks: generate(),
-
-		pulled: () => state.pulled,
-		closed: () => state.closed
-
-	};
-
+	return source(count, index => `${ index },label-${ index }\n`, { head: "id,label\n" });
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 describe("csv", () => {
 
