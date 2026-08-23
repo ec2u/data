@@ -18,8 +18,8 @@
 
 project=ec2u-data
 
-gcloud auth login
-gcloud auth application-default login
+gcloud auth print-access-token >/dev/null 2>&1 || gcloud auth login
+gcloud auth application-default print-access-token >/dev/null 2>&1 || gcloud auth application-default login
+
 gcloud auth application-default set-quota-project ${project}
 gcloud config set project ${project}
-gcloud config set billing/quota_project ${project}
