@@ -16,11 +16,15 @@
 
 import { secret } from "@/_/gcp/secrets.js";
 import { csv } from "@/taxonomies/_csv.js";
+import { error } from "@metreeca/core";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { toArray } from "@metreeca/pipe/sinks";
-import { map, take } from "@metreeca/pipe/tasks";
+import { flatMap, map, take } from "@metreeca/pipe/tasks";
+import { log } from "@metreeca/tape";
+import { Readable } from "node:stream";
+import type { ReadableStream } from "node:stream/web";
 
 
 const DataURL = "taxonomies-ec2u-isced-2011";
@@ -64,6 +68,14 @@ export async function sync() {
 	const concepts = await pipe(
 		(items(url))
 		(map(fetch))
+		(flatMap(r => Readable.fromWeb(
+
+			// ;(cast) @types/node types the fetch body against undici, which omits the async iteration
+			// members `Readable.fromWeb()` looks for
+
+			(r.body ?? error("undefined response body")) as ReadableStream<Uint8Array>
+
+		)))
 		(csv<Concept>(CSVFormat))
 		(take(3))
 		(toArray())
