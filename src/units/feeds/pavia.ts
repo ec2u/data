@@ -27,8 +27,11 @@ import { Type } from "@google/genai";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { forEach } from "@metreeca/pipe/sinks";
-import { flatMap, map } from "@metreeca/pipe/tasks";
+import { concurrent, flatMap, map } from "@metreeca/pipe/tasks";
 import { log, report, time } from "@metreeca/tape";
+
+
+const Concurrency = 32;
 
 
 const logger = log(import.meta.url);
@@ -111,7 +114,7 @@ export async function bootstrap(url?: string): Promise<unknown> {
 
 		time(() => pipe(
 			(items(roots))
-			(flatMap(root => pipe(
+			(concurrent(Concurrency, flatMap(root => pipe(
 				items(root)
 				(flatMap(bootstrap))
 				(map(item => ({
@@ -126,9 +129,7 @@ export async function bootstrap(url?: string): Promise<unknown> {
 					profile: root
 
 				} satisfies Partial<Unit>)))
-			), {
-				parallel: true
-			}))
+			))))
 			(forEach(async item => {
 
 				const current = await _units.lookup(item);
