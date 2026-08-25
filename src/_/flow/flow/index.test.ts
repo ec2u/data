@@ -15,10 +15,8 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { bind, context, service } from "./index.js";
+import { bind, context, getPath, service } from "./index.js";
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 interface Store {
 
@@ -261,6 +259,33 @@ describe("service", () => {
 
 	});
 
+	it("resolves a service constructing a primitive", async () => {
+
+		const createRoot = (): string => "/tmp";
+
+		await context()(() => {
+
+			expect(service(createRoot)).toBe("/tmp");
+
+		});
+
+	});
+
+	it("resolves a service constructing null", async () => {
+
+		const create = vi.fn((): null => null);
+
+		await context()(() => {
+
+			expect(service(create)).toBeNull();
+			expect(service(create)).toBeNull();
+
+		});
+
+		expect(create).toHaveBeenCalledTimes(1);
+
+	});
+
 	it("constructs a service at most once per execution", async () => {
 
 		const create = vi.fn(createStore);
@@ -351,7 +376,7 @@ describe("service", () => {
 	it("rejects a lookup from within a disposer", async () => {
 
 		const create = (): AsyncDisposable => ({
-			[Symbol.asyncDispose]: () => { service(createStore); }
+			[Symbol.asyncDispose]: async () => { service(createStore); }
 		});
 
 		await expect(context()(() => { service(create); })).rejects.toThrow();
@@ -378,6 +403,30 @@ describe("service", () => {
 		});
 
 		expect(create).toHaveBeenCalledTimes(2);
+
+	});
+
+});
+
+describe("getPath", () => {
+
+	it("constructs the working directory of the process", async () => {
+
+		await context()(() => {
+
+			expect(service(getPath)).toBe(process.cwd());
+
+		});
+
+	});
+
+	it("is replaceable by a binding", async () => {
+
+		await context(bind(getPath, () => "/base"))(() => {
+
+			expect(service(getPath)).toBe("/base");
+
+		});
 
 	});
 

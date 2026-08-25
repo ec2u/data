@@ -16,6 +16,7 @@
 
 import { describe, expectTypeOf, it } from "vitest";
 import { bind, context, service } from "./index.js";
+import type { Defined } from "@metreeca/core";
 import type { Binding } from "./index.js";
 
 
@@ -41,6 +42,8 @@ declare function createMemoryStore(): Store;
 declare function createCounter(): Counter;
 
 declare function createTally(): number;
+
+declare function createNothing(): undefined;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,17 +72,23 @@ describe("bind", () => {
 
 	});
 
-	it("rejects a service constructing a primitive", async () => {
+	it("binds a service constructing a primitive", async () => {
 
-		// @ts-expect-error — a service must construct a non-primitive
+		expectTypeOf(bind(createTally, createTally)).toEqualTypeOf<Binding<number>>();
 
-		bind(createTally, createTally);
+	});
+
+	it("rejects a service constructing undefined", async () => {
+
+		// @ts-expect-error — a service must construct a defined value
+
+		bind(createNothing, createNothing);
 
 	});
 
 	it("erases the bound type at the binding list", async () => {
 
-		expectTypeOf<Binding<Store>>().toExtend<Binding<object>>();
+		expectTypeOf<Binding<Store>>().toExtend<Binding<Defined>>();
 
 	});
 

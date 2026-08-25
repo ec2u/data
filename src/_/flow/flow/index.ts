@@ -49,6 +49,7 @@
  * ```
  */
 
+import type { Defined } from "@metreeca/core";
 import type { Awaitable } from "@metreeca/core/async";
 import { report } from "@metreeca/tape";
 import { AsyncLocalStorage } from "node:async_hooks";
@@ -56,14 +57,13 @@ import { AsyncLocalStorage } from "node:async_hooks";
 
 interface Execution {
 
-	readonly bindings: ReadonlyMap<Service<object>, Service<object>>;
-	readonly instances: Map<Service<object>, null | object>;
+	readonly bindings: ReadonlyMap<Service<Defined>, Service<Defined>>;
+	readonly instances: Map<Service<Defined>, undefined | Defined>;
 
 }
 
 
 const executions = new AsyncLocalStorage<Execution>();
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +98,7 @@ export type Context =
  *
  * @typeParam T The type of the bound service
  */
-export type Binding<T extends object> =
+export type Binding<T extends Defined> =
 	readonly [service: Service<T>, factory: Service<T>];
 
 /**
@@ -111,7 +111,7 @@ export type Binding<T extends object> =
  * Construction must be synchronous and free of I/O, deferring such work to the instance's own methods. A service that
  * throws must undo whatever it has already done, as a failed lookup records nothing and a later lookup runs it again.
  *
- * @typeParam T The type of the constructed instance, restricted to non-primitives, functions included
+ * @typeParam T The type of the constructed instance, `undefined` excepted, as it marks a service under construction
  *
  * @remarks
  *
@@ -119,7 +119,7 @@ export type Binding<T extends object> =
  * module declaring a service must stay import-light, requiring heavy clients lazily inside the default implementation
  * rather than at module level.
  */
-export type Service<T extends object> =
+export type Service<T extends Defined> =
 	() => T;
 
 /**
@@ -144,7 +144,7 @@ export type Task<T> =
  * @throws {Error} If `bindings` includes more than one binding for the same service, reporting the services bound
  * more than once
  */
-export function context(...bindings: readonly Binding<object>[]): Context {
+export function context(...bindings: readonly Binding<Defined>[]): Context {
 
 	const duplicates = [...new Set(bindings
 		.map(([ service ]) => service)
@@ -274,7 +274,7 @@ export function context(...bindings: readonly Binding<object>[]): Context {
  *
  * @returns An immutable binding pairing `service` with `factory`
  */
-export function bind<T extends object>(service: Service<T>, factory: NoInfer<Service<T>>): Binding<T> {
+export function bind<T extends Defined>(service: Service<T>, factory: NoInfer<Service<T>>): Binding<T> {
 
 	return [service, factory];
 
@@ -292,8 +292,8 @@ export function bind<T extends object>(service: Service<T>, factory: NoInfer<Ser
  *
  * @returns The service instance for the enclosing execution
  *
- * @throws {Error} If called outside an execution, reporting `service`; work outliving the task, such as an unawaited
- * promise or a timer callback, and disposal of the execution's own services both count as outside
+ * @throws {Error} If called outside an execution, reporting `service`; disposal of the execution's own services
+ * counts as outside, as does a callback invoked from work that escaped the execution, such as a timer
  *
  * @throws {Error} If the service depends on itself, either directly or through other services, reporting the
  * dependency chain
@@ -302,8 +302,11 @@ export function bind<T extends object>(service: Service<T>, factory: NoInfer<Ser
  *
  * Implementations are services in their own right: resolving one directly, rather than the service it is bound to,
  * yields a separate instance.
+ *
+ * A task must await the work it starts. A promise chain left unawaited keeps the execution around it, so a lookup in
+ * one of its continuations resolves after disposal has run, into an instance nothing will dispose.
  */
-export function service<T extends object>(service: Service<T>): T {
+export function service<T extends Defined>(service: Service<T>): T {
 
 	const execution = executions.getStore();
 
@@ -311,31 +314,31 @@ export function service<T extends object>(service: Service<T>): T {
 
 	return resolve(execution, service);
 
-	function resolve<T extends object>(execution: Execution, service: Service<T>): T {
+	function resolve<T extends Defined>(execution: Execution, service: Service<T>): T {
 
 		const instance = execution.instances.get(service);
 
-		if ( instance === null ) {
+		if ( instance !== undefined ) {
+
+			return instance as T;
+
+		} else if ( execution.instances.has(service) ) {
 
 			throw new Error(`circular dependency across services [${
 				chain(execution, service).map(v => report(v)).join(", ")
 			}]`);
 
-		} else if ( instance === undefined ) {
-
-			return construct(execution, service);
-
 		} else {
 
-			return instance as T;
+			return construct(execution, service);
 
 		}
 
 	}
 
-	function construct<T extends object>({ bindings, instances }: Execution, service: Service<T>): T {
+	function construct<T extends Defined>({ bindings, instances }: Execution, service: Service<T>): T {
 
-		instances.set(service, null);
+		instances.set(service, undefined);
 
 		try {
 
@@ -355,13 +358,28 @@ export function service<T extends object>(service: Service<T>): T {
 
 	}
 
-	function chain({ instances }: Execution, service: Service<object>): readonly Service<object>[] {
+	function chain({ instances }: Execution, service: Service<Defined>): readonly Service<Defined>[] {
 
 		return [...instances]
-			.filter(([ , instance ]) => instance === null)
+			.filter(([ , instance ]) => instance === undefined)
 			.map(([ service ]) => service)
 			.concat(service);
 
 	}
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Constructs the base path.
+ *
+ * Resolves the paths a task works with, so that filesystem access is redirected by binding this service rather than
+ * by altering the working directory of the process.
+ *
+ * @returns The absolute path of the working directory of the process
+ */
+export function getPath(): string {
+	return process.cwd();
 }
