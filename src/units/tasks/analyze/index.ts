@@ -23,7 +23,7 @@ import { universities } from "@/universities/index.js";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { forEach } from "@metreeca/pipe/sinks";
-import { flatMap, map } from "@metreeca/pipe/tasks";
+import { concurrent, flatMap, map } from "@metreeca/pipe/tasks";
 import { log, report, time } from "@metreeca/tape";
 
 
@@ -40,6 +40,9 @@ import { log, report, time } from "@metreeca/tape";
 // TO RE-ENABLE: Comment out or remove the line below.
 // ============================================================================
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+
+const Concurrency = 32;
 
 
 const logger = log(import.meta.url);
@@ -59,7 +62,7 @@ export default async function execute(): Promise<number> {
 
 		(items(_units.select({ university: universities.pavia })))
 
-		(flatMap(lead => pipe(
+		(concurrent(Concurrency, flatMap(lead => pipe(
 			items(lead)
 			(map(log(analyze)))
 			(map(log(classify)))
@@ -72,9 +75,7 @@ export default async function execute(): Promise<number> {
 				analyzed: Date.now()
 
 			})))
-		), {
-			parallel: true
-		}))
+		))))
 		(forEach(_units.insert))
 	), (count, elapsed) => {
 		logger.info`processed <${count}> units in <${report(elapsed)}> ms`;
