@@ -57,18 +57,22 @@ type Concept = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function execute() {
+	return context(
+		bind(createVault, createGCPVault),
+		bind(createFetch, () => createFetch()) // !!! caching
+	);
+}
+
 export async function sync() {
 
-	await context(
-		bind(createVault, createGCPVault),
-		bind(createFetch, () => createFetch(throttle({ minimum: 1000/10 }))) // !!! caching
-	)(async () => {
+	await execute()(async () => {
 
 		const url = await service(createVault)(DataURL);
 
 		return await pipe(
 			(items(url))
-			(fetch())
+			(fetch()) // !!! throttle({ minimum: 1000/10 }) specialise shared execution context
 			(csv<Concept>(CSVFormat))
 			(take(3))
 			(forEach(console.log))
