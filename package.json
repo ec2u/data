@@ -15,6 +15,8 @@
     "@metreeca/core": "^0.9.19",
     "@metreeca/pipe": "^0.9.20",
     "@metreeca/tape": "^0.9.1",
+    "@metreeca/flow": "^0.1.0",
+    "@metreeca/flow-csv": "^0.1.0",
     "@metreeca/trio": "^0.1.0",
     "@metreeca/wire-sparql": "^0.9.0",
     "@metreeca/wire-sparql-http": "^0.9.0",
