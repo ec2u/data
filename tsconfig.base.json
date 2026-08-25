@@ -13,8 +13,6 @@
     "lib": [
       "ES2022"
     ],
-    // the project runs on Node: only its typings are laid in, so that a package shipping a DOM reference doesn't
-    // shadow them for the whole compilation unit
     "types": [
       "node"
     ],
@@ -23,5 +21,9 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "skipLibCheck": true
-  }
+  },
+  // shared options only: without an empty file set the config would implicitly claim every source under its directory,
+  // and an IDE checking a module against it would type the whole tree against the DOM typings jsdom drags in
+  "files": [],
+  "include": []
 }
