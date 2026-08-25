@@ -20,7 +20,6 @@
     "@metreeca/trio": "^0.1.0",
     "@metreeca/wire-sparql": "^0.9.0",
     "@metreeca/wire-sparql-http": "^0.9.0",
-    "csv-parse": "^7.0.2",
     "defuddle": "^0.19.2",
     "express": "^5.2.1",
     "jsdom": "^30.0.1",

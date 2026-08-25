@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import { csv } from "@metreeca/flow-csv";
-import { fetch } from "@metreeca/flow/fetch";
-import { secret } from "@/_/gcp/secrets.js";
+import { createGCPVault } from "@/_/gcp/secrets.js";
+import { createFetch, success, throttle } from "@metreeca/core/fetch";
 import { immutable } from "@metreeca/core/structures";
+import { bind, context, service } from "@metreeca/flow";
+import { csv } from "@metreeca/flow-csv";
+import { createVault } from "@metreeca/flow/vault";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { forEach } from "@metreeca/pipe/sinks";
-import { take } from "@metreeca/pipe/tasks";
+import { map, take } from "@metreeca/pipe/tasks";
 
 
 const DataURL = "taxonomies-ec2u-isced-2011";
@@ -56,18 +58,26 @@ type Concept = {
 
 export async function sync() {
 
-	const url = await secret(DataURL); // !!! vault
 
-	// !!! service injection
-	// !!! fetcher
-	// !!! caching
+	await context(
 
-	await pipe(
-		(items(url))
-		(fetch())
-		(csv<Concept>(CSVFormat))
-		(take(3))
-		(forEach(console.log))
-	);
+		bind(createVault, createGCPVault),
+		bind(createFetch, () => createFetch(success(), throttle({ minimum: 1000 }))) // !!! caching
+
+	)(async () => {
+
+		const url = await service(createVault)(DataURL);
+		const fetch = service(createFetch);
+
+		return await pipe(
+			(items(url))
+			(map(fetch))
+			(map(response => response.text())) // !!!
+			(csv<Concept>(CSVFormat))
+			(take(3))
+			(forEach(console.log))
+		);
+
+	});
 
 }

@@ -28,8 +28,27 @@
 
 import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
 import { error } from "@metreeca/core";
+import { Vault } from "@metreeca/flow/vault";
 
 const client=new SecretManagerServiceClient();
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates a Secret Manager vault.
+ *
+ * Parameters are looked up among the secrets of the project the process is authenticated against as each request is
+ * served, so that a secret created or rotated after the vault was constructed is reported as well; the latest version
+ * of the secret is retrieved, as {@link secret} defines.
+ *
+ * @returns A vault retrieving parameters from the Secret Manager of the project the process is authenticated against
+ */
+export function createGCPVault(): Vault {
+
+	return secret;
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
