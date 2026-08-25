@@ -21,8 +21,11 @@ import * as uuid from "uuid";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { forEach, toArray } from "@metreeca/pipe/sinks";
-import { filter, flatMap, map } from "@metreeca/pipe/tasks";
+import { concurrent, filter, flatMap, map } from "@metreeca/pipe/tasks";
 import { log, report, time } from "@metreeca/tape";
+
+
+const Concurrency = 32;
 
 
 const logger = log(import.meta.url);
@@ -43,7 +46,7 @@ export async function expandAll(): Promise<number> {
 			// (filter(u => u.website === "https://fisica.dip.unipv.it/")) // !!!
 			(filter(u => u.website === "https://iii.dip.unipv.it/")) // !!!
 
-			(map(async lead => ({
+			(concurrent(Concurrency, map(async lead => ({
 				lead, items: await pipe(
 					(items(lead))
 					(flatMap(log(expand)))
@@ -58,9 +61,7 @@ export async function expandAll(): Promise<number> {
 					(toArray())
 				)
 
-			}), {
-				parallel: true
-			}))
+			}))))
 			(forEach(async ({ lead, items }) => {
 
 				for (const item of items) {
