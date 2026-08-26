@@ -17,7 +17,7 @@
 import { createGCPVault } from "@/_/gcp/secrets.js";
 import { createFetch, throttle } from "@metreeca/core/fetch";
 import { immutable } from "@metreeca/core/structures";
-import { bind, context, service } from "@metreeca/flow";
+import { bind, context as scope, service } from "@metreeca/flow";
 import { csv } from "@metreeca/flow-csv";
 import { fetch } from "@metreeca/flow/fetch";
 import { createVault } from "@metreeca/flow/vault";
@@ -26,6 +26,14 @@ import { items } from "@metreeca/pipe/feeds";
 import { forEach } from "@metreeca/pipe/sinks";
 import { take } from "@metreeca/pipe/tasks";
 
+
+const execute = scope(
+	bind(createVault, createGCPVault),
+	bind(createFetch, () => createFetch()) // !!! caching
+);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const DataURL = "taxonomies-ec2u-isced-2011";
 
@@ -39,7 +47,7 @@ const CSVFormat = immutable({
 
 
 if ( import.meta.main ) {
-	sync();
+	execute(sync)
 }
 
 
@@ -57,27 +65,16 @@ type Concept = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function execute() {
-	return context(
-		bind(createVault, createGCPVault),
-		bind(createFetch, () => createFetch()) // !!! caching
-	);
-}
-
 export async function sync() {
 
-	await execute()(async () => {
+	const url = await service(createVault)(DataURL);
 
-		const url = await service(createVault)(DataURL);
-
-		return await pipe(
-			(items(url))
-			(fetch()) // !!! throttle({ minimum: 1000/10 }) specialise shared execution context
-			(csv<Concept>(CSVFormat))
-			(take(3))
-			(forEach(console.log))
-		);
-
-	});
+	return pipe(
+		(items(url))
+		(fetch(throttle({ minimum: 1000/10 })))
+		(csv<Concept>(CSVFormat))
+		(take(3))
+		(forEach(console.log))
+	);
 
 }
