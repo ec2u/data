@@ -28,7 +28,7 @@
  * under {@link job}.
  */
 
-import { Forbidden, OK, Unauthorized } from "@metreeca/core/http";
+import { Forbidden, OK, Unauthorized } from "@metreeca/http";
 import { log } from "@metreeca/tape";
 import { Router } from "express";
 import { OAuth2Client } from "google-auth-library";

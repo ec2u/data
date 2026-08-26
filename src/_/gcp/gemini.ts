@@ -49,8 +49,8 @@ import {
 } from "@google/genai";
 import { isString } from "@metreeca/core";
 import { createThrottle, type Throttle } from "@metreeca/core/async";
-import { BadRequest, TooManyRequests } from "@metreeca/core/http";
 import { markdown } from "@metreeca/core/strings";
+import { BadRequest, TooManyRequests } from "@metreeca/http";
 import { log, Logger, report } from "@metreeca/tape";
 
 const logger = log(import.meta.url);

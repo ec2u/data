@@ -15,12 +15,13 @@
  */
 
 import { createGCPVault } from "@/_/gcp/secrets.js";
-import { createFetch, throttle } from "@metreeca/core/fetch";
 import { immutable } from "@metreeca/core/structures";
 import { bind, context as scope, service } from "@metreeca/flow";
 import { csv } from "@metreeca/flow-csv";
-import { fetch } from "@metreeca/flow/fetch";
 import { createVault } from "@metreeca/flow/vault";
+import { fetch } from "@metreeca/flow-url";
+import { createFetch } from "@metreeca/http";
+import { throttle } from "@metreeca/http/throttle";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { forEach } from "@metreeca/pipe/sinks";
@@ -47,7 +48,7 @@ const CSVFormat = immutable({
 
 
 if ( import.meta.main ) {
-	execute(sync)
+	await execute(sync)
 }
 
 
