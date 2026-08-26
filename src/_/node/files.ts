@@ -24,7 +24,7 @@ import { isString } from "@metreeca/core";
 import { writeFileSync } from "fs";
 import { readFile } from "fs/promises";
 
-const cache=new Map<string, Promise<string>>();
+const cache = new Map<string, Promise<string>>();
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ export function file(url: string | URL, base?: string | URL): Promise<string> {
 		? new URL(new URL(base).href.replace(/(\.[a-z0-9]+)+$/i, url), base)
 		: new URL(url, base);
 
-	const key=src.href;
+	const key = src.href;
 
 	if ( !cache.has(key) ) {
 		cache.set(key, readFile(src, "utf-8"));

@@ -54,16 +54,28 @@ export const gcp = immutable({
 	project: await new GoogleAuth().getProjectId(),
 
 	/**
-	 * Whether the current process is running in the development environment.
+	 * Whether the current process is running in the production environment.
 	 *
-	 * true if the process is running outside a deployed service, for instance under a local development server or a
-	 * test runner; false otherwise.
+	 * true if the process is running as a deployed workload, that is a Cloud Run service, a Cloud Run job, a cloud
+	 * function or an App Engine instance; false if it is running outside one, for instance under a local development
+	 * server or a test runner.
 	 *
 	 * @remarks
 	 *
-	 * Managed Google Cloud runtimes assign the serving port through the `PORT` environment variable: an undefined
-	 * value identifies a process running outside a deployed service.
+	 * > [!NOTE]
+	 * >
+	 * > Managed Google Cloud runtimes name the workload they serve through an environment variable of their own:
+	 * > `K_SERVICE` for Cloud Run services and cloud functions, `CLOUD_RUN_JOB` for Cloud Run jobs and `GAE_ENV` for
+	 * > App Engine; a process defining none of them is running outside a deployed workload.
+	 *
+	 * > [!IMPORTANT]
+	 * >
+	 * > Every deployed workload reports as production, whatever the project it is deployed to, as no runtime signal
+	 * > tells a staging deployment from a production one: tell them apart by the {@link project} they are
+	 * > authenticated against, or by a deployment variable of their own.
 	 */
-	development: process.env.PORT === undefined
+	production: process.env.K_SERVICE !== undefined
+		|| process.env.CLOUD_RUN_JOB !== undefined
+		|| process.env.GAE_ENV !== undefined
 
 });

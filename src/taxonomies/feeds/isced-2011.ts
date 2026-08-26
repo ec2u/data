@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-import { createGCPVault } from "@/_/gcp/secrets.js";
+import { execute } from "@/index.core.js";
 import { immutable } from "@metreeca/core/structures";
-import { bind, executor, service } from "@metreeca/flow";
+import { service } from "@metreeca/flow";
 import { csv } from "@metreeca/flow-csv";
 import { fetch } from "@metreeca/flow-url";
 import { createVault } from "@metreeca/flow/vault";
-import { createFetch } from "@metreeca/http";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { forEach } from "@metreeca/pipe/sinks";
 import { take } from "@metreeca/pipe/tasks";
 
-
-const execute = executor( // !!! shared
-	bind(createVault, createGCPVault),
-	bind(createFetch, () => createFetch()) // !!! caching
-);
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const DataURL = "taxonomies-ec2u-isced-2011";
 
