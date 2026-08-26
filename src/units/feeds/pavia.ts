@@ -25,7 +25,7 @@ import { universities } from "@/universities/index.js";
 import * as uuid from "uuid";
 import { Type } from "@google/genai";
 import { pipe } from "@metreeca/pipe";
-import { items } from "@metreeca/pipe/feeds";
+import { feed, items } from "@metreeca/pipe/feeds";
 import { forEach } from "@metreeca/pipe/sinks";
 import { concurrent, flatMap, map } from "@metreeca/pipe/tasks";
 import { log, report, time } from "@metreeca/tape";
@@ -113,7 +113,7 @@ export async function bootstrap(url?: string): Promise<unknown> {
 	} else {
 
 		time(() => pipe(
-			(items(roots))
+			(feed(roots))
 			(concurrent(Concurrency, flatMap(root => pipe(
 				items(root)
 				(flatMap(bootstrap))

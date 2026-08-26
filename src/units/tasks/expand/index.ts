@@ -19,7 +19,7 @@ import { expand } from "@/units/tasks/expand/expand.js";
 import { _units } from "@/units/store.js";
 import * as uuid from "uuid";
 import { pipe } from "@metreeca/pipe";
-import { items } from "@metreeca/pipe/feeds";
+import { feed, items } from "@metreeca/pipe/feeds";
 import { forEach, toArray } from "@metreeca/pipe/sinks";
 import { concurrent, filter, flatMap, map } from "@metreeca/pipe/tasks";
 import { log, report, time } from "@metreeca/tape";
@@ -42,14 +42,14 @@ export async function expandAll(): Promise<number> {
 	return time(() => pipe(
 		// (items(units.select({ expanded: Date.now()-stale }))) // !!!
 
-		(items(_units.select()))
+		(feed(_units.select()))
 			// (filter(u => u.website === "https://fisica.dip.unipv.it/")) // !!!
 			(filter(u => u.website === "https://iii.dip.unipv.it/")) // !!!
 
 			(concurrent(Concurrency, map(async lead => ({
 				lead, items: await pipe(
 					(items(lead))
-					(flatMap(log(expand)))
+					(flatMap(async item => await log(expand)(item) ?? []))
 					(map(item => ({
 
 						...item,

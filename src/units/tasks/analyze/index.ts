@@ -21,7 +21,7 @@ import { annotate } from "@/units/tasks/analyze/annotate.js";
 import { classify } from "@/units/tasks/analyze/classify.js";
 import { universities } from "@/universities/index.js";
 import { pipe } from "@metreeca/pipe";
-import { items } from "@metreeca/pipe/feeds";
+import { feed, items } from "@metreeca/pipe/feeds";
 import { forEach } from "@metreeca/pipe/sinks";
 import { concurrent, flatMap, map } from "@metreeca/pipe/tasks";
 import { log, report, time } from "@metreeca/tape";
@@ -60,7 +60,7 @@ export default async function execute(): Promise<number> {
 	return time(() => pipe(
 		// (items(units.select({ analyzed: Date.now()-stale }))) // !!!
 
-		(items(_units.select({ university: universities.pavia })))
+		(feed(_units.select({ university: universities.pavia })))
 
 		(concurrent(Concurrency, flatMap(lead => pipe(
 			items(lead)

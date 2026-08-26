@@ -16,19 +16,18 @@
 
 import { createGCPVault } from "@/_/gcp/secrets.js";
 import { immutable } from "@metreeca/core/structures";
-import { bind, context as scope, service } from "@metreeca/flow";
+import { bind, executor, service } from "@metreeca/flow";
 import { csv } from "@metreeca/flow-csv";
-import { createVault } from "@metreeca/flow/vault";
 import { fetch } from "@metreeca/flow-url";
+import { createVault } from "@metreeca/flow/vault";
 import { createFetch } from "@metreeca/http";
-import { throttle } from "@metreeca/http/throttle";
 import { pipe } from "@metreeca/pipe";
 import { items } from "@metreeca/pipe/feeds";
 import { forEach } from "@metreeca/pipe/sinks";
 import { take } from "@metreeca/pipe/tasks";
 
 
-const execute = scope(
+const execute = executor( // !!! shared
 	bind(createVault, createGCPVault),
 	bind(createFetch, () => createFetch()) // !!! caching
 );
@@ -48,7 +47,7 @@ const CSVFormat = immutable({
 
 
 if ( import.meta.main ) {
-	await execute(sync)
+	await execute(sync);
 }
 
 
@@ -72,7 +71,7 @@ export async function sync() {
 
 	return pipe(
 		(items(url))
-		(fetch(throttle({ minimum: 1000/10 })))
+		(fetch())
 		(csv<Concept>(CSVFormat))
 		(take(3))
 		(forEach(console.log))
