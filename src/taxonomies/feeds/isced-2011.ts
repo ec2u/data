@@ -64,7 +64,7 @@ export async function sync() {
 		(items(url))
 		(fetch())
 		(csv<Concept>(CSVFormat))
-		(take(3))
+		(take(1))
 		(forEach(console.log))
 	);
 
