@@ -24,10 +24,10 @@ import { file } from "@/_/node/files.js";
 import { universities } from "@/universities/index.js";
 import * as uuid from "uuid";
 import { Type } from "@google/genai";
-import { pipe } from "@metreeca/pipe";
-import { feed, items } from "@metreeca/pipe/feeds";
-import { forEach } from "@metreeca/pipe/sinks";
-import { concurrent, flatMap, map } from "@metreeca/pipe/tasks";
+import { pipe } from "@metreeca/flow";
+import { feed, items } from "@metreeca/flow/feeds";
+import { forEach } from "@metreeca/flow/sinks";
+import { concurrent, flatMap, map } from "@metreeca/flow/tasks";
 import { log, report, time } from "@metreeca/tape";
 
 

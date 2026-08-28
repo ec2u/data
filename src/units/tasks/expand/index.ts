@@ -18,10 +18,10 @@ import { Units } from "@/units/index.js";
 import { expand } from "@/units/tasks/expand/expand.js";
 import { _units } from "@/units/store.js";
 import * as uuid from "uuid";
-import { pipe } from "@metreeca/pipe";
-import { feed, items } from "@metreeca/pipe/feeds";
-import { forEach, toArray } from "@metreeca/pipe/sinks";
-import { concurrent, filter, flatMap, map } from "@metreeca/pipe/tasks";
+import { pipe } from "@metreeca/flow";
+import { feed, items } from "@metreeca/flow/feeds";
+import { forEach, toArray } from "@metreeca/flow/sinks";
+import { concurrent, filter, flatMap, map } from "@metreeca/flow/tasks";
 import { log, report, time } from "@metreeca/tape";
 
 

@@ -16,14 +16,14 @@
 
 import { execute } from "@/index.core.js";
 import { immutable } from "@metreeca/core/structures";
-import { service } from "@metreeca/flow";
-import { csv } from "@metreeca/flow-csv";
-import { fetch } from "@metreeca/flow-url";
-import { createVault } from "@metreeca/flow/vault";
-import { pipe } from "@metreeca/pipe";
-import { items } from "@metreeca/pipe/feeds";
-import { forEach } from "@metreeca/pipe/sinks";
-import { take } from "@metreeca/pipe/tasks";
+import { pipe } from "@metreeca/flow";
+import { items } from "@metreeca/flow/feeds";
+import { forEach } from "@metreeca/flow/sinks";
+import { take } from "@metreeca/flow/tasks";
+import { service } from "@metreeca/gear";
+import { csv } from "@metreeca/gear-csv";
+import { fetch } from "@metreeca/gear-url";
+import { createVault } from "@metreeca/gear/vault";
 
 
 const DataURL = "taxonomies-ec2u-isced-2011";

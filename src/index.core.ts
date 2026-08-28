@@ -15,10 +15,10 @@
  */
 
 import { gcp } from "@/_/gcp/index.js";
-import { bind, executor, service } from "@metreeca/flow";
-import { createCache, createFileCache } from "@metreeca/flow/cache";
-import { getPackage, getPath } from "@metreeca/flow/space";
-import { createVault } from "@metreeca/flow/vault";
+import { bind, executor, service } from "@metreeca/gear";
+import { createCache, createFileCache } from "@metreeca/gear/cache";
+import { getPackage, getPath } from "@metreeca/gear/space";
+import { createVault } from "@metreeca/gear/vault";
 import { createFetch } from "@metreeca/http";
 import { cache } from "@metreeca/http/cache";
 import { monitor } from "@metreeca/http/monitor";

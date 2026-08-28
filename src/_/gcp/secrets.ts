@@ -37,7 +37,7 @@
 
 import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
 import { error } from "@metreeca/core";
-import { Vault } from "@metreeca/flow/vault";
+import { Vault } from "@metreeca/gear/vault";
 
 const client=new SecretManagerServiceClient();
 

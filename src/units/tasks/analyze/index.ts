@@ -20,10 +20,10 @@ import { analyze } from "@/units/tasks/analyze/analyze.js";
 import { annotate } from "@/units/tasks/analyze/annotate.js";
 import { classify } from "@/units/tasks/analyze/classify.js";
 import { universities } from "@/universities/index.js";
-import { pipe } from "@metreeca/pipe";
-import { feed, items } from "@metreeca/pipe/feeds";
-import { forEach } from "@metreeca/pipe/sinks";
-import { concurrent, flatMap, map } from "@metreeca/pipe/tasks";
+import { pipe } from "@metreeca/flow";
+import { feed, items } from "@metreeca/flow/feeds";
+import { forEach } from "@metreeca/flow/sinks";
+import { concurrent, flatMap, map } from "@metreeca/flow/tasks";
 import { log, report, time } from "@metreeca/tape";
 
 

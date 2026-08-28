@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - [Defuddle](https://github.com/kepano/defuddle) - Content extraction library that strips boilerplate from web
   pages and converts the main content to markdown; its `defuddle/node` entry is fed with JSDOM documents, but
   accepts any DOM implementation and declares no peer dependency, so JSDOM is upgraded independently
-- [@metreeca/pipe](https://github.com/metreeca/pipe) - TypeScript library for processing async iterables with
+- [@metreeca/flow](https://github.com/metreeca/flow) - TypeScript library for processing async iterables with
   composable, type-safe pipelines
 
 ## Google Cloud Platform
