@@ -65,6 +65,9 @@ export async function sync() {
 		(fetch())
 		(csv<Concept>(CSVFormat))
 		(take(1))
+			// !!! to json
+			// !!! validate
+			// !!! store
 		(forEach(console.log))
 	);
 
