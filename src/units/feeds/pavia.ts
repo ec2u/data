@@ -55,7 +55,7 @@ const tools = [
 
 
 if ( import.meta.main ) {
-	bootstrap();
+	await bootstrap();
 }
 
 
@@ -112,7 +112,7 @@ export async function bootstrap(url?: string): Promise<unknown> {
 
 	} else {
 
-		time(() => pipe(
+		await time(() => pipe(
 			(feed(roots))
 			(concurrent(Concurrency, flatMap(root => pipe(
 				items(root)
