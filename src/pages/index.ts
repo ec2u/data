@@ -59,7 +59,8 @@ export interface Page {
 	readonly title: Text;
 
 	/**
-	 * The main page content as markdown, with boilerplate and images removed.
+	 * The main page content as markdown, stripped of the navigation, headers, footers and other framing the page is
+	 * built around.
 	 */
 	readonly content: Markdown;
 
