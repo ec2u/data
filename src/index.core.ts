@@ -21,15 +21,7 @@ import { getPackage, getPath } from "@metreeca/gear/space";
 import { createVault } from "@metreeca/gear/vault";
 import { createFetch } from "@metreeca/http";
 import { cache } from "@metreeca/http/cache";
-import { monitor } from "@metreeca/http/monitor";
-import { log } from "@metreeca/tape";
 import { createGCPVault } from "./_/gcp/secrets.js";
-
-
-const logger = log(import.meta.url);
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const execute = executor(
 	bind(getPath, () => gcp.production
@@ -41,7 +33,6 @@ export const execute = executor(
 		bytes: 1024**3
 	})),
 	bind(createFetch, () => createFetch(
-		monitor(logger),
 		cache({ store: service(createCache) })
 	))
 );
