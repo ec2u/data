@@ -1,19 +1,33 @@
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "baseUrl": "src",
+    "rootDir": "src",
+    "outDir": "lib",
+    "paths": {
+      "@/*": [
+        "*"
+      ]
+    },
+    "strict": true,
+    "target": "ES2022",
+    "lib": [
+      "ES2022"
+    ],
+    "types": [
+      "node"
+    ],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
     "incremental": true,
     "tsBuildInfoFile": "lib/.main.tsbuildinfo"
   },
-  "references": [
-    {
-      "path": "./tsconfig.dom.json"
-    }
-  ],
   "include": [
     "src"
   ],
   "exclude": [
-    "**/*.*.ts",
-    "src/pages/_scraper.ts"
+    "**/*.*.ts"
   ]
 }
