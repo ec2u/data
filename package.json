@@ -17,6 +17,7 @@
     "@metreeca/flow": "^0.9.21",
     "@metreeca/gear": "^0.1.1",
     "@metreeca/gear-csv": "^0.1.1",
+    "@metreeca/gear-json": "^0.1.0",
     "@metreeca/gear-url": "^0.1.1",
     "@metreeca/gear-xml": "^0.1.0",
     "@metreeca/tape": "^0.10.0",
