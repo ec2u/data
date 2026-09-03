@@ -19,6 +19,7 @@ import { optional, required } from "@metreeca/core/arrays";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each, toArray } from "@metreeca/flow/sinks";
+import { take } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { jpath, json, number, string } from "@metreeca/gear-json";
 import { crawl, fetch } from "@metreeca/gear-url";
@@ -65,7 +66,7 @@ export async function sync() {
 					(jpath())
 					(toArray()) // !!! avoid
 			)),
-			path => {
+			path => { // !!! simplify
 
 				const current = required(path("pagination.current_page").map(number));
 				const total = required(path("pagination.total_pages").map(number));
@@ -76,6 +77,7 @@ export async function sync() {
 				.map(string)
 				.map(key => `${Events}/${key}`)
 		))
+		(take(2))
 		(each(console.log))
 	);
 
