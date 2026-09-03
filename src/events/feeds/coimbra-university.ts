@@ -20,17 +20,12 @@ import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each, toArray } from "@metreeca/flow/sinks";
 import { take } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
 import { jpath, json, number, string } from "@metreeca/gear-json";
 import { crawl, fetch } from "@metreeca/gear-url";
-import { createCache } from "@metreeca/gear/cache";
-import { cache } from "@metreeca/http/cache";
 
 
 const Search = "https://content.fw.uc.pt/v1/agenda/events/search";
 const Events = "https://agenda.coimbra.pt/event";
-
-const Freshness = 3_600; // seconds
 
 
 if ( import.meta.main ) {
@@ -47,21 +42,7 @@ export async function sync() {
 		(crawl(
 			async url => optional(await pipe(
 				(items(url))
-
-					// state the freshness the agenda API omits, so responses are cacheable
-
-					(fetch(cache({ store: service(createCache) }), next => async (input, init) => {
-
-						const response = await next(input, init);
-
-						return new Response(response.body, {
-							status: response.status,
-							statusText: response.statusText,
-							headers: new Headers([...response.headers, ["cache-control", `max-age=${Freshness}`]])
-						});
-
-					}))
-
+					(fetch())
 					(json())
 					(jpath())
 					(toArray()) // !!! avoid
@@ -80,7 +61,7 @@ export async function sync() {
 
 }
 
-// !!! incremantal sync
+// !!! incremental sync
 // !!! analysis
 // !!! mapping
 // !!! validation

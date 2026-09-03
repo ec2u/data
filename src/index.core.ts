@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { minute } from "@/_/core/temporal.js";
 import { gcp } from "@/_/gcp/index.js";
 import { bind, executor, service } from "@metreeca/gear";
 import { createCache, createFileCache } from "@metreeca/gear/cache";
@@ -33,6 +34,9 @@ export const execute = executor(
 		bytes: 1024**3
 	})),
 	bind(createFetch, () => createFetch(
-		cache({ store: service(createCache) })
+		cache({
+			ttl: 60*minute,
+			store: service(createCache)
+		})
 	))
 );
