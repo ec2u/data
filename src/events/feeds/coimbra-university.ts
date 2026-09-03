@@ -15,11 +15,10 @@
  */
 
 import { execute } from "@/index.core.js";
-import { optional, range } from "@metreeca/core/arrays";
+import { range } from "@metreeca/core/arrays";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { each, toArray } from "@metreeca/flow/sinks";
-import { take } from "@metreeca/flow/tasks";
+import { each, find } from "@metreeca/flow/sinks";
 import { jpath, json, number, string } from "@metreeca/gear-json";
 import { crawl, fetch } from "@metreeca/gear-url";
 
@@ -40,13 +39,13 @@ export async function sync() {
 	return pipe(
 		(items(Search))
 		(crawl(
-			async url => optional(await pipe(
+			url => pipe(
 				(items(url))
-					(fetch())
-					(json())
-					(jpath())
-					(toArray()) // !!! avoid
-			)),
+				(fetch())
+				(json())
+				(jpath())
+				(find())
+			),
 			path => path("pagination.total_pages")
 				.map(number)
 				.flatMap(total => range(2, total+1)) // page 1 is the seed, under a URL of its own
@@ -55,7 +54,6 @@ export async function sync() {
 				.map(string)
 				.map(key => `${Events}/${key}`)
 		))
-		// (take(2))
 		(each(console.log))
 	);
 
