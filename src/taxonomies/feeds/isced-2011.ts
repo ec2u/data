@@ -18,7 +18,7 @@ import { execute } from "@/index.core.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { forEach } from "@metreeca/flow/sinks";
+import { each } from "@metreeca/flow/sinks";
 import { take } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { csv } from "@metreeca/gear-csv";
@@ -68,7 +68,7 @@ export async function sync() {
 			// !!! to json
 			// !!! validate
 			// !!! store
-		(forEach(console.log))
+		(each(console.log))
 	);
 
 }
