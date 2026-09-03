@@ -15,7 +15,7 @@
  */
 
 import { execute } from "@/index.core.js";
-import { optional, required } from "@metreeca/core/arrays";
+import { optional, range } from "@metreeca/core/arrays";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each, toArray } from "@metreeca/flow/sinks";
@@ -66,19 +66,22 @@ export async function sync() {
 					(jpath())
 					(toArray()) // !!! avoid
 			)),
-			path => { // !!! simplify
-
-				const current = required(path("pagination.current_page").map(number));
-				const total = required(path("pagination.total_pages").map(number));
-
-				return current < total ? `${Search}?page=${current+1}` : undefined;
-			},
+			path => path("pagination.total_pages")
+				.map(number)
+				.flatMap(total => range(2, total+1)) // page 1 is the seed, under a URL of its own
+				.map(index => `${Search}?page=${index}`),
 			path => path("events.*.key")
 				.map(string)
 				.map(key => `${Events}/${key}`)
 		))
-		(take(2))
+		// (take(2))
 		(each(console.log))
 	);
 
 }
+
+// !!! incremantal sync
+// !!! analysis
+// !!! mapping
+// !!! validation
+// !!! storage
