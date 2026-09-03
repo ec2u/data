@@ -45,28 +45,65 @@
  */
 
 /**
+ * A second, in milliseconds.
+ */
+export const second = 1000;
+
+/**
+ * A minute, in milliseconds.
+ */
+export const minute = 60*second;
+
+/**
+ * An hour, in milliseconds.
+ */
+export const hour = 60*minute;
+
+/**
+ * A day, in milliseconds.
+ */
+export const day = 24*hour;
+
+/**
+ * A week, in milliseconds.
+ */
+export const week = 7*day;
+
+/**
+ * A month, in milliseconds, approximated as 30 days.
+ */
+export const month = 30*day;
+
+/**
+ * A year, in milliseconds, approximated as 365 days.
+ */
+export const year = 365*day;
+
+
+/**
  * Time unit constants.
  *
- * Reports the length of commonly used time units as {@link Duration} values, for composing readable time spans by
- * multiplication. Calendar units are approximated by fixed lengths, with months taken as 30 days and years as 365.
+ * Gathers the time units as a single immutable object, for composing readable time spans by multiplication where a
+ * qualified name is preferable to a bare one, either because the unit reads better next to the value it scales or
+ * because a bare `hour` or `day` would clash with a local name.
  *
  * @example
  *
  * ```typescript
- * const timeout = 5 * duration.second;
- * const cacheExpiry = 30 * duration.day;
- * const refreshInterval = 2 * duration.hour;
+ * const timeout = 5*duration.second;
+ * const cacheExpiry = 30*duration.day;
+ * const refreshInterval = 2*duration.hour;
  * ```
  */
-export const duration = {
+export const duration = { // !!! review // !!! review const case
 
-	second: 1000,
-	minute: 60*1000,
-	hour: 60*60*1000,
-	day: 24*60*60*1000,
-	week: 7*24*60*60*1000,
-	month: 30*24*60*60*1000,
-	year: 365*24*60*60*1000
+	second,
+	minute,
+	hour,
+	day,
+	week,
+	month,
+	year
 
 } as const;
 
