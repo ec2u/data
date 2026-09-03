@@ -17,7 +17,7 @@
 import { retrieve } from "@/pages/index.js";
 import { pages } from "@/pages/store.js";
 import { fetchPage } from "@/pages/tools/fetchPage.js";
-import { matches, merge, Unit, Units } from "@/units/index.js";
+import { matches, merge, Unit, units } from "@/units/index.js";
 import { _units } from "@/units/store.js";
 import { ai, json } from "@/_/gcp/gemini.js";
 import { file } from "@/_/node/files.js";
@@ -25,9 +25,9 @@ import { universities } from "@/universities/index.js";
 import * as uuid from "uuid";
 import { Type } from "@google/genai";
 import { pipe } from "@metreeca/flow";
-import { feed, items } from "@metreeca/flow/feeds";
-import { forEach } from "@metreeca/flow/sinks";
-import { concurrent, flatMap, map } from "@metreeca/flow/tasks";
+import { items } from "@metreeca/flow/feeds";
+import { each } from "@metreeca/flow/sinks";
+import { flat, fork, map } from "@metreeca/flow/tasks";
 import { log, report, time } from "@metreeca/tape";
 
 
@@ -113,10 +113,10 @@ export async function bootstrap(url?: string): Promise<unknown> {
 	} else {
 
 		await time(() => pipe(
-			(feed(roots))
-			(concurrent(Concurrency, flatMap(root => pipe(
-				items(root)
-				(flatMap(bootstrap))
+			(items(roots))
+
+			(map(async root => pipe(
+				(items(await bootstrap(root)))
 				(map(item => ({
 
 					...item,
@@ -129,12 +129,14 @@ export async function bootstrap(url?: string): Promise<unknown> {
 					profile: root
 
 				} satisfies Partial<Unit>)))
-			))))
-			(forEach(async item => {
+			)))
+
+			(fork(Concurrency, flat()))
+			(each(async item => {
 
 				const current = await _units.lookup(item);
 
-				await _units.insert(!current ? { ...item, id: `${Units}${uuid.v4()}` }
+				await _units.insert(!current ? { ...item, id: `${units}/${uuid.v4()}` }
 					: !matches(current, item) ? merge(current, { ...item, analyzed: undefined, expanded: undefined })
 						: current
 				);

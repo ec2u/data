@@ -20,10 +20,10 @@ import { analyze } from "@/units/tasks/analyze/analyze.js";
 import { annotate } from "@/units/tasks/analyze/annotate.js";
 import { classify } from "@/units/tasks/analyze/classify.js";
 import { universities } from "@/universities/index.js";
-import { pipe } from "@metreeca/flow";
-import { feed, items } from "@metreeca/flow/feeds";
-import { forEach } from "@metreeca/flow/sinks";
-import { concurrent, flatMap, map } from "@metreeca/flow/tasks";
+import { pipe, type Task } from "@metreeca/flow";
+import { items } from "@metreeca/flow/feeds";
+import { each } from "@metreeca/flow/sinks";
+import { flat, fork, map } from "@metreeca/flow/tasks";
 import { log, report, time } from "@metreeca/tape";
 
 
@@ -57,16 +57,16 @@ if ( import.meta.main ) {
 
 export default async function execute(): Promise<number> {
 
-	return time(() => pipe(
+	return time(async () => pipe(
 		// (items(units.select({ analyzed: Date.now()-stale }))) // !!!
 
-		(feed(_units.select({ university: universities.pavia })))
+		(items(await _units.select({ university: universities.pavia })))
 
-		(concurrent(Concurrency, flatMap(lead => pipe(
+		(map(lead => pipe(
 			items(lead)
-			(map(log(analyze)))
-			(map(log(classify)))
-			(map(log(annotate)))
+			(step(analyze))
+			(step(classify))
+			(step(annotate))
 			(map(item => merge(lead, {
 
 				...item,
@@ -75,10 +75,23 @@ export default async function execute(): Promise<number> {
 				analyzed: Date.now()
 
 			})))
-		))))
-		(forEach(_units.insert))
+		)))
+
+		(fork(Concurrency, flat()))
+		(each(_units.insert))
 	), (count, elapsed) => {
 		logger.info`processed <${count}> units in <${report(elapsed)}> ms`;
 	});
 
+}
+
+
+/**
+ * States the task applying a processing step to every unit, dropping the ones it fails on.
+ */
+function step<V, R>(task: (unit: V) => Promise<R>): Task<V, R> {
+	return feed => pipe(feed
+		(map(async unit => items(await log(task)(unit) ?? [])))
+		(flat())
+	);
 }

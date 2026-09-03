@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { Units } from "@/units/index.js";
+import { units } from "@/units/index.js";
 import { expand } from "@/units/tasks/expand/expand.js";
 import { _units } from "@/units/store.js";
 import * as uuid from "uuid";
 import { pipe } from "@metreeca/flow";
-import { feed, items } from "@metreeca/flow/feeds";
-import { forEach, toArray } from "@metreeca/flow/sinks";
-import { concurrent, filter, flatMap, map } from "@metreeca/flow/tasks";
+import { items } from "@metreeca/flow/feeds";
+import { each, toArray } from "@metreeca/flow/sinks";
+import { filter, flat, fork, map } from "@metreeca/flow/tasks";
 import { log, report, time } from "@metreeca/tape";
 
 
@@ -39,17 +39,18 @@ if ( import.meta.main ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export async function expandAll(): Promise<number> {
-	return time(() => pipe(
+	return time(async () => pipe(
 		// (items(units.select({ expanded: Date.now()-stale }))) // !!!
 
-		(feed(_units.select()))
+		(items(await _units.select()))
 			// (filter(u => u.website === "https://fisica.dip.unipv.it/")) // !!!
 			(filter(u => u.website === "https://iii.dip.unipv.it/")) // !!!
 
-			(concurrent(Concurrency, map(async lead => ({
+			(fork(Concurrency, map(async lead => ({
 				lead, items: await pipe(
 					(items(lead))
-					(flatMap(async item => await log(expand)(item) ?? []))
+					(map(async item => items(await log(expand)(item) ?? [])))
+					(flat())
 					(map(item => ({
 
 						...item,
@@ -62,11 +63,11 @@ export async function expandAll(): Promise<number> {
 				)
 
 			}))))
-			(forEach(async ({ lead, items }) => {
+			(each(async ({ lead, items }) => {
 
 				for (const item of items) {
 					if ( !await _units.lookup(item) ) { // check and update atomically
-						await _units.insert({ ...item, id: `${Units}${uuid.v4()}` });
+						await _units.insert({ ...item, id: `${units}/${uuid.v4()}` });
 					}
 				}
 

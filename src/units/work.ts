@@ -17,12 +17,12 @@
 import { _units } from "@/units/store.js";
 import { dump } from "@/_/node/files.js";
 import { pipe } from "@metreeca/flow";
-import { feed } from "@metreeca/flow/feeds";
+import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
 
 
 pipe(
-	(feed(_units.select()))
+	(items(await _units.select()))
 	// (filter(({ formal }) => formal?.includes("Department")))
 	(toArray())
 ).then(dump("work.json"));
