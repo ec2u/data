@@ -112,33 +112,6 @@ public interface Events extends Dataset {
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    final class Handler extends Delegator {
-
-        public Handler() {
-
-            final EventFrame event=new EventFrame(true)
-                    .image(new SchemaImageObjectFrame(true))
-                    .location(new SchemaLocationFrame(true)
-                            .String("")
-                            .Place(new SchemaPlaceFrame(true)
-                                    .address(new SchemaPostalAddressFrame(true))
-                            )
-                            .PostalAddress(new SchemaPostalAddressFrame(true))
-                            .VirtualLocation(new SchemaVirtualLocationFrame(true))
-                    );
-
-            delegate(new Router()
-
-                    .path("/", new Driver().retrieve(new EventsFrame(true)
-                            .members(stash(query(event)))
-                    ))
-
-                    .path("/{code}", new Driver().retrieve(event))
-            );
-        }
-
-    }
-
     final class Reaper implements Runnable {
 
         private final Store store=service(store());
