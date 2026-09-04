@@ -77,8 +77,9 @@ export function createTranslator(): Translator {
  * Checks if text is to be translated.
  *
  * Blank text, and text already written in the target language, are served as they are: translators short-circuit on
- * this check rather than paying a provider to hand the text back unchanged. Languages are compared under RFC 4647
- * basic filtering in both directions, so a regional variant counts as the language it belongs to.
+ * this check rather than paying a provider to hand the text back unchanged. The source language is matched against the
+ * target language under RFC 4647 basic filtering, so a regional variant counts as the language it belongs to, while
+ * text in a broader language is still handed over for translation into a specific variant of it.
  *
  * @param text The text to be translated
  * @param target The BCP 47 language {@link Tag} identifying the language `text` is to be translated into
@@ -93,9 +94,6 @@ export function createTranslator(): Translator {
  */
 export function translatable(text: Text, target: Tag, source?: Tag): boolean {
 
-	const blank = text.trim() === "";
-	const translated = source !== undefined && (matchTag(source, target) || matchTag(target, source));
-
-	return !blank && !translated;
+	return text.trim() !== "" && (source === undefined || !matchTag(source, target));
 
 }

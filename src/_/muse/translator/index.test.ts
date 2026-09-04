@@ -63,7 +63,12 @@ describe("translatable", () => {
 	it("rejects text written in a variant of the target language", () => {
 
 		expect(translatable("text", "en", "en-GB")).toBe(false);
-		expect(translatable("text", "en-GB", "en")).toBe(false);
+
+	});
+
+	it("accepts text written in a language the target language is a variant of", () => {
+
+		expect(translatable("text", "en-GB", "en")).toBe(true);
 
 	});
 
