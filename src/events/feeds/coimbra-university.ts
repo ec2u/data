@@ -18,7 +18,8 @@ import { execute } from "@/index.core.js";
 import { range } from "@metreeca/core/arrays";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { each, find } from "@metreeca/flow/sinks";
+import { each } from "@metreeca/flow/sinks";
+import { fork } from "@metreeca/flow/tasks";
 import { jpath, json, number, string } from "@metreeca/gear-json";
 import { crawl, fetch } from "@metreeca/gear-url";
 
@@ -39,12 +40,10 @@ export async function sync() {
 	return pipe(
 		(items(Search))
 		(crawl(
-			url => pipe(
-				(items(url))
+			fork(32, urls => urls
 				(fetch())
 				(json())
 				(jpath())
-				(find())
 			),
 			path => path("pagination.total_pages")
 				.map(number)
