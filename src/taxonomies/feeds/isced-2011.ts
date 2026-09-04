@@ -58,10 +58,10 @@ type Concept = {
 
 export async function sync() {
 
-	const url = await service(createVault)(DataURL);
+	const vault = service(createVault);
 
 	return pipe(
-		(items(url))
+		(items(await vault(DataURL)))
 		(fetch())
 		(csv<Concept>(CSVFormat))
 		(take(1))
