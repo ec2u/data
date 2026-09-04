@@ -28,6 +28,7 @@
 import { createGoogleAI, text as output } from "@/_/muse-google/index.js";
 import { type Translator } from "@/_/muse/translator/index.js";
 import { file } from "@/_/node/files.js";
+import { ThinkingLevel } from "@google/genai";
 import { nameTag, type Tag } from "@metreeca/core/language";
 import { markdown, type Text } from "@metreeca/core/strings";
 import { service } from "@metreeca/gear";
@@ -41,8 +42,9 @@ import { service } from "@metreeca/gear";
  * rather than by the translator: a consumer translating at speed is held back by that pacing rather than rejected by
  * the API.
  *
- * Translations are generated at a fixed seed and a zero temperature, so that the same text is rendered consistently
- * across runs.
+ * Translations are generated at a fixed seed, so that the same text is rendered as consistently as the model allows,
+ * and with thinking held to its minimum, so that a job translating in bulk is not charged for reasoning a rendering
+ * task doesn't draw on.
  *
  * Blank text, and text already written in the target language, are handed to the API like any other, as
  * short-circuiting them is the business of the {@link translate} task.
@@ -65,7 +67,7 @@ import { service } from "@metreeca/gear";
  */
 export function createGoogleTranslator({
 
-	model = "gemini-2.5-flash"
+	model = "gemini-3.1-flash-lite"
 
 }: {
 
@@ -92,7 +94,10 @@ export function createGoogleTranslator({
 			config: {
 
 				seed: 0,
-				temperature: 0,
+
+				thinkingConfig: {
+					thinkingLevel: ThinkingLevel.MINIMAL
+				},
 
 				systemInstruction: await file(".sys.md", import.meta.url)
 
