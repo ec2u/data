@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
+import { createGoogleAI, json } from "@/_/muse-google/index.js";
+import { file } from "@/_/node/files.js";
 import { topics } from "@/taxonomies/_topics/store.js";
 import { matchTopics } from "@/taxonomies/_topics/tools/matchTopics.js";
 import { Unit } from "@/units/index.js";
-import { ai, json } from "@/_/muse-google/gemini.js";
-import { file } from "@/_/node/files.js";
 import { Type } from "@google/genai";
 import { isString } from "@metreeca/core";
 import { markdown } from "@metreeca/core/strings";
 import { log } from "@metreeca/tape";
+import { service } from "../../../../../../../Packages/Gear/packages/gear/src/index.js";
 
 
 const logger = log(import.meta.url);
@@ -44,7 +45,7 @@ const tools = [
 export async function annotate(unit: Partial<Unit>): Promise<{ topics: string[] }> {
 
 	return {
-		...unit, ...(await validate(json<{ topics: string[] }>(await ai.models.generateContent({
+		...unit, ...(await validate(json<{ topics: string[] }>(await service(createGoogleAI).models.generateContent({
 			model: "gemini-2.5-flash",
 			contents: markdown`
 			formal: ${unit.formal ?? "Not provided"}

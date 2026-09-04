@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { createGoogleEmbedder } from "@/_/muse-google/_embedder.js";
 import { cosine } from "@/_/muse/embedder/index.js";
-import { ai, embedding } from "@/_/muse-google/gemini.js";
 
 export interface Topic {
 
@@ -35,38 +35,46 @@ export interface Topic {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function index(text: string): Promise<readonly number[]> {
-	return embedding(await ai.models.embedContent({
-		model: "text-embedding-004", //  see https://ai.google.dev/models
-		contents: text,
-		config: {
-			taskType: "CLASSIFICATION" // see https://ai.google.dev/gemini-api/docs/embeddings#supported-task-types
-		}
-	}));
-}
+/**
+ * The embedder positioning queries in the semantic space topics are indexed in.
+ *
+ * States the Gemini embedder, so that a query is embedded exactly as the topic embeddings it is compared against were:
+ * {@link cosine} distances are meaningful only between embeddings produced by the same source.
+ */
+const embedder = createGoogleEmbedder();
+
 
 /**
- * Matches topics against a text query using semantic similarity.
+ * Matches topics against a text query by semantic similarity.
  *
- * <p>Topics are ranked by cosine distance from the query text embedding, with optional filtering
- * and adjustment parameters to refine results.</p>
+ * Topics are ranked by the cosine distance between their embedding and the embedding of the query, so that a caller
+ * retrieves the topics a text is about without matching its wording against labels. The optional bounds narrow the
+ * outcome to the topics worth acting on: `focus` restricts the search to a branch of the taxonomy, `threshold` and
+ * `tolerance` drop weak and comparatively weak matches, `narrowing` shifts the balance between general and specific
+ * topics, and `limit` caps the size of the outcome.
  *
- * @param text the query text to match against topics
- * @param topics the collection of topics to search
- * @param focus optional topic ID to restrict matches to descendants (topics whose lineage includes this ID)
- * @param limit optional maximum number of matches to return (must be non-negative)
- * @param threshold optional maximum distance threshold; topics with distance exceeding this value are excluded
- *        (must be non-negative)
- * @param tolerance optional relative tolerance from the best match; filters results within
- *        {@code best + max(1-best, 0) * tolerance} of the best match distance (must be non-negative)
- * @param narrowing optional depth adjustment factor; when specified, multiplies distance by {@code narrowing^depth}
- *        where depth is {@code lineage.length - 1}. Values > 1 penalize deeper topics; values < 1 favor them.
- *        (must be non-negative)
+ * @param text The query text to match topics against
  *
- * @return tuples of [topic, score] ordered by increasing distance from the query text, where score is the adjusted
- *         cosine distance; filtered and limited according to parameters
+ * @param options The matching bounds
+ * @param options.topics The topics to search
+ * @param options.focus The identifier of the topic matches are to be restricted to the descendants of; if undefined,
+ * the whole of `topics` is searched
+ * @param options.limit The maximum number of matches to return, non-negative; if undefined, every match is returned
+ * @param options.threshold The maximum distance a match is accepted at, non-negative; if undefined, matches are
+ * accepted at any distance
+ * @param options.tolerance The relative distance from the best match a match is accepted within, non-negative, as a
+ * fraction of the room left above the best distance; if undefined, matches are accepted however far from the best one
+ * @param options.narrowing The factor the distance of a topic is scaled by for each step below the root of its
+ * lineage, non-negative; values above 1 penalise specific topics, values below 1 favour them; if undefined, distances
+ * are taken as they stand
  *
- * @throws RangeError if {@code limit}, {@code threshold}, {@code tolerance}, or {@code narrowing} is negative
+ * @returns An immutable list of `[topic, distance]` pairs ordered by increasing adjusted distance from `text`, where
+ * `distance` accounts for `narrowing`, limited to the topics accepted by the given bounds
+ *
+ * @throws {@link !RangeError RangeError} If `text` is blank, or if `limit`, `threshold`, `tolerance` or `narrowing` is
+ * negative
+ *
+ * @throws {Error} Whatever the embedding provider reports while embedding `text`
  */
 export async function match(text: string, {
 
@@ -108,7 +116,7 @@ export async function match(text: string, {
 		throw new RangeError(`negative narrowing <${narrowing}>`);
 	}
 
-	const embedding = await index(text);
+	const embedding = await embedder(text);
 
 	const sorted = topics
 		.filter(topic => focus === undefined || topic.lineage.includes(focus))

@@ -39,9 +39,12 @@ import { createTranslator, type Translator } from "./index.js";
  * its own.
  *
  * Text is handed to `translator`, or to the translator resolved from the enclosing
- * {@link @metreeca/gear!index.service execution} if none is given, so that the provider is chosen when the task is run
+ * {@link @metreeca/gear!index.service execution} if none is given, so that the provider is settled by the consumer
  * rather than by the task itself: binding {@link createTranslator} routes every item through a cached, chained or
  * stubbed provider, without altering the task.
+ *
+ * The provider is settled once, as the task is created, so the enclosing execution must already be running by then and
+ * every item drawn is translated by the same provider, however long the feed runs.
  *
  * Blank text and text already written in the target language are handed over like any other, as short-circuiting them
  * is the business of the {@link createCacheTranslator caching} and {@link createComboTranslator combo} decorators the
@@ -63,8 +66,8 @@ import { createTranslator, type Translator } from "./index.js";
  *
  * @returns A task converting a feed of text into a feed of translations into `target`
  *
- * @throws {Error} While the feed is consumed, if `translator` is undefined and no execution is running, as the
- * provider is resolved from the enclosing one
+ * @throws {Error} If `translator` is undefined and no execution is running, as the provider is resolved from the
+ * enclosing one
  *
  * @throws {Error} While the feed is consumed, whatever the source reports while producing text, or whatever the
  * provider reports while translating it
@@ -73,6 +76,8 @@ import { createTranslator, type Translator } from "./index.js";
  */
 export function translate(target: Tag, source?: Tag, translator?: Translator): Task<Text> {
 
-	return map(text => (translator ?? service(createTranslator))(text, target, source));
+	const $translator = translator ?? service(createTranslator);
+
+	return map(text => $translator(text, target, source));
 
 }

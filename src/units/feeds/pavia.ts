@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
+import { createGoogleAI, json } from "@/_/muse-google/index.js";
+import { file } from "@/_/node/files.js";
 import { retrieve } from "@/pages/index.js";
 import { pages } from "@/pages/store.js";
 import { fetchPage } from "@/pages/tools/fetchPage.js";
 import { matches, merge, Unit, units } from "@/units/index.js";
 import { _units } from "@/units/store.js";
-import { ai, json } from "@/_/muse-google/gemini.js";
-import { file } from "@/_/node/files.js";
 import { universities } from "@/universities/index.js";
-import * as uuid from "uuid";
 import { Type } from "@google/genai";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";
 import { flat, fork, map } from "@metreeca/flow/tasks";
 import { log, report, time } from "@metreeca/tape";
+import * as uuid from "uuid";
+import { service } from "../../../../../../Packages/Gear/packages/gear/src/index.js";
 
 
 const Concurrency = 32;
@@ -69,7 +70,7 @@ export async function bootstrap(url?: string): Promise<unknown> {
 
 	if ( url ) {
 
-		return json<Partial<Unit>>(await ai.models.generateContent({
+		return json<Partial<Unit>>(await service(createGoogleAI).models.generateContent({
 			model: "gemini-2.5-flash",
 			contents: url,
 			config: {

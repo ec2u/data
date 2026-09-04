@@ -26,10 +26,22 @@
  * @see {@link https://en.wikipedia.org/wiki/Cosine_similarity Cosine similarity}
  */
 
-import type { Optional } from "@metreeca/core";
 import type { Awaitable } from "@metreeca/core/async";
 import type { Text } from "@metreeca/core/strings";
 
+
+/**
+ * The factor mapping normalised components onto the int16 range under quantisation.
+ *
+ * States the largest magnitude a signed 16-bit integer carries, so that a component of the `[-1, 1]` range
+ * {@link compress} accepts spans the whole encoding and is restored by {@link decompress} within half a step of
+ * `1/32767`. The bound is symmetric, leaving `-32768` unused, so that components at either end of the range are
+ * quantised alike and none is clipped.
+ */
+const Scale = 32767;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Text embedder.
@@ -40,14 +52,15 @@ import type { Text } from "@metreeca/core/strings";
 export interface Embedder {
 
 	/**
-	 * Embeds a text.
+	 * Generates a text embedding.
 	 *
 	 * @param text The text to be embedded
 	 *
-	 * @returns The vector embedding of `text`, either directly or on settlement of the returned promise, or undefined
-	 * if the text carries no embeddable content
+	 * @returns The vector embedding of `text`, either directly or on settlement of the returned promise
+	 *
+	 * @throws {@link !RangeError RangeError} If `text` is blank
 	 */
-	(text: Text): Awaitable<Optional<Vector>>;
+	(text: Text): Awaitable<Vector>;
 
 }
 
@@ -81,20 +94,6 @@ export function createEmbedder(): Embedder {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// the factor mapping normalised components onto the int16 range under quantisation
-
-const SCALE = 32767;
-
-
-function finite(vector: Vector): boolean {
-
-	return vector.every(component => Number.isFinite(component));
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 /**
  * Computes the cosine distance between two vectors.
  *
@@ -121,11 +120,11 @@ export function cosine(x: Vector, y: Vector): number {
 		throw new RangeError(`mismatched vector lengths <${x.length}>/<${y.length}>`);
 	}
 
-	if ( !finite(x) ) {
+	if ( !x.every(Number.isFinite) ) {
 		throw new RangeError("non-finite x vector components");
 	}
 
-	if ( !finite(y) ) {
+	if ( !y.every(Number.isFinite) ) {
 		throw new RangeError("non-finite y vector components");
 	}
 
@@ -171,7 +170,7 @@ export function cosine(x: Vector, y: Vector): number {
  */
 export function compress(vector: Vector): string {
 
-	if ( !finite(vector) ) {
+	if ( !vector.every(Number.isFinite) ) {
 		throw new RangeError("non-finite vector components");
 	}
 
@@ -179,7 +178,7 @@ export function compress(vector: Vector): string {
 		throw new RangeError("out-of-range vector components");
 	}
 
-	const quantised = Int16Array.from(vector, component => Math.round(component*SCALE));
+	const quantised = Int16Array.from(vector, component => Math.round(component*Scale));
 
 	return Buffer.from(quantised.buffer).toString("base64");
 }
@@ -204,5 +203,5 @@ export function decompress(compressed: string): Vector {
 		buffer.byteLength/Int16Array.BYTES_PER_ELEMENT
 	);
 
-	return Array.from(quantised, component => component/SCALE);
+	return Array.from(quantised, component => component/Scale);
 }

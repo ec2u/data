@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { translate } from "@/_/muse/translator/translate.js";
 import { execute } from "@/index.core.js";
 import { pipe } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
@@ -23,6 +24,11 @@ import { jpath, json, number, string } from "@metreeca/gear-json";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 
+
+const en = "en";
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const Search = "https://content.fw.uc.pt/v1/agenda/events/search";
 const Events = "https://agenda.coimbra.pt/event";
@@ -65,6 +71,7 @@ export async function sync() {
 			(html())
 			(focus())
 			(untag())
+			(translate(en))
 		)))
 		(each(console.log))
 	);

@@ -18,18 +18,18 @@
  * Persistent web page storage.
  *
  * Provides {@link pages} for retaining {@link Page} snapshots in Google Cloud Datastore across runs, so that pages
- * already processed are reported without being retrieved again, and for discarding them once they go stale.
+ * already processed are served without being retrieved again, and for discarding them once they go stale.
  *
  * Executing this module as a script discards every retained page.
  *
- * @see {@link https://cloud.google.com/nodejs/docs/reference/datastore/latest Google Cloud Datastore}
- *
  * @module
+ *
+ * @see {@link https://cloud.google.com/nodejs/docs/reference/datastore/latest Google Cloud Datastore}
  */
 
 import type { Retriever, Page } from "@/pages/index.js";
 import { createCache } from "@/_/core/cache.js";
-import { datastore } from "@/_/muse-google/datastore.js";
+import { datastore } from "@/_/gcp/datastore.js";
 import * as uuid from "uuid";
 import { log, report, time } from "@metreeca/tape";
 

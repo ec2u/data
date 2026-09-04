@@ -69,27 +69,23 @@ describe("translate", () => {
 
 	});
 
-	it("resolves the provider as the feed is consumed", async () => {
+	it("settles the provider as the task is created", async () => {
 
 		const delegate = vi.fn(stub);
 
-		const task = translate("en", "it");
+		const task = await executor(bind(createTranslator, () => delegate))(async () => translate("en", "it"));
 
-		expect(await executor(bind(createTranslator, () => delegate))(() => pipe(
+		expect(await pipe(
 			(items("uno"))
 			(task)
 			(toArray())
-		))).toEqual(["<uno|en|it>"]);
+		)).toEqual(["<uno|en|it>"]);
 
 	});
 
-	it("rejects a request with no provider at all", async () => {
+	it("rejects a task created with no provider at all", async () => {
 
-		await expect(pipe(
-			(items("uno"))
-			(translate("en", "it"))
-			(toArray())
-		)).rejects.toThrow(Error);
+		expect(() => translate("en", "it")).toThrow(Error);
 
 	});
 

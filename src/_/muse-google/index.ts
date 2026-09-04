@@ -15,27 +15,28 @@
  */
 
 /**
- * Gemini API client and response accessors.
+ * Gemini API access.
  *
- * Provides a shared {@link ai} client for the Gemini API, authenticated from Secret Manager, together with accessors
- * for extracting text, JSON payloads and embedding vectors from model responses.
+ * Provides a Gemini API client for content generation, function calling and embedding, together with the accessors
+ * turning a model response into the text, JSON payload or embedding vector it was requested for, so that a consumer
+ * draws on the Gemini models without pacing requests or unpacking responses of its own.
  *
- * @module
+ * @module index
  *
  * @remarks
  *
- * Content generation, function calling and embedding are requested through the shared client, or through a separately
- * configured one created with {@link GoogleGenAI}; both work around the quota and structured output limitations of the
- * API. {@link text}, {@link json} and {@link embedding} take over from their responses, reporting the generated text,
- * the JSON payload produced under a requested response schema, or the embedding vector, and failing on incomplete or
- * malformed generations.
+ * Clients are configured by the consumer binding them, so that credentials and endpoint are settled once for a whole
+ * execution rather than by each job. Two limitations of the API are taken over on the consumer's behalf: requests are
+ * paced against the published rate quotas and resumed after the delay the API advertises, and a requested response
+ * schema is honoured on every model, including the ones rejecting it alongside tools. Responses are unpacked by
+ * {@link text}, {@link json} and {@link embedding}, which fail on incomplete or malformed generations rather than
+ * handing a partial result over.
  *
  * @see {@link https://ai.google.dev/gemini-api/docs Gemini API}
  * @see {@link https://googleapis.github.io/js-genai/release_docs/index.html Google GenAI SDK}
  */
 
 import { createCache } from "@/_/core/cache.js";
-import { secret } from "@/_/gcp/secrets.js";
 import {
 	ApiError,
 	CallableTool,
@@ -43,7 +44,7 @@ import {
 	ContentListUnion,
 	EmbedContentResponse,
 	GenerateContentResponse,
-	GoogleGenAI as Client,
+	GoogleGenAI,
 	GoogleGenAIOptions,
 	Part
 } from "@google/genai";
@@ -56,32 +57,17 @@ import { log, Logger, report } from "@metreeca/tape";
 const logger = log(import.meta.url);
 
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Shared Gemini API client.
- *
- * Created once at module load by {@link GoogleGenAI}, reading its key from the `googleai-key` secret, so importing
- * this module requires Secret Manager access and its requests carry the workarounds documented there.
- */
-export const ai = GoogleGenAI({
-
-	apiKey: await secret("googleai-key")
-
-});
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Creates a Gemini API client patched to work around known API limitations.
  *
- * The client exposes the full {@link Client GoogleGenAI} surface with a patched `models.generateContent`, which drives
- * function calling through a throttled loop and honours a requested response schema on every model. Requests without
- * `config.tools` reach the SDK unchanged.
+ * The client exposes the full {@link GoogleGenAI} surface with its request-issuing model methods paced against
+ * the published quotas, and a patched `models.generateContent` driving function calling through a throttled loop and
+ * honouring a requested response schema on every model.
  *
- * @param options The client options, as accepted by the {@link Client GoogleGenAI} constructor
+ * @param options The client options, as accepted by the {@link GoogleGenAI} constructor; if omitted, the SDK
+ *                defaults apply, reading the API key from the environment
  *
  * @returns A patched client sharing throttling, logging and structured output capability among all requests naming
  *          the same model, keyed by the exact model id, so the bare and `models/`-prefixed forms of a model id are
@@ -89,29 +75,28 @@ export const ai = GoogleGenAI({
  *
  * @remarks
  *
- * The patch works around two API limitations affecting every request that carries `config.tools`:
+ * The patch works around two API limitations:
  *
- * - **Quota control**: the SDK resolves function calls through an internal loop that neither throttles its requests
- *   nor recovers from quota exhaustion, causing 429 failures during long tool sessions. Tool turns are driven here
- *   instead, submitting one throttled request per turn against a per-model adaptive throttle that honours the
- *   `RetryInfo` delay advertised by the API. Turns are unlimited unless `automaticFunctionCalling.maximumRemoteCalls`
- *   bounds them, and only `CallableTool` tools are dispatched; requests setting `automaticFunctionCalling.disable`
- *   are submitted through the same throttle, with their function calls left to the caller.
+ * - **Quota control**: every request is paced against a per-model adaptive throttle and retried after the `RetryInfo`
+ *   delay the API advertises, so that a long run keeps within the published rate quota instead of failing on the 429
+ *   errors the SDK neither paces nor recovers from. Function calling turns are driven here rather than by the SDK, one
+ *   throttled request each, unlimited unless `automaticFunctionCalling.maximumRemoteCalls` bounds them; only
+ *   `CallableTool` tools are dispatched, and a request disabling automatic function calling is submitted once, with
+ *   its function calls left to the caller.
  *
- * - **Structured output**: the API accepts `responseMimeType`/`responseSchema` alongside `tools` only from the Gemini 3
- *   generation onwards. A requested response schema is nonetheless honoured on every model: capable models receive it
- *   with the request, while earlier ones return prose that a separate lightweight request converts into
- *   schema-conformant JSON, at the cost of one extra generation. Capability is inferred from the model id and
- *   corrected whenever the API rejects a submitted schema.
+ * - **Structured output**: a requested response schema is honoured on every model, though the API accepts
+ *   `responseMimeType`/`responseSchema` alongside `tools` only from the Gemini 3 generation onwards: a model that
+ *   doesn't take the schema replies in prose, which a further lightweight request converts into schema-conformant
+ *   JSON, at the cost of one extra generation. Capability is tracked per model and corrected on rejection.
  *
  * @see {@link https://ai.google.dev/gemini-api/docs/function-calling Function calling}
  * @see {@link https://ai.google.dev/gemini-api/docs/structured-output Structured output}
  * @see {@link https://ai.google.dev/gemini-api/docs/rate-limits Rate limits}
  * @see {@link https://github.com/googleapis/js-genai/issues/727 js-genai#727}
  */
-export function GoogleGenAI(options: GoogleGenAIOptions) {
+export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 
-	const ai = new Client(options);
+	const ai = new GoogleGenAI(options);
 
 	/**
 	 * Retrieves the request channel shared by all requests to a model, opening it on first request.
@@ -179,7 +164,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 
 					return config?.tools
 						? await structure(await execute())
-						: await generateContent(params, ...rest);
+						: await submit(params.model, () => generateContent({ ...params, config }, ...rest));
 
 
 					/**
@@ -198,7 +183,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 					 * Turns are driven by {@link afc} instead, one throttled request at a time (see {@link retry}),
 					 * and a requested response schema is submitted with them wherever the model accepts it. Requests
 					 * that disable automatic function calling take the same throttled route, but are submitted once
-					 * and reported as they come, function calls included.
+					 * and handed over as they come, function calls included.
 					 *
 					 * @returns The final response of the function calling loop, or the single response to a request
 					 *          that disables it
@@ -238,7 +223,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 						 * Drives the function calling loop until the model returns a final response.
 						 *
 						 * Normalises the request contents into a conversation history, then alternates throttled
-						 * model requests (see {@link retry}) with tool dispatch: the function calls reported by the
+						 * model requests (see {@link retry}) with tool dispatch: the function calls requested by the
 						 * model are submitted to every `CallableTool` declared in the request and the resulting
 						 * parts are appended to the history for the next turn, until a response reports no call.
 						 *
@@ -322,80 +307,61 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 						 */
 						async function retry(contents: ContentListUnion) {
 
-							const { throttle, logger: mlogger } = channel;
+							return await submit(params.model, () => generateContent({
+								...params,
+								contents,
 
-							return await throttle.retry(
-								() => generateContent({
-									...params,
-									contents,
+								config: {
 
-									config: {
+									...configWithoutSchema,
+									tools,
 
-										...configWithoutSchema,
-										tools,
+									// disable the SDK loop: it would resolve function calls without throttling,
+									// leaving this loop with nothing but the final response
 
-										// disable the SDK loop: it would resolve function calls without throttling,
-										// leaving this loop with nothing but the final response
+									automaticFunctionCalling: { disable: true },
 
-										automaticFunctionCalling: { disable: true },
+									// submit the response schema only to models accepting it alongside tools,
+									// leaving the conversion to `structure` on the others
 
-										// submit the response schema only to models accepting it alongside tools,
-										// leaving the conversion to `structure` on the others
-
-										...(channel.structured ? { responseMimeType, responseSchema } : {})
-
-									}
-
-								}, ...rest),
-								{
-
-									recover: (error) => {
-										if ( error instanceof ApiError && error.status === TooManyRequests ) {
-
-											const delay = (error as any).error?.details
-												?.find((d: any) => d["@type"]?.includes("RetryInfo"))
-												?.retryDelay;
-
-											const match = delay?.match(/^(\d+(?:\.\d+)?)s$/);
-
-											return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
-
-										} else if ( error instanceof ApiError && error.status === BadRequest
-											&& channel.structured ) {
-
-											// the model doesn't accept a response schema alongside tools: close the
-											// channel to schemas and immediately retry the same request without one,
-											// leaving the conversion to `structure`
-
-											channel.structured = false;
-
-											mlogger.warning`response schema rejected with tools: converting separately`;
-
-											return 0;
-
-										} else {
-
-											return undefined;
-
-										}
-									},
-
-									monitor: (attempt, attempts, elapsed) => {
-
-										const count = attempts > 0 ? `${attempt+1}/${attempts}` : `${attempt+1}`;
-
-										if ( elapsed === undefined ) {
-											mlogger.error`request attempt ${count} aborted`;
-										} else if ( attempt > 0 ) {
-											mlogger.warning`request attempt ${count} rejected with delay ${elapsed} ms`;
-										} else {
-											mlogger.info`request attempt ${count} submitted with delay ${elapsed} ms`;
-										}
-
-									}
+									...(channel.structured ? { responseMimeType, responseSchema } : {})
 
 								}
-							);
+
+							}, ...rest), schema);
+
+
+							/**
+							 * States the delay a request rejected over its response schema is to be retried after.
+							 *
+							 * @param error The rejection to recover from
+							 *
+							 * @returns 0, retrying at once without the schema, if `error` reports the model refusing
+							 *          it; undefined otherwise, leaving the rejection to the quota recovery of
+							 *          {@link submit}
+							 */
+							function schema(error: unknown): undefined | number {
+
+								if ( error instanceof ApiError && error.status === BadRequest && channel.structured ) {
+
+									// the model doesn't accept a response schema alongside tools: close the channel to
+									// schemas and immediately retry the same request without one, leaving the
+									// conversion to `structure`
+
+									channel.structured = false;
+
+									channel.logger.warning`response schema rejected with tools: converting separately`;
+
+									return 0;
+
+								} else {
+
+									return undefined;
+
+								}
+
+							}
+
 						}
 
 					}
@@ -441,12 +407,10 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 
 							const urls = [...new Set(input.match(/https?:\/\/[^\s\[\]()<>]+/g) || [])];
 
-							// !!! submitted through the bare SDK method: the conversion escapes the quota control this
-							// !!! patch exists to provide, reporting a raw 429 without the RetryInfo handling of
-							// !!! `retry()`; route it through the channel of the converting model
+							const converter = "gemini-2.5-flash-lite";
 
-							const data = await generateContent({
-								model: "gemini-2.5-flash-lite",
+							const data = await submit(converter, () => generateContent({
+								model: converter,
 								contents: [input, urls.length > 0
 									? markdown`REFERENCE URLs found in source (use EXACTLY as written):
 											${urls.map(url => `- ${url}`).join("\n")}
@@ -494,7 +458,7 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 									responseMimeType: "application/json",
 									responseSchema
 								}
-							});
+							}));
 
 							return {
 								...response,
@@ -506,11 +470,112 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 
 				};
 
-			})(ai.models.generateContent.bind(ai.models))
+			})(ai.models.generateContent.bind(ai.models)),
+
+			generateContentStream: throttled(ai.models.generateContentStream.bind(ai.models)),
+			embedContent: throttled(ai.models.embedContent.bind(ai.models)),
+
+			countTokens: throttled(ai.models.countTokens.bind(ai.models)),
+			computeTokens: throttled(ai.models.computeTokens.bind(ai.models)),
+
+			generateImages: throttled(ai.models.generateImages.bind(ai.models)),
+			generateVideos: throttled(ai.models.generateVideos.bind(ai.models))
 
 		})
 
 	});
+
+
+	/**
+	 * Submits a request under the throttle of the model it targets.
+	 *
+	 * Requests to the same model are paced against a shared adaptive throttle, so that concurrent consumers of a model
+	 * keep within its published rate quota, and a rejection reporting a `RetryInfo` delay is retried after the delay
+	 * the API advertises rather than at a pace of the client's own.
+	 *
+	 * @param model The target model name, keying the channel the request is paced against (see {@link channels})
+	 * @param request The request to submit
+	 * @param recover The recovery to attempt before the quota one, if any
+	 *
+	 * @returns The value `request` resolves to
+	 *
+	 * @throws ApiError if the request fails for a reason neither `recover` nor the quota recovery handles
+	 */
+	function submit<V>(model: string, request: () => Promise<V>,
+		recover?: (error: unknown) => undefined | number
+	): Promise<V> {
+
+		const { throttle, logger: mlogger } = channels(model);
+
+		return throttle.retry(request, {
+
+			recover: error => recover?.(error) ?? quota(error),
+
+			monitor: (attempt, attempts, elapsed) => {
+
+				const count = attempts > 0 ? `${attempt+1}/${attempts}` : `${attempt+1}`;
+
+				if ( elapsed === undefined ) {
+					mlogger.error`request attempt ${count} aborted`;
+				} else if ( attempt > 0 ) {
+					mlogger.warning`request attempt ${count} rejected with delay ${elapsed} ms`;
+				} else {
+					mlogger.info`request attempt ${count} submitted with delay ${elapsed} ms`;
+				}
+
+			}
+
+		});
+
+	}
+
+	/**
+	 * States the delay a request rejected over the rate quota is to be retried after.
+	 *
+	 * @param error The rejection to recover from
+	 *
+	 * @returns The delay advertised by the API, in ms, if `error` reports an exhausted quota alongside a `RetryInfo`
+	 *          detail; undefined otherwise, leaving the rejection to the caller
+	 *
+	 * @see {@link https://ai.google.dev/gemini-api/docs/rate-limits Rate limits}
+	 */
+	function quota(error: unknown): undefined | number {
+
+		if ( error instanceof ApiError && error.status === TooManyRequests ) {
+
+			const delay = (error as ApiError & { // ;(cast) the SDK error type carries no quota details
+				error?: { details?: readonly Record<string, unknown>[] }
+			}).error?.details
+				?.find(detail => `${detail["@type"]}`.includes("RetryInfo"))
+				?.["retryDelay"];
+
+			const match = `${delay}`.match(/^(\d+(?:\.\d+)?)s$/);
+
+			return match ? Math.ceil(parseFloat(match[1])*1000) : undefined;
+
+		} else {
+
+			return undefined;
+
+		}
+
+	}
+
+	/**
+	 * Adapts a model method into one submitting its requests under the throttle of the model they target.
+	 *
+	 * @typeParam P The type of the request parameters, naming the target model
+	 * @typeParam V The type of the value the method resolves to
+	 *
+	 * @param method The model method to adapt
+	 *
+	 * @returns A method submitting the requests of `method` through {@link submit}
+	 */
+	function throttled<P extends { model: string }, V>(method: (params: P) => Promise<V>): (params: P) => Promise<V> {
+
+		return params => submit(params.model, () => method(params));
+
+	}
 
 }
 
@@ -518,9 +583,9 @@ export function GoogleGenAI(options: GoogleGenAIOptions) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Reports the output text of a Gemini API response.
+ * Extracts the output text of a Gemini API response.
  *
- * Thinking parts and function calls are skipped, so only the text generated for the caller is reported. Responses that
+ * Thinking parts and function calls are skipped, so only the text generated for the caller is returned. Responses that
  * completed a function calling session without producing output text are rejected as incomplete generations.
  *
  * @param response The response of a `generateContent` request
@@ -546,7 +611,7 @@ export function text(response: GenerateContentResponse): string {
 }
 
 /**
- * Reports the output text of a Gemini API response as a JSON payload.
+ * Extracts the output text of a Gemini API response as a JSON payload.
  *
  * The payload is parsed from the output text of the response, as produced under the requested response schema, and cast
  * to `T` without further validation: callers needing guarantees must validate it themselves.
@@ -570,7 +635,7 @@ export function json<T>(response: GenerateContentResponse): T {
 }
 
 /**
- * Reports the embedding vector of a Gemini API response.
+ * Extracts the embedding vector of a Gemini API response.
  *
  * @param response The response of an `embedContent` request
  *

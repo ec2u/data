@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
+import { createGoogleAI, json } from "@/_/muse-google/index.js";
+import { file } from "@/_/node/files.js";
 import { retrieve } from "@/pages/index.js";
 import { pages } from "@/pages/store.js";
 import { fetchPage } from "@/pages/tools/fetchPage.js";
 import { Unit } from "@/units/index.js";
-import { ai, json } from "@/_/muse-google/gemini.js";
-import { file } from "@/_/node/files.js";
 import { Type } from "@google/genai";
 import { markdown } from "@metreeca/core/strings";
+import { service } from "../../../../../../../Packages/Gear/packages/gear/src/index.js";
 
 
 const tools = [
@@ -32,7 +33,7 @@ const tools = [
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export async function expand(lead: Partial<Unit>): Promise<readonly Partial<Unit>[]> {
-	return validate(lead, json<readonly Partial<Unit>[]>(await ai.models.generateContent({
+	return validate(lead, json<readonly Partial<Unit>[]>(await service(createGoogleAI).models.generateContent({
 		model: "gemini-2.5-flash",
 		contents: markdown`
 			profile: ${lead.profile ?? "Not provided"}

@@ -23,7 +23,6 @@
  * @module
  */
 
-import type { Optional } from "@metreeca/core";
 import type { Awaitable } from "@metreeca/core/async";
 import type { Text } from "@metreeca/core/strings";
 import { dispose } from "../_disposal.js";
@@ -35,29 +34,39 @@ import type { Embedder, Vector } from "./index.js";
  *
  * Embeddings are retained in the process heap under the text they were computed from, so that a text embedded again
  * is served without a further call to the delegate, at the price of a memory footprint growing with the number of
- * distinct texts. Blank text is answered as empty without reaching the delegate, and a failed embedding is dropped,
- * leaving a later request free to retry.
+ * distinct texts. Blank text is rejected without reaching the delegate, and a failed embedding is dropped, leaving a
+ * later request free to retry.
  *
  * @param embedder The delegate embedder computing the embeddings to be retained
  *
  * @returns An embedder serving the embeddings computed by `embedder`, releasing it as the execution ends
  *
+ * @throws {@link !RangeError RangeError} While embedding, if the text is blank
+ *
  * @group Implementations
  */
 export function createCacheEmbedder(embedder: Embedder): Embedder {
 
-	const cache = new Map<Text, Awaitable<Optional<Vector>>>();
+	const cache = new Map<Text, Awaitable<Vector>>();
 
 	return Object.assign(
 
-		(text: Text): Awaitable<Optional<Vector>> => text.trim() === "" ? undefined : embed(text),
+		(text: Text): Awaitable<Vector> => {
+
+			if ( text.trim() === "" ) {
+				throw new RangeError("expected non-blank text");
+			}
+
+			return embed(text);
+
+		},
 
 		{ [Symbol.asyncDispose]: () => dispose(embedder) }
 
 	);
 
 
-	function embed(text: Text): Awaitable<Optional<Vector>> {
+	function embed(text: Text): Awaitable<Vector> {
 
 		const cached = cache.get(text);
 

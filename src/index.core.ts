@@ -16,6 +16,7 @@
 
 import { minute } from "@/_/core/temporal.js";
 import { gcp } from "@/_/gcp/index.js";
+import { createGoogleAI } from "@/_/muse-google/index.js";
 import { bind, executor, service } from "@metreeca/gear";
 import { createCache, createFileCache } from "@metreeca/gear/cache";
 import { getPackage, getPath } from "@metreeca/gear/space";
@@ -38,5 +39,8 @@ export const execute = executor(
 			ttl: 60*minute,
 			store: service(createCache)
 		})
-	))
+	)),
+	bind(createGoogleAI, async () => createGoogleAI({
+		apiKey: await service(createVault)("googleai-key")
+	}))
 );

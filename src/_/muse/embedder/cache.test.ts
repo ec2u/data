@@ -61,13 +61,13 @@ describe("createCacheEmbedder", () => {
 
 	});
 
-	it("serves blank text as empty without reaching the delegate", async () => {
+	it("rejects blank text without reaching the delegate", async () => {
 
 		const delegate = vi.fn((text: string) => [text.length]);
 		const embedder = createCacheEmbedder(delegate);
 
-		expect(await embedder("")).toBeUndefined();
-		expect(await embedder("  \n ")).toBeUndefined();
+		expect(() => embedder("")).toThrow(RangeError);
+		expect(() => embedder("  \n ")).toThrow(RangeError);
 
 		expect(delegate).not.toHaveBeenCalled();
 
