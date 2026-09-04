@@ -15,11 +15,12 @@
  */
 
 import { translate } from "@/_/muse/translator/translate.js";
+import { extract } from "@/events/tasks/extract.js";
 import { execute } from "@/index.core.js";
 import { pipe } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
-import { each } from "@metreeca/flow/sinks";
-import { flat, fork, map, take } from "@metreeca/flow/tasks";
+import { count } from "@metreeca/flow/sinks";
+import { flat, fork, map, peek, take } from "@metreeca/flow/tasks";
 import { jpath, json, number, string } from "@metreeca/gear-json";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
@@ -64,7 +65,7 @@ export async function sync() {
 				(map(key => `${Events}/${key}`))
 			)
 		))
-		(take(1))
+		(take(10))
 		(fork(10, urls => pipe(
 			(items(urls))
 			(fetch())
@@ -72,8 +73,11 @@ export async function sync() {
 			(focus())
 			(untag())
 			(translate({ target: en }))
+			(peek(console.log))
+			(extract())
+			(peek(console.log))
 		)))
-		(each(console.log))
+		(count())
 	);
 
 }

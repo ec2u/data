@@ -1,13 +1,13 @@
 ---
-title: Prompt Testing Log for @scan.sys.md
+title: Prompt Testing Log for @extract.sys.md
 description: |
-  Memory for LLM assistants working with the academic event scanning prompt.
+  Memory for LLM assistants working with the academic event extraction prompt.
   Documents behavioral requirements, known issues, and validation procedures.
 ---
 
 # Overview
 
-This log serves as memory for LLM assistants when asked to modify or validate the event scanning prompt.
+This log serves as memory for LLM assistants when asked to modify or validate the event extraction prompt.
 
 It provides documentation of behavioral expectations, known issues and their fixes, validation procedures, and
 regression prevention guidance.
@@ -22,6 +22,12 @@ This is NOT an automated test suite - it's human-readable documentation for LLM-
 - Undated years: define expected behavior when the document states day and month without a year
 - Implicit attendance mode: decide whether an event with a venue and no attendance statement warrants `offline`
 - Description scope: verify that programme listings, speaker biographies, and contact blocks belong in `description`
+- Title suffixes: pages whose markdown title carries a site or institution suffix ("… - University of Coimbra") yield
+  a `title` including it; decide whether the suffix is to be trimmed
+- Venue assembly: `venueName` occasionally accumulates the room, the department and the institution into one string
+  instead of naming the venue; decide how far the name extends
+- Blank rate: measure how often required properties come back blank across a full feed, as a blank record is a request
+  paid for and discarded
 
 # Guidelines
 
@@ -31,7 +37,7 @@ When asked to validate this prompt:
 
 1. **Create and run test driver**:
   - Write temporary `.test.ts` file with test code
-  - Import `scan` function from `scan.ts`
+  - Import `extract` function from `extract.ts`
   - Configure test with an event page URL and the current date
   - Execute `npx tsx .test.ts` to generate output
   - Delete `.test.ts` after the complete testing process is finished
@@ -104,13 +110,36 @@ instruction.
 - Keeps property types, formats, and the required set enforced by the API rather than by instruction alone
 - Prose descriptions can carry extraction conditions ("only if reasonably sure") that a schema cannot express
 
-## Required Properties Omitted Rather Than Fabricated
+**CRITICAL**: The required set is what makes extraction complete, and no amount of prompting substitutes for it. A run
+with the same prompt against an open schema returned two or three properties from a page stating ten, dropping
+`description`, `startDate` and `language` even though the prompt lists them as always provided. Restating the
+requirement in the prompt, emphatically and at the end, changed nothing. Never relax `required` to discourage
+fabrication: use the two refusal channels below instead.
 
-**Choice**: When a required property cannot be extracted, the prompt omits it instead of guessing a value.
+## Refusal Channels Rather Than an Empty Object
+
+**Choice**: A required set the API enforces leaves the model no way to decline, so refusal travels through two
+channels of its own: `documentType` reports what the document actually is, and a blank (`""`) stands for a required
+property the document does not state. The calling module drops a record typed `other` and prunes the blanks.
 
 **Rationale**:
 
-- Downstream review rejects incomplete events, so an omission is recoverable while a fabrication is not
+- A model forced to fill a required property invents one, and the cheapest invention is the current date
+- An empty JSON object, the earlier guard, cannot be produced at all once any property is required
+- Both channels cost only the request already paid for, and neither lets an invented value reach the pipe
+
+**Alternative Rejected**: Leaving the required set open so that a non-event page yields an empty object
+
+- Restores the fabrication guard at the cost of extraction itself, as recorded above
+
+## Required Properties Blanked Rather Than Fabricated
+
+**Choice**: When a required property cannot be extracted, the prompt emits an empty string instead of guessing a
+value, and the calling module prunes it.
+
+**Rationale**:
+
+- Downstream review rejects incomplete events, so a blank is recoverable while a fabrication is not
 - Fabricated dates and titles propagate into the published dataset undetected
 
 ## Page Cleaning Left Outside the Prompt
@@ -120,8 +149,49 @@ footers, and navigation sections beyond a final guard.
 
 **Rationale**:
 
-- The scanning task consumes an already extracted page body, unlike the legacy variant that fed de-tagged raw HTML
+- The extraction task consumes an already extracted page body, unlike the legacy variant that fed de-tagged raw HTML
 - Instructions about page chrome inflate the prompt and compete with the extraction rules
+
+## Event Kind Left Unrestricted
+
+**Choice**: The prompt extracts events of any kind and no longer describes itself as academic.
+
+**Rationale**:
+
+- The feeds it reads are municipal and institutional agendas carrying concerts, exhibitions and fairs alongside
+  seminars and conferences
+- Asked to judge whether a permanent municipal exhibition was an academic event, the model answered no, which would
+  have discarded a page the feed is meant to publish
+- Deciding what belongs in the dataset is a selection concern, not an extraction one
+
+## Model Chosen for Completeness Rather Than Price
+
+**Choice**: Extraction runs on the Flash tier at the default thinking level, at roughly two and a half times the input
+price of the Lite tier.
+
+**Rationale**:
+
+- Measured over ten pages of the same feed, on identical translated input, Flash returned 52 properties against 42 for
+  Lite on the eight pages both completed, and completed a ninth that Lite failed outright
+- The gap is concentrated in the properties that make a record usable rather than bare: `summary` came back on 8 pages
+  of 8 against 2, and `topic` on 4 of 9 against none at all
+- Lite overruns the output token limit on long pages, copying the whole page into `description` until the response is
+  truncated and the payload is no longer JSON, which aborts the run rather than dropping the page
+- Flash also trims the site suffix from `title`, which Lite carries through
+- Holding thinking to its minimum cost three properties on a single page, so the default level is worth its tokens on
+  either tier
+- See `_gemini-cost.md` for the price and positioning of the current offering
+
+**Alternative Rejected**: The Lite tier, on the strength of a single page measured before the prompt carried the
+document type and the blank rule
+
+- That measurement had Flash returning fewer properties and mangling `venueName`; it did not survive a ten-page run
+- **CRITICAL**: Never settle the model on one page. Extraction quality varies more across pages than across models, so
+  a single document can rank two tiers either way.
+
+**Not Fixed by the Model**: `imageURL` comes back on no page at all on either tier, and end dates are lost on every
+page whose date range reaches the prompt with its parts glued together. The first is a prompt or schema gap, the
+second an upstream markup one, and neither moves with the model.
 
 ---
 
@@ -235,32 +305,59 @@ component in its URL
 
 **Validation**: Compare the extracted image URL against the page source, including the query string
 
-## Language from Descriptive Text
+## Language Never Extracted
 
-**Input**: Event page whose navigation chrome is in English while the event description is in the local language
+**Input**: Any event page
 
 **Expected Behavior**:
 
-- `language` matches the language of the descriptive text, not of the page chrome
-- The value is a lowercase 2-letter ISO tag
+- No `language` property is extracted, and none is declared in the response schema
 
-**Validation**: Verify the extracted tag matches the language of the extracted description
+**Root Cause**: Feeds render pages into a common language before extraction, so a language read off the document
+reports the rendering rather than the event. Extracted from a translated page, the property was a constant `en` and
+carried nothing.
+
+**Validation**: Verify no language property appears in the output of a feed that translates upstream
+
+**CRITICAL**: The language of an event is a property of the source page, not of the text handed to this prompt. Never
+reintroduce it here: it can only be captured before translation.
+
+## Complete Extraction
+
+**Input**: Event page stating a title, a description, a date range, a venue, an image and a topic
+
+**Expected Behavior**:
+
+- Every property the page states is extracted, not the two or three it states most plainly
+- `title`, `description`, `startDate` and `language` are present whenever the page states them
+
+**Root Cause**: The omission rules dominate the prompt, and against an open response schema the model reads them as
+licence to drop properties the page does state. Emphatic prompting does not counter this; the required set does.
+
+**Validation**: Count the extracted properties against a manual reading of the page, and treat a drop to two or three
+as a regression rather than as page-specific variance
+
+**CRITICAL**: When modifying the prompt or the module, keep `title`, `description`, `startDate` and `language` in the
+`required` set of the response schema. Removing them silently collapses extraction on every page.
 
 ## Required Properties Never Fabricated
 
-**Input**: Event page missing a start date, or describing the event only through an attached document
+**Input**: Event page describing an event but stating no date, or describing it only through an attached document
 
 **Expected Behavior**:
 
-- Missing required properties are omitted rather than guessed
+- A required property the page does not state comes back as an empty string and is pruned by the module
 - No plausible-looking date, title, or language is synthesised to satisfy the required set
+- The current date in particular never appears as a start date the page does not state
 
-**Root Cause**: A required property in a response schema pressures the model to supply a value, and the cheapest
-value is an invented one.
+**Root Cause**: A required property in a response schema pressures the model to supply a value, and the cheapest value
+is an invented one: an undated page reliably drew today's date before the blank was made an explicit option.
 
-**Validation**: Verify output for incomplete pages omits the unavailable required properties
+**Validation**: Run an undated event page and verify no start date is emitted, in particular not the date supplied as
+the reference input
 
-**CRITICAL**: When modifying the prompt, keep the preference for omission over fabrication explicit
+**CRITICAL**: When modifying the prompt, keep the blank explicitly permitted for required properties. The required set
+cannot be relaxed to prevent fabrication, so the blank is the only refusal a required property has.
 
 ## Non-Event Documents
 
@@ -268,11 +365,19 @@ value is an invented one.
 
 **Expected Behavior**:
 
-- An empty JSON object is returned
+- `documentType` is `other` and the whole record is discarded by the module
 - No properties are extracted from page headers, footers, or navigation sections
 - Details of unrelated events mentioned in passing are not merged into a single result
+- One entry of a listing is never promoted to stand for the whole document
 
-**Validation**: Verify non-event pages yield no extracted properties
+**Root Cause**: A required set leaves the model no way to return nothing, so a listing page came back as an event
+titled after the page, described by its own markup, and dated to the current day.
+
+**Validation**: Run a listing page and an error page and verify both yield no record at all
+
+**CRITICAL**: When modifying the prompt, keep `documentType` required and keep its two values described in terms of
+what the document is, never in terms of what the extractor should then do: instructing the model to stop extracting on
+`other` suppressed extraction on genuine event pages too.
 
 ## Single Event per Document
 
