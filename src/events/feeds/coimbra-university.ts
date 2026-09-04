@@ -71,7 +71,7 @@ export async function sync() {
 			(html())
 			(focus())
 			(untag())
-			(translate(en))
+			(translate({ target: en }))
 		)))
 		(each(console.log))
 	);

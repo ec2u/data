@@ -32,13 +32,12 @@ import { createTranslator, type Translator } from "./index.js";
 
 
 /**
- * Creates a text translator.
+ * Creates a task translating text into another language.
  *
- * The generated task converts a feed of text into a feed of translations, one per item and in the order they are
- * drawn, so that a consumer renders prose in another language as a step of a pipe rather than through a provider of
- * its own.
+ * Each item is converted into its translation and emitted in the order items are drawn, so that prose is rendered in
+ * another language as a step of a pipe rather than through a provider of its own.
  *
- * Text is handed to `translator`, or to the translator resolved from the enclosing
+ * Text is handed to `using`, or to the translator resolved from the enclosing
  * {@link @metreeca/gear!index.service execution} if none is given, so that the provider is settled by the consumer
  * rather than by the task itself: binding {@link createTranslator} routes every item through a cached, chained or
  * stubbed provider, without altering the task.
@@ -58,15 +57,16 @@ import { createTranslator, type Translator } from "./index.js";
  * > - **Stateless**: every item is translated on its own, so the outcome is unaffected by how the feed is split
  * >   across nested feeds or runs, whatever state the provider carries across requests.
  *
- * @param target The BCP 47 language {@link Tag} identifying the language text is to be translated into
- * @param source The BCP 47 language {@link Tag} identifying the language text is written in; if undefined, the source
- * language is detected by the provider
- * @param translator The provider producing the translations; if undefined, the translator bound to
+ * @param options The translation options
+ * @param options.target The BCP 47 language {@link Tag} identifying the language text is to be translated into
+ * @param options.source The BCP 47 language {@link Tag} identifying the language text is written in; if undefined,
+ * the source language is detected by the provider
+ * @param options.using The provider translating the text; if undefined, the one bound to
  * {@link createTranslator} in the enclosing execution
  *
  * @returns A task converting a feed of text into a feed of translations into `target`
  *
- * @throws {Error} If `translator` is undefined and no execution is running, as the provider is resolved from the
+ * @throws {Error} If `using` is undefined and no execution is running, as the provider is resolved from the
  * enclosing one
  *
  * @throws {Error} While the feed is consumed, whatever the source reports while producing text, or whatever the
@@ -74,10 +74,24 @@ import { createTranslator, type Translator } from "./index.js";
  *
  * @group Factories
  */
-export function translate(target: Tag, source?: Tag, translator?: Translator): Task<Text> {
+export function translate({
 
-	const $translator = translator ?? service(createTranslator);
+	target,
+	source,
 
-	return map(text => $translator(text, target, source));
+	using
+
+}: {
+
+	target: Tag
+	source?: Tag
+
+	using?: Translator
+
+}): Task<Text> {
+
+	const translator = using ?? service(createTranslator);
+
+	return map(text => translator(text, target, source));
 
 }

@@ -33,7 +33,7 @@ describe("translate", () => {
 
 		expect(await pipe(
 			(items(["uno", "due"]))
-			(translate("en", "it", stub))
+			(translate({ target: "en", source: "it", using: stub }))
 			(toArray())
 		)).toEqual(["<uno|en|it>", "<due|en|it>"]);
 
@@ -43,7 +43,7 @@ describe("translate", () => {
 
 		expect(await pipe(
 			(items("uno"))
-			(translate("en", undefined, stub))
+			(translate({ target: "en", using: stub }))
 			(toArray())
 		)).toEqual(["<uno|en|?>"]);
 
@@ -59,7 +59,7 @@ describe("translate", () => {
 
 			expect(await pipe(
 				(items("uno"))
-				(translate("en", "it"))
+				(translate({ target: "en", source: "it" }))
 				(toArray())
 			)).toEqual(["<uno|en|it>"]);
 
@@ -73,7 +73,9 @@ describe("translate", () => {
 
 		const delegate = vi.fn(stub);
 
-		const task = await executor(bind(createTranslator, () => delegate))(async () => translate("en", "it"));
+		const task = await executor(bind(createTranslator, () => delegate))(async () =>
+			translate({ target: "en", source: "it" })
+		);
 
 		expect(await pipe(
 			(items("uno"))
@@ -85,7 +87,7 @@ describe("translate", () => {
 
 	it("rejects a task created with no provider at all", async () => {
 
-		expect(() => translate("en", "it")).toThrow(Error);
+		expect(() => translate({ target: "en", source: "it" })).toThrow(Error);
 
 	});
 
