@@ -1,0 +1,96 @@
+/*
+ * Copyright © 2026 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { pipe } from "@metreeca/flow";
+import { items } from "@metreeca/flow/feeds";
+import { toArray } from "@metreeca/flow/sinks";
+import { bind, executor } from "@metreeca/gear";
+import { describe, expect, it, vi } from "vitest";
+import { createTranslator, type Translator } from "./index.js";
+import { translate } from "./translate.js";
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+describe("translate", () => {
+
+	const stub: Translator = (text, target, source) => `<${text}|${target}|${source ?? "?"}>`;
+
+	it("serves the translations produced by the translator", async () => {
+
+		expect(await pipe(
+			(items(["uno", "due"]))
+			(translate("en", "it", stub))
+			(toArray())
+		)).toEqual(["<uno|en|it>", "<due|en|it>"]);
+
+	});
+
+	it("serves text of an undetermined source language", async () => {
+
+		expect(await pipe(
+			(items("uno"))
+			(translate("en", undefined, stub))
+			(toArray())
+		)).toEqual(["<uno|en|?>"]);
+
+	});
+
+	it("serves the translations produced by the bound provider", async () => {
+
+		const delegate = vi.fn(stub);
+
+		// asserted inside the execution: releasing a disposable service restores the mock, clearing its call records
+
+		await executor(bind(createTranslator, () => delegate))(async () => {
+
+			expect(await pipe(
+				(items("uno"))
+				(translate("en", "it"))
+				(toArray())
+			)).toEqual(["<uno|en|it>"]);
+
+			expect(delegate).toHaveBeenCalledWith("uno", "en", "it");
+
+		});
+
+	});
+
+	it("resolves the provider as the feed is consumed", async () => {
+
+		const delegate = vi.fn(stub);
+
+		const task = translate("en", "it");
+
+		expect(await executor(bind(createTranslator, () => delegate))(() => pipe(
+			(items("uno"))
+			(task)
+			(toArray())
+		))).toEqual(["<uno|en|it>"]);
+
+	});
+
+	it("rejects a request with no provider at all", async () => {
+
+		await expect(pipe(
+			(items("uno"))
+			(translate("en", "it"))
+			(toArray())
+		)).rejects.toThrow(Error);
+
+	});
+
+});
