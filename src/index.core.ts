@@ -34,12 +34,10 @@ export const execute = executor(
 	bind(createCache, () => createFileCache({
 		bytes: 1024**3
 	})),
-	bind(createFetch, () => createFetch(
-		cache({
-			ttl: 60*minute,
-			store: service(createCache)
-		})
-	)),
+	bind(createFetch, () => createFetch(cache({
+		ttl: 60*minute,
+		store: service(createCache)
+	}))),
 	bind(createGoogleAI, async () => createGoogleAI({
 		apiKey: await service(createVault)("googleai-key")
 	}))

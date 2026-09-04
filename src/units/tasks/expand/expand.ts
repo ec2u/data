@@ -22,7 +22,7 @@ import { fetchPage } from "@/pages/tools/fetchPage.js";
 import { Unit } from "@/units/index.js";
 import { Type } from "@google/genai";
 import { markdown } from "@metreeca/core/strings";
-import { service } from "../../../../../../../Packages/Gear/packages/gear/src/index.js";
+import { service } from "@metreeca/gear";
 
 
 const tools = [

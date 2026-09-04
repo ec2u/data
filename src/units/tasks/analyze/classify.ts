@@ -21,8 +21,8 @@ import { matchTopics } from "@/taxonomies/_topics/tools/matchTopics.js";
 import { Unit } from "@/units/index.js";
 import { Type } from "@google/genai";
 import { markdown } from "@metreeca/core/strings";
+import { service } from "@metreeca/gear";
 import { log } from "@metreeca/tape";
-import { service } from "../../../../../../../Packages/Gear/packages/gear/src/index.js";
 
 
 const scheme = "https://data.ec2u.eu/taxonomies/organizations/";

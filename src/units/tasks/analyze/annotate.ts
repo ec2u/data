@@ -22,8 +22,8 @@ import { Unit } from "@/units/index.js";
 import { Type } from "@google/genai";
 import { isString } from "@metreeca/core";
 import { markdown } from "@metreeca/core/strings";
+import { service } from "@metreeca/gear";
 import { log } from "@metreeca/tape";
-import { service } from "../../../../../../../Packages/Gear/packages/gear/src/index.js";
 
 
 const logger = log(import.meta.url);

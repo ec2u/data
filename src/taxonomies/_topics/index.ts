@@ -36,15 +36,6 @@ export interface Topic {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * The embedder positioning queries in the semantic space topics are indexed in.
- *
- * States the Gemini embedder, so that a query is embedded exactly as the topic embeddings it is compared against were:
- * {@link cosine} distances are meaningful only between embeddings produced by the same source.
- */
-const embedder = createGoogleEmbedder();
-
-
-/**
  * Matches topics against a text query by semantic similarity.
  *
  * Topics are ranked by the cosine distance between their embedding and the embedding of the query, so that a caller
@@ -74,7 +65,8 @@ const embedder = createGoogleEmbedder();
  * @throws {@link !RangeError RangeError} If `text` is blank, or if `limit`, `threshold`, `tolerance` or `narrowing` is
  * negative
  *
- * @throws {Error} Whatever the embedding provider reports while embedding `text`
+ * @throws {Error} If no execution is running, as the embedding provider is resolved from the enclosing one, or
+ * whatever that provider reports while embedding `text`
  */
 export async function match(text: string, {
 
@@ -116,7 +108,9 @@ export async function match(text: string, {
 		throw new RangeError(`negative narrowing <${narrowing}>`);
 	}
 
-	const embedding = await embedder(text);
+	// queries are embedded by the same source topic embeddings were, as cosine distances compare only alike embeddings
+
+	const embedding = await createGoogleEmbedder()(text);
 
 	const sorted = topics
 		.filter(topic => focus === undefined || topic.lineage.includes(focus))

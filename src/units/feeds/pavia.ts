@@ -27,9 +27,9 @@ import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";
 import { flat, fork, map } from "@metreeca/flow/tasks";
+import { service } from "@metreeca/gear";
 import { log, report, time } from "@metreeca/tape";
 import * as uuid from "uuid";
-import { service } from "../../../../../../Packages/Gear/packages/gear/src/index.js";
 
 
 const Concurrency = 32;
