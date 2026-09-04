@@ -15,11 +15,10 @@
  */
 
 import { execute } from "@/index.core.js";
-import { range } from "@metreeca/core/arrays";
 import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
+import { items, range } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";
-import { fork } from "@metreeca/flow/tasks";
+import { flat, fork, map } from "@metreeca/flow/tasks";
 import { jpath, json, number, string } from "@metreeca/gear-json";
 import { crawl, fetch } from "@metreeca/gear-url";
 
@@ -40,23 +39,29 @@ export async function sync() {
 	return pipe(
 		(items(Search))
 		(crawl(
-			fork(32, urls => urls
+			fork(10, urls => pipe(
+				items(urls)
 				(fetch())
 				(json())
 				(jpath())
+			)),
+			path => pipe(
+				items(path("pagination.total_pages"))
+				(map(number))
+				(flat(map(total => range(2, total+1))))
+				(map(index => `${Search}?page=${index}`))
 			),
-			path => path("pagination.total_pages")
-				.map(number)
-				.flatMap(total => range(2, total+1)) // page 1 is the seed, under a URL of its own
-				.map(index => `${Search}?page=${index}`),
-			path => path("events.*.key")
-				.map(string)
-				.map(key => `${Events}/${key}`)
+			path => pipe(
+				items(path("events.*.key"))
+				(map(string))
+				(map(key => `${Events}/${key}`))
+			)
 		))
 		(each(console.log))
 	);
 
 }
+
 
 // !!! incremental sync
 // !!! analysis
