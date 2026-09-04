@@ -54,8 +54,6 @@ import { markdown } from "@metreeca/core/strings";
 import { BadRequest, TooManyRequests } from "@metreeca/http";
 import { log, Logger, report } from "@metreeca/tape";
 
-const logger = log(import.meta.url);
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -102,7 +100,8 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 	 * Retrieves the request channel shared by all requests to a model, opening it on first request.
 	 *
 	 * Channels are cached by model id exactly as supplied, so the bare and `models/`-prefixed forms of the same model
-	 * are throttled and logged independently. The `structured` flag records whether the model is currently expected to
+	 * are throttled and logged independently, each under a category naming the model alone rather than this module,
+	 * so that a run reads as a list of models rather than of repeated module paths. The `structured` flag records whether the model is currently expected to
 	 * accept a response schema alongside tools: the Gemini API supports the combination from the Gemini 3 generation
 	 * onwards, so the generation read from the last path segment of the id seeds the flag, while a rejection clears it
 	 * in place (see {@link retry}).
@@ -128,7 +127,7 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 
 			structured: generation >= 3,
 
-			logger: logger.getChild(model),
+			logger: log(["/", model]),
 
 			// !!! the floor is a magic 600 rpm: derive it from the rpm published for the model, that is as
 			// !!! `60_000/rpm`, so that the pace is stated by the quota rather than guessed
