@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { createTranslator, translatable } from "./index.js";
+import { createTranslator } from "./index.js";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,51 +31,3 @@ describe("createTranslator", () => {
 });
 
 
-describe("translatable", () => {
-
-	it("accepts text to be translated into another language", () => {
-
-		expect(translatable("text", "it", "en")).toBe(true);
-
-	});
-
-	it("accepts text of an undetermined source language", () => {
-
-		expect(translatable("text", "it")).toBe(true);
-
-	});
-
-	it("rejects blank text", () => {
-
-		expect(translatable("", "it", "en")).toBe(false);
-		expect(translatable("  \n ", "it", "en")).toBe(false);
-		expect(translatable("", "it")).toBe(false);
-
-	});
-
-	it("rejects text already written in the target language", () => {
-
-		expect(translatable("text", "en", "en")).toBe(false);
-		expect(translatable("text", "EN", "en")).toBe(false);
-
-	});
-
-	it("rejects text written in a variant of the target language", () => {
-
-		expect(translatable("text", "en", "en-GB")).toBe(false);
-
-	});
-
-	it("accepts text written in a language the target language is a variant of", () => {
-
-		expect(translatable("text", "en-GB", "en")).toBe(true);
-
-	});
-
-	it("accepts text written in a language sharing a prefix with the target language", () => {
-
-		expect(translatable("text", "en-GB", "en-US")).toBe(true);
-
-	});
-
-});

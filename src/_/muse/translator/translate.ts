@@ -23,7 +23,7 @@
  * @module
  */
 
-import { type Tag } from "@metreeca/core/language";
+import { matchTag, type Tag } from "@metreeca/core/language";
 import type { Text } from "@metreeca/core/strings";
 import type { Task } from "@metreeca/flow";
 import { map } from "@metreeca/flow/tasks";
@@ -45,9 +45,10 @@ import { createTranslator, type Translator } from "./index.js";
  * The provider is settled once, as the task is created, so the enclosing execution must already be running by then and
  * every item drawn is translated by the same provider, however long the feed runs.
  *
- * Blank text and text already written in the target language are handed over like any other, as short-circuiting them
- * is the business of the {@link createCacheTranslator caching} and {@link createComboTranslator combo} decorators the
- * provider is assembled from.
+ * Blank text, and text whose `source` language already matches `target`, are emitted as they are, without reaching the
+ * provider, so that a feed carrying text that needs no translation is neither delayed nor charged for. Languages are
+ * matched under RFC 4647 basic filtering, so a regional variant counts as the language it belongs to, while text in a
+ * broader language is still handed over for translation into a specific variant of it.
  *
  * > [!NOTE]
  * >
@@ -72,7 +73,12 @@ import { createTranslator, type Translator } from "./index.js";
  * @throws {Error} While the feed is consumed, whatever the source reports while producing text, or whatever the
  * provider reports while translating it
  *
+ * @throws {@link !TypeError TypeError} While the feed is consumed, if `source` is given and either it or `target`
+ * isn't a well-formed language tag
+ *
  * @group Factories
+ *
+ * @see {@link https://www.rfc-editor.org/rfc/rfc4647.html#section-3.3.1 RFC 4647 § 3.3.1 - Basic Filtering}
  */
 export function translate({
 
@@ -92,6 +98,9 @@ export function translate({
 
 	const translator = using ?? service(createTranslator);
 
-	return map(text => translator(text, target, source));
+	return map(text => text.trim() === "" || source !== undefined && matchTag(source, target)
+		? text
+		: translator(text, target, source)
+	);
 
 }

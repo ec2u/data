@@ -27,7 +27,7 @@ import type { Awaitable } from "@metreeca/core/async";
 import type { Tag } from "@metreeca/core/language";
 import type { Text } from "@metreeca/core/strings";
 import { dispose } from "../_disposal.js";
-import { translatable, type Translator } from "./index.js";
+import { type Translator } from "./index.js";
 
 
 /**
@@ -35,8 +35,7 @@ import { translatable, type Translator } from "./index.js";
  *
  * Translations are retained in the process heap under the text and the languages they were requested for, so that the
  * same request is served without a further call to the delegate, at the price of a memory footprint growing with the
- * number of distinct requests. Blank text is served as it is, without reaching the delegate, and a failed translation
- * is dropped, leaving a later request free to retry.
+ * number of distinct requests. A failed translation is dropped, leaving a later request free to retry.
  *
  * @param translator The delegate translator producing the translations to be retained
  *
@@ -50,9 +49,7 @@ export function createCacheTranslator(translator: Translator): Translator {
 
 	return Object.assign(
 
-		(text: Text, target: Tag, source?: Tag): Awaitable<Text> => translatable(text, target, source)
-			? translate(text, target, source)
-			: text,
+		translate,
 
 		{ [Symbol.asyncDispose]: () => dispose(translator) }
 

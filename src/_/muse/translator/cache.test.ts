@@ -48,16 +48,6 @@ describe("createCacheTranslator", () => {
 
 	});
 
-	it("serves text already written in the target language without reaching the delegate", async () => {
-
-		const delegate = vi.fn((text: string) => `<${text}>`);
-		const translator = createCacheTranslator(delegate);
-
-		expect(await translator("text", "en", "en-GB")).toBe("text");
-		expect(delegate).not.toHaveBeenCalled();
-
-	});
-
 	it("distinguishes requests by text and languages", async () => {
 
 		const delegate = vi.fn((text: string) => `<${text}>`);

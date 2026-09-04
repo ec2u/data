@@ -26,7 +26,7 @@
 import type { Tag } from "@metreeca/core/language";
 import type { Text } from "@metreeca/core/strings";
 import { dispose } from "../_disposal.js";
-import { translatable, type Translator } from "./index.js";
+import { type Translator } from "./index.js";
 
 
 /**
@@ -34,8 +34,7 @@ import { translatable, type Translator } from "./index.js";
  *
  * Delegates are tried in the order they are given and the first translation obtained is served, so that a preferred
  * provider is backed by fallbacks covering the languages it doesn't handle and the failures it runs into; a delegate
- * failing or producing an empty translation hands the request over to the next one. Blank text is served as it is,
- * without reaching a delegate.
+ * failing or producing an empty translation hands the request over to the next one.
  *
  * @param translators The delegate translators, in the order they are to be tried
  *
@@ -51,9 +50,7 @@ export function createComboTranslator(...translators: readonly Translator[]): Tr
 
 	return Object.assign(
 
-		(text: Text, target: Tag, source?: Tag): Promise<Text> => translatable(text, target, source)
-			? translate(text, target, source)
-			: Promise.resolve(text),
+		translate,
 
 		{ [Symbol.asyncDispose]: release }
 

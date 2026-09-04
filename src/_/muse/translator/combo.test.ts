@@ -60,16 +60,6 @@ describe("createComboTranslator", () => {
 
 	});
 
-	it("serves text already written in the target language without reaching a delegate", async () => {
-
-		const delegate = vi.fn((text: string) => `<${text}>`);
-		const translator = createComboTranslator(delegate);
-
-		expect(await translator("text", "en", "en-GB")).toBe("text");
-		expect(delegate).not.toHaveBeenCalled();
-
-	});
-
 	it("stops at the first delegate serving the request", async () => {
 
 		const fallback = vi.fn((text: string) => `[${text}]`);

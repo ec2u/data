@@ -26,7 +26,7 @@
  */
 
 import type { Awaitable } from "@metreeca/core/async";
-import { matchTag, type Tag } from "@metreeca/core/language";
+import type { Tag } from "@metreeca/core/language";
 import type { Text } from "@metreeca/core/strings";
 
 
@@ -67,33 +67,5 @@ export interface Translator {
 export function createTranslator(): Translator {
 
 	throw new Error("undefined text translator service");
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Checks if text is to be translated.
- *
- * Blank text, and text already written in the target language, are served as they are: translators short-circuit on
- * this check rather than paying a provider to hand the text back unchanged. The source language is matched against the
- * target language under RFC 4647 basic filtering, so a regional variant counts as the language it belongs to, while
- * text in a broader language is still handed over for translation into a specific variant of it.
- *
- * @param text The text to be translated
- * @param target The BCP 47 language {@link Tag} identifying the language `text` is to be translated into
- * @param source The BCP 47 language {@link Tag} identifying the language `text` is written in; if undefined, the
- * source language is unknown and the text is to be translated
- *
- * @returns true if `text` is to be handed over to a translator; false if it is to be served as it is
- *
- * @throws {@link !TypeError TypeError} If either `target` or `source` isn't a well-formed language tag
- *
- * @see {@link https://www.rfc-editor.org/rfc/rfc4647.html#section-3.3.1 RFC 4647 § 3.3.1 - Basic Filtering}
- */
-export function translatable(text: Text, target: Tag, source?: Tag): boolean {
-
-	return text.trim() !== "" && (source === undefined || !matchTag(source, target));
 
 }

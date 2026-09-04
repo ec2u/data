@@ -91,4 +91,67 @@ describe("translate", () => {
 
 	});
 
+
+	describe("guard", () => {
+
+		it("serves blank text as it is", async () => {
+
+			const delegate = vi.fn(stub);
+
+			expect(await pipe(
+				(items(["", "  \n "]))
+				(translate({ target: "en", source: "it", using: delegate }))
+				(toArray())
+			)).toEqual(["", "  \n "]);
+
+			expect(delegate).not.toHaveBeenCalled();
+
+		});
+
+		it("serves text already written in the target language as it is", async () => {
+
+			const delegate = vi.fn(stub);
+
+			expect(await pipe(
+				(items("text"))
+				(translate({ target: "EN", source: "en", using: delegate }))
+				(toArray())
+			)).toEqual(["text"]);
+
+			expect(delegate).not.toHaveBeenCalled();
+
+		});
+
+		it("serves text written in a variant of the target language as it is", async () => {
+
+			expect(await pipe(
+				(items("text"))
+				(translate({ target: "en", source: "en-GB", using: stub }))
+				(toArray())
+			)).toEqual(["text"]);
+
+		});
+
+		it("hands over text written in a language the target language is a variant of", async () => {
+
+			expect(await pipe(
+				(items("text"))
+				(translate({ target: "en-GB", source: "en", using: stub }))
+				(toArray())
+			)).toEqual(["<text|en-GB|en>"]);
+
+		});
+
+		it("reports malformed language tags", async () => {
+
+			await expect(pipe(
+				(items("text"))
+				(translate({ target: "!", source: "en", using: stub }))
+				(toArray())
+			)).rejects.toThrow(TypeError);
+
+		});
+
+	});
+
 });
