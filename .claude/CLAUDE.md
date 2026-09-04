@@ -28,9 +28,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **`npm run clean`** - Remove build artifacts and dependencies (lib, node_modules)
 - **`npm run setup`** - Install dependencies and apply security fixes
-- **`npm run build`** - Compile TypeScript to lib directory
+- **`npm run build`** - Compile TypeScript to lib directory and copy `*.sys.md` prompts alongside their modules
 - **`npm run check`** - Run Vitest test suite
 - **`npm run serve`** - Start development server with watch mode
+
+## Local Packages
+
+> [!CAUTION]
+> **`npm install` replaces symlinked local packages with registry copies.** Before installing, list the symlinks under
+> `node_modules/@metreeca`; after installing, reinstate every one of them with `npx link <path to local package>`.
+> Skipping this silently swaps the working copies for published ones, surfacing as type errors in modules left
+> untouched.
 
 ## Testing
 
