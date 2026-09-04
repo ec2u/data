@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { distance } from "@/_/muse/vector.js";
-import { ai, embedding } from "@/_/gcp/gemini.js";
+import { cosine } from "@/_/muse/embedder/index.js";
+import { ai, embedding } from "@/_/muse-google/gemini.js";
 
 export interface Topic {
 
@@ -113,7 +113,7 @@ export async function match(text: string, {
 	const sorted = topics
 		.filter(topic => focus === undefined || topic.lineage.includes(focus))
 		.map(topic => [topic,
-			distance(embedding, topic.embedding)*(narrowing ? Math.pow(narrowing, topic.lineage.length-1) : 1)
+			cosine(embedding, topic.embedding)*(narrowing ? Math.pow(narrowing, topic.lineage.length-1) : 1)
 		] as const)
 		.filter(([, d]) => threshold === undefined || d <= threshold)
 		.sort((x, y) => x[1]-y[1]);

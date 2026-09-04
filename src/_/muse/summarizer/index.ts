@@ -20,18 +20,17 @@
  * Provides the {@link Summarizer} contract for condensing a web page into a short abstract, decoupling consumers from
  * the generation strategy.
  *
- * @module
+ * @module index
  */
 
 import type { Page } from "@/pages/index.js";
-import { Awaitable } from "@metreeca/core/async";
+import type { Awaitable } from "@metreeca/core/async";
 
 
 /**
- * Generator of web page summaries.
+ * Web page summariser.
  *
- * Abstracts over the way a summary is produced, for instance an LLM-generated abstract or an excerpt of the page
- * itself, so that consumers requiring a short description of a page aren't bound to a specific provider.
+ * Condenses the title and content of a web page into a short abstract.
  */
 export interface Summarizer {
 
@@ -40,8 +39,27 @@ export interface Summarizer {
 	 *
 	 * @param page The title and markdown content of the {@link Page} to be summarised
 	 *
-	 * @returns The summary generated for `page`, reported either directly or on completion of the generation
+	 * @returns The summary of `page`, either directly or on settlement of the returned promise
 	 */
 	(page: Pick<Page,  "title" | "content">): Awaitable<string>; // !!! remove Page dependency
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates the default summariser.
+ *
+ * Summarisation depends on an external provider, with no sensible in-process fallback: a job relying on this service
+ * must bind a concrete summariser to it.
+ *
+ * @returns Nothing
+ *
+ * @throws {Error} Always, reporting the service as undefined
+ */
+export function createSummarizer(): Summarizer {
+
+	throw new Error("undefined page summarizer service");
 
 }

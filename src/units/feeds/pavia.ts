@@ -19,7 +19,7 @@ import { pages } from "@/pages/store.js";
 import { fetchPage } from "@/pages/tools/fetchPage.js";
 import { matches, merge, Unit, units } from "@/units/index.js";
 import { _units } from "@/units/store.js";
-import { ai, json } from "@/_/gcp/gemini.js";
+import { ai, json } from "@/_/muse-google/gemini.js";
 import { file } from "@/_/node/files.js";
 import { universities } from "@/universities/index.js";
 import * as uuid from "uuid";

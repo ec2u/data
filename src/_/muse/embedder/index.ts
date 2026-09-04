@@ -1,0 +1,208 @@
+/*
+ * Copyright © 2026 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Text embedding.
+ *
+ * Provides the {@link Embedder} contract for mapping text to a {@link Vector} positioning its meaning in a semantic
+ * space, decoupling consumers from the embedding strategy, alongside the tools for ranking embeddings by semantic
+ * proximity and retaining them in a compact form.
+ *
+ * @module index
+ *
+ * @see {@link https://en.wikipedia.org/wiki/Cosine_similarity Cosine similarity}
+ */
+
+import type { Optional } from "@metreeca/core";
+import type { Awaitable } from "@metreeca/core/async";
+import type { Text } from "@metreeca/core/strings";
+
+
+/**
+ * Text embedder.
+ *
+ * Maps text to a {@link Vector} positioning its meaning in a semantic space, so that related texts may be identified
+ * by comparing their embeddings. Embeddings are comparable only if produced by the same embedder.
+ */
+export interface Embedder {
+
+	/**
+	 * Embeds a text.
+	 *
+	 * @param text The text to be embedded
+	 *
+	 * @returns The vector embedding of `text`, either directly or on settlement of the returned promise, or undefined
+	 * if the text carries no embeddable content
+	 */
+	(text: Text): Awaitable<Optional<Vector>>;
+
+}
+
+/**
+ * Numeric vector.
+ *
+ * Carries the components of a vector, typically a text embedding, in a fixed coordinate order. Components are matched
+ * by position, so vectors are meaningfully compared only if produced by the same source.
+ */
+export type Vector = readonly number[];
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates the default embedder.
+ *
+ * Embedding depends on an external provider, with no sensible in-process fallback: a job relying on this service must
+ * bind a concrete embedder to it.
+ *
+ * @returns Nothing
+ *
+ * @throws {Error} Always, reporting the service as undefined
+ */
+export function createEmbedder(): Embedder {
+
+	throw new Error("undefined text embedder service");
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// the factor mapping normalised components onto the int16 range under quantisation
+
+const SCALE = 32767;
+
+
+function finite(vector: Vector): boolean {
+
+	return vector.every(component => Number.isFinite(component));
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Computes the cosine distance between two vectors.
+ *
+ * Cosine distance is defined as `1 - cosine similarity`, where cosine similarity measures the cosine of the angle
+ * between two vectors in n-dimensional space: values range from 0 to 2, with 0 for identical direction, 1 for
+ * orthogonality and 2 for opposite directions.
+ *
+ * Only vectors of the same length are comparable, as components are matched by position: comparing vectors of
+ * different length, as produced by different embedding models, is rejected rather than reconciled.
+ *
+ * @param x The first vector
+ * @param y The second vector
+ *
+ * @returns The cosine distance between `x` and `y`
+ *
+ * @throws {@link !RangeError RangeError} If `x` and `y` have different lengths, if either carries a non-finite
+ * component, or if either has a zero norm, that is if it is empty or all its components are 0
+ *
+ * @see {@link https://en.wikipedia.org/wiki/Cosine_similarity Cosine similarity}
+ */
+export function cosine(x: Vector, y: Vector): number {
+
+	if ( x.length !== y.length ) {
+		throw new RangeError(`mismatched vector lengths <${x.length}>/<${y.length}>`);
+	}
+
+	if ( !finite(x) ) {
+		throw new RangeError("non-finite x vector components");
+	}
+
+	if ( !finite(y) ) {
+		throw new RangeError("non-finite y vector components");
+	}
+
+	const xnorm = norm(x);
+	const ynorm = norm(y);
+
+	if ( xnorm === 0 ) {
+		throw new RangeError("zero-length x vector");
+	}
+
+	if ( ynorm === 0 ) {
+		throw new RangeError("zero-length y vector");
+	}
+
+	const dot = x.reduce((sum, xi, index) => sum+xi*y[index], 0);
+
+	return 1-dot/(xnorm*ynorm);
+
+
+	function norm(vector: Vector): number {
+
+		return Math.sqrt(vector.reduce((sum, component) => sum+component*component, 0));
+
+	}
+
+}
+
+
+/**
+ * Compresses a vector to a compact textual form.
+ *
+ * Trades precision for size, quantising components to 16-bit integers and encoding them as base64 text: storage
+ * shrinks by roughly 75% compared to a JSON array, at a loss negligible for semantic similarity ranking. Components
+ * must lie in the `[-1, 1]` range, as produced by normalised embedding models: values outside it are rejected rather
+ * than silently wrapped around by the conversion.
+ *
+ * @param vector The vector to compress
+ *
+ * @returns The compact textual form of `vector`, to be restored as by {@link decompress}
+ *
+ * @throws {@link !RangeError RangeError} If `vector` carries a non-finite component or a component outside the
+ * `[-1, 1]` range
+ */
+export function compress(vector: Vector): string {
+
+	if ( !finite(vector) ) {
+		throw new RangeError("non-finite vector components");
+	}
+
+	if ( vector.some(component => component < -1 || component > 1) ) {
+		throw new RangeError("out-of-range vector components");
+	}
+
+	const quantised = Int16Array.from(vector, component => Math.round(component*SCALE));
+
+	return Buffer.from(quantised.buffer).toString("base64");
+}
+
+/**
+ * Decompresses a vector from its compact textual form.
+ *
+ * Restores components to the `[-1, 1]` range, approximating the original values within the quantisation step applied
+ * by {@link compress}.
+ *
+ * @param compressed The compact textual form of the vector to restore, as produced by {@link compress}
+ *
+ * @returns The vector restored from `compressed`
+ */
+export function decompress(compressed: string): Vector {
+
+	const buffer = Buffer.from(compressed, "base64");
+
+	const quantised = new Int16Array(
+		buffer.buffer,
+		buffer.byteOffset,
+		buffer.byteLength/Int16Array.BYTES_PER_ELEMENT
+	);
+
+	return Array.from(quantised, component => component/SCALE);
+}

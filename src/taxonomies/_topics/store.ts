@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { compress, decompress } from "@/_/muse/embedder/index.js";
 import { Topic } from "@/taxonomies/_topics/index.js";
-import { compress, decompress } from "@/_/muse/vector.js";
-import { datastore } from "@/_/gcp/datastore.js";
+import { datastore } from "@/_/muse-google/datastore.js";
 import * as uuid from "uuid";
 import { PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";

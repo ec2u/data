@@ -29,7 +29,7 @@
 
 import type { Retriever, Page } from "@/pages/index.js";
 import { createCache } from "@/_/core/cache.js";
-import { datastore } from "@/_/gcp/datastore.js";
+import { datastore } from "@/_/muse-google/datastore.js";
 import * as uuid from "uuid";
 import { log, report, time } from "@metreeca/tape";
 
