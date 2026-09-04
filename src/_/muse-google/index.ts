@@ -625,13 +625,17 @@ export function text(response: GenerateContentResponse): string {
  * @throws Error if `response` carries no output text or its text is not well-formed JSON
  */
 export function json<T>(response: GenerateContentResponse): T {
+
 	try {
 
 		return JSON.parse(text(response));
 
 	} catch ( e ) {
+
 		throw new Error(`malformed model response: ${report(e)}`);
+
 	}
+
 }
 
 /**

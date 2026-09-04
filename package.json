@@ -4,7 +4,7 @@
   "scripts": {
     "clean": "rm -rf lib node_modules",
     "setup": "npm install",
-    "build": "rm -rf lib && tsc --build",
+    "build": "rm -rf lib && tsc --build && cpy 'src/**/*.sys.md' lib",
     "check": "npx vitest run",
     "serve": "npx tsx --watch src/_ports.ts"
   },
@@ -13,13 +13,13 @@
     "@google-cloud/secret-manager": "^6.3.0",
     "@google/genai": "^1.52.0",
     "@metreeca/core": "^0.9.19",
-    "@metreeca/http": "^0.1.1",
     "@metreeca/flow": "^0.9.21",
     "@metreeca/gear": "^0.1.1",
     "@metreeca/gear-csv": "^0.1.1",
     "@metreeca/gear-json": "^0.1.0",
     "@metreeca/gear-url": "^0.1.1",
     "@metreeca/gear-xml": "^0.1.0",
+    "@metreeca/http": "^0.1.1",
     "@metreeca/tape": "^0.10.0",
     "@metreeca/trio": "^0.1.0",
     "@metreeca/wire-sparql": "^0.9.0",
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "cpy-cli": "^7.0.0",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
     "vitest": "^4.1.10"
