@@ -24,9 +24,9 @@ new material and record what varies by source rather than restating the Coimbra 
 - Description scope: the boundary between the descriptive text and the surrounding page furniture is stated as a
   prohibition rather than a definition; decide what belongs in the description for a page that mixes a programme,
   speaker notes and contact details
-- Description completeness under translation: the longest page answered with some 4,700 characters of description
-  before the prose was asked for in English and some 1,900 after, so the model appears to paraphrase where it cannot
-  translate cheaply; establish what a complete translated description is expected to carry
+- Season programmes as description: a concert series answers with its whole programme, a paragraph per date and some
+  29,500 characters, which the rules admit as the event's own descriptive text rather than a listing of others;
+  decide whether a programme belongs in the description or is carried some other way
 
 # Test Cases
 
@@ -36,6 +36,15 @@ The title, the summary, the description, the topic and the audience come back in
 document is written in, identically across runs, while `language` states the language of the document rather than the
 English the properties are stated in. Proper names are left as the document has them: a venue, a street, a city, an
 image credit, and a name carried by a title.
+
+A translation carries the whole of what it translates: abridging, summarising, condensing and paraphrasing are
+forbidden by name, and a translated description runs as long as its source. Completeness is stated as bearing on the
+translating and not on the choosing, since asking for it wholesale invites the description to widen into the page
+furniture the prompt keeps out. The output budget was doubled to 16384 tokens to leave room, the longest page of the
+test set answering with some 29,500 characters.
+
+CRITICAL: a report that translation shortens the description is most likely a comparison across an edit. Measure the
+same page under one revision before and after, never a count carried over from an earlier one.
 
 ## Recurring Events Are Events
 

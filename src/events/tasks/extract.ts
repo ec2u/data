@@ -59,7 +59,7 @@ export function extract(): Task<Text, Value> {
 
 					seed: 0,
 					temperature: 0,
-					maxOutputTokens: 8192,
+					maxOutputTokens: 16384,
 
 					systemInstruction: await file(".sys.md", import.meta.url),
 

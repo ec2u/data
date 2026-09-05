@@ -50,6 +50,17 @@ name and an image credit are stated as the document has them, and a proper name 
 form. The `language` property states the language the document is written in, NEVER the English the properties are
 stated in.
 
+**A translation is complete and faithful. STRICTLY FORBIDDEN: abridging, summarising, condensing, paraphrasing, or
+leaving out any part of the text you are translating.** Every sentence of it is carried over, in the order it is
+written and with the markdown structure it carries, and the result is as long as the text it translates, give or take
+what the two languages need to say the same thing. Where the text resists translation, translate it anyway rather
+than shortening it.
+
+Completeness bears on the translating, NEVER on the choosing: it is no licence to widen the description to matter the
+prompt keeps out of it, such as navigation, a calendar of sessions or a listing of other events. Choose the
+descriptive text first, on the rules above, then translate all of what you chose. The summary alone is short, being
+asked for short.
+
 A recurring event has no start or end time of its own: a series meeting week after week is reported with none,
 however plainly the document names the hour its sessions are held at. The hours a venue keeps, and the time of a talk
 given alongside a longer exhibition, are NEVER the times of the event either. Report a start or end time only where
