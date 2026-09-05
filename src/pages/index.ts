@@ -114,7 +114,7 @@ export type Retriever = (url: Locator) => Promise<Page>;
  *
  * @returns The immutable snapshot of the processed page
  *
- * @throws Error If the page can't be retrieved or processed
+ * @throws {@link !Error Error} If the page can't be retrieved or processed
  */
 export async function retrieve(url: Locator): Promise<Page> {
 

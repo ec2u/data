@@ -83,7 +83,7 @@ export type Embedding = readonly number[];
  *
  * @returns Nothing
  *
- * @throws {Error} Always, reporting the service as undefined
+ * @throws {@link !Error Error} Always, reporting the service as undefined
  */
 export function createEmbedder(): Embedder {
 

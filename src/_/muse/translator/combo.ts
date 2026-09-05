@@ -41,8 +41,8 @@ import { type Translator } from "./index.js";
  * @returns A translator serving the first translation obtained from `translators`, releasing each of them as the
  * execution ends
  *
- * @throws {Error} While translating, if every delegate either fails or produces an empty translation, reporting the
- * last failure as its cause
+ * @throws {@link !Error Error} While translating, if every delegate either fails or produces an empty translation,
+ * reporting the last failure as its cause
  *
  * @group Implementations
  */

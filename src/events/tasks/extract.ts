@@ -46,11 +46,11 @@ import * as uuid from "uuid";
  *
  * @returns A task converting a feed of markdown event pages into a feed of the events they state
  *
- * @throws {Error} If no execution is running, as the Gemini client is resolved from the enclosing one
+ * @throws {@link !Error Error} If no execution is running, as the Gemini client is resolved from the enclosing one
  *
- * @throws {Error} While the feed is consumed, if the prompt cannot be read, whatever the source reports while producing
- * pages, whatever the API reports on a request it cannot recover from, or if the model replies with no output text or
- * with malformed JSON
+ * @throws {@link !Error Error} While the feed is consumed, if the prompt cannot be read, whatever the source reports
+ * while producing pages, whatever the API reports on a request it cannot recover from, or if the model replies with
+ * no output text or with malformed JSON
  */
 export function extract(university: {
 

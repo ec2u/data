@@ -89,7 +89,7 @@ export interface Content {
  *
  * @returns The immutable content extracted from `page`
  *
- * @throws Error If the page can't be processed
+ * @throws {@link !Error Error} If the page can't be processed
  */
 export async function scrape(page: string, url: string): Promise<Content> {
 

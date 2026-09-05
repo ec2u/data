@@ -82,7 +82,8 @@ export function createGCPVault(): Vault {
  *
  * @returns A promise resolving to the textual payload of the latest version of the secret named `key`
  *
- * @throws Error If `key` names no secret, if the secret is not accessible, or if its latest version carries no payload
+ * @throws {@link !Error Error} If `key` names no secret, if the secret is not accessible, or if its latest version
+ * carries no payload
  *
  * @see {@link https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets Accessing secrets}
  */

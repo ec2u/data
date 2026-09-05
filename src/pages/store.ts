@@ -145,7 +145,7 @@ function lookup(fetcher: Retriever): Retriever {
  *
  * @param items The page or pages whose snapshots are to be discarded; if undefined, every retained page is discarded
  *
- * @throws Error If the snapshots can't be discarded
+ * @throws {@link !Error Error} If the snapshots can't be discarded
  */
 async function remove(items?: Page | readonly Page[]): Promise<void> {
 

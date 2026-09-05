@@ -65,8 +65,8 @@ export interface Topic {
  * @throws {@link !RangeError RangeError} If `text` is blank, or if `limit`, `threshold`, `tolerance` or `narrowing` is
  * negative
  *
- * @throws {Error} If no execution is running, as the embedding provider is resolved from the enclosing one, or
- * whatever that provider reports while embedding `text`
+ * @throws {@link !Error Error} If no execution is running, as the embedding provider is resolved from the enclosing
+ * one, or whatever that provider reports while embedding `text`
  */
 export async function match(text: string, {
 

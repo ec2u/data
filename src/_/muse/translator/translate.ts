@@ -67,11 +67,11 @@ import { createTranslator, type Translator } from "./index.js";
  *
  * @returns A task converting a feed of text into a feed of translations into `target`
  *
- * @throws {Error} If `using` is undefined and no execution is running, as the provider is resolved from the
- * enclosing one
+ * @throws {@link !Error Error} If `using` is undefined and no execution is running, as the provider is resolved from
+ * the enclosing one
  *
- * @throws {Error} While the feed is consumed, whatever the source reports while producing text, or whatever the
- * provider reports while translating it
+ * @throws {@link !Error Error} While the feed is consumed, whatever the source reports while producing text, or
+ * whatever the provider reports while translating it
  *
  * @throws {@link !TypeError TypeError} While the feed is consumed, if `source` is given and either it or `target`
  * isn't a well-formed language tag
