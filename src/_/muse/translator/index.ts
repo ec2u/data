@@ -35,7 +35,7 @@ import type { Text } from "@metreeca/core/strings";
  *
  * Translates text into a target language, detecting the source language when it isn't specified.
  */
-export interface Translator {
+export type Translator = {
 
 	/**
 	 * Translates text into a target language.
@@ -49,7 +49,7 @@ export interface Translator {
 	 */
 	(text: Text, target: Tag, source?: Tag): Awaitable<Text>;
 
-}
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -18,8 +18,8 @@
  * Gemini API access.
  *
  * Provides a Gemini API client for content generation, function calling and embedding, together with the accessors
- * turning a model response into the text, JSON payload or embedding vector it was requested for, so that a consumer
- * draws on the Gemini models without pacing requests or unpacking responses of its own.
+ * turning a model response into the text, JSON payload or embedding it was requested for, so that a consumer draws on
+ * the Gemini models without pacing requests or unpacking responses of its own.
  *
  * @module index
  *
@@ -37,7 +37,7 @@
  */
 
 import { memoize } from "@/_/core/memoize.js";
-import type { Vector } from "@/_/muse/embedder/index.js";
+import type { Embedding } from "@/_/muse/embedder/index.js";
 import {
 	ApiError,
 	CallableTool,
@@ -640,13 +640,13 @@ export function json<T extends Value=Value>(response: GenerateContentResponse): 
 }
 
 /**
- * Extracts the embedding vector of a Gemini API response.
+ * Extracts the embedding of a Gemini API response.
  *
  * @param response The response of an `embedContent` request
  *
- * @returns The {@link Vector} embedded for the first content of `response`, or an empty array if it carries none
+ * @returns The {@link Embedding} embedded for the first content of `response`, or an empty array if it carries none
  */
-export function embedding(response: EmbedContentResponse) : Vector {
+export function embedding(response: EmbedContentResponse) : Embedding {
 
 	return response.embeddings?.[0]?.values ?? [];
 

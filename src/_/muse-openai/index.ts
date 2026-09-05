@@ -18,8 +18,8 @@
  * OpenAI API access.
  *
  * Provides an OpenAI API client for chat completion and embedding, together with the accessors turning a model
- * response into the text, JSON payload or embedding vector it was requested for, so that a consumer draws on the
- * OpenAI models without pacing requests or unpacking responses of its own.
+ * response into the text, JSON payload or embedding it was requested for, so that a consumer draws on the OpenAI
+ * models without pacing requests or unpacking responses of its own.
  *
  * @module index
  *
@@ -36,7 +36,7 @@
  */
 
 import { memoize } from "@/_/core/memoize.js";
-import type { Vector } from "@/_/muse/embedder/index.js";
+import type { Embedding } from "@/_/muse/embedder/index.js";
 import { isObject, isString, type Value } from "@metreeca/core";
 import { createThrottle, type Throttle } from "@metreeca/core/async";
 import { TooManyRequests } from "@metreeca/http";
@@ -318,13 +318,13 @@ export function json<T extends Value=Value>(completion: OpenAI.ChatCompletion): 
 }
 
 /**
- * Extracts the embedding vector of an embedding response.
+ * Extracts the embedding of an embedding response.
  *
  * @param response The response of an `embeddings.create` request
  *
- * @returns The {@link Vector} embedded for the first input of `response`, or an empty array if it carries none
+ * @returns The {@link Embedding} embedded for the first input of `response`, or an empty array if it carries none
  */
-export function embedding(response: OpenAI.CreateEmbeddingResponse) : Vector {
+export function embedding(response: OpenAI.CreateEmbeddingResponse) : Embedding {
 
 	return response.data[0]?.embedding ?? [];
 

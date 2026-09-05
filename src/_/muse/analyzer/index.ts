@@ -35,7 +35,7 @@ import type { Text } from "@metreeca/core/strings";
  *
  * Extracts structured information from text as directed by a plain language prompt.
  */
-export interface Analyzer {
+export type Analyzer = {
 
 	/**
 	 * Analyses a text.
@@ -58,7 +58,7 @@ export interface Analyzer {
 	 */
 	prompt(prompt: Text, schema?: Value): Analyzer;
 
-}
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

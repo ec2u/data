@@ -26,7 +26,7 @@
 import type { Awaitable } from "@metreeca/core/async";
 import type { Text } from "@metreeca/core/strings";
 import { dispose } from "../_disposal.js";
-import type { Embedder, Vector } from "./index.js";
+import type { Embedder, Embedding } from "./index.js";
 
 
 /**
@@ -47,11 +47,11 @@ import type { Embedder, Vector } from "./index.js";
  */
 export function createCacheEmbedder(embedder: Embedder): Embedder {
 
-	const cache = new Map<Text, Awaitable<Vector>>();
+	const cache = new Map<Text, Awaitable<Embedding>>();
 
 	return Object.assign(
 
-		(text: Text): Awaitable<Vector> => {
+		(text: Text): Awaitable<Embedding> => {
 
 			if ( text.trim() === "" ) {
 				throw new RangeError("expected non-blank text");
@@ -66,7 +66,7 @@ export function createCacheEmbedder(embedder: Embedder): Embedder {
 	);
 
 
-	function embed(text: Text): Awaitable<Vector> {
+	function embed(text: Text): Awaitable<Embedding> {
 
 		const cached = cache.get(text);
 

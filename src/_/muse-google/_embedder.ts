@@ -26,7 +26,7 @@
  */
 
 import { createGoogleAI, embedding } from "@/_/muse-google/index.js";
-import type { Embedder, Vector } from "@/_/muse/embedder/index.js";
+import type { Embedder, Embedding } from "@/_/muse/embedder/index.js";
 import type { Text } from "@metreeca/core/strings";
 import { service } from "@metreeca/gear";
 
@@ -73,7 +73,7 @@ export function createGoogleEmbedder(): Embedder {
 
 	const $ai = service(createGoogleAI);
 
-	return async (text: Text): Promise<Vector> => {
+	return async (text: Text): Promise<Embedding> => {
 
 		if ( text.trim() === "" ) {
 			throw new RangeError("expected non-blank text");

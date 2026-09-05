@@ -17,7 +17,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { dispose } from "../_disposal.js";
 import { createCacheEmbedder } from "./cache.js";
-import type { Vector } from "./index.js";
+import type { Embedding } from "./index.js";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ describe("createCacheEmbedder", () => {
 
 		const delegate = Object.assign(
 
-			(text: string): Vector => [text.length],
+			(text: string): Embedding => [text.length],
 
 			{ [Symbol.asyncDispose]: release }
 

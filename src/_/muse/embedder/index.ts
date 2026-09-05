@@ -17,9 +17,9 @@
 /**
  * Text embedding.
  *
- * Provides the {@link Embedder} contract for mapping text to a {@link Vector} positioning its meaning in a semantic
- * space, decoupling consumers from the embedding strategy, alongside the tools for ranking embeddings by semantic
- * proximity and retaining them in a compact form.
+ * Provides the {@link Embedder} contract for mapping text to an {@link Embedding} positioning its meaning in a
+ * semantic space, decoupling consumers from the embedding strategy, alongside the tools for ranking embeddings by
+ * semantic proximity and retaining them in a compact form.
  *
  * @module index
  *
@@ -46,31 +46,31 @@ const Scale = 32767;
 /**
  * Text embedder.
  *
- * Maps text to a {@link Vector} positioning its meaning in a semantic space, so that related texts may be identified
- * by comparing their embeddings. Embeddings are comparable only if produced by the same embedder.
+ * Maps text to an {@link Embedding} positioning its meaning in a semantic space, so that related texts may be
+ * identified by comparing their embeddings. Embeddings are comparable only if produced by the same embedder.
  */
-export interface Embedder {
+export type Embedder = {
 
 	/**
 	 * Generates a text embedding.
 	 *
 	 * @param text The text to be embedded
 	 *
-	 * @returns The vector embedding of `text`, either directly or on settlement of the returned promise
+	 * @returns The embedding of `text`, either directly or on settlement of the returned promise
 	 *
 	 * @throws {@link !RangeError RangeError} If `text` is blank
 	 */
-	(text: Text): Awaitable<Vector>;
+	(text: Text): Awaitable<Embedding>;
 
-}
+};
 
 /**
- * Numeric vector.
+ * Text embedding.
  *
- * Carries the components of a vector, typically a text embedding, in a fixed coordinate order. Components are matched
- * by position, so vectors are meaningfully compared only if produced by the same source.
+ * Carries the components positioning a text in a semantic space, in a fixed coordinate order. Components are matched
+ * by position, so embeddings are meaningfully compared only if produced by the same source.
  */
-export type Vector = readonly number[];
+export type Embedding = readonly number[];
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,17 +95,17 @@ export function createEmbedder(): Embedder {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Computes the cosine distance between two vectors.
+ * Computes the cosine distance between two embeddings.
  *
  * Cosine distance is defined as `1 - cosine similarity`, where cosine similarity measures the cosine of the angle
- * between two vectors in n-dimensional space: values range from 0 to 2, with 0 for identical direction, 1 for
+ * between two embeddings in n-dimensional space: values range from 0 to 2, with 0 for identical direction, 1 for
  * orthogonality and 2 for opposite directions.
  *
- * Only vectors of the same length are comparable, as components are matched by position: comparing vectors of
+ * Only embeddings of the same length are comparable, as components are matched by position: comparing embeddings of
  * different length, as produced by different embedding models, is rejected rather than reconciled.
  *
- * @param x The first vector
- * @param y The second vector
+ * @param x The first embedding
+ * @param y The second embedding
  *
  * @returns The cosine distance between `x` and `y`
  *
@@ -114,29 +114,29 @@ export function createEmbedder(): Embedder {
  *
  * @see {@link https://en.wikipedia.org/wiki/Cosine_similarity Cosine similarity}
  */
-export function cosine(x: Vector, y: Vector): number {
+export function cosine(x: Embedding, y: Embedding): number {
 
 	if ( x.length !== y.length ) {
-		throw new RangeError(`mismatched vector lengths <${x.length}>/<${y.length}>`);
+		throw new RangeError(`mismatched embedding lengths <${x.length}>/<${y.length}>`);
 	}
 
 	if ( !x.every(Number.isFinite) ) {
-		throw new RangeError("non-finite x vector components");
+		throw new RangeError("non-finite x embedding components");
 	}
 
 	if ( !y.every(Number.isFinite) ) {
-		throw new RangeError("non-finite y vector components");
+		throw new RangeError("non-finite y embedding components");
 	}
 
 	const xnorm = norm(x);
 	const ynorm = norm(y);
 
 	if ( xnorm === 0 ) {
-		throw new RangeError("zero-length x vector");
+		throw new RangeError("zero-length x embedding");
 	}
 
 	if ( ynorm === 0 ) {
-		throw new RangeError("zero-length y vector");
+		throw new RangeError("zero-length y embedding");
 	}
 
 	const dot = x.reduce((sum, xi, index) => sum+xi*y[index], 0);
@@ -144,9 +144,9 @@ export function cosine(x: Vector, y: Vector): number {
 	return 1-dot/(xnorm*ynorm);
 
 
-	function norm(vector: Vector): number {
+	function norm(embedding: Embedding): number {
 
-		return Math.sqrt(vector.reduce((sum, component) => sum+component*component, 0));
+		return Math.sqrt(embedding.reduce((sum, component) => sum+component*component, 0));
 
 	}
 
@@ -154,46 +154,46 @@ export function cosine(x: Vector, y: Vector): number {
 
 
 /**
- * Compresses a vector to a compact textual form.
+ * Compresses an embedding to a compact textual form.
  *
  * Trades precision for size, quantising components to 16-bit integers and encoding them as base64 text: storage
  * shrinks by roughly 75% compared to a JSON array, at a loss negligible for semantic similarity ranking. Components
  * must lie in the `[-1, 1]` range, as produced by normalised embedding models: values outside it are rejected rather
  * than silently wrapped around by the conversion.
  *
- * @param vector The vector to compress
+ * @param embedding The embedding to compress
  *
- * @returns The compact textual form of `vector`, to be restored as by {@link decompress}
+ * @returns The compact textual form of `embedding`, to be restored as by {@link decompress}
  *
- * @throws {@link !RangeError RangeError} If `vector` carries a non-finite component or a component outside the
+ * @throws {@link !RangeError RangeError} If `embedding` carries a non-finite component or a component outside the
  * `[-1, 1]` range
  */
-export function compress(vector: Vector): string {
+export function compress(embedding: Embedding): string {
 
-	if ( !vector.every(Number.isFinite) ) {
-		throw new RangeError("non-finite vector components");
+	if ( !embedding.every(Number.isFinite) ) {
+		throw new RangeError("non-finite embedding components");
 	}
 
-	if ( vector.some(component => component < -1 || component > 1) ) {
-		throw new RangeError("out-of-range vector components");
+	if ( embedding.some(component => component < -1 || component > 1) ) {
+		throw new RangeError("out-of-range embedding components");
 	}
 
-	const quantised = Int16Array.from(vector, component => Math.round(component*Scale));
+	const quantised = Int16Array.from(embedding, component => Math.round(component*Scale));
 
 	return Buffer.from(quantised.buffer).toString("base64");
 }
 
 /**
- * Decompresses a vector from its compact textual form.
+ * Decompresses an embedding from its compact textual form.
  *
  * Restores components to the `[-1, 1]` range, approximating the original values within the quantisation step applied
  * by {@link compress}.
  *
- * @param compressed The compact textual form of the vector to restore, as produced by {@link compress}
+ * @param compressed The compact textual form of the embedding to restore, as produced by {@link compress}
  *
- * @returns The vector restored from `compressed`
+ * @returns The embedding restored from `compressed`
  */
-export function decompress(compressed: string): Vector {
+export function decompress(compressed: string): Embedding {
 
 	const buffer = Buffer.from(compressed, "base64");
 

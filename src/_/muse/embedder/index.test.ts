@@ -50,13 +50,13 @@ describe("distance", () => {
 
 	});
 
-	it("rejects vectors of mismatched length", () => {
+	it("rejects embeddings of mismatched length", () => {
 
 		expect(() => cosine([1, 0], [1, 0, 0])).toThrow(RangeError);
 
 	});
 
-	it("rejects zero-norm vectors", () => {
+	it("rejects zero-norm embeddings", () => {
 
 		expect(() => cosine([0, 0], [1, 0])).toThrow(RangeError);
 		expect(() => cosine([1, 0], [0, 0])).toThrow(RangeError);
@@ -77,10 +77,10 @@ describe("compress", () => {
 
 	it("restores components within the quantisation step", () => {
 
-		const vector = [-1, -0.5, 0, 0.25, 1];
+		const embedding = [-1, -0.5, 0, 0.25, 1];
 
-		decompress(compress(vector)).forEach((component, index) => {
-			expect(component).toBeCloseTo(vector[index], 4);
+		decompress(compress(embedding)).forEach((component, index) => {
+			expect(component).toBeCloseTo(embedding[index], 4);
 		});
 
 	});

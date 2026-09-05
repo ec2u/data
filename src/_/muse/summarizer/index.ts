@@ -32,7 +32,7 @@ import type { Awaitable } from "@metreeca/core/async";
  *
  * Condenses the title and content of a web page into a short abstract.
  */
-export interface Summarizer {
+export type Summarizer = {
 
 	/**
 	 * Summarises a web page.
@@ -43,7 +43,7 @@ export interface Summarizer {
 	 */
 	(page: Pick<Page,  "title" | "content">): Awaitable<string>; // !!! remove Page dependency
 
-}
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
