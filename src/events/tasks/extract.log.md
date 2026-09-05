@@ -24,9 +24,32 @@ new material and record what varies by source rather than restating the Coimbra 
 - Description scope: the boundary between the descriptive text and the surrounding page furniture is stated as a
   prohibition rather than a definition; decide what belongs in the description for a page that mixes a programme,
   speaker notes and contact details
-- English translation
+- Description completeness under translation: the longest page answered with some 4,700 characters of description
+  before the prose was asked for in English and some 1,900 after, so the model appears to paraphrase where it cannot
+  translate cheaply; establish what a complete translated description is expected to carry
 
 # Test Cases
+
+## English Prose
+
+The title, the summary, the description, the topic and the audience come back in English whatever language the
+document is written in, identically across runs, while `language` states the language of the document rather than the
+English the properties are stated in. Proper names are left as the document has them: a venue, a street, a city, an
+image credit, and a name carried by a title.
+
+## Recurring Events Are Events
+
+An event happening more than once is a single event, reported in full.
+
+The rule stating that a recurring event has no times of its own was first worded as carrying "its dates alone", and
+the model read it twice as widely as intended: it stripped one page of its description, summary and topic, and it
+leaked into the non-event test, marking a permanent exhibition, a concert series and a reading group as `event`
+false. Three of ten real events would have been discarded whole. The rule now says it bears on the two times alone,
+and the error handling states that recurrence never makes a document `false`.
+
+CRITICAL: this was found while measuring something else. A rule about one property was read as a rule about the whole
+record, and the damage showed in properties nobody was looking at. After changing any instruction, read a full payload
+and the `event` flag, not only the field the change was aimed at.
 
 ## Source URL
 

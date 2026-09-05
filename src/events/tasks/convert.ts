@@ -27,6 +27,23 @@ import { filter } from "@metreeca/flow/tasks";
 import { jpath, link, string } from "@metreeca/gear-json";
 import * as uuid from "uuid";
 
+
+/**
+ * Creates a task converting extracted event properties into event records.
+ *
+ * Payloads stating no event are dropped, so the output of an extraction may be piped through unfiltered. Each record
+ * is identified after the page it was drawn from, so the same page always yields the same event, and wall times are
+ * anchored to the time zone of `university`.
+ *
+ * @param university The university the events are attributed to
+ * @param university.id The identifier the events are attributed to
+ * @param university.zone The IANA time zone the extracted dates and times are read in
+ *
+ * @returns A task converting a feed of extracted property payloads into a feed of immutable event records
+ *
+ * @throws {@link !TypeError TypeError} While the feed is consumed, if a payload states no URL, title or start date, or
+ * more than one of any of them
+ */
 export function convert(university: {
 
 	readonly id: IRI
@@ -127,47 +144,4 @@ function about(topic: string): readonly IRI[] {
 
 function audience(stakeholder: string): readonly IRI[] {
 	return []; // !!! match `stakeholder` against the EC2U stakeholders taxonomy, keeping the closest concept
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-if ( import.meta.main ) {
-	await pipe(
-		items({
-
-			event: true,
-
-			url: "https://example.org/events/urban-mobility",
-
-			title: "Doctoral Seminar on Urban Mobility",
-			summary: "A three-day seminar on sustainable urban mobility, open to doctoral students and practitioners.",
-			description: "The seminar reviews current research on sustainable urban mobility.\n\n## Programme\n\nKeynotes, paper sessions and a closing round table.",
-
-			startDate: "2026-09-14",
-			startTime: "09:30",
-			endDate: "2026-09-16",
-			endTime: "17:00",
-
-			entryFees: "free",
-			attendanceMode: "mixed",
-			attendanceURL: "https://meet.example.org/urban-mobility",
-
-			venueName: "Aula Magna",
-			venueAddress: "Largo da Porta Ferrea 1",
-			venueCity: "Coimbra",
-
-			imageURL: "https://example.org/images/urban-mobility.jpg?width=1200",
-			imageCredits: "Example University",
-
-			topic: "Urban mobility",
-			audience: "Doctoral students",
-
-			language: "en"
-
-		})
-		(convert(universities.coimbra))
-		(each(console.log))
-	);
 }

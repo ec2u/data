@@ -42,12 +42,19 @@ Extract the following properties from the provided document:
 - image credits or copyright
 - major topic
 - intended audience
-- language as guessed from the description as a 2-letter ISO tag
+- language of the document, as a 2-letter ISO tag
 
-A recurring event carries its dates alone: a series meeting week after week states no start or end time, however
-plainly the document names the hour its sessions are held at. The hours a venue keeps, and the time of a talk given
-alongside a longer exhibition, are NEVER the times of the event either. Report a start or end time only where the
-document states it as the event's own.
+**CRITICAL: state the title, the summary, the description, the topic and the audience in English, translating them
+where the document is written in another language.** Translate the prose alone: a venue name, a street address, a city
+name and an image credit are stated as the document has them, and a proper name carried by a title keeps its original
+form. The `language` property states the language the document is written in, NEVER the English the properties are
+stated in.
+
+A recurring event has no start or end time of its own: a series meeting week after week is reported with none,
+however plainly the document names the hour its sessions are held at. The hours a venue keeps, and the time of a talk
+given alongside a longer exhibition, are NEVER the times of the event either. Report a start or end time only where
+the document states it as the event's own. This bears on the two times alone: every other property of a recurring
+event is reported as fully as for any other.
 
 # Output
 
@@ -66,6 +73,10 @@ Documents to be stated as `false` include:
 - an index or a listing enumerating several events, none of which the page is about
 - a page carrying no event content, such as an error page, a login page or an empty page
 - a page about a venue, a programme or an institution that mentions events only in passing
+
+**An event happening more than once is still a single event.** A series meeting week after week, a workshop running
+in sessions and an exhibition open for months are each one event, stated as `true` and reported in full. What makes a
+document `false` is describing no one event of its own, NEVER describing an event that recurs.
 
 A document stated as `false` is discarded whole, so what the remaining properties carry does not matter. NEVER state
 `event` as `true` for a page whose event you had to assemble out of what the page happens to mention.

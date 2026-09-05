@@ -127,3 +127,10 @@ export type Instant = number
  * such, it doesn't account for calendar effects like leap years or daylight saving shifts.
  */
 export type Duration = number
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function getDate() {
+	return new Date().toISOString().slice(0, 10);
+}

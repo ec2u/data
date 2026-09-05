@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { getDate } from "@/_/core/temporal.js";
 import { file } from "@/_/host-node/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { Type } from "@google/genai";
@@ -28,24 +29,14 @@ import { service } from "@metreeca/gear";
 /**
  * Creates a task extracting event properties from event pages.
  *
- * Each markdown page is read into the JSON payload of properties it states, in the order pages are drawn; turning a
- * payload into an event record is left to whoever draws it.
- *
- * A payload states through its `event` property whether the page describes a single event: a page that describes none,
- * such as a listing or an error page, is answered with `event` false and placeholder properties, so a caller MUST drop
- * those payloads rather than read them.
- *
- * The {@link createGoogleAI Gemini client} is resolved as the task is created, so the enclosing execution must already
- * be running by then, and the steering prompt is read from the `.sys.md` file shipped alongside this module, so a
- * deployment must carry it next to the compiled code.
+ * Payloads are produced in the order pages are drawn. A page describing no single event, such as a listing or an error
+ * page, is answered with a payload stating `event` false, so a caller MUST drop those rather than read them.
  *
  * @returns A task converting a feed of markdown event pages into a feed of the property payloads they state
  *
- * @throws {@link !Error Error} If no execution is running, as the Gemini client is resolved from the enclosing one
+ * @throws {@link !Error Error} If no execution is running
  *
- * @throws {@link !Error Error} While the feed is consumed, if the prompt cannot be read, whatever the source reports
- * while producing pages, whatever the API reports on a request it cannot recover from, or if the model replies with
- * no output text or with malformed JSON
+ * @throws {@link !Error Error} While the feed is consumed, if no properties can be extracted from a page
  */
 export function extract(): Task<Text, Value> {
 
@@ -59,7 +50,7 @@ export function extract(): Task<Text, Value> {
 
 				contents: [
 					markdown`
-						- date: ${new Date().toISOString().slice(0, 10)}
+						- date: ${getDate()}
 					`,
 					document
 				],
