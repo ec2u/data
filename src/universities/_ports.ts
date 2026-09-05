@@ -22,7 +22,7 @@
  * @module
  */
 
-import { job } from "@/_/gcp/scheduler.js";
+import { job } from "@/_/host-gcp/scheduler.js";
 import { Router } from "express";
 
 

@@ -28,8 +28,8 @@
  */
 
 import type { Retriever, Page } from "@/pages/index.js";
-import { createCache } from "@/_/core/cache.js";
-import { datastore } from "@/_/gcp/datastore.js";
+import { memoize } from "@/_/core/memoize.js";
+import { datastore } from "@/_/host-gcp/datastore.js";
 import * as uuid from "uuid";
 import { log, report, time } from "@metreeca/tape";
 
@@ -67,22 +67,22 @@ export const pages = Object.freeze({
 /**
  * Creates a Datastore-backed page store.
  *
- * Reports pages retained in Google Cloud Datastore under the requested URL, delegating to `fetcher` and retaining the
- * processed page when the store doesn't already hold one. Lookups are memoised for the lifetime of the returned store,
- * so that concurrent and repeated requests for the same URL share a single Datastore round trip; failures are memoised
- * as well, so a URL that fails once keeps reporting the same error.
+ * The returned store serves pages retained in Google Cloud Datastore under the requested URL, delegating to `fetcher`
+ * and retaining the processed page when it doesn't already hold one. Lookups are memoised for the lifetime of the
+ * store, so that concurrent and repeated requests for the same URL share a single Datastore round trip; failures are
+ * memoised as well, so every later request for a URL that failed once gets the same error.
  *
  * @param fetcher The {@link Retriever} retrieving and processing the pages the store doesn't already hold
  *
- * @returns A {@link Retriever} reporting the retained page for the requested URL, or the page reported by `fetcher`
- * after retaining it; the reported promise is rejected if the page can't be looked up, retrieved, processed or
+ * @returns A {@link Retriever} yielding the retained page for the requested URL, or the page produced by `fetcher`
+ * after retaining it; the returned promise is rejected if the page can't be looked up, retrieved, processed or
  * retained
  *
  * @see {@link https://cloud.google.com/nodejs/docs/reference/datastore/latest Google Cloud Datastore}
  */
 function lookup(fetcher: Retriever): Retriever {
 
-	return createCache(url => new Promise<Page>(async (resolve, reject) => {
+	return memoize(url => new Promise<Page>(async (resolve, reject) => {
 
 		try {
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { datastore } from "@/_/gcp/datastore.js";
+import { datastore } from "@/_/host-gcp/datastore.js";
 import { Unit } from "@/units/index.js";
 import { Entity, PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";

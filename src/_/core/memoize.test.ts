@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { createCache } from "./cache.js";
+import { memoize } from "./memoize.js";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,11 +25,11 @@ class FactoryError extends Error {}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-describe("createCache", () => {
+describe("memoize", () => {
 
 	it("returns the value computed by the factory", async () => {
 
-		const cache = createCache((key: string) => key.toUpperCase());
+		const cache = memoize((key: string) => key.toUpperCase());
 
 		expect(cache("alpha")).toBe("ALPHA");
 
@@ -37,7 +37,7 @@ describe("createCache", () => {
 
 	it("computes a distinct value for each key", async () => {
 
-		const cache = createCache((key: string) => key.length);
+		const cache = memoize((key: string) => key.length);
 
 		expect(cache("alpha")).toBe(5);
 		expect(cache("beta")).toBe(4);
@@ -46,7 +46,7 @@ describe("createCache", () => {
 
 	it("returns the same value on repeated lookups", async () => {
 
-		const cache = createCache((key: string) => ({ key }));
+		const cache = memoize((key: string) => ({ key }));
 
 		expect(cache("alpha")).toBe(cache("alpha"));
 
@@ -55,7 +55,7 @@ describe("createCache", () => {
 	it("computes each value only once", async () => {
 
 		const factory = vi.fn((key: string) => key.toUpperCase());
-		const cache = createCache(factory);
+		const cache = memoize(factory);
 
 		cache("alpha");
 		cache("alpha");
@@ -68,7 +68,7 @@ describe("createCache", () => {
 
 		const factory = vi.fn((key: string) => key.toUpperCase());
 
-		createCache(factory);
+		memoize(factory);
 
 		expect(factory).not.toHaveBeenCalled();
 
@@ -78,8 +78,8 @@ describe("createCache", () => {
 
 		const factory = vi.fn((key: string) => key.toUpperCase());
 
-		createCache(factory)("alpha");
-		createCache(factory)("alpha");
+		memoize(factory)("alpha");
+		memoize(factory)("alpha");
 
 		expect(factory).toHaveBeenCalledTimes(2);
 
@@ -90,7 +90,7 @@ describe("createCache", () => {
 
 		it("returns undefined values", async () => {
 
-			const cache = createCache((key: string) => key === "alpha" ? undefined : key);
+			const cache = memoize((key: string) => key === "alpha" ? undefined : key);
 
 			expect(cache("alpha")).toBeUndefined();
 
@@ -99,7 +99,7 @@ describe("createCache", () => {
 		it("computes undefined values only once", async () => {
 
 			const factory = vi.fn((key: string): string | undefined => undefined);
-			const cache = createCache(factory);
+			const cache = memoize(factory);
 
 			cache("alpha");
 			cache("alpha");
@@ -111,7 +111,7 @@ describe("createCache", () => {
 		it("distinguishes cached undefined values from unknown keys", async () => {
 
 			const factory = vi.fn((key: string): string | undefined => undefined);
-			const cache = createCache(factory);
+			const cache = memoize(factory);
 
 			cache("alpha");
 			cache("beta");
@@ -128,7 +128,7 @@ describe("createCache", () => {
 		it("matches keys by same-value-zero equality", async () => {
 
 			const factory = vi.fn((key: number) => String(key));
-			const cache = createCache(factory);
+			const cache = memoize(factory);
 
 			cache(NaN);
 			cache(NaN);
@@ -140,7 +140,7 @@ describe("createCache", () => {
 		it("distinguishes structurally equal object keys", async () => {
 
 			const factory = vi.fn((key: { id: string }) => key.id);
-			const cache = createCache(factory);
+			const cache = memoize(factory);
 
 			cache({ id: "alpha" });
 			cache({ id: "alpha" });
@@ -156,7 +156,7 @@ describe("createCache", () => {
 
 		it("reports factory errors", async () => {
 
-			const cache = createCache((key: string) => { throw new FactoryError(key); });
+			const cache = memoize((key: string) => { throw new FactoryError(key); });
 
 			expect(() => cache("alpha")).toThrow(FactoryError);
 
@@ -165,7 +165,7 @@ describe("createCache", () => {
 		it("doesn't cache factory errors", async () => {
 
 			const factory = vi.fn((key: string): string => { throw new FactoryError(key); });
-			const cache = createCache(factory);
+			const cache = memoize(factory);
 
 			expect(() => cache("alpha")).toThrow(FactoryError);
 			expect(() => cache("alpha")).toThrow(FactoryError);

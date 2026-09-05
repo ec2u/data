@@ -15,7 +15,7 @@
  */
 
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
-import { file } from "@/_/node/files.js";
+import { file } from "@/_/host-node/files.js";
 import { events, type Event, type EventAttendanceMode, type Location } from "@/events/index.js";
 import { universities } from "@/universities/index.js";
 import { Type } from "@google/genai";

@@ -36,7 +36,7 @@
  * @see {@link https://googleapis.github.io/js-genai/release_docs/index.html Google GenAI SDK}
  */
 
-import { createCache } from "@/_/core/cache.js";
+import { memoize } from "@/_/core/memoize.js";
 import {
 	ApiError,
 	CallableTool,
@@ -99,20 +99,20 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 	/**
 	 * Retrieves the request channel shared by all requests to a model, opening it on first request.
 	 *
-	 * Channels are cached by model id exactly as supplied, so the bare and `models/`-prefixed forms of the same model
-	 * are throttled and logged independently, each under a category naming the model alone rather than this module,
-	 * so that a run reads as a list of models rather than of repeated module paths. The `structured` flag records whether the model is currently expected to
-	 * accept a response schema alongside tools: the Gemini API supports the combination from the Gemini 3 generation
-	 * onwards, so the generation read from the last path segment of the id seeds the flag, while a rejection clears it
-	 * in place (see {@link retry}).
+	 * Channels are memoised by model id exactly as supplied, so the bare and `models/`-prefixed forms of the same
+	 * model are throttled and logged independently, each under a category naming the model alone rather than this
+	 * module, so that a run reads as a list of models rather than of repeated module paths. The `structured` flag
+	 * records whether the model is currently expected to accept a response schema alongside tools: the Gemini API
+	 * supports the combination from the Gemini 3 generation onwards, so the generation read from the last path segment
+	 * of the id seeds the flag, while a rejection clears it in place (see {@link retry}).
 	 *
 	 * @param model The target model name
 	 *
-	 * @returns The channel registered for `model`, retained for the lifetime of the client (see {@link createCache})
+	 * @returns The channel registered for `model`, retained for the lifetime of the client (see {@link memoize})
 	 *
 	 * @see {@link https://ai.google.dev/gemini-api/docs/structured-output Structured output}
 	 */
-	const channels = createCache<string, {
+	const channels = memoize<string, {
 
 		structured: boolean
 
