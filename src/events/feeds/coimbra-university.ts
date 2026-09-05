@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { convert } from "@/events/tasks/_convert.js";
 import { extractGoogle } from "@/events/tasks/extract-google.js";
 import { extractOpenAI } from "@/events/tasks/extract-openai.js";
 import { execute } from "@/index.core.js";
@@ -73,8 +74,10 @@ export async function sync() {
 			(html())
 			(focus())
 			(untag())
+			// (extractGoogle())
 			(extractOpenAI(universities.coimbra))
-			(validate(v => undefined))
+			// (convert(universities.coimbra))
+			// (validate(v => undefined))
 			(peek(console.log))
 		)))
 		(count())

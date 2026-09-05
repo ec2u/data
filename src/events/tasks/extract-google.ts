@@ -16,11 +16,9 @@
 
 import { file } from "@/_/host-node/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
-import { type Event } from "@/events/index.js";
-import { convert } from "@/events/tasks/_convert.js";
 import { Type } from "@google/genai";
-import type { IRI } from "@metreeca/core/resource";
-import { markdown, type Text } from "@metreeca/core/strings";
+import type { Value } from "@metreeca/core";
+import type { Text } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { map } from "@metreeca/flow/tasks";
@@ -28,17 +26,17 @@ import { service } from "@metreeca/gear";
 
 
 /**
- * Creates a task extracting events from event pages.
+ * Creates a task extracting event properties from event pages.
  *
- * Each markdown page is converted into the {@link Event} it states, in the order pages are drawn, and attributed to
- * the given university. A page must open with a frontmatter block stating the URL it was retrieved from, which the
- * record carries; its own identity and the language of the event are left to whoever draws it.
+ * Each markdown page is read into the JSON payload of properties it states, in the order pages are drawn, under the
+ * prompt and the response schema the OpenAI variant submits, so that the two read the same pages under the same
+ * instructions; turning a payload into an event record is left to whoever draws it.
  *
- * The {@link createGoogleAI Gemini client} is resolved as the task is created, so the enclosing execution must
- * already be running by then, and the steering prompt is read from the `.sys.md` file shipped alongside this module,
- * so a deployment must carry it next to the compiled code.
+ * The {@link createGoogleAI Gemini client} is resolved as the task is created, so the enclosing execution must already
+ * be running by then, and the steering prompt is read from the `.sys.md` file shipped alongside this module, so a
+ * deployment must carry it next to the compiled code.
  *
- * @returns A task converting a feed of markdown event pages into a feed of the events they state
+ * @returns A task converting a feed of markdown event pages into a feed of the property payloads they state
  *
  * @throws {@link !Error Error} If no execution is running, as the Gemini client is resolved from the enclosing one
  *
@@ -46,149 +44,137 @@ import { service } from "@metreeca/gear";
  * while producing pages, whatever the API reports on a request it cannot recover from, or if the model replies with
  * no output text or with malformed JSON
  */
-export function extractGoogle(university: {
-
-	readonly id: IRI
-	readonly zone: string
-
-}): Task<Text, Event> {
+export function extractGoogle(): Task<Text, Value> {
 
 	const ai = service(createGoogleAI);
 
 	return documents => pipe(
 		items(documents)
-		(map(async document => json(await ai.models.generateContent({
+		(map(async document => ({
 
-			model: "gemini-3.5-flash",
+			// !!! stub: the scanner takes the event URL from the page id, which the ported prompt doesn't ask for
 
-			contents: [
-				markdown`
-					- date: ${new Date().toISOString().slice(0, 10)}
-				`,
-				document
-			],
+			url: "https://example.org/",
 
-			config: {
+			...json<{ readonly [property: string]: Value }>(await ai.models.generateContent({
 
-				seed: 0,
+				model: "gemini-3.5-flash-lite",
 
-				maxOutputTokens: 8192,
+				contents: document,
 
-				systemInstruction: await file(".sys.md", import.meta.url),
+				config: {
 
-				responseMimeType: "application/json",
-				responseSchema: {
+					seed: 0,
+					temperature: 0,
+					maxOutputTokens: 8192,
 
-					type: Type.OBJECT,
+					systemInstruction: prompt(await file(".sys.md", import.meta.url)),
 
-					properties: {
+					responseMimeType: "application/json",
+					responseSchema: {
 
-						url: {
-							type: Type.STRING,
-							description: "The URL the document was retrieved from, as stated in its frontmatter"
+						type: Type.OBJECT,
+
+						properties: {
+
+							title: {
+								type: Type.STRING
+							},
+
+							summary: {
+								type: Type.STRING
+							},
+
+							description: {
+								type: Type.STRING
+							},
+
+							startDate: {
+								type: Type.STRING,
+								format: "date"
+							},
+
+							startTime: {
+								type: Type.STRING,
+								pattern: "^[0-9]{2}:[0-9]{2}$"
+							},
+
+							endDate: {
+								type: Type.STRING,
+								format: "date"
+							},
+
+							endTime: {
+								type: Type.STRING,
+								pattern: "^[0-9]{2}:[0-9]{2}$"
+							},
+
+							entryFees: {
+								type: Type.STRING
+							},
+
+							attendanceMode: {
+								type: Type.STRING
+							},
+
+							attendanceURL: {
+								type: Type.STRING,
+								format: "uri"
+							},
+
+							venueName: {
+								type: Type.STRING
+							},
+
+							venueAddress: {
+								type: Type.STRING
+							},
+
+							imageURL: {
+								type: Type.STRING,
+								format: "uri"
+							},
+
+							imageCredits: {
+								type: Type.STRING
+							},
+
+							topic: {
+								type: Type.STRING
+							},
+
+							audience: {
+								type: Type.STRING
+							},
+
+							language: {
+								type: Type.STRING,
+								pattern: "^[a-z]{2}$"
+							}
+
 						},
 
-						title: {
-							type: Type.STRING,
-							description: "The event title"
-						},
+						required: [
+							"title",
+							"description",
+							"startDate",
+							"language"
+						]
 
-						summary: {
-							type: Type.STRING,
-							description: "A plain text summary of less than 500 characters, with no markdown formatting"
-						},
-
-						description: {
-							type: Type.STRING,
-							description: "The complete descriptive text of the event, in markdown format"
-						},
-
-						startDate: {
-							type: Type.STRING,
-							format: "date",
-							description: "The start date as an ISO calendar date (yyyy-mm-dd)"
-						},
-
-						startTime: {
-							type: Type.STRING,
-							description: "The start time as an ISO wall clock time without seconds (hh:mm)"
-						},
-
-						endDate: {
-							type: Type.STRING,
-							format: "date",
-							description: "The end date as an ISO calendar date (yyyy-mm-dd)"
-						},
-
-						endTime: {
-							type: Type.STRING,
-							description: "The end time as an ISO wall clock time without seconds (hh:mm)"
-						},
-
-						entryFees: {
-							type: Type.STRING,
-							format: "enum",
-							enum: ["free", "paid"],
-							description: "The entry cost"
-						},
-
-						attendanceMode: {
-							type: Type.STRING,
-							format: "enum",
-							enum: ["offline", "online", "mixed"],
-							description: "The way the event is attended"
-						},
-
-						attendanceURL: {
-							type: Type.STRING,
-							description: "The URL for attending the event remotely"
-						},
-
-						venueName: {
-							type: Type.STRING,
-							description: "The name of the venue"
-						},
-
-						venueAddress: {
-							type: Type.STRING,
-							description: "The street address of the venue"
-						},
-
-						venueCity: {
-							type: Type.STRING,
-							description: "The city the venue is located in"
-						},
-
-						imageURL: {
-							type: Type.STRING,
-							description: "The URL of the image illustrating the event, query component included"
-						},
-
-						imageCredits: {
-							type: Type.STRING,
-							description: "The credits or the copyright notice for the image"
-						},
-
-						topic: {
-							type: Type.STRING,
-							description: "The major topic of the event"
-						},
-
-						audience: {
-							type: Type.STRING,
-							description: "The intended audience of the event"
-						}
-
-					},
-
-					required: ["url", "title", "startDate"]
+					}
 
 				}
 
-			}
+			}))
 
-		}))))
-		(convert(university))
+		})))
 	);
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function prompt(instructions: string): string {
+	return instructions.replaceAll("{{date}}", new Date().toISOString().slice(0, 10));
 }

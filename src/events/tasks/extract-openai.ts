@@ -15,10 +15,7 @@
  */
 
 import { createOpenAI, json } from "@/_/muse-openai/index.js";
-import { type Event } from "@/events/index.js";
-import { convert } from "@/events/tasks/_convert.js";
 import type { Value } from "@metreeca/core";
-import type { IRI } from "@metreeca/core/resource";
 import { markdown, type Text } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -27,16 +24,17 @@ import { service } from "@metreeca/gear";
 
 
 /**
- * Creates a task extracting events from event pages.
+ * Creates a task extracting event properties from event pages.
  *
- * Each markdown page is converted into the {@link Event} it states, in the order pages are drawn, and attributed to
- * the given university, under the prompt and the response schema the legacy Java pipeline submits, ported verbatim.
+ * Each markdown page is read into the JSON payload of properties it states, in the order pages are drawn, under the
+ * prompt and the response schema the legacy Java pipeline submits, ported verbatim; turning a payload into an event
+ * record is left to whoever draws it.
  *
  * The {@link createOpenAI OpenAI client} is resolved as the task is created, so the enclosing execution must already
  * be running by then; the steering prompt travels with this module, so a deployment needs nothing beside the compiled
  * code.
  *
- * @returns A task converting a feed of markdown event pages into a feed of the events they state
+ * @returns A task converting a feed of markdown event pages into a feed of the property payloads they state
  *
  * @throws {@link !Error Error} If no execution is running, as the OpenAI client is resolved from the enclosing one
  *
@@ -44,12 +42,7 @@ import { service } from "@metreeca/gear";
  * whatever the API reports on a request it cannot recover from, or if the model replies with no output text or with
  * malformed JSON
  */
-export function extractOpenAI(university: {
-
-	readonly id: IRI
-	readonly zone: string
-
-}): Task<Text, Event> {
+export function extractOpenAI(): Task<Text, Value> {
 
 	const ai = service(createOpenAI);
 
@@ -220,7 +213,6 @@ export function extractOpenAI(university: {
 		}))
 
 		})))
-		(convert(university))
 	);
 
 }
