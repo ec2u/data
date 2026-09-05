@@ -18,6 +18,17 @@ new material and record what varies by source rather than restating the Coimbra 
 
 # Inbox
 
+- Entry fees stated where the document states none: a page carrying no price at all comes back `free`, and a page
+  reading "de entrada livre, no 4º sábado de cada mês" comes back `free` flat, the condition dropped. Two of the eight
+  fee values of the test set are wrong, on a property the prompt already qualifies with "only if absolutely
+  confident"; decide whether a conditional admission counts as free, and how much firmer the instruction has to be
+- Audience answered from nowhere: four pages come back with an audience ("General public", "Adult population and all
+  interested parties") that the document nowhere states, one of them loosely backed by a mention of adults; decide
+  whether the property is worth keeping if it cannot be sourced
+- Times of an event held alongside another: a page announcing an exhibition open 15h00 to 20h00 and an inauguration
+  talk at 16h00 comes back with a start time of 16:00, the talk's, which the prompt forbids by name
+- Addresses the document states going unreported: a page naming "Pátio da Inquisição" as the venue's whereabouts
+  comes back with no address, three of the ten pages carrying one
 - Recurring events keeping their session times: a concert series running across some forty dates still comes back with
   the hour its sessions are held at, where a workshop series on the same feed correctly comes back with none; the rule
   is stated plainly, so this is the model applying it unevenly rather than a gap in the wording
@@ -30,7 +41,18 @@ new material and record what varies by source rather than restating the Coimbra 
 
 # Test Cases
 
-## English Prose
+## Traceability To The Document
+
+Every payload of the test set was read against the page it was drawn from. The properties standing on what the page
+literally carries hold: the URL, the venue name, the city, the address where one is reported, the image URL, and the
+start and end dates all trace to the document, the venue name keeping the document's own misspellings.
+
+The properties resting on judgment are where the model invents: entry fees, audience, and a start time taken from an
+event held alongside the one the page is about. What is fabricated is always plausible and never flagged, and it
+survives repeated runs unchanged.
+
+CRITICAL: coverage is not accuracy, and stability is neither. A property answered on ten pages out of ten may still be
+wrong on two, as the fees are. Read payloads against their pages before quoting a count as quality.
 
 The title, the summary, the description, the topic and the audience come back in English whatever language the
 document is written in, identically across runs, while `language` states the language of the document rather than the
