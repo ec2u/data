@@ -17,15 +17,17 @@
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { file } from "@/_/node/files.js";
 import type { Event, EventAttendanceMode, Location } from "@/events/index.js";
+import { universities } from "@/universities/index.js";
 import { Type } from "@google/genai";
-import { opt } from "@metreeca/core";
+import { opt, type Optional } from "@metreeca/core";
 import { optional, required } from "@metreeca/core/arrays";
+import type { IRI } from "@metreeca/core/resource";
 import { markdown, type Text } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";
-import { map, peek } from "@metreeca/flow/tasks";
+import { map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { jpath, link, string } from "@metreeca/gear-json";
 
@@ -33,16 +35,13 @@ import { jpath, link, string } from "@metreeca/gear-json";
 /**
  * Creates a task extracting events from event pages.
  *
- * Each markdown page is converted into the {@link Event} it states, in the order pages are drawn. A record carries
- * neither the properties identifying it as a dataset resource nor the language of the event, all left to whoever
- * draws it.
+ * Each markdown page is converted into the {@link Event} it states, in the order pages are drawn, and attributed to
+ * the given university. A record carries neither its own identity, nor the page it was read from, nor the language of
+ * the event, all left to whoever draws it.
  *
  * The {@link createGoogleAI Gemini client} is resolved as the task is created, so the enclosing execution must
  * already be running by then, and the steering prompt is read from the `.sys.md` file shipped alongside this module,
  * so a deployment must carry it next to the compiled code.
- *
- * @param options The extraction options
- * @param options.model The Gemini model events are extracted by; if undefined, a general-purpose model is used
  *
  * @returns A task converting a feed of markdown event pages into a feed of the events they state
  *
@@ -52,15 +51,12 @@ import { jpath, link, string } from "@metreeca/gear-json";
  * pages, whatever the API reports on a request it cannot recover from, or if the model replies with no output text or
  * with malformed JSON
  */
-export function extract({
+export function extract(university: {
 
-	model = "gemini-3.5-flash"
+	readonly id: IRI
+	readonly zone: string
 
-}: {
-
-	model?: string
-
-} = {}): Task<Text, Omit<Event, "id" | "university" | "url">> {
+}): Task<Text, Omit<Event, "id" | "url">> {
 
 	const ai = service(createGoogleAI);
 
@@ -93,7 +89,7 @@ export function extract({
 
 		}>(await ai.models.generateContent({
 
-			model,
+			model: "gemini-3.5-flash",
 
 			contents: [
 				markdown`
@@ -217,7 +213,7 @@ export function extract({
 			}
 
 		}))))
-		(convert())
+		(convert(university))
 	);
 
 }
@@ -225,19 +221,18 @@ export function extract({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// !!! zone: dates are stated as the source states them, as the university zone is not available to this task
+function stamp(date: string, time: Optional<string>, zone: string): string { // !!! to temporals?
 
-function stamp(date: string, time: undefined | string): string {
-	return time === undefined ? date : `${date}T${time}`;
+	const wall = `${date}T${time ?? "00:00"}`;
+
+	const shift = new Intl.DateTimeFormat("en", { timeZone: zone, timeZoneName: "longOffset" })
+		.formatToParts(new Date(`${wall}Z`))
+		.find(({ type }) => type === "timeZoneName")
+		?.value ?? "GMT";
+
+	return `${wall}${shift === "GMT" ? "Z" : shift.slice(3)}`;
+
 }
-
-function attendance(mode: string): undefined | EventAttendanceMode {
-	return mode === "offline" ? "OfflineEventAttendanceMode"
-		: mode === "online" ? "OnlineEventAttendanceMode"
-			: mode === "mixed" ? "MixedEventAttendanceMode"
-				: undefined;
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -270,13 +265,18 @@ if ( import.meta.main ) {
 			audience: "Doctoral students"
 
 		})
-		(convert())
+		(convert(universities.coimbra))
 		(each(console.log))
 	);
 }
 
 
-function convert() {
+function convert(university: {
+
+	readonly id: IRI
+	readonly zone: string
+
+}) {
 	return jpath(path => {
 
 		const startDate = required(path("startDate").map(string));
@@ -288,27 +288,33 @@ function convert() {
 		const venueAddress = optional(path("venueAddress").map(string));
 		const venueCity = optional(path("venueCity").map(string));
 
-		// !!! id/university/url: page identity and university are not available to this task
+		// !!! id/url: page identity is not available to this task
 		// !!! about/audience: topic/audience strings are to be matched against the taxonomies downstream
 		// !!! inLanguage: the language is not extracted, as pages usually reach this task already translated
 
 		return immutable({
 
 			generated: true,
+			university: university.id,
 
 			name: required(path("title").map(string)),
 			description: optional(path("description").map(string)),
 			disambiguatingDescription: optional(path("summary").map(string)),
 
-			startDate: required(stamp(startDate, optional(path("startTime").map(string)))),
+			startDate: required(stamp(startDate, optional(path("startTime").map(string)), university.zone)),
 
 			endDate: optional(endDate === undefined && endTime === undefined
 				? undefined
-				: stamp(endDate ?? startDate, endTime)
+				: stamp(endDate ?? startDate, endTime, university.zone)
 			),
 
 			isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
-			eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
+			eventAttendanceMode: optional(path("attendanceMode").map(string).map((mode: string): Optional<EventAttendanceMode> =>
+				mode === "offline" ? "OfflineEventAttendanceMode"
+					: mode === "online" ? "OnlineEventAttendanceMode"
+						: mode === "mixed" ? "MixedEventAttendanceMode"
+							: undefined
+			)),
 
 			image: optional(path("imageURL").map(link).map(url => ({
 				url,

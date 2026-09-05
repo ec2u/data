@@ -16,6 +16,7 @@
 
 import { extract } from "@/events/tasks/extract.js";
 import { execute } from "@/index.core.js";
+import { universities } from "@/universities/index.js";
 import { pipe } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
 import { count } from "@metreeca/flow/sinks";
@@ -73,7 +74,7 @@ export async function sync() {
 			(untag())
 				// !!! (translate({ target: en }))
 				(peek(console.log))
-				(extract())
+				(extract(universities.coimbra))
 				(peek(console.log))
 		)))
 		(count())

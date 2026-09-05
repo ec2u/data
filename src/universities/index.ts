@@ -21,7 +21,7 @@ import { markdown, type Text } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 
 
-export const Universities = immutable({
+export const universities = immutable({
 
 	coimbra: {
 
