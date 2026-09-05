@@ -48,7 +48,7 @@ import {
 	GoogleGenAIOptions,
 	Part
 } from "@google/genai";
-import { isString } from "@metreeca/core";
+import { isString, type Value } from "@metreeca/core";
 import { createThrottle, type Throttle } from "@metreeca/core/async";
 import { markdown } from "@metreeca/core/strings";
 import { BadRequest, TooManyRequests } from "@metreeca/http";
@@ -623,7 +623,7 @@ export function text(response: GenerateContentResponse): string {
  *
  * @throws Error if `response` carries no output text or its text is not well-formed JSON
  */
-export function json<T>(response: GenerateContentResponse): T {
+export function json<T extends Value=Value>(response: GenerateContentResponse): T {
 
 	try {
 
