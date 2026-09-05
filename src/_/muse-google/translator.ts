@@ -58,10 +58,10 @@ import { service } from "@metreeca/gear";
  *
  * @returns A translator rendering the text handed to it in the target language through the Gemini API
  *
- * @throws {Error} If no execution is running, as the Gemini client is resolved from the enclosing one
+ * @throws {@link !Error Error} If no execution is running, as the Gemini client is resolved from the enclosing one
  *
- * @throws {Error} While translating, if the prompt shipped alongside the module cannot be read, whatever the API
- * reports on a request it cannot recover from, or if the model replies without output text
+ * @throws {@link !Error Error} While translating, if the prompt shipped alongside the module cannot be read, whatever
+ * the API reports on a request it cannot recover from, or if the model replies without output text
  *
  * @group Implementations
  */

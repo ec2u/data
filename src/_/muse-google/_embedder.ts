@@ -63,7 +63,7 @@ const Task = "CLASSIFICATION";
  *
  * @returns An embedder computing the embedding of the text handed to it through the Gemini API
  *
- * @throws {Error} If no execution is running, as the Gemini client is resolved from the enclosing one
+ * @throws {@link !Error Error} If no execution is running, as the Gemini client is resolved from the enclosing one
  *
  * @throws {@link !RangeError RangeError} While embedding, if the text is blank
  *
