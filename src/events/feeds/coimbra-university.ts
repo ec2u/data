@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { extract } from "@/events/tasks/extract.js";
+import { extractGoogle } from "@/events/tasks/extract-google.js";
+import { extractOpenAI } from "@/events/tasks/extract-openai.js";
 import { execute } from "@/index.core.js";
 import { universities } from "@/universities/index.js";
 import { pipe } from "@metreeca/flow";
@@ -72,9 +73,9 @@ export async function sync() {
 			(html())
 			(focus())
 			(untag())
-			(extract(universities.coimbra))
-			(validate(v => undefined)) // !!! shape
-				(peek(console.log))
+			(extractOpenAI(universities.coimbra))
+			(validate(v => undefined))
+			(peek(console.log))
 		)))
 		(count())
 	);
@@ -82,4 +83,5 @@ export async function sync() {
 }
 
 // !!! incremental sync
+// !!! shape validation
 // !!! storage
