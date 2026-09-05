@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { translate } from "@/_/muse/translator/translate.js";
 import { extract } from "@/events/tasks/extract.js";
 import { execute } from "@/index.core.js";
 import { pipe } from "@metreeca/flow";
@@ -72,10 +71,10 @@ export async function sync() {
 			(html())
 			(focus())
 			(untag())
-			// (translate({ target: en }))
-			(peek(console.log))
-			(extract())
-			(peek(console.log))
+				// !!! (translate({ target: en }))
+				(peek(console.log))
+				(extract())
+				(peek(console.log))
 		)))
 		(count())
 	);
