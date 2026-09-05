@@ -27,6 +27,7 @@
     "domhandler": "^6.0.1",
     "domutils": "^4.0.2",
     "express": "^5.2.1",
+    "openai": "^7.10.0",
     "uuid": "^14.0.1"
   },
   "devDependencies": {
