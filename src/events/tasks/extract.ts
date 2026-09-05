@@ -33,48 +33,13 @@ import { jpath, link, string } from "@metreeca/gear-json";
 /**
  * Creates a task extracting events from event pages.
  *
- * Each markdown page is converted into the event properties it states and emitted in the order pages are drawn, so
- * that a feed of pages is read as a feed of events.
+ * Each markdown page is converted into the {@link Event} it states, in the order pages are drawn. A record carries
+ * neither the properties identifying it as a dataset resource nor the language of the event, all left to whoever
+ * draws it.
  *
- * Pages are handed to the {@link createGoogleAI Gemini client} bound to the enclosing execution, one request each, so
- * that credentials, endpoint and quota pacing are settled once by the consumer binding that client rather than by the
- * task: a feed extracting at speed is held back by that pacing rather than rejected by the API.
- *
- * Events are extracted at a fixed seed, so that the same page yields the same properties as consistently as the model
- * allows. The current date travels with each request, so a page stating a relative date is resolved against the day it
- * is drawn on rather than against the day the task was created on.
- *
- * The title and start date of an event are declared required to the API, matching the properties an {@link Event}
- * states unconditionally, and the remaining properties are extracted as far as the page states them. Declaring that
- * set is what makes extraction complete: left optional, the omission rules the prompt states dominate and a page is
- * stripped down to two or three properties it happens to state most plainly. Prompting alone does not recover them,
- * whatever the model.
- *
- * The language of an event is not among them, and is left to whoever knows it: a page reaching this task has usually
- * been rendered into a common language upstream, so a language read off it would name that rendering rather than the
- * event.
- *
- * Every record is emitted as an {@link Event} stripped of the properties that identify it as a dataset resource, so
- * that the page it was read from and the university it belongs to are settled by whoever draws it rather than by this
- * task.
- *
- * Generation is capped, so that a page the model runs away on is rejected early rather than paid for to the end: a
- * runaway copies the page into a property until the response is truncated and no longer parses, and the cap decides
- * how much of that is bought before the request fails. Raising it buys proportionally more of the same runaway rather
- * than a complete record.
- *
- * > [!NOTE]
- * >
- * > - **Incremental**: each event is emitted as soon as it is extracted, so the feed produced runs dry as the feed
- * >   drawn from does and an endless source is read as long as it is consumed.
- * > - **Streaming**: pages are extracted one item at a time, none retained.
- * > - **Stateless**: every page is extracted on its own, so the outcome is unaffected by how the feed is split across
- * >   nested feeds or runs.
- *
- * The client is resolved as the task is created, so the enclosing execution must already be running by then and every
- * page drawn is extracted through the same client, however long the feed runs. The prompt steering the extraction is
- * read from the `.sys.md` file shipped alongside this module, so a deployment must carry it next to the compiled
- * code.
+ * The {@link createGoogleAI Gemini client} is resolved as the task is created, so the enclosing execution must
+ * already be running by then, and the steering prompt is read from the `.sys.md` file shipped alongside this module,
+ * so a deployment must carry it next to the compiled code.
  *
  * @param options The extraction options
  * @param options.model The Gemini model events are extracted by; if undefined, a general-purpose model is used
@@ -83,9 +48,9 @@ import { jpath, link, string } from "@metreeca/gear-json";
  *
  * @throws {Error} If no execution is running, as the Gemini client is resolved from the enclosing one
  *
- * @throws {Error} While the feed is consumed, if the prompt shipped alongside the module cannot be read, whatever the
- * source reports while producing pages, whatever the API reports on a request it cannot recover from, or if the model
- * replies with no output text or with malformed JSON
+ * @throws {Error} While the feed is consumed, if the prompt cannot be read, whatever the source reports while producing
+ * pages, whatever the API reports on a request it cannot recover from, or if the model replies with no output text or
+ * with malformed JSON
  */
 export function extract({
 
@@ -252,55 +217,7 @@ export function extract({
 			}
 
 		}))))
-		(peek(console.log))
-		(jpath(path => {
-
-			const startDate = required(path("startDate").map(string));
-			const endDate = optional(path("endDate").map(string));
-			const endTime = optional(path("endTime").map(string));
-
-			const attendanceURL = optional(path("attendanceURL").map(link));
-			const venueName = optional(path("venueName").map(string));
-			const venueAddress = optional(path("venueAddress").map(string));
-			const venueCity = optional(path("venueCity").map(string));
-
-			// !!! id/university/url: page identity and university are not available to this task
-			// !!! about/audience: topic/audience strings are to be matched against the taxonomies downstream
-			// !!! inLanguage: the language is not extracted, as pages usually reach this task already translated
-
-			return immutable({
-
-				generated: true,
-
-				name: required(path("title").map(string)),
-				description: optional(path("description").map(string)),
-				disambiguatingDescription: optional(path("summary").map(string)),
-
-				startDate: required(stamp(startDate, optional(path("startTime").map(string)))),
-
-				endDate: optional(endDate === undefined && endTime === undefined ? undefined
-					: stamp(endDate ?? startDate, endTime)),
-
-				isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
-				eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
-
-				image: optional(path("imageURL").map(link).map(url => ({
-					url,
-					copyrightNotice: optional(path("imageCredits").map(string))
-				}))),
-
-				location: optional<Location>(
-					opt(attendanceURL, url => ({ url }))
-					?? opt(venueAddress, address => ({
-						name: venueName,
-						streetAddress: address,
-						addressLocality: venueCity
-					}))
-					?? venueName
-				)
-			});
-
-		}))
+		(convert())
 	);
 
 }
@@ -323,6 +240,7 @@ function attendance(mode: string): undefined | EventAttendanceMode {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 if ( import.meta.main ) {
 	await pipe(
@@ -352,55 +270,60 @@ if ( import.meta.main ) {
 			audience: "Doctoral students"
 
 		})
-		(jpath(path => {
-
-			const startDate = required(path("startDate").map(string));
-			const endDate = optional(path("endDate").map(string));
-			const endTime = optional(path("endTime").map(string));
-
-			const attendanceURL = optional(path("attendanceURL").map(link));
-			const venueName = optional(path("venueName").map(string));
-			const venueAddress = optional(path("venueAddress").map(string));
-			const venueCity = optional(path("venueCity").map(string));
-
-			// !!! id/university/url: page identity and university are not available to this task
-			// !!! about/audience: topic/audience strings are to be matched against the taxonomies downstream
-			// !!! inLanguage: the language is not extracted, as pages usually reach this task already translated
-
-			return immutable({
-
-				generated: true,
-
-				name: required(path("title").map(string)),
-				description: optional(path("description").map(string)),
-				disambiguatingDescription: optional(path("summary").map(string)),
-
-				startDate: required(stamp(startDate, optional(path("startTime").map(string)))),
-
-				endDate: optional(endDate === undefined && endTime === undefined
-					? undefined
-					: stamp(endDate ?? startDate, endTime)
-				),
-
-				isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
-				eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
-
-				image: optional(path("imageURL").map(link).map(url => ({
-					url,
-					copyrightNotice: optional(path("imageCredits").map(string))
-				}))),
-
-				location: optional<Location>(
-					opt(attendanceURL, url => ({ url }))
-					?? opt(venueAddress, streetAddress => ({
-						name: venueName, streetAddress, addressLocality: venueCity
-					}))
-					?? venueName
-				)
-
-			});
-
-		}))
+		(convert())
 		(each(console.log))
 	);
+}
+
+
+function convert() {
+	return jpath(path => {
+
+		const startDate = required(path("startDate").map(string));
+		const endDate = optional(path("endDate").map(string));
+		const endTime = optional(path("endTime").map(string));
+
+		const attendanceURL = optional(path("attendanceURL").map(link));
+		const venueName = optional(path("venueName").map(string));
+		const venueAddress = optional(path("venueAddress").map(string));
+		const venueCity = optional(path("venueCity").map(string));
+
+		// !!! id/university/url: page identity and university are not available to this task
+		// !!! about/audience: topic/audience strings are to be matched against the taxonomies downstream
+		// !!! inLanguage: the language is not extracted, as pages usually reach this task already translated
+
+		return immutable({
+
+			generated: true,
+
+			name: required(path("title").map(string)),
+			description: optional(path("description").map(string)),
+			disambiguatingDescription: optional(path("summary").map(string)),
+
+			startDate: required(stamp(startDate, optional(path("startTime").map(string)))),
+
+			endDate: optional(endDate === undefined && endTime === undefined
+				? undefined
+				: stamp(endDate ?? startDate, endTime)
+			),
+
+			isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
+			eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
+
+			image: optional(path("imageURL").map(link).map(url => ({
+				url,
+				copyrightNotice: optional(path("imageCredits").map(string))
+			}))),
+
+			location: optional<Location>(
+				opt(attendanceURL, url => ({ url }))
+				?? opt(venueAddress, streetAddress => ({
+					name: venueName, streetAddress, addressLocality: venueCity
+				}))
+				?? venueName
+			)
+
+		});
+
+	});
 }
