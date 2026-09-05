@@ -21,7 +21,7 @@ import { pipe } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
 import { count } from "@metreeca/flow/sinks";
 import { flat, fork, map, peek, take } from "@metreeca/flow/tasks";
-import { jpath, json, number, string } from "@metreeca/gear-json";
+import { jpath, json, number, string, validate } from "@metreeca/gear-json";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 
@@ -73,8 +73,8 @@ export async function sync() {
 			(focus())
 			(untag())
 				// !!! (translate({ target: en }))
-				(peek(console.log))
 				(extract(universities.coimbra))
+				(validate(v => undefined)) // !!! shape
 				(peek(console.log))
 		)))
 		(count())
@@ -82,9 +82,5 @@ export async function sync() {
 
 }
 
-
 // !!! incremental sync
-// !!! analysis
-// !!! mapping
-// !!! validation
 // !!! storage
