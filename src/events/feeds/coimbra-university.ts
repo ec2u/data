@@ -72,9 +72,8 @@ export async function sync() {
 			(html())
 			(focus())
 			(untag())
-				// !!! (translate({ target: en }))
-				(extract(universities.coimbra))
-				(validate(v => undefined)) // !!! shape
+			(extract(universities.coimbra))
+			(validate(v => undefined)) // !!! shape
 				(peek(console.log))
 		)))
 		(count())
