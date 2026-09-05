@@ -14,31 +14,19 @@
  * limitations under the License.
  */
 
-/**
- * Event extraction.
- *
- * Provides the {@link extract} task factory, so that a pipe turns the event pages it carries into structured
- * {@link Event} records as a step of its own, without assembling model requests.
- *
- * @module
- *
- * @see {@link https://ai.google.dev/gemini-api/docs Gemini API}
- */
-
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
+import type { Event, EventAttendanceMode } from "@/events/index.js";
 import { file } from "@/_/node/files.js";
-import type { Event } from "@/events/index.js";
 import { Type } from "@google/genai";
+import { optional, required } from "@metreeca/core/arrays";
+import type { Tag } from "@metreeca/core/language";
 import { markdown, type Text } from "@metreeca/core/strings";
+import { immutable } from "@metreeca/core/structures";
 import { pipe, type Task } from "@metreeca/flow";
-import { filter, map } from "@metreeca/flow/tasks";
+import { items } from "@metreeca/flow/feeds";
+import { map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
-
-
-/**
- * The first markdown image stated by a page, as the image illustrating the event it describes.
- */
-const Image = /!\[[^\]]*]\(\s*([^)\s]+)/;
+import { jpath, link, string } from "@metreeca/gear-json";
 
 
 /**
@@ -55,26 +43,24 @@ const Image = /!\[[^\]]*]\(\s*([^)\s]+)/;
  * allows. The current date travels with each request, so a page stating a relative date is resolved against the day it
  * is drawn on rather than against the day the task was created on.
  *
- * The title, description and start date of an event are declared required to the API, and the remaining properties are
- * extracted as far as the page states them. Declaring that set is what makes extraction complete: left optional, the
- * omission rules the prompt states dominate and a page is stripped down to two or three properties it happens to state
- * most plainly. Prompting alone does not recover them, whatever the model.
- *
- * The illustrating image is read off the page rather than asked for, as the first image a page states is the one
- * illustrating it and no judgement is called for: a page carrying one always yields it, at no cost and with no chance
- * of an invented URL. A model naming an image of its own is taken at its word, so a page where the choice is less
- * obvious can still be answered by the model rather than by position.
+ * The title and start date of an event are declared required to the API, matching the properties an {@link Event}
+ * states unconditionally, and the remaining properties are extracted as far as the page states them. Declaring that
+ * set is what makes extraction complete: left optional, the omission rules the prompt states dominate and a page is
+ * stripped down to two or three properties it happens to state most plainly. Prompting alone does not recover them,
+ * whatever the model.
  *
  * The language of an event is not among them, and is left to whoever knows it: a page reaching this task has usually
  * been rendered into a common language upstream, so a language read off it would name that rendering rather than the
  * event.
  *
- * Nothing invented is emitted. A required set the API enforces would otherwise leave the model no way to decline, so
- * two channels carry a refusal instead: a page describing no single event, a listing or an error page among them, is
- * typed as such and dropped whole, and a required property the page leaves unstated comes back blank and is pruned.
- * Both cost a request, and neither reaches the rest of the pipe.
+ * Every record is emitted as an {@link Event} stripped of the properties that identify it as a dataset resource, so
+ * that the page it was read from and the university it belongs to are settled by whoever draws it rather than by this
+ * task.
  *
- * Every event is emitted as a {@link Partial} record for a downstream step to validate.
+ * Generation is capped, so that a page the model runs away on is rejected early rather than paid for to the end: a
+ * runaway copies the page into a property until the response is truncated and no longer parses, and the cap decides
+ * how much of that is bought before the request fails. Raising it buys proportionally more of the same runaway rather
+ * than a complete record.
  *
  * > [!NOTE]
  * >
@@ -108,13 +94,38 @@ export function extract({
 
 	model?: string
 
-} = {}): Task<Text, Partial<Event>> {
+} = {}): Task<Text, Omit<Event, "id" | "university" | "url">> {
 
 	const ai = service(createGoogleAI);
 
-	return feed => pipe(feed
+	return documents => pipe(
+		items(documents)
+		(map(async document => json<{
 
-		(map(async document => ({ document, extraction: json<Extraction>(await ai.models.generateContent({
+			readonly title: string;
+			readonly summary?: string;
+			readonly description?: string;
+
+			readonly startDate: string;
+			readonly startTime?: string;
+			readonly endDate?: string;
+			readonly endTime?: string;
+
+			readonly entryFees?: "free" | "paid";
+			readonly attendanceMode?: "offline" | "online" | "mixed";
+			readonly attendanceURL?: string;
+
+			readonly venueName?: string;
+			readonly venueAddress?: string;
+			readonly venueCity?: string;
+
+			readonly imageURL?: string;
+			readonly imageCredits?: string;
+
+			readonly topic?: string;
+			readonly audience?: string;
+
+		}>(await ai.models.generateContent({
 
 			model,
 
@@ -129,6 +140,8 @@ export function extract({
 
 				seed: 0,
 
+				maxOutputTokens: 8192,
+
 				systemInstruction: await file(".sys.md", import.meta.url),
 
 				responseMimeType: "application/json",
@@ -137,13 +150,6 @@ export function extract({
 					type: Type.OBJECT,
 
 					properties: {
-
-						documentType: {
-							type: Type.STRING,
-							format: "enum",
-							enum: ["event", "other"],
-							description: "Whether the document describes exactly one event, or something else"
-						},
 
 						title: {
 							type: Type.STRING,
@@ -162,6 +168,7 @@ export function extract({
 
 						startDate: {
 							type: Type.STRING,
+							format: "date",
 							description: "The start date as an ISO calendar date (yyyy-mm-dd)"
 						},
 
@@ -172,6 +179,7 @@ export function extract({
 
 						endDate: {
 							type: Type.STRING,
+							format: "date",
 							description: "The end date as an ISO calendar date (yyyy-mm-dd)"
 						},
 
@@ -236,53 +244,90 @@ export function extract({
 
 					},
 
-					required: ["documentType", "title", "description", "startDate"]
+					required: ["title", "startDate"]
 
 				}
 
 			}
 
-		})) })))
+		}))))
+		(jpath(path => {
 
-		(filter(({ extraction }) => extraction.documentType === "event"))
+			const startDate = required(path("startDate").map(string));
+			const startTime = optional(path("startTime").map(string));
+			const endDate = optional(path("endDate").map(string));
+			const endTime = optional(path("endTime").map(string));
 
-		(map(({
+			const entryFees = optional(path("entryFees").map(string));
+			const attendanceMode = optional(path("attendanceMode").map(string));
+			const attendanceURL = optional(path("attendanceURL").map(link));
 
-			document,
+			const venueName = optional(path("venueName").map(string));
+			const venueAddress = optional(path("venueAddress").map(string));
+			const venueCity = optional(path("venueCity").map(string));
 
-			extraction: { documentType, title, description, startDate, imageURL, ...rest }
+			const imageURL = optional(path("imageURL").map(link));
+			const imageCredits = optional(path("imageCredits").map(string));
 
-		}): Partial<Event> => {
+			// !!! id/university/url: page identity and university are not available to this task
+			// !!! about/audience: topic/audience strings are to be matched against the taxonomies downstream
+			// !!! inLanguage: the language is not extracted, as pages usually reach this task already translated
 
-			const image = imageURL || Image.exec(document)?.[1];
+			return immutable({
 
-			return {
+				generated: true,
 
-				...rest,
+				name: required(path("title").map(string)),
+				description: optional(path("description").map(string)),
+				disambiguatingDescription: optional(path("summary").map(string)),
 
-				...(title ? { title } : {}),
-				...(description ? { description } : {}),
-				...(startDate ? { startDate } : {}),
-				...(image ? { imageURL: image } : {})
+				startDate: stamp(startDate, startTime),
 
-			};
+				endDate: endDate !== undefined ? stamp(endDate, endTime)
+					: endTime !== undefined ? stamp(startDate, endTime)
+						: undefined,
+
+				isAccessibleForFree: entryFees === "free" ? true
+					: entryFees === "paid" ? false
+						: undefined,
+
+				eventAttendanceMode: attendance(attendanceMode),
+
+				image: imageURL === undefined ? undefined : {
+					url: imageURL,
+					copyrightNotice: imageCredits
+				},
+
+				location: attendanceURL !== undefined ? { VirtualLocation: { url: attendanceURL } }
+					: venueAddress !== undefined || venueCity !== undefined ? {
+							PostalAddress: {
+								name: venueName,
+								streetAddress: venueAddress,
+								addressLocality: venueCity
+							}
+						}
+						: venueName !== undefined ? { String: venueName }
+							: undefined
+
+			});
 
 		}))
-
 	);
 
 }
 
 
-/**
- * A record as the model reports it, before the pipe prunes it into an {@link Event}.
- *
- * Carries the document type the model is required to state, and the blanks it emits in place of a required property
- * the page leaves unstated.
- */
-interface Extraction extends Partial<Event> {
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	/** Whether the page describes exactly one event, or something else. */
-	readonly documentType?: "event" | "other";
+// !!! zone: dates are stated as the source states them, as the university zone is not available to this task
 
+function stamp(date: string, time: undefined | string): string {
+	return time === undefined ? date : `${date}T${time}`;
+}
+
+function attendance(mode: undefined | string): undefined | EventAttendanceMode {
+	return mode === "offline" ? "OfflineEventAttendanceMode"
+		: mode === "online" ? "OnlineEventAttendanceMode"
+			: mode === "mixed" ? "MixedEventAttendanceMode"
+				: undefined;
 }

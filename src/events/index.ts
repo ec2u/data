@@ -16,6 +16,8 @@
 
 import { ec2u } from "@/index.js";
 import type { Tag } from "@metreeca/core/language";
+import type { IRI } from "@metreeca/core/resource";
+import type { Markdown, Text } from "@metreeca/core/strings";
 
 
 export const events = `${ec2u}/events`;
@@ -23,85 +25,95 @@ export const events = `${ec2u}/events`;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Structured information about an academic event.
- *
- * Dates and times are stated as the source states them, with no timezone attached: a time is read in the local
- * timezone of the venue.
- */
 export interface Event {
 
-	/** The title. */
-	readonly title: string;
+	readonly id: IRI;
 
-	/** A plain text summary of less than 500 characters. */
-	readonly summary?: string;
+	readonly generated?: boolean;
+	readonly university: IRI;
 
-	/** A detailed description in markdown format. */
-	readonly description: string;
+	readonly url: readonly IRI[];
 
+	readonly name: Text;
+	readonly description?: Markdown;
+	readonly disambiguatingDescription?: Text;
 
-	/** The start date, as an ISO calendar date (`yyyy-mm-dd`). */
 	readonly startDate: string;
-
-	/** The start time, as an ISO wall clock time without seconds (`hh:mm`). */
-	readonly startTime?: string;
-
-	/**
-	 * The end date, as an ISO calendar date (`yyyy-mm-dd`).
-	 *
-	 * Undefined for an event ending on the day it starts.
-	 */
 	readonly endDate?: string;
 
-	/** The end time, as an ISO wall clock time without seconds (`hh:mm`). */
-	readonly endTime?: string;
+	readonly inLanguage?: Tag;
+	readonly isAccessibleForFree?: boolean;
+	readonly eventStatus?: EventStatus;
+	readonly eventAttendanceMode?: EventAttendanceMode;
+
+	readonly image?: Image;
+	readonly location?: Location;
+
+	readonly publisher?: IRI;
+
+	readonly about?: readonly IRI[];
+	readonly audience?: readonly IRI[];
+
+}
 
 
-	/** The entry cost. */
-	readonly entryFees?: "free" | "paid";
+export type EventStatus =
+	| "EventCancelled"
+	| "EventMovedOnline"
+	| "EventPostponed"
+	| "EventRescheduled"
+	| "EventScheduled";
 
-	/** The way the event is attended. */
-	readonly attendanceMode?: "offline" | "online" | "mixed";
-
-	/**
-	 * The URL for attending remotely.
-	 *
-	 * Defined only for `online` and `mixed` events.
-	 */
-	readonly attendanceURL?: string;
-
-
-	/** The name of the venue. */
-	readonly venueName?: string;
-
-	/** The street address of the venue. */
-	readonly venueAddress?: string;
-
-	/** The city the venue is located in. */
-	readonly venueCity?: string;
+export type EventAttendanceMode =
+	| "OfflineEventAttendanceMode"
+	| "OnlineEventAttendanceMode"
+	| "MixedEventAttendanceMode";
 
 
-	/** The URL of the illustrative image, query component included. */
-	readonly imageURL?: string;
+export interface Image {
 
-	/** The credits or the copyright notice for the illustrative image. */
-	readonly imageCredits?: string;
+	readonly url: IRI;
 
+	readonly caption?: Text;
+	readonly author?: Text;
+	readonly copyrightNotice?: Text;
 
-	/** The major topic. */
-	readonly topic?: string;
+}
 
-	/** The intended audience. */
-	readonly audience?: string;
+export type Location =
+	| { readonly String: Text }
+	| { readonly Place: Place }
+	| { readonly PostalAddress: PostalAddress }
+	| { readonly VirtualLocation: VirtualLocation };
 
-	/**
-	 * The BCP 47 language tag identifying the language the event is held in.
-	 *
-	 * Names the language of the event itself, not of the text describing it: a description rendered into a common
-	 * language for publication leaves this property untouched, so it is read from the source page rather than from
-	 * the description carried here.
-	 */
-	readonly language: Tag;
+export interface Place {
+
+	readonly name?: Text;
+	readonly address?: PostalAddress;
+
+	readonly latitude: number;
+	readonly longitude: number;
+
+}
+
+export interface PostalAddress {
+
+	readonly name?: Text;
+
+	readonly addressCountry?: Text;
+	readonly addressRegion?: Text;
+	readonly addressLocality?: Text;
+
+	readonly postalCode?: Text;
+	readonly streetAddress?: Text;
+
+	readonly email?: Text;
+	readonly telephone?: Text;
+
+}
+
+export interface VirtualLocation {
+
+	readonly url: IRI;
 
 }
