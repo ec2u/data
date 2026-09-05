@@ -18,13 +18,29 @@ new material and record what varies by source rather than restating the Coimbra 
 
 # Inbox
 
-- Missing times: three of ten pages come back with no `startTime`/`endTime`, and which three varies between runs at
-  temperature 0; establish whether those pages state times at all before insisting in the prompt
+- Discarding non-events: nothing downstream reads the `event` flag yet, so a page stated as `false` still reaches the
+  conversion carrying its placeholder properties
+- Missing times: four to five of ten pages come back with no `startTime`/`endTime`, and which ones varies between
+  runs at temperature 0, as does the year of an undated recurring event; establish whether those pages state times at
+  all before insisting in the prompt
 - Description scope: the boundary between the descriptive text and the surrounding page furniture is stated as a
   prohibition rather than a definition; decide what belongs in the description for a page that mixes a programme,
   speaker notes and contact details
 
 # Test Cases
+
+## Non-Event Pages
+
+A document describing no single event is stated as `event: false`. The Coimbra agenda listing page answers
+`event: false` with a placeholder title, description and start date, which the schema requires and which the reading
+downstream is meant to discard along with the record.
+
+An earlier form asked for an empty object instead, and the `required` list was dropped so that an empty object would
+be legal. The model then answered every page with three properties (`title`, `venueName`, `topic`), no description,
+no dates, no language, and cut three replies mid-string. The `required` list is what holds coverage, so the signal
+had to become a property rather than an absence.
+
+CRITICAL: never drop `required` to make some other answer expressible. Coverage rests on it, not on the prompt.
 
 ## Time Format
 
@@ -59,14 +75,18 @@ as a whole, and the same page answers in a few hundred characters.
 
 CRITICAL: this bound rests on the prohibition alone. Nothing in the schema limits the length of a string.
 
-## Date Placeholder
+## Current Date
 
-The prompt states the current date once, through a `{{date}}` placeholder substituted by the module at request time,
-and the date properties resolve relative dates against it. A page stating a day and a month without a year resolves
-to the current year.
+The current date reaches the model as the first content part, a `- date: yyyy-mm-dd` line ahead of the document, and
+the date properties resolve relative dates against it. A page stating a day and a month without a year resolves to
+the current year.
 
-CRITICAL: keep the placeholder spelling intact. A renamed or reformatted marker is not substituted, and the model
-resolves relative dates against its own idea of today.
+The prompt carried the date inline instead for a while, through a `{{date}}` placeholder the module substituted
+before the request. Stating it as an input keeps the instructions static, which is what lets them be read from a
+file.
+
+CRITICAL: the date is an input, not part of the instructions. A request built without that content part leaves the
+model resolving relative dates against its own idea of today.
 
 ## Title Suffix
 
@@ -79,6 +99,8 @@ recheck this on every source added.
 
 ## Property Set
 
-The response schema declared by the module carries no `venueCity`, so the city named in the prompt cannot come back.
+The prompt asked for a venue city for a while that the response schema did not declare, so the property never came
+back. It is now declared, and comes back on every page of the test set.
 
-CRITICAL: adding it to the prompt alone changes nothing; the schema in `extract-google.ts` governs what is returned.
+CRITICAL: the schema in `extract-google.ts` governs what is returned. A property named in the prompt alone is
+unreachable, so read the two together on every edit.

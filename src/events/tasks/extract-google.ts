@@ -18,7 +18,7 @@ import { file } from "@/_/host-node/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { Type } from "@google/genai";
 import type { Value } from "@metreeca/core";
-import type { Text } from "@metreeca/core/strings";
+import { markdown, type Text } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { map } from "@metreeca/flow/tasks";
@@ -28,9 +28,12 @@ import { service } from "@metreeca/gear";
 /**
  * Creates a task extracting event properties from event pages.
  *
- * Each markdown page is read into the JSON payload of properties it states, in the order pages are drawn, under the
- * prompt and the response schema the OpenAI variant submits, so that the two read the same pages under the same
- * instructions; turning a payload into an event record is left to whoever draws it.
+ * Each markdown page is read into the JSON payload of properties it states, in the order pages are drawn; turning a
+ * payload into an event record is left to whoever draws it.
+ *
+ * A payload states through its `event` property whether the page describes a single event: a page that describes none,
+ * such as a listing or an error page, is answered with `event` false and placeholder properties, so a caller MUST drop
+ * those payloads rather than read them.
  *
  * The {@link createGoogleAI Gemini client} is resolved as the task is created, so the enclosing execution must already
  * be running by then, and the steering prompt is read from the `.sys.md` file shipped alongside this module, so a
@@ -60,7 +63,12 @@ export function extractGoogle(): Task<Text, Value> {
 
 				model: "gemini-3.5-flash-lite",
 
-				contents: document,
+				contents: [
+					markdown`
+						- date: ${new Date().toISOString().slice(0, 10)}
+					`,
+					document
+				],
 
 				config: {
 
@@ -68,7 +76,7 @@ export function extractGoogle(): Task<Text, Value> {
 					temperature: 0,
 					maxOutputTokens: 8192,
 
-					systemInstruction: prompt(await file(".sys.md", import.meta.url)),
+					systemInstruction: await file(".sys.md", import.meta.url),
 
 					responseMimeType: "application/json",
 					responseSchema: {
@@ -76,6 +84,10 @@ export function extractGoogle(): Task<Text, Value> {
 						type: Type.OBJECT,
 
 						properties: {
+
+							event: {
+								type: Type.BOOLEAN
+							},
 
 							title: {
 								type: Type.STRING
@@ -130,6 +142,10 @@ export function extractGoogle(): Task<Text, Value> {
 								type: Type.STRING
 							},
 
+							venueCity: {
+								type: Type.STRING
+							},
+
 							imageURL: {
 								type: Type.STRING,
 								format: "uri"
@@ -155,6 +171,7 @@ export function extractGoogle(): Task<Text, Value> {
 						},
 
 						required: [
+							"event",
 							"title",
 							"description",
 							"startDate",
@@ -170,11 +187,4 @@ export function extractGoogle(): Task<Text, Value> {
 		})))
 	);
 
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function prompt(instructions: string): string {
-	return instructions.replaceAll("{{date}}", new Date().toISOString().slice(0, 10));
 }
