@@ -18,8 +18,9 @@ new material and record what varies by source rather than restating the Coimbra 
 
 # Inbox
 
-- Missing times: five of ten pages come back with no `startTime` and six with no `endTime`; establish whether those
-  pages state times at all before insisting in the prompt
+- Recurring events keeping their session times: a concert series running across some forty dates still comes back with
+  the hour its sessions are held at, where a workshop series on the same feed correctly comes back with none; the rule
+  is stated plainly, so this is the model applying it unevenly rather than a gap in the wording
 - Description scope: the boundary between the descriptive text and the surrounding page furniture is stated as a
   prohibition rather than a definition; decide what belongs in the description for a page that mixes a programme,
   speaker notes and contact details
@@ -87,6 +88,25 @@ name.
 
 CRITICAL: the schema pattern steers the model but is not enforced by the API. The prohibition in the prompt is what
 carries this behaviour, so never weaken it to save a line.
+
+## Times An Event Holds As Its Own
+
+A start or end time is reported only where the document states it as the event's own. A recurring event carries its
+dates alone, however plainly the hour of its sessions is named; the hours a venue keeps and the time of a talk given
+alongside a longer exhibition are not the event's times either. Four of the ten pages report a start time and three an
+end time, the rest stating none of their own.
+
+Three instructions carry this between them, and they pull against each other. The prompt first forbade local notation
+outright, which the model read as licence to drop a time stated as `18h30` rather than convert it, so half the pages
+carrying times returned none. Asking for the conversion instead recovered them, and had the model report a venue's
+opening hours as an exhibition's start and end. Drawing the distinction against opening hours settled that and
+suppressed a recurring event's session time, which the rule above then settled deliberately. A first wording of that
+rule spoke of an event running over a span of dates rather than a recurring one, which swept up the exhibitions that
+do state their own hours and left one page in ten reporting a time.
+
+CRITICAL: a false time is published silently while a missing one is visibly absent, so these instructions are tuned
+towards omission. Measure both directions after touching any of them: recall alone will read as an improvement, and
+every widening of the wording so far has cost more than it recovered.
 
 ## Output Budget
 

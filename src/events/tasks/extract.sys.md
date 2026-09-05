@@ -24,11 +24,13 @@ Extract the following properties from the provided document:
   sure not to include in the description H1 (#) headings with the document title; NEVER carry over
   navigation, listings of other events, or the page as a whole
 - start date in ISO format (yyyy-mm-dd), resolving relative dates against the current date
-- start time as hh:mm on a 24-hour clock; NEVER state seconds or a time zone offset, and NEVER use
-  local notation such as 18h30
+- start time as hh:mm on a 24-hour clock, converting whatever notation the document states it in (18h30, 18.30,
+  6.30pm) into that form; NEVER state seconds or a time zone offset, and NEVER leave the time out because the
+  document states it in another notation
 - end date in ISO format (yyyy-mm-dd), resolving relative dates against the current date
-- end time as hh:mm on a 24-hour clock; NEVER state seconds or a time zone offset, and NEVER use
-  local notation such as 18h30
+- end time as hh:mm on a 24-hour clock, converting whatever notation the document states it in (18h30, 18.30,
+  6.30pm) into that form; NEVER state seconds or a time zone offset, and NEVER leave the time out because the
+  document states it in another notation
 - entry fees (free, paid); include only if absolutely confident; make sure not to mix up
   registration required with paid entry fees
 - attendance mode (offline, online, mixed)
@@ -41,6 +43,11 @@ Extract the following properties from the provided document:
 - major topic
 - intended audience
 - language as guessed from the description as a 2-letter ISO tag
+
+A recurring event carries its dates alone: a series meeting week after week states no start or end time, however
+plainly the document names the hour its sessions are held at. The hours a venue keeps, and the time of a talk given
+alongside a longer exhibition, are NEVER the times of the event either. Report a start or end time only where the
+document states it as the event's own.
 
 # Output
 
