@@ -36,7 +36,7 @@ export function convert(university: {
 
 	return payloads => pipe(
 		items(payloads)
-		(filter(payload => !isObject(payload) || payload["event"] !== false)) // a page stating no event yields none
+		(filter(payload => !isObject(payload) || payload.event !== false)) // a page stating no event yields none
 		(jpath(path => {
 
 		const url = required(path("url").map(link));
