@@ -16,6 +16,9 @@ This is NOT an automated test suite - it's human-readable documentation for LLM-
 
 # Inbox
 
+- Frontmatter URL: verify that `url` is copied verbatim from the frontmatter and never replaced by a link found in the
+  body, a canonical link element, or a shortened form
+- Missing frontmatter: define expected behavior for a document reaching the prompt without a frontmatter block
 - Entry fees confidence: verify that "only if absolutely confident" does not suppress explicit free-admission
   statements
 - Multi-session events: define expected behavior for documents listing several dates or recurring sessions

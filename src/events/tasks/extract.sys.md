@@ -3,12 +3,14 @@
 You will be provided with:
 
 - a line stating the current date in ISO format, as the reference point for resolving relative dates
-- a markdown document describing a single event
+- a markdown document describing a single event, opening with a YAML frontmatter block stating the URL the document
+  was retrieved from
 
 # Task
 
 Extract the following properties from the provided markdown document describing an event:
 
+- url, copied verbatim from the frontmatter; NEVER report a link found in the body of the document instead
 - title
 - plain text summary of less than 500 characters with strictly no markdown formatting
 - complete descriptive text as included in the document in markdown format; make absolutely sure not to include in the

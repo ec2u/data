@@ -16,11 +16,11 @@
 
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { file } from "@/_/node/files.js";
-import type { Event, EventAttendanceMode, Location } from "@/events/index.js";
+import { events, type Event, type EventAttendanceMode, type Location } from "@/events/index.js";
 import { universities } from "@/universities/index.js";
 import { Type } from "@google/genai";
-import { opt, type Optional } from "@metreeca/core";
-import { optional, required } from "@metreeca/core/arrays";
+import { opt, type Optional, type Value } from "@metreeca/core";
+import { multiple, optional, required } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { markdown, type Text } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
@@ -30,14 +30,15 @@ import { each } from "@metreeca/flow/sinks";
 import { map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { jpath, link, string } from "@metreeca/gear-json";
+import * as uuid from "uuid";
 
 
 /**
  * Creates a task extracting events from event pages.
  *
  * Each markdown page is converted into the {@link Event} it states, in the order pages are drawn, and attributed to
- * the given university. A record carries neither its own identity, nor the page it was read from, nor the language of
- * the event, all left to whoever draws it.
+ * the given university. A page must open with a frontmatter block stating the URL it was retrieved from, which the
+ * record carries; its own identity and the language of the event are left to whoever draws it.
  *
  * The {@link createGoogleAI Gemini client} is resolved as the task is created, so the enclosing execution must
  * already be running by then, and the steering prompt is read from the `.sys.md` file shipped alongside this module,
@@ -56,38 +57,13 @@ export function extract(university: {
 	readonly id: IRI
 	readonly zone: string
 
-}): Task<Text, Omit<Event, "id" | "url">> {
+}): Task<Text, Event> {
 
 	const ai = service(createGoogleAI);
 
 	return documents => pipe(
 		items(documents)
-		(map(async document => json<{
-
-			readonly title: string;
-			readonly summary?: string;
-			readonly description?: string;
-
-			readonly startDate: string;
-			readonly startTime?: string;
-			readonly endDate?: string;
-			readonly endTime?: string;
-
-			readonly entryFees?: "free" | "paid";
-			readonly attendanceMode?: "offline" | "online" | "mixed";
-			readonly attendanceURL?: string;
-
-			readonly venueName?: string;
-			readonly venueAddress?: string;
-			readonly venueCity?: string;
-
-			readonly imageURL?: string;
-			readonly imageCredits?: string;
-
-			readonly topic?: string;
-			readonly audience?: string;
-
-		}>(await ai.models.generateContent({
+		(map(async document => json(await ai.models.generateContent({
 
 			model: "gemini-3.5-flash",
 
@@ -112,6 +88,11 @@ export function extract(university: {
 					type: Type.OBJECT,
 
 					properties: {
+
+						url: {
+							type: Type.STRING,
+							description: "The URL the document was retrieved from, as stated in its frontmatter"
+						},
 
 						title: {
 							type: Type.STRING,
@@ -206,7 +187,7 @@ export function extract(university: {
 
 					},
 
-					required: ["title", "startDate"]
+					required: ["url", "title", "startDate"]
 
 				}
 
@@ -234,12 +215,31 @@ function stamp(date: string, time: Optional<string>, zone: string): string { // 
 
 }
 
+
+function attendance(mode: string): Optional<EventAttendanceMode> {
+	return mode === "offline" ? "OfflineEventAttendanceMode"
+		: mode === "online" ? "OnlineEventAttendanceMode"
+			: mode === "mixed" ? "MixedEventAttendanceMode"
+				: undefined;
+}
+
+function about(topic: string): readonly IRI[] {
+	return []; // !!! match `topic` against the EC2U events taxonomy, keeping the closest concept
+}
+
+function audience(stakeholder: string): readonly IRI[] {
+	return []; // !!! match `stakeholder` against the EC2U stakeholders taxonomy, keeping the closest concept
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 if ( import.meta.main ) {
 	await pipe(
 		items({
+
+			url: "https://example.org/events/urban-mobility",
 
 			title: "Doctoral Seminar on Urban Mobility",
 			summary: "A three-day seminar on sustainable urban mobility, open to doctoral students and practitioners.",
@@ -276,8 +276,11 @@ function convert(university: {
 	readonly id: IRI
 	readonly zone: string
 
-}) {
+}): Task<Value, Event> {
+
 	return jpath(path => {
+
+		const url = required(path("url").map(link));
 
 		const startDate = required(path("startDate").map(string));
 		const endDate = optional(path("endDate").map(string));
@@ -288,14 +291,18 @@ function convert(university: {
 		const venueAddress = optional(path("venueAddress").map(string));
 		const venueCity = optional(path("venueCity").map(string));
 
-		// !!! id/url: page identity is not available to this task
-		// !!! about/audience: topic/audience strings are to be matched against the taxonomies downstream
 		// !!! inLanguage: the language is not extracted, as pages usually reach this task already translated
 
-		return immutable({
+		return immutable<Event>({
+
+			id: `${events}/${uuid.v3(url, uuid.v3.URL)}`,
+			url: multiple(url),
 
 			generated: true,
 			university: university.id,
+
+			about: multiple(path("topic").map(string).flatMap(about)),
+			audience: multiple(path("audience").map(string).flatMap(audience)),
 
 			name: required(path("title").map(string)),
 			description: optional(path("description").map(string)),
@@ -309,12 +316,7 @@ function convert(university: {
 			),
 
 			isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
-			eventAttendanceMode: optional(path("attendanceMode").map(string).map((mode: string): Optional<EventAttendanceMode> =>
-				mode === "offline" ? "OfflineEventAttendanceMode"
-					: mode === "online" ? "OnlineEventAttendanceMode"
-						: mode === "mixed" ? "MixedEventAttendanceMode"
-							: undefined
-			)),
+			eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
 
 			image: optional(path("imageURL").map(link).map(url => ({
 				url,
@@ -323,8 +325,8 @@ function convert(university: {
 
 			location: optional<Location>(
 				opt(attendanceURL, url => ({ url }))
-				?? opt(venueAddress, streetAddress => ({
-					name: venueName, streetAddress, addressLocality: venueCity
+				?? opt(venueAddress ?? venueCity, () => ({
+					name: venueName, streetAddress: venueAddress, addressLocality: venueCity
 				}))
 				?? venueName
 			)
@@ -332,4 +334,5 @@ function convert(university: {
 		});
 
 	});
+
 }
