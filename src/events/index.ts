@@ -81,10 +81,10 @@ export interface Image {
 }
 
 export type Location =
-	| { readonly String: Text }
-	| { readonly Place: Place }
-	| { readonly PostalAddress: PostalAddress }
-	| { readonly VirtualLocation: VirtualLocation };
+	| Text
+	| Place
+	| PostalAddress
+	| VirtualLocation;
 
 export interface Place {
 

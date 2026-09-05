@@ -15,16 +15,17 @@
  */
 
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
-import type { Event, EventAttendanceMode } from "@/events/index.js";
 import { file } from "@/_/node/files.js";
+import type { Event, EventAttendanceMode, Location } from "@/events/index.js";
 import { Type } from "@google/genai";
+import { opt } from "@metreeca/core";
 import { optional, required } from "@metreeca/core/arrays";
-import type { Tag } from "@metreeca/core/language";
 import { markdown, type Text } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { map } from "@metreeca/flow/tasks";
+import { each } from "@metreeca/flow/sinks";
+import { map, peek } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { jpath, link, string } from "@metreeca/gear-json";
 
@@ -88,7 +89,7 @@ import { jpath, link, string } from "@metreeca/gear-json";
  */
 export function extract({
 
-	model = "gemini-3.5-flash-lite"
+	model = "gemini-3.5-flash"
 
 }: {
 
@@ -251,23 +252,17 @@ export function extract({
 			}
 
 		}))))
+		(peek(console.log))
 		(jpath(path => {
 
 			const startDate = required(path("startDate").map(string));
-			const startTime = optional(path("startTime").map(string));
 			const endDate = optional(path("endDate").map(string));
 			const endTime = optional(path("endTime").map(string));
 
-			const entryFees = optional(path("entryFees").map(string));
-			const attendanceMode = optional(path("attendanceMode").map(string));
 			const attendanceURL = optional(path("attendanceURL").map(link));
-
 			const venueName = optional(path("venueName").map(string));
 			const venueAddress = optional(path("venueAddress").map(string));
 			const venueCity = optional(path("venueCity").map(string));
-
-			const imageURL = optional(path("imageURL").map(link));
-			const imageCredits = optional(path("imageCredits").map(string));
 
 			// !!! id/university/url: page identity and university are not available to this task
 			// !!! about/audience: topic/audience strings are to be matched against the taxonomies downstream
@@ -281,34 +276,28 @@ export function extract({
 				description: optional(path("description").map(string)),
 				disambiguatingDescription: optional(path("summary").map(string)),
 
-				startDate: stamp(startDate, startTime),
+				startDate: required(stamp(startDate, optional(path("startTime").map(string)))),
 
-				endDate: endDate !== undefined ? stamp(endDate, endTime)
-					: endTime !== undefined ? stamp(startDate, endTime)
-						: undefined,
+				endDate: optional(endDate === undefined && endTime === undefined ? undefined
+					: stamp(endDate ?? startDate, endTime)),
 
-				isAccessibleForFree: entryFees === "free" ? true
-					: entryFees === "paid" ? false
-						: undefined,
+				isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
+				eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
 
-				eventAttendanceMode: attendance(attendanceMode),
+				image: optional(path("imageURL").map(link).map(url => ({
+					url,
+					copyrightNotice: optional(path("imageCredits").map(string))
+				}))),
 
-				image: imageURL === undefined ? undefined : {
-					url: imageURL,
-					copyrightNotice: imageCredits
-				},
-
-				location: attendanceURL !== undefined ? { VirtualLocation: { url: attendanceURL } }
-					: venueAddress !== undefined || venueCity !== undefined ? {
-							PostalAddress: {
-								name: venueName,
-								streetAddress: venueAddress,
-								addressLocality: venueCity
-							}
-						}
-						: venueName !== undefined ? { String: venueName }
-							: undefined
-
+				location: optional<Location>(
+					opt(attendanceURL, url => ({ url }))
+					?? opt(venueAddress, address => ({
+						name: venueName,
+						streetAddress: address,
+						addressLocality: venueCity
+					}))
+					?? venueName
+				)
 			});
 
 		}))
@@ -325,9 +314,93 @@ function stamp(date: string, time: undefined | string): string {
 	return time === undefined ? date : `${date}T${time}`;
 }
 
-function attendance(mode: undefined | string): undefined | EventAttendanceMode {
+function attendance(mode: string): undefined | EventAttendanceMode {
 	return mode === "offline" ? "OfflineEventAttendanceMode"
 		: mode === "online" ? "OnlineEventAttendanceMode"
 			: mode === "mixed" ? "MixedEventAttendanceMode"
 				: undefined;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+if ( import.meta.main ) {
+	await pipe(
+		items({
+
+			title: "Doctoral Seminar on Urban Mobility",
+			summary: "A three-day seminar on sustainable urban mobility, open to doctoral students and practitioners.",
+			description: "The seminar reviews current research on sustainable urban mobility.\n\n## Programme\n\nKeynotes, paper sessions and a closing round table.",
+
+			startDate: "2026-09-14",
+			startTime: "09:30",
+			endDate: "2026-09-16",
+			endTime: "17:00",
+
+			entryFees: "free",
+			attendanceMode: "mixed",
+			attendanceURL: "https://meet.example.org/urban-mobility",
+
+			venueName: "Aula Magna",
+			venueAddress: "Largo da Porta Ferrea 1",
+			venueCity: "Coimbra",
+
+			imageURL: "https://example.org/images/urban-mobility.jpg?width=1200",
+			imageCredits: "Example University",
+
+			topic: "Urban mobility",
+			audience: "Doctoral students"
+
+		})
+		(jpath(path => {
+
+			const startDate = required(path("startDate").map(string));
+			const endDate = optional(path("endDate").map(string));
+			const endTime = optional(path("endTime").map(string));
+
+			const attendanceURL = optional(path("attendanceURL").map(link));
+			const venueName = optional(path("venueName").map(string));
+			const venueAddress = optional(path("venueAddress").map(string));
+			const venueCity = optional(path("venueCity").map(string));
+
+			// !!! id/university/url: page identity and university are not available to this task
+			// !!! about/audience: topic/audience strings are to be matched against the taxonomies downstream
+			// !!! inLanguage: the language is not extracted, as pages usually reach this task already translated
+
+			return immutable({
+
+				generated: true,
+
+				name: required(path("title").map(string)),
+				description: optional(path("description").map(string)),
+				disambiguatingDescription: optional(path("summary").map(string)),
+
+				startDate: required(stamp(startDate, optional(path("startTime").map(string)))),
+
+				endDate: optional(endDate === undefined && endTime === undefined
+					? undefined
+					: stamp(endDate ?? startDate, endTime)
+				),
+
+				isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
+				eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
+
+				image: optional(path("imageURL").map(link).map(url => ({
+					url,
+					copyrightNotice: optional(path("imageCredits").map(string))
+				}))),
+
+				location: optional<Location>(
+					opt(attendanceURL, url => ({ url }))
+					?? opt(venueAddress, streetAddress => ({
+						name: venueName, streetAddress, addressLocality: venueCity
+					}))
+					?? venueName
+				)
+
+			});
+
+		}))
+		(each(console.log))
+	);
 }
