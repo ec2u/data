@@ -37,6 +37,7 @@
  */
 
 import { memoize } from "@/_/core/memoize.js";
+import type { Vector } from "@/_/muse/embedder/index.js";
 import {
 	ApiError,
 	CallableTool,
@@ -103,8 +104,8 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 	 * model are throttled and logged independently, each under a category naming the model alone rather than this
 	 * module, so that a run reads as a list of models rather than of repeated module paths. The `structured` flag
 	 * records whether the model is currently expected to accept a response schema alongside tools: the Gemini API
-	 * supports the combination from the Gemini 3 generation onwards, so the generation read from the last path segment
-	 * of the id seeds the flag, while a rejection clears it in place (see {@link retry}).
+	 * supports the combination from the Gemini 3 generation onwards, so the generation read from the `gemini-` segment
+	 * of the id, whichever prefix it carries, seeds the flag, while a rejection clears it in place (see {@link retry}).
 	 *
 	 * @param model The target model name
 	 *
@@ -121,7 +122,7 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 
 	}>(model => {
 
-		const generation = Number(model.split("/").pop()?.match(/^gemini-(\d+)/)?.[1] ?? 0);
+		const generation = Number(model.match(/(?:^|\/)gemini-(\d+)/)?.[1] ?? 0);
 
 		return {
 
@@ -187,7 +188,7 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 					 * @returns The final response of the function calling loop, or the single response to a request
 					 *          that disables it
 					 *
-					 * @throws Error if the function calling loop cannot be completed (see {@link afc})
+					 * @throws {@link !Error Error} If the function calling loop cannot be completed (see {@link afc})
 					 */
 					async function execute(): Promise<GenerateContentResponse> {
 
@@ -229,9 +230,9 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 						 * @returns The final model response, with the conversation history attached as
 						 *          `automaticFunctionCallingHistory`
 						 *
-						 * @throws Error if a response carries no model content, if a function is requested while no
-						 *         callable tool is declared, or if `maximumRemoteCalls` turns are exhausted without
-						 *         a final response
+						 * @throws {@link !Error Error} If a response carries no model content, if a function is
+						 *         requested while no callable tool is declared, or if `maximumRemoteCalls` turns
+						 *         are exhausted without a final response
 						 */
 						async function afc() {
 
@@ -302,7 +303,7 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 						 *
 						 * @returns The model response to `contents`
 						 *
-						 * @throws ApiError if the request fails for a reason the throttle cannot recover from
+						 * @throws {ApiError} If the request fails for a reason the throttle cannot recover from
 						 */
 						async function retry(contents: ContentListUnion) {
 
@@ -380,7 +381,7 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 					 *          stands if the model applied the schema itself, if no schema was requested, or if the
 					 *          response is still awaiting tool execution
 					 *
-					 * @throws Error if the response to convert carries no text
+					 * @throws {@link !Error Error} If the response to convert carries no text
 					 *
 					 * @see {@link https://github.com/googleapis/js-genai/issues/727 js-genai#727}
 					 */
@@ -498,7 +499,7 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 	 *
 	 * @returns The value `request` resolves to
 	 *
-	 * @throws ApiError if the request fails for a reason neither `recover` nor the quota recovery handles
+	 * @throws {ApiError} If the request fails for a reason neither `recover` nor the quota recovery handles
 	 */
 	function submit<V>(model: string, request: () => Promise<V>,
 		recover?: (error: unknown) => undefined | number
@@ -591,7 +592,7 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
  *
  * @returns The trimmed output text of `response`, joining the text of multiple parts with blank lines
  *
- * @throws Error if `response` completed function calls without producing output text
+ * @throws {@link !Error Error} If `response` completed function calls without producing output text
  */
 export function text(response: GenerateContentResponse): string {
 
@@ -621,7 +622,8 @@ export function text(response: GenerateContentResponse): string {
  *
  * @returns The JSON payload parsed from the output text of `response`
  *
- * @throws Error if `response` carries no output text or its text is not well-formed JSON
+ * @throws {@link !Error Error} If `response` carries no output text (see {@link text}) or its text is not well-formed
+ * JSON
  */
 export function json<T extends Value=Value>(response: GenerateContentResponse): T {
 
@@ -642,9 +644,9 @@ export function json<T extends Value=Value>(response: GenerateContentResponse): 
  *
  * @param response The response of an `embedContent` request
  *
- * @returns The vector embedded for the first content of `response`, or an empty array if it carries none
+ * @returns The {@link Vector} embedded for the first content of `response`, or an empty array if it carries none
  */
-export function embedding(response: EmbedContentResponse) {
+export function embedding(response: EmbedContentResponse) : Vector {
 
 	return response.embeddings?.[0]?.values ?? [];
 
