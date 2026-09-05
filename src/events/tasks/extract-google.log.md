@@ -18,15 +18,11 @@ new material and record what varies by source rather than restating the Coimbra 
 
 # Inbox
 
-- Time format: the schema pattern is not enforced, so an occasional time still arrives in local notation (`18h30`)
-  and the conversion downstream rejects it; decide whether to restate the format in the prompt or normalise on the
-  way out
-- Runaway description: a page whose body carries long listings yields a `description` of some 30,000 characters,
-  the whole page rather than the descriptive text of the event; decide how far the description extends
-- Missing times: three of ten pages come back with no `startTime`/`endTime`; establish whether those pages state
-  times at all before insisting in the prompt
-- Undated years: recurring events resolve to a year the page does not state; establish the intended reading before
-  constraining the prompt
+- Missing times: three of ten pages come back with no `startTime`/`endTime`, and which three varies between runs at
+  temperature 0; establish whether those pages state times at all before insisting in the prompt
+- Description scope: the boundary between the descriptive text and the surrounding page furniture is stated as a
+  prohibition rather than a definition; decide what belongs in the description for a page that mixes a programme,
+  speaker notes and contact details
 
 # Test Cases
 
@@ -37,10 +33,11 @@ Times are stated as `hh:mm`.
 The schema originally declared `format: "time"` on `startTime`/`endTime`, which the model read as RFC 3339 and
 answered with `13:00:00-00:00` and `15:30:00.000Z` on every page carrying times; the conversion downstream builds an
 instant by concatenation and rejected all of them. The format was replaced by a `^[0-9]{2}:[0-9]{2}$` pattern, which
-also lifted time coverage from five pages in ten to seven.
+left a page answering in local notation (`18h30`), and the prompt now forbids seconds, offsets and local notation by
+name.
 
-CRITICAL: the pattern steers the model but is not enforced by the API, so a stray `18h30` still gets through. Never
-assume a time coming back from the model is well formed.
+CRITICAL: the schema pattern steers the model but is not enforced by the API. The prohibition in the prompt is what
+carries this behaviour, so never weaken it to save a line.
 
 ## Output Budget
 
@@ -52,9 +49,21 @@ parse as JSON. The budget was raised to 8192.
 CRITICAL: a truncated reply surfaces as malformed JSON, not as a quota diagnostic. Read a parse failure on a long
 page as an exhausted output budget before suspecting the prompt.
 
+## Description Scope
+
+The description carries the descriptive text of the event alone.
+
+A page whose body listed a season of sessions once yielded a `description` of some 30,000 characters, the page as a
+whole rather than the event; the prompt now forbids carrying over navigation, listings of other events, and the page
+as a whole, and the same page answers in a few hundred characters.
+
+CRITICAL: this bound rests on the prohibition alone. Nothing in the schema limits the length of a string.
+
 ## Date Placeholder
 
-The prompt states the current date through a `{{date}}` placeholder, substituted by the module at request time.
+The prompt states the current date once, through a `{{date}}` placeholder substituted by the module at request time,
+and the date properties resolve relative dates against it. A page stating a day and a month without a year resolves
+to the current year.
 
 CRITICAL: keep the placeholder spelling intact. A renamed or reformatted marker is not substituted, and the model
 resolves relative dates against its own idea of today.
