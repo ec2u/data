@@ -187,15 +187,21 @@ export function compress(embedding: Embedding): string {
  * Decompresses an embedding from its compact textual form.
  *
  * Restores components to the `[-1, 1]` range, approximating the original values within the quantisation step applied
- * by {@link compress}.
+ * by {@link compress}. Truncated input is rejected rather than restored as a silently shortened embedding.
  *
  * @param compressed The compact textual form of the embedding to restore, as produced by {@link compress}
  *
  * @returns The embedding restored from `compressed`
+ *
+ * @throws {@link !RangeError RangeError} If `compressed` doesn't decode to a whole number of components
  */
 export function decompress(compressed: string): Embedding {
 
 	const buffer = Buffer.from(compressed, "base64");
+
+	if ( buffer.byteLength%Int16Array.BYTES_PER_ELEMENT !== 0 ) {
+		throw new RangeError(`truncated compressed embedding <${buffer.byteLength}>`);
+	}
 
 	const quantised = new Int16Array(
 		buffer.buffer,

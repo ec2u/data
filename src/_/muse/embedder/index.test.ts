@@ -105,4 +105,12 @@ describe("compress", () => {
 
 	});
 
+	it("rejects truncated compressed forms", async () => {
+
+		const truncated = Buffer.from([1, 2, 3]).toString("base64"); // an odd byte count can't spell whole components
+
+		expect(() => decompress(truncated)).toThrow(RangeError);
+
+	});
+
 });
