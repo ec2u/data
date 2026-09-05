@@ -47,19 +47,13 @@ import { service } from "@metreeca/gear";
  * while producing pages, whatever the API reports on a request it cannot recover from, or if the model replies with
  * no output text or with malformed JSON
  */
-export function extractGoogle(): Task<Text, Value> {
+export function extract(): Task<Text, Value> {
 
 	const ai = service(createGoogleAI);
 
 	return documents => pipe(
 		items(documents)
-		(map(async document => ({
-
-			// !!! stub: the scanner takes the event URL from the page id, which the ported prompt doesn't ask for
-
-			url: "https://example.org/",
-
-			...json<{ readonly [property: string]: Value }>(await ai.models.generateContent({
+		(map(async document => json<{ readonly [property: string]: Value }>(await ai.models.generateContent({
 
 				model: "gemini-3.5-flash-lite",
 
@@ -87,6 +81,11 @@ export function extractGoogle(): Task<Text, Value> {
 
 							event: {
 								type: Type.BOOLEAN
+							},
+
+							url: {
+								type: Type.STRING,
+								format: "uri"
 							},
 
 							title: {
@@ -172,6 +171,7 @@ export function extractGoogle(): Task<Text, Value> {
 
 						required: [
 							"event",
+							"url",
 							"title",
 							"description",
 							"startDate",
@@ -182,9 +182,7 @@ export function extractGoogle(): Task<Text, Value> {
 
 				}
 
-			}))
-
-		})))
+			}))))
 	);
 
 }

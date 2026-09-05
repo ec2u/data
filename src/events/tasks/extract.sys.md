@@ -8,13 +8,16 @@ language, and practised at telling what a page states from what it merely mentio
 You will be provided with:
 
 - **date**: a line stating the current date in ISO format, as the reference point for resolving relative dates
-- **document**: a markdown document describing a single academic event
+- **document**: a markdown document describing a single academic event, opening with a YAML frontmatter block stating
+  as `url` the address the document was retrieved from
 
 # Task
 
 Extract the following properties from the provided document:
 
 - event: whether the document describes a single event (see Error Handling)
+- url, copied verbatim from the `url` field of the frontmatter, query component included; NEVER state a link found in
+  the body of the document, a canonical link, a shortened form, or an address you complete or tidy up in any way
 - title
 - plain text summary of less than 500 characters with strictly no markdown formatting
 - complete descriptive text as included in the document in markdown format; make absolutely

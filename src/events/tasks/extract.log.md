@@ -18,16 +18,49 @@ new material and record what varies by source rather than restating the Coimbra 
 
 # Inbox
 
-- Discarding non-events: nothing downstream reads the `event` flag yet, so a page stated as `false` still reaches the
-  conversion carrying its placeholder properties
-- Missing times: four to five of ten pages come back with no `startTime`/`endTime`, and which ones varies between
-  runs at temperature 0, as does the year of an undated recurring event; establish whether those pages state times at
-  all before insisting in the prompt
+- Missing times: five of ten pages come back with no `startTime` and six with no `endTime`; establish whether those
+  pages state times at all before insisting in the prompt
 - Description scope: the boundary between the descriptive text and the surrounding page furniture is stated as a
   prohibition rather than a definition; decide what belongs in the description for a page that mixes a programme,
   speaker notes and contact details
+- English translation
 
 # Test Cases
+
+## Source URL
+
+The URL is copied verbatim from the `url` field of the frontmatter, query component included, and comes back on every
+page of the test set, identical across runs.
+
+The property is required, and while the retrieval URL was reaching the model on a fresh fetch but not on a cache hit,
+the model answered with an address it made up rather than leaving the property out: plausible, well formed, stable
+across runs, and pointing nowhere. The URL seeds the event identity, so this minted wrong identities silently. The
+cause was in the fetch cache, which has been fixed to restate the retrieval URL on a replayed response.
+
+CRITICAL: a required property the input may not carry is a fabrication generator, and a fabrication is as stable as
+anything else the model states. When this property looks wrong, read the frontmatter the model was given before
+reading the prompt.
+
+## Reproducibility
+
+The same page read three times under the same prompt yields byte-identical payloads, free text included: every one of
+the nineteen properties is stable across all ten pages of the test set, with no failure. `seed: 0` and
+`temperature: 0` are what carry this, and the model thinks at its own floor (`MINIMAL` for `gemini-3.5-flash-lite`)
+without being asked.
+
+Coverage counts quoted in this log therefore describe the prompt, not a sample of it. A count that moves is a
+consequence of an edit.
+
+CRITICAL: never read a difference between two runs as noise. Compare only runs made under the same prompt and schema,
+and never quote a count across an edit.
+
+## Thinking Budget
+
+`thinkingConfig.thinkingBudget` is rejected by this model with a 400 on every request; the generation states its
+thinking as `thinkingConfig.thinkingLevel`, and `MINIMAL` is both the floor and the default.
+
+CRITICAL: thinking cannot be turned off here, only raised. There is nothing to gain by configuring it for
+reproducibility, which the seed already carries.
 
 ## Non-Event Pages
 

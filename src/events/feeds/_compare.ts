@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { extractGoogle } from "@/events/tasks/extract-google.js";
+import { extract } from "@/events/tasks/extract.js";
 import { extractOpenAI } from "@/events/tasks/extract-openai.js";
 import { execute } from "@/index.core.js";
 import type { Value } from "@metreeca/core";
@@ -67,7 +67,7 @@ await execute(async () => {
 		(toArray())
 	);
 
-	const google = extractGoogle();
+	const google = extract();
 	const openai = extractOpenAI();
 
 	const results = await Promise.all(pages.map(async page => ({

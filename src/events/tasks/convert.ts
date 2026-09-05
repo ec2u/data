@@ -16,13 +16,14 @@
 
 import { type Event, type EventAttendanceMode, events, type Location } from "@/events/index.js";
 import { universities } from "@/universities/index.js";
-import { opt, type Optional, type Value } from "@metreeca/core";
+import { isObject, opt, type Optional, type Value } from "@metreeca/core";
 import { multiple, optional, required } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";
+import { filter } from "@metreeca/flow/tasks";
 import { jpath, link, string } from "@metreeca/gear-json";
 import * as uuid from "uuid";
 
@@ -33,7 +34,10 @@ export function convert(university: {
 
 }): Task<Value, Event> {
 
-	return jpath(path => {
+	return payloads => pipe(
+		items(payloads)
+		(filter(payload => !isObject(payload) || payload["event"] !== false)) // a page stating no event yields none
+		(jpath(path => {
 
 		const url = required(path("url").map(link));
 
@@ -45,8 +49,6 @@ export function convert(university: {
 		const venueName = optional(path("venueName").map(string));
 		const venueAddress = optional(path("venueAddress").map(string));
 		const venueCity = optional(path("venueCity").map(string));
-
-		// !!! inLanguage: the language is not extracted, as pages usually reach this task already translated
 
 		return immutable<Event>({
 
@@ -70,6 +72,8 @@ export function convert(university: {
 				: stamp(endDate ?? startDate, endTime, university.zone)
 			),
 
+			inLanguage: optional(path("language").map(string)),
+
 			isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
 			eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
 
@@ -88,7 +92,8 @@ export function convert(university: {
 
 		});
 
-	});
+		}))
+	);
 
 }
 
@@ -132,6 +137,8 @@ if ( import.meta.main ) {
 	await pipe(
 		items({
 
+			event: true,
+
 			url: "https://example.org/events/urban-mobility",
 
 			title: "Doctoral Seminar on Urban Mobility",
@@ -155,7 +162,9 @@ if ( import.meta.main ) {
 			imageCredits: "Example University",
 
 			topic: "Urban mobility",
-			audience: "Doctoral students"
+			audience: "Doctoral students",
+
+			language: "en"
 
 		})
 		(convert(universities.coimbra))
