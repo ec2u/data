@@ -17,7 +17,7 @@
 import { createGoogleEmbedder } from "@/_/muse-google/_embedder.js";
 import { cosine } from "@/_/muse/embedder/index.js";
 
-export interface Topic {
+export type Topic = {
 
 	readonly id: string;
 

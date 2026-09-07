@@ -41,7 +41,7 @@ import { findAll, findOne, getAttributeValue, textContent } from "domutils";
 /**
  * Outbound link of a web page.
  */
-export interface Link {
+export type Link = {
 
 	/**
 	 * The absolute URL of the link target, resolved against the page URL.
@@ -58,7 +58,7 @@ export interface Link {
 /**
  * Web page content.
  */
-export interface Content {
+export type Content = {
 
 	/**
 	 * The page title, empty if the document doesn't provide one.

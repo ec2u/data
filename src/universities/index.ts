@@ -242,7 +242,7 @@ export const universities = immutable({
 
 // !!! name/description/legalName/location: the schema.org organization surface awaits a shared vocabulary module
 
-export interface University {
+export type University = {
 
 	readonly id: IRI;
 
@@ -286,7 +286,7 @@ export interface University {
 }
 
 
-export interface GeoReference {
+export type GeoReference = {
 
 	readonly id: IRI;
 

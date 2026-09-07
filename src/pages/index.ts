@@ -40,7 +40,7 @@ const logger = log(import.meta.url);
  *
  * Provides a deeply immutable snapshot of a web page content as of the time it was retrieved.
  */
-export interface Page {
+export type Page = {
 
 	/**
 	 * The time the page was retrieved at.

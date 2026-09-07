@@ -31,7 +31,7 @@ export const stale: number = 30*duration.day;
  *
  * Timestamps are in milliseconds from epoch.
  */
-export interface Unit {
+export type Unit = {
 
 	/**
 	 * Updating timestamp.

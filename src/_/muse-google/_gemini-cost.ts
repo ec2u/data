@@ -54,7 +54,7 @@ const MODEL_PRICING={
 
 type ModelName=keyof typeof MODEL_PRICING;
 
-export interface CostBreakdown {
+export type CostBreakdown = {
 	inputCost: number;
 	outputCost: number;
 	thinkingCost: number;
