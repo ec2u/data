@@ -15,7 +15,7 @@
  */
 
 import { getDate } from "@/_/core/temporal.js";
-import { file } from "@/_/host-node/files.js";
+import { file } from "@/_/gear-node/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { Type } from "@google/genai";
 import type { Value } from "@metreeca/core";

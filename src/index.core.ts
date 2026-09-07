@@ -15,7 +15,7 @@
  */
 
 import { minute } from "@/_/core/temporal.js";
-import { gcp } from "@/_/host-gcp/index.js";
+import { gcp } from "@/_/gear-gcp/index.js";
 import { createGoogleAI } from "@/_/muse-google/index.js";
 import { createGoogleTranslator } from "@/_/muse-google/translator.js";
 import { createOpenAI } from "@/_/muse-openai/index.js";
@@ -26,7 +26,7 @@ import { getPackage, getPath } from "@metreeca/gear/space";
 import { createVault } from "@metreeca/gear/vault";
 import { createFetch } from "@metreeca/http";
 import { cache } from "@metreeca/http/cache";
-import { createGCPVault } from "@/_/host-gcp/secrets.js";
+import { createGCPVault } from "@/_/gear-gcp/secrets.js";
 
 export const execute = executor(
 	bind(getPath, () => gcp.production

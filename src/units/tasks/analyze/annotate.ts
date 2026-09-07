@@ -15,7 +15,7 @@
  */
 
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
-import { file } from "@/_/host-node/files.js";
+import { file } from "@/_/gear-node/files.js";
 import { topics } from "@/taxonomies/_topics/store.js";
 import { matchTopics } from "@/taxonomies/_topics/tools/matchTopics.js";
 import { Unit } from "@/units/index.js";

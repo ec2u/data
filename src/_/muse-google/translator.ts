@@ -27,7 +27,7 @@
 
 import { createGoogleAI, text as output } from "@/_/muse-google/index.js";
 import { type Translator } from "@/_/muse/translator/index.js";
-import { file } from "@/_/host-node/files.js";
+import { file } from "@/_/gear-node/files.js";
 import { ThinkingLevel } from "@google/genai";
 import { nameTag, type Tag } from "@metreeca/core/language";
 import { markdown, type Text } from "@metreeca/core/strings";
