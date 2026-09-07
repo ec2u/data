@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-import { createStore } from "@/_/gear-store/index.js";
-import { type Digest, digest } from "@/events/_/digest.js";
-import { isStale } from "@/events/index.js";
-import { convert } from "@/events/tasks/convert.js";
-import { extract } from "@/events/tasks/extract.js";
+import { persist } from "@/events/_/persist.js";
+import { harvest } from "@/events/tasks/harvest.js";
 import { execute } from "@/index.core.js";
 import { universities } from "@/universities/index.js";
-import { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
-import { pipe, type Task } from "@metreeca/flow";
+import { pipe } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
-import { filter, flat, fork, map, peek, take } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { jpath, json, number, string, validate } from "@metreeca/gear-json";
+import { flat, fork, map, take } from "@metreeca/flow/tasks";
+import { jpath, json, number, string } from "@metreeca/gear-json";
 import { crawl, fetch } from "@metreeca/gear-url";
-import { focus, html, untag } from "@metreeca/gear-xml";
-import { Reference } from "@metreeca/qest";
-import { Delta, persist } from "../sinks/persist.js";
 
 
 const Search = "https://content.fw.uc.pt/v1/agenda/events/search";
@@ -81,65 +73,8 @@ export async function CoimbraUniversity() {
 			)
 		))
 		(take(1) /* !!! */)
-		(diff(universities.coimbra))
+		(harvest(universities.coimbra))
 		(persist())
 	);
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function diff(university: {
-
-	readonly id: IRI
-	readonly zone: string
-
-}): Task<string | URL, Delta> {
-
-	const store = service(createStore);
-
-	const entries = new Set<Reference>;  // !!! populate from store
-	const digests = new Map<string, Digest>;  // !!! populate from store, keyed by source page URL
-
-	return urls => items((async function* () {
-
-		const inserted = pipe(
-			items(urls)
-			(fork(10, flat(map(url => pipe( // a pipe per page keeps the source URL in scope as the digest key
-				(items([url]))
-				(fetch())
-				(html())
-				(focus())
-				(untag())
-				(filter(page => digests.get(String(url)) !== digest(page)))
-				(extract())
-				(peek(console.log))
-				(convert(university))
-				(peek(console.log))
-				(validate(v => undefined) /* !!! */)
-				(map(event => [event.id, event] satisfies Delta))
-			)))))
-		);
-
-		for await (const insertion of inserted) {
-
-			const [entry, state] = insertion;
-
-			if ( !isStale(state) ) {
-
-				entries.delete(entry);
-
-				yield insertion;
-
-			}
-
-		}
-
-		yield* [...entries].map((entry) =>
-			[entry, null] satisfies Delta // whatever the crawl left unconfirmed is gone or stale
-		);
-
-	})());
 
 }

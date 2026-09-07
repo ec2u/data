@@ -16,13 +16,13 @@
 
 import { createStore } from "@/_/gear-store/index.js";
 import { EventShape } from "@/events/index.js";
-import { immutable } from "@metreeca/core/structures";
-import type { Sink } from "@metreeca/flow";
-import { reduce } from "@metreeca/flow/sinks";
-import { service } from "@metreeca/gear";
-import type { Reference } from "@metreeca/qest";
-import type { Resource } from "@metreeca/qest/resource";
-import { log, report } from "@metreeca/tape";
+import { immutable } from "../../../../../../Packages/Core/src/values/structures.js";
+import type { Sink } from "../../../../../../Packages/Flow/src/index.js";
+import { reduce } from "../../../../../../Packages/Flow/src/sinks/index.js";
+import { service } from "../../../../../../Packages/Gear/packages/gear/src/index.js";
+import type { Reference } from "../../../../../../Packages/Qest/src/index.js";
+import type { Resource } from "../../../../../../Packages/Qest/src/resource.js";
+import { log, report } from "../../../../../../Packages/Tape/src/index.js";
 
 
 const logger = log(import.meta.url);
@@ -97,7 +97,7 @@ export interface Tally {
  *
  * @throws {@link !Error Error} While the feed is consumed, if every attempted write fails
  */
-export function persist(): Sink<Delta, Tally> {
+export function persist(): Sink<Delta, Tally> { // !!! shape
 
 	const store = service(createStore);
 
