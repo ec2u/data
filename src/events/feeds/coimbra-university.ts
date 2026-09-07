@@ -27,11 +27,6 @@ import { crawl, fetch } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 
 
-const en = "en";
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 const Search = "https://content.fw.uc.pt/v1/agenda/events/search";
 const Events = "https://agenda.coimbra.pt/event";
 
