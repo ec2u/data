@@ -48,7 +48,7 @@ const Publisher = immutable({
 
 
 if ( import.meta.main ) {
-	await execute(sync);
+	await execute(harvest);
 }
 
 
@@ -57,21 +57,8 @@ if ( import.meta.main ) {
 // !!! incremental sync
 // !!! storage
 
-export async function sync() {
+export async function harvest() {
 
-	return pipe(
-		(scan())
-		(take(1) /* !!! */)
-		(insert())
-		(delta())
-	);
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function scan() {
 	return pipe(
 		(items(Search))
 		(crawl(
@@ -93,10 +80,17 @@ function scan() {
 				(map(key => `${Events}/${key}`))
 			)
 		))
+		(take(1) /* !!! */)
+		(diff())
+		(sync())
 	);
+
 }
 
-function insert(): Task<string|URL, Delta> {
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function diff(): Task<string | URL, Delta> {
 
 	const store = service(createStore);
 
@@ -137,7 +131,9 @@ function insert(): Task<string|URL, Delta> {
 
 		}
 
-		yield* [...entries].map((entry): Delta => [entry, null]); // whatever the crawl left unconfirmed is gone or stale
+		yield* [...entries].map((entry) =>
+			[entry, null] satisfies Delta // whatever the crawl left unconfirmed is gone or stale
+		);
 
 	})());
 
@@ -156,7 +152,7 @@ export type Delta = [
 	state: null | Resource
 ]
 
-function delta(): Sink<Delta> {
+function sync(): Sink<Delta> {
 
 	const store = service(createStore);
 
