@@ -22,7 +22,7 @@ import { execute } from "@/index.core.js";
 import { universities } from "@/universities/index.js";
 import type { Markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
-import { type Feed, pipe, type Sink } from "@metreeca/flow";
+import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";
 import { filter, flat, fork, map, peek, take } from "@metreeca/flow/tasks";
@@ -61,9 +61,9 @@ if ( import.meta.main ) {
 export async function sync() {
 
 	return pipe(
-		(items([asserted(), retracted()]))
-		(flat()) // the crawl must run dry before an entry can be told stale
-			(delta())
+		(insert())
+		(remove())
+		(delta())
 	);
 
 }
@@ -71,7 +71,9 @@ export async function sync() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function asserted(): Feed<Delta> {
+function insert(): Feed<Delta> {
+
+	const store = service(createStore);
 
 	return pipe(
 		(items(Search))
@@ -101,7 +103,7 @@ function asserted(): Feed<Delta> {
 			(html())
 			(focus())
 			(untag())
-			(filter(changed))
+			(filter(changed) /* !!! */)
 			(extract())
 			(peek(console.log))
 			(convert(universities.coimbra))
@@ -111,12 +113,64 @@ function asserted(): Feed<Delta> {
 		)))
 	);
 
+
+
+	async function changed(page: Markdown): Promise<boolean> {
+
+		return unknown(createHash("sha256").update(page).digest("hex"));
+
+
+		async function unknown(digest: string): Promise<boolean> {
+
+			return true; // !!! test `digest` against the recorded page digests, recording it if unknown
+
+		}
+
+	}
+
 }
 
 
-function retracted(): Feed<Delta> {
+function remove(): Task<Delta> {
 
-	return items<Delta>([]); // !!! retract every recorded entry the crawl didn't visit
+	const store = service(createStore);
+
+	const removed = new Set<Reference>();
+
+	// !!! populate removed from store
+
+	return inserted => items((async function* () {
+
+		for await (const insertion of inserted) {
+
+			const [entry, state] = insertion;
+
+			if ( !removed.has(entry) ) {
+
+				yield insertion;
+
+			} else if ( state !== null && !isStale(state) ) {
+
+				removed.delete(entry); // the entry is live, so the run must not retract it
+
+				yield insertion;
+
+			} else {
+
+				// stale: withheld here and left in `removed`, so the run retracts it
+
+			}
+
+		}
+
+		yield* [...removed].map((entry ): Delta => [entry, null]);
+
+	})());
+
+
+	function isStale(state: Resource): boolean {
+		return false; // !!!
+	}
 
 }
 
@@ -127,21 +181,6 @@ export type Delta = [
 	entry: Reference,
 	state: null | Resource
 ]
-
-
-async function changed(page: Markdown): Promise<boolean> {
-
-	return unknown(createHash("sha256").update(page).digest("hex"));
-
-
-	async function unknown(digest: string): Promise<boolean> {
-
-		return true; // !!! test `digest` against the recorded page digests, recording it if unknown
-
-	}
-
-}
-
 
 function delta(): Sink<Delta> {
 
