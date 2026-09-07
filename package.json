@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf lib node_modules",
-    "setup": "npm install",
+    "prime": "npm ci && sh package.sh --gcp",
+    "setup": "npm ci && sh package.sh --gcp --link",
     "build": "rm -rf lib && tsc --build && cpy 'src/**/*.sys.md' lib",
     "check": "npx vitest run",
     "serve": "npx tsx --watch src/_ports.ts"

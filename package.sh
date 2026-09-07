@@ -14,12 +14,50 @@
 # limitations under the License.
 #
 
+# Select actions: default to all, unless requested on the command line
+
+gcp=
+link=
+
+options=" ${*:---gcp --link} "
+
+case "${options}" in *" --gcp "*) gcp=1 ;; esac
+case "${options}" in *" --link "*) link=1 ;; esac
+
+
 # Configure GCP project for local testing
 
 project=ec2u-data
 
-gcloud auth print-access-token >/dev/null 2>&1 || gcloud auth login --update-adc
-gcloud auth application-default print-access-token >/dev/null 2>&1 || gcloud auth application-default login
+if [ -n "${gcp}" ]; then
 
-gcloud auth application-default set-quota-project ${project}
-gcloud config set project ${project}
+	gcloud auth print-access-token >/dev/null 2>&1 || gcloud auth login --update-adc
+	gcloud auth application-default print-access-token >/dev/null 2>&1 || gcloud auth application-default login
+
+	gcloud auth application-default set-quota-project ${project}
+	gcloud config set project ${project}
+
+fi
+
+
+# Link local @metreeca packages, if checked out
+
+packages=${HOME}/Metreeca/Packages
+
+if [ -n "${link}" ] && [ -d "${packages}" ]; then
+
+	npx link \
+		${packages}/Core \
+		${packages}/Flow \
+		${packages}/Gear/packages/gear \
+		${packages}/Gear/packages/gear-csv \
+		${packages}/Gear/packages/gear-json \
+		${packages}/Gear/packages/gear-url \
+		${packages}/Gear/packages/gear-xml \
+		${packages}/HTTP \
+		${packages}/Tape \
+		${packages}/Trio \
+		${packages}/Wire/packages/sparql/wire-sparql \
+		${packages}/Wire/packages/sparql/wire-sparql-http
+
+fi

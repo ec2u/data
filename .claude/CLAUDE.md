@@ -26,8 +26,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## NPM Scripts
 
-- **`npm run clean`** - Remove build artifacts and dependencies (lib, node_modules)
-- **`npm run setup`** - Install dependencies and apply security fixes
+- **`npm run clean`** - Remove build artefacts and dependencies (lib, node_modules)
+- **`npm run prime`** - Install pinned dependencies and configure the GCP project for local testing
+- **`npm run setup`** - Prime the project and link the local `@metreeca` packages checked out under
+	`~/Metreeca/Packages`
 - **`npm run build`** - Compile TypeScript to lib directory and copy `*.sys.md` prompts alongside their modules
 - **`npm run check`** - Run Vitest test suite
 - **`npm run serve`** - Start development server with watch mode
@@ -35,10 +37,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Local Packages
 
 > [!CAUTION]
-> **`npm install` replaces symlinked local packages with registry copies.** Before installing, list the symlinks under
-> `node_modules/@metreeca`; after installing, reinstate every one of them with `npx link <path to local package>`.
-> Skipping this silently swaps the working copies for published ones, surfacing as type errors in modules left
-> untouched.
+> **`npm install` and `npm ci` replace symlinked local packages with registry copies.** Reinstate the links with
+> `npm run setup`, or with `sh package.sh --link` alone. Skipping this silently swaps the working copies for published
+> ones, surfacing as type errors in modules left untouched.
 
 ## Testing
 
