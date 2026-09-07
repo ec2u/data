@@ -75,6 +75,8 @@ export function convert(university: {
 			generated: true,
 			university: university.id,
 
+			retrieved: Date.now(), // !!! the time the page was drawn at, rather than converted
+
 			about: multiple(path("topic").map(string).flatMap(about)),
 			audience: multiple(path("audience").map(string).flatMap(audience)),
 

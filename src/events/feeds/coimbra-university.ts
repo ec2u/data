@@ -100,8 +100,8 @@ function insert(): Task<string|URL, Delta> {
 
 	const store = service(createStore);
 
-	const known = new Set<Hash>;  // !!! populate from store
-	const stale = new Set<Reference>;  // !!! populate from store
+	const entries = new Set<Reference>;  // !!! populate from store
+	const digests = new Set<Hash>;  // !!! populate from store
 
 	return urls => items((async function* () {
 
@@ -113,7 +113,7 @@ function insert(): Task<string|URL, Delta> {
 				(html())
 				(focus())
 				(untag())
-				(filter(page => !known.has(hash(page))))
+				(filter(page => !digests.has(digest(page))))
 				(extract())
 				(peek(console.log))
 				(convert(universities.coimbra))
@@ -129,7 +129,7 @@ function insert(): Task<string|URL, Delta> {
 
 			if ( !isStale(state) ) {
 
-				stale.delete(entry);
+				entries.delete(entry);
 
 				yield insertion;
 
@@ -137,7 +137,7 @@ function insert(): Task<string|URL, Delta> {
 
 		}
 
-		yield* [...stale].map((entry): Delta => [entry, null]);
+		yield* [...entries].map((entry): Delta => [entry, null]); // whatever the crawl left unconfirmed is gone or stale
 
 	})());
 
@@ -186,7 +186,7 @@ function delta(): Sink<Delta> {
 
 export type Hash = string
 
-function hash(data: string): Hash {
+function digest(data: string): Hash {
 
 	return createHash("sha256").update(data).digest("hex");
 

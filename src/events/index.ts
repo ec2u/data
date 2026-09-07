@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { Instant } from "@/_/core/temporal.js";
 import { ec2u } from "@/index.js";
 import { resource as shape } from "@metreeca/blue/resource";
 import type { Tag } from "@metreeca/core/language";
@@ -34,6 +35,8 @@ export type Event = { // !!! from shape
 
 	readonly generated?: boolean;
 	readonly university: IRI;
+
+	readonly retrieved: Instant; // !!! delisting: retract the events a sweep leaves unretrieved, once confirmed gone
 
 	readonly url: readonly IRI[];
 
