@@ -15,7 +15,7 @@
  */
 
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
-import { file } from "@/_/gear-node/files.js";
+import { file } from "@/_/gear/files.js";
 import { retrieve } from "@/pages/index.js";
 import { pages } from "@/pages/store.js";
 import { fetchPage } from "@/pages/tools/fetchPage.js";

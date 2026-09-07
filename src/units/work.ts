@@ -15,7 +15,7 @@
  */
 
 import { _units } from "@/units/store.js";
-import { dump } from "@/_/gear-node/files.js";
+import { dump } from "@/_/gear/files.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
