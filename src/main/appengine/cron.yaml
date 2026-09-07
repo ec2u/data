@@ -46,7 +46,7 @@ cron:
     schedule: every day 01:05
 
   - description: "offerings › linz - nightly crawling"
-    url: /pipelines/offerings/linz/programs
+    url: /pipelines/offerings/linz
     schedule: every day 01:10
 
   - description: "offerings › pavia - nightly crawling"
