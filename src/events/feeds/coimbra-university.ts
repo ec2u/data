@@ -20,9 +20,8 @@ import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { execute } from "@/index.core.js";
 import { universities } from "@/universities/index.js";
-import type { Markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
-import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
+import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";
 import { filter, flat, fork, map, peek, take } from "@metreeca/flow/tasks";
@@ -61,6 +60,8 @@ if ( import.meta.main ) {
 export async function sync() {
 
 	return pipe(
+		(scan())
+		(take(1) /* !!! */)
 		(insert())
 		(delta())
 	);
@@ -70,37 +71,42 @@ export async function sync() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function insert(): Feed<Delta> {
+function scan() {
+	return pipe(
+		(items(Search))
+		(crawl(
+			fork(10, urls => pipe(
+				items(urls)
+				(fetch())
+				(json())
+				(jpath())
+			)),
+			path => pipe(
+				items(path("pagination.total_pages"))
+				(map(number))
+				(flat(map(total => range(2, total+1))))
+				(map(index => `${Search}?page=${index}`))
+			),
+			path => pipe(
+				items(path("events.*.key"))
+				(map(string))
+				(map(key => `${Events}/${key}`))
+			)
+		))
+	);
+}
+
+function insert(): Task<string, Delta> {
 
 	const store = service(createStore);
 
-	const known=new Set<Hash>;  // !!! populate from store
-	const stale=new Set<Reference>;  // !!! populate from store
+	const known = new Set<Hash>;  // !!! populate from store
+	const stale = new Set<Reference>;  // !!! populate from store
 
-	return items((async function* () {
+	return urls => items((async function* () {
 
 		const inserted = pipe(
-			(items(Search))
-			(crawl(
-				fork(10, urls => pipe(
-					items(urls)
-					(fetch())
-					(json())
-					(jpath())
-				)),
-				path => pipe(
-					items(path("pagination.total_pages"))
-					(map(number))
-					(flat(map(total => range(2, total+1))))
-					(map(index => `${Search}?page=${index}`))
-				),
-				path => pipe(
-					items(path("events.*.key"))
-					(map(string))
-					(map(key => `${Events}/${key}`))
-				)
-			))
-			(take(1) /* !!! */)
+			items(urls)
 			(fork(10, urls => pipe(
 				(items(urls))
 				(fetch())
@@ -184,7 +190,7 @@ function delta(): Sink<Delta> {
 
 export type Hash = string
 
-function hash(data: string) : Hash {
+function hash(data: string): Hash {
 
 	return createHash("sha256").update(data).digest("hex");
 
