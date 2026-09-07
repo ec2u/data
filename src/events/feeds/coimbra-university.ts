@@ -15,11 +15,12 @@
  */
 
 import { createStore } from "@/_/gear-store/index.js";
-import { type Event, EventShape } from "@/events/index.js";
+import { EventShape, isStale } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { execute } from "@/index.core.js";
-import { universities } from "@/universities/index.js";
+import { universities, type University } from "@/universities/index.js";
+import { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
@@ -81,7 +82,7 @@ export async function harvest() {
 			)
 		))
 		(take(1) /* !!! */)
-		(diff())
+		(diff(universities.coimbra))
 		(sync())
 	);
 
@@ -90,31 +91,36 @@ export async function harvest() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function diff(): Task<string | URL, Delta> {
+function diff(university: {
+
+	readonly id: IRI
+	readonly zone: string
+
+}): Task<string | URL, Delta> {
 
 	const store = service(createStore);
 
 	const entries = new Set<Reference>;  // !!! populate from store
-	const digests = new Set<Hash>;  // !!! populate from store
+	const digests = new Map<string, Digest>;  // !!! populate from store, keyed by source page URL
 
 	return urls => items((async function* () {
 
 		const inserted = pipe(
 			items(urls)
-			(fork(10, urls => pipe(
-				(items(urls))
+			(fork(10, flat(map(url => pipe( // a pipe per page keeps the source URL in scope as the digest key
+				(items([url]))
 				(fetch())
 				(html())
 				(focus())
 				(untag())
-				(filter(page => !digests.has(digest(page))))
+				(filter(page => digests.get(String(url)) !== digest(page)))
 				(extract())
 				(peek(console.log))
-				(convert(universities.coimbra))
+				(convert(university))
 				(peek(console.log))
 				(validate(v => undefined) /* !!! */)
 				(map(event => [event.id, event] satisfies Delta))
-			)))
+			)))))
 		);
 
 		for await (const insertion of inserted) {
@@ -136,11 +142,6 @@ function diff(): Task<string | URL, Delta> {
 		);
 
 	})());
-
-
-	function isStale(state: Event): boolean {
-		return false; // !!!
-	}
 
 }
 
@@ -180,9 +181,9 @@ function sync(): Sink<Delta> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type Hash = string
+export type Digest = string
 
-function digest(data: string): Hash {
+function digest(data: string): Digest {
 
 	return createHash("sha256").update(data).digest("hex");
 
