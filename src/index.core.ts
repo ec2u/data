@@ -42,9 +42,6 @@ export const execute = executor(
 		store: service(createCache)
 	}))),
 	bind(createStore, createMockStore), // !!! bind the connector the deployment targets
-	bind(createOpenAI, async () => createOpenAI({
-		apiKey: await service(createVault)("openai-key")
-	})),
 	bind(createGoogleAI, async () => createGoogleAI({
 		apiKey: await service(createVault)("googleai-key")
 	}))

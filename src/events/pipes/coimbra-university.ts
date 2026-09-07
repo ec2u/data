@@ -15,24 +15,23 @@
  */
 
 import { createStore } from "@/_/gear-store/index.js";
-import { EventShape, isStale } from "@/events/index.js";
+import { type Digest, digest } from "@/events/_/digest.js";
+import { isStale } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { execute } from "@/index.core.js";
-import { universities, type University } from "@/universities/index.js";
+import { universities } from "@/universities/index.js";
 import { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
-import { pipe, type Sink, type Task } from "@metreeca/flow";
+import { pipe, type Task } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
-import { each } from "@metreeca/flow/sinks";
 import { filter, flat, fork, map, peek, take } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { jpath, json, number, string, validate } from "@metreeca/gear-json";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 import { Reference } from "@metreeca/qest";
-import type { Resource } from "@metreeca/qest/resource";
-import { createHash } from "node:crypto";
+import { Delta, persist } from "../sinks/persist.js";
 
 
 const Search = "https://content.fw.uc.pt/v1/agenda/events/search";
@@ -49,7 +48,7 @@ const Publisher = immutable({
 
 
 if ( import.meta.main ) {
-	await execute(harvest);
+	execute(CoimbraUniversity);
 }
 
 
@@ -58,7 +57,7 @@ if ( import.meta.main ) {
 // !!! incremental sync
 // !!! storage
 
-export async function harvest() {
+export async function CoimbraUniversity() {
 
 	return pipe(
 		(items(Search))
@@ -83,7 +82,7 @@ export async function harvest() {
 		))
 		(take(1) /* !!! */)
 		(diff(universities.coimbra))
-		(sync())
+		(persist())
 	);
 
 }
@@ -142,49 +141,5 @@ function diff(university: {
 		);
 
 	})());
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type Delta = [
-	entry: Reference,
-	state: null | Resource
-]
-
-function sync(): Sink<Delta> {
-
-	const store = service(createStore);
-
-	return feed => {
-
-		const entries = new Set<Reference>();
-
-		return store.execute(client => feed(each(([entry, state]) => {
-
-			if ( entries.has(entry) ) {
-				throw new RangeError(`duplicate entry <${entry}>`);
-			}
-
-			entries.add(entry);
-
-			return state === null
-				? client.remove({ entry, shape: EventShape })
-				: client.insert({ entry, shape: EventShape, state });
-
-		})));
-
-	};
-
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type Digest = string
-
-function digest(data: string): Digest {
-
-	return createHash("sha256").update(data).digest("hex");
 
 }

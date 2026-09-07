@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { events } from "@/events/ports/index.js";
 import { units } from "@/units/_ports.js";
 import { universities } from "@/universities/_ports.js";
 import { BadRequest, InternalServerError } from "@metreeca/http";
@@ -39,6 +40,7 @@ express()
 	.use(request())
 
 	.use(universities())
+	.use(events())
 
 	.use(error())
 	.use(sanitise())
