@@ -96,7 +96,7 @@ function scan() {
 	);
 }
 
-function insert(): Task<string, Delta> {
+function insert(): Task<string|URL, Delta> {
 
 	const store = service(createStore);
 
@@ -127,11 +127,7 @@ function insert(): Task<string, Delta> {
 
 			const [entry, state] = insertion;
 
-			if ( !stale.has(entry) ) {
-
-				yield insertion;
-
-			} else if ( !isStale(state) ) {
+			if ( !isStale(state) ) {
 
 				stale.delete(entry);
 
