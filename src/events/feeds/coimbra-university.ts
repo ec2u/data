@@ -15,7 +15,7 @@
  */
 
 import { createStore } from "@/_/gear-store/index.js";
-import { EventShape } from "@/events/index.js";
+import { type Event, EventShape } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { execute } from "@/index.core.js";
@@ -62,7 +62,6 @@ export async function sync() {
 
 	return pipe(
 		(insert())
-		(remove())
 		(delta())
 	);
 
@@ -75,100 +74,73 @@ function insert(): Feed<Delta> {
 
 	const store = service(createStore);
 
-	return pipe(
-		(items(Search))
-		(crawl(
-			fork(10, urls => pipe(
-				items(urls)
+	const known=new Set<Hash>;  // !!! populate from store
+	const stale=new Set<Reference>;  // !!! populate from store
+
+	return items((async function* () {
+
+		const inserted = pipe(
+			(items(Search))
+			(crawl(
+				fork(10, urls => pipe(
+					items(urls)
+					(fetch())
+					(json())
+					(jpath())
+				)),
+				path => pipe(
+					items(path("pagination.total_pages"))
+					(map(number))
+					(flat(map(total => range(2, total+1))))
+					(map(index => `${Search}?page=${index}`))
+				),
+				path => pipe(
+					items(path("events.*.key"))
+					(map(string))
+					(map(key => `${Events}/${key}`))
+				)
+			))
+			(take(1) /* !!! */)
+			(fork(10, urls => pipe(
+				(items(urls))
 				(fetch())
-				(json())
-				(jpath())
-			)),
-			path => pipe(
-				items(path("pagination.total_pages"))
-				(map(number))
-				(flat(map(total => range(2, total+1))))
-				(map(index => `${Search}?page=${index}`))
-			),
-			path => pipe(
-				items(path("events.*.key"))
-				(map(string))
-				(map(key => `${Events}/${key}`))
-			)
-		))
-		(take(1) /* !!! */)
-		(fork(10, urls => pipe(
-			(items(urls))
-			(fetch())
-			(html())
-			(focus())
-			(untag())
-			(filter(changed) /* !!! */)
-			(extract())
-			(peek(console.log))
-			(convert(universities.coimbra))
-			(peek(console.log))
-			(validate(v => undefined) /* !!! */)
-			(map(event => [event.id, event] satisfies Delta))
-		)))
-	);
-
-
-
-	async function changed(page: Markdown): Promise<boolean> {
-
-		return unknown(createHash("sha256").update(page).digest("hex"));
-
-
-		async function unknown(digest: string): Promise<boolean> {
-
-			return true; // !!! test `digest` against the recorded page digests, recording it if unknown
-
-		}
-
-	}
-
-}
-
-
-function remove(): Task<Delta> {
-
-	const store = service(createStore);
-
-	const removed = new Set<Reference>();
-
-	// !!! populate removed from store
-
-	return inserted => items((async function* () {
+				(html())
+				(focus())
+				(untag())
+				(filter(page => !known.has(hash(page))))
+				(extract())
+				(peek(console.log))
+				(convert(universities.coimbra))
+				(peek(console.log))
+				(validate(v => undefined) /* !!! */)
+				(map(event => [event.id, event] satisfies Delta))
+			)))
+		);
 
 		for await (const insertion of inserted) {
 
 			const [entry, state] = insertion;
 
-			if ( !removed.has(entry) ) {
+			if ( !stale.has(entry) ) {
 
 				yield insertion;
 
-			} else if ( state !== null && !isStale(state) ) {
+			} else if ( !isStale(state) ) {
 
-				removed.delete(entry); // the entry is live, so the run must not retract it
+				stale.delete(entry);
 
 				yield insertion;
-
-			} else {
-
-				// stale: withheld here and left in `removed`, so the run retracts it
 
 			}
 
 		}
 
-		yield* [...removed].map((entry ): Delta => [entry, null]);
+		yield* [...stale].map((entry): Delta => [entry, null]);
 
 	})());
 
 
-	function isStale(state: Resource): boolean {
+	function isStale(state: Event): boolean {
 		return false; // !!!
 	}
 
@@ -205,5 +177,15 @@ function delta(): Sink<Delta> {
 		})));
 
 	};
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Hash = string
+
+function hash(data: string) : Hash {
+
+	return createHash("sha256").update(data).digest("hex");
 
 }
