@@ -169,13 +169,13 @@ function links(tree: Document, url: string): readonly Link[] {
 
 	const base = tree.children.filter(isTag)
 		.map(root => getAttributeValue(root, "xml:base"))
-		.find(isDefined) ?? url;
+		.find(value => isDefined(value)) ?? url;
 
 	const self = `${base}#`;
 
 	return findAll(node => node.name === "a", tree)
 		.map(anchor => link(anchor, base))
-		.filter(isDefined)
+		.filter(value => isDefined(value))
 		.filter(link => !link.href.startsWith(self));
 
 }
