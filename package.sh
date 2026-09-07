@@ -47,6 +47,7 @@ packages=${HOME}/Metreeca/Packages
 if [ -n "${link}" ] && [ -d "${packages}" ]; then
 
 	npx link \
+		${packages}/Blue \
 		${packages}/Core \
 		${packages}/Flow \
 		${packages}/Gear/packages/gear \
@@ -55,6 +56,8 @@ if [ -n "${link}" ] && [ -d "${packages}" ]; then
 		${packages}/Gear/packages/gear-url \
 		${packages}/Gear/packages/gear-xml \
 		${packages}/HTTP \
+		${packages}/Keep/packages/components/keep \
+		${packages}/Qest \
 		${packages}/Tape \
 		${packages}/Trio \
 		${packages}/Wire/packages/sparql/wire-sparql \

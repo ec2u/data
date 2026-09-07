@@ -15,6 +15,7 @@
  */
 
 import { ec2u } from "@/index.js";
+import { resource as shape } from "@metreeca/blue/resource";
 import type { Tag } from "@metreeca/core/language";
 import type { IRI } from "@metreeca/core/resource";
 import type { Markdown, Text } from "@metreeca/core/strings";
@@ -25,7 +26,9 @@ export const events = `${ec2u}/events`;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export interface Event {
+export const EventShape = shape({}); // !!! the shape the stored events are validated against
+
+export type Event = { // !!! from shape
 
 	readonly id: IRI;
 
@@ -70,7 +73,7 @@ export type EventAttendanceMode =
 	| "MixedEventAttendanceMode";
 
 
-export interface Image {
+export type Image = {
 
 	readonly url: IRI;
 
@@ -86,7 +89,7 @@ export type Location =
 	| PostalAddress
 	| VirtualLocation;
 
-export interface Place {
+export type Place = {
 
 	readonly name?: Text;
 	readonly address?: PostalAddress;
@@ -96,7 +99,7 @@ export interface Place {
 
 }
 
-export interface PostalAddress {
+export type PostalAddress = {
 
 	readonly name?: Text;
 
@@ -112,7 +115,7 @@ export interface PostalAddress {
 
 }
 
-export interface VirtualLocation {
+export type VirtualLocation = {
 
 	readonly url: IRI;
 

@@ -16,17 +16,17 @@
 
 import { minute } from "@/_/core/temporal.js";
 import { gcp } from "@/_/gear-gcp/index.js";
+import { createGCPVault } from "@/_/gear-gcp/secrets.js";
+import { createStore } from "@/_/gear-store/index.js";
+import { createMockStore } from "@/_/gear-store/mock.js";
 import { createGoogleAI } from "@/_/muse-google/index.js";
-import { createGoogleTranslator } from "@/_/muse-google/translator.js";
 import { createOpenAI } from "@/_/muse-openai/index.js";
-import { createTranslator } from "@/_/muse/translator/index.js";
 import { bind, executor, service } from "@metreeca/gear";
 import { createCache, createFileCache } from "@metreeca/gear/cache";
 import { getPackage, getPath } from "@metreeca/gear/space";
 import { createVault } from "@metreeca/gear/vault";
 import { createFetch } from "@metreeca/http";
 import { cache } from "@metreeca/http/cache";
-import { createGCPVault } from "@/_/gear-gcp/secrets.js";
 
 export const execute = executor(
 	bind(getPath, () => gcp.production
@@ -41,11 +41,11 @@ export const execute = executor(
 		ttl: 60*minute,
 		store: service(createCache)
 	}))),
+	bind(createStore, createMockStore), // !!! bind the connector the deployment targets
 	bind(createOpenAI, async () => createOpenAI({
 		apiKey: await service(createVault)("openai-key")
 	})),
 	bind(createGoogleAI, async () => createGoogleAI({
 		apiKey: await service(createVault)("googleai-key")
-	})),
-	bind(createTranslator, createGoogleTranslator)
+	}))
 );
