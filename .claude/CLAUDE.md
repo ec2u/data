@@ -26,23 +26,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## NPM Scripts
 
-- **`npm run clean`** - Remove build artefacts and dependencies (lib, node_modules)
-- **`npm run prime`** - Install pinned dependencies and configure the GCP project for local testing
-- **`npm run setup`** - Prime the project and link the local `@metreeca` packages checked out under
-	`~/Metreeca/Packages`
-- **`npm run build`** - Compile TypeScript to lib directory and copy `*.sys.md` prompts alongside their modules
-- **`npm run check`** - Run Vitest test suite
-- **`npm run serve`** - Start development server with watch mode
-
-## Local Packages
-
-> [!CAUTION]
-> **`npm install` and `npm ci` replace symlinked local packages with registry copies.** Reinstate the links with
-> `npm run setup`, or with `sh package.sh --link` alone. Skipping this silently swaps the working copies for published
-> ones, surfacing as type errors in modules left untouched.
+- **`npm run clean`** - Remove dependencies and build artefacts
+- **`npm run prime`** - Install dependencies from the lockfile and configure the GCP project
+- **`npm run setup`** - Configure for local development
+- **`npm run build`** - Compile sources and copy `*.sys.md` prompts alongside their modules
+- **`npm run check`** - Run the test suite
+- **`npm run serve`** - Serve the endpoints in watch mode
 
 ## Testing
 
-- **Run all tests**: `npm run check`
-- **Run specific test file**: `npm run check -- path/to/test.ts`
-- Tests are written using Vitest and located in `*.test.ts` files alongside the source code
+- **Run a single test file**: `npm run check -- path/to/test.ts`
