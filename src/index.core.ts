@@ -18,7 +18,7 @@ import { minute } from "@/_/core/temporal.js";
 import { gcp } from "@/_/gear-gcp/index.js";
 import { createGCPVault } from "@/_/gear-gcp/secrets.js";
 import { createStore } from "@/_/gear-store/index.js";
-import { createMockStore } from "@/_/gear-store/mock.js";
+import { createMockStore } from "@/_/gear-store/_mock.js";
 import { createGoogleAI } from "@/_/muse-google/index.js";
 import { createOpenAI } from "@/_/muse-openai/index.js";
 import { bind, executor, service } from "@metreeca/gear";

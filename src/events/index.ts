@@ -128,10 +128,14 @@ export type VirtualLocation = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function isStale(event: Event): boolean {
+export function isStaleEvent(event: Event): boolean {
+
 	return false; // !!! tbi
+
 }
 
-export function event(url: string | URL): IRI {
+export function createEventId(url: string | URL): IRI {
+
 	return `${events}/${uuid.v3(String(url), uuid.v3.URL)}`;
+
 }

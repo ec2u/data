@@ -46,26 +46,25 @@ over, retracts what the store holds and the scan never named. Both state their c
 sink, which commits them as the class demands.
 
 ```text
-scan ─┬─ insert ─ read, convert, judge ────────── deltas, as they are drawn ─┐
-      │                                                                      ├─ persist
+      ┌─ insert ─ read, convert, judge ────────── deltas, as they are drawn ─┐
+scan ─┤                                                                      ├─ persist
       └─ remove ─ collect, wait for the end, weigh ─── deltas, all at once ──┘
 ```
 
-Absence from a complete scan is proof of deletion, and the split is what that premise costs. A retraction rests on the
-scan as a whole rather than on any entry in it, so none may be stated until the scan is over, and a scan that comes
-back implausibly short states none at all. The scan itself is repeated from scratch every run rather than recorded: no
-cursor, no stored census, no progress to corrupt.
+Absence from a complete scan is proof of deletion, and the split is what that premise costs: a retraction rests on the
+scan as a whole rather than on any entry in it, so none may be stated until the scan is over, and a scan that comes back
+implausibly short states none at all.
 
 | Question              | Branch   | Test                                                   |
 |-----------------------|----------|--------------------------------------------------------|
 | Which pages to read?  | `insert` | never read, or a marker moved past the stored copy     |
 | What no longer holds? | `remove` | stale by its own state, or absent from a complete scan |
 
-What holds throughout:
+## Invariants
 
 - **One item at a time** — every entry is read, judged and stated on its own, so a mishap costs the judgement of one
-  entry rather than the run's. Whether it is also *committed* on its own is the class's to settle. Concurrency is a
-  separate axis: several entries may be in flight at once.
+  entry rather than the run's. Whether it is also *committed* on its own is the class's to settle, and concurrency is a
+  separate axis, settled inside `insert`.
 
 - **One staleness predicate per kind** — a single test judges an entry from its own state, and both branches apply it:
   `insert` to what it has just extracted, `remove` to what the store holds. What the test reads is the kind's business
@@ -92,11 +91,17 @@ Read what the source lists, together with whatever marker it carries for each en
 a digest of the row.
 
 - **Repeated, not recorded** — seconds against a run measured in minutes, so rescanning from scratch buys away the
-  cursor, the checkpoint and the stored census alike.
+  cursor, the checkpoint and the stored census alike, and leaves no progress to corrupt. That is how every source in
+  hand is drawn, and what one too costly to crawl whole would have to give up.
 
 - **A feed of entries, however it is built** — the scan hands the branches a feed and nothing else, and neither asks
-  where it came from. A catalogue of a few thousand entries is crawled whole every run; one that outgrows that swaps
-  the crawl for a scan built across runs and backed by the store, leaving both branches as they are.
+  where it came from. A catalogue that outgrew crawling whole would harvest across runs into a census in the store and
+  hand over a feed only once that census closed, leaving both branches as they are. Two conditions would make it safe.
+  The census is generational, opened fresh each cycle and replacing the last on closing, or absence from one merely
+  topped up stops meaning anything, as a modified-since pass reports additions and never deletions. And it closes on
+  the source's own evidence that nothing is left, a cursor that terminated or a count that matches, as a harvest that
+  simply stopped and called itself whole retracts every page it missed. A run whose harvest has not closed yields no
+  scan at all, which is not the same as a scan that closed on an empty listing.
 
 - **Discovery and adjudication both** — the scan settles which entries are worth reading and, taken whole, which ones
   no longer exist. A page that fails to arrive is therefore no longer merely a turn postponed: it is a hole in the only
@@ -121,9 +126,9 @@ handed it.
   `remove` sees stays the scan entire. Placed upstream of the split it would hand `remove` only the entries that
   changed, and the first quiet day would retract the catalogue.
 
-- **The branch sets the pace** — the two draw in lockstep, one entry on offer at a time, so the run advances at the
-  speed of the reads. Concurrency belongs inside the branch, where several pages are in flight at once, and `remove`
-  keeps up on the cost of a set insertion.
+- **The branch sets the pace** — the two draw in lockstep and neither runs ahead of the feed, so the run advances at
+  the speed of the reads. What sets that speed is the branch's own window, several pages in flight at once, and
+  `remove` keeps up on the cost of a set insertion.
 
 - **The retrieval settles nothing about delisting** — a fetch drops an unsuccessful response the way it drops nothing
   at all, so a page answering that it is gone reaches the branch as silence, indistinguishable from one that timed out.
@@ -147,9 +152,8 @@ Draw what the store holds for the source, watch the scan go by, and retract at t
 condemns or the scan never named.
 
 - **It watches the scan, not the harvest** — the branch sits beside `insert` rather than after it, so it sees every
-  entry the source listed rather than only the ones worth reading. It names each one through the shared identity
-  function as it goes, so the comparison at the end is between identifiers on both sides and the store is never asked
-  what a page is called.
+  entry the source listed rather than only the ones worth reading. Naming each one as it goes puts identifiers on both
+  sides of the final comparison, and the store is never asked what a page is called.
 
 - **Silent until the scan is over** — nothing follows from a partial scan, so the branch states nothing while the feed
   runs and everything once it is dry. Retirements land after the last insertion as a consequence rather than by
@@ -157,8 +161,10 @@ condemns or the scan never named.
   retracts.
 
 - **A floor under the retraction** — a run retracting more than some fraction of what the store holds for the source
-  states nothing and fails, overridably, so a broken index costs a run instead of the catalogue. It guards both classes
-  alike, and it is the reason either may treat absence as evidence at all.
+  states nothing and fails, so a broken index costs a run instead of the catalogue. A scan that completed and named
+  nothing is no special case: it is the largest retraction there is, and it meets the floor like any other. Only an
+  operator lifts it, for one run, having established that the withdrawal is real. It guards both classes alike, and it
+  is the reason either may treat absence as evidence at all.
 
 - **Expiry needs no scan** — sources list past entries as a matter of course, so the bulk of the retiring is drawn from
   the store's own copy against the staleness predicate. That half is evidenced entry by entry, is judged on every

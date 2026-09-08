@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { digest, type Digest } from "@/_/gear-store/digest.js";
-import { type Delta, persist } from "@/_/gear-store/persist.js";
-import { event, EventShape, isStale } from "@/events/index.js";
+import { digest, type Digest } from "@/_/gear-store/_digest.js";
+import { type Delta, delta, persist } from "@/_/gear-store/persist.js";
+import { validate } from "@/_/gear-store/validate.js";
+import { createEventId, EventShape, isStaleEvent } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { execute } from "@/index.core.js";
@@ -26,10 +27,9 @@ import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import { type Feed, pipe, type Task } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
-import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
-import { jpath, json, number, string, validate } from "@metreeca/gear-json";
-import { crawl, fetch } from "@metreeca/gear-url";
+import { batch, filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
+import { jpath, json, number, string } from "@metreeca/gear-json";
+import { crawl, fetch, type URLLike } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 import { log } from "@metreeca/tape";
 
@@ -48,7 +48,7 @@ const Publisher = immutable({
 
 
 const Concurrency = 10;
-const Floor = 0.10; // the share of the stored events a single run is allowed to retract
+const Floor = 0.25; // the share of the stored events a single run is allowed to retract
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,7 +64,6 @@ if ( import.meta.main ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // !!! incremental sync
-// !!! validation
 // !!! storage
 
 export async function CoimbraUniversity() {
@@ -102,14 +101,12 @@ export async function CoimbraUniversity() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// the digest skip lives inside the branch, so `remove` still sees the whole scan
-
 function insert(university: {
 
 	readonly id: IRI
 	readonly zone: string
 
-}): Task<string | URL, Delta> {
+}): Task<URLLike, Delta> {
 
 	const digests = new Map<string, Digest>;  // !!! populate from store, keyed by source page URL
 
@@ -124,8 +121,8 @@ function insert(university: {
 			(filter(page => digests.get(String(url)) !== digest(page)))
 			(extract())
 			(convert(university))
-			(validate(v => undefined) /* !!! */)
-			(map(event => [event.id, isStale(event) ? null : event] satisfies Delta))
+			(validate(EventShape))
+			(map(event => isStaleEvent(event) ? delta(event.id) : delta(event.id, event)))
 		)))))
 	);
 
@@ -135,29 +132,33 @@ function remove(university: {
 
 	readonly id: IRI
 
-}): Task<string | URL, Delta> {
+}): Task<URLLike, Delta> {
 
-	return urls => items(retract(urls))(flat());
+	return urls => pipe(
+		items(urls)
+		(map(createEventId))
+		(batch())
+		(flat(map(retract)))
+		(map(id => delta(id)))
+	);
 
 
-	async function retract(urls: Feed<string | URL>): Promise<Feed<Delta>> {
+	async function retract(scanned: readonly IRI[]): Promise<Feed<IRI>> {
 
-		const current = await catalogue(university);
-		const present = await pipe(items(urls)(map(event))(toSet()));
+		const stored = await catalogue(university);
+		const removed = difference<IRI>([stored, scanned]);
 
-		const removed = difference([current, present]);
-
-		if ( removed.length > current.length*Floor ) {
+		if ( removed.length > stored.length*Floor ) {
 
 			throw new Error(`exceeded retraction floor <${Floor}>`
-				+` with <${removed.length}> of <${current.length}> events`
+				+` with <${removed.length}> of <${stored.length}> events`
 			);
 
 		} else {
 
-			logger.info`retracting <${removed.length}> of <${current.length}> events`;
+			logger.info`retracting <${removed.length}> of <${stored.length}> events`;
 
-			return items(removed.map(id => [id, null] satisfies Delta));
+			return items(removed);
 
 		}
 

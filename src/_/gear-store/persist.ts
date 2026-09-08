@@ -39,7 +39,7 @@ const logger = log(import.meta.url);
  *
  * @typeParam T The type of the states to be stored
  */
-export type Delta<T extends Resource = Resource> = [
+export type Delta<T extends Resource = Resource> =  readonly [
 
 	/**
 	 * The resource concerned.
@@ -129,7 +129,7 @@ export function persist(shape: Lazy<ResourceShape>, {
 
 
 	function collect(client: StoreClient): Sink<Delta, Tally> {
-		return reduce<Delta, Tally>(async (tally, [entry, state]) => {
+		return reduce(async (tally, [entry, state]) => {
 
 			try {
 
@@ -178,5 +178,27 @@ export function persist(shape: Lazy<ResourceShape>, {
 
 		});
 	}
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates a delta for a resource.
+ *
+ * Omitting `state` states the removal of the resource, so a workflow that gathers resources and one that retires them
+ * both close on the same call.
+ *
+ * @typeParam T The type of the state to be stored
+ *
+ * @param entry The resource concerned
+ * @param state The state the resource is to be stored with; omit to state its removal
+ *
+ * @returns An immutable {@link Delta} pairing `entry` with `state`, or with `null` if `state` is omitted
+ */
+export function delta<T extends Resource>(entry: Reference, state?: T) : Delta<T> {
+
+	return Object.freeze([entry, state ?? null])
 
 }
