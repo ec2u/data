@@ -20,6 +20,7 @@ import { resource as shape } from "@metreeca/blue/resource";
 import type { Tag } from "@metreeca/core/language";
 import type { IRI } from "@metreeca/core/resource";
 import type { Markdown, Text } from "@metreeca/core/strings";
+import * as uuid from "uuid";
 
 
 export const events = `${ec2u}/events`;
@@ -126,6 +127,12 @@ export type VirtualLocation = {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// the single naming rule, so insert and remove agree on identity without retrieving anything
+
+export function entry(url: string | URL): IRI {
+	return `${events}/${uuid.v3(String(url), uuid.v3.URL)}`;
+}
 
 export function isStale(event: Event): boolean {
 	return false; // !!! tbi

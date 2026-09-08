@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { type Event, type EventAttendanceMode, events, type Location } from "@/events/index.js";
+import { entry, type Event, type EventAttendanceMode, type Location } from "@/events/index.js";
 import { universities } from "@/universities/index.js";
 import { isObject, opt, type Optional, type Value } from "@metreeca/core";
 import { multiple, optional, required } from "@metreeca/core/arrays";
@@ -25,7 +25,6 @@ import { items } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";
 import { filter } from "@metreeca/flow/tasks";
 import { jpath, link, string } from "@metreeca/gear-json";
-import * as uuid from "uuid";
 
 
 /**
@@ -69,7 +68,7 @@ export function convert(university: {
 
 		return immutable<Event>({
 
-			id: `${events}/${uuid.v3(url, uuid.v3.URL)}`,
+			id: entry(url), // !!! name after the address the scan listed, rather than the one the page states
 			url: multiple(url),
 
 			generated: true,
