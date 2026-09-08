@@ -16,7 +16,7 @@
 
 import { digest, type Digest } from "@/_/gear-store/digest.js";
 import { type Delta, persist } from "@/_/gear-store/persist.js";
-import { entry, EventShape, isStale } from "@/events/index.js";
+import { event, EventShape, isStale } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { execute } from "@/index.core.js";
@@ -84,7 +84,6 @@ export async function CoimbraUniversity() {
 				(flat(map(total => range(2, total+1))))
 				(map(index => `${Search}?page=${index}`))
 			),
-			// language=JSONPath
 			path => pipe(
 				items(path("events.*.key"))
 				(map(string))
@@ -112,7 +111,7 @@ function insert(university: {
 
 }): Task<string | URL, Delta> {
 
-	const digests = new Map<string, Digest>;  // !!! populate from the store, keyed by source page URL (paging?)
+	const digests = new Map<string, Digest>;  // !!! populate from store, keyed by source page URL
 
 	return urls => pipe(
 		items(urls)
@@ -144,19 +143,19 @@ function remove(university: {
 	async function retract(urls: Feed<string | URL>): Promise<Feed<Delta>> {
 
 		const current = await catalogue(university);
-		const present = await pipe(items(urls)(map(entry))(toSet()));
+		const present = await pipe(items(urls)(map(event))(toSet()));
 
-		const removed = difference<IRI>([current, present]);
+		const removed = difference([current, present]);
 
 		if ( removed.length > current.length*Floor ) {
 
-			throw new Error(`refused retraction of <${removed.length}>`
-				+` of the <${current.length}> events held for <${university.id}>`
+			throw new Error(`exceeded retraction floor <${Floor}>`
+				+` with <${removed.length}> of <${current.length}> events`
 			);
 
 		} else {
 
-			logger.info`retracting <${removed.length}> of the <${current.length}> events held for <${university.id}>`;
+			logger.info`retracting <${removed.length}> of <${current.length}> events`;
 
 			return items(removed.map(id => [id, null] satisfies Delta));
 

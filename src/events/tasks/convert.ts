@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { entry, type Event, type EventAttendanceMode, type Location } from "@/events/index.js";
+import { event, type Event, type EventAttendanceMode, type Location } from "@/events/index.js";
 import { universities } from "@/universities/index.js";
 import { isObject, opt, type Optional, type Value } from "@metreeca/core";
 import { multiple, optional, required } from "@metreeca/core/arrays";
@@ -68,7 +68,7 @@ export function convert(university: {
 
 		return immutable<Event>({
 
-			id: entry(url), // !!! name after the address the scan listed, rather than the one the page states
+			id: event(url), // !!! name after the address the scan listed, rather than the one the page states
 			url: multiple(url),
 
 			generated: true,

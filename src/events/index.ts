@@ -128,12 +128,10 @@ export type VirtualLocation = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// the single naming rule, so insert and remove agree on identity without retrieving anything
-
-export function entry(url: string | URL): IRI {
-	return `${events}/${uuid.v3(String(url), uuid.v3.URL)}`;
-}
-
 export function isStale(event: Event): boolean {
 	return false; // !!! tbi
+}
+
+export function event(url: string | URL): IRI {
+	return `${events}/${uuid.v3(String(url), uuid.v3.URL)}`;
 }
