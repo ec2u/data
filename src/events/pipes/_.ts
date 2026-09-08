@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { type Event, isStale } from "@/events/index.js";
-import { type Delta, persist } from "@/events/_/persist.js";
+import { type Event, EventShape, isStale } from "@/events/index.js";
+import { type Delta, persist } from "@/_/gear-store/persist.js";
 import { execute } from "@/index.core.js";
 import { type Feed, pipe, type Task } from "@metreeca/flow";
 import { filter, map } from "@metreeca/flow/tasks";
@@ -45,14 +45,14 @@ export async function dispose() {
 		(expiring())
 		(filter(isStale))
 		(map(event => [event.id, null] satisfies Delta))
-		(persist())
+		(persist(EventShape))
 	);
 
 	await pipe(
 		(serving())
 		(delisted())
 		(map(event => [event.id, null] satisfies Delta))
-		(persist())
+		(persist(EventShape))
 	);
 
 }

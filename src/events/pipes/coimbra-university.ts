@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { persist } from "@/events/_/persist.js";
+import { persist } from "@/_/gear-store/persist.js";
+import { EventShape } from "@/events/index.js";
 import { harvest } from "@/events/tasks/harvest.js";
 import { execute } from "@/index.core.js";
 import { universities } from "@/universities/index.js";
@@ -74,7 +75,7 @@ export async function CoimbraUniversity() {
 		))
 		(take(1) /* !!! */)
 		(harvest(universities.coimbra))
-		(persist())
+		(persist(EventShape))
 	);
 
 }

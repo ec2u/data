@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { type Digest, digest } from "@/events/_/digest.js";
+import { type Digest, digest } from "@/_/gear-store/digest.js";
 import { isStale } from "@/events/index.js";
-import { type Delta } from "@/events/_/persist.js";
+import { type Delta } from "@/_/gear-store/persist.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { IRI } from "@metreeca/core/resource";

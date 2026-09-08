@@ -15,7 +15,7 @@
  */
 
 import { job } from "@/_/gear-gcp/scheduler.js";
-import { dispose } from "@/events/pipes/index.js";
+import { dispose } from "@/events/pipes/_.js";
 import { CoimbraUniversity } from "@/events/pipes/coimbra-university.js";
 import { execute } from "@/index.core.js";
 import { Router } from "express";

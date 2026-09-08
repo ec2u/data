@@ -56,6 +56,11 @@ type Concept = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+// !!! staleness check
+// !!! disposal
+// !!! persist(Shape, { atomic: true })
+
 export async function sync() {
 
 	const vault = service(createVault);
@@ -63,6 +68,7 @@ export async function sync() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(fetch())
+
 		(csv<Concept>(CSVFormat))
 		(take(1))
 			// !!! to json

@@ -1,0 +1,182 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { createStore } from "@/_/gear-store/index.js";
+import type { ResourceShape } from "@metreeca/blue/resource";
+import type { Lazy } from "@metreeca/core";
+import { immutable } from "@metreeca/core/structures";
+import type { Sink } from "@metreeca/flow";
+import { reduce } from "@metreeca/flow/sinks";
+import { service } from "@metreeca/gear";
+import type { StoreClient } from "@metreeca/keep";
+import type { Reference, Resource } from "@metreeca/qest/resource";
+import { log, report } from "@metreeca/tape";
+
+
+const logger = log(import.meta.url);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Target state of a single resource.
+ *
+ * A workflow settles on one of these for every resource it looks at, naming the state to store or, with `null`, the
+ * removal. Whether it gathers resources or retires them the statement is the same, so all workflows close on the same
+ * sink. `T` carries a workflow's own state type through to the store, so a state is not widened on the way.
+ *
+ * @typeParam T The type of the states to be stored
+ */
+export type Delta<T extends Resource = Resource> = [
+
+	/**
+	 * The resource concerned.
+	 */
+	entry: Reference,
+
+	/**
+	 * The state the resource is to be stored with, or `null` for a resource to be removed.
+	 */
+	state: null | T
+
+]
+
+/**
+ * Counts of what a run did to the resources it drew.
+ *
+ * Every resource falls under exactly one count, so the three add up to the number of deltas drawn and a run went
+ * cleanly exactly when `failed` is zero.
+ */
+export interface Tally {
+
+	/**
+	 * The number of resources stored, whether afresh or over a state already held.
+	 */
+	readonly stored: number;
+
+	/**
+	 * The number of resources removed, whether or not the store held them.
+	 */
+	readonly removed: number;
+
+	/**
+	 * The number of resources a failed write left exactly as the store already held them, to be reconsidered by the
+	 * next run.
+	 */
+	readonly failed: number;
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates a sink storing the resources a workflow claims.
+ *
+ * Each delta is committed on its own, so a run interrupted at any point leaves behind exactly the resources it got to
+ * and the next run is free to carry on. A write that fails is logged and counted, leaving the resource as it was and
+ * the feed running: a single unusable resource, or a single hostile response from the store, costs one resource rather
+ * than the run.
+ *
+ * A rejected state is a broken run rather than a bad resource: a shape the states don't satisfy would otherwise fail
+ * every write alike and hand back a clean run that stored nothing, so the failure is propagated and the scheduler sees
+ * the attempt fail and retries it.
+ *
+ * Sources that tolerate no mixed state are served by `atomic`, which trades all that for all-or-nothing: the whole
+ * feed is drawn inside a single store transaction, and the first failing write leaves the store exactly as it was.
+ *
+ * @param shape The shape the states are validated against before they reach the store
+ *
+ * @param options Options governing how the deltas are committed
+ * @param options.atomic Whether the deltas are committed as a single transaction, dropping them all as soon as one
+ * write fails; defaults to `false`, committing each delta on its own and absorbing individual failures
+ *
+ * @returns A sink storing a feed of deltas and resolving to a tally of what it did
+ *
+ * @throws {@link !RangeError RangeError} While the feed is consumed, if the store rejects a state as invalid
+ *
+ * @throws {@link !Error Error} Under `atomic`, while the feed is consumed, if any write fails, with nothing committed
+ */
+export function persist(shape: Lazy<ResourceShape>, {
+
+	atomic = false
+
+}:{
+
+	readonly atomic?: boolean
+
+}={}): Sink<Delta, Tally> {
+
+	const store = service(createStore);
+
+
+	return async feed => immutable(atomic
+		? await store.execute(client => feed(collect(client)))
+		: await feed(collect(store))
+	);
+
+
+	function collect(client: StoreClient): Sink<Delta, Tally> {
+		return reduce<Delta, Tally>(async (tally, [entry, state]) => {
+
+			try {
+
+				if ( state === null ) {
+
+					await client.remove({ entry, shape });
+
+					logger.info`removed resource <${entry}>`;
+
+					return { ...tally, removed: tally.removed+1 };
+
+				} else {
+
+					await client.insert({ entry, shape, state });
+
+					logger.info`stored resource <${entry}>`;
+
+					return { ...tally, stored: tally.stored+1 };
+
+				}
+
+			} catch ( error ) {
+
+				// a transaction commits as one, and a logic error condemns every write alike: either ends the run,
+				// while a lone hostile response costs just its own resource and leaves the feed running
+
+				if ( atomic || error instanceof RangeError ) {
+
+					throw error;
+
+				} else {
+
+					logger.warning`unable to write resource <${entry}>: ${report(error)}`;
+
+
+					return { ...tally, failed: tally.failed+1 };
+				}
+
+			}
+
+		}, {
+
+			stored: 0,
+			removed: 0,
+			failed: 0
+
+		});
+	}
+
+}
