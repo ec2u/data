@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2026 EC2U Alliance
+ * Copyright © 2025-2026 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,52 @@
  * limitations under the License.
  */
 
+import { Resource } from "@/resources/resources.js";
+import { dct } from "@/vocabularies/dublincore.js";
+import { ec2u, Entity } from "@/vocabularies/ec2u.js";
+import { reference } from "@metreeca/blue/reference";
+import { property, resource } from "@metreeca/blue/resource";
+import { date, markdown, plain } from "@metreeca/blue/string";
+import { multiple, optional, required, type State } from "@metreeca/blue/value";
 
-export type Dataset = {}
+
+export type Dataset = State<typeof Dataset>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Dataset() {
+	return resource({
 
-}
+		extends: Entity,
+		namespace: dct
 
-export function Resource() {
-	return
-}
+	}, {
 
-export function X() {
+		title: required(plain),
+		alternative: required(plain),
+		description: required(markdown),
 
+		created: optional(date),
+		issued: optional(date),
+		modified: optional(date),
+
+		// !!! Organization publisher();
+
+		source: optional(reference(Entity)),
+
+		rights: optional(plain),
+		license: multiple(reference(Entity)),
+		accessRights: optional(markdown),
+
+		// !!! Set<Topic> subject();
+
+		resources: property({
+
+			forward: ec2u.resource,
+			reverse: ec2u.dataset
+
+		}, multiple(reference(Resource, { foreign: true }))) // !!! foreign to property
+
+	});
 }
