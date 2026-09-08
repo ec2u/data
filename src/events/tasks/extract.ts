@@ -18,7 +18,7 @@ import { getDate } from "@/_/core/temporal.js";
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { Type } from "@google/genai";
-import type { Value } from "@metreeca/core";
+import type { Object } from "@metreeca/core";
 import { markdown, type Text } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -38,142 +38,142 @@ import { service } from "@metreeca/gear";
  *
  * @throws {@link !Error Error} While the feed is consumed, if no properties can be extracted from a page
  */
-export function extract(): Task<Text, Value> {
+export function extract(): Task<Text, Object> {
 
 	const ai = service(createGoogleAI);
 
 	return documents => pipe(
 		items(documents)
-		(map(async document => json<{ readonly [property: string]: Value }>(await ai.models.generateContent({
+		(map(async document => json<Object>(await ai.models.generateContent({
 
-				model: "gemini-3.5-flash-lite",
+			model: "gemini-3.5-flash-lite",
 
-				contents: [
-					markdown`
+			contents: [
+				markdown`
 						- date: ${getDate()}
 					`,
-					document
-				],
+				document
+			],
 
-				config: {
+			config: {
 
-					seed: 0,
-					temperature: 0,
-					maxOutputTokens: 16384,
+				seed: 0,
+				temperature: 0,
+				maxOutputTokens: 16384,
 
-					systemInstruction: await file(".sys.md", import.meta.url),
+				systemInstruction: await file(".sys.md", import.meta.url),
 
-					responseMimeType: "application/json",
-					responseSchema: {
+				responseMimeType: "application/json",
+				responseSchema: {
 
-						type: Type.OBJECT,
+					type: Type.OBJECT,
 
-						properties: {
+					properties: {
 
-							event: {
-								type: Type.BOOLEAN
-							},
-
-							url: {
-								type: Type.STRING,
-								format: "uri"
-							},
-
-							title: {
-								type: Type.STRING
-							},
-
-							summary: {
-								type: Type.STRING
-							},
-
-							description: {
-								type: Type.STRING
-							},
-
-							startDate: {
-								type: Type.STRING,
-								format: "date"
-							},
-
-							startTime: {
-								type: Type.STRING,
-								pattern: "^[0-9]{2}:[0-9]{2}$"
-							},
-
-							endDate: {
-								type: Type.STRING,
-								format: "date"
-							},
-
-							endTime: {
-								type: Type.STRING,
-								pattern: "^[0-9]{2}:[0-9]{2}$"
-							},
-
-							entryFees: {
-								type: Type.STRING
-							},
-
-							attendanceMode: {
-								type: Type.STRING
-							},
-
-							attendanceURL: {
-								type: Type.STRING,
-								format: "uri"
-							},
-
-							venueName: {
-								type: Type.STRING
-							},
-
-							venueAddress: {
-								type: Type.STRING
-							},
-
-							venueCity: {
-								type: Type.STRING
-							},
-
-							imageURL: {
-								type: Type.STRING,
-								format: "uri"
-							},
-
-							imageCredits: {
-								type: Type.STRING
-							},
-
-							topic: {
-								type: Type.STRING
-							},
-
-							audience: {
-								type: Type.STRING
-							},
-
-							language: {
-								type: Type.STRING,
-								pattern: "^[a-z]{2}$"
-							}
-
+						event: {
+							type: Type.BOOLEAN
 						},
 
-						required: [
-							"event",
-							"url",
-							"title",
-							"description",
-							"startDate",
-							"language"
-						]
+						url: {
+							type: Type.STRING,
+							format: "uri"
+						},
 
-					}
+						title: {
+							type: Type.STRING
+						},
+
+						summary: {
+							type: Type.STRING
+						},
+
+						description: {
+							type: Type.STRING
+						},
+
+						startDate: {
+							type: Type.STRING,
+							format: "date"
+						},
+
+						startTime: {
+							type: Type.STRING,
+							pattern: "^[0-9]{2}:[0-9]{2}$"
+						},
+
+						endDate: {
+							type: Type.STRING,
+							format: "date"
+						},
+
+						endTime: {
+							type: Type.STRING,
+							pattern: "^[0-9]{2}:[0-9]{2}$"
+						},
+
+						entryFees: {
+							type: Type.STRING
+						},
+
+						attendanceMode: {
+							type: Type.STRING
+						},
+
+						attendanceURL: {
+							type: Type.STRING,
+							format: "uri"
+						},
+
+						venueName: {
+							type: Type.STRING
+						},
+
+						venueAddress: {
+							type: Type.STRING
+						},
+
+						venueCity: {
+							type: Type.STRING
+						},
+
+						imageURL: {
+							type: Type.STRING,
+							format: "uri"
+						},
+
+						imageCredits: {
+							type: Type.STRING
+						},
+
+						topic: {
+							type: Type.STRING
+						},
+
+						audience: {
+							type: Type.STRING
+						},
+
+						language: {
+							type: Type.STRING,
+							pattern: "^[a-z]{2}$"
+						}
+
+					},
+
+					required: [
+						"event",
+						"url",
+						"title",
+						"description",
+						"startDate",
+						"language"
+					]
 
 				}
 
-			}))))
+			}
+
+		}))))
 	);
 
 }

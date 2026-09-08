@@ -17,7 +17,7 @@
 import { digest, type Digest } from "@/_/gear-store/_digest.js";
 import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.js";
 import { validate } from "@/_/gear-store/validate.js";
-import { createEventId, EventShape, isStaleEvent } from "@/events/index.js";
+import { createEventId, Event, isStaleEvent } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { universities } from "@/universities/index.js";
@@ -61,7 +61,7 @@ export function sync(publisher: { // !!! persist
 			insert(),
 			remove()
 		))
-		(persist(EventShape))
+		(persist(Event))
 	);
 
 
@@ -82,7 +82,7 @@ export function sync(publisher: { // !!! persist
 					(filter(async page => !(await digests).has(digest(page))))
 					(extract())
 					(convert(university))
-					(validate(EventShape))
+					(validate(Event))
 					(map(event => isStaleEvent(event) ? delta(event.id) : delta(event.id, event)))
 				)))
 			);

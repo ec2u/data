@@ -10,10 +10,7 @@
 
 		"homepage": ["https://www.uc.pt/en/", "https://www.uc.pt/pt"],
 		"depiction": ["/blobs/coimbra.png"],
-		"seeAlso": ["http://www.wikidata.org/entity/Q368643"],
-
-		"locale": "pt",
-		"zone": "Europe/Lisbon"
+		"seeAlso": ["http://www.wikidata.org/entity/Q368643"]
 
 	},
 
@@ -28,10 +25,7 @@
 
 		"homepage": ["https://www.uaic.ro/en/", "https://www.uaic.ro/"],
 		"depiction": ["/blobs/iasi.png"],
-		"seeAlso": ["http://www.wikidata.org/entity/Q1523902"],
-
-		"locale": "ro",
-		"zone": "Europe/Bucharest"
+		"seeAlso": ["http://www.wikidata.org/entity/Q1523902"]
 
 	},
 
@@ -46,10 +40,7 @@
 
 		"homepage": ["https://www.uni-jena.de/en", "https://www.uni-jena.de/"],
 		"depiction": ["/blobs/jena.png"],
-		"seeAlso": ["http://www.wikidata.org/entity/Q154561"],
-
-		"locale": "de",
-		"zone": "Europe/Berlin"
+		"seeAlso": ["http://www.wikidata.org/entity/Q154561"]
 
 	},
 
@@ -64,10 +55,7 @@
 
 		"homepage": ["https://www.jku.at/en", "https://www.jku.at"],
 		"depiction": ["/blobs/linz.png"],
-		"seeAlso": ["http://www.wikidata.org/entity/Q682739"],
-
-		"locale": "de",
-		"zone": "Europe/Vienna"
+		"seeAlso": ["http://www.wikidata.org/entity/Q682739"]
 
 	},
 
@@ -82,10 +70,7 @@
 
 		"homepage": ["https://web-en.unipv.it", "https://portale.unipv.it/it"],
 		"depiction": ["/blobs/pavia.png"],
-		"seeAlso": ["http://www.wikidata.org/entity/Q219317"],
-
-		"locale": "it",
-		"zone": "Europe/Rome"
+		"seeAlso": ["http://www.wikidata.org/entity/Q219317"]
 
 	},
 
@@ -100,10 +85,7 @@
 
 		"homepage": ["https://www.univ-poitiers.fr/en/", "https://www.univ-poitiers.fr"],
 		"depiction": ["/blobs/poitiers.png"],
-		"seeAlso": ["http://www.wikidata.org/entity/Q661056"],
-
-		"locale": "fr",
-		"zone": "Europe/Paris"
+		"seeAlso": ["http://www.wikidata.org/entity/Q661056"]
 
 	},
 
@@ -118,10 +100,7 @@
 
 		"homepage": ["https://www.usal.es"],
 		"depiction": ["/blobs/salamanca.png"],
-		"seeAlso": ["http://www.wikidata.org/entity/Q308963"],
-
-		"locale": "es",
-		"zone": "Europe/Madrid"
+		"seeAlso": ["http://www.wikidata.org/entity/Q308963"]
 
 	},
 
@@ -136,10 +115,7 @@
 
 		"homepage": ["https://www.utu.fi/en", "https://www.utu.fi/fi"],
 		"depiction": ["/blobs/turku.png"],
-		"seeAlso": ["http://www.wikidata.org/entity/Q501841"],
-
-		"locale": "fi",
-		"zone": "Europe/Helsinki"
+		"seeAlso": ["http://www.wikidata.org/entity/Q501841"]
 
 	},
 
@@ -154,10 +130,7 @@
 
 		"homepage": ["https://www.umu.se/en", "https://www.umu.se"],
 		"depiction": ["/blobs/umea.png"],
-		"seeAlso": ["http://www.wikidata.org/entity/Q1144565"],
-
-		"locale": "sv",
-		"zone": "Europe/Stockholm"
+		"seeAlso": ["http://www.wikidata.org/entity/Q1144565"]
 
 	}
 }

@@ -19,7 +19,7 @@ import { file } from "@/_/gear/files.js";
 import { retrieve } from "@/_pages/index.js";
 import { pages } from "@/_pages/store.js";
 import { fetchPage } from "@/_pages/tools/fetchPage.js";
-import { Unit } from "@/units/index.js";
+import { Unit } from "@/units/_index.js";
 import { Type } from "@google/genai";
 import { markdown } from "@metreeca/core/strings";
 import { service } from "@metreeca/gear";

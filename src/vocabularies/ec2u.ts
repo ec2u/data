@@ -17,8 +17,8 @@
 import { ec2u as ec2u1 } from "@/index.js";
 import { decimal } from "@metreeca/blue/number";
 import { id, property, resource } from "@metreeca/blue/resource";
-import { markdown, plain } from "@metreeca/blue/string";
-import { optional, required, type State } from "@metreeca/blue/value";
+import { iri, markdown, plain } from "@metreeca/blue/string";
+import { multiple, optional, required, type State } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -62,6 +62,9 @@ export const rdfs = createNamespace("http://www.w3.org/2000/01/rdf-schema#", [
 	"label",
 	"comment",
 
+	"isDefinedBy",
+	"seeAlso",
+
 	"member"
 
 ]);
@@ -104,7 +107,10 @@ export function Entity() {
 
 		comment: optional(markdown({
 			maxLength: CommentLength
-		}))
+		})),
+
+		isDefinedBy: optional(iri),
+		seeAlso: multiple(iri)
 
 	});
 }

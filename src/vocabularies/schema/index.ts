@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { reference } from "@metreeca/blue/reference";
 import { resource, type ResourceShape } from "@metreeca/blue/resource";
 import { iri, markdown, plain, string } from "@metreeca/blue/string";
 import { multiple, optional, repeatable, type State } from "@metreeca/blue/value";
@@ -110,7 +109,7 @@ export function Thing() {
 		description: optional(markdown),
 		disambiguatingDescription: optional(markdown),
 
-		image: optional(reference((): ResourceShape => ImageObject()))
+		image: optional((): ResourceShape => ImageObject())
 
 	});
 }

@@ -26,6 +26,8 @@ import { multiple, optional, repeatable, required, type State } from "@metreeca/
 
 
 export type Event = State<typeof Event>
+export type EventStatusType = State<typeof EventStatusType>
+export type EventAttendanceModeEnumeration = State<typeof EventAttendanceModeEnumeration>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

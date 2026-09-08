@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import { createEventId, type Event, type EventAttendanceMode, type Location } from "@/events/index.js";
-import { universities } from "@/universities/index.js";
-import { isObject, opt, type Optional, type Value } from "@metreeca/core";
+import { createEventId, type Event, events } from "@/events/index.js";
+import { ec2u } from "@/vocabularies/ec2u.js";
+import type { EventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
+import type { Location } from "@/vocabularies/schema/location.js";
+import { isObject, opt, type Optional, type Object } from "@metreeca/core";
 import { multiple, optional, required } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { each } from "@metreeca/flow/sinks";
 import { filter } from "@metreeca/flow/tasks";
 import { jpath, link, string } from "@metreeca/gear-json";
 
@@ -48,70 +49,73 @@ export function convert(university: {
 	readonly id: IRI
 	readonly zone: string
 
-}): Task<Value, Event> {
+}): Task<Object, Event> {
 
 	return payloads => pipe(
 		items(payloads)
-		(filter(payload => isObject(payload) && payload.event === true)) // a page stating no event yields none
+		(filter(payload => payload.event === true))
 		(jpath(path => {
 
-		const url = required(path("url").map(link));
+			const url = required(path("url").map(link));
+			const title = required(path("title").map(string));
 
-		const startDate = required(path("startDate").map(string));
-		const endDate = optional(path("endDate").map(string));
-		const endTime = optional(path("endTime").map(string));
+			const startDate = required(path("startDate").map(string));
+			const endDate = optional(path("endDate").map(string));
+			const endTime = optional(path("endTime").map(string));
 
-		const attendanceURL = optional(path("attendanceURL").map(link));
-		const venueName = optional(path("venueName").map(string));
-		const venueAddress = optional(path("venueAddress").map(string));
-		const venueCity = optional(path("venueCity").map(string));
+			const attendanceURL = optional(path("attendanceURL").map(link));
+			const venueName = optional(path("venueName").map(string));
+			const venueAddress = optional(path("venueAddress").map(string));
+			const venueCity = optional(path("venueCity").map(string));
 
-		return immutable<Event>({
+			return immutable({
 
-			id: createEventId(url), // !!! name after the address the scan listed, rather than the one the page states
-			url: multiple(url),
+				id: createEventId(url),
+				type: ec2u.Event, // ;( system-managed, but required by the state projection
+				url: multiple(url),
 
-			generated: true,
-			university: university.id,
+				dataset: events,
 
-			retrieved: Date.now(), // !!! the time the page was drawn at, rather than converted
+				generated: true,
+				university: university.id,
 
-			about: multiple(path("topic").map(string).flatMap(about)),
-			audience: multiple(path("audience").map(string).flatMap(audience)),
+				label: title,
 
-			name: required(path("title").map(string)),
-			description: optional(path("description").map(string)),
-			disambiguatingDescription: optional(path("summary").map(string)),
+				about: multiple(path("topic").map(string).flatMap(about)),
+				audience: multiple(path("audience").map(string).flatMap(audience)),
 
-			startDate: required(stamp(startDate, optional(path("startTime").map(string)), university.zone)),
+				name: title,
+				description: optional(path("description").map(string)),
+				disambiguatingDescription: optional(path("summary").map(string)),
 
-			endDate: optional(endDate === undefined && endTime === undefined
-				? undefined
-				: stamp(endDate ?? startDate, endTime, university.zone)
-			),
+				startDate: required(stamp(startDate, optional(path("startTime").map(string)), university.zone)),
 
-			inLanguage: optional(path("language").map(string)),
+				endDate: optional(endDate === undefined && endTime === undefined
+					? undefined
+					: stamp(endDate ?? startDate, endTime, university.zone)
+				),
 
-			isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
-			eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
+				inLanguage: optional(path("language").map(string)),
 
-			image: optional(path("imageURL").map(link).map(url => ({
-				url,
-				copyrightNotice: optional(path("imageCredits").map(string))
-			}))),
+				isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
+				eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
 
-			location: optional<Location>(
-				opt(attendanceURL, url => ({ url }))
-				?? opt(venueAddress ?? venueCity, () => ({
-					name: venueName, streetAddress: venueAddress, addressLocality: venueCity
-				}))
-				?? venueName
-			)
+				image: optional(path("imageURL").map(link).map(url => ({
+					url,
+					copyrightNotice: optional(path("imageCredits").map(string))
+				}))),
 
-		});
+				location: optional<Location>(
+					opt(attendanceURL, url => ({ url: [url] }))
+					?? opt(venueAddress ?? venueCity, () => ({
+						name: venueName, streetAddress: venueAddress, addressLocality: venueCity
+					}))
+					?? venueName
+				)
 
-		}))
-	);
+			});
+
+		})));
 
 }
 
@@ -132,7 +136,7 @@ function stamp(date: string, time: Optional<string>, zone: string): string { // 
 }
 
 
-function attendance(mode: string): Optional<EventAttendanceMode> {
+function attendance(mode: string): Optional<EventAttendanceModeEnumeration> {
 	return mode === "offline" ? "OfflineEventAttendanceMode"
 		: mode === "online" ? "OnlineEventAttendanceMode"
 			: mode === "mixed" ? "MixedEventAttendanceMode"

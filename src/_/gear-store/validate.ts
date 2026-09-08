@@ -16,6 +16,7 @@
 
 import { validate as validator} from "@metreeca/blue";
 import { getShapeId, type ResourceShape } from "@metreeca/blue/resource";
+import type { State } from "@metreeca/blue/value";
 import type { Lazy } from "@metreeca/core";
 import { Task } from "@metreeca/flow";
 import { filter } from "@metreeca/flow/tasks";
@@ -34,7 +35,7 @@ const logger = log(import.meta.url);
  * rather than the run and later stages see only values the shape vouches for. Feeds that must not lose a value are
  * better validated at the sink, where a rejection fails the run.
  *
- * @typeParam V The type of the values to be validated
+ * @typeParam S The type of the shape the values are validated against
  *
  * @param shape The shape the values are validated against
  *
@@ -42,7 +43,7 @@ const logger = log(import.meta.url);
  *
  * @throws {@link !RangeError RangeError} While the feed is consumed, if `shape` is malformed
  */
-export function validate<V>(shape : Lazy<ResourceShape>): Task<V> {
+export function validate<S extends Lazy<ResourceShape>>(shape: S): Task<State<S>> {
 
 	return filter(value => validator(value, { shape })({
 

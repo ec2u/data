@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Resource } from "@/resources/index.js";
+import { Organization } from "@/organizations/index.js";
 import * as dict from "@/universities/index.core.js";
 import { ec2u, Feature } from "@/vocabularies/ec2u.js";
 import { FormalOrganization } from "@/vocabularies/org.js";
@@ -43,12 +43,14 @@ export function University() {
 	return resource({
 
 		class: ec2u.University,
-		extends: [Resource, Feature, FormalOrganization],
+		extends: [Organization, Feature, FormalOrganization],
 		namespace: ec2u
 
 	}, {
 
 		// !!! constraint dataset to getNamespaceIRI(universities)
+		// !!! constraint classification to the EC2U organizations taxonomy: a narrowed Topic shape with an id
+		// !!! pattern would do it, but classification is inherited and Blue rejects re-pointing a reference target
 
 		depiction: repeatable(iri),
 		homepage: repeatable(iri),

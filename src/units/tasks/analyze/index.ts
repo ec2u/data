@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { matches, merge } from "@/units/index.js";
+import { matches, merge } from "@/units/_index.js";
 import { _units } from "@/units/store.js";
 import { analyze } from "@/units/tasks/analyze/analyze.js";
 import { annotate } from "@/units/tasks/analyze/annotate.js";

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import type { Instant } from "@/_/core/temporal.js";
-import { ec2u } from "@/index.js";
-import { resource as shape } from "@metreeca/blue/resource";
-import type { Tag } from "@metreeca/core/language";
+import { Resource } from "@/resources/index.js";
+import { CommentLength, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
+import { Event as SchemaEvent } from "@/vocabularies/schema/event.js";
+import { resource } from "@metreeca/blue/resource";
+import { plain } from "@metreeca/blue/string";
+import { optional, type State } from "@metreeca/blue/value";
 import type { IRI } from "@metreeca/core/resource";
-import type { Markdown, Text } from "@metreeca/core/strings";
 import * as uuid from "uuid";
 
 
@@ -28,101 +29,25 @@ export const events = `${ec2u}/events`;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const EventShape = shape({}); // !!! the shape the stored events are validated against
-
-export type Event = { // !!! from shape
-
-	readonly id: IRI;
-
-	readonly generated?: boolean;
-	readonly university: IRI;
-
-	readonly retrieved: Instant; // !!! delisting: retract the events a sweep leaves unretrieved, once confirmed gone
-
-	readonly url: readonly IRI[];
-
-	readonly name: Text;
-	readonly description?: Markdown;
-	readonly disambiguatingDescription?: Text;
-
-	readonly startDate: string;
-	readonly endDate?: string;
-
-	readonly inLanguage?: Tag;
-	readonly isAccessibleForFree?: boolean;
-	readonly eventStatus?: EventStatus;
-	readonly eventAttendanceMode?: EventAttendanceMode;
-
-	readonly image?: Image;
-	readonly location?: Location;
-
-	readonly publisher?: IRI;
-
-	readonly about?: readonly IRI[];
-	readonly audience?: readonly IRI[];
-
-}
+export type Event = State<typeof Event>
 
 
-export type EventStatus =
-	| "EventCancelled"
-	| "EventMovedOnline"
-	| "EventPostponed"
-	| "EventRescheduled"
-	| "EventScheduled";
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type EventAttendanceMode =
-	| "OfflineEventAttendanceMode"
-	| "OnlineEventAttendanceMode"
-	| "MixedEventAttendanceMode";
+export function Event() {
+	return resource({
 
+		extends: [Resource, SchemaEvent],
 
-export type Image = {
+		namespace: ec2u,
+		class: ec2u.Event
 
-	readonly url: IRI;
+	}, {
 
-	readonly caption?: Text;
-	readonly author?: Text;
-	readonly copyrightNotice?: Text;
+		name: optional(plain({ maxLength: LabelLength })),
+		disambiguatingDescription: optional(plain({ maxLength: CommentLength }))
 
-}
-
-export type Location =
-	| Text
-	| Place
-	| PostalAddress
-	| VirtualLocation;
-
-export type Place = {
-
-	readonly name?: Text;
-	readonly address?: PostalAddress;
-
-	readonly latitude: number;
-	readonly longitude: number;
-
-}
-
-export type PostalAddress = {
-
-	readonly name?: Text;
-
-	readonly addressCountry?: Text;
-	readonly addressRegion?: Text;
-	readonly addressLocality?: Text;
-
-	readonly postalCode?: Text;
-	readonly streetAddress?: Text;
-
-	readonly email?: Text;
-	readonly telephone?: Text;
-
-}
-
-export type VirtualLocation = {
-
-	readonly url: IRI;
-
+	});
 }
 
 
