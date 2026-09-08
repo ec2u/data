@@ -27,7 +27,7 @@ import { immutable } from "@metreeca/core/structures";
 import { type Feed, pipe, type Task } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, peek, tee } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
 import { jpath, json, number, string, validate } from "@metreeca/gear-json";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
@@ -36,8 +36,6 @@ import { log } from "@metreeca/tape";
 
 const Search = "https://content.fw.uc.pt/v1/agenda/events/search";
 const Events = "https://agenda.coimbra.pt/event";
-const Floor = 0.10; // the share of the stored events a single run is allowed to retract
-
 
 const Publisher = immutable({
 
@@ -49,6 +47,11 @@ const Publisher = immutable({
 });
 
 
+const Concurrency = 10;
+const Floor = 0.10; // the share of the stored events a single run is allowed to retract
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const logger = log(import.meta.url);
 
@@ -69,7 +72,7 @@ export async function CoimbraUniversity() {
 	return pipe(
 		(items(Search))
 		(crawl(
-			fork(10, urls => pipe(
+			fork(Concurrency, urls => pipe(
 				items(urls)
 				(fetch())
 				(json())
@@ -81,6 +84,7 @@ export async function CoimbraUniversity() {
 				(flat(map(total => range(2, total+1))))
 				(map(index => `${Search}?page=${index}`))
 			),
+			// language=JSONPath
 			path => pipe(
 				items(path("events.*.key"))
 				(map(string))
@@ -112,7 +116,7 @@ function insert(university: {
 
 	return urls => pipe(
 		items(urls)
-		(fork(10, flat(map(url => pipe( // a pipe per page keeps the source URL in scope as the digest key
+		(fork(Concurrency, flat(map(url => pipe( // a pipe per page keeps the source URL in scope as the digest key
 			(items([url]))
 			(fetch())
 			(html())
@@ -161,6 +165,9 @@ function remove(university: {
 	}
 
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function catalogue(university: {
 
