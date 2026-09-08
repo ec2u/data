@@ -62,7 +62,7 @@ export function Document() {
 		subject: multiple(reference(Topic)),
 		audience: multiple(reference(Topic)),
 
-		relation: multiple(reference((): ResourceShape => Document()))
+		relation: multiple(reference(Document))
 
 	});
 }

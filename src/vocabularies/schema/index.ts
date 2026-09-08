@@ -89,6 +89,22 @@ export const schema = createNamespace("https://schema.org/", [
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export function ImageObject() {
+	return resource({
+
+		extends: Thing
+
+	}, {
+
+		url: repeatable(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
+
+		caption: optional(plain),
+		author: optional(plain),
+		copyrightNotice: optional(plain)
+
+	});
+}
+
 export function Thing() {
 	return resource({
 
@@ -104,23 +120,7 @@ export function Thing() {
 		description: optional(markdown),
 		disambiguatingDescription: optional(markdown),
 
-		image: optional(reference((): ResourceShape => ImageObject(), { captive: true }))
-
-	});
-}
-
-export function ImageObject() {
-	return resource({
-
-		extends: Thing
-
-	}, {
-
-		url: repeatable(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
-
-		caption: optional(plain),
-		author: optional(plain),
-		copyrightNotice: optional(plain)
+		image: optional(reference(ImageObject, { captive: true }))
 
 	});
 }

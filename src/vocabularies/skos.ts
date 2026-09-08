@@ -63,39 +63,39 @@ export function Concept() {
 		hiddenLabel: multiple(plain),
 		definition: optional(plain),
 
-		inScheme: required(reference((): ResourceShape => ConceptScheme())),
+		inScheme: required(reference(ConceptScheme)),
 
 		topConceptOf: property({
 
 			forward: skos,
 			reverse: skos.hasTopConcept
 
-		}, optional(reference((): ResourceShape => ConceptScheme()))),
+		}, optional(reference(ConceptScheme))),
 
 		broader: property({
 
 			forward: skos,
 			reverse: skos.narrower
 
-		}, multiple(reference((): ResourceShape => Concept()))),
+		}, multiple(reference(Concept))),
 
-		broaderTransitive: multiple(reference((): ResourceShape => Concept())),
+		broaderTransitive: multiple(reference(Concept)),
 
-		narrower: multiple(reference((): ResourceShape => Concept(), { foreign: true })),
+		narrower: multiple(reference(Concept, { foreign: true })),
 
 		related: property({
 
 			forward: skos,
 			reverse: skos
 
-		}, multiple(reference((): ResourceShape => Concept()))),
+		}, multiple(reference(Concept))),
 
 		exactMatch: property({
 
 			forward: skos,
 			reverse: skos
 
-		}, multiple(reference((): ResourceShape => Concept())))
+		}, multiple(reference(Concept)))
 
 	});
 }

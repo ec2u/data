@@ -49,7 +49,7 @@ export function Dataset() {
 		issued: optional(date),
 		modified: optional(date),
 
-		publisher: optional(reference((): ResourceShape => Organization())),
+		publisher: optional(reference(Organization)),
 
 		source: optional(reference(Entity)),
 
@@ -57,7 +57,7 @@ export function Dataset() {
 		license: multiple(reference(Entity)),
 		accessRights: optional(plain),
 
-		subject: multiple(reference((): ResourceShape => Topic())),
+		subject: multiple(reference(Topic)),
 
 		resources: property({
 

@@ -49,6 +49,24 @@ export const org = createNamespace("http://www.w3.org/ns/org#", [
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export function OrganizationalUnit() {
+	return resource({
+
+		class: org.OrganizationalUnit,
+		extends: Organization
+
+	}, {
+
+		unitOf: property({
+
+			forward: org,
+			reverse: org.hasUnit
+
+		}, repeatable(reference(Organization)))
+
+	});
+}
+
 export function Organization() {
 	return resource({
 
@@ -66,10 +84,10 @@ export function Organization() {
 
 		classification: multiple(reference(Concept)),
 
-		subOrganizationOf: multiple(reference((): ResourceShape => Organization())),
-		hasSubOrganization: multiple(reference((): ResourceShape => Organization(), { foreign: true })),
+		subOrganizationOf: multiple(reference(Organization)),
+		hasSubOrganization: multiple(reference(Organization, { foreign: true })),
 
-		hasUnit: multiple(reference((): ResourceShape => OrganizationalUnit(), { foreign: true })),
+		hasUnit: multiple(reference(OrganizationalUnit, { foreign: true })),
 
 		hasHead: property({
 
@@ -89,24 +107,6 @@ export function FormalOrganization() {
 		extends: Organization
 
 	}, {});
-}
-
-export function OrganizationalUnit() {
-	return resource({
-
-		class: org.OrganizationalUnit,
-		extends: Organization
-
-	}, {
-
-		unitOf: property({
-
-			forward: org,
-			reverse: org.hasUnit
-
-		}, repeatable(reference((): ResourceShape => Organization())))
-
-	});
 }
 
 export function OrganizationalCollaboration() {
