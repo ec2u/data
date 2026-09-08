@@ -109,23 +109,27 @@ function insert(university: {
 
 }): Task<URLLike, Delta> {
 
-	const digests = new Set<Digest>;  // !!! populate from store / publisher
+	return urls => {
 
-	return urls => pipe(
-		items(urls)
-		(fork(Concurrency, pages => pipe(
-			(pages)
-			(fetch())
-			(html())
-			(focus())
-			(untag())
-			(filter(page => !digests.has(digest(page))))
-			(extract())
-			(convert(university))
-			(validate(EventShape))
-			(map(event => isStaleEvent(event) ? delta(event.id) : delta(event.id, event)))
-		)))
-	);
+		const digests = fingerprints(Publisher); // queried once and shared by the forked runs
+
+		return pipe(
+			items(urls)
+			(fork(Concurrency, pages => pipe(
+				(pages)
+				(fetch())
+				(html())
+				(focus())
+				(untag())
+				(filter(async page => !(await digests).has(digest(page))))
+				(extract())
+				(convert(university))
+				(validate(EventShape))
+				(map(event => isStaleEvent(event) ? delta(event.id) : delta(event.id, event)))
+			)))
+		);
+
+	};
 
 }
 
@@ -135,37 +139,53 @@ function remove(university: {
 
 }): Task<URLLike, Delta> {
 
-	return urls => pipe(
-		items(urls)
-		(map(createEventId))
-		(ids => items((async function* () {
+	return urls => {
 
-			const [stored, current] = await Promise.all([catalogue(university), ids(toSet())]);
+		const catalogued = catalogue(university); // queried once, while the scan drains
 
-			const removed = difference([stored, current]);
+		return pipe(
+			items(urls)
+			(map(createEventId))
+			(ids => items((async function* () {
 
-			if ( removed.length > stored.length*Floor ) {
+				const [stored, current] = await Promise.all([catalogued, ids(toSet())]);
 
-				throw new Error(`exceeded retraction floor <${Floor}>`
-					+` with <${removed.length}> of <${stored.length}> events`
-				);
+				const removed = difference([stored, current]);
 
-			} else {
+				if ( removed.length > stored.length*Floor ) {
 
-				logger.info`retracting <${removed.length}> of <${stored.length}> events`;
+					throw new Error(`exceeded retraction floor <${Floor}>`
+						+` with <${removed.length}> of <${stored.length}> events`
+					);
 
-				yield* removed;
+				} else {
 
-			}
+					logger.info`retracting <${removed.length}> of <${stored.length}> events`;
 
-		})()))
-		(map(id => delta(id)))
-	);
+					yield* removed;
+
+				}
+
+			})()))
+			(map(id => delta(id)))
+		);
+
+	};
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+async function fingerprints(publisher: {
+
+	readonly id: IRI
+
+}): Promise<ReadonlySet<Digest>> {
+
+	return new Set(); // !!! query the store, through `service(createStore)`, for the digests of the `publisher` pages
+
+}
 
 async function catalogue(university: {
 
