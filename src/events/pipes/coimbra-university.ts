@@ -15,18 +15,21 @@
  */
 
 import { digest, type Digest } from "@/_/gear-store/digest.js";
+import { createStore } from "@/_/gear-store/index.js";
 import { type Delta, persist } from "@/_/gear-store/persist.js";
 import { EventShape, isStale } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { execute } from "@/index.core.js";
 import { universities } from "@/universities/index.js";
+import { difference } from "@metreeca/core/arrays";
+import { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Task } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
-import { filter, flat, fork, map, peek, take } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, peek, tee } from "@metreeca/flow/tasks";
+import { service } from "@metreeca/gear";
 import { jpath, json, number, string, validate } from "@metreeca/gear-json";
-import { IRI } from "@metreeca/core/resource";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 
@@ -54,6 +57,7 @@ if ( import.meta.main ) {
 // !!! incremental sync
 // !!! storage
 
+
 export async function CoimbraUniversity() {
 
 	return pipe(
@@ -77,13 +81,53 @@ export async function CoimbraUniversity() {
 				(map(key => `${Events}/${key}`))
 			)
 		))
-		(take(1) /* !!! */)
-		(harvest(universities.coimbra))
+		(tee(
+			insert(universities.coimbra),
+			remove(universities.coimbra)
+		))
 		(persist(EventShape))
 	);
 
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function insert(university: {
+
+	readonly id: IRI
+	readonly zone: string
+
+}): Task<string | URL, Delta> {
+
+	throw new Error(";( to be implemented"); // !!!
+
+}
+
+
+function remove(university: {
+
+	readonly id: IRI
+	readonly zone: string
+
+}): Task<string | URL, Delta> {
+
+	const store = service(createStore);
+
+	const current = new Set(); // !!! current event catalogue from store
+	const present = new Set(); // !!! updated event catalogue incrementally built from feed
+
+
+	const removed = difference([current, present]);
+
+	// !!! sanity checks and logging
+
+	throw new Error(";( to be implemented"); // !!! emit removal deltas
+
+}
+
+
+//// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function harvest(university: {
 
