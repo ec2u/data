@@ -16,9 +16,9 @@
 
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { file } from "@/_/gear/files.js";
-import { retrieve } from "@/pages/index.js";
-import { pages } from "@/pages/store.js";
-import { fetchPage } from "@/pages/tools/fetchPage.js";
+import { retrieve } from "@/_pages/index.js";
+import { pages } from "@/_pages/store.js";
+import { fetchPage } from "@/_pages/tools/fetchPage.js";
 import { Unit } from "@/units/index.js";
 import { Type } from "@google/genai";
 import { markdown } from "@metreeca/core/strings";

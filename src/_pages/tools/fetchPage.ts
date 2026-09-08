@@ -35,7 +35,7 @@
  * @module
  */
 
-import { type Retriever, retrieve } from "@/pages/index.js";
+import { type Retriever, retrieve } from "@/_pages/index.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import { dedent } from "@metreeca/core/strings";
 import { log, report } from "@metreeca/tape";

@@ -27,7 +27,7 @@
  * @see {@link https://cloud.google.com/nodejs/docs/reference/datastore/latest Google Cloud Datastore}
  */
 
-import type { Retriever, Page } from "@/pages/index.js";
+import type { Retriever, Page } from "@/_pages/index.js";
 import { memoize } from "@/_/core/memoize.js";
 import { datastore } from "@/_/gear-gcp/datastore.js";
 import * as uuid from "uuid";

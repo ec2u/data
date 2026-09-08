@@ -15,11 +15,12 @@
  */
 
 import { Dataset } from "@/datasets/index.js";
-import { University } from "@/universities/_index.js";
+
+import { University } from "@/universities/index.js";
 import { ec2u, Entity, rdfs } from "@/vocabularies/ec2u.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
-import { property, resource } from "@metreeca/blue/resource";
+import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
 import { optional, required, type State } from "@metreeca/blue/value";
 
 
@@ -49,7 +50,7 @@ export function Resource() {
 
 		}, required(reference(Dataset))),
 
-		university: optional(reference(University))
+		university: optional(reference((): ResourceShape => University()))
 
 	});
 }
