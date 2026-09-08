@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
+import { ec2u, Entity, Resource } from "@/vocabularies/ec2u.js";
 import { Organization } from "@/organizations/index.js";
 import { Person } from "@/persons/index.js";
-import { Resource } from "@/resources/index.js";
 import { Topic } from "@/taxonomies/index.js";
 import { dct } from "@/vocabularies/dublincore.js";
-import { ec2u, Entity } from "@/vocabularies/ec2u.js";
 import { schema } from "@/vocabularies/schema/index.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
 import { date, iri, plain, tag } from "@metreeca/blue/string";
-import { multiple, optional, required, type State } from "@metreeca/blue/value";
+import { multiple, optional, required } from "@metreeca/blue/value";
 
-
-export type Document = State<typeof Document>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Document() {
 	return resource({

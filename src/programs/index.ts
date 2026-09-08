@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-import { Offering } from "@/offerings/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
+import { Offering } from "@/offerings/index.js";
 import { EducationalOccupationalProgram } from "@/vocabularies/schema/learning.js";
 import { resource } from "@metreeca/blue/resource";
-import { type State } from "@metreeca/blue/value";
 
-
-export type Program = State<typeof Program>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Program() {
 	return resource({

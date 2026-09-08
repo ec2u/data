@@ -19,7 +19,7 @@ import { Concept, skos } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
 import { plain, string } from "@metreeca/blue/string";
-import { multiple, optional, repeatable, required, type State } from "@metreeca/blue/value";
+import { multiple, optional, repeatable, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -45,14 +45,6 @@ export const org = createNamespace("http://www.w3.org/ns/org#", [
 	"hasMember"
 
 ]);
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type Organization = State<typeof Organization>
-export type FormalOrganization = State<typeof FormalOrganization>
-export type OrganizationalUnit = State<typeof OrganizationalUnit>
-export type OrganizationalCollaboration = State<typeof OrganizationalCollaboration>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

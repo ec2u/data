@@ -16,7 +16,7 @@
 
 import { resource } from "@metreeca/blue/resource";
 import { email, iri, phone, plain } from "@metreeca/blue/string";
-import { multiple, optional, required, type State } from "@metreeca/blue/value";
+import { multiple, optional, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -37,13 +37,6 @@ export const foaf = createNamespace("http://xmlns.com/foaf/0.1/", [
 	"familyName"
 
 ]);
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type Agent = State<typeof Agent>
-export type Organization = State<typeof Organization>
-export type Person = State<typeof Person>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -20,16 +20,8 @@ import { reference } from "@metreeca/blue/reference";
 import { resource } from "@metreeca/blue/resource";
 import { email, iri, phone, plain } from "@metreeca/blue/string";
 import { union } from "@metreeca/blue/union";
-import { optional, repeatable, required, type State } from "@metreeca/blue/value";
+import { optional, repeatable, required } from "@metreeca/blue/value";
 
-
-export type Location = State<typeof Location>
-export type Place = State<typeof Place>
-export type PostalAddress = State<typeof PostalAddress>
-export type VirtualLocation = State<typeof VirtualLocation>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Location() {
 	return union(

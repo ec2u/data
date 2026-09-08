@@ -16,7 +16,7 @@
 
 import { resource, type ResourceShape } from "@metreeca/blue/resource";
 import { iri, markdown, plain, string } from "@metreeca/blue/string";
-import { multiple, optional, repeatable, type State } from "@metreeca/blue/value";
+import { multiple, optional, repeatable } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -84,12 +84,6 @@ export const schema = createNamespace("https://schema.org/", [
 	"programPrerequisites"
 
 ]);
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type Thing = State<typeof Thing>
-export type ImageObject = State<typeof ImageObject>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -25,13 +25,6 @@ import { instant, iri, string, tag } from "@metreeca/blue/string";
 import { multiple, optional, repeatable, required, type State } from "@metreeca/blue/value";
 
 
-export type Event = State<typeof Event>
-export type EventStatusType = State<typeof EventStatusType>
-export type EventAttendanceModeEnumeration = State<typeof EventAttendanceModeEnumeration>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function EventStatusType() {
 	return string({
 		in: [

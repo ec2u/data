@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
+import { ec2u, Resource } from "@/vocabularies/ec2u.js";
 import { Organization } from "@/organizations/index.js";
-import { Resource } from "@/resources/index.js";
 import { Topic } from "@/taxonomies/index.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
 import { LearningResource } from "@/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { resource } from "@metreeca/blue/resource";
-import { multiple, optional, type State } from "@metreeca/blue/value";
+import { multiple, optional } from "@metreeca/blue/value";
 
-
-export type Offering = State<typeof Offering>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Offering() {
 	return resource({

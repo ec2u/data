@@ -18,13 +18,8 @@ import { Thing } from "@/vocabularies/schema/index.js";
 import { Location } from "@/vocabularies/schema/location.js";
 import { resource } from "@metreeca/blue/resource";
 import { email, phone, plain } from "@metreeca/blue/string";
-import { multiple, optional, type State } from "@metreeca/blue/value";
+import { multiple, optional } from "@metreeca/blue/value";
 
-
-export type Organization = State<typeof Organization>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Organization() {
 	return resource({

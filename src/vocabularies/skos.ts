@@ -17,7 +17,7 @@
 import { reference } from "@metreeca/blue/reference";
 import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
 import { plain } from "@metreeca/blue/string";
-import { multiple, optional, required, type State } from "@metreeca/blue/value";
+import { multiple, optional, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -44,12 +44,6 @@ export const skos = createNamespace("http://www.w3.org/2004/02/skos/core#", [
 	"exactMatch"
 
 ]);
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type Concept = State<typeof Concept>
-export type ConceptScheme = State<typeof ConceptScheme>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

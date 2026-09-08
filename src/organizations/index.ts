@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-import { Resource } from "@/resources/index.js";
+import { ec2u, Resource } from "@/vocabularies/ec2u.js";
 import { Topic } from "@/taxonomies/index.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
 import * as org from "@/vocabularies/org.js";
 import * as schema from "@/vocabularies/schema/index.js";
 import { Location } from "@/vocabularies/schema/location.js";
 import { property, resource } from "@metreeca/blue/resource";
 import { email, iri, markdown, phone, plain } from "@metreeca/blue/string";
-import { multiple, optional, type State } from "@metreeca/blue/value";
+import { multiple, optional } from "@metreeca/blue/value";
 
 
 export const Alliance = "https://ec2u.eu/"; // the EC2U Alliance organization
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type Organization = State<typeof Organization>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

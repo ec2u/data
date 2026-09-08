@@ -15,18 +15,18 @@
  */
 
 import { CCBYNCND40, Copyright, type Dataset } from "@/datasets/index.js";
+import { CommentLength, ec2u, LabelLength, Resource } from "@/vocabularies/ec2u.js";
 import { Alliance } from "@/organizations/index.js";
-import { Resource } from "@/resources/index.js";
-import { CommentLength, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
 import { Event as SchemaEvent } from "@/vocabularies/schema/event.js";
 import { resource } from "@metreeca/blue/resource";
 import { plain } from "@metreeca/blue/string";
 import { optional, type State } from "@metreeca/blue/value";
 import type { IRI } from "@metreeca/core/resource";
+import { immutable } from "@metreeca/core/structures";
 import * as uuid from "uuid";
 
 
-export const events: Dataset = {
+export const events = immutable({
 
 	id: `${ec2u}/events`,
 	type: ec2u.Dataset,
@@ -47,7 +47,7 @@ export const events: Dataset = {
 
 	issued: "2022-01-01"
 
-};
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

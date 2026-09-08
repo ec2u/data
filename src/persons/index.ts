@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
+import { ec2u, Resource } from "@/vocabularies/ec2u.js";
 import { Organization } from "@/organizations/index.js";
-import { Resource } from "@/resources/index.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
 import * as foaf from "@/vocabularies/foaf.js";
 import { org } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
-import { multiple, type State } from "@metreeca/blue/value";
+import { multiple } from "@metreeca/blue/value";
 
-
-export type Person = State<typeof Person>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Person() {
 	return resource({

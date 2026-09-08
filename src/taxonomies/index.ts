@@ -15,19 +15,12 @@
  */
 
 import { Dataset } from "@/datasets/index.js";
-import { Resource } from "@/resources/index.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
+import { ec2u, Resource } from "@/vocabularies/ec2u.js";
 import { Concept, ConceptScheme } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { resource, type ResourceShape } from "@metreeca/blue/resource";
-import { multiple, optional, required, type State } from "@metreeca/blue/value";
+import { multiple, optional, required } from "@metreeca/blue/value";
 
-
-export type Taxonomy = State<typeof Taxonomy>
-export type Topic = State<typeof Topic>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Taxonomy() {
 	return resource({

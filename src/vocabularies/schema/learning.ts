@@ -24,17 +24,8 @@ import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { resource } from "@metreeca/blue/resource";
 import { duration, plain, string, tag } from "@metreeca/blue/string";
-import { multiple, optional, required, type State } from "@metreeca/blue/value";
+import { multiple, optional, required } from "@metreeca/blue/value";
 
-
-export type LearningResource = State<typeof LearningResource>
-export type EducationalOccupationalProgram = State<typeof EducationalOccupationalProgram>
-export type Course = State<typeof Course>
-export type CourseInstance = State<typeof CourseInstance>
-export type EducationalOccupationalCredential = State<typeof EducationalOccupationalCredential>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function CredentialCategory() {
 	return string({

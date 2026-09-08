@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+import { ec2u, Feature } from "@/vocabularies/ec2u.js";
 import { Organization } from "@/organizations/index.js";
 import * as dict from "@/universities/index.core.js";
-import { ec2u, Feature } from "@/vocabularies/ec2u.js";
 import { FormalOrganization } from "@/vocabularies/org.js";
 import { int } from "@metreeca/blue/number";
 import { resource } from "@metreeca/blue/resource";
 import { iri, year } from "@metreeca/blue/string";
-import { repeatable, required, type State } from "@metreeca/blue/value";
+import { repeatable, required } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/structures";
 
 export * from "@/universities/index.core.js";
@@ -30,11 +30,6 @@ export * from "@/universities/index.core.js";
 export const universities = immutable(Object.fromEntries(
 	Object.values(dict).map(university => [university.id, university])
 ));
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type University = State<typeof University>;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

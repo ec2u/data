@@ -15,37 +15,20 @@
  */
 
 import { Offering } from "@/offerings/index.js";
-import { Person } from "@/persons/index.js";
 import { Program } from "@/programs/index.js";
-import { Topic } from "@/taxonomies/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
-import { CourseInstance, Course as SchemaCourse } from "@/vocabularies/schema/learning.js";
 import { schema } from "@/vocabularies/schema/index.js";
+import { Course as SchemaCourse, CourseInstance } from "@/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
-import { multiple, optional, type State } from "@metreeca/blue/value";
+import { multiple, optional } from "@metreeca/blue/value";
 
 
 const YearPattern = "^\\d{4}/\\d{4}$";
 
 
-export type Course = State<typeof Course>
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function Term() {
-	return string({
-		in: [
-			"Annual",
-			"First",
-			"Second",
-			"Summer",
-			"Open"
-		]
-	});
-}
 
 export function Course() {
 	return resource({
@@ -61,5 +44,17 @@ export function Course() {
 
 		inProgram: property({ reverse: schema.hasCourse }, multiple(reference(Program))),
 
+	});
+}
+
+export function Term() {
+	return string({
+		in: [
+			"Annual",
+			"First",
+			"Second",
+			"Summer",
+			"Open"
+		]
 	});
 }
