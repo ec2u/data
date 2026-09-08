@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { CCBYNCND40, Copyright, type Dataset } from "@/datasets/index.js";
+import { Alliance } from "@/organizations/index.js";
 import { Resource } from "@/resources/index.js";
 import { CommentLength, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
 import { Event as SchemaEvent } from "@/vocabularies/schema/event.js";
@@ -24,7 +26,28 @@ import type { IRI } from "@metreeca/core/resource";
 import * as uuid from "uuid";
 
 
-export const events = `${ec2u}/events`;
+export const events: Dataset = {
+
+	id: `${ec2u}/events`,
+	type: ec2u.Dataset,
+
+	isDefinedBy: `${ec2u}/datasets/events`,
+	dataset: `${ec2u}/`,
+
+	label: "EC2U Events",
+
+	title: "EC2U Academic and Local Events",
+	alternative: "EC2U Events",
+	description: "Information about events at EC2U partner universities and associated local organizations.",
+
+	publisher: Alliance,
+
+	rights: Copyright,
+	license: [CCBYNCND40],
+
+	issued: "2022-01-01"
+
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +84,6 @@ export function isStaleEvent(event: Event): boolean {
 
 export function createEventId(url: string | URL): IRI {
 
-	return `${events}/${uuid.v3(String(url), uuid.v3.URL)}`;
+	return `${(events.id)}/${uuid.v3(String(url), uuid.v3.URL)}`;
 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ec2u as ec2u1 } from "@/index.js";
+import { ec2u as base } from "@/index.js";
 import { decimal } from "@metreeca/blue/number";
 import { id, property, resource } from "@metreeca/blue/resource";
 import { iri, markdown, plain } from "@metreeca/blue/string";
@@ -22,7 +22,7 @@ import { multiple, optional, required, type State } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 
-export const ec2u = createNamespace(`${ec2u1}/terms#`, [
+export const ec2u = createNamespace(`${base}/terms#`, [
 
 	"Resource",
 	"Dataset",

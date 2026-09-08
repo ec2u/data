@@ -25,6 +25,11 @@ import { email, iri, markdown, phone, plain } from "@metreeca/blue/string";
 import { multiple, optional, type State } from "@metreeca/blue/value";
 
 
+export const Alliance = "https://ec2u.eu/"; // the EC2U Alliance organization
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export type Organization = State<typeof Organization>
 
 

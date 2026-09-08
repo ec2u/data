@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2025 EC2U Alliance
+ * Copyright © 2020-2026 EC2U Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,78 +123,6 @@ public interface Event extends Resource, SchemaEvent {
     static Taxonomies.Matcher stakeholders() {
         return new Taxonomies.Matcher(EC2U_STAKEHOLDERS)
                 .threshold(0.6);
-    }
-
-
-    static EventAttendanceModeEnumeration attendanceMode(final String value) {
-        return switch ( value ) {
-            case "offline" -> OfflineEventAttendanceMode;
-            case "online" -> OnlineEventAttendanceMode;
-            case "mixed" -> MixedEventAttendanceMode;
-            default -> null;
-        };
-    }
-
-    static Boolean entryFees(final String value) {
-        return switch ( value ) {
-            case "free" -> true;
-            case "paid" -> false;
-            default -> null;
-        };
-    }
-
-
-    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    default Map<Locale, String> label() {
-        return Reference.label(name());
-    }
-
-    @Override
-    default Map<Locale, String> comment() {
-        return Reference.comment(disambiguatingDescription(), description());
-    }
-
-
-    @Override
-    default Events dataset() {
-        return EVENTS;
-    }
-
-
-    @Override
-    @MaxLength(LABEL_LENGTH) // ;( sanity check on model hallucinations
-    Map<Locale, String> name();
-
-    @Override
-    @MaxLength(COMMENT_LENGTH) // ;( sanity check on model hallucinations
-    Map<Locale, String> disambiguatingDescription();
-
-
-    @Override
-    Organization publisher();
-
-
-    @Override
-    @Pattern("^"+TopicsEC2UEvents.PATH+".*$") // !!! @Prefix
-    Set<Topic> about();
-
-    @Override
-    @Pattern("^"+TopicsEC2UStakeholders.PATH+".*$") // !!! @Prefix
-    Set<Topic> audience();
-
-
-    /**
-     * Last validity dateTime.
-     *
-     * <p>Supports stale event {@linkplain Events.Reaper reaping}.</p>
-     *
-     * @return the latest between {@link #startDate()} and {@link #endDate()}
-     */
-    @Hidden
-    default ZonedDateTime validDate() {
-        return endDate() != null ? endDate() : startDate();
     }
 
 }

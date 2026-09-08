@@ -18,7 +18,7 @@ import { createEventId, type Event, events } from "@/events/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
 import type { EventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
 import type { Location } from "@/vocabularies/schema/location.js";
-import { isObject, opt, type Optional, type Object } from "@metreeca/core";
+import { type Object, opt, type Optional } from "@metreeca/core";
 import { multiple, optional, required } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
@@ -74,7 +74,7 @@ export function convert(university: {
 				type: ec2u.Event, // ;( system-managed, but required by the state projection
 				url: multiple(url),
 
-				dataset: events,
+				dataset: events.id,
 
 				generated: true,
 				university: university.id,
