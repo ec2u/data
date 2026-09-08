@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
+import { Resource } from "@/resources/index.js";
 import * as dict from "@/universities/index.core.js";
-import type { Tag } from "@metreeca/core/language";
-import type { IRI } from "@metreeca/core/resource";
-import { type Text } from "@metreeca/core/strings";
+import { ec2u, Feature } from "@/vocabularies/ec2u.js";
+import { FormalOrganization } from "@/vocabularies/org.js";
+import { int } from "@metreeca/blue/number";
+import { resource } from "@metreeca/blue/resource";
+import { iri, year } from "@metreeca/blue/string";
+import { repeatable, required, type State } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/structures";
 
 export * from "@/universities/index.core.js";
@@ -30,59 +34,30 @@ export const universities = immutable(Object.fromEntries(
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// !!! name/description/legalName/location: the schema.org organization surface awaits a shared vocabulary module
-
-export type University = {
-
-	readonly id: IRI;
-
-	readonly generated?: boolean;
-
-	readonly identifier?: Text;
-
-	readonly prefLabel: Text;
-	readonly altLabel?: Text;
-	readonly definition?: Text;
-
-	readonly homepage: readonly IRI[];
-	readonly depiction: readonly IRI[];
-	readonly isDefinedBy?: IRI;
-	readonly seeAlso?: readonly IRI[];
-
-	readonly mbox?: readonly Text[];
-	readonly phone?: readonly Text[];
-
-	readonly inception: number;
-	readonly students: number;
-
-	readonly latitude: number;
-	readonly longitude: number;
-
-	readonly city: GeoReference;
-	readonly country: GeoReference;
-
-	readonly locale: Tag;
-	readonly zone: string;
-
-	readonly classification?: readonly IRI[];
-
-	readonly subOrganizationOf?: readonly IRI[];
-	readonly hasSubOrganization?: readonly IRI[];
-	readonly hasUnit?: readonly IRI[];
-
-	readonly hasHead?: readonly IRI[];
-	readonly hasMember?: readonly IRI[];
-
-}
+export type University = State<typeof University>;
 
 
-export type GeoReference = {
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	readonly id: IRI;
+export function University() {
+	return resource({
 
-	readonly label?: Text;
+		class: ec2u.University,
+		extends: [Resource, Feature, FormalOrganization],
+		namespace: ec2u
 
-	readonly latitude: number;
-	readonly longitude: number;
+	}, {
 
+		// !!! constraint dataset to getNamespaceIRI(universities)
+
+		depiction: repeatable(iri),
+		homepage: repeatable(iri),
+
+		inception: required(year),
+		students: required(int),
+
+		city: required(Feature), // !!! reference?
+		country: required(Feature) // !!! reference?
+
+	});
 }

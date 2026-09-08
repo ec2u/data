@@ -15,12 +15,11 @@
  */
 
 import { Dataset } from "@/datasets/index.js";
-
 import { University } from "@/universities/index.js";
 import { ec2u, Entity, rdfs } from "@/vocabularies/ec2u.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
-import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
+import { id, property, resource, type, type ResourceShape } from "@metreeca/blue/resource";
 import { optional, required, type State } from "@metreeca/blue/value";
 
 
@@ -33,9 +32,14 @@ export function Resource() {
 	return resource({
 
 		extends: Entity,
+
+		class: ec2u.Resource,
 		namespace: ec2u
 
 	}, {
+
+		id: id(),
+		type: type(),
 
 		generated: property({
 
@@ -48,7 +52,7 @@ export function Resource() {
 			forward: ec2u,
 			reverse: rdfs.member
 
-		}, required(reference(Dataset))),
+		}, required(reference((): ResourceShape => Dataset()))),
 
 		university: optional(reference((): ResourceShape => University()))
 

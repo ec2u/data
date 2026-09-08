@@ -14,6 +14,119 @@
  * limitations under the License.
  */
 
-export function SchemaThing() {
+import { reference } from "@metreeca/blue/reference";
+import { resource, type ResourceShape } from "@metreeca/blue/resource";
+import { iri, markdown, plain, string } from "@metreeca/blue/string";
+import { multiple, optional, repeatable, type State } from "@metreeca/blue/value";
+import { createNamespace } from "@metreeca/core/resource";
 
+
+export const schema = createNamespace("https://schema.org/", [
+
+	"url",
+	"identifier",
+
+	"name",
+	"description",
+	"disambiguatingDescription",
+
+	"image",
+	"caption",
+	"author",
+	"copyrightNotice",
+
+	"address",
+	"latitude",
+	"longitude",
+
+	"addressCountry",
+	"addressRegion",
+	"addressLocality",
+	"postalCode",
+	"streetAddress",
+
+	"email",
+	"telephone",
+
+	"legalName",
+	"location",
+
+	"startDate",
+	"endDate",
+	"inLanguage",
+	"isAccessibleForFree",
+	"eventStatus",
+	"eventAttendanceMode",
+	"publisher",
+	"about",
+	"audience",
+
+	"numberOfCredits",
+	"teaches",
+	"assesses",
+	"competencyRequired",
+	"educationalCredentialAwarded",
+	"occupationalCredentialAwarded",
+	"provider",
+	"educationalLevel",
+
+	"credentialCategory",
+
+	"courseCode",
+	"timeRequired",
+	"coursePrerequisites",
+
+	"courseWorkload",
+	"courseMode",
+	"instructor",
+	"hasCourse",
+
+	"timeToComplete",
+	"programPrerequisites"
+
+]);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Thing = State<typeof Thing>
+export type ImageObject = State<typeof ImageObject>
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Thing() {
+	return resource({
+
+		namespace: schema
+
+	}, {
+
+		url: multiple(iri),
+
+		identifier: optional(string), // single string value for compatibility with org:Organization
+
+		name: optional(plain),
+		description: optional(markdown),
+		disambiguatingDescription: optional(markdown),
+
+		image: optional(reference((): ResourceShape => ImageObject()))
+
+	});
+}
+
+export function ImageObject() {
+	return resource({
+
+		extends: Thing
+
+	}, {
+
+		url: repeatable(iri), // !!! MaxCount(1) not expressible as an override of the inherited set
+
+		caption: optional(plain),
+		author: optional(plain),
+		copyrightNotice: optional(plain)
+
+	});
 }

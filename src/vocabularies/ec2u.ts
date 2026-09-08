@@ -16,13 +16,39 @@
 
 import { ec2u as ec2u1 } from "@/index.js";
 import { decimal } from "@metreeca/blue/number";
-import { property, resource } from "@metreeca/blue/resource";
+import { id, property, resource } from "@metreeca/blue/resource";
 import { markdown, plain } from "@metreeca/blue/string";
 import { optional, required, type State } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 
 export const ec2u = createNamespace(`${ec2u1}/terms#`, [
+
+	"Resource",
+	"Dataset",
+	"University",
+	"Organization",
+	"Person",
+	"Unit",
+	"Taxonomy",
+	"Topic",
+	"Event",
+	"Document",
+	"Program",
+	"Course",
+	"Offering",
+
+	"generated",
+
+	"year",
+	"term",
+	"inProgram",
+
+	"inception",
+	"students",
+
+	"city",
+	"country",
 
 	"dataset",
 	"resource",
@@ -48,10 +74,17 @@ export const wgs = createNamespace("http://www.w3.org/2003/01/geo/wgs84_pos#", [
 ]);
 
 
+export const LabelLength = 100;
+export const CommentLength = 500;
+
+const LatitudeLimit = 90;
+const LongitudeLimit = 180;
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type Entity = State<typeof Entity>
-export type GeoEntity = State<typeof GeoEntity>
+export type Feature = State<typeof Feature>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,33 +96,36 @@ export function Entity() {
 
 	}, {
 
+		id: id(),
+
 		label: required(plain({
-			maxLength: 100
+			maxLength: LabelLength
 		})),
 
 		comment: optional(markdown({
-			maxLength: 500
+			maxLength: CommentLength
 		}))
 
 	});
 }
 
-export function GeoEntity() {
+export function Feature() {
 	return resource({
 
 		extends: Entity,
+
 		namespace: wgs
 
 	}, {
 
 		longitude: property({ forward: wgs.long }, required(decimal({
-			minInclusive: -180,
-			maxInclusive: 180
+			minInclusive: -LongitudeLimit,
+			maxInclusive: LongitudeLimit
 		}))),
 
 		latitude: property({ forward: wgs.lat }, required(decimal({
-			minInclusive: -90,
-			maxInclusive: 90
+			minInclusive: -LatitudeLimit,
+			maxInclusive: LatitudeLimit
 		})))
 
 	});

@@ -14,5 +14,78 @@
  * limitations under the License.
  */
 
+import { resource } from "@metreeca/blue/resource";
+import { email, iri, phone, plain } from "@metreeca/blue/string";
+import { multiple, optional, required, type State } from "@metreeca/blue/value";
+import { createNamespace } from "@metreeca/core/resource";
 
-export function FOAFAgent() {}
+
+export const foaf = createNamespace("http://xmlns.com/foaf/0.1/", [
+
+	"Agent",
+	"Organization",
+	"Person",
+
+	"depiction",
+	"homepage",
+
+	"mbox",
+	"phone",
+
+	"title",
+	"givenName",
+	"familyName"
+
+]);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Agent = State<typeof Agent>
+export type Organization = State<typeof Organization>
+export type Person = State<typeof Person>
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Agent() {
+	return resource({
+
+		class: foaf.Agent,
+		namespace: foaf
+
+	}, {
+
+		depiction: multiple(iri),
+		homepage: multiple(iri),
+
+		mbox: multiple(email),
+		phone: multiple(phone)
+
+	});
+}
+
+export function Organization() {
+	return resource({
+
+		class: foaf.Organization,
+		extends: Agent
+
+	}, {});
+}
+
+export function Person() {
+	return resource({
+
+		class: foaf.Person,
+		extends: Agent
+
+	}, {
+
+		title: optional(plain),
+
+		givenName: required(plain),
+		familyName: required(plain)
+
+	});
+}

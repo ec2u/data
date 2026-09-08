@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Resource } from "@/resources/resources.js";
+import { Resource } from "@/resources/index.js";
 import { dct } from "@/vocabularies/dublincore.js";
 import { ec2u, Entity } from "@/vocabularies/ec2u.js";
 import { reference } from "@metreeca/blue/reference";
@@ -31,7 +31,8 @@ export type Dataset = State<typeof Dataset>
 export function Dataset() {
 	return resource({
 
-		extends: Entity,
+		class: ec2u.Dataset,
+		extends: Resource,
 		namespace: dct
 
 	}, {

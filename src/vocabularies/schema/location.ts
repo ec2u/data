@@ -1,0 +1,88 @@
+/*
+ * Copyright © 2025-2026 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { Thing } from "@/vocabularies/schema/index.js";
+import { decimal } from "@metreeca/blue/number";
+import { reference } from "@metreeca/blue/reference";
+import { resource } from "@metreeca/blue/resource";
+import { email, iri, phone, plain } from "@metreeca/blue/string";
+import { union } from "@metreeca/blue/union";
+import { optional, repeatable, required, type State } from "@metreeca/blue/value";
+
+
+export type Location = State<typeof Location>
+export type Place = State<typeof Place>
+export type PostalAddress = State<typeof PostalAddress>
+export type VirtualLocation = State<typeof VirtualLocation>
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Location() {
+	return union(
+		plain,
+		Place,
+		PostalAddress,
+		VirtualLocation
+	);
+}
+
+export function Place() {
+	return resource({
+
+		extends: Thing
+
+	}, {
+
+		address: optional(reference(PostalAddress)),
+
+		latitude: required(decimal),
+		longitude: required(decimal)
+
+	});
+}
+
+export function PostalAddress() {
+	return resource({
+
+		extends: Thing
+
+	}, {
+
+		addressCountry: optional(plain),
+		addressRegion: optional(plain),
+		addressLocality: optional(plain),
+
+		postalCode: optional(plain),
+		streetAddress: optional(plain),
+
+		email: optional(email),
+		telephone: optional(phone)
+
+	});
+}
+
+export function VirtualLocation() {
+	return resource({
+
+		extends: Thing
+
+	}, {
+
+		url: repeatable(iri)
+
+	});
+}

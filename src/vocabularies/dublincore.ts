@@ -31,6 +31,16 @@ export const dct = createNamespace("http://purl.org/dc/terms/", [
 	"source",
 
 	"subject",
+	"type",
+	"audience",
+
+	"creator",
+	"contributor",
+
+	"identifier",
+	"language",
+	"valid",
+	"relation",
 
 	"rights",
 	"license",
