@@ -25,9 +25,10 @@ import { universities } from "@/universities/index.js";
 import { difference } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
-import { type Feed, pipe, type Task } from "@metreeca/flow";
+import { pipe, type Task } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
-import { batch, filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
+import { toSet } from "@metreeca/flow/sinks";
+import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
 import { jpath, json, number, string } from "@metreeca/gear-json";
 import { crawl, fetch, type URLLike } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
@@ -137,32 +138,31 @@ function remove(university: {
 	return urls => pipe(
 		items(urls)
 		(map(createEventId))
-		(batch())
-		(flat(map(retract)))
+		(ids => items((async function* () {
+
+			const stored = await catalogue(university);
+			const current = await ids(toSet());
+
+			const removed = difference([stored, current]);
+
+			if ( removed.length > stored.length*Floor ) {
+
+				throw new Error(`exceeded retraction floor <${Floor}>`
+					+` with <${removed.length}> of <${stored.length}> events`
+				);
+
+			} else {
+
+				logger.info`retracting <${removed.length}> of <${stored.length}> events`;
+
+				yield* removed;
+
+			}
+
+		})()))
 		(map(id => delta(id)))
 	);
 
-
-	async function retract(scanned: readonly IRI[]): Promise<Feed<IRI>> {
-
-		const stored = await catalogue(university);
-		const removed = difference<IRI>([stored, scanned]);
-
-		if ( removed.length > stored.length*Floor ) {
-
-			throw new Error(`exceeded retraction floor <${Floor}>`
-				+` with <${removed.length}> of <${stored.length}> events`
-			);
-
-		} else {
-
-			logger.info`retracting <${removed.length}> of <${stored.length}> events`;
-
-			return items(removed);
-
-		}
-
-	}
 
 }
 
