@@ -109,22 +109,22 @@ function insert(university: {
 
 }): Task<URLLike, Delta> {
 
-	const digests = new Map<string, Digest>;  // !!! populate from store, keyed by source page URL
+	const digests = new Set<Digest>;  // !!! populate from store / publisher
 
 	return urls => pipe(
 		items(urls)
-		(fork(Concurrency, flat(map(url => pipe( // a pipe per page keeps the source URL in scope as the digest key
-			(items([url]))
+		(fork(Concurrency, pages => pipe(
+			(pages)
 			(fetch())
 			(html())
 			(focus())
 			(untag())
-			(filter(page => digests.get(String(url)) !== digest(page)))
+			(filter(page => !digests.has(digest(page))))
 			(extract())
 			(convert(university))
 			(validate(EventShape))
 			(map(event => isStaleEvent(event) ? delta(event.id) : delta(event.id, event)))
-		)))))
+		)))
 	);
 
 }
