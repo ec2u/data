@@ -38,6 +38,7 @@ const logger = log(import.meta.url);
 
 
 const oauth2Client = new OAuth2Client();
+
 const schedulerEmail = process.env.SCHEDULER_SERVICE_ACCOUNT;
 const serviceUrl = process.env.URL;
 

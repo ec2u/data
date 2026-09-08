@@ -25,33 +25,17 @@
  */
 
 import { immutable } from "@metreeca/core/structures";
-import { GoogleAuth } from "google-auth-library";
 
 
 /**
  * The Google Cloud Platform execution environment.
  *
- * Reports the ambient settings shared by the Google Cloud integrations, that is the project the process is
- * authenticated against and the kind of runtime it is deployed to. Values are resolved once at module initialisation
- * and exposed as a deeply immutable object.
+ * Reports the ambient settings shared by the Google Cloud integrations, that is the kind of runtime the process is
+ * deployed to. Values are resolved once at module initialisation and exposed as a deeply immutable object.
  *
  * @see {@link https://cloud.google.com/docs/authentication Google Cloud Authentication}
  */
 export const gcp = immutable({
-
-	/**
-	 * The Google Cloud project ID resolved from the authenticated environment.
-	 *
-	 * Resolved at module initialisation, probing in order the `GCLOUD_PROJECT` and `GOOGLE_CLOUD_PROJECT` variables,
-	 * the credentials file named by `GOOGLE_APPLICATION_CREDENTIALS`, the local `gcloud` configuration, and the
-	 * Google Cloud metadata server.
-	 *
-	 * @remarks
-	 *
-	 * Outside a deployed service the `gcloud` step spawns the Cloud SDK and takes on the order of a second, unless
-	 * one of the project variables is defined; module initialisation fails if no project ID is found.
-	 */
-	project: await new GoogleAuth().getProjectId(),
 
 	/**
 	 * Whether the current process is running in the production environment.
@@ -71,8 +55,8 @@ export const gcp = immutable({
 	 * > [!IMPORTANT]
 	 * >
 	 * > Every deployed workload reports as production, whatever the project it is deployed to, as no runtime signal
-	 * > tells a staging deployment from a production one: tell them apart by the {@link project} they are
-	 * > authenticated against, or by a deployment variable of their own.
+	 * > tells a staging deployment from a production one: tell them apart by the project they are authenticated
+	 * > against, or by a deployment variable of their own.
 	 */
 	production: process.env.K_SERVICE !== undefined
 		|| process.env.CLOUD_RUN_JOB !== undefined
