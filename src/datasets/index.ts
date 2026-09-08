@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+import { Organization } from "@/organizations/index.js";
 import { Resource } from "@/resources/index.js";
+import { Topic } from "@/taxonomies/index.js";
 import { dct } from "@/vocabularies/dublincore.js";
 import { ec2u, Entity } from "@/vocabularies/ec2u.js";
 import { reference } from "@metreeca/blue/reference";
-import { property, resource } from "@metreeca/blue/resource";
+import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
 import { date, markdown, plain } from "@metreeca/blue/string";
 import { multiple, optional, required, type State } from "@metreeca/blue/value";
 
@@ -38,22 +40,22 @@ export function Dataset() {
 	}, {
 
 		title: required(plain),
-		alternative: required(plain),
+		alternative: optional(plain),
 		description: required(markdown),
 
 		created: optional(date),
 		issued: optional(date),
 		modified: optional(date),
 
-		// !!! Organization publisher();
+		publisher: optional(reference((): ResourceShape => Organization())),
 
 		source: optional(reference(Entity)),
 
 		rights: optional(plain),
 		license: multiple(reference(Entity)),
-		accessRights: optional(markdown),
+		accessRights: optional(plain),
 
-		// !!! Set<Topic> subject();
+		subject: multiple(reference((): ResourceShape => Topic())),
 
 		resources: property({
 

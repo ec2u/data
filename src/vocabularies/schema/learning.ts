@@ -82,9 +82,9 @@ export function EducationalOccupationalProgram() {
 
 		timeToComplete: optional(duration),
 
-		programPrerequisites: optional(plain)
+		programPrerequisites: optional(plain),
 
-		// !!! Set<Course> hasCourse() — its Java target is the EC2U Course dataset frame
+		hasCourse: multiple(reference(Course, { foreign: true }))
 
 	});
 }

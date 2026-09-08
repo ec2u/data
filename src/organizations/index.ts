@@ -21,7 +21,7 @@ import * as org from "@/vocabularies/org.js";
 import * as schema from "@/vocabularies/schema/index.js";
 import { Location } from "@/vocabularies/schema/location.js";
 import { property, resource } from "@metreeca/blue/resource";
-import { email, phone, plain } from "@metreeca/blue/string";
+import { email, iri, markdown, phone, plain } from "@metreeca/blue/string";
 import { multiple, optional, type State } from "@metreeca/blue/value";
 
 
@@ -40,6 +40,14 @@ export function Organization() {
 	}, {
 
 		// !!! schema.Organization cannot join the parents: its inherited `identifier` redefines the org: forward IRI
+
+		url: property({ forward: schema.schema }, multiple(iri)),
+
+		name: property({ forward: schema.schema }, optional(plain)),
+		description: property({ forward: schema.schema }, optional(markdown)),
+		disambiguatingDescription: property({ forward: schema.schema }, optional(markdown)),
+
+		// !!! image: embedding ImageObject here recurses, since ImageObject extends Thing, which embeds it back
 
 		legalName: property({ forward: schema.schema }, optional(plain)),
 
