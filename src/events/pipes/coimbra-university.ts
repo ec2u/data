@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-import { persist } from "@/_/gear-store/persist.js";
-import { EventShape } from "@/events/index.js";
-import { harvest } from "@/events/tasks/harvest.js";
+import { digest, type Digest } from "@/_/gear-store/digest.js";
+import { type Delta, persist } from "@/_/gear-store/persist.js";
+import { EventShape, isStale } from "@/events/index.js";
+import { convert } from "@/events/tasks/convert.js";
+import { extract } from "@/events/tasks/extract.js";
 import { execute } from "@/index.core.js";
 import { universities } from "@/universities/index.js";
 import { immutable } from "@metreeca/core/structures";
-import { pipe } from "@metreeca/flow";
+import { pipe, type Task } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
-import { flat, fork, map, take } from "@metreeca/flow/tasks";
-import { jpath, json, number, string } from "@metreeca/gear-json";
+import { filter, flat, fork, map, peek, take } from "@metreeca/flow/tasks";
+import { jpath, json, number, string, validate } from "@metreeca/gear-json";
+import { IRI } from "@metreeca/core/resource";
 import { crawl, fetch } from "@metreeca/gear-url";
+import { focus, html, untag } from "@metreeca/gear-xml";
 
 
 const Search = "https://content.fw.uc.pt/v1/agenda/events/search";
@@ -76,6 +80,36 @@ export async function CoimbraUniversity() {
 		(take(1) /* !!! */)
 		(harvest(universities.coimbra))
 		(persist(EventShape))
+	);
+
+}
+
+
+export function harvest(university: {
+
+	readonly id: IRI
+	readonly zone: string
+
+}): Task<string | URL, Delta> {
+
+	const digests = new Map<string, Digest>;  // !!! populate from the store, keyed by source page URL (paging?)
+
+	return urls => pipe(
+		items(urls)
+		(fork(10, flat(map(url => pipe( // a pipe per page keeps the source URL in scope as the digest key
+			(items([url]))
+			(fetch())
+			(html())
+			(focus())
+			(untag())
+			(filter(page => digests.get(String(url)) !== digest(page)))
+			(extract())
+			(peek(console.log) /* !!! */)
+			(convert(university))
+			(peek(console.log) /* !!! */)
+			(validate(v => undefined) /* !!! */)
+			(map(event => [event.id, isStale(event) ? null : event] satisfies Delta))
+		)))))
 	);
 
 }
