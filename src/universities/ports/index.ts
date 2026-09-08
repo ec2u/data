@@ -14,41 +14,15 @@
  * limitations under the License.
  */
 
-/**
- * REST API endpoints for educational unit resources.
- *
- * Provides endpoints for listing and retrieving units with support for filtering by update timestamp and university.
- *
- * @module
- */
-
-import { job } from "@/_/gear-gcp/scheduler.js";
+import { cron } from "@/universities/ports/cron.js";
+import { data } from "@/universities/ports/data.js";
 import { Router } from "express";
 
 
 export function universities(): Router {
 
 	return Router()
-
-		.use("/universities", Router()
-
-			.get("/", async (request, response) => {
-
-				throw new Error(";( to be implemented"); // !!!
-
-			})
-
-			.get("/:code", async (request, response) => {
-
-				throw new Error(";( to be implemented"); // !!!
-
-			})
-		)
-
-		.use("/~universities", Router()
-
-			.use("/wikidata", job(() => Promise.resolve("tbi"))) // !!!
-
-		);
+		.use("/universities", data())
+		.use("/~universities", cron());
 
 }

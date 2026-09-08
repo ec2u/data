@@ -21,7 +21,7 @@ import { pages } from "@/pages/store.js";
 import { fetchPage } from "@/pages/tools/fetchPage.js";
 import { matches, merge, Unit, units } from "@/units/index.js";
 import { _units } from "@/units/store.js";
-import { universities } from "@/universities/index.js";
+import { pavia } from "@/universities/index.js";
 import { Type } from "@google/genai";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -38,7 +38,7 @@ const Concurrency = 32;
 const logger = log(import.meta.url);
 
 
-const university = universities.pavia.id;
+const university = pavia.id;
 
 const roots = [
 	"https://portale.unipv.it/it/ricerca/strutture-di-ricerca/dipartimenti",

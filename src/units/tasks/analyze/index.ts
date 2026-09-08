@@ -19,7 +19,7 @@ import { _units } from "@/units/store.js";
 import { analyze } from "@/units/tasks/analyze/analyze.js";
 import { annotate } from "@/units/tasks/analyze/annotate.js";
 import { classify } from "@/units/tasks/analyze/classify.js";
-import { universities } from "@/universities/index.js";
+import { pavia } from "@/universities/index.js";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";
@@ -60,7 +60,7 @@ export default async function execute(): Promise<number> {
 	return time(async () => pipe(
 		// (items(units.select({ analyzed: Date.now()-stale }))) // !!!
 
-		(items(await _units.select({ university: universities.pavia.id })))
+		(items(await _units.select({ university: pavia.id })))
 
 		(map(lead => pipe(
 			items(lead)

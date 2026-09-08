@@ -20,6 +20,8 @@ import { validate } from "@/_/gear-store/validate.js";
 import { createEventId, EventShape, isStaleEvent } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
+import { universities } from "@/universities/index.js";
+import { assert, isDefined } from "@metreeca/core";
 import { difference } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
@@ -42,37 +44,28 @@ const logger = log(import.meta.url);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function sync(university: { // !!! read from publisher?
+export function sync(publisher: {
 
 	readonly id: IRI
-	readonly zone: string
-
-}, publisher: {
-
-	readonly id: IRI
+	readonly university: IRI
 
 }): Sink<URLLike, Tally> {
+
+	const university = assert(universities[publisher.university], isDefined,
+		`unknown publisher university <${publisher.university}>`
+	);
 
 	return urls => pipe(
 		(items(urls))
 		(tee(
-			insert(university, publisher),
-			remove(university)
+			insert(),
+			remove()
 		))
 		(persist(EventShape))
 	);
 
 
-	function insert(university: {
-
-		readonly id: IRI
-		readonly zone: string
-
-	}, publisher: {
-
-		readonly id: IRI
-
-	}): Task<URLLike, Delta> {
+	function insert(): Task<URLLike, Delta> {
 
 		return urls => {
 
@@ -98,11 +91,7 @@ export function sync(university: { // !!! read from publisher?
 
 	}
 
-	function remove(university: {
-
-		readonly id: IRI
-
-	}): Task<URLLike, Delta> {
+	function remove(): Task<URLLike, Delta> {
 
 		return urls => {
 
@@ -122,7 +111,7 @@ export function sync(university: { // !!! read from publisher?
 
 					if ( surviving < required ) {
 
-						logger.warning`retaining <${removed.length}> of <${present.length}> events below <${Survival}>`;
+						logger.warning`skipping removal of <${removed.length}> events to keep at least <${required}>`;
 
 						return [];
 

@@ -16,7 +16,7 @@
 
 import { sync } from "@/events/sinks/sync.js";
 import { execute } from "@/index.core.js";
-import { universities } from "@/universities/index.js";
+import { coimbra } from "@/universities/index.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
@@ -31,7 +31,7 @@ const Events = "https://agenda.coimbra.pt/event";
 const Publisher = immutable({
 
 	id: "https://www.uc.pt/dri/noticias/eventos",
-	university: universities.coimbra.id,
+	university: coimbra.id,
 
 	prefLabel: "Coimbra Agenda"
 
@@ -70,7 +70,7 @@ export async function CoimbraUniversity() {
 				(map(key => `${Events}/${key}`))
 			)
 		))
-		(sync(universities.coimbra, Publisher))
+		(sync(Publisher))
 	);
 
 }
