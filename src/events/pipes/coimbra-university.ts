@@ -140,8 +140,7 @@ function remove(university: {
 		(map(createEventId))
 		(ids => items((async function* () {
 
-			const stored = await catalogue(university);
-			const current = await ids(toSet());
+			const [stored, current] = await Promise.all([catalogue(university), ids(toSet())]);
 
 			const removed = difference([stored, current]);
 
@@ -162,7 +161,6 @@ function remove(university: {
 		})()))
 		(map(id => delta(id)))
 	);
-
 
 }
 
