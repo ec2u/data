@@ -116,17 +116,19 @@ export function sync(university: { // !!! read from publisher?
 					const [present, current] = await Promise.all([stored, ids(toSet())]);
 
 					const removed = difference([present, current]);
+
 					const surviving = present.length-removed.length;
+					const required = Math.ceil(present.length*Survival);
 
-					if ( surviving < present.length*Survival ) {
+					if ( surviving < required ) {
 
-						throw new Error(`expected survival share >= <${Survival}>`
-							+` with <${surviving}> of <${present.length}> events`
-						);
+						logger.warning`retaining <${removed.length}> of <${present.length}> events below <${Survival}>`;
+
+						return [];
 
 					} else {
 
-						logger.info`retracting <${removed.length}> of <${present.length}> events`;
+						logger.info`removing <${removed.length}> of <${present.length}> stored events`;
 
 						return removed;
 
