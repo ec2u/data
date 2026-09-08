@@ -78,9 +78,9 @@ What holds throughout:
   own address is data, never identity: derived from what came back rather than from what was asked for, the branches
   would disagree and an entry would be retracted and re-created under a new name every run.
 
-- **Removal takes evidence** — an entry goes on a positive fact: its own state condemning it, its page answering that
-  it is gone, or a scan that named everything else and not it. The first two are facts about the entry and stand on
-  their own; the third is a fact about the run, and is worth exactly as much as the scan behind it.
+- **Removal takes evidence** — an entry goes on a positive fact: its own state condemning it, or a scan that named
+  everything else and not it. The first is a fact about the entry and stands on its own; the second is a fact about the
+  run, and is worth exactly as much as the scan behind it.
 
 - **Overlap wastes, it does not corrupt** — an attempt still running when the scheduler retries draws the same work
   twice and nothing worse: upserts are idempotent and every removal is evidenced afresh. No lease to refresh, and none
@@ -125,11 +125,15 @@ handed it.
   speed of the reads. Concurrency belongs inside the branch, where several pages are in flight at once, and `remove`
   keeps up on the cost of a set insertion.
 
-- **The retrieval is still a delisting check** — a page answering that it is gone retires the entry there and then,
-  where a timeout, a `5xx` or a name that fails to resolve settles nothing and leaves it for the next run.
+- **The retrieval settles nothing about delisting** — a fetch drops an unsuccessful response the way it drops nothing
+  at all, so a page answering that it is gone reaches the branch as silence, indistinguishable from one that timed out.
+  Nothing here retires an entry the index still lists, and delisting rests on the scan alone. Telling the two apart
+  would take a retrieval reporting its own outcome, which nothing else in the branch has any use for.
 
-- **Only a successful write advances its stamp** — the state and the stamp justifying it land in one operation. A read
-  that dies leaves its entry pending, and revisiting an entry already current is a no-op.
+- **Only a successful write advances the evidence for skipping** — the state and the digest justifying it are recorded
+  together, so a read that dies leaves its entry to be read again, and re-reading an entry already current costs a
+  comparison and no write. The digest is held per source page, which makes the skip a property of the page rather than
+  of the entry drawn from it.
 
 - **A source marker beats a digest** — where the index carries one, keep it as the source reports it and read on the
   marker moving past its stored copy. That skips the retrieval outright, where a digest still pays for it.
@@ -143,7 +147,9 @@ Draw what the store holds for the source, watch the scan go by, and retract at t
 condemns or the scan never named.
 
 - **It watches the scan, not the harvest** — the branch sits beside `insert` rather than after it, so it sees every
-  entry the source listed rather than only the ones worth reading.
+  entry the source listed rather than only the ones worth reading. It names each one through the shared identity
+  function as it goes, so the comparison at the end is between identifiers on both sides and the store is never asked
+  what a page is called.
 
 - **Silent until the scan is over** — nothing follows from a partial scan, so the branch states nothing while the feed
   runs and everything once it is dry. Retirements land after the last insertion as a consequence rather than by
@@ -165,8 +171,9 @@ condemns or the scan never named.
 - **Nothing sweeps across sources** — every removal is drawn for the source that claims the entry. Entries left behind
   by a source no longer configured at all belong to a maintenance pass, not to a scheduled run.
 
-- **A census in memory, for the length of a run** — the branch holds the scanned keys until the feed runs dry, which is
-  the census the scan is spared from storing. Minutes of memory against a table that would have to be kept true.
+- **A census in memory, for the length of a run** — the branch holds the scanned identifiers until the feed runs dry,
+  which is the census the scan is spared from storing. A few thousand strings for a couple of minutes, against a table
+  that would have to be kept true.
 
 ## Commit
 
