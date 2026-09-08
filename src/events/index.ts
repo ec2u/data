@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, type Dataset } from "@/datasets/index.js";
-import { CommentLength, ec2u, LabelLength, Resource } from "@/vocabularies/ec2u.js";
+import { CCBYNCND40, Copyright, type Dataset, Resource } from "@/datasets/index.js";
+import { base, CommentLength, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
 import { Alliance } from "@/organizations/index.js";
 import { Event as SchemaEvent } from "@/vocabularies/schema/event.js";
 import { resource } from "@metreeca/blue/resource";
@@ -28,11 +28,10 @@ import * as uuid from "uuid";
 
 export const events = immutable({
 
-	id: `${ec2u}/events`,
-	type: ec2u.Dataset,
+	id: `${base}/events`,
 
-	isDefinedBy: `${ec2u}/datasets/events`,
-	dataset: `${ec2u}/`,
+	isDefinedBy: `${base}/datasets/events`,
+	dataset: `${base}/`,
 
 	label: "EC2U Events",
 
@@ -52,7 +51,7 @@ export const events = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type Event = State<typeof Event>
+export type Event = State<typeof Event> // !!! remove
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

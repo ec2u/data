@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { ec2u, Entity, Resource } from "@/vocabularies/ec2u.js";
+import { Resource } from "@/datasets/index.js";
+import { ec2u, Entity } from "@/vocabularies/ec2u.js";
 import { Organization } from "@/organizations/index.js";
 import { Person } from "@/persons/index.js";
 import { Topic } from "@/taxonomies/index.js";
-import { dct } from "@/vocabularies/dublincore.js";
+import { dct } from "@/vocabularies/dct.js";
 import { schema } from "@/vocabularies/schema/index.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
@@ -57,8 +58,7 @@ export function Document() {
 		accessRights: optional(plain),
 		license: optional(reference(Entity)),
 
-		// !!! dct:type clashes with the @type marker inherited from Resource
-		documentType: property({ forward: dct.type }, multiple(reference(Topic))),
+		type: property({ forward: dct.type }, multiple(reference(Topic))),
 		subject: multiple(reference(Topic)),
 		audience: multiple(reference(Topic)),
 

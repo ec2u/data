@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Dataset } from "@/datasets/index.js";
-import { ec2u, Resource } from "@/vocabularies/ec2u.js";
+import { Dataset, Resource } from "@/datasets/index.js";
+import { ec2u } from "@/vocabularies/ec2u.js";
 import { Concept, ConceptScheme } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { resource, type ResourceShape } from "@metreeca/blue/resource";

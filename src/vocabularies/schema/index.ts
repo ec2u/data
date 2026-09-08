@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { reference } from "@metreeca/blue/reference";
 import { resource, type ResourceShape } from "@metreeca/blue/resource";
 import { iri, markdown, plain, string } from "@metreeca/blue/string";
 import { multiple, optional, repeatable } from "@metreeca/blue/value";
@@ -97,13 +98,13 @@ export function Thing() {
 
 		url: multiple(iri),
 
-		identifier: optional(string), // single string value for compatibility with org:Organization
+		identifier: optional(string), // ;( single string value for compatibility with org:Organization
 
 		name: optional(plain),
 		description: optional(markdown),
 		disambiguatingDescription: optional(markdown),
 
-		image: optional((): ResourceShape => ImageObject())
+		image: optional(reference((): ResourceShape => ImageObject(), { captive: true }))
 
 	});
 }
@@ -115,7 +116,7 @@ export function ImageObject() {
 
 	}, {
 
-		url: repeatable(iri), // !!! MaxCount(1) not expressible as an override of the inherited set
+		url: repeatable(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
 
 		caption: optional(plain),
 		author: optional(plain),

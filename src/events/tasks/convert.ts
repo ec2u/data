@@ -15,7 +15,6 @@
  */
 
 import { createEventId, type Event, events } from "@/events/index.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
 import { EventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
 import { Location } from "@/vocabularies/schema/location.js";
 import { type Object, opt, type Optional } from "@metreeca/core";
@@ -71,13 +70,13 @@ export function convert(university: {
 
 			return immutable({
 
+				generated: true,
+
 				id: createEventId(url),
-				type: ec2u.Event, // ;( system-managed, but required by the state projection
 				url: multiple(url),
 
 				dataset: events.id,
 
-				generated: true,
 				university: university.id,
 
 				label: title,
@@ -101,10 +100,12 @@ export function convert(university: {
 				isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
 				eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
 
-				image: optional(path("imageURL").map(link).map(url => ({
-					url,
-					copyrightNotice: optional(path("imageCredits").map(string))
-				}))),
+				// !!! ;( captive references are inferred as IRI: unable to include actual resource
+
+				// image: optional(path("imageURL").map(link).map(url => ({
+				// 	url,
+				// 	copyrightNotice: optional(path("imageCredits").map(string))
+				// }))),
 
 				location: optional<State<typeof Location>>(
 					opt(attendanceURL, url => ({ url: [url] }))
@@ -137,12 +138,15 @@ function stamp(date: string, time: Optional<string>, zone: string): string { // 
 }
 
 
-function attendance(mode: string): Optional<State<typeof EventAttendanceModeEnumeration>> {
+function attendance(mode: string): Optional<State<typeof EventAttendanceModeEnumeration>> { // !!! type
 	return mode === "offline" ? "OfflineEventAttendanceMode"
 		: mode === "online" ? "OnlineEventAttendanceMode"
 			: mode === "mixed" ? "MixedEventAttendanceMode"
 				: undefined;
 }
+
+
+//// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function about(topic: string): readonly IRI[] {
 	return []; // !!! match `topic` against the EC2U events taxonomy, keeping the closest concept

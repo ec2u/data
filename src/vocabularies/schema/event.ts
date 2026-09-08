@@ -68,8 +68,6 @@ export function Event() {
 		eventStatus: optional(EventStatusType),
 		eventAttendanceMode: optional(EventAttendanceModeEnumeration),
 
-		// !!! embedded image() override not expressible over the inherited reference
-
 		location: optional(Location),
 
 		publisher: optional(reference(Organization)),

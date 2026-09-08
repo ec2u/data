@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { ec2u, Resource } from "@/vocabularies/ec2u.js";
+import { Resource } from "@/datasets/index.js";
+import { ec2u } from "@/vocabularies/ec2u.js";
 import { Organization } from "@/organizations/index.js";
 import { Topic } from "@/taxonomies/index.js";
 import { LearningResource } from "@/vocabularies/schema/learning.js";

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { ec2u } from "@/vocabularies/ec2u.js";
+import { base, ec2u } from "@/vocabularies/ec2u.js";
 import { Organization } from "@/organizations/index.js";
 import { Topic } from "@/taxonomies/index.js";
 import { dcat } from "@/vocabularies/dcat.js";
-import { dct } from "@/vocabularies/dublincore.js";
+import { dct } from "@/vocabularies/dct.js";
 import { OrganizationalUnit } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
@@ -26,7 +26,8 @@ import { plain } from "@metreeca/blue/string";
 import { multiple } from "@metreeca/blue/value";
 
 
-export const units = `${ec2u}/units`;
+export const units = `${base}/units`;
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

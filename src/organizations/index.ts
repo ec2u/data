@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import { ec2u, Resource } from "@/vocabularies/ec2u.js";
+import { Resource } from "@/datasets/index.js";
+import { ec2u } from "@/vocabularies/ec2u.js";
 import { Topic } from "@/taxonomies/index.js";
 import * as org from "@/vocabularies/org.js";
 import * as schema from "@/vocabularies/schema/index.js";
 import { Location } from "@/vocabularies/schema/location.js";
+import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
 import { email, iri, markdown, phone, plain } from "@metreeca/blue/string";
 import { multiple, optional } from "@metreeca/blue/value";
@@ -46,7 +48,7 @@ export function Organization() {
 		description: property({ forward: schema.schema }, optional(markdown)),
 		disambiguatingDescription: property({ forward: schema.schema }, optional(markdown)),
 
-		// !!! image: embedding ImageObject here recurses, since ImageObject extends Thing, which embeds it back
+		image: property({ forward: schema.schema }, optional(reference(schema.ImageObject, { captive: true }))),
 
 		legalName: property({ forward: schema.schema }, optional(plain)),
 
