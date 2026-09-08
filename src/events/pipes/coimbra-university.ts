@@ -14,25 +14,15 @@
  * limitations under the License.
  */
 
-import { digest, type Digest } from "@/_/gear-store/_digest.js";
-import { type Delta, delta, persist } from "@/_/gear-store/persist.js";
-import { validate } from "@/_/gear-store/validate.js";
-import { createEventId, EventShape, isStaleEvent } from "@/events/index.js";
-import { convert } from "@/events/tasks/convert.js";
-import { extract } from "@/events/tasks/extract.js";
+import { sync } from "@/events/sinks/sync.js";
 import { execute } from "@/index.core.js";
 import { universities } from "@/universities/index.js";
-import { difference } from "@metreeca/core/arrays";
-import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
-import { pipe, type Task } from "@metreeca/flow";
+import { pipe } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
-import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
+import { flat, fork, map } from "@metreeca/flow/tasks";
 import { jpath, json, number, string } from "@metreeca/gear-json";
-import { crawl, fetch, type URLLike } from "@metreeca/gear-url";
-import { focus, html, untag } from "@metreeca/gear-xml";
-import { log } from "@metreeca/tape";
+import { crawl, fetch } from "@metreeca/gear-url";
 
 
 const Search = "https://content.fw.uc.pt/v1/agenda/events/search";
@@ -48,14 +38,7 @@ const Publisher = immutable({
 });
 
 
-const Concurrency = 10;
-const Floor = 0.25; // the share of the stored events a single run is allowed to retract
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const logger = log(import.meta.url);
-
 
 if ( import.meta.main ) {
 	execute(CoimbraUniversity);
@@ -64,15 +47,12 @@ if ( import.meta.main ) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// !!! incremental sync
-// !!! storage
-
 export async function CoimbraUniversity() {
 
 	return pipe(
 		(items(Search))
 		(crawl(
-			fork(Concurrency, urls => pipe(
+			fork(10, urls => pipe(
 				items(urls)
 				(fetch())
 				(json())
@@ -90,109 +70,7 @@ export async function CoimbraUniversity() {
 				(map(key => `${Events}/${key}`))
 			)
 		))
-		(tee(
-			insert(universities.coimbra),
-			remove(universities.coimbra)
-		))
-		(persist(EventShape))
+		(sync(universities.coimbra, Publisher))
 	);
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function insert(university: {
-
-	readonly id: IRI
-	readonly zone: string
-
-}): Task<URLLike, Delta> {
-
-	return urls => {
-
-		const digests = fingerprints(Publisher); // queried once and shared by the forked runs
-
-		return pipe(
-			items(urls)
-			(fork(Concurrency, pages => pipe(
-				(pages)
-				(fetch())
-				(html())
-				(focus())
-				(untag())
-				(filter(async page => !(await digests).has(digest(page))))
-				(extract())
-				(convert(university))
-				(validate(EventShape))
-				(map(event => isStaleEvent(event) ? delta(event.id) : delta(event.id, event)))
-			)))
-		);
-
-	};
-
-}
-
-function remove(university: {
-
-	readonly id: IRI
-
-}): Task<URLLike, Delta> {
-
-	return urls => {
-
-		const catalogued = catalogue(university); // queried once, while the scan drains
-
-		return pipe(
-			items(urls)
-			(map(createEventId))
-			(ids => items((async function* () {
-
-				const [stored, current] = await Promise.all([catalogued, ids(toSet())]);
-
-				const removed = difference([stored, current]);
-
-				if ( removed.length > stored.length*Floor ) {
-
-					throw new Error(`exceeded retraction floor <${Floor}>`
-						+` with <${removed.length}> of <${stored.length}> events`
-					);
-
-				} else {
-
-					logger.info`retracting <${removed.length}> of <${stored.length}> events`;
-
-					yield* removed;
-
-				}
-
-			})()))
-			(map(id => delta(id)))
-		);
-
-	};
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-async function fingerprints(publisher: {
-
-	readonly id: IRI
-
-}): Promise<ReadonlySet<Digest>> {
-
-	return new Set(); // !!! query the store, through `service(createStore)`, for the digests of the `publisher` pages
-
-}
-
-async function catalogue(university: {
-
-	readonly id: IRI
-
-}): Promise<readonly IRI[]> {
-
-	return []; // !!! query the store, through `service(createStore)`, for the events published by `university`
 
 }
