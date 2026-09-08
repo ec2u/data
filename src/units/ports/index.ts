@@ -14,70 +14,15 @@
  * limitations under the License.
  */
 
-/**
- * REST API endpoints for educational unit resources.
- *
- * Provides endpoints for listing and retrieving units with support for filtering by update timestamp and university.
- *
- * @module
- */
-
-import { _units } from "@/units/store.js";
-import { NotFound } from "@metreeca/http";
+import { cron } from "@/units/ports/cron.js";
+import { data } from "@/units/ports/data.js";
 import { Router } from "express";
 
 
 export function units(): Router {
-	return Router().use("/units", Router()
 
-		.get("/", async (request, response) => {
+	return Router()
+		.use("/units", data())
+		.use("/~units", cron());
 
-			const {
-
-				updated,
-				university,
-				offset,
-				limit
-
-			}: {
-
-				updated?: string;
-				university?: string;
-				offset?: string;
-				limit?: string;
-
-			} = request.query;
-
-			response.json(await _units.select({
-				updated: updated ? parseInt(updated, 10) : 1, // return only current processed units
-				university,
-				offset: offset ? parseInt(offset, 10) : undefined,
-				limit: limit ? parseInt(limit, 10) : undefined
-			}));
-
-		})
-
-		.get("/:code", async (request, response) => {
-
-			const {
-
-				code
-
-			}: {
-
-				code: string
-
-			} = request.params;
-
-			const unit = await _units.lookup(code);
-
-			if ( unit ) {
-				response.json(unit);
-			} else {
-				response.status(NotFound).json({ error: "unit not found" });
-			}
-
-		})
-
-	);
 }
