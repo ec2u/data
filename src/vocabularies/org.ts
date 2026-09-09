@@ -18,7 +18,7 @@ import * as foaf from "@/vocabularies/foaf.js";
 import { Concept, skos } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
-import { string, text } from "@metreeca/blue/string";
+import { text } from "@metreeca/blue/string";
 import { multiple, optional, repeatable, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
@@ -76,7 +76,7 @@ export function Organization() {
 
 	}, {
 
-		identifier: optional(string), // ;( string value for compatibility with schema:identifier
+		// ;( `identifier` omitted: it would clash with `schema:identifier`, the term EC2U `Organization` publishes
 
 		prefLabel: property({ forward: skos }, required(text)),
 		altLabel: property({ forward: skos }, optional(text)),

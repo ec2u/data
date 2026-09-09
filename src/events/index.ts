@@ -16,11 +16,14 @@
 
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
+import { Organization } from "@/organizations/index.js";
+import { Topic } from "@/taxonomies/index.js";
 import { EC2U, base, CommentLength, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
 import { Event as SchemaEvent } from "@/vocabularies/schema/event.js";
+import { reference } from "@metreeca/blue/reference";
 import { resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
-import { optional, type State } from "@metreeca/blue/value";
+import { multiple, optional, type State } from "@metreeca/blue/value";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import * as uuid from "uuid";
@@ -67,7 +70,15 @@ export function Event() {
 	}, {
 
 		name: optional(text({ maxLength: LabelLength })),
-		disambiguatingDescription: optional(text({ maxLength: CommentLength }))
+		disambiguatingDescription: optional(text({ maxLength: CommentLength })),
+
+		// !!! pin `about` to the EC2U events taxonomy and `audience` to the EC2U stakeholders taxonomy: both take a
+		// !!! narrowed `Topic` shape carrying an id `pattern`, and neither taxonomy is ported yet
+
+		publisher: optional(reference(Organization)),
+
+		about: multiple(reference(Topic)),
+		audience: multiple(reference(Topic))
 
 	});
 }

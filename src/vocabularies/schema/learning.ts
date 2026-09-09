@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Course as EC2UCourse } from "@/courses/index.js";
 import { Person } from "@/vocabularies/foaf.js";
 import { EventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
 import { Thing } from "@/vocabularies/schema/index.js";
@@ -22,7 +23,7 @@ import { Concept } from "@/vocabularies/skos.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
-import { resource } from "@metreeca/blue/resource";
+import { resource, type ResourceShape } from "@metreeca/blue/resource";
 import { duration, string, tag, text } from "@metreeca/blue/string";
 import { multiple, optional, required } from "@metreeca/blue/value";
 
@@ -75,7 +76,7 @@ export function EducationalOccupationalProgram() {
 
 		programPrerequisites: optional(text),
 
-		hasCourse: multiple(reference(Course, { foreign: true }))
+		hasCourse: multiple(reference((): ResourceShape => EC2UCourse(), { foreign: true }))
 
 	});
 }

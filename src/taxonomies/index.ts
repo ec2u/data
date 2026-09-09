@@ -18,9 +18,10 @@ import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Dataset, Resource } from "@/datasets/index.js";
 import { base, EC2U, ec2u } from "@/vocabularies/ec2u.js";
 import { Concept, ConceptScheme } from "@/vocabularies/skos.js";
+import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
-import { required } from "@metreeca/blue/value";
+import { multiple, required } from "@metreeca/blue/value";
 import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 
@@ -51,21 +52,39 @@ export const taxonomies = immutable({
 export function Taxonomy() {
 	return resource({
 
-		class: ec2u.Taxonomy,
 		extends: [Dataset, ConceptScheme],
-		namespace: ec2u
 
-	}, {});
+		namespace: ec2u,
+		class: ec2u.Taxonomy
+
+	}, {
+
+		// ;( the `Taxonomy`/`Topic` pair admits one refined direction only: refining `Topic.dataset`, `inScheme` and
+		// ;( `topConceptOf` back to `Taxonomy` would leave the two ends resolving each other until the stack is spent
+
+		resources: multiple(reference(Topic)),
+
+		hasConcept: multiple(reference(Topic)),
+		hasTopConcept: multiple(reference(Topic))
+
+	});
 }
 
 export function Topic() {
 	return resource({
 
-		class: ec2u.Topic,
 		extends: [Resource, Concept],
-		namespace: ec2u
+
+		namespace: ec2u,
+		class: ec2u.Topic
 
 	}, {
+
+		// ;( `broader`, `broaderTransitive`, `narrower`, `related` and `exactMatch` not narrowed to `Topic`: an
+		// ;( override targeting the very shape that declares it closes a circular `extends` chain
+
+		// ;( `inScheme`, `topConceptOf` and `dataset` not narrowed to `Taxonomy`: `Taxonomy` already narrows the
+		// ;( opposite direction, and refining both leaves the two ends resolving each other until the stack is spent
 
 		digest: property({
 

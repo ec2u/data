@@ -15,9 +15,12 @@
  */
 
 import { Resource } from "@/datasets/index.js";
+import { Topic } from "@/taxonomies/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
 import { LearningResource } from "@/vocabularies/schema/learning.js";
+import { reference } from "@metreeca/blue/reference";
 import { resource } from "@metreeca/blue/resource";
+import { multiple } from "@metreeca/blue/value";
 
 
 export function Offering() {
@@ -27,5 +30,16 @@ export function Offering() {
 		extends: [Resource, LearningResource],
 		namespace: ec2u
 
-	}, {});
+	}, {
+
+		// ;( `provider` not narrowed to an embedded EC2U `Organization`: an inherited reference cannot be swapped
+		// ;( for an embedded resource
+
+		// !!! pin `educationalLevel` to the ISCED 2011 taxonomy and `about` to ISCED-F 2013: both take a narrowed
+		// !!! `Topic` shape carrying an id `pattern`, and neither taxonomy is ported yet
+
+		educationalLevel: multiple(reference(Topic)),
+		about: multiple(reference(Topic))
+
+	});
 }

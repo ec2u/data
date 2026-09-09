@@ -6,61 +6,54 @@ description: Open divergences of the Blue shapes ported into Pipe from the EC2U 
 
 # Divergences
 
-How the ported Blue shapes depart from the EC2U model published by the sibling Data service. Every entry below is an
-instance of
-[reference targets and embedding kinds cannot be refined](#reference-targets-and-embedding-kinds-cannot-be-refined),
-except where noted: the inherited property keeps the target its parent declared, and any id pattern narrowing it goes
-with it.
+How the ported Blue shapes depart from the EC2U model published by the sibling Data service. Every reference target
+the model narrows is ported, except where an entry below records otherwise: those are blocked by
+[reference refinement stops at embedding, arity and cycles](#reference-refinement-stops-at-embedding-arity-and-cycles),
+or wait on the pinned `Topic` shapes the id patterns need, which the taxonomies they pin to do not yet have.
 
-## Course
-
-- `audience`, `instructor` — target `skos.Concept` and `foaf.Person` instead of the EC2U `Topic` and `Person`.
-
-## EducationalOccupationalProgram
-
-- `hasCourse` — targets `schema.Course` instead of the EC2U `Course` dataset shape.
+Each entry names the property, the definition the model specifies as `cardinality(target)`, and what the ported shape
+carries instead.
 
 ## Event
 
-- `publisher`, `about`, `audience` — target `schema` and `skos` shapes instead of the EC2U families, dropping the id
-  patterns pinning `about` and `audience` to the EC2U events and stakeholders taxonomies.
+- `about`, `audience` — `multiple(Topic)` ported without the id patterns pinning them to the EC2U events and
+  stakeholders taxonomies.
+- `image` — `optional(ImageObject)` embedded, ported as a captive reference on `schema.Event`
+  ([captive references project to a bare IRI](#captive-references-project-to-a-bare-iri)).
 
 ## Offering
 
-- `provider`, `educationalLevel`, `about` — target `schema` and `skos` shapes instead of the EC2U families, dropping the
-  id patterns pinning `educationalLevel` and `about` to the ISCED taxonomies.
+- `educationalLevel`, `about` — `multiple(Topic)` ported without the id patterns pinning them to the ISCED 2011 and
+  ISCED-F 2013 taxonomies.
+- `provider` — `optional(Organization)` embedded, ported as a reference to `schema.Organization`. `Course` and
+  `Program` inherit the divergence.
 
 ## Organization
 
-- Extends `[Resource, org.Organization]` only: `schema.Organization` cannot join the parents, as `identifier` would come
-  in as `schema:identifier` against the inherited `org:identifier`
-  ([multiple inheritance rejects a property inherited under two different IRIs](#multiple-inheritance-rejects-a-property-inherited-under-two-different-iris)).
-  The other `schema` properties are duplicated locally, and instances carry no `schema:Organization` class.
-- `subOrganizationOf`, `hasSubOrganization`, `hasUnit`, `hasHead`, `hasMember`, `classification` — target `org`, `foaf`
-  and `skos` shapes instead of the EC2U families, dropping the id pattern pinning `classification` to the EC2U
-  organizations taxonomy.
-
-## Taxonomy
-
-- `resources`, `hasConcept`, `hasTopConcept` — `resources` targets the EC2U `Resource` and `hasConcept`/`hasTopConcept`
-  target `skos.Concept`, in place of the intended `Topic` narrowing.
+- Instances carry no `schema:Organization` class, which the local `schema` shapes do not declare.
+- `classification` — `multiple(Topic)` ported without the id pattern pinning it to the EC2U organizations taxonomy.
+- `subOrganizationOf`, `hasSubOrganization` — `multiple(Organization)`, left at `org.Organization`: an override
+  targeting the very shape that declares it closes a circular `extends` chain. `Unit` and `University` narrow them on
+  their own.
+- `hasUnit` — `multiple(Unit)`, left at `org.OrganizationalUnit`: the inherited target is reached through a thunk, so
+  the lineage never matches by structure. `Unit` and `University` are blocked the same way.
 
 ## Topic
 
-- `inScheme`, `topConceptOf` — target `skos.ConceptScheme` instead of the EC2U `Taxonomy`.
-- `broader`, `broaderTransitive`, `narrower`, `related`, `exactMatch` — target `skos.Concept` instead of the EC2U
-  `Topic`.
-- `dataset` — targets `Dataset` instead of the narrower `Taxonomy`.
+- `broader`, `broaderTransitive`, `narrower`, `related`, `exactMatch` — `multiple(Topic)`, left at `skos.Concept`: an
+  override targeting the very shape that declares it closes a circular `extends` chain.
+- `inScheme`, `topConceptOf` — `required(Taxonomy)` and `optional(Taxonomy)`, left at `skos.ConceptScheme`.
+- `dataset` — `required(Taxonomy)`, left at `Dataset`. `Taxonomy` already narrows the opposite direction, and refining
+  both leaves the two ends resolving each other until the stack is spent.
 
 ## Unit
 
-- `unitOf` — targets `org.Organization` instead of the EC2U `Organization`.
-- `hasUnit` — targets `org.OrganizationalUnit` instead of the EC2U `Unit`.
+- `classification` — `multiple(Topic)` ported without the id pattern pinning it to the EC2U organizations taxonomy.
 
 ## University
 
-- `classification` — drops the id pattern pinning it to the EC2U organizations taxonomy, which would take a narrowed
-  `Topic` shape carrying an id `pattern`.
+- `classification` — `multiple(Topic)` ported without the id pattern pinning it to the EC2U organizations taxonomy.
+- `dataset` — not constrained to the universities namespace.
 
 # Blue Limitations
 
@@ -91,21 +84,27 @@ whatever its target, so the inline form has no type to name. Writing a captive t
 `Event.image` is where this bites: the event converter (`src/events/tasks/convert.ts:103`) can populate the image IRI
 but not the `caption`, `author` and `copyrightNotice` that come with it, so the extracted image credits are dropped.
 
-## Reference targets and embedding kinds cannot be refined
+## Reference refinement stops at embedding, arity and cycles
 
-`resource({ extends: Parent }, { ref: required(reference(Narrower)) })`, where `Parent.ref` targets `Wider`, throws
-`incompatible resource shape override <[{"ref": ["{shape} unexpected <shape> redefinition"]}]>`: Blue documents the
-reference `shape` field as non-overridable. Swapping an inherited reference for an embedded resource fails as
-`{kind} mismatched kinds <resource> vs <reference>`, so embedding overrides are equally out of reach.
+An inherited reference re-points at a target extending the inherited one:
+`resource({ extends: Parent }, { ref: required(reference(Narrower)) })` merges to `Narrower` where `Parent.ref` targets
+`Wider`, and the inherited definition reaches the narrower target through its own `extends` chain. An unrelated target
+compiles and fails only at run time, as
+`incompatible resource shape override <[{"link": ["{shape} incompatible <shape> override"]}]>`.
+
+Swapping an inherited reference for an embedded resource fails as `{kind} mismatched kinds <resource> vs <reference>`,
+so embedding overrides stay out of reach.
 
 Cardinality is refinable within the same arity, but not across it: the projected value type follows from arity, so
-raising a minimum count ports unchanged, while capping an inherited set at a single value does not.
+raising a minimum count ports unchanged, while capping an inherited set at a single value does not. Only the projected
+type rejects the narrowing; the override check itself accepts it.
 
-When the override re-points an inherited self-reference at the overriding shape itself, `narrowsReference`
-(`Packages/Blue/src/reference.core.ts:47`) resolves each end repeatedly until `RangeError: Maximum call stack size
-exceeded`, naming no property; targets that merely point back into the hierarchy fail with the ordinary message.
+Cycles close the remaining ground, since shapes are declared as functions rebuilt on every call and the override
+resolves both ends eagerly. Re-pointing a property at the very shape that declares it fails as
+`circular extends chain <[{"Organization": ["circular dependency"]}]>`. Refining both ends of a pair that point at
+each other exhausts the stack with `RangeError: Maximum call stack size exceeded`, naming no property, so a mutually
+referencing pair admits one refined direction only.
 
-## Multiple inheritance rejects a property inherited under two different IRIs
-
-Two parents declaring the same property name in different namespaces fail with `{forward} unexpected <forward>
-redefinition`, with no way to pick a winner short of dropping a parent.
+A thunk on the path defeats the check outright. The lineage is matched by structure, and `reference(() => …)` builds a
+fresh closure on every call, so two builds of a shape carrying a thunk never compare equal: any target reached through
+one is rejected as `{shape} incompatible <shape> override`, however the hierarchy actually reads.

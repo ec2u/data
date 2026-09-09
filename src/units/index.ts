@@ -24,7 +24,7 @@ import { OrganizationalUnit } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
-import { multiple } from "@metreeca/blue/value";
+import { multiple, repeatable } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/structures";
 
 
@@ -61,6 +61,14 @@ export function Unit() {
 		namespace: ec2u
 
 	}, {
+
+		// ;( `hasUnit` not narrowed to `Unit`: the inherited `org.OrganizationalUnit` target is reached through a
+		// ;( thunk, and a thunk builds a fresh closure per call, so the lineage never matches by structure
+
+		unitOf: repeatable(reference(Organization)),
+
+		subOrganizationOf: multiple(reference(Organization)),
+		hasSubOrganization: multiple(reference(Organization)),
 
 		subject: property({ forward: dct }, multiple(reference(Topic))),
 		keyword: property({ forward: dcat }, multiple(text))

@@ -18,6 +18,7 @@ import { digest, type Digest } from "@/_/gear-store/_digest.js";
 import { Topic } from "@/taxonomies/index.js";
 import type { State } from "@metreeca/blue/value";
 import { required } from "@metreeca/core/arrays";
+import { by } from "@metreeca/core/order";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import type { Task } from "@metreeca/flow";
@@ -94,7 +95,7 @@ export function createTopicId(taxonomy: {
  */
 export function createTopicDigest(record: Record): Digest {
 
-	return digest(JSON.stringify(Object.entries(record).sort(([x], [y]) => x < y ? -1 : x > y ? 1 : 0)));
+	return digest(JSON.stringify(Object.entries(record).sort(by(([name]) => name))));
 
 }
 

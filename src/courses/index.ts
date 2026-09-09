@@ -16,7 +16,9 @@
 
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Offering } from "@/offerings/index.js";
+import { Person } from "@/persons/index.js";
 import { Program } from "@/programs/index.js";
+import { Topic } from "@/taxonomies/index.js";
 import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import { schema } from "@/vocabularies/schema/index.js";
 import { Course as SchemaCourse, CourseInstance } from "@/vocabularies/schema/learning.js";
@@ -66,6 +68,9 @@ export function Course() {
 
 		year: optional(string({ pattern: YearPattern })),
 		term: multiple(Term),
+
+		audience: multiple(reference(Topic)),
+		instructor: multiple(reference(Person)),
 
 		inProgram: property({ reverse: schema.hasCourse }, multiple(reference(Program)))
 

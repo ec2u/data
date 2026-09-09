@@ -16,14 +16,14 @@
 
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
+import { Person } from "@/persons/index.js";
+import { Topic } from "@/taxonomies/index.js";
 import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import * as org from "@/vocabularies/org.js";
-import * as schema from "@/vocabularies/schema/index.js";
-import { Location } from "@/vocabularies/schema/location.js";
+import { Organization as SchemaOrganization } from "@/vocabularies/schema/organization.js";
 import { reference } from "@metreeca/blue/reference";
-import { property, resource } from "@metreeca/blue/resource";
-import { email, iri, markdown, phone, text } from "@metreeca/blue/string";
-import { multiple, optional } from "@metreeca/blue/value";
+import { resource } from "@metreeca/blue/resource";
+import { multiple } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/structures";
 
 
@@ -53,28 +53,27 @@ export const organizations = immutable({
 export function Organization() {
 	return resource({
 
-		class: ec2u.Organization,
-		extends: [Resource, org.Organization],
-		namespace: ec2u
+		extends: [Resource, org.Organization, SchemaOrganization],
+
+		namespace: ec2u,
+
+		class: ec2u.Organization
 
 	}, {
 
-		// !!! schema.Organization cannot join the parents: its inherited `identifier` redefines the org: forward IRI
+		// ;( `subOrganizationOf` and `hasSubOrganization` not narrowed: an override targeting the very shape that
+		// ;( declares it closes a circular `extends` chain; `Unit` and `University` narrow them on their own
 
-		url: property({ forward: schema.schema }, multiple(iri)),
+		// ;( `hasUnit` not narrowed to `Unit`: the inherited `org.OrganizationalUnit` target is reached through a
+		// ;( thunk, and a thunk builds a fresh closure per call, so the lineage never matches by structure
 
-		name: property({ forward: schema.schema }, optional(text)),
-		description: property({ forward: schema.schema }, optional(markdown)),
-		disambiguatingDescription: property({ forward: schema.schema }, optional(markdown)),
+		// !!! pin `classification` to the EC2U organizations taxonomy: it takes a narrowed `Topic` shape carrying an
+		// !!! id `pattern`, and that taxonomy is not ported yet
 
-		image: property({ forward: schema.schema }, optional(reference(schema.ImageObject, { captive: true }))),
+		classification: multiple(reference(Topic)),
 
-		legalName: property({ forward: schema.schema }, optional(text)),
-
-		email: property({ forward: schema.schema }, multiple(email)),
-		telephone: property({ forward: schema.schema }, multiple(phone)),
-
-		location: property({ forward: schema.schema }, optional(Location))
+		hasHead: multiple(reference(Person)),
+		hasMember: multiple(reference(Person))
 
 	});
 }

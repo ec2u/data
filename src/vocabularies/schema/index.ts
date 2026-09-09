@@ -114,7 +114,7 @@ export function Thing() {
 
 		url: multiple(iri),
 
-		identifier: optional(string), // ;( single string value for compatibility with org:Organization
+		identifier: optional(string), // ;( single plain string: the standard range is Text | URL | PropertyValue
 
 		name: optional(text),
 		description: optional(markdown),

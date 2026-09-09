@@ -20,9 +20,10 @@ import * as dict from "@/universities/index.core.js";
 import { EC2U, base, ec2u, Feature } from "@/vocabularies/ec2u.js";
 import { FormalOrganization } from "@/vocabularies/org.js";
 import { int } from "@metreeca/blue/number";
+import { reference } from "@metreeca/blue/reference";
 import { resource } from "@metreeca/blue/resource";
 import { iri, year } from "@metreeca/blue/string";
-import { repeatable, required } from "@metreeca/blue/value";
+import { multiple, repeatable, required } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/structures";
 
 export * from "@/universities/index.core.js";
@@ -67,8 +68,12 @@ export function University() {
 	}, {
 
 		// !!! constraint dataset to getNamespaceIRI(universities)
-		// !!! constraint classification to the EC2U organizations taxonomy: a narrowed Topic shape with an id
-		// !!! pattern would do it, but classification is inherited and Blue rejects re-pointing a reference target
+
+		// ;( `hasUnit` not narrowed to `Unit`: the inherited `org.OrganizationalUnit` target is reached through a
+		// ;( thunk, and a thunk builds a fresh closure per call, so the lineage never matches by structure
+
+		subOrganizationOf: multiple(reference(Organization)),
+		hasSubOrganization: multiple(reference(Organization)),
 
 		depiction: repeatable(iri),
 		homepage: repeatable(iri),
