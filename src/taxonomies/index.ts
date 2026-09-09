@@ -16,7 +16,7 @@
 
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Dataset, Resource } from "@/datasets/index.js";
-import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
+import { base, EC2U, ec2u } from "@/vocabularies/ec2u.js";
 import { Concept, ConceptScheme } from "@/vocabularies/skos.js";
 import { property, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
@@ -71,15 +71,11 @@ export function Topic() {
 
 			hidden: true,
 
-			name: { en: "Source Digest" },
-			description: {
-
-				en: markdown`
-					Identifies the state of the source entry the topic reflects, telling one unchanged since the topic
-					was stored from one worth reading again.
-				`
-
-			},
+			name: "Source Digest",
+			description: markdown`
+				Records the state of the source entry the topic was derived from, so that a taxonomy sync
+				reprocesses only the entries the source document has changed.
+			`
 
 		}, required(string))
 
