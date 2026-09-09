@@ -31,7 +31,7 @@ import { fetch, type URLLike } from "@metreeca/gear-url";
 import { log } from "@metreeca/tape";
 
 
-const Survival = 0.75; // the smallest share of the stored topics a single run must leave in place
+const Attrition = 0.25; // the largest fraction of the stored topics a single run may remove
 
 const CSVFormat = immutable({
 
@@ -122,15 +122,17 @@ export function sync(taxonomy: { // !!! persists whole taxonomy
 					const [present, current] = await Promise.all([stored, ids(toSet())]);
 
 					const removed = difference([present, current]);
-					const allowed = present.length-Math.ceil(present.length*Survival);
+					const allowed = Math.floor(present.length*Attrition);
 
 					// a wholesale retraction is refused outright: under a transaction the throw takes the
 					// insertions down with it, leaving the taxonomy as the last sound run left it
 
 					if ( removed.length > allowed ) {
 
-						throw new RangeError(`exceeded removal limit of <${allowed}> topics`
-							+` with <${removed.length}> of <${present.length}> stored ones`
+						const percentage = Math.round(Attrition*100);
+
+						throw new RangeError(
+							`prevented mass removal of more than <${percentage}%> of <${present.length}> stored topics`
 						);
 
 					} else {

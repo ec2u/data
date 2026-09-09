@@ -34,7 +34,7 @@ import { log } from "@metreeca/tape";
 
 
 const Concurrency = 10; // the number of pages fetched at the same time from the source site
-const Survival = 0.75; // the smallest share of the stored events a single run must leave in place
+const Attrition = 0.25; // the largest fraction of the stored events a single run may remove
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,12 +106,13 @@ export function sync(publisher: { // !!! persist publisher
 
 					const removed = difference([present, current]);
 
-					const surviving = present.length-removed.length;
-					const required = Math.ceil(present.length*Survival);
+					const allowed = Math.floor(present.length*Attrition);
 
-					if ( surviving < required ) {
+					if ( removed.length > allowed ) {
 
-						logger.warning`skipping removal of <${removed.length}> events to keep at least <${required}>`;
+						const percentage = Math.round(Attrition*100);
+
+						logger.warning`skipping mass removal of more than <${percentage}%> of <${present.length}> stored events`;
 
 						return [];
 
