@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { compress, createEmbedder, decompress, cosine } from "./index.js";
+import { compress, cosine, createEmbedder, decompress } from "./index.js";
 
 
 describe("createEmbedder", () => {

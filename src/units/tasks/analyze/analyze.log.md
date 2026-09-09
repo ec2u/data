@@ -27,22 +27,25 @@ This is NOT an automated test suite - it's human-readable documentation for LLM-
 When asked to validate this prompt:
 
 1. **Create and run test driver**:
-  - Write temporary `.test.ts` file with test code
-   - Import `analyze` function from `analyze.ts`
-  - Configure test with sample Lead object containing profile/website URLs
-  - Execute `npx tsx .test.ts` to generate output
-   - Delete `.test.ts` after the complete testing process is finished
+
+- Write temporary `.test.ts` file with test code
+- Import `analyze` function from `analyze.ts`
+- Configure test with sample Lead object containing profile/website URLs
+- Execute `npx tsx .test.ts` to generate output
+- Delete `.test.ts` after the complete testing process is finished
 
 2. **Perform independent verification**:
-  - Use WebFetch to retrieve target pages from the Lead
-  - Manually extract reference data from source pages
-  - Identify expected information (formal name, email, summary, description, keywords)
-  - CRITICAL: This reference data is ground truth for evaluation
+
+- Use WebFetch to retrieve target pages from the Lead
+- Manually extract reference data from source pages
+- Identify expected information (formal name, email, summary, description, keywords)
+- CRITICAL: This reference data is ground truth for evaluation
 
 3. **Compare and validate**:
-  - Compare script output against independent findings
-   - Verify structured output matches Unit schema requirements
-   - Check all documented test cases for regressions
+
+- Compare script output against independent findings
+- Verify structured output matches Unit schema requirements
+- Check all documented test cases for regressions
 
 ## Maintenance Principles
 
@@ -61,15 +64,15 @@ When updating this log:
 
 When asked to improve or fix the prompt:
 
-1. **Add test case if needed**: Document new requirements or issues as test cases before modifying the
-   prompt
+1. **Add test case if needed**: Document new requirements or issues as test cases before modifying the prompt
 
 2. **Make incremental changes**: Modify the prompt iteratively until new requirements are met
 
 3. **Validate without regressions**: Test that ALL requirements (new and existing) are satisfied
-  - Run complete test suite
-  - If any test fails, modify prompt and retest
-  - Continue until all test cases pass
+
+- Run complete test suite
+- If any test fails, modify prompt and retest
+- Continue until all test cases pass
 
 ---
 
@@ -86,8 +89,7 @@ When asked to improve or fix the prompt:
 - Stop exploration when sufficient information is gathered
 - Generate comprehensive plaintext report with all required sections
 
-**Validation**: Retrieve pages independently and verify all extractable information appears in analysis
-report
+**Validation**: Retrieve pages independently and verify all extractable information appears in analysis report
 
 ## Formal Name Extraction
 
@@ -103,8 +105,8 @@ report
 - Never report official name as short name
 - Never report acronym as short name
 
-**Validation**: Verify extracted name is standalone, includes type descriptor, uses English, and uniquely identifies
-the unit
+**Validation**: Verify extracted name is standalone, includes type descriptor, uses English, and uniquely identifies the
+unit
 
 ## Personal Information Exclusion
 
@@ -113,17 +115,15 @@ the unit
 **Expected Behavior**:
 
 - Extract unit information only
-- Strictly exclude all personal information about individuals (staff, researchers, collaborators, faculty,
-  directors)
+- Strictly exclude all personal information about individuals (staff, researchers, collaborators, faculty, directors)
 - No personal names, titles, or individual roles should appear
 
-**Root Cause**: LLMs naturally extract prominent information including leadership names and roles. Explicit
-prohibition required.
+**Root Cause**: LLMs naturally extract prominent information including leadership names and roles. Explicit prohibition
+required.
 
 **Validation**: Verify report contains no personal names, titles, or individual roles
 
-**CRITICAL**: When modifying the prompt, ensure personal information prohibition remains explicit and
-prominent
+**CRITICAL**: When modifying the prompt, ensure personal information prohibition remains explicit and prominent
 
 ## Email Address Extraction
 
@@ -152,11 +152,11 @@ prominent
 - Incomplete names MUST be extended with appropriate type designation inferred from context
 - Type descriptors: Facility, Laboratory, Department, Institute, Research Group, Centre, School, Faculty
 - Use functional context clues to determine appropriate descriptor:
-  - Infrastructure/shared resources → "Facility" or "Center"
-  - Experimental/analytical work → "Laboratory"
-  - Primary academic division → "Department"
-  - Collaborative research team → "Research Group"
-  - Specialized research/service unit → "Centre"
+	- Infrastructure/shared resources → "Facility" or "Center"
+	- Experimental/analytical work → "Laboratory"
+	- Primary academic division → "Department"
+	- Collaborative research team → "Research Group"
+	- Specialized research/service unit → "Centre"
 
 **Root Cause**: LLMs prefer verbatim extraction over reformulation. Explicit instruction with examples required to
 extend incomplete names.
@@ -202,8 +202,8 @@ extend incomplete names.
 
 - Prioritize pages based on relevance to analysis goals
 - Stop when sufficient information gathered for:
-  - Unit identity (name, acronym, email)
-  - Research topics and activities
+	- Unit identity (name, acronym, email)
+	- Research topics and activities
 - Avoid exhaustive crawling of all linked pages
 - Ignore PDFs and other linked documents
 

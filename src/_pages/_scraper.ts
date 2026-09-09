@@ -35,7 +35,6 @@ import { isTag } from "domhandler";
 import { findAll, findOne, getAttributeValue, textContent } from "domutils";
 
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -93,19 +92,19 @@ export type Content = {
  */
 export async function scrape(page: string, url: string): Promise<Content> {
 
-	const [ tree ] = await pipe(
+	const [tree] = await pipe(
 		(items(page))
 		(html())
 		(toArray())
 	);
 
-	const [ main ] = await pipe(
+	const [main] = await pipe(
 		(items(tree))
 		(focus())
 		(toArray())
 	);
 
-	const [ content = "" ] = await pipe(
+	const [content = ""] = await pipe(
 		(items(main && region(main)))
 		(untag())
 		(toArray())

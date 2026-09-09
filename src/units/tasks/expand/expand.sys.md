@@ -151,10 +151,12 @@ Identify functional units through ANY of these signals:
 3. Fetch section pages (may be overview/index pages)
 4. From section pages, fetch listing pages with subunit directories
 5. **For each potential unit:**
-  - Fetch its page
-  - Check for functional unit signals (see Functional Unit Signals section)
-  - If signals present → report as subunit
-  - If no signals → explore for units underneath
+
+- Fetch its page
+- Check for functional unit signals (see Functional Unit Signals section)
+- If signals present → report as subunit
+- If no signals → explore for units underneath
+
 6. **Fetch each identified unit's profile page** to extract website links and verify functional status
 7. **Check domains** to exclude external collaborations (see Critical Exclusions)
 
@@ -201,9 +203,9 @@ Then generate the structured report. Return empty list if no functional subunits
 - Report EVERY functional subunit found from directories/tables/lists
 - Fetch each subunit's profile page to extract complete information and verify functional status
 - Each subunit MUST have:
-  - At least one URL (profile or website)
-  - A summary (~100 chars) describing focus and research areas
-  - Website URL when available on profile page
-  - Evidence of being a functional unit (designation OR membership evidence)
+	- At least one URL (profile or website)
+	- A summary (~100 chars) describing focus and research areas
+	- Website URL when available on profile page
+	- Evidence of being a functional unit (designation OR membership evidence)
 - Report URLs verbatim (exactly as found)
 - **CRITICAL:** All formal names, short names, and summaries MUST be translated to English

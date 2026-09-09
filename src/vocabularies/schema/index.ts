@@ -15,7 +15,7 @@
  */
 
 import { reference } from "@metreeca/blue/reference";
-import { resource, type ResourceShape } from "@metreeca/blue/resource";
+import { resource } from "@metreeca/blue/resource";
 import { iri, markdown, string, text } from "@metreeca/blue/string";
 import { multiple, optional, repeatable } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";

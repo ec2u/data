@@ -42,7 +42,7 @@ export function Course() {
 		year: optional(string({ pattern: YearPattern })),
 		term: multiple(Term),
 
-		inProgram: property({ reverse: schema.hasCourse }, multiple(reference(Program))),
+		inProgram: property({ reverse: schema.hasCourse }, multiple(reference(Program)))
 
 	});
 }

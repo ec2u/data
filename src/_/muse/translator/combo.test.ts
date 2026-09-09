@@ -94,10 +94,8 @@ describe("createComboTranslator", () => {
 		const second = vi.fn(async () => {});
 
 		await dispose(createComboTranslator(
-
 			Object.assign((text: string) => `<${text}>`, { [Symbol.asyncDispose]: first }),
 			Object.assign((text: string) => `[${text}]`, { [Symbol.asyncDispose]: second })
-
 		));
 
 		expect(first).toHaveBeenCalledTimes(1);

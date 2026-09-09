@@ -88,12 +88,12 @@ When asked to improve or fix the prompt:
 **Expected Behavior**:
 
 - Model MUST call `matchTopics` tool with:
-  - `text`: combined formal name and summary (joined with `\n\n`)
-  - `scheme: "https://data.ec2u.eu/taxonomies/organizations/"`
-  - `focus: "https://data.ec2u.eu/taxonomies/organizations/university-unit"`
-  - `limit: 5` (retrieve top 5 candidates)
-  - `tolerance: 0.15` (relative tolerance from best match)
-  - `narrowing: 1.05` (slightly penalize over-specific typologies)
+	- `text`: combined formal name and summary (joined with `\n\n`)
+	- `scheme: "https://data.ec2u.eu/taxonomies/organizations/"`
+	- `focus: "https://data.ec2u.eu/taxonomies/organizations/university-unit"`
+	- `limit: 5` (retrieve top 5 candidates)
+	- `tolerance: 0.15` (relative tolerance from best match)
+	- `narrowing: 1.05` (slightly penalize over-specific typologies)
 - Model MUST review the top 5 returned candidates
 - Model MUST apply classification rules to select the best match from candidates
 - Model MUST select typology from the list returned by `matchTopics`
@@ -143,10 +143,10 @@ top-5 candidates
 - Model retrieves top-5 candidates via `matchTopics` (may include various `centre/*` subtypes)
 - Model analyzes summary to determine primary function
 - Model applies disambiguation rules to select most specific subtype:
-  - **Research Centre**: Active research programs, publications, funded projects
-  - **Service Centre**: Provides services/resources (testing, analysis, computing, language services)
-  - **Study and Documentation Centre**: Documentation, archives, historical preservation
-  - **Interdepartmental Research Centre**: Research coordination across departments
+	- **Research Centre**: Active research programs, publications, funded projects
+	- **Service Centre**: Provides services/resources (testing, analysis, computing, language services)
+	- **Study and Documentation Centre**: Documentation, archives, historical preservation
+	- **Interdepartmental Research Centre**: Research coordination across departments
 - Final classification selects most specific applicable subtype from candidates
 
 **Validation**: Verify centre subtypes are correctly distinguished based on primary function, and most specific subtype
@@ -207,9 +207,9 @@ like "Computing Cluster" might suggest other types
 - Model retrieves top-5 candidates via `matchTopics` (may include multiple specificity levels)
 - Model applies specificity preference rule: select MOST SPECIFIC applicable typology
 - Examples:
-  - `centre/research/interdepartmental` over generic `centre/research` or `centre`
-  - `facility/computing` over generic `facility`
-  - `centre/research/study-documentation` over generic `centre/research`
+	- `centre/research/interdepartmental` over generic `centre/research` or `centre`
+	- `facility/computing` over generic `facility`
+	- `centre/research/study-documentation` over generic `centre/research`
 - Specific subtypes provide more precise organizational classification
 
 **Validation**: Verify most specific subtype selected when multiple levels appear in top-5 candidates
@@ -265,13 +265,15 @@ like "Computing Cluster" might suggest other types
 Hybrid approach combining strengths of semantic matching and rule-based classification:
 
 1. **Semantic candidate generation**: Call `matchTopics` with formal name + summary to retrieve top-5 candidates
-  - Parameters: `limit=5`, `tolerance=0.15`, `narrowing=1.05`
-  - 90.4% of correct answers appear in top-5 (verified on 52 University of Pavia units)
+
+- Parameters: `limit=5`, `tolerance=0.15`, `narrowing=1.05`
+- 90.4% of correct answers appear in top-5 (verified on 52 University of Pavia units)
 
 2. **Rule-based selection**: Model applies classification principles to select best match from candidates
-  - Type descriptor mapping prioritizes structural signals ("Department" → `department`)
-  - Disambiguation rules resolve conflicts between semantic match and formal name
-  - Specificity preference ensures most appropriate subtype is selected
+
+- Type descriptor mapping prioritizes structural signals ("Department" → `department`)
+- Disambiguation rules resolve conflicts between semantic match and formal name
+- Specificity preference ensures most appropriate subtype is selected
 
 **Key Principles**:
 

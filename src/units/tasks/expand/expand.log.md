@@ -27,22 +27,22 @@ This is NOT an automated test suite - it's human-readable documentation for LLM-
 When asked to validate this prompt:
 
 1. **Create and run test driver**:
-    - Write temporary `.test.ts` file with test code
-   - Import `expand` function from `expand.ts`
-    - Configure test with URL and run options
-    - Execute `npx tsx .test.ts` to generate output
-   - Delete `.test.ts` after the complete testing process is finished
+	- Write temporary `.test.ts` file with test code
+	- Import `expand` function from `expand.ts`
+	- Configure test with URL and run options
+	- Execute `npx tsx .test.ts` to generate output
+	- Delete `.test.ts` after the complete testing process is finished
 
 2. **Perform independent verification**:
-    - Use WebFetch to retrieve target pages
-    - Manually extract reference data from source pages
-    - Identify expected information (subunits, names, URLs, summaries)
-    - CRITICAL: This reference data is ground truth for evaluation
+	- Use WebFetch to retrieve target pages
+	- Manually extract reference data from source pages
+	- Identify expected information (subunits, names, URLs, summaries)
+	- CRITICAL: This reference data is ground truth for evaluation
 
 3. **Compare and validate**:
-    - Compare script output against independent findings
-   - Verify structured output matches Lead schema requirements
-   - Check all documented test cases for regressions
+	- Compare script output against independent findings
+	- Verify structured output matches Lead schema requirements
+	- Check all documented test cases for regressions
 
 ## Maintenance Principles
 
@@ -66,9 +66,9 @@ When asked to improve or fix the prompt:
 2. **Make incremental changes**: Modify the prompt iteratively until new requirements are met
 
 3. **Validate without regressions**: Test that ALL requirements (new and existing) are satisfied
-    - Run complete test suite
-    - If any test fails, modify prompt and retest
-    - Continue until all test cases pass
+	- Run complete test suite
+	- If any test fails, modify prompt and retest
+	- Continue until all test cases pass
 
 ---
 
@@ -264,8 +264,8 @@ exclusion of individual person pages required.
 - Not reporting interdepartmental centers as direct subunits
 - Understanding organizational hierarchy (department < university)
 
-**Root Cause**: Departments often list university-wide services and interdepartmental centers for convenience.
-Explicit organizational level checking required.
+**Root Cause**: Departments often list university-wide services and interdepartmental centers for convenience. Explicit
+organizational level checking required.
 
 **CRITICAL**: When modifying the prompt, ensure university-wide/interdepartmental center exclusion remains explicit
 
@@ -342,10 +342,10 @@ ATLAS, CMS, MEG, etc. at CERN, PSI, Fermilab).
 - MUST NOT report external experiments/collaborations (ATLAS, CMS, MEG, MUonE, RD_FCC, RD_MUCOL, ICARUS, HERD, ALICE,
   FAMU, MAMBO)
 - Recognize indicators of external collaborations:
-  - Different institutional domains (atlas.cern, cms.cern, psi.ch, fnal.gov)
-  - Language like "participate in", "collaborate with", "member of"
-  - Hosted at external facilities
-  - Multi-institutional membership
+	- Different institutional domains (atlas.cern, cms.cern, psi.ch, fnal.gov)
+	- Language like "participate in", "collaborate with", "member of"
+	- Hosted at external facilities
+	- Multi-institutional membership
 - All reported units should have URLs on department domain (fisica.dip.unipv.it)
 
 **Key Issues Tested**:
@@ -375,13 +375,13 @@ Nigro, Francesco Scala, Simone Zanotti").
 **Expected Behavior**:
 
 - MUST recognize functional units through multiple signals (any one is sufficient):
-  - **Explicit designation**: Labeled as laboratory, lab, research group, or center
-  - **Membership evidence**: Sections showing leadership AND members
+	- **Explicit designation**: Labeled as laboratory, lab, research group, or center
+	- **Membership evidence**: Sections showing leadership AND members
 - Key membership indicators (recognize by semantic meaning in any language):
-  - Leadership/responsible persons: semantic indicators like "responsible", "leader", "director", "coordinator",
-    "head", "principal investigator"
-  - Member lists: semantic indicators like "members", "team", "group", "researchers", "staff", "personnel"
-  - Multiple named individuals (not just single person)
+	- Leadership/responsible persons: semantic indicators like "responsible", "leader", "director", "coordinator",
+	  "head", "principal investigator"
+	- Member lists: semantic indicators like "members", "team", "group", "researchers", "staff", "personnel"
+	- Multiple named individuals (not just single person)
 - Pages with ANY functional signal are actual functional units, NOT thematic groupings
 - MUST report these as subunits with their profile URL
 - Use semantic understanding to identify functional signals regardless of exact wording or language

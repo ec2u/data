@@ -24,21 +24,21 @@ This is NOT an automated test suite - it's human-readable documentation for LLM-
 When asked to validate this prompt:
 
 1. **Create and run temporary test driver**:
-    - Use Write tool to create `.test.ts` with test code
-   - Import `scan` function from `pavia.ts`
-    - Configure test URL and options (structured vs raw output)
-    - Execute `npx tsx .test.ts` to generate output
-   - Delete `.test.ts` after the complete testing process is finished
+	- Use Write tool to create `.test.ts` with test code
+	- Import `scan` function from `pavia.ts`
+	- Configure test URL and options (structured vs raw output)
+	- Execute `npx tsx .test.ts` to generate output
+	- Delete `.test.ts` after the complete testing process is finished
 
 2. **Perform independent verification**:
-    - Use WebFetch to retrieve the target page
-   - **CRITICAL**: Manually and carefully extract reference data from the source
-   - Take extra care to identify exactly what should be extracted (active departments, full names, URLs, etc.)
-   - Be thorough and precise - this reference data is the ground truth for evaluation
+	- Use WebFetch to retrieve the target page
+	- **CRITICAL**: Manually and carefully extract reference data from the source
+	- Take extra care to identify exactly what should be extracted (active departments, full names, URLs, etc.)
+	- Be thorough and precise - this reference data is the ground truth for evaluation
 
 3. **Compare and validate**:
-    - Compare script output against independent findings
-    - Review documented test cases for known issues
+	- Compare script output against independent findings
+	- Review documented test cases for known issues
 
 ## Maintenance
 
@@ -64,9 +64,9 @@ When asked to improve or fix the prompt:
 
 3. **Validate against all test cases**: Iteratively test that ALL requirements (both new and existing) are met without
    regressions
-    - Run the complete test suite
-    - If any test fails, modify the prompt and retest
-    - Continue until all test cases pass
+	- Run the complete test suite
+	- If any test fails, modify the prompt and retest
+	- Continue until all test cases pass
 
 ---
 

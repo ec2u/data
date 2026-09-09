@@ -39,7 +39,7 @@ const logger = log(import.meta.url);
  *
  * @typeParam T The type of the states to be stored
  */
-export type Delta<T extends Resource = Resource> =  readonly [
+export type Delta<T extends Resource = Resource> = readonly [
 
 	/**
 	 * The resource concerned.
@@ -113,11 +113,11 @@ export function persist(shape: Lazy<ResourceShape>, {
 
 	atomic = false
 
-}:{
+}: {
 
 	readonly atomic?: boolean
 
-}={}): Sink<Delta, Tally> {
+} = {}): Sink<Delta, Tally> {
 
 	const store = service(createStore);
 
@@ -197,8 +197,8 @@ export function persist(shape: Lazy<ResourceShape>, {
  *
  * @returns An immutable {@link Delta} pairing `entry` with `state`, or with `null` if `state` is omitted
  */
-export function delta<T extends Resource>(entry: Reference, state?: T) : Delta<T> {
+export function delta<T extends Resource>(entry: Reference, state?: T): Delta<T> {
 
-	return Object.freeze([entry, state ?? null])
+	return Object.freeze([entry, state ?? null]);
 
 }

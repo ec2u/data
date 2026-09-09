@@ -109,7 +109,5 @@ export function Feature() {
 
 		namespace: wgs
 
-	}, {
-
-	});
+	}, {});
 }

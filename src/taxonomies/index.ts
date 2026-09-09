@@ -17,9 +17,7 @@
 import { Dataset, Resource } from "@/datasets/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
 import { Concept, ConceptScheme } from "@/vocabularies/skos.js";
-import { reference } from "@metreeca/blue/reference";
-import { resource, type ResourceShape } from "@metreeca/blue/resource";
-import { multiple, optional, required } from "@metreeca/blue/value";
+import { resource } from "@metreeca/blue/resource";
 
 
 export function Taxonomy() {
@@ -29,9 +27,7 @@ export function Taxonomy() {
 		extends: [Dataset, ConceptScheme],
 		namespace: ec2u
 
-	}, {
-
-	});
+	}, {});
 }
 
 export function Topic() {
@@ -41,7 +37,5 @@ export function Topic() {
 		extends: [Resource, Concept],
 		namespace: ec2u
 
-	}, {
-
-	});
+	}, {});
 }

@@ -303,7 +303,7 @@ export function text(completion: OpenAI.ChatCompletion): string {
  * @throws {@link !Error Error} If `completion` carries no output text (see {@link text}) or its text is not
  * well-formed JSON
  */
-export function json<T extends Value=Value>(completion: OpenAI.ChatCompletion): T {
+export function json<T extends Value = Value>(completion: OpenAI.ChatCompletion): T {
 
 	try {
 
@@ -324,7 +324,7 @@ export function json<T extends Value=Value>(completion: OpenAI.ChatCompletion): 
  *
  * @returns The {@link Embedding} embedded for the first input of `response`, or an empty array if it carries none
  */
-export function embedding(response: OpenAI.CreateEmbeddingResponse) : Embedding {
+export function embedding(response: OpenAI.CreateEmbeddingResponse): Embedding {
 
 	return response.data[0]?.embedding ?? [];
 

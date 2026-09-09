@@ -50,7 +50,6 @@ export function createCacheEmbedder(embedder: Embedder): Embedder {
 	const cache = new Map<Text, Awaitable<Embedding>>();
 
 	return Object.assign(
-
 		(text: Text): Awaitable<Embedding> => {
 
 			if ( text.trim() === "" ) {
@@ -62,7 +61,6 @@ export function createCacheEmbedder(embedder: Embedder): Embedder {
 		},
 
 		{ [Symbol.asyncDispose]: () => dispose(embedder) }
-
 	);
 
 

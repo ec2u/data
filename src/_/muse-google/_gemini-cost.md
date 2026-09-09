@@ -29,39 +29,39 @@ a figure that matters.
 The cheapest tier, and the one built for the work the pipeline does most: reading one page and returning the properties
 it states.
 
-| Model                   | Status | Input | Output | Context   | Suited to                                                         |
-|-------------------------|--------|-------|--------|-----------|-------------------------------------------------------------------|
-| `gemini-3.5-flash-lite` | stable | $0.30 | $2.50  | 1M / 64k  | high-throughput subagent tasks and document parsing               |
-| `gemini-3.1-flash-lite` | stable | $0.25 | $1.50  | 1M / 64k  | translation, transcription, data extraction, document processing  |
-| `gemini-2.5-flash-lite` | stable | $0.10 | $0.40  | 1M / 64k  | the cheapest option, at a generation's remove from the rest       |
+| Model                   | Status | Input | Output | Context  | Suited to                                                        |
+|-------------------------|--------|-------|--------|----------|------------------------------------------------------------------|
+| `gemini-3.5-flash-lite` | stable | $0.30 | $2.50  | 1M / 64k | high-throughput subagent tasks and document parsing              |
+| `gemini-3.1-flash-lite` | stable | $0.25 | $1.50  | 1M / 64k | translation, transcription, data extraction, document processing |
+| `gemini-2.5-flash-lite` | stable | $0.10 | $0.40  | 1M / 64k | the cheapest option, at a generation's remove from the rest      |
 
 ## Flash
 
 The general-purpose tier, worth its premium where a task reasons over what it reads rather than transcribing it.
 
-| Model               | Status | Input  | Output | Context  | Suited to                                                     |
-|---------------------|--------|--------|--------|----------|---------------------------------------------------------------|
-| `gemini-3.8-flash`  | stable | $0.75¹ | $3.75¹ | 1M / 64k | long-horizon agents, software engineering, enterprise workflows |
-| `gemini-3.7-flash`  | stable | $0.75¹ | $3.75¹ | 1M / 64k | the preceding generation, kept for pinned deployments          |
-| `gemini-3.6-flash`  | stable | $0.75¹ | $3.75¹ | 1M / 64k | frontier-level reasoning at speed, rapid agentic loops         |
-| `gemini-3.5-flash`  | stable | $1.50  | $9.00  | 1M / 64k | high-throughput work, superseded on price by 3.6 and later     |
-| `gemini-2.5-flash`  | stable | $0.30  | $2.50  | 1M / 64k | the generation the pipeline tasks currently run on             |
+| Model              | Status | Input  | Output | Context  | Suited to                                                       |
+|--------------------|--------|--------|--------|----------|-----------------------------------------------------------------|
+| `gemini-3.8-flash` | stable | $0.75¹ | $3.75¹ | 1M / 64k | long-horizon agents, software engineering, enterprise workflows |
+| `gemini-3.7-flash` | stable | $0.75¹ | $3.75¹ | 1M / 64k | the preceding generation, kept for pinned deployments           |
+| `gemini-3.6-flash` | stable | $0.75¹ | $3.75¹ | 1M / 64k | frontier-level reasoning at speed, rapid agentic loops          |
+| `gemini-3.5-flash` | stable | $1.50  | $9.00  | 1M / 64k | high-throughput work, superseded on price by 3.6 and later      |
+| `gemini-2.5-flash` | stable | $0.30  | $2.50  | 1M / 64k | the generation the pipeline tasks currently run on              |
 
 ## Pro
 
 The reasoning tier, priced for depth rather than volume. Both models charge a higher rate above 200k input tokens.
 
-| Model                   | Status  | Input (≤200k) | Output (≤200k) | Input (>200k) | Output (>200k) | Caching        |
-|-------------------------|---------|---------------|----------------|---------------|----------------|----------------|
-| `gemini-3.1-pro-preview`| preview | $2.00         | $12.00         | $4.00         | $18.00         | $0.20 / $0.40  |
-| `gemini-2.5-pro`        | stable  | $1.25         | $10.00         | $2.50         | $15.00         | $0.125 / $0.25 |
+| Model                    | Status  | Input (≤200k) | Output (≤200k) | Input (>200k) | Output (>200k) | Caching        |
+|--------------------------|---------|---------------|----------------|---------------|----------------|----------------|
+| `gemini-3.1-pro-preview` | preview | $2.00         | $12.00         | $4.00         | $18.00         | $0.20 / $0.40  |
+| `gemini-2.5-pro`         | stable  | $1.25         | $10.00         | $2.50         | $15.00         | $0.125 / $0.25 |
 
 ## Embeddings
 
-| Model                       | Status  | Text  | Images | Audio | Video  |
-|-----------------------------|---------|-------|--------|-------|--------|
-| `gemini-embedding-2-preview`| preview | $0.20 | $0.45  | $6.50 | $12.00 |
-| `gemini-embedding-001`      | stable  | $0.15 | n/a    | n/a   | n/a    |
+| Model                        | Status  | Text  | Images | Audio | Video  |
+|------------------------------|---------|-------|--------|-------|--------|
+| `gemini-embedding-2-preview` | preview | $0.20 | $0.45  | $6.50 | $12.00 |
+| `gemini-embedding-001`       | stable  | $0.15 | n/a    | n/a   | n/a    |
 
 # Selecting a Model
 
@@ -80,10 +80,10 @@ The reasoning tier, priced for depth rather than volume. Both models charge a hi
 - **Thinking level**: 3.x models think by default, at `medium` since 3.5 Flash, and thinking tokens bill as output.
   Classification and extraction are the tasks Google names for `minimal`, so a task left at the default pays for
   reasoning it does not use.
-- **Batch mode**: halves both rates, at the cost of synchronous results. Suited to a full feed sync, not to a request
-  a caller waits on.
-- **Context caching**: charged per model at the rates above, and worth the bookkeeping only where a large prompt
-  prefix repeats across requests.
+- **Batch mode**: halves both rates, at the cost of synchronous results. Suited to a full feed sync, not to a request a
+  caller waits on.
+- **Context caching**: charged per model at the rates above, and worth the bookkeeping only where a large prompt prefix
+  repeats across requests.
 - **Long context**: the Pro tier doubles its input rate above 200k tokens. A task feeding whole pages stays well under
   that, so the surcharge bites only on deliberately large prompts.
 

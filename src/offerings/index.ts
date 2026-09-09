@@ -16,12 +16,8 @@
 
 import { Resource } from "@/datasets/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
-import { Organization } from "@/organizations/index.js";
-import { Topic } from "@/taxonomies/index.js";
 import { LearningResource } from "@/vocabularies/schema/learning.js";
-import { reference } from "@metreeca/blue/reference";
 import { resource } from "@metreeca/blue/resource";
-import { multiple, optional } from "@metreeca/blue/value";
 
 
 export function Offering() {
@@ -31,7 +27,5 @@ export function Offering() {
 		extends: [Resource, LearningResource],
 		namespace: ec2u
 
-	}, {
-
-	});
+	}, {});
 }

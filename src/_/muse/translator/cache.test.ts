@@ -81,11 +81,9 @@ describe("createCacheTranslator", () => {
 		const release = vi.fn(async () => {});
 
 		const delegate = Object.assign(
-
 			(text: string) => `<${text}>`,
 
 			{ [Symbol.asyncDispose]: release }
-
 		);
 
 		await dispose(createCacheTranslator(delegate));

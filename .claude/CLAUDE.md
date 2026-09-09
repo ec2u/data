@@ -17,10 +17,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - [Google Cloud Secret Manager](https://cloud.google.com/nodejs/docs/reference/secret-manager/latest) - Google Cloud
   Secret Manager client library
 - [Gemini API Documentation](https://ai.google.dev/gemini-api/docs)
-  - [API Keys and Authentication](https://ai.google.dev/gemini-api/docs/api-key)
-  - [Gemini Models](https://ai.google.dev/models)
-  - [API Pricing](https://ai.google.dev/pricing)
-  - [Rate Limits](https://ai.google.dev/rate-limits)
+	- [API Keys and Authentication](https://ai.google.dev/gemini-api/docs/api-key)
+	- [Gemini Models](https://ai.google.dev/models)
+	- [API Pricing](https://ai.google.dev/pricing)
+	- [Rate Limits](https://ai.google.dev/rate-limits)
 
 # Task Workflows
 

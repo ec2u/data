@@ -47,14 +47,14 @@ Generate a plaintext report with a single section:
 1. **Determine match text based on formal name structure:**
 
 - **IF formal name contains a type descriptor** (Department, Centre, Laboratory, School, Institute, Group, Facility):
-  - Use the formal name ONLY as match text
-  - Example: "Department of Physics" → use "Department of Physics"
+	- Use the formal name ONLY as match text
+	- Example: "Department of Physics" → use "Department of Physics"
 - **IF formal name LACKS a type descriptor** (acronym, branded name, topic description only):
-  - Analyze the summary to understand the unit's type and function
-  - Generate match text by augmenting/describing the formal name with type information from the summary
-  - Example: "MERGED" + summary indicates interdepartmental research centre → use "MERGED interdepartmental research
-    centre"
-  - Example: "3DMetal@UniPV" + summary indicates materials laboratory → use "3DMetal materials laboratory"
+	- Analyze the summary to understand the unit's type and function
+	- Generate match text by augmenting/describing the formal name with type information from the summary
+	- Example: "MERGED" + summary indicates interdepartmental research centre → use "MERGED interdepartmental research
+	  centre"
+	- Example: "3DMetal@UniPV" + summary indicates materials laboratory → use "3DMetal materials laboratory"
 
 2. Call `matchTopics` with:
 
@@ -69,13 +69,13 @@ Generate a plaintext report with a single section:
 4. **Select the best typology using BOTH distance scores AND summary judgement:**
 
 - **IF formal name has type descriptor**:
-  - Apply type descriptor mapping rules (prefer matching the formal name's type)
-  - Use distance scores to choose among options with the same type
-  - Verify selection makes sense given the summary
+	- Apply type descriptor mapping rules (prefer matching the formal name's type)
+	- Use distance scores to choose among options with the same type
+	- Verify selection makes sense given the summary
 - **IF formal name lacks type descriptor**:
-  - Use distance scores as primary guide
-  - Validate against summary to ensure alignment with unit's actual function
-  - Don't blindly pick lowest distance if summary suggests a different type
+	- Use distance scores as primary guide
+	- Validate against summary to ensure alignment with unit's actual function
+	- Don't blindly pick lowest distance if summary suggests a different type
 - **IF multiple matches have similar scores**: Use summary and disambiguation rules to select the most
   specific/appropriate match
 

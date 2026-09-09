@@ -15,8 +15,8 @@
  */
 
 import { Resource } from "@/datasets/index.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
 import { Organization } from "@/organizations/index.js";
+import { ec2u } from "@/vocabularies/ec2u.js";
 import * as foaf from "@/vocabularies/foaf.js";
 import { org } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";

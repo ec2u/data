@@ -39,14 +39,14 @@ import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
 import { error } from "@metreeca/core";
 import { Vault } from "@metreeca/gear/vault";
 
-const client=new SecretManagerServiceClient();
+const client = new SecretManagerServiceClient();
 
 /**
  * The gRPC status code reporting a secret or a secret version that doesn't exist.
  *
  * @see {@link https://grpc.io/docs/guides/status-codes/ gRPC status codes}
  */
-const NOT_FOUND=5;
+const NOT_FOUND = 5;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,9 +91,9 @@ export async function secret(key: string): Promise<string> {
 
 	try {
 
-		const name=client.secretVersionPath(await client.getProjectId(), key, "latest");
-		const [version]=await client.accessSecretVersion({ name });
-		const value=version.payload?.data?.toString();
+		const name = client.secretVersionPath(await client.getProjectId(), key, "latest");
+		const [version] = await client.accessSecretVersion({ name });
+		const value = version.payload?.data?.toString();
 
 		return value ?? error(`undefined secret <${key}>`);
 

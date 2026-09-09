@@ -16,7 +16,6 @@
 
 import { Resource } from "@/datasets/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
-import { Topic } from "@/taxonomies/index.js";
 import * as org from "@/vocabularies/org.js";
 import * as schema from "@/vocabularies/schema/index.js";
 import { Location } from "@/vocabularies/schema/location.js";

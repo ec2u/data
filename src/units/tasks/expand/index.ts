@@ -16,14 +16,14 @@
 
 
 import { units } from "@/units/index.js";
-import { expand } from "@/units/tasks/expand/expand.js";
 import { _units } from "@/units/store.js";
-import * as uuid from "uuid";
+import { expand } from "@/units/tasks/expand/expand.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each, toArray } from "@metreeca/flow/sinks";
 import { filter, flat, fork, map } from "@metreeca/flow/tasks";
 import { log, report, time } from "@metreeca/tape";
+import * as uuid from "uuid";
 
 
 const Concurrency = 32;

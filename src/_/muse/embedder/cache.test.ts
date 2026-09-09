@@ -92,11 +92,9 @@ describe("createCacheEmbedder", () => {
 		const release = vi.fn(async () => {});
 
 		const delegate = Object.assign(
-
 			(text: string): Embedding => [text.length],
 
 			{ [Symbol.asyncDispose]: release }
-
 		);
 
 		await dispose(createCacheEmbedder(delegate));

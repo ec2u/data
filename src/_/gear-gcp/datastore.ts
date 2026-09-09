@@ -38,4 +38,4 @@ export { PropertyFilter, or };
  * Operates on the datastore of the project the process is authenticated against, as discovered by the client at
  * construction time from the ambient Google Cloud credentials.
  */
-export const datastore=new Datastore();
+export const datastore = new Datastore();

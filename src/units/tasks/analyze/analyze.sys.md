@@ -51,25 +51,25 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 **CRITICAL: The following naming rules MUST be followed:**
 
 - **MANDATORY: ALL names MUST be in ENGLISH - NO exceptions**
-  - Before writing any name, CHECK: Is every word English? If not, TRANSLATE IT.
-  - WRONG: "Dipartimento di Fisica" (Italian)
-  - WRONG: "Département de Physique" (French)
-  - WRONG: "Departamento de Física" (Spanish)
-  - WRONG: "Physik-Institut" (German)
-  - CORRECT: "Department of Physics"
-  - **If you write a single non-English word in any name field, you have FAILED this requirement**
+	- Before writing any name, CHECK: Is every word English? If not, TRANSLATE IT.
+	- WRONG: "Dipartimento di Fisica" (Italian)
+	- WRONG: "Département de Physique" (French)
+	- WRONG: "Departamento de Física" (Spanish)
+	- WRONG: "Physik-Institut" (German)
+	- CORRECT: "Department of Physics"
+	- **If you write a single non-English word in any name field, you have FAILED this requirement**
 - **MANDATORY: Use British English spelling in all translations**
-  - "centre" NOT "center"
-  - "theatre" NOT "theater"
-  - "organisation" NOT "organization"
-  - "behaviour" NOT "behavior"
+	- "centre" NOT "center"
+	- "theatre" NOT "theater"
+	- "organisation" NOT "organization"
+	- "behaviour" NOT "behavior"
 - **ALWAYS include explicit unit type descriptor in the formal name - NEVER omit it**
-  - WRONG: "Molecular Biology" (missing type descriptor)
-  - CORRECT: "Department of Molecular Biology" or "Laboratory of Molecular Biology"
+	- WRONG: "Molecular Biology" (missing type descriptor)
+	- CORRECT: "Department of Molecular Biology" or "Laboratory of Molecular Biology"
 - **NEVER include references to the university or to parent units in the name**
-  - WRONG: "University of XYZ Department of Chemistry"
-  - WRONG: "Faculty of Science - Physics Laboratory"
-  - CORRECT: "Department of Chemistry" or "Laboratory of Physics"
+	- WRONG: "University of XYZ Department of Chemistry"
+	- WRONG: "Faculty of Science - Physics Laboratory"
+	- CORRECT: "Department of Chemistry" or "Laboratory of Physics"
 
 **Titulations and Dedications**:
 
@@ -77,11 +77,11 @@ Generate a plaintext report with the following structure (each item as an H1 hea
   quotes
 - Format: `[Type Descriptor] [Functional Name] "[Titulation]"`
 - Examples:
-  - "Cesare Bonacossa Center for the Study of Extra-European Peoples" →
-    "Center for the Study of Extra-European Peoples \"Cesare Bonacossa\""
-  - "Lazzaro Spallanzani Department of Biology" →
-    "Department of Biology and Biotechnology \"Lazzaro Spallanzani\""
-  - "John Smith Laboratory of Physics" → "Laboratory of Physics \"John Smith\""
+	- "Cesare Bonacossa Center for the Study of Extra-European Peoples" →
+	  "Center for the Study of Extra-European Peoples \"Cesare Bonacossa\""
+	- "Lazzaro Spallanzani Department of Biology" →
+	  "Department of Biology and Biotechnology \"Lazzaro Spallanzani\""
+	- "John Smith Laboratory of Physics" → "Laboratory of Physics \"John Smith\""
 
 **Name Extraction**:
 
@@ -89,12 +89,12 @@ Generate a plaintext report with the following structure (each item as an H1 hea
 - Translate to English if needed
 - If the website name lacks a clear type descriptor (Department, Laboratory, Centre, etc.), add an appropriate one based
   on functional context clues:
-  - Infrastructure/shared resources → "Facility" or "Center"
-  - Experimental/analytical work → "Laboratory"
-  - Primary academic division → "Department"
-  - Collaborative research team → "Research Group"
-  - Specialized research/service unit → "Centre"
-  - Teaching and research division → "School" or "Faculty"
+	- Infrastructure/shared resources → "Facility" or "Center"
+	- Experimental/analytical work → "Laboratory"
+	- Primary academic division → "Department"
+	- Collaborative research team → "Research Group"
+	- Specialized research/service unit → "Centre"
+	- Teaching and research division → "School" or "Faculty"
 - Use organizational hierarchy, functional descriptions, and website structure to determine the appropriate descriptor
 
 ## Short Names and Acronyms

@@ -49,11 +49,9 @@ import { type Translator } from "./index.js";
 export function createComboTranslator(...translators: readonly Translator[]): Translator {
 
 	return Object.assign(
-
 		translate,
 
 		{ [Symbol.asyncDispose]: release }
-
 	);
 
 
@@ -62,11 +60,9 @@ export function createComboTranslator(...translators: readonly Translator[]): Tr
 		return translators
 
 			.reduce(
-
 				(attempted, translator) => attempted.catch(() => attempt(translator)),
 
 				Promise.reject<Text>(new Error("undefined translators"))
-
 			)
 
 			.catch(cause => {
@@ -97,11 +93,9 @@ export function createComboTranslator(...translators: readonly Translator[]): Tr
 	function release(): Promise<void> {
 
 		return translators.reduce(
-
 			(pending, translator) => pending.then(() => dispose(translator)),
 
 			Promise.resolve()
-
 		);
 
 	}

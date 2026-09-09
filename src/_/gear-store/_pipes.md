@@ -5,8 +5,8 @@ description: Requirements for source ingestion, one pipe per source, committed e
 status: draft
 ---
 
-Requirements for source ingestion: one pipe per source, committed entry by entry where partial states are legitimate
-and whole where they are not.
+Requirements for source ingestion: one pipe per source, committed entry by entry where partial states are legitimate and
+whole where they are not.
 
 # Sources
 
@@ -87,8 +87,8 @@ implausibly short states none at all.
 
 ## Scan
 
-Read what the source lists, together with whatever marker it carries for each entry: a `modified` date, an entity tag,
-a digest of the row.
+Read what the source lists, together with whatever marker it carries for each entry: a `modified` date, an entity tag, a
+digest of the row.
 
 - **Repeated, not recorded** — seconds against a run measured in minutes, so rescanning from scratch buys away the
   cursor, the checkpoint and the stored census alike, and leaves no progress to corrupt. That is how every source in
@@ -98,40 +98,38 @@ a digest of the row.
   where it came from. A catalogue that outgrew crawling whole would harvest across runs into a census in the store and
   hand over a feed only once that census closed, leaving both branches as they are. Two conditions would make it safe.
   The census is generational, opened fresh each cycle and replacing the last on closing, or absence from one merely
-  topped up stops meaning anything, as a modified-since pass reports additions and never deletions. And it closes on
-  the source's own evidence that nothing is left, a cursor that terminated or a count that matches, as a harvest that
-  simply stopped and called itself whole retracts every page it missed. A run whose harvest has not closed yields no
-  scan at all, which is not the same as a scan that closed on an empty listing.
+  topped up stops meaning anything, as a modified-since pass reports additions and never deletions. And it closes on the
+  source's own evidence that nothing is left, a cursor that terminated or a count that matches, as a harvest that simply
+  stopped and called itself whole retracts every page it missed. A run whose harvest has not closed yields no scan at
+  all, which is not the same as a scan that closed on an empty listing.
 
-- **Discovery and adjudication both** — the scan settles which entries are worth reading and, taken whole, which ones
-  no longer exist. A page that fails to arrive is therefore no longer merely a turn postponed: it is a hole in the only
+- **Discovery and adjudication both** — the scan settles which entries are worth reading and, taken whole, which ones no
+  longer exist. A page that fails to arrive is therefore no longer merely a turn postponed: it is a hole in the only
   evidence a retraction has.
 
-- **A broken index is the one real hazard** — a backend answering empty or short, an auth wall served as `200`, a
-  filter silently applied: each is a coherent scan of a catalogue that isn't there, and nothing downstream can tell one
-  from a genuine mass withdrawal. The floor in `remove` is what stands between it and the store.
+- **A broken index is the one real hazard** — a backend answering empty or short, an auth wall served as `200`, a filter
+  silently applied: each is a coherent scan of a catalogue that isn't there, and nothing downstream can tell one from a
+  genuine mass withdrawal. The floor in `remove` is what stands between it and the store.
 
 - **For an atomic source the scan is the document** — index and entries arrive together, so the scan and the reading
-  coincide and completeness is a property of one parse rather than of a page count. A digest of the document, not of
-  its rows, settles whether the run happens at all: an unchanged artefact means no run, exactly rather than
-  approximately.
+  coincide and completeness is a property of one parse rather than of a page count. A digest of the document, not of its
+  rows, settles whether the run happens at all: an unchanged artefact means no run, exactly rather than approximately.
 
 ## Insert
 
-Read what the scan calls for: entries the store never read, and entries whose marker has moved past the stored copy.
-For an atomic source there is nothing left to read, and the branch only converts and judges what the scan already
-handed it.
+Read what the scan calls for: entries the store never read, and entries whose marker has moved past the stored copy. For
+an atomic source there is nothing left to read, and the branch only converts and judges what the scan already handed it.
 
 - **Everything scanned, minus what the store already has** — the marker or digest skip lives inside the branch, so what
   `remove` sees stays the scan entire. Placed upstream of the split it would hand `remove` only the entries that
   changed, and the first quiet day would retract the catalogue.
 
-- **The branch sets the pace** — the two draw in lockstep and neither runs ahead of the feed, so the run advances at
-  the speed of the reads. What sets that speed is the branch's own window, several pages in flight at once, and
+- **The branch sets the pace** — the two draw in lockstep and neither runs ahead of the feed, so the run advances at the
+  speed of the reads. What sets that speed is the branch's own window, several pages in flight at once, and
   `remove` keeps up on the cost of a set insertion.
 
-- **The retrieval settles nothing about delisting** — a fetch drops an unsuccessful response the way it drops nothing
-  at all, so a page answering that it is gone reaches the branch as silence, indistinguishable from one that timed out.
+- **The retrieval settles nothing about delisting** — a fetch drops an unsuccessful response the way it drops nothing at
+  all, so a page answering that it is gone reaches the branch as silence, indistinguishable from one that timed out.
   Nothing here retires an entry the index still lists, and delisting rests on the scan alone. Telling the two apart
   would take a retrieval reporting its own outcome, which nothing else in the branch has any use for.
 
@@ -186,27 +184,27 @@ condemns or the scan never named.
 Both branches close on one sink, and how that sink commits is the only place the classes part.
 
 - **An entry at a time, for an incremental source** — store operations are already indivisible and an entry is one
-  operation, so every delta stands alone. A failed write is logged and counted, leaving the entry as it was and the
-  feed running: one unusable entry, or one hostile response from the store, costs an entry rather than the run.
+  operation, so every delta stands alone. A failed write is logged and counted, leaving the entry as it was and the feed
+  running: one unusable entry, or one hostile response from the store, costs an entry rather than the run.
 
 - **One transaction, for an atomic source** — the whole feed is drawn inside a single store transaction, additions and
   removals committing together or not at all, so no state exists in which the artefact is half replaced. Nothing is
   absorbed while it does: the first failing write ends the run and leaves the store exactly as it was.
 
-- **The transaction subsumes the complete read** — an artefact had to be read whole before anything was written,
-  because a truncated transfer or an error page served as `200` would otherwise half-replace the scheme. Under one
-  transaction a parse dying mid-feed rolls the run back untouched, so materialising the document first is a choice
-  about memory rather than a rule about safety.
+- **The transaction subsumes the complete read** — an artefact had to be read whole before anything was written, because
+  a truncated transfer or an error page served as `200` would otherwise half-replace the scheme. Under one transaction a
+  parse dying mid-feed rolls the run back untouched, so materialising the document first is a choice about memory rather
+  than a rule about safety.
 
-- **It also makes the refusal total** — `remove` refusing a wholesale retraction throws once the scan is over, and
-  under a transaction that takes the insertions down with it. An incremental run refusing the same retraction keeps the
+- **It also makes the refusal total** — `remove` refusing a wholesale retraction throws once the scan is over, and under
+  a transaction that takes the insertions down with it. An incremental run refusing the same retraction keeps the
   insertions it already committed, which is right there and would be wrong here.
 
 - **Progress lives in the entries, or nowhere** — an incremental run is restartable because every commit is a restart
-  point: it re-scans, finds the committed entries current, and picks up the rest, with nothing held back to a final
-  step and nothing to reconcile before the next run begins. An atomic run has no partial progress to resume and simply
-  starts over, which it can afford, as it fetches nothing and finishes in seconds.
+  point: it re-scans, finds the committed entries current, and picks up the rest, with nothing held back to a final step
+  and nothing to reconcile before the next run begins. An atomic run has no partial progress to resume and simply starts
+  over, which it can afford, as it fetches nothing and finishes in seconds.
 
 - **A rejected state ends either run** — a hostile response costs the entry it concerns, but a state the shape refuses
-  condemns every write alike and would hand back a clean run that stored nothing. That failure is propagated rather
-  than counted, so the scheduler sees the attempt fail and retries it.
+  condemns every write alike and would hand back a clean run that stored nothing. That failure is propagated rather than
+  counted, so the scheduler sees the attempt fail and retries it.

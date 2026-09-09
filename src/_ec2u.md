@@ -27,13 +27,13 @@ with it.
 
 ## Offering
 
-- `provider`, `educationalLevel`, `about` — target `schema` and `skos` shapes instead of the EC2U families, dropping
-  the id patterns pinning `educationalLevel` and `about` to the ISCED taxonomies.
+- `provider`, `educationalLevel`, `about` — target `schema` and `skos` shapes instead of the EC2U families, dropping the
+  id patterns pinning `educationalLevel` and `about` to the ISCED taxonomies.
 
 ## Organization
 
-- Extends `[Resource, org.Organization]` only: `schema.Organization` cannot join the parents, as `identifier` would
-  come in as `schema:identifier` against the inherited `org:identifier`
+- Extends `[Resource, org.Organization]` only: `schema.Organization` cannot join the parents, as `identifier` would come
+  in as `schema:identifier` against the inherited `org:identifier`
   ([multiple inheritance rejects a property inherited under two different IRIs](#multiple-inheritance-rejects-a-property-inherited-under-two-different-iris)).
   The other `schema` properties are duplicated locally, and instances carry no `schema:Organization` class.
 - `subOrganizationOf`, `hasSubOrganization`, `hasUnit`, `hasHead`, `hasMember`, `classification` — target `org`, `foaf`

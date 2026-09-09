@@ -82,27 +82,27 @@ Follow these steps to ensure complete extraction:
 
 - ALWAYS translate formal names to English if the original name is in another language
 - MANDATORY: Use British English spelling in all translations
-  - "centre" NOT "center"
-  - "theatre" NOT "theater"
-  - "organisation" NOT "organization"
-  - "behaviour" NOT "behavior"
+	- "centre" NOT "center"
+	- "theatre" NOT "theater"
+	- "organisation" NOT "organization"
+	- "behaviour" NOT "behavior"
 - Extract ONLY the unit's name EXACTLY as it appears in the source
-  - Translate naturally to English, but DO NOT add words that aren't in the source name
-  - DO NOT infer or add terms like "Facility", "Center", "Laboratory", "Institute" based on surrounding context
-  - DO NOT add location details (e.g., "at the Department of...")
-  - DO NOT add descriptive information beyond what is in the name itself
-  - Example source: "Computing Cluster" → Output: "Computing Cluster" (NOT "Computing Cluster Facility")
-  - Example CORRECT: "3DMetal@UniPV Laboratory"
-  - Example WRONG: "3DMetal@UniPV Laboratory, at the Department of Civil Engineering and Architecture"
+	- Translate naturally to English, but DO NOT add words that aren't in the source name
+	- DO NOT infer or add terms like "Facility", "Center", "Laboratory", "Institute" based on surrounding context
+	- DO NOT add location details (e.g., "at the Department of...")
+	- DO NOT add descriptive information beyond what is in the name itself
+	- Example source: "Computing Cluster" → Output: "Computing Cluster" (NOT "Computing Cluster Facility")
+	- Example CORRECT: "3DMetal@UniPV Laboratory"
+	- Example WRONG: "3DMetal@UniPV Laboratory, at the Department of Civil Engineering and Architecture"
 - When translating to English:
-  - Translate ONLY the words that constitute the original name
-  - Do not expand by adding institutional or categorical terms absent from the original
-  - If the original name is "Cluster di Calcolo", translate as "Computing Cluster", NOT as "Computing Cluster Facility"
-  - The surrounding text may describe the unit as a "facility" or "center", but only include such terms if they are part
-    of the actual name itself
+	- Translate ONLY the words that constitute the original name
+	- Do not expand by adding institutional or categorical terms absent from the original
+	- If the original name is "Cluster di Calcolo", translate as "Computing Cluster", NOT as "Computing Cluster Facility"
+	- The surrounding text may describe the unit as a "facility" or "center", but only include such terms if they are part
+	  of the actual name itself
 - DO NOT include acronyms in the formal name field
 - Preserve proper names and quoted subtitles exactly as they appear
-  - Example: 'Department of Biology "Lazzaro Spallanzani"' (keep quotes and proper name)
+	- Example: 'Department of Biology "Lazzaro Spallanzani"' (keep quotes and proper name)
 
 ## Acronym
 

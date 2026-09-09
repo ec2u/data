@@ -17,6 +17,7 @@
 import { createEventId, type Event, events } from "@/events/index.js";
 import { EventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
 import { Location } from "@/vocabularies/schema/location.js";
+import type { State } from "@metreeca/blue/value";
 import { type Object, opt, type Optional } from "@metreeca/core";
 import { multiple, optional, required } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
@@ -25,7 +26,6 @@ import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter } from "@metreeca/flow/tasks";
 import { jpath, link, string } from "@metreeca/gear-json";
-import type { State } from "@metreeca/blue/value";
 
 
 /**

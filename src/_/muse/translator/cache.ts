@@ -48,11 +48,9 @@ export function createCacheTranslator(translator: Translator): Translator {
 	const cache = new Map<string, Awaitable<Text>>();
 
 	return Object.assign(
-
 		translate,
 
 		{ [Symbol.asyncDispose]: () => dispose(translator) }
-
 	);
 
 

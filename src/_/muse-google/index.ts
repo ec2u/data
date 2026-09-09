@@ -625,7 +625,7 @@ export function text(response: GenerateContentResponse): string {
  * @throws {@link !Error Error} If `response` carries no output text (see {@link text}) or its text is not well-formed
  * JSON
  */
-export function json<T extends Value=Value>(response: GenerateContentResponse): T {
+export function json<T extends Value = Value>(response: GenerateContentResponse): T {
 
 	try {
 
@@ -646,7 +646,7 @@ export function json<T extends Value=Value>(response: GenerateContentResponse): 
  *
  * @returns The {@link Embedding} embedded for the first content of `response`, or an empty array if it carries none
  */
-export function embedding(response: EmbedContentResponse) : Embedding {
+export function embedding(response: EmbedContentResponse): Embedding {
 
 	return response.embeddings?.[0]?.values ?? [];
 

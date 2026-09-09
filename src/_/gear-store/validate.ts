@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { validate as validator} from "@metreeca/blue";
+import { validate as validator } from "@metreeca/blue";
 import { getShapeId, type ResourceShape } from "@metreeca/blue/resource";
 import type { State } from "@metreeca/blue/value";
 import type { Lazy } from "@metreeca/core";

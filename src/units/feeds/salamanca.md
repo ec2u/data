@@ -11,9 +11,9 @@
 ## Pending
 
 * waiting for API extensions
-  * research centres
-  * description
-  * extended contact data
+	* research centres
+	* description
+	* extended contact data
 
 ## 2022-10-20
 

@@ -74,7 +74,7 @@ export async function sync() {
 			// !!! to json
 			// !!! validate
 			// !!! store
-		(each(console.log))
+			(each(console.log))
 	);
 
 }

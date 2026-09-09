@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+import { datastore } from "@/_/gear-gcp/datastore.js";
 import { compress, decompress } from "@/_/muse/embedder/index.js";
 import { Topic } from "@/taxonomies/_topics/index.js";
-import { datastore } from "@/_/gear-gcp/datastore.js";
-import * as uuid from "uuid";
 import { PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";
 import { log, report, time } from "@metreeca/tape";
+import * as uuid from "uuid";
 
 
 const logger = log(import.meta.url);

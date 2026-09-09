@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { ec2u, Feature } from "@/vocabularies/ec2u.js";
 import { Organization } from "@/organizations/index.js";
 import * as dict from "@/universities/index.core.js";
+import { ec2u, Feature } from "@/vocabularies/ec2u.js";
 import { FormalOrganization } from "@/vocabularies/org.js";
 import { int } from "@metreeca/blue/number";
 import { resource } from "@metreeca/blue/resource";

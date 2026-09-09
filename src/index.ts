@@ -15,7 +15,6 @@
  */
 
 import { events } from "@/events/ports/index.js";
-import { units } from "@/units/ports/index.js";
 import { universities } from "@/universities/ports/index.js";
 import { BadRequest, InternalServerError } from "@metreeca/http";
 import { log } from "@metreeca/tape";

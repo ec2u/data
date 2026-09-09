@@ -41,7 +41,7 @@ export type Summarizer = {
 	 *
 	 * @returns The summary of `page`, either directly or on settlement of the returned promise
 	 */
-	(page: Pick<Page,  "title" | "content">): Awaitable<string>; // !!! remove Page dependency
+	(page: Pick<Page, "title" | "content">): Awaitable<string>; // !!! remove Page dependency
 
 };
 
