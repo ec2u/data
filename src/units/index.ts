@@ -14,19 +14,41 @@
  * limitations under the License.
  */
 
+import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Organization } from "@/organizations/index.js";
 import { Topic } from "@/taxonomies/index.js";
 import { dcat } from "@/vocabularies/dcat.js";
 import { dct } from "@/vocabularies/dct.js";
-import { base, ec2u } from "@/vocabularies/ec2u.js";
+import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import { OrganizationalUnit } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
 import { multiple } from "@metreeca/blue/value";
+import { immutable } from "@metreeca/core/structures";
 
 
-export const units = `${base}/units`;
+export const units = immutable({
+
+	id: `${base}/units`,
+
+	isDefinedBy: `${base}/datasets/units`,
+	dataset: datasets.id,
+
+	label: "EC2U Units",
+
+	title: "EC2U Research Units and Facilities",
+	alternative: "EC2U Units",
+	description: "Information about research units and supporting structures at EC2U partner universities.",
+
+	publisher: EC2U,
+
+	rights: Copyright,
+	license: [CCBYNCND40],
+
+	issued: "2022-01-01"
+
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

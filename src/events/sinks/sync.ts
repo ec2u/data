@@ -20,7 +20,7 @@ import { validate } from "@/_/gear-store/validate.js";
 import { createEventId, Event, isStaleEvent } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
-import { universities } from "@/universities/index.js";
+import { partners } from "@/universities/index.js";
 import { assert, isDefined } from "@metreeca/core";
 import { difference } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
@@ -51,7 +51,7 @@ export function sync(publisher: { // !!! persist
 
 }): Sink<URLLike, Tally> {
 
-	const university = assert(universities[publisher.university], isDefined,
+	const university = assert(partners[publisher.university], isDefined,
 		`unknown publisher university <${publisher.university}>`
 	);
 

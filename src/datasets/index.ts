@@ -26,12 +26,6 @@ import { date, markdown, text } from "@metreeca/blue/string";
 import { multiple, optional, required } from "@metreeca/blue/value";
 
 
-export const Copyright = "Copyright © 2022-2025 EC2U Alliance";
-export const CCBYNCND40 = "https://creativecommons.org/licenses/by-nc-nd/4.0/";
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function Dataset() {
 	return resource({
 

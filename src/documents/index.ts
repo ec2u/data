@@ -14,18 +14,45 @@
  * limitations under the License.
  */
 
+import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
 import { Organization } from "@/organizations/index.js";
 import { Person } from "@/persons/index.js";
 import { Topic } from "@/taxonomies/index.js";
 import { dct } from "@/vocabularies/dct.js";
-import { ec2u, Entity } from "@/vocabularies/ec2u.js";
+import { EC2U, base, ec2u, Entity } from "@/vocabularies/ec2u.js";
 import { schema } from "@/vocabularies/schema/index.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
 import { date, iri, tag, text } from "@metreeca/blue/string";
 import { multiple, optional, required } from "@metreeca/blue/value";
+import { immutable } from "@metreeca/core/structures";
 
+
+export const documents = immutable({
+
+	id: `${base}/documents`,
+
+	isDefinedBy: `${base}/datasets/documents`,
+	dataset: datasets.id,
+
+	label: "EC2U Documents",
+
+	title: "EC2U Institutional Documents",
+	alternative: "EC2U Documents",
+	description: "Regulations, policies and other governance documents shared by EC2U partner universities.",
+
+	publisher: EC2U,
+
+	rights: Copyright,
+	license: [CCBYNCND40],
+
+	issued: "2023-07-15"
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Document() {
 	return resource({

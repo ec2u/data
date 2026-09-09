@@ -14,11 +14,36 @@
  * limitations under the License.
  */
 
+import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Dataset, Resource } from "@/datasets/index.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
+import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import { Concept, ConceptScheme } from "@/vocabularies/skos.js";
 import { resource } from "@metreeca/blue/resource";
+import { immutable } from "@metreeca/core/structures";
 
+
+export const taxonomies = immutable({
+
+	id: `${base}/taxonomies`,
+
+	isDefinedBy: `${base}/datasets/taxonomies`,
+	dataset: datasets.id,
+
+	label: "EC2U Taxonomies",
+
+	title: "EC2U Classification Taxonomies",
+	alternative: "EC2U Taxonomies",
+	description: "Standardized topic taxonomies and other concept schemes for classifying resources.",
+
+	publisher: EC2U,
+
+	rights: Copyright,
+	license: [CCBYNCND40]
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Taxonomy() {
 	return resource({

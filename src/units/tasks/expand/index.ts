@@ -68,7 +68,7 @@ export async function expandAll(): Promise<number> {
 
 				for (const item of items) {
 					if ( !await _units.lookup(item) ) { // check and update atomically
-						await _units.insert({ ...item, id: `${units}/${uuid.v4()}` });
+						await _units.insert({ ...item, id: `${units.id}/${uuid.v4()}` });
 					}
 				}
 

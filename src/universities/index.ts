@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Organization } from "@/organizations/index.js";
 import * as dict from "@/universities/index.core.js";
-import { ec2u, Feature } from "@/vocabularies/ec2u.js";
+import { EC2U, base, ec2u, Feature } from "@/vocabularies/ec2u.js";
 import { FormalOrganization } from "@/vocabularies/org.js";
 import { int } from "@metreeca/blue/number";
 import { resource } from "@metreeca/blue/resource";
@@ -27,7 +28,29 @@ import { immutable } from "@metreeca/core/structures";
 export * from "@/universities/index.core.js";
 
 
-export const universities = immutable(Object.fromEntries(
+export const universities = immutable({
+
+	id: `${base}/universities`,
+
+	isDefinedBy: `${base}/datasets/universities`,
+	dataset: datasets.id,
+
+	label: "EC2U Universities",
+
+	title: "EC2U Partner Universities",
+	alternative: "EC2U Universities",
+	description: "Background, historical context and statistical data about EC2U partner universities.",
+
+	publisher: EC2U,
+
+	rights: Copyright,
+	license: [CCBYNCND40],
+
+	issued: "2022-01-01"
+
+});
+
+export const partners = immutable(Object.fromEntries(
 	Object.values(dict).map(university => [university.id, university])
 ));
 

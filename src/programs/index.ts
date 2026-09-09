@@ -14,11 +14,38 @@
  * limitations under the License.
  */
 
+import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Offering } from "@/offerings/index.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
+import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import { EducationalOccupationalProgram } from "@/vocabularies/schema/learning.js";
 import { resource } from "@metreeca/blue/resource";
+import { immutable } from "@metreeca/core/structures";
 
+
+export const programs = immutable({
+
+	id: `${base}/programs`,
+
+	isDefinedBy: `${base}/datasets/programs`,
+	dataset: datasets.id,
+
+	label: "EC2U Programs",
+
+	title: "EC2U Degree and Occupational Programs",
+	alternative: "EC2U Programs",
+	description: "Formal degree and vocational qualification programs offered by EC2U partner universities.",
+
+	publisher: EC2U,
+
+	rights: Copyright,
+	license: [CCBYNCND40],
+
+	issued: "2022-03-10"
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Program() {
 	return resource({

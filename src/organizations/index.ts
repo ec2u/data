@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
+import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
+import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import * as org from "@/vocabularies/org.js";
 import * as schema from "@/vocabularies/schema/index.js";
 import { Location } from "@/vocabularies/schema/location.js";
@@ -23,9 +24,28 @@ import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
 import { email, iri, markdown, phone, text } from "@metreeca/blue/string";
 import { multiple, optional } from "@metreeca/blue/value";
+import { immutable } from "@metreeca/core/structures";
 
 
-export const Alliance = "https://ec2u.eu/"; // the EC2U Alliance organization
+export const organizations = immutable({
+
+	id: `${base}/organizations`,
+
+	isDefinedBy: `${base}/datasets/organizations`,
+	dataset: datasets.id,
+
+	label: "EC2U Organizations",
+
+	title: "EC2U Related Organizations",
+	alternative: "EC2U Organizations",
+	description: "Organisations related to EC2U partner universities.",
+
+	publisher: EC2U,
+
+	rights: Copyright,
+	license: [CCBYNCND40]
+
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

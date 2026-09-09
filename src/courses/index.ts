@@ -14,18 +14,43 @@
  * limitations under the License.
  */
 
+import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Offering } from "@/offerings/index.js";
 import { Program } from "@/programs/index.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
+import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import { schema } from "@/vocabularies/schema/index.js";
 import { Course as SchemaCourse, CourseInstance } from "@/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
 import { multiple, optional } from "@metreeca/blue/value";
+import { immutable } from "@metreeca/core/structures";
 
 
 const YearPattern = "^\\d{4}/\\d{4}$";
+
+
+export const courses = immutable({
+
+	id: `${base}/courses`,
+
+	isDefinedBy: `${base}/datasets/courses`,
+	dataset: datasets.id,
+
+	label: "EC2U Courses",
+
+	title: "EC2U Academic and Occupational Courses",
+	alternative: "EC2U Courses",
+	description: "Degree, vocational and personal development courses offered by EC2U partner universities.",
+
+	publisher: EC2U,
+
+	rights: Copyright,
+	license: [CCBYNCND40],
+
+	issued: "2022-03-10"
+
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

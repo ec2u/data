@@ -138,7 +138,7 @@ export async function bootstrap(url?: string): Promise<unknown> {
 
 				const current = await _units.lookup(item);
 
-				await _units.insert(!current ? { ...item, id: `${units}/${uuid.v4()}` }
+				await _units.insert(!current ? { ...item, id: `${units.id}/${uuid.v4()}` }
 					: !matches(current, item) ? merge(current, { ...item, analyzed: undefined, expanded: undefined })
 						: current
 				);

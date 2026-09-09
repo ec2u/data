@@ -21,7 +21,8 @@ import { multiple, optional, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 
-export const base = "https://data.ec2u.eu";
+export const EC2U = "https://ec2u.eu/"; // the EC2U Alliance organization
+export const base = "https://data.ec2u.eu"; // the EC2U Knowledge Hub id space
 
 export const ec2u = createNamespace(`${base}/terms#`, [
 

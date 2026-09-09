@@ -14,15 +14,40 @@
  * limitations under the License.
  */
 
+import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
 import { Organization } from "@/organizations/index.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
+import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import * as foaf from "@/vocabularies/foaf.js";
 import { org } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
 import { multiple } from "@metreeca/blue/value";
+import { immutable } from "@metreeca/core/structures";
 
+
+export const persons = immutable({
+
+	id: `${base}/persons`,
+
+	isDefinedBy: `${base}/datasets/persons`,
+	dataset: datasets.id,
+
+	label: "EC2U People",
+
+	title: "EC2U Faculty, Researchers and Staff",
+	alternative: "EC2U People",
+	description: "Staff involved in teaching and research activities at EC2U partner universities.",
+
+	publisher: EC2U,
+
+	rights: Copyright,
+	license: [CCBYNCND40]
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Person() {
 	return resource({

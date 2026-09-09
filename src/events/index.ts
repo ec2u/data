@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, Resource } from "@/datasets/index.js";
-import { Alliance } from "@/organizations/index.js";
-import { base, CommentLength, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
+import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
+import { Resource } from "@/datasets/index.js";
+import { EC2U, base, CommentLength, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
 import { Event as SchemaEvent } from "@/vocabularies/schema/event.js";
 import { resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
@@ -31,7 +31,7 @@ export const events = immutable({
 	id: `${base}/events`,
 
 	isDefinedBy: `${base}/datasets/events`,
-	dataset: `${base}/`,
+	dataset: datasets.id,
 
 	label: "EC2U Events",
 
@@ -39,7 +39,7 @@ export const events = immutable({
 	alternative: "EC2U Events",
 	description: "Information about events at EC2U partner universities and associated local organizations.",
 
-	publisher: Alliance,
+	publisher: EC2U,
 
 	rights: Copyright,
 	license: [CCBYNCND40],
