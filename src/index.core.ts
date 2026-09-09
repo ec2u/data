@@ -17,7 +17,6 @@
 import { minute } from "@/_/core/temporal.js";
 import { gcp } from "@/_/gear-gcp/index.js";
 import { createGCPVault } from "@/_/gear-gcp/secrets.js";
-import { createMockStore } from "@/_/gear-store/_mock.js";
 import { createStore } from "@/_/gear-store/index.js";
 import { createGoogleAI } from "@/_/muse-google/index.js";
 import { bind, executor, service } from "@metreeca/gear";
@@ -25,7 +24,11 @@ import { createCache, createFileCache } from "@metreeca/gear/cache";
 import { getPackage, getPath } from "@metreeca/gear/space";
 import { createVault } from "@metreeca/gear/vault";
 import { createFetch } from "@metreeca/http";
+import { basic } from "@metreeca/http/basic";
 import { cache } from "@metreeca/http/cache";
+import { createSPARQLStore } from "@metreeca/keep-sparql";
+import { createRDF4JRepository } from "@metreeca/wire-sparql-rdf4j";
+
 
 export const execute = executor(
 	bind(getPath, () => gcp.production
@@ -40,7 +43,14 @@ export const execute = executor(
 		ttl: 60*minute,
 		store: service(createCache)
 	}))),
-	bind(createStore, createMockStore), // !!! bind the connector the deployment targets
+	bind(createStore, async () => createSPARQLStore(createRDF4JRepository({
+		server: "https://graphdb.ec2u.net",
+		repository: "data-work",
+		fetch: createFetch(basic(
+			await service(createVault)("gdb-server-usr"),
+			await service(createVault)("gdb-server-pwd")
+		))
+	}))),
 	bind(createGoogleAI, async () => createGoogleAI({
 		apiKey: await service(createVault)("googleai-key")
 	}))

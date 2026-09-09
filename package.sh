@@ -57,10 +57,12 @@ if [ -n "${link}" ] && [ -d "${packages}" ]; then
 		${packages}/Gear/packages/gear-xml \
 		${packages}/HTTP \
 		${packages}/Keep/packages/components/keep \
+		${packages}/Keep/packages/connectors/keep-sparql \
 		${packages}/Qest \
 		${packages}/Tape \
 		${packages}/Trio \
 		${packages}/Wire/packages/sparql/wire-sparql \
-		${packages}/Wire/packages/sparql/wire-sparql-http
+		${packages}/Wire/packages/sparql/wire-sparql-http \
+		${packages}/Wire/packages/sparql/wire-sparql-rdf4j
 
 fi
