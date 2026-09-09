@@ -44,7 +44,7 @@ const logger = log(import.meta.url);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function sync(publisher: { // !!! persist
+export function sync(publisher: { // !!! persist publisher
 
 	readonly id: IRI
 	readonly university: IRI

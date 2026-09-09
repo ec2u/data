@@ -41,6 +41,7 @@ export const ec2u = createNamespace(`${base}/terms#`, [
 	"Offering",
 
 	"generated",
+	"digest",
 
 	"year",
 	"term",

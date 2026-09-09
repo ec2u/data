@@ -18,7 +18,10 @@ import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Dataset, Resource } from "@/datasets/index.js";
 import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import { Concept, ConceptScheme } from "@/vocabularies/skos.js";
-import { resource } from "@metreeca/blue/resource";
+import { property, resource } from "@metreeca/blue/resource";
+import { string } from "@metreeca/blue/string";
+import { required } from "@metreeca/blue/value";
+import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 
 
@@ -33,7 +36,7 @@ export const taxonomies = immutable({
 
 	title: "EC2U Classification Taxonomies",
 	alternative: "EC2U Taxonomies",
-	description: "Standardized topic taxonomies and other concept schemes for classifying resources.",
+	description: "Standardised topic taxonomies and other concept schemes for classifying resources.",
 
 	publisher: EC2U,
 
@@ -62,5 +65,23 @@ export function Topic() {
 		extends: [Resource, Concept],
 		namespace: ec2u
 
-	}, {});
+	}, {
+
+		digest: property({
+
+			hidden: true,
+
+			name: { en: "Source Digest" },
+			description: {
+
+				en: markdown`
+					Identifies the state of the source entry the topic reflects, telling one unchanged since the topic
+					was stored from one worth reading again.
+				`
+
+			},
+
+		}, required(string))
+
+	});
 }

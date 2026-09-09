@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { digest, type Digest } from "@/_/gear-store/_digest.js";
 import { Topic } from "@/taxonomies/index.js";
 import type { State } from "@metreeca/blue/value";
 import { required } from "@metreeca/core/arrays";
@@ -35,10 +36,10 @@ const LabelSeparator = ";";
  * `alternative` and `hidden` holding `;`-separated lists of labels; blank fields are ignored and other columns are
  * left alone.
  *
- * Each record is identified after its `id` within `taxonomy`, so the same row always yields the same topic. The
- * hierarchy is read off that identifier, taken as a `/`-separated path: a topic is linked to the topics its ancestor
- * paths name, and one sitting at the root of the path is flagged as a top concept of `taxonomy`. Records are
- * converted one at a time, so every ancestor path is expected to be stated by a record of its own.
+ * Each record is identified by {@link createTopicId}, so the same row always yields the same topic. The hierarchy is
+ * read off that identifier, taken as a `/`-separated path: a topic is linked to the topics its ancestor paths name,
+ * and one sitting at the root of the path is flagged as a top concept of `taxonomy`. Records are converted one at a
+ * time, so every ancestor path is expected to be stated by a record of its own.
  *
  * @param taxonomy The taxonomy the topics are attributed to
  * @param taxonomy.id The identifier of the concept scheme the topics belong to
@@ -57,6 +58,46 @@ export function convert(taxonomy: {
 
 }
 
+/**
+ * Names the topic a tabular concept definition defines.
+ *
+ * Identity rests on the `id` column alone, so a workflow naming what it stores and one naming what it retracts agree
+ * without conferring, whatever the rest of the record says.
+ *
+ * @param taxonomy The taxonomy the topic is attributed to
+ * @param taxonomy.id The identifier of the concept scheme the topic belongs to
+ * @param record The tabular concept definition naming the topic
+ *
+ * @returns The identifier of the topic `record` defines within `taxonomy`
+ *
+ * @throws {@link !TypeError TypeError} If `record` states no identifier
+ */
+export function createTopicId(taxonomy: {
+
+	readonly id: IRI
+
+}, record: Record): IRI {
+
+	return identify(taxonomy, required(field(record, "id")));
+
+}
+
+/**
+ * Fingerprints a tabular concept definition.
+ *
+ * Columns are digested irrespective of the order they are listed in, so a record yields the same fingerprint as long
+ * as its own content is unchanged and a workflow may skip whatever it already converted under that fingerprint.
+ *
+ * @param record The tabular concept definition to be fingerprinted
+ *
+ * @returns The digest of the content of `record`
+ */
+export function createTopicDigest(record: Record): Digest {
+
+	return digest(JSON.stringify(Object.entries(record).sort(([x], [y]) => x < y ? -1 : x > y ? 1 : 0)));
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -70,13 +111,15 @@ function topic(taxonomy: { readonly id: IRI }, record: Record): State<typeof Top
 	const notation = field(record, "notation") ?? (NotationPattern.test(id) ? id : undefined);
 	const definition = field(record, "definition");
 
-	const broader = ancestors(taxonomy.id, id);
+	const broader = ancestors(taxonomy, id);
 
 	return immutable({
 
-		id: `${taxonomy.id}/${id}`,
+		id: createTopicId(taxonomy, record),
 
 		dataset: taxonomy.id,
+
+		digest: createTopicDigest(record),
 
 		label: notation === undefined ? prefLabel : `${notation} - ${prefLabel}`,
 		comment: definition,
@@ -99,11 +142,17 @@ function topic(taxonomy: { readonly id: IRI }, record: Record): State<typeof Top
 }
 
 
-function ancestors(taxonomy: IRI, id: string): readonly IRI[] {
+function ancestors(taxonomy: { readonly id: IRI }, id: string): readonly IRI[] {
 
 	const segments = id.split("/");
 
-	return segments.slice(0, -1).map((_, index) => `${taxonomy}/${segments.slice(0, index+1).join("/")}`);
+	return segments.slice(0, -1).map((_, index) => identify(taxonomy, segments.slice(0, index+1).join("/")));
+
+}
+
+function identify(taxonomy: { readonly id: IRI }, path: string): IRI {
+
+	return `${taxonomy.id}/${path}`;
 
 }
 

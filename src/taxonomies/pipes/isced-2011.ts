@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-import { validate } from "@/_/gear-store/validate.js";
 import { execute } from "@/index.core.js";
-import { taxonomies, Topic } from "@/taxonomies/index.js";
-import { convert } from "@/taxonomies/tasks/convert.js";
+import { taxonomies } from "@/taxonomies/index.js";
+import { sync } from "@/taxonomies/sinks/sync.js";
 import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { each } from "@metreeca/flow/sinks";
-import { take } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
-import { csv } from "@metreeca/gear-csv";
-import { fetch } from "@metreeca/gear-url";
 import { createVault } from "@metreeca/gear/vault";
 
 
-const ISCED2011 = immutable({
+const DataURL = "taxonomies-ec2u-isced-2011";
+
+const Taxonomy = immutable({ // !!! persist
 
 	id: `${taxonomies.id}/isced-2011`,
 
@@ -57,43 +54,22 @@ const ISCED2011 = immutable({
 });
 
 
-const DataURL = "taxonomies-ec2u-isced-2011";
-
-const CSVFormat = immutable({
-
-	header: true,
-	skip: true,
-	trim: true
-
-});
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if ( import.meta.main ) {
-	await execute(sync);
+	await execute(ISCED2011);
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// !!! staleness check
-// !!! disposal
-// !!! persist(Shape, { atomic: true })
-
-export async function sync() {
+export async function ISCED2011() {
 
 	const vault = service(createVault);
 
 	return pipe(
 		(items(await vault(DataURL)))
-		(fetch())
-		(csv(CSVFormat))
-		(take(1))
-		(convert(ISCED2011))
-		(validate(Topic))
-			// !!! store
-			(each(console.log))
+		(sync(Taxonomy))
 	);
 
 }
