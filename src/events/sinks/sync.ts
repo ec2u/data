@@ -16,30 +16,23 @@
 
 import { digest, type Digest } from "@/_/gear-store/_digest.js";
 import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.js";
+import { retire } from "@/_/gear-store/retire.js";
 import { validate } from "@/_/gear-store/validate.js";
 import { createEventId, Event, isStaleEvent } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { partners } from "@/universities/index.js";
 import { assert, isDefined } from "@metreeca/core";
-import { difference } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { toSet } from "@metreeca/flow/sinks";
-import { drain, filter, fork, map, tee } from "@metreeca/flow/tasks";
+import { filter, fork, map, tee } from "@metreeca/flow/tasks";
 import { fetch, type URLLike } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
-import { log } from "@metreeca/tape";
 
 
-const Concurrency = 10; // the number of pages fetched at the same time from the source site
-const Attrition = 0.25; // the largest fraction of the stored events a single run may remove
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const logger = log(import.meta.url);
+const concurrency = 10; // the number of pages fetched at the same time from the source site // !!! as option
+const attrition = 0.25; // the largest fraction of the stored events a single run may remove // !!! as option
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +66,7 @@ export function sync(publisher: { // !!! persist publisher
 
 			return pipe(
 				(items(urls))
-				(fork(Concurrency, pages => pipe(
+				(fork(concurrency, pages => pipe(
 					(pages)
 					(fetch())
 					(html())
@@ -95,36 +88,12 @@ export function sync(publisher: { // !!! persist publisher
 
 		return urls => {
 
-			const stored = catalogue(university);
+			const existing = catalogue(university);
 
 			return pipe(
 				(items(urls))
 				(map(createEventId))
-				(drain(async ids => {
-
-					const [present, current] = await Promise.all([stored, ids(toSet())]);
-
-					const removed = difference([present, current]);
-
-					const allowed = Math.floor(present.length*Attrition);
-
-					if ( removed.length > allowed ) {
-
-						const percentage = Math.round(Attrition*100);
-
-						logger.warning`skipping mass removal of more than <${percentage}%> of <${present.length}> stored events`;
-
-						return [];
-
-					} else {
-
-						logger.info`removing <${removed.length}> of <${present.length}> stored events`;
-
-						return removed;
-
-					}
-
-				}))
+				(retire({ attrition, existing }))
 				(map(id => delta(id)))
 			);
 
@@ -147,12 +116,12 @@ async function fingerprints(publisher: {
 
 }
 
-async function catalogue(university: {
+async function* catalogue(university: {
 
 	readonly id: IRI
 
-}): Promise<readonly IRI[]> {
+}): AsyncGenerator<IRI> {
 
-	return []; // !!! query the store, through `service(createStore)`, for the events published by `university`
+	// !!! query the store, through `service(createStore)`, for the events published by `university`
 
 }

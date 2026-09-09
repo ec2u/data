@@ -16,22 +16,20 @@
 
 import { digest, type Digest } from "@/_/gear-store/_digest.js";
 import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.js";
+import { retire } from "@/_/gear-store/retire.js";
 import { validate } from "@/_/gear-store/validate.js";
 import { Topic } from "@/taxonomies/index.js";
 import { convert, createTopicId } from "@/taxonomies/tasks/convert.js";
-import { difference } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { toSet } from "@metreeca/flow/sinks";
-import { drain, filter, map, tee } from "@metreeca/flow/tasks";
+import { filter, map, tee } from "@metreeca/flow/tasks";
 import { csv, type Record } from "@metreeca/gear-csv";
 import { fetch, type URLLike } from "@metreeca/gear-url";
-import { log } from "@metreeca/tape";
 
 
-const Attrition = 0.25; // the largest fraction of the stored topics a single run may remove
+const attrition = 0.25; // the largest fraction of the stored topics a single run may remove // !!! as option
 
 const CSVFormat = immutable({
 
@@ -40,11 +38,6 @@ const CSVFormat = immutable({
 	trim: true
 
 });
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const logger = log(import.meta.url);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,38 +105,12 @@ export function sync(taxonomy: { // !!! persists whole taxonomy
 
 		return records => {
 
-			const stored = catalogue(taxonomy);
+			const existing = catalogue(taxonomy);
 
 			return pipe(
 				(items(records))
 				(map(record => createTopicId(taxonomy, record)))
-				(drain(async ids => {
-
-					const [present, current] = await Promise.all([stored, ids(toSet())]);
-
-					const removed = difference([present, current]);
-					const allowed = Math.floor(present.length*Attrition);
-
-					// a wholesale retraction is refused outright: under a transaction the throw takes the
-					// insertions down with it, leaving the taxonomy as the last sound run left it
-
-					if ( removed.length > allowed ) {
-
-						const percentage = Math.round(Attrition*100);
-
-						throw new RangeError(
-							`prevented mass removal of more than <${percentage}%> of <${present.length}> stored topics`
-						);
-
-					} else {
-
-						logger.info`removing <${removed.length}> of <${present.length}> stored topics`;
-
-						return removed;
-
-					}
-
-				}))
+				(retire({ atomic: true, attrition, existing }))
 				(map(id => delta(id)))
 			);
 
@@ -168,12 +135,12 @@ async function fingerprints(taxonomy: {
 
 }
 
-async function catalogue(taxonomy: {
+async function* catalogue(taxonomy: {
 
 	readonly id: IRI
 
-}): Promise<readonly IRI[]> {
+}): AsyncGenerator<IRI> {
 
-	return []; // !!! query the store, through `service(createStore)`, for the topics of `taxonomy`
+	// !!! query the store, through `service(createStore)`, for the topics of `taxonomy`
 
 }
