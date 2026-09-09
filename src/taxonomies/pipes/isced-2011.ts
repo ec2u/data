@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+import { validate } from "@/_/gear-store/validate.js";
 import { execute } from "@/index.core.js";
+import { Topic } from "@/taxonomies/index.js";
+import { convert } from "@/taxonomies/tasks/convert.js";
+import { base } from "@/vocabularies/ec2u.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -27,6 +31,12 @@ import { createVault } from "@metreeca/gear/vault";
 
 
 const DataURL = "taxonomies-ec2u-isced-2011";
+
+const ISCED2011 = immutable({ // !!! define the taxonomy dataset
+
+	id: `${base}/taxonomies/isced-2011`
+
+});
 
 const CSVFormat = immutable({
 
@@ -44,19 +54,6 @@ if ( import.meta.main ) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type Concept = {
-
-	readonly id: string;
-	readonly label: string;
-	readonly alternative: string;
-	readonly definition: string;
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 // !!! staleness check
 // !!! disposal
 // !!! persist(Shape, { atomic: true })
@@ -68,11 +65,10 @@ export async function sync() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(fetch())
-
-		(csv<Concept>(CSVFormat))
+		(csv(CSVFormat))
 		(take(1))
-			// !!! to json
-			// !!! validate
+		(convert(ISCED2011))
+		(validate(Topic))
 			// !!! store
 			(each(console.log))
 	);
