@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { type Digest } from "@/_/gear-store/_digest.js";
+import { digest, type Digest } from "@/_/gear-store/_digest.js";
 import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.js";
 import { validate } from "@/_/gear-store/validate.js";
 import { Topic } from "@/taxonomies/index.js";
-import { convert, createTopicDigest, createTopicId } from "@/taxonomies/tasks/convert.js";
+import { convert, createTopicId } from "@/taxonomies/tasks/convert.js";
 import { difference } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
@@ -98,7 +98,7 @@ export function sync(taxonomy: { // !!! persists whole taxonomy
 
 			return pipe(
 				(items(records))
-				(filter(async record => !(await digests).has(createTopicDigest(record))))
+				(filter(async record => !(await digests).has(digest(record))))
 				(convert(taxonomy))
 				(validate(Topic))
 				(map(topic => delta(topic.id, topic)))

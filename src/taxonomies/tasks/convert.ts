@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { digest, type Digest } from "@/_/gear-store/_digest.js";
+import { digest } from "@/_/gear-store/_digest.js";
 import { Topic } from "@/taxonomies/index.js";
 import type { State } from "@metreeca/blue/value";
 import { required } from "@metreeca/core/arrays";
-import { by } from "@metreeca/core/order";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import type { Task } from "@metreeca/flow";
@@ -83,22 +82,6 @@ export function createTopicId(taxonomy: {
 
 }
 
-/**
- * Fingerprints a tabular concept definition.
- *
- * Columns are digested irrespective of the order they are listed in, so a record yields the same fingerprint as long
- * as its own content is unchanged and a workflow may skip whatever it already converted under that fingerprint.
- *
- * @param record The tabular concept definition to be fingerprinted
- *
- * @returns The digest of the content of `record`
- */
-export function createTopicDigest(record: Record): Digest {
-
-	return digest(JSON.stringify(Object.entries(record).sort(by(([name]) => name))));
-
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -120,7 +103,7 @@ function topic(taxonomy: { readonly id: IRI }, record: Record): State<typeof Top
 
 		dataset: taxonomy.id,
 
-		digest: createTopicDigest(record),
+		digest: digest(record),
 
 		label: notation === undefined ? prefLabel : `${notation} - ${prefLabel}`,
 		comment: definition,
@@ -160,8 +143,8 @@ function identify(taxonomy: { readonly id: IRI }, path: string): IRI {
 function labels(record: Record, column: string): readonly string[] {
 
 	return field(record, column)?.split(LabelSeparator)
-		.map(label => label.trim())
-		.filter(label => label !== "")
+			.map(label => label.trim())
+			.filter(label => label !== "")
 		?? [];
 
 }
