@@ -145,7 +145,7 @@ export function persist(shape: Lazy<ResourceShape>, {
 
 					await client.insert({ entry, shape, state });
 
-					logger.info`stored resource <${entry}>`;
+					logger.info`inserted resource <${entry}>`;
 
 					return { ...tally, stored: tally.stored+1 };
 
