@@ -71,9 +71,11 @@ otherwise both ends fail with `TS7023: 'Dataset' implicitly has return type 'any
 type annotation and is referenced directly or indirectly in one of its return expressions`. Cycles closed purely by
 references infer at any order and any length.
 
-Ordering carries the whole vocabulary: `OrganizationalUnit` precedes `Organization`, `ImageObject` precedes `Thing`.
-Where a cycle closes through a shape declared in another module there is no ordering knob, so the edge is cut with an
-explicitly annotated `reference((): ResourceShape => …)` thunk, as `Resource.dataset` and `Resource.university` do. The
+Ordering carries most of the vocabulary: `OrganizationalUnit` precedes `Organization`, `ImageObject` precedes `Thing`.
+It stops short where the parent also references the extending shape back, closing a second cycle through the two
+reference edges that no declaration order untangles: `Organization.hasUnit` is cut with an explicitly annotated
+`reference((): ResourceShape => …)` thunk for that reason. The same cut applies where a cycle closes through a shape
+declared in another module and there is no ordering knob at all, as `Resource.dataset` and `Resource.university` do. The
 annotation carries no type cost: `reference()` types its target as `Lazy<ResourceShape>` in any case.
 
 Cut the reference edge, never the `extends` edge: annotating a parent as `ResourceShape` compiles silently and empties

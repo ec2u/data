@@ -87,7 +87,7 @@ export function Organization() {
 		subOrganizationOf: multiple(reference(Organization)),
 		hasSubOrganization: multiple(reference(Organization, { foreign: true })),
 
-		hasUnit: multiple(reference(OrganizationalUnit, { foreign: true })),
+		hasUnit: multiple(reference((): ResourceShape => OrganizationalUnit(), { foreign: true })),
 
 		hasHead: property({
 
