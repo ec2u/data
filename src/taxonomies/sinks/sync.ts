@@ -22,14 +22,14 @@ import { Topic } from "@/taxonomies/index.js";
 import { convert, createTopicId } from "@/taxonomies/tasks/convert.js";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
-import { pipe, type Sink, type Task } from "@metreeca/flow";
+import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, map, tee } from "@metreeca/flow/tasks";
 import { csv, type Record } from "@metreeca/gear-csv";
 import { fetch, type URLLike } from "@metreeca/gear-url";
 
 
-const attrition = 0.25; // the largest fraction of the stored topics a single run may remove // !!! as option
+const survival = 0.75; // the smallest fraction of the stored topics a single run must leave in place // !!! as option
 
 const CSVFormat = immutable({
 
@@ -52,8 +52,8 @@ const CSVFormat = immutable({
  *
  * Topics are named after the entries the document lists and stated as they are drawn. The ones the store holds for
  * the taxonomy and the document never named are retracted once it has been read whole, so nothing is retired on the
- * strength of a partial reading. A run retracting more than a quarter of the stored topics states nothing and fails,
- * leaving a truncated, misserved or unreachable document to cost a run rather than the taxonomy.
+ * strength of a partial reading. A run leaving in place less than three quarters of the stored topics states nothing
+ * and fails, so a truncated, misserved or unreachable document costs a run rather than the taxonomy.
  *
  * @param taxonomy The taxonomy the topics are attributed to
  * @param taxonomy.id The identifier of the concept scheme the topics belong to
@@ -65,7 +65,7 @@ const CSVFormat = immutable({
  *
  * @throws {@link !Error Error} While the feed is consumed, if any write fails, with nothing committed
  */
-export function sync(taxonomy: { // !!! persists whole taxonomy
+export function sync(taxonomy: { // !!! persists taxonomy description
 
 	readonly id: IRI
 
@@ -110,7 +110,7 @@ export function sync(taxonomy: { // !!! persists whole taxonomy
 			return pipe(
 				(items(records))
 				(map(record => createTopicId(taxonomy, record)))
-				(retire({ atomic: true, attrition, existing }))
+				(retire({ atomic: true, survival, existing }))
 				(map(id => delta(id)))
 			);
 
@@ -135,12 +135,14 @@ async function fingerprints(taxonomy: {
 
 }
 
-async function* catalogue(taxonomy: {
+ function catalogue(taxonomy: {
 
 	readonly id: IRI
 
-}): AsyncGenerator<IRI> {
+}): Feed<IRI> {
 
 	// !!! query the store, through `service(createStore)`, for the topics of `taxonomy`
+
+	 return items([])
 
 }

@@ -26,64 +26,64 @@ describe("retire", () => {
 
 	it("emits the existing items the incoming feed no longer names", async () => {
 
-		const existing = ["/items/1", "/items/2", "/items/3", "/items/4"];
+		const existing = items(["/items/1", "/items/2", "/items/3", "/items/4"]);
 
-		expect(await items(["/items/1", "/items/2", "/items/3"])(retire({ attrition: 1, existing }))(toArray()))
+		expect(await items(["/items/1", "/items/2", "/items/3"])(retire({ survival: 0, existing }))(toArray()))
 			.toEqual(["/items/4"]);
 
 	});
 
 	it("emits nothing where the incoming feed names every existing item", async () => {
 
-		const existing = ["/items/1", "/items/2"];
+		const existing = items(["/items/1", "/items/2"]);
 
-		expect(await items(["/items/1", "/items/2"])(retire({ attrition: 1, existing }))(toArray()))
+		expect(await items(["/items/1", "/items/2"])(retire({ survival: 0, existing }))(toArray()))
 			.toEqual([]);
 
 	});
 
 	it("ignores incoming items the collection doesn't hold", async () => {
 
-		const existing = ["/items/1"];
+		const existing = items(["/items/1"]);
 
-		expect(await items(["/items/1", "/items/2"])(retire({ attrition: 1, existing }))(toArray()))
+		expect(await items(["/items/1", "/items/2"])(retire({ survival: 0, existing }))(toArray()))
 			.toEqual([]);
 
 	});
 
 	it("emits each existing item once", async () => {
 
-		const existing = ["/items/1", "/items/1", "/items/2"];
+		const existing = items(["/items/1", "/items/1", "/items/2"]);
 
-		expect(await items([])(retire({ attrition: 1, existing }))(toArray()))
+		expect(await items([])(retire({ survival: 0, existing }))(toArray()))
 			.toEqual(["/items/1", "/items/2"]);
 
 	});
 
-	it("rejects an attrition rate outside [0, 1] as the task is created", async () => {
+	it("rejects a survival rate outside [0, 1] as the task is created", async () => {
 
-		expect(() => retire({ attrition: -0.1, existing: [] })).toThrow(TypeError);
-		expect(() => retire({ attrition: 1.1, existing: [] })).toThrow(TypeError);
+		expect(() => retire({ survival: -0.1, existing: items([]) })).toThrow(TypeError);
+		expect(() => retire({ survival: 1.1, existing: items([]) })).toThrow(TypeError);
 
 	});
 
 
-	describe("within the attrition allowance", () => {
+	describe("above the survival floor", () => {
 
 		it("emits the retired items", async () => {
 
-			const existing = ["/items/1", "/items/2", "/items/3", "/items/4"];
+			const existing = items(["/items/1", "/items/2", "/items/3", "/items/4"]);
 
-			expect(await items(["/items/1", "/items/2", "/items/3"])(retire({ attrition: 0.25, existing }))(toArray()))
+			expect(await items(["/items/1", "/items/2", "/items/3"])(retire({ survival: 0.75, existing }))(toArray()))
 				.toEqual(["/items/4"]);
 
 		});
 
-		it("rounds the allowance down to a whole item", async () => {
+		it("rounds a fractional floor up to a whole item", async () => {
 
-			const existing = ["/items/1", "/items/2", "/items/3"];
+			const existing = items(["/items/1", "/items/2", "/items/3"]);
 
-			expect(await items(["/items/1", "/items/2"])(retire({ attrition: 0.5, existing }))(toArray()))
+			expect(await items(["/items/1", "/items/2"])(retire({ survival: 0.5, existing }))(toArray()))
 				.toEqual(["/items/3"]);
 
 		});
@@ -91,22 +91,22 @@ describe("retire", () => {
 	});
 
 
-	describe("beyond the attrition allowance", () => {
+	describe("below the survival floor", () => {
 
 		it("skips the retirements", async () => {
 
-			const existing = ["/items/1", "/items/2", "/items/3", "/items/4"];
+			const existing = items(["/items/1", "/items/2", "/items/3", "/items/4"]);
 
-			expect(await items(["/items/1"])(retire({ attrition: 0.25, existing }))(toArray()))
+			expect(await items(["/items/1"])(retire({ survival: 0.75, existing }))(toArray()))
 				.toEqual([]);
 
 		});
 
 		it("aborts the update under atomic", async () => {
 
-			const existing = ["/items/1", "/items/2", "/items/3", "/items/4"];
+			const existing = items(["/items/1", "/items/2", "/items/3", "/items/4"]);
 
-			await expect(items(["/items/1"])(retire({ atomic: true, attrition: 0.25, existing }))(toArray()))
+			await expect(items(["/items/1"])(retire({ atomic: true, survival: 0.75, existing }))(toArray()))
 				.rejects.toThrow(RangeError);
 
 		});
@@ -114,22 +114,22 @@ describe("retire", () => {
 	});
 
 
-	describe("with a degenerate attrition rate", () => {
+	describe("with a degenerate survival rate", () => {
 
-		it("retires nothing at 0", async () => {
+		it("retires nothing at 1", async () => {
 
-			const existing = ["/items/1", "/items/2"];
+			const existing = items(["/items/1", "/items/2"]);
 
-			expect(await items(["/items/1"])(retire({ attrition: 0, existing }))(toArray()))
+			expect(await items(["/items/1"])(retire({ survival: 1, existing }))(toArray()))
 				.toEqual([]);
 
 		});
 
-		it("retires every existing item at 1", async () => {
+		it("retires every existing item at 0", async () => {
 
-			const existing = ["/items/1", "/items/2"];
+			const existing = items(["/items/1", "/items/2"]);
 
-			expect(await items([])(retire({ attrition: 1, existing }))(toArray()))
+			expect(await items([])(retire({ survival: 0, existing }))(toArray()))
 				.toEqual(["/items/1", "/items/2"]);
 
 		});

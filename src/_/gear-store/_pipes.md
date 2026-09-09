@@ -158,11 +158,11 @@ condemns or the scan never named.
   arrangement, and no retraction can race the upsert of its own entry: what the scan named is never what the branch
   retracts.
 
-- **A floor under the retraction** — a run retracting more than some fraction of what the store holds for the source
-  states nothing and fails, so a broken index costs a run instead of the catalogue. A scan that completed and named
-  nothing is no special case: it is the largest retraction there is, and it meets the floor like any other. Only an
-  operator lifts it, for one run, having established that the withdrawal is real. It guards both classes alike, and it
-  is the reason either may treat absence as evidence at all.
+- **A floor under the retraction** — a run leaving in place less than some fraction of what the store holds for the
+  source states nothing and fails, so a broken index costs a run instead of the catalogue. A scan that completed and
+  named nothing is no special case: it is the largest retraction there is, and it meets the floor like any other. Only
+  an operator lifts it, for one run, having established that the withdrawal is real. It guards both classes alike, and
+  it is the reason either may treat absence as evidence at all.
 
 - **Expiry needs no scan** — sources list past entries as a matter of course, so the bulk of the retiring is drawn from
   the store's own copy against the staleness predicate. That half is evidenced entry by entry, is judged on every

@@ -24,7 +24,7 @@ import { extract } from "@/events/tasks/extract.js";
 import { partners } from "@/universities/index.js";
 import { assert, isDefined } from "@metreeca/core";
 import type { IRI } from "@metreeca/core/resource";
-import { pipe, type Sink, type Task } from "@metreeca/flow";
+import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, fork, map, tee } from "@metreeca/flow/tasks";
 import { fetch, type URLLike } from "@metreeca/gear-url";
@@ -32,12 +32,12 @@ import { focus, html, untag } from "@metreeca/gear-xml";
 
 
 const concurrency = 10; // the number of pages fetched at the same time from the source site // !!! as option
-const attrition = 0.25; // the largest fraction of the stored events a single run may remove // !!! as option
+const survival = 0.75; // the smallest fraction of the stored events a single run must leave in place // !!! as option
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function sync(publisher: { // !!! persist publisher
+export function sync(publisher: { // !!! persist publisher description
 
 	readonly id: IRI
 	readonly university: IRI
@@ -93,7 +93,7 @@ export function sync(publisher: { // !!! persist publisher
 			return pipe(
 				(items(urls))
 				(map(createEventId))
-				(retire({ attrition, existing }))
+				(retire({ survival, existing }))
 				(map(id => delta(id)))
 			);
 
@@ -116,12 +116,14 @@ async function fingerprints(publisher: {
 
 }
 
-async function* catalogue(university: {
+function catalogue(university: {
 
 	readonly id: IRI
 
-}): AsyncGenerator<IRI> {
+}): Feed<IRI> {
 
 	// !!! query the store, through `service(createStore)`, for the events published by `university`
+
+	return items([])
 
 }
