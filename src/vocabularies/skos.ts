@@ -16,7 +16,7 @@
 
 import { reference } from "@metreeca/blue/reference";
 import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
-import { plain } from "@metreeca/blue/string";
+import { text } from "@metreeca/blue/string";
 import { multiple, optional, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
@@ -56,12 +56,12 @@ export function Concept() {
 
 	}, {
 
-		notation: optional(plain), // ;( should be typed as per SKOS best practices
+		notation: optional(text), // ;( should be typed as per SKOS best practices
 
-		prefLabel: required(plain),
-		altLabel: multiple(plain),
-		hiddenLabel: multiple(plain),
-		definition: optional(plain),
+		prefLabel: required(text),
+		altLabel: multiple(text),
+		hiddenLabel: multiple(text),
+		definition: optional(text),
 
 		inScheme: required(reference(ConceptScheme)),
 

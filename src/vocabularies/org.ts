@@ -18,7 +18,7 @@ import * as foaf from "@/vocabularies/foaf.js";
 import { Concept, skos } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
-import { plain, string } from "@metreeca/blue/string";
+import { string, text } from "@metreeca/blue/string";
 import { multiple, optional, repeatable, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
@@ -78,9 +78,9 @@ export function Organization() {
 
 		identifier: optional(string), // ;( string value for compatibility with schema:identifier
 
-		prefLabel: property({ forward: skos }, required(plain)),
-		altLabel: property({ forward: skos }, optional(plain)),
-		definition: property({ forward: skos }, optional(plain)),
+		prefLabel: property({ forward: skos }, required(text)),
+		altLabel: property({ forward: skos }, optional(text)),
+		definition: property({ forward: skos }, optional(text)),
 
 		classification: multiple(reference(Concept)),
 

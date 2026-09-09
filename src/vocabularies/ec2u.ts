@@ -16,7 +16,7 @@
 
 import { Point, wgs } from "@/vocabularies/wgs.js";
 import { id, resource } from "@metreeca/blue/resource";
-import { iri, markdown, plain } from "@metreeca/blue/string";
+import { iri, markdown, text } from "@metreeca/blue/string";
 import { multiple, optional, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
@@ -88,7 +88,7 @@ export function Entity() {
 
 		id: id(),
 
-		label: required(plain({
+		label: required(text({
 			maxLength: LabelLength
 		})),
 

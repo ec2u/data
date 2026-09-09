@@ -23,7 +23,7 @@ import { boolean } from "@metreeca/blue/boolean";
 import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { resource } from "@metreeca/blue/resource";
-import { duration, plain, string, tag } from "@metreeca/blue/string";
+import { duration, string, tag, text } from "@metreeca/blue/string";
 import { multiple, optional, required } from "@metreeca/blue/value";
 
 
@@ -49,9 +49,9 @@ export function LearningResource() {
 
 		numberOfCredits: optional(decimal({ minInclusive: 0 })),
 
-		teaches: optional(plain),
-		assesses: optional(plain),
-		competencyRequired: optional(plain),
+		teaches: optional(text),
+		assesses: optional(text),
+		competencyRequired: optional(text),
 
 		educationalCredentialAwarded: optional(EducationalOccupationalCredential),
 		occupationalCredentialAwarded: optional(EducationalOccupationalCredential),
@@ -73,7 +73,7 @@ export function EducationalOccupationalProgram() {
 
 		timeToComplete: optional(duration),
 
-		programPrerequisites: optional(plain),
+		programPrerequisites: optional(text),
 
 		hasCourse: multiple(reference(Course, { foreign: true }))
 
@@ -87,12 +87,12 @@ export function Course() {
 
 	}, {
 
-		courseCode: optional(plain),
+		courseCode: optional(text),
 
 		inLanguage: multiple(tag),
 		timeRequired: optional(duration),
 
-		coursePrerequisites: optional(plain)
+		coursePrerequisites: optional(text)
 
 	});
 }

@@ -16,7 +16,7 @@
 
 import { reference } from "@metreeca/blue/reference";
 import { resource, type ResourceShape } from "@metreeca/blue/resource";
-import { iri, markdown, plain, string } from "@metreeca/blue/string";
+import { iri, markdown, string, text } from "@metreeca/blue/string";
 import { multiple, optional, repeatable } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
@@ -98,9 +98,9 @@ export function ImageObject() {
 
 		url: repeatable(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
 
-		caption: optional(plain),
-		author: optional(plain),
-		copyrightNotice: optional(plain)
+		caption: optional(text),
+		author: optional(text),
+		copyrightNotice: optional(text)
 
 	});
 }
@@ -116,7 +116,7 @@ export function Thing() {
 
 		identifier: optional(string), // ;( single string value for compatibility with org:Organization
 
-		name: optional(plain),
+		name: optional(text),
 		description: optional(markdown),
 		disambiguatingDescription: optional(markdown),
 

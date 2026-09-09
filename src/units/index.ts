@@ -22,7 +22,7 @@ import { dct } from "@/vocabularies/dct.js";
 import { OrganizationalUnit } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
-import { plain } from "@metreeca/blue/string";
+import { text } from "@metreeca/blue/string";
 import { multiple } from "@metreeca/blue/value";
 
 
@@ -41,7 +41,7 @@ export function Unit() {
 	}, {
 
 		subject: property({ forward: dct }, multiple(reference(Topic))),
-		keyword: property({ forward: dcat }, multiple(plain))
+		keyword: property({ forward: dcat }, multiple(text))
 
 	});
 }

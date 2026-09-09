@@ -19,7 +19,7 @@ import { base, CommentLength, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
 import { Alliance } from "@/organizations/index.js";
 import { Event as SchemaEvent } from "@/vocabularies/schema/event.js";
 import { resource } from "@metreeca/blue/resource";
-import { plain } from "@metreeca/blue/string";
+import { text } from "@metreeca/blue/string";
 import { optional, type State } from "@metreeca/blue/value";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
@@ -66,8 +66,8 @@ export function Event() {
 
 	}, {
 
-		name: optional(plain({ maxLength: LabelLength })),
-		disambiguatingDescription: optional(plain({ maxLength: CommentLength }))
+		name: optional(text({ maxLength: LabelLength })),
+		disambiguatingDescription: optional(text({ maxLength: CommentLength }))
 
 	});
 }

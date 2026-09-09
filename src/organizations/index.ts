@@ -22,7 +22,7 @@ import * as schema from "@/vocabularies/schema/index.js";
 import { Location } from "@/vocabularies/schema/location.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource } from "@metreeca/blue/resource";
-import { email, iri, markdown, phone, plain } from "@metreeca/blue/string";
+import { email, iri, markdown, phone, text } from "@metreeca/blue/string";
 import { multiple, optional } from "@metreeca/blue/value";
 
 
@@ -44,13 +44,13 @@ export function Organization() {
 
 		url: property({ forward: schema.schema }, multiple(iri)),
 
-		name: property({ forward: schema.schema }, optional(plain)),
+		name: property({ forward: schema.schema }, optional(text)),
 		description: property({ forward: schema.schema }, optional(markdown)),
 		disambiguatingDescription: property({ forward: schema.schema }, optional(markdown)),
 
 		image: property({ forward: schema.schema }, optional(reference(schema.ImageObject, { captive: true }))),
 
-		legalName: property({ forward: schema.schema }, optional(plain)),
+		legalName: property({ forward: schema.schema }, optional(text)),
 
 		email: property({ forward: schema.schema }, multiple(email)),
 		telephone: property({ forward: schema.schema }, multiple(phone)),

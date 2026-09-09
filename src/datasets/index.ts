@@ -22,7 +22,7 @@ import { ec2u, Entity, rdfs } from "@/vocabularies/ec2u.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
-import { date, markdown, plain } from "@metreeca/blue/string";
+import { date, markdown, text } from "@metreeca/blue/string";
 import { multiple, optional, required, type State } from "@metreeca/blue/value";
 
 
@@ -41,8 +41,8 @@ export function Dataset() {
 
 	}, {
 
-		title: required(plain),
-		alternative: optional(plain),
+		title: required(text),
+		alternative: optional(text),
 		description: required(markdown),
 
 		created: optional(date),
@@ -53,9 +53,9 @@ export function Dataset() {
 
 		source: optional(reference(Entity)),
 
-		rights: optional(plain),
+		rights: optional(text),
 		license: multiple(reference(Entity)),
-		accessRights: optional(plain),
+		accessRights: optional(text),
 
 		subject: multiple(reference(Topic)),
 

@@ -17,7 +17,7 @@
 import { Thing } from "@/vocabularies/schema/index.js";
 import { Location } from "@/vocabularies/schema/location.js";
 import { resource } from "@metreeca/blue/resource";
-import { email, phone, plain } from "@metreeca/blue/string";
+import { email, phone, text } from "@metreeca/blue/string";
 import { multiple, optional } from "@metreeca/blue/value";
 
 
@@ -28,7 +28,7 @@ export function Organization() {
 
 	}, {
 
-		legalName: optional(plain),
+		legalName: optional(text),
 
 		email: multiple(email),
 		telephone: multiple(phone),

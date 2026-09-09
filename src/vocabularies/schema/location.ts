@@ -18,14 +18,14 @@ import { Thing } from "@/vocabularies/schema/index.js";
 import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { resource } from "@metreeca/blue/resource";
-import { email, iri, phone, plain } from "@metreeca/blue/string";
+import { email, iri, phone, text } from "@metreeca/blue/string";
 import { union } from "@metreeca/blue/union";
 import { optional, repeatable, required } from "@metreeca/blue/value";
 
 
 export function Location() {
 	return union(
-		plain,
+		text,
 		Place,
 		PostalAddress,
 		VirtualLocation
@@ -54,12 +54,12 @@ export function PostalAddress() {
 
 	}, {
 
-		addressCountry: optional(plain),
-		addressRegion: optional(plain),
-		addressLocality: optional(plain),
+		addressCountry: optional(text),
+		addressRegion: optional(text),
+		addressLocality: optional(text),
 
-		postalCode: optional(plain),
-		streetAddress: optional(plain),
+		postalCode: optional(text),
+		streetAddress: optional(text),
 
 		email: optional(email),
 		telephone: optional(phone)

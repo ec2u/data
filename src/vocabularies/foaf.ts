@@ -15,7 +15,7 @@
  */
 
 import { resource } from "@metreeca/blue/resource";
-import { email, iri, phone, plain } from "@metreeca/blue/string";
+import { email, iri, phone, text } from "@metreeca/blue/string";
 import { multiple, optional, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
@@ -75,10 +75,10 @@ export function Person() {
 
 	}, {
 
-		title: optional(plain),
+		title: optional(text),
 
-		givenName: required(plain),
-		familyName: required(plain)
+		givenName: required(text),
+		familyName: required(text)
 
 	});
 }

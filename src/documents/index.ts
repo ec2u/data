@@ -23,7 +23,7 @@ import { dct } from "@/vocabularies/dct.js";
 import { schema } from "@/vocabularies/schema/index.js";
 import { reference } from "@metreeca/blue/reference";
 import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
-import { date, iri, plain, tag } from "@metreeca/blue/string";
+import { date, iri, tag, text } from "@metreeca/blue/string";
 import { multiple, optional, required } from "@metreeca/blue/value";
 
 
@@ -38,11 +38,11 @@ export function Document() {
 
 		url: property({ forward: schema }, multiple(iri)),
 
-		identifier: optional(plain),
+		identifier: optional(text),
 		language: multiple(tag),
 
-		title: required(plain),
-		description: optional(plain),
+		title: required(text),
+		description: optional(text),
 
 		creator: optional(Person),
 		contributor: multiple(Person),
@@ -52,10 +52,10 @@ export function Document() {
 		issued: optional(date),
 		modified: optional(date),
 
-		valid: optional(plain),
+		valid: optional(text),
 
-		rights: optional(plain),
-		accessRights: optional(plain),
+		rights: optional(text),
+		accessRights: optional(text),
 		license: optional(reference(Entity)),
 
 		type: property({ forward: dct.type }, multiple(reference(Topic))),
