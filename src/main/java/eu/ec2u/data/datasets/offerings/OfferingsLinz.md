@@ -16,6 +16,8 @@ Data extracted from dedicated REST/JSON APIs.
 | https://ec2u.datahub.jku.at/api/1/programs | degree programs [de] | English names and descriptions translated |
 | https://ec2u.datahub.jku.at/api/1/courses  | courses [de, en]     | no course descriptions provided           |
 
+- **2026-09-11** – map the course `audience` field to EC2U stakeholder topics, tagging lifelong-learning courses as
+  continuing-education students
 - **2026-09-07** – fix the nightly crawling URL, which pointed to a non-existent `/programs` sub-route and silently
   returned 404 since 2025-02-11
 - **2025-04-28** – update courses pipeline to read `educationalLevel` directly from the course description
