@@ -33,6 +33,7 @@ import eu.ec2u.data.datasets.taxonomies.TopicFrame;
 
 import java.net.URI;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -56,6 +57,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.courses.Courses.COURSES;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
+import static eu.ec2u.data.datasets.taxonomies.TopicsEC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.datasets.universities.University.LINZ;
 import static eu.ec2u.data.datasets.universities.University.uuid;
 import static java.lang.String.format;
@@ -67,6 +69,12 @@ public final class OfferingsLinz implements Runnable {
     private static final String COURSES_URL="courses-linz-url";
 
     private static final URI PIPELINE=URIs.uri("java:%s".formatted(OfferingsLinz.class.getName()));
+
+    private static final Map<String, TopicFrame> AUDIENCES=map(entry(
+            "Lifelong Learning", new TopicFrame(true).id(
+                    EC2U_STAKEHOLDERS.id().resolve("teaching/students/continuing-education")
+            )
+    ));
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,6 +201,7 @@ public final class OfferingsLinz implements Runnable {
 
                 .numberOfCredits(numberOfCredits(json).orElse(null))
                 .educationalLevel(set(educationalLevel(json).stream()))
+                .audience(set(audience(json)))
 
                 .inProgram(set(json.select("inProgram.*.identifier").strings().map(v ->
                         new ProgramFrame(true).id(PROGRAMS.id().resolve(uuid(LINZ, v)))
@@ -217,6 +226,11 @@ public final class OfferingsLinz implements Runnable {
 
     private Optional<Double> numberOfCredits(final Value json) {
         return json.get("numberOfCredits").floating();
+    }
+
+    private Stream<TopicFrame> audience(final Value json) {
+        return json.get("audience").strings()
+                .flatMap(v -> Optional.ofNullable(AUDIENCES.get(v)).stream());
     }
 
     private Optional<TopicFrame> educationalLevel(final Value json) {
