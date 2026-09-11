@@ -24,16 +24,16 @@ import { multiple, optional } from "@metreeca/blue/value";
 export function Organization() {
 	return resource({
 
-		extends: Thing
-
-	}, {
-
 		legalName: optional(text),
 
 		email: multiple(email),
 		telephone: multiple(phone),
 
 		location: optional(Location)
+
+	}, {
+
+		extends: Thing
 
 	});
 }

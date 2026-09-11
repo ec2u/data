@@ -56,12 +56,6 @@ export const units = immutable({
 export function Unit() {
 	return resource({
 
-		class: ec2u.Unit,
-		extends: [Organization, OrganizationalUnit],
-		namespace: ec2u
-
-	}, {
-
 		// ;( `hasUnit` not narrowed to `Unit`: the inherited `org.OrganizationalUnit` target is reached through a
 		// ;( thunk, and a thunk builds a fresh closure per call, so the lineage never matches by structure
 
@@ -72,6 +66,13 @@ export function Unit() {
 
 		subject: property({ forward: dct }, multiple(reference(Topic))),
 		keyword: property({ forward: dcat }, multiple(text))
+
+	}, {
+
+		namespace: ec2u,
+		class: ec2u.Unit,
+
+		extends: [Organization, OrganizationalUnit]
 
 	});
 }

@@ -53,14 +53,6 @@ export const organizations = immutable({
 export function Organization() {
 	return resource({
 
-		extends: [Resource, org.Organization, SchemaOrganization],
-
-		namespace: ec2u,
-
-		class: ec2u.Organization
-
-	}, {
-
 		// ;( `subOrganizationOf` and `hasSubOrganization` not narrowed: an override targeting the very shape that
 		// ;( declares it closes a circular `extends` chain; `Unit` and `University` narrow them on their own
 
@@ -74,6 +66,13 @@ export function Organization() {
 
 		hasHead: multiple(reference(Person)),
 		hasMember: multiple(reference(Person))
+
+	}, {
+
+		namespace: ec2u,
+		class: ec2u.Organization,
+
+		extends: [Resource, org.Organization, SchemaOrganization]
 
 	});
 }

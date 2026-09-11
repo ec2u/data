@@ -61,12 +61,6 @@ export const partners = immutable(Object.fromEntries(
 export function University() {
 	return resource({
 
-		class: ec2u.University,
-		extends: [Organization, Feature, FormalOrganization],
-		namespace: ec2u
-
-	}, {
-
 		// !!! constraint dataset to getNamespaceIRI(universities)
 
 		// ;( `hasUnit` not narrowed to `Unit`: the inherited `org.OrganizationalUnit` target is reached through a
@@ -83,6 +77,13 @@ export function University() {
 
 		city: required(Feature), // !!! reference?
 		country: required(Feature) // !!! reference?
+
+	}, {
+
+		namespace: ec2u,
+		class: ec2u.University,
+
+		extends: [Organization, Feature, FormalOrganization]
 
 	});
 }

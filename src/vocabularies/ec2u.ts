@@ -84,10 +84,6 @@ export const CommentLength = 500;
 export function Entity() {
 	return resource({
 
-		namespace: rdfs
-
-	}, {
-
 		id: id(),
 
 		label: required(text({
@@ -101,15 +97,19 @@ export function Entity() {
 		isDefinedBy: optional(iri),
 		seeAlso: multiple(iri)
 
+	}, {
+
+		namespace: rdfs
+
 	});
 }
 
 export function Feature() {
-	return resource({
+	return resource({}, {
 
-		extends: [Entity, Point],
+		namespace: wgs,
 
-		namespace: wgs
+		extends: [Entity, Point]
 
-	}, {});
+	});
 }

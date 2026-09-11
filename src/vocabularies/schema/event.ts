@@ -53,10 +53,6 @@ export function EventAttendanceModeEnumeration() {
 export function Event() {
 	return resource({
 
-		extends: Thing
-
-	}, {
-
 		url: repeatable(iri),
 
 		startDate: required(instant),
@@ -77,6 +73,10 @@ export function Event() {
 
 		about: multiple(reference(Concept)),
 		audience: multiple(reference(Concept))
+
+	}, {
+
+		extends: Thing
 
 	});
 }

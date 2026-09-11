@@ -60,12 +60,6 @@ export const courses = immutable({
 export function Course() {
 	return resource({
 
-		class: ec2u.Course,
-		extends: [Offering, SchemaCourse, CourseInstance],
-		namespace: ec2u
-
-	}, {
-
 		year: optional(string({ pattern: YearPattern })),
 		term: multiple(Term),
 
@@ -73,6 +67,13 @@ export function Course() {
 		instructor: multiple(reference(Person)),
 
 		inProgram: property({ reverse: schema.hasCourse }, multiple(reference(Program)))
+
+	}, {
+
+		namespace: ec2u,
+		class: ec2u.Course,
+
+		extends: [Offering, SchemaCourse, CourseInstance]
 
 	});
 }

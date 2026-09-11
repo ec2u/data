@@ -37,10 +37,6 @@ export const wgs = createNamespace("http://www.w3.org/2003/01/geo/wgs84_pos#", [
 export function Point() {
 	return resource({
 
-		namespace: wgs
-
-	}, {
-
 		longitude: property({ forward: wgs.long }, required(decimal({
 			minInclusive: -LongitudeLimit,
 			maxInclusive: LongitudeLimit
@@ -50,6 +46,10 @@ export function Point() {
 			minInclusive: -LatitudeLimit,
 			maxInclusive: LatitudeLimit
 		})))
+
+	}, {
+
+		namespace: wgs
 
 	});
 }

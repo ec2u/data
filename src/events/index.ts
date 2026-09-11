@@ -62,13 +62,6 @@ export type Event = State<typeof Event> // !!! remove
 export function Event() {
 	return resource({
 
-		extends: [Resource, SchemaEvent],
-
-		namespace: ec2u,
-		class: ec2u.Event
-
-	}, {
-
 		name: optional(text({ maxLength: LabelLength })),
 		disambiguatingDescription: optional(text({ maxLength: CommentLength })),
 
@@ -79,6 +72,13 @@ export function Event() {
 
 		about: multiple(reference(Topic)),
 		audience: multiple(reference(Topic))
+
+	}, {
+
+		namespace: ec2u,
+		class: ec2u.Event,
+
+		extends: [Resource, SchemaEvent]
 
 	});
 }

@@ -29,12 +29,6 @@ import { multiple, optional, required } from "@metreeca/blue/value";
 export function Dataset() {
 	return resource({
 
-		class: ec2u.Dataset,
-		extends: Resource,
-		namespace: dct
-
-	}, {
-
 		title: required(text),
 		alternative: optional(text),
 		description: required(markdown),
@@ -60,18 +54,18 @@ export function Dataset() {
 
 		}, multiple(reference(Resource, { foreign: true }))) // !!! foreign to property
 
+	}, {
+
+		namespace: dct,
+		class: ec2u.Dataset,
+
+		extends: Resource
+
 	});
 }
 
 export function Resource() {
 	return resource({
-
-		extends: Entity,
-
-		class: ec2u.Resource,
-		namespace: ec2u
-
-	}, {
 
 		generated: property({
 
@@ -87,6 +81,13 @@ export function Resource() {
 		}, required(reference((): ResourceShape => Dataset()))),
 
 		university: optional(reference((): ResourceShape => University()))
+
+	}, {
+
+		namespace: ec2u,
+		class: ec2u.Resource,
+
+		extends: Entity
 
 	});
 }
