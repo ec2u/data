@@ -20,9 +20,8 @@ import { Organization } from "@/vocabularies/schema/organization.js";
 import { Concept } from "@/vocabularies/skos.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
-import { resource } from "@metreeca/blue/resource";
+import { multiple, nonempty, optional, required, resource } from "@metreeca/blue/resource";
 import { instant, iri, string, tag } from "@metreeca/blue/string";
-import { multiple, optional, repeatable, required } from "@metreeca/blue/value";
 
 
 export function EventStatusType() {
@@ -53,7 +52,7 @@ export function EventAttendanceModeEnumeration() {
 export function Event() {
 	return resource(Thing, {
 
-		url: repeatable(iri),
+		url: nonempty(iri),
 
 		startDate: required(instant),
 		endDate: optional(instant),

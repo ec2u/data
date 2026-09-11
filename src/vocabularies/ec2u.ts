@@ -15,9 +15,8 @@
  */
 
 import { Point, wgs } from "@/vocabularies/wgs.js";
-import { id, resource } from "@metreeca/blue/resource";
+import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { iri, markdown, text } from "@metreeca/blue/string";
-import { multiple, optional, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 

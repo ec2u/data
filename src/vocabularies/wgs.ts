@@ -15,8 +15,7 @@
  */
 
 import { decimal } from "@metreeca/blue/number";
-import { property, resource } from "@metreeca/blue/resource";
-import { required } from "@metreeca/blue/value";
+import { required, resource } from "@metreeca/blue/resource";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -37,15 +36,23 @@ export const wgs = createNamespace("http://www.w3.org/2003/01/geo/wgs84_pos#", [
 export function Point() {
 	return resource({
 
-		longitude: property({ forward: wgs.long }, required(decimal({
+		longitude: required(decimal({
 			minInclusive: -LongitudeLimit,
 			maxInclusive: LongitudeLimit
-		}))),
+		}), {
 
-		latitude: property({ forward: wgs.lat }, required(decimal({
+			forward: wgs.long
+
+		}),
+
+		latitude: required(decimal({
 			minInclusive: -LatitudeLimit,
 			maxInclusive: LatitudeLimit
-		})))
+		}), {
+
+			forward: wgs.lat
+
+		})
 
 	}, {
 

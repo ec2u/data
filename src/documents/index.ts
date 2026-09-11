@@ -23,9 +23,8 @@ import { dct } from "@/vocabularies/dct.js";
 import { EC2U, base, ec2u, Entity } from "@/vocabularies/ec2u.js";
 import { schema } from "@/vocabularies/schema/index.js";
 import { reference } from "@metreeca/blue/reference";
-import { property, resource } from "@metreeca/blue/resource";
+import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { date, iri, tag, text } from "@metreeca/blue/string";
-import { multiple, optional, required } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/structures";
 
 
@@ -57,7 +56,11 @@ export const documents = immutable({
 export function Document() {
 	return resource(Resource, {
 
-		url: property({ forward: schema }, multiple(iri)),
+		url: multiple(iri, {
+
+			forward: schema
+
+		}),
 
 		identifier: optional(text),
 		language: multiple(tag),
@@ -79,7 +82,12 @@ export function Document() {
 		accessRights: optional(text),
 		license: optional(reference(Entity)),
 
-		type: property({ forward: dct.type }, multiple(reference(Topic))),
+		type: multiple(reference(Topic), {
+
+			forward: dct.type
+
+		}),
+
 		subject: multiple(reference(Topic)),
 		audience: multiple(reference(Topic)),
 

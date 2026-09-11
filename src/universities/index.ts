@@ -21,9 +21,8 @@ import { EC2U, base, ec2u, Feature } from "@/vocabularies/ec2u.js";
 import { FormalOrganization } from "@/vocabularies/org.js";
 import { int } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
-import { resource } from "@metreeca/blue/resource";
+import { multiple, nonempty, required, resource } from "@metreeca/blue/resource";
 import { iri, year } from "@metreeca/blue/string";
-import { multiple, repeatable, required } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/structures";
 
 export * from "@/universities/index.core.js";
@@ -69,8 +68,8 @@ export function University() {
 		subOrganizationOf: multiple(reference(Organization)),
 		hasSubOrganization: multiple(reference(Organization)),
 
-		depiction: repeatable(iri),
-		homepage: repeatable(iri),
+		depiction: nonempty(iri),
+		homepage: nonempty(iri),
 
 		inception: required(year),
 		students: required(int),

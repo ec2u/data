@@ -19,8 +19,7 @@ import { Topic } from "@/taxonomies/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
 import { LearningResource } from "@/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
-import { resource } from "@metreeca/blue/resource";
-import { multiple } from "@metreeca/blue/value";
+import { multiple, resource } from "@metreeca/blue/resource";
 
 
 export function Offering() {

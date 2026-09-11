@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { resource } from "@metreeca/blue/resource";
+import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { email, iri, phone, text } from "@metreeca/blue/string";
-import { multiple, optional, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 

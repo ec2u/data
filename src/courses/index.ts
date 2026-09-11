@@ -23,9 +23,8 @@ import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import { schema } from "@/vocabularies/schema/index.js";
 import { Course as SchemaCourse, CourseInstance } from "@/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
-import { property, resource } from "@metreeca/blue/resource";
+import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
-import { multiple, optional } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/structures";
 
 
@@ -66,7 +65,11 @@ export function Course() {
 		audience: multiple(reference(Topic)),
 		instructor: multiple(reference(Person)),
 
-		inProgram: property({ reverse: schema.hasCourse }, multiple(reference(Program)))
+		inProgram: multiple(reference(Program), {
+
+			reverse: schema.hasCourse
+
+		})
 
 	}, {
 

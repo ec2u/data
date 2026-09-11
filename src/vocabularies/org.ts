@@ -17,9 +17,8 @@
 import * as foaf from "@/vocabularies/foaf.js";
 import { Concept, skos } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
-import { property, resource, type ResourceShape } from "@metreeca/blue/resource";
+import { multiple, nonempty, optional, required, resource, type ResourceShape } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
-import { multiple, optional, repeatable, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -52,12 +51,12 @@ export const org = createNamespace("http://www.w3.org/ns/org#", [
 export function OrganizationalUnit() {
 	return resource(Organization, {
 
-		unitOf: property({
+		unitOf: nonempty(reference(Organization), {
 
 			forward: org,
 			reverse: org.hasUnit
 
-		}, repeatable(reference(Organization)))
+		})
 
 	}, {
 
@@ -71,9 +70,23 @@ export function Organization() {
 
 		// ;( `identifier` omitted: it would clash with `schema:identifier`, the term EC2U `Organization` publishes
 
-		prefLabel: property({ forward: skos }, required(text)),
-		altLabel: property({ forward: skos }, optional(text)),
-		definition: property({ forward: skos }, optional(text)),
+		prefLabel: required(text, {
+
+			forward: skos
+
+		}),
+
+		altLabel: optional(text, {
+
+			forward: skos
+
+		}),
+
+		definition: optional(text, {
+
+			forward: skos
+
+		}),
 
 		classification: multiple(reference(Concept)),
 
@@ -82,11 +95,11 @@ export function Organization() {
 
 		hasUnit: multiple(reference((): ResourceShape => OrganizationalUnit(), { foreign: true })),
 
-		hasHead: property({
+		hasHead: multiple(reference(foaf.Person, { foreign: true }), {
 
 			reverse: org.headOf
 
-		}, multiple(reference(foaf.Person, { foreign: true }))),
+		}),
 
 		hasMember: multiple(reference(foaf.Person, { foreign: true }))
 

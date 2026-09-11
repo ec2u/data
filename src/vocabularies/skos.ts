@@ -15,9 +15,8 @@
  */
 
 import { reference } from "@metreeca/blue/reference";
-import { property, resource } from "@metreeca/blue/resource";
+import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
-import { multiple, optional, required } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -51,19 +50,19 @@ export const skos = createNamespace("http://www.w3.org/2004/02/skos/core#", [
 export function ConceptScheme() {
 	return resource({
 
-		hasTopConcept: property({
+		hasTopConcept: multiple(reference(Concept, { foreign: true }), {
 
 			reverse: skos.topConceptOf
 
-		}, multiple(reference(Concept, { foreign: true }))),
+		}),
 
-		hasConcept: property({
+		hasConcept: multiple(reference(Concept, { foreign: true }), {
 
 			hidden: true,
 
 			reverse: skos.inScheme
 
-		}, multiple(reference(Concept, { foreign: true })))
+		})
 
 	}, {
 
@@ -85,37 +84,37 @@ export function Concept() {
 
 		inScheme: required(reference(ConceptScheme)),
 
-		topConceptOf: property({
+		topConceptOf: optional(reference(ConceptScheme), {
 
 			forward: skos,
 			reverse: skos.hasTopConcept
 
-		}, optional(reference(ConceptScheme))),
+		}),
 
-		broader: property({
+		broader: multiple(reference(Concept), {
 
 			forward: skos,
 			reverse: skos.narrower
 
-		}, multiple(reference(Concept))),
+		}),
 
 		broaderTransitive: multiple(reference(Concept)),
 
 		narrower: multiple(reference(Concept, { foreign: true })),
 
-		related: property({
+		related: multiple(reference(Concept), {
 
 			forward: skos,
 			reverse: skos
 
-		}, multiple(reference(Concept))),
+		}),
 
-		exactMatch: property({
+		exactMatch: multiple(reference(Concept), {
 
 			forward: skos,
 			reverse: skos
 
-		}, multiple(reference(Concept)))
+		})
 
 	}, {
 

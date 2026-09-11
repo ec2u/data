@@ -22,8 +22,7 @@ import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import * as org from "@/vocabularies/org.js";
 import { Organization as SchemaOrganization } from "@/vocabularies/schema/organization.js";
 import { reference } from "@metreeca/blue/reference";
-import { resource } from "@metreeca/blue/resource";
-import { multiple } from "@metreeca/blue/value";
+import { multiple, resource } from "@metreeca/blue/resource";
 import { immutable } from "@metreeca/core/structures";
 
 

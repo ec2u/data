@@ -15,9 +15,8 @@
  */
 
 import { reference } from "@metreeca/blue/reference";
-import { resource, type ResourceShape } from "@metreeca/blue/resource";
+import { multiple, nonempty, optional, resource, type ResourceShape } from "@metreeca/blue/resource";
 import { iri, markdown, string, text } from "@metreeca/blue/string";
-import { multiple, optional, repeatable } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -92,7 +91,7 @@ export const schema = createNamespace("https://schema.org/", [
 export function ImageObject() {
 	return resource(Thing, {
 
-		url: repeatable(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
+		url: nonempty(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
 
 		caption: optional(text),
 		author: optional(text),

@@ -19,9 +19,8 @@ import { Dataset, Resource } from "@/datasets/index.js";
 import { base, EC2U, ec2u } from "@/vocabularies/ec2u.js";
 import { Concept, ConceptScheme } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
-import { property, resource } from "@metreeca/blue/resource";
+import { multiple, required, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
-import { multiple, required } from "@metreeca/blue/value";
 import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 
@@ -77,7 +76,7 @@ export function Topic() {
 		// ;( `inScheme`, `topConceptOf` and `dataset` not narrowed to `Taxonomy`: `Taxonomy` already narrows the
 		// ;( opposite direction, and refining both leaves the two ends resolving each other until the stack is spent
 
-		digest: property({
+		digest: required(string, {
 
 			hidden: true,
 
@@ -87,7 +86,7 @@ export function Topic() {
 				reprocesses only the entries the source document has changed.
 			`
 
-		}, required(string))
+		})
 
 	}, {
 

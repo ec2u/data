@@ -23,9 +23,8 @@ import { Concept } from "@/vocabularies/skos.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
-import { resource, type ResourceShape } from "@metreeca/blue/resource";
+import { multiple, optional, required, resource, type ResourceShape } from "@metreeca/blue/resource";
 import { duration, string, tag, text } from "@metreeca/blue/string";
-import { multiple, optional, required } from "@metreeca/blue/value";
 
 
 export function CredentialCategory() {

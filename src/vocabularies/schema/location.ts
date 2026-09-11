@@ -17,10 +17,9 @@
 import { Thing } from "@/vocabularies/schema/index.js";
 import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
-import { resource } from "@metreeca/blue/resource";
+import { nonempty, optional, required, resource } from "@metreeca/blue/resource";
 import { email, iri, phone, text } from "@metreeca/blue/string";
 import { union } from "@metreeca/blue/union";
-import { optional, repeatable, required } from "@metreeca/blue/value";
 
 
 export function Location() {
@@ -62,7 +61,7 @@ export function PostalAddress() {
 export function VirtualLocation() {
 	return resource(Thing, {
 
-		url: repeatable(iri)
+		url: nonempty(iri)
 
 	});
 }

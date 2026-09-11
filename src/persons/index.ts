@@ -21,8 +21,7 @@ import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import * as foaf from "@/vocabularies/foaf.js";
 import { org } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
-import { property, resource } from "@metreeca/blue/resource";
-import { multiple } from "@metreeca/blue/value";
+import { multiple, resource } from "@metreeca/blue/resource";
 import { immutable } from "@metreeca/core/structures";
 
 
@@ -52,14 +51,18 @@ export const persons = immutable({
 export function Person() {
 	return resource(Resource, foaf.Person, {
 
-		headOf: property({ forward: org }, multiple(reference(Organization))),
+		headOf: multiple(reference(Organization), {
 
-		memberOf: property({
+			forward: org
+
+		}),
+
+		memberOf: multiple(reference(Organization), {
 
 			forward: org,
 			reverse: org.hasMember
 
-		}, multiple(reference(Organization)))
+		})
 
 	}, {
 
