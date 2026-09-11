@@ -69,7 +69,7 @@ export function Unit() {
 
 	}, {
 
-		namespace: ec2u,
+		space: ec2u,
 		class: ec2u.Unit,
 
 		extends: [Organization, OrganizationalUnit]

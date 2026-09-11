@@ -87,7 +87,7 @@ export function Document() {
 
 	}, {
 
-		namespace: dct,
+		space: dct,
 		class: ec2u.Document,
 
 		extends: Resource

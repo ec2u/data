@@ -70,7 +70,7 @@ export function Course() {
 
 	}, {
 
-		namespace: ec2u,
+		space: ec2u,
 		class: ec2u.Course,
 
 		extends: [Offering, SchemaCourse, CourseInstance]

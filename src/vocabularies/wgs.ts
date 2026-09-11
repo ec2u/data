@@ -49,7 +49,7 @@ export function Point() {
 
 	}, {
 
-		namespace: wgs
+		space: wgs
 
 	});
 }

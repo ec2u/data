@@ -75,7 +75,7 @@ export function Event() {
 
 	}, {
 
-		namespace: ec2u,
+		space: ec2u,
 		class: ec2u.Event,
 
 		extends: [Resource, SchemaEvent]

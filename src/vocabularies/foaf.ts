@@ -52,7 +52,7 @@ export function Agent() {
 
 	}, {
 
-		namespace: foaf,
+		space: foaf,
 		class: foaf.Agent
 
 	});

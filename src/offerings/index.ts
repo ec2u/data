@@ -37,7 +37,7 @@ export function Offering() {
 
 	}, {
 
-		namespace: ec2u,
+		space: ec2u,
 		class: ec2u.Offering,
 
 		extends: [Resource, LearningResource]

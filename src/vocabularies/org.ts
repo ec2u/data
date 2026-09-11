@@ -94,7 +94,7 @@ export function Organization() {
 
 	}, {
 
-		namespace: org,
+		space: org,
 		class: org.Organization,
 
 		extends: foaf.Organization

@@ -67,7 +67,7 @@ export function ConceptScheme() {
 
 	}, {
 
-		namespace: skos,
+		space: skos,
 		class: skos.ConceptScheme
 
 	});
@@ -119,7 +119,7 @@ export function Concept() {
 
 	}, {
 
-		namespace: skos,
+		space: skos,
 		class: skos.Concept
 
 	});

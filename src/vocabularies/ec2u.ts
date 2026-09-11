@@ -99,7 +99,7 @@ export function Entity() {
 
 	}, {
 
-		namespace: rdfs
+		space: rdfs
 
 	});
 }
@@ -107,7 +107,7 @@ export function Entity() {
 export function Feature() {
 	return resource({}, {
 
-		namespace: wgs,
+		space: wgs,
 
 		extends: [Entity, Point]
 

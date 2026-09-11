@@ -120,7 +120,7 @@ export function Thing() {
 
 	}, {
 
-		namespace: schema
+		space: schema
 
 	});
 }

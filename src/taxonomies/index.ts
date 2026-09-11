@@ -62,7 +62,7 @@ export function Taxonomy() {
 
 	}, {
 
-		namespace: ec2u,
+		space: ec2u,
 		class: ec2u.Taxonomy,
 
 		extends: [Dataset, ConceptScheme]
@@ -93,7 +93,7 @@ export function Topic() {
 
 	}, {
 
-		namespace: ec2u,
+		space: ec2u,
 		class: ec2u.Topic,
 
 		extends: [Resource, Concept]

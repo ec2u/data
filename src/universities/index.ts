@@ -80,7 +80,7 @@ export function University() {
 
 	}, {
 
-		namespace: ec2u,
+		space: ec2u,
 		class: ec2u.University,
 
 		extends: [Organization, Feature, FormalOrganization]

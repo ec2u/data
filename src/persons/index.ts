@@ -63,7 +63,7 @@ export function Person() {
 
 	}, {
 
-		namespace: ec2u,
+		space: ec2u,
 		class: ec2u.Person,
 
 		extends: [Resource, foaf.Person]

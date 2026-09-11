@@ -69,7 +69,7 @@ export function Organization() {
 
 	}, {
 
-		namespace: ec2u,
+		space: ec2u,
 		class: ec2u.Organization,
 
 		extends: [Resource, org.Organization, SchemaOrganization]

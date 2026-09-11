@@ -56,7 +56,7 @@ export function Dataset() {
 
 	}, {
 
-		namespace: dct,
+		space: dct,
 		class: ec2u.Dataset,
 
 		extends: Resource
@@ -84,7 +84,7 @@ export function Resource() {
 
 	}, {
 
-		namespace: ec2u,
+		space: ec2u,
 		class: ec2u.Resource,
 
 		extends: Entity

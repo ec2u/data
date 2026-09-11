@@ -50,7 +50,7 @@ export const programs = immutable({
 export function Program() {
 	return resource({}, {
 
-		namespace: ec2u,
+		space: ec2u,
 		class: ec2u.Program,
 
 		extends: [Offering, EducationalOccupationalProgram]
