@@ -59,7 +59,7 @@ export const partners = immutable(Object.fromEntries(
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function University() {
-	return resource({
+	return resource(Organization, Feature, FormalOrganization, {
 
 		// !!! constraint dataset to getNamespaceIRI(universities)
 
@@ -81,9 +81,7 @@ export function University() {
 	}, {
 
 		space: ec2u,
-		class: ec2u.University,
-
-		extends: [Organization, Feature, FormalOrganization]
+		class: ec2u.University
 
 	});
 }

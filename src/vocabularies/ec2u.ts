@@ -105,11 +105,9 @@ export function Entity() {
 }
 
 export function Feature() {
-	return resource({}, {
+	return resource(Entity, Point, {}, {
 
-		space: wgs,
-
-		extends: [Entity, Point]
+		space: wgs
 
 	});
 }

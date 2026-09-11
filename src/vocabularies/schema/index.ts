@@ -90,17 +90,13 @@ export const schema = createNamespace("https://schema.org/", [
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function ImageObject() {
-	return resource({
+	return resource(Thing, {
 
 		url: repeatable(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
 
 		caption: optional(text),
 		author: optional(text),
 		copyrightNotice: optional(text)
-
-	}, {
-
-		extends: Thing
 
 	});
 }

@@ -42,7 +42,7 @@ export function CredentialCategory() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function LearningResource() {
-	return resource({
+	return resource(Thing, {
 
 		numberOfCredits: optional(decimal({ minInclusive: 0 })),
 
@@ -58,15 +58,11 @@ export function LearningResource() {
 		educationalLevel: multiple(reference(Concept)),
 		about: multiple(reference(Concept))
 
-	}, {
-
-		extends: Thing
-
 	});
 }
 
 export function EducationalOccupationalProgram() {
-	return resource({
+	return resource(LearningResource, {
 
 		timeToComplete: optional(duration),
 
@@ -74,15 +70,11 @@ export function EducationalOccupationalProgram() {
 
 		hasCourse: multiple(reference((): ResourceShape => EC2UCourse(), { foreign: true }))
 
-	}, {
-
-		extends: LearningResource
-
 	});
 }
 
 export function Course() {
-	return resource({
+	return resource(LearningResource, {
 
 		courseCode: optional(text),
 
@@ -91,15 +83,11 @@ export function Course() {
 
 		coursePrerequisites: optional(text)
 
-	}, {
-
-		extends: LearningResource
-
 	});
 }
 
 export function CourseInstance() {
-	return resource({
+	return resource(Thing, {
 
 		isAccessibleForFree: optional(boolean),
 		courseWorkload: optional(duration),
@@ -110,21 +98,13 @@ export function CourseInstance() {
 		about: multiple(reference(Concept)),
 		audience: multiple(reference(Concept))
 
-	}, {
-
-		extends: Thing
-
 	});
 }
 
 export function EducationalOccupationalCredential() {
-	return resource({
+	return resource(Thing, {
 
 		credentialCategory: required(CredentialCategory)
-
-	}, {
-
-		extends: Thing
 
 	});
 }

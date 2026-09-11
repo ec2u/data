@@ -33,22 +33,18 @@ export function Location() {
 }
 
 export function Place() {
-	return resource({
+	return resource(Thing, {
 
 		address: optional(reference(PostalAddress)),
 
 		latitude: required(decimal),
 		longitude: required(decimal)
 
-	}, {
-
-		extends: Thing
-
 	});
 }
 
 export function PostalAddress() {
-	return resource({
+	return resource(Thing, {
 
 		addressCountry: optional(text),
 		addressRegion: optional(text),
@@ -60,21 +56,13 @@ export function PostalAddress() {
 		email: optional(email),
 		telephone: optional(phone)
 
-	}, {
-
-		extends: Thing
-
 	});
 }
 
 export function VirtualLocation() {
-	return resource({
+	return resource(Thing, {
 
 		url: repeatable(iri)
-
-	}, {
-
-		extends: Thing
 
 	});
 }

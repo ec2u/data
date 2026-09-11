@@ -55,7 +55,7 @@ export const documents = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Document() {
-	return resource({
+	return resource(Resource, {
 
 		url: property({ forward: schema }, multiple(iri)),
 
@@ -88,9 +88,7 @@ export function Document() {
 	}, {
 
 		space: dct,
-		class: ec2u.Document,
-
-		extends: Resource
+		class: ec2u.Document
 
 	});
 }

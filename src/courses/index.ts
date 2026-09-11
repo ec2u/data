@@ -58,7 +58,7 @@ export const courses = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Course() {
-	return resource({
+	return resource(Offering, SchemaCourse, CourseInstance, {
 
 		year: optional(string({ pattern: YearPattern })),
 		term: multiple(Term),
@@ -71,9 +71,7 @@ export function Course() {
 	}, {
 
 		space: ec2u,
-		class: ec2u.Course,
-
-		extends: [Offering, SchemaCourse, CourseInstance]
+		class: ec2u.Course
 
 	});
 }

@@ -59,17 +59,15 @@ export function Agent() {
 }
 
 export function Organization() {
-	return resource({}, {
+	return resource(Agent, {}, {
 
-		class: foaf.Organization,
-
-		extends: Agent
+		class: foaf.Organization
 
 	});
 }
 
 export function Person() {
-	return resource({
+	return resource(Agent, {
 
 		title: optional(text),
 
@@ -78,9 +76,7 @@ export function Person() {
 
 	}, {
 
-		class: foaf.Person,
-
-		extends: Agent
+		class: foaf.Person
 
 	});
 }

@@ -50,7 +50,7 @@ export const taxonomies = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Taxonomy() {
-	return resource({
+	return resource(Dataset, ConceptScheme, {
 
 		// ;( the `Taxonomy`/`Topic` pair admits one refined direction only: refining `Topic.dataset`, `inScheme` and
 		// ;( `topConceptOf` back to `Taxonomy` would leave the two ends resolving each other until the stack is spent
@@ -63,15 +63,13 @@ export function Taxonomy() {
 	}, {
 
 		space: ec2u,
-		class: ec2u.Taxonomy,
-
-		extends: [Dataset, ConceptScheme]
+		class: ec2u.Taxonomy
 
 	});
 }
 
 export function Topic() {
-	return resource({
+	return resource(Resource, Concept, {
 
 		// ;( `broader`, `broaderTransitive`, `narrower`, `related` and `exactMatch` not narrowed to `Topic`: an
 		// ;( override targeting the very shape that declares it closes a circular `extends` chain
@@ -94,9 +92,7 @@ export function Topic() {
 	}, {
 
 		space: ec2u,
-		class: ec2u.Topic,
-
-		extends: [Resource, Concept]
+		class: ec2u.Topic
 
 	});
 }

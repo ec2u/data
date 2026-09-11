@@ -27,7 +27,7 @@ import { multiple, optional, required } from "@metreeca/blue/value";
 
 
 export function Dataset() {
-	return resource({
+	return resource(Resource, {
 
 		title: required(text),
 		alternative: optional(text),
@@ -57,15 +57,13 @@ export function Dataset() {
 	}, {
 
 		space: dct,
-		class: ec2u.Dataset,
-
-		extends: Resource
+		class: ec2u.Dataset
 
 	});
 }
 
 export function Resource() {
-	return resource({
+	return resource(Entity, {
 
 		generated: property({
 
@@ -85,9 +83,7 @@ export function Resource() {
 	}, {
 
 		space: ec2u,
-		class: ec2u.Resource,
-
-		extends: Entity
+		class: ec2u.Resource
 
 	});
 }

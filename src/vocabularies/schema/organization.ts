@@ -22,7 +22,7 @@ import { multiple, optional } from "@metreeca/blue/value";
 
 
 export function Organization() {
-	return resource({
+	return resource(Thing, {
 
 		legalName: optional(text),
 
@@ -30,10 +30,6 @@ export function Organization() {
 		telephone: multiple(phone),
 
 		location: optional(Location)
-
-	}, {
-
-		extends: Thing
 
 	});
 }

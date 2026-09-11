@@ -54,7 +54,7 @@ export const units = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Unit() {
-	return resource({
+	return resource(Organization, OrganizationalUnit, {
 
 		// ;( `hasUnit` not narrowed to `Unit`: the inherited `org.OrganizationalUnit` target is reached through a
 		// ;( thunk, and a thunk builds a fresh closure per call, so the lineage never matches by structure
@@ -70,9 +70,7 @@ export function Unit() {
 	}, {
 
 		space: ec2u,
-		class: ec2u.Unit,
-
-		extends: [Organization, OrganizationalUnit]
+		class: ec2u.Unit
 
 	});
 }

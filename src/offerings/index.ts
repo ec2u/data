@@ -24,7 +24,7 @@ import { multiple } from "@metreeca/blue/value";
 
 
 export function Offering() {
-	return resource({
+	return resource(Resource, LearningResource, {
 
 		// ;( `provider` not narrowed to an embedded EC2U `Organization`: an inherited reference cannot be swapped
 		// ;( for an embedded resource
@@ -38,9 +38,7 @@ export function Offering() {
 	}, {
 
 		space: ec2u,
-		class: ec2u.Offering,
-
-		extends: [Resource, LearningResource]
+		class: ec2u.Offering
 
 	});
 }

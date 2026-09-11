@@ -50,7 +50,7 @@ export const persons = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Person() {
-	return resource({
+	return resource(Resource, foaf.Person, {
 
 		headOf: property({ forward: org }, multiple(reference(Organization))),
 
@@ -64,9 +64,7 @@ export function Person() {
 	}, {
 
 		space: ec2u,
-		class: ec2u.Person,
-
-		extends: [Resource, foaf.Person]
+		class: ec2u.Person
 
 	});
 }
