@@ -91,17 +91,32 @@ export function Organization() {
 		classification: multiple(reference(Concept)),
 
 		subOrganizationOf: multiple(reference(Organization)),
-		hasSubOrganization: multiple(reference(Organization, { foreign: true })),
 
-		hasUnit: multiple(reference((): ResourceShape => OrganizationalUnit(), { foreign: true })),
+		hasSubOrganization: multiple(reference(Organization), {
 
-		hasHead: multiple(reference(foaf.Person, { foreign: true }), {
+			foreign: true
+
+		}),
+
+		hasUnit: multiple(reference((): ResourceShape => OrganizationalUnit()), {
+
+			foreign: true
+
+		}),
+
+		hasHead: multiple(reference(foaf.Person), {
+
+			foreign: true,
 
 			reverse: org.headOf
 
 		}),
 
-		hasMember: multiple(reference(foaf.Person, { foreign: true }))
+		hasMember: multiple(reference(foaf.Person), {
+
+			foreign: true
+
+		})
 
 	}, {
 

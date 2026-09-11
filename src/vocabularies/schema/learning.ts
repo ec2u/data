@@ -67,7 +67,11 @@ export function EducationalOccupationalProgram() {
 
 		programPrerequisites: optional(text),
 
-		hasCourse: multiple(reference((): ResourceShape => EC2UCourse(), { foreign: true }))
+		hasCourse: multiple(reference((): ResourceShape => EC2UCourse()), {
+
+			foreign: true
+
+		})
 
 	});
 }

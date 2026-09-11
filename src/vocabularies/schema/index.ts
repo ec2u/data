@@ -111,7 +111,11 @@ export function Thing() {
 		description: optional(markdown),
 		disambiguatingDescription: optional(markdown),
 
-		image: optional(reference((): ResourceShape => ImageObject(), { captive: true }))
+		image: optional(reference((): ResourceShape => ImageObject()), {
+
+			captive: true
+
+		})
 
 	}, {
 

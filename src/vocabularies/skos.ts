@@ -50,15 +50,18 @@ export const skos = createNamespace("http://www.w3.org/2004/02/skos/core#", [
 export function ConceptScheme() {
 	return resource({
 
-		hasTopConcept: multiple(reference(Concept, { foreign: true }), {
+		hasTopConcept: multiple(reference(Concept), {
+
+			foreign: true,
 
 			reverse: skos.topConceptOf
 
 		}),
 
-		hasConcept: multiple(reference(Concept, { foreign: true }), {
+		hasConcept: multiple(reference(Concept), {
 
 			hidden: true,
+			foreign: true,
 
 			reverse: skos.inScheme
 
@@ -100,7 +103,11 @@ export function Concept() {
 
 		broaderTransitive: multiple(reference(Concept)),
 
-		narrower: multiple(reference(Concept, { foreign: true })),
+		narrower: multiple(reference(Concept), {
+
+			foreign: true
+
+		}),
 
 		related: multiple(reference(Concept), {
 

@@ -46,12 +46,14 @@ export function Dataset() {
 
 		subject: multiple(reference(Topic)),
 
-		resources: multiple(reference(Resource, { foreign: true }), {
+		resources: multiple(reference(Resource), {
+
+			foreign: true,
 
 			forward: ec2u.resource,
 			reverse: ec2u.dataset
 
-		}) // !!! foreign to property
+		})
 
 	}, {
 
