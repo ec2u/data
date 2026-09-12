@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { reference } from "@metreeca/blue/reference";
-import { multiple, nonempty, optional, resource, type ResourceShape } from "@metreeca/blue/resource";
+import { multiple, nonempty, optional, resource } from "@metreeca/blue/resource";
 import { iri, markdown, string, text } from "@metreeca/blue/string";
 import { createNamespace } from "@metreeca/core/resource";
 
@@ -88,19 +87,7 @@ export const schema = createNamespace("https://schema.org/", [
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function ImageObject() {
-	return resource(Thing, {
-
-		url: nonempty(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
-
-		caption: optional(text),
-		author: optional(text),
-		copyrightNotice: optional(text)
-
-	});
-}
-
-export function Thing() {
+export function Base() {
 	return resource({
 
 		url: multiple(iri),
@@ -109,17 +96,31 @@ export function Thing() {
 
 		name: optional(text),
 		description: optional(markdown),
-		disambiguatingDescription: optional(markdown),
-
-		image: optional(reference((): ResourceShape => ImageObject()), {
-
-			captive: true
-
-		})
+		disambiguatingDescription: optional(markdown)
 
 	}, {
 
 		space: schema
+
+	});
+}
+
+export function Thing() {
+	return resource(Base, {
+
+		image: optional(ImageObject)
+
+	});
+}
+
+export function ImageObject() {
+	return resource(Base, { // ;( extends Base, not Thing: the inherited `image` would nest ImageObject endlessly
+
+		url: nonempty(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
+
+		caption: optional(text),
+		author: optional(text),
+		copyrightNotice: optional(text)
 
 	});
 }

@@ -19,7 +19,7 @@ import { Organization } from "@/organizations/index.js";
 import { Topic } from "@/taxonomies/index.js";
 import { dcat } from "@/vocabularies/dcat.js";
 import { dct } from "@/vocabularies/dct.js";
-import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
+import { base, EC2U, ec2u } from "@/vocabularies/ec2u.js";
 import { OrganizationalUnit } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, resource } from "@metreeca/blue/resource";
@@ -55,25 +55,16 @@ export const units = immutable({
 export function Unit() {
 	return resource(Organization, OrganizationalUnit, {
 
-		// ;( `hasUnit` not narrowed to `Unit`: the inherited `org.OrganizationalUnit` target is reached through a
-		// ;( thunk, and a thunk builds a fresh closure per call, so the lineage never matches by structure
+		// ;( `hasUnit` not narrowed to `Unit`: an override targeting the very shape that declares it closes a
+		// ;( circular definition
 
 		unitOf: nonempty(reference(Organization)),
 
 		subOrganizationOf: multiple(reference(Organization)),
 		hasSubOrganization: multiple(reference(Organization)),
 
-		subject: multiple(reference(Topic), {
-
-			forward: dct
-
-		}),
-
-		keyword: multiple(text, {
-
-			forward: dcat
-
-		})
+		subject: multiple(reference(Topic), { forward: dct }),
+		keyword: multiple(text, { forward: dcat })
 
 	}, {
 

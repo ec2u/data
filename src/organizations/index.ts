@@ -53,10 +53,10 @@ export function Organization() {
 	return resource(Resource, org.Organization, SchemaOrganization, {
 
 		// ;( `subOrganizationOf` and `hasSubOrganization` not narrowed: an override targeting the very shape that
-		// ;( declares it closes a circular `extends` chain; `Unit` and `University` narrow them on their own
+		// ;( declares it closes a circular definition; `Unit` and `University` narrow them on their own
 
-		// ;( `hasUnit` not narrowed to `Unit`: the inherited `org.OrganizationalUnit` target is reached through a
-		// ;( thunk, and a thunk builds a fresh closure per call, so the lineage never matches by structure
+		// ;( `hasUnit` not narrowed to `Unit`: `Unit` extends this very shape, so resolving the override closes a
+		// ;( circular definition
 
 		// !!! pin `classification` to the EC2U organizations taxonomy: it takes a narrowed `Topic` shape carrying an
 		// !!! id `pattern`, and that taxonomy is not ported yet

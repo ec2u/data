@@ -17,7 +17,7 @@
 import * as foaf from "@/vocabularies/foaf.js";
 import { Concept, skos } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, nonempty, optional, required, resource, type ResourceShape } from "@metreeca/blue/resource";
+import { multiple, nonempty, optional, required, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
 import { createNamespace } from "@metreeca/core/resource";
 
@@ -98,7 +98,7 @@ export function Organization() {
 
 		}),
 
-		hasUnit: multiple(reference((): ResourceShape => OrganizationalUnit()), {
+		hasUnit: multiple(reference(OrganizationalUnit), {
 
 			foreign: true
 

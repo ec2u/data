@@ -21,7 +21,7 @@ import { dct } from "@/vocabularies/dct.js";
 import { ec2u, Entity, rdfs } from "@/vocabularies/ec2u.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, required, resource, type ResourceShape } from "@metreeca/blue/resource";
+import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { date, markdown, text } from "@metreeca/blue/string";
 
 
@@ -72,14 +72,14 @@ export function Resource() {
 
 		}),
 
-		dataset: required(reference((): ResourceShape => Dataset()), {
+		dataset: required(reference(Dataset), {
 
 			forward: ec2u,
 			reverse: rdfs.member
 
 		}),
 
-		university: optional(reference((): ResourceShape => University()))
+		university: optional(reference(University))
 
 	}, {
 

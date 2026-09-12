@@ -52,7 +52,7 @@ export function Taxonomy() {
 	return resource(Dataset, ConceptScheme, {
 
 		// ;( the `Taxonomy`/`Topic` pair admits one refined direction only: refining `Topic.dataset`, `inScheme` and
-		// ;( `topConceptOf` back to `Taxonomy` would leave the two ends resolving each other until the stack is spent
+		// ;( `topConceptOf` back to `Taxonomy` would close a circular definition
 
 		resources: multiple(reference(Topic)),
 
@@ -71,10 +71,10 @@ export function Topic() {
 	return resource(Resource, Concept, {
 
 		// ;( `broader`, `broaderTransitive`, `narrower`, `related` and `exactMatch` not narrowed to `Topic`: an
-		// ;( override targeting the very shape that declares it closes a circular `extends` chain
+		// ;( override targeting the very shape that declares it closes a circular definition
 
 		// ;( `inScheme`, `topConceptOf` and `dataset` not narrowed to `Taxonomy`: `Taxonomy` already narrows the
-		// ;( opposite direction, and refining both leaves the two ends resolving each other until the stack is spent
+		// ;( opposite direction, and refining both ends closes a circular definition
 
 		digest: required(string, {
 

@@ -100,12 +100,10 @@ export function convert(university: {
 				isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
 				eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
 
-				// !!! ;( captive references are inferred as IRI: unable to include actual resource
-
-				// image: optional(path("imageURL").map(link).map(url => ({
-				// 	url,
-				// 	copyrightNotice: optional(path("imageCredits").map(string))
-				// }))),
+				image: optional(path("imageURL").map(link).map(url => ({
+					url: nonempty(url),
+					copyrightNotice: optional(path("imageCredits").map(string))
+				}))),
 
 				location: optional<Instance<typeof Location>>(
 					opt(attendanceURL, url => ({ url: [url] }))

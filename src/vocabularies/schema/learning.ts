@@ -23,7 +23,7 @@ import { Concept } from "@/vocabularies/skos.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, required, resource, type ResourceShape } from "@metreeca/blue/resource";
+import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { duration, string, tag, text } from "@metreeca/blue/string";
 
 
@@ -67,7 +67,7 @@ export function EducationalOccupationalProgram() {
 
 		programPrerequisites: optional(text),
 
-		hasCourse: multiple(reference((): ResourceShape => EC2UCourse()), {
+		hasCourse: multiple(reference(EC2UCourse), {
 
 			foreign: true
 

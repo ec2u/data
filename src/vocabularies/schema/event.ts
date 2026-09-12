@@ -65,9 +65,6 @@ export function Event() {
 
 		location: optional(Location),
 
-		// ;( `image` not narrowed to an embedded `ImageObject`: an inherited reference cannot be swapped for an
-		// ;( embedded resource, so the image credits stay out of reach
-
 		publisher: optional(reference(Organization)),
 
 		about: multiple(reference(Concept)),
