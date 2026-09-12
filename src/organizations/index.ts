@@ -17,7 +17,7 @@
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
 import { Person } from "@/persons/index.js";
-import { Topic } from "@/taxonomies/index.js";
+import { OrganizationTopic } from "@/taxonomies/pipes/organizations.js";
 import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import * as org from "@/vocabularies/org.js";
 import { Organization as SchemaOrganization } from "@/vocabularies/schema/organization.js";
@@ -58,10 +58,7 @@ export function Organization() {
 		// ;( `hasUnit` not narrowed to `Unit`: `Unit` extends this very shape, so resolving the override closes a
 		// ;( circular definition
 
-		// !!! pin `classification` to the EC2U organizations taxonomy: it takes a narrowed `Topic` shape carrying an
-		// !!! id `pattern`, and that taxonomy is not ported yet
-
-		classification: multiple(reference(Topic)),
+		classification: multiple(reference(OrganizationTopic)),
 
 		hasHead: multiple(reference(Person)),
 		hasMember: multiple(reference(Person))

@@ -95,3 +95,4 @@ export function Topic() {
 
 	});
 }
+export { EventTopic } from "@/taxonomies/pipes/events.js";

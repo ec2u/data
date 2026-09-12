@@ -15,8 +15,9 @@
  */
 
 import { execute } from "@/index.core.js";
-import { taxonomies } from "@/taxonomies/index.js";
+import { taxonomies, Topic } from "@/taxonomies/index.js";
 import { sync } from "@/taxonomies/sinks/sync.js";
+import { resource } from "@metreeca/blue/resource";
 import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
@@ -27,7 +28,15 @@ import { createVault } from "@metreeca/gear/vault";
 
 const DataURL = "taxonomies-ec2u-isced-2011";
 
-const Taxonomy = immutable({ // !!! persist
+
+if ( import.meta.main ) {
+	await execute(ISCED2011);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const isced2011 = immutable({ // !!! persist
 
 	id: `${taxonomies.id}/isced-2011`,
 
@@ -56,8 +65,8 @@ const Taxonomy = immutable({ // !!! persist
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if ( import.meta.main ) {
-	await execute(ISCED2011);
+export function ISCED2011Topic() {
+	return resource(Topic, {}, { pattern: `${isced2011.id}/*` });
 }
 
 
@@ -69,7 +78,7 @@ export async function ISCED2011() {
 
 	return pipe(
 		(items(await vault(DataURL)))
-		(sync(Taxonomy))
+		(sync(isced2011))
 	);
 
 }
