@@ -15,7 +15,7 @@
  */
 
 import { Organization } from "@/organizations/index.js";
-import { Topic } from "@/taxonomies/index.js";
+import { EuroSciVocTopic } from "@/taxonomies/pipes/euroscivoc.core.js";
 import { University } from "@/universities/index.js";
 import { dct } from "@/vocabularies/dct.js";
 import { ec2u, Entity, rdfs } from "@/vocabularies/ec2u.js";
@@ -44,7 +44,7 @@ export function Dataset() {
 		license: multiple(reference(Entity)),
 		accessRights: optional(text),
 
-		subject: multiple(reference(Topic)),
+		subject: multiple(reference(EuroSciVocTopic)),
 
 		resources: multiple(reference(Resource), {
 

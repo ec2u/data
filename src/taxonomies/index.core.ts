@@ -19,8 +19,6 @@ import { base, EC2U } from "@/vocabularies/ec2u.js";
 import { immutable } from "@metreeca/core/structures";
 
 
-// standalone from the shape module, so that a taxonomy defined alongside a shape doesn't have to import it back
-
 export const taxonomies = immutable({
 
 	id: `${base}/taxonomies`,

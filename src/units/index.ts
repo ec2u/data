@@ -16,7 +16,7 @@
 
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Organization } from "@/organizations/index.js";
-import { Topic } from "@/taxonomies/index.js";
+import { EuroSciVocTopic } from "@/taxonomies/pipes/euroscivoc.core.js";
 import { dcat } from "@/vocabularies/dcat.js";
 import { dct } from "@/vocabularies/dct.js";
 import { base, EC2U, ec2u } from "@/vocabularies/ec2u.js";
@@ -63,7 +63,7 @@ export function Unit() {
 		subOrganizationOf: multiple(reference(Organization)),
 		hasSubOrganization: multiple(reference(Organization)),
 
-		subject: multiple(reference(Topic), { forward: dct }),
+		subject: multiple(reference(EuroSciVocTopic), { forward: dct }),
 		keyword: multiple(text, { forward: dcat })
 
 	}, {

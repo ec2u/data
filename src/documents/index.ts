@@ -18,7 +18,9 @@ import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
 import { Organization } from "@/organizations/index.js";
 import { Person } from "@/persons/index.js";
-import { Topic } from "@/taxonomies/index.js";
+import { DocumentTopic } from "@/taxonomies/pipes/documents.core.js";
+import { EuroSciVocTopic } from "@/taxonomies/pipes/euroscivoc.core.js";
+import { StakeholderTopic } from "@/taxonomies/pipes/stakeholders.core.js";
 import { dct } from "@/vocabularies/dct.js";
 import { EC2U, base, ec2u, Entity } from "@/vocabularies/ec2u.js";
 import { schema } from "@/vocabularies/schema/index.js";
@@ -82,14 +84,14 @@ export function Document() {
 		accessRights: optional(text),
 		license: optional(reference(Entity)),
 
-		type: multiple(reference(Topic), {
+		type: multiple(reference(DocumentTopic), {
 
 			forward: dct.type
 
 		}),
 
-		subject: multiple(reference(Topic)),
-		audience: multiple(reference(Topic)),
+		subject: multiple(reference(EuroSciVocTopic)),
+		audience: multiple(reference(StakeholderTopic)),
 
 		relation: multiple(reference(Document))
 
