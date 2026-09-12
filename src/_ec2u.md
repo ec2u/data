@@ -40,10 +40,6 @@ carries instead.
 - `hasUnit` — `multiple(Unit)`, left at `org.OrganizationalUnit`: `Unit` is the very shape carrying the override, so it
   closes a circular definition.
 
-## University
-
-- `dataset` — not constrained to the universities namespace.
-
 # Blue Limitations
 
 Refining an inherited member is what the port leans on throughout, and it carries most of the model as stated. An

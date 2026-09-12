@@ -15,6 +15,7 @@
  */
 
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
+import { Dataset } from "@/datasets/index.js";
 import { Organization } from "@/organizations/index.js";
 import { Unit } from "@/units/index.js";
 import * as dict from "@/universities/index.core.js";
@@ -61,7 +62,7 @@ export const partners = immutable(Object.fromEntries(
 export function University() {
 	return resource(Organization, Feature, FormalOrganization, {
 
-		// !!! constraint dataset to getNamespaceIRI(universities)
+		dataset: required(reference(resource(Dataset, {}, { hasValue: [ universities.id ] }))),
 
 		subOrganizationOf: multiple(reference(Organization)),
 		hasSubOrganization: multiple(reference(Organization)),
