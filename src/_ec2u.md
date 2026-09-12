@@ -7,9 +7,9 @@ description: Open divergences of the Blue shapes ported into Pipe from the EC2U 
 # Divergences
 
 How the ported Blue shapes depart from the EC2U model published by the sibling Data service. Every reference target the
-model narrows is ported, except where an entry below records otherwise: those are blocked by
-[reference refinement stops at embedding, arity and cycles](#reference-refinement-stops-at-embedding-arity-and-cycles),
-or wait on the pinned `Topic` shapes the id patterns need, which the taxonomies they pin to do not yet have.
+model narrows is ported, except where an entry below records otherwise: those are blocked by one of the
+[Blue limitations](#blue-limitations), or wait on the pinned `Topic` shapes the id patterns need, which the taxonomies
+they pin to do not yet have.
 
 Each entry names the property, the definition the model specifies as `cardinality(target)`, and what the ported shape
 carries instead.
@@ -29,8 +29,9 @@ carries instead.
 
 - `educationalLevel`, `about` — `multiple(Topic)` ported without the id patterns pinning them to the ISCED 2011 and
   ISCED-F 2013 taxonomies.
-- `provider` — `optional(Organization)` embedded, ported as a reference to `schema.Organization`. `Course` and
-  `Program` inherit the divergence.
+- `provider` — `optional(Organization)` embedded, ported as a reference to `schema.Organization`
+  ([embedding overrides are refused](#embedding-overrides-are-refused)). `Course` and `Program` inherit the
+  divergence.
 
 ## Organization
 
@@ -63,26 +64,35 @@ carries instead.
 
 # Blue Limitations
 
-## Reference refinement stops at embedding, arity and cycles
-
-An inherited reference re-points at a target extending the inherited one:
+Refining an inherited member is what the port leans on throughout, and it carries most of the model as stated. An
+inherited reference re-points at a target extending the inherited one:
 `resource(Parent, { ref: required(reference(Narrower)) })` merges to `Narrower` where `Parent.ref` targets `Wider`, and
 the inherited definition reaches the narrower target through its own `extends` chain. Targets are matched by structure
 alone, so how either end names its shape makes no difference: the uncalled factory `reference(Narrower)`, the arrow
 thunk `reference(() => Narrower())` and an already built shape all compare equal. An unrelated target compiles and
-fails only at run time, as
-`incompatible resource shape override <[{"ref": ["{target} incompatible <target> override"]}]>`.
+fails only at run time, as `incompatible resource shape override <[{"ref": ["{target} incompatible <target> override"]}]>`.
+
+The sections below record where the refinement stops.
+
+## Embedding overrides are refused
 
 Swapping an inherited reference for an embedded resource fails as
-`incompatible resource shape override <[{"ref": ["{kind} mismatched kinds <resource> vs <reference>"]}]>`, so embedding
-overrides stay out of reach.
+`incompatible resource shape override <[{"ref": ["{kind} mismatched kinds <resource> vs <reference>"]}]>`. A member
+admits an embedded resource only where the shape declaring it says so, so a model that embeds what a parent links has
+to be met on the parent rather than on the extending shape. `schema.Thing.image` is stated as an embedded
+`ImageObject` for that reason, `Event` having no way to embed it on its own.
+
+## Arity caps drop the member from the projected type
 
 Cardinality is refinable within the same arity, but not across it. Raising a minimum count ports unchanged; capping an
 inherited set at a single value passes the override check, but the member then drops out of the projected value type
-altogether, so nothing can state it.
+altogether, so nothing can state it. The two ends disagree, and the shape builds clean, so a capped member is found
+only when the value carrying it fails to compile.
 
-Cycles close the remaining ground, since shapes are declared as functions rebuilt on every call and the override
-resolves both ends eagerly. Re-pointing a property at a target that extends the shape carrying the override fails as
+## Self-reaching overrides close a circular definition
+
+Shapes are declared as functions rebuilt on every call, and the override resolves both ends eagerly. Re-pointing a
+property at a target that extends the shape carrying the override fails as
 `circular definition <[{"Unit": ["reaches itself"]}]>`, which is what blocks `Organization.hasUnit` and `Unit.hasUnit`.
 Refining both ends of a pair that point at each other fails the same way, so a mutually referencing pair admits one
-refined direction only.
+refined direction only: `Taxonomy` narrows towards `Topic`, and `Topic` is left at the shapes it inherits.
