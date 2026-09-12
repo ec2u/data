@@ -17,7 +17,7 @@
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
 import { Person } from "@/persons/index.js";
-import { OrganizationTopic } from "@/taxonomies/pipes/organizations.js";
+import { OrganizationTopic } from "@/taxonomies/pipes/organizations.core.js";
 import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import * as org from "@/vocabularies/org.js";
 import { Organization as SchemaOrganization } from "@/vocabularies/schema/organization.js";

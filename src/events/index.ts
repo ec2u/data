@@ -17,8 +17,8 @@
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
 import { Organization } from "@/organizations/index.js";
-import { EventTopic, Topic } from "@/taxonomies/index.js";
-import { stakeholders as stakeholderTopics } from "@/taxonomies/pipes/stakeholders.js";
+import { EventTopic } from "@/taxonomies/pipes/events.core.js";
+import { StakeholderTopic } from "@/taxonomies/pipes/stakeholders.core.js";
 import { base, CommentLength, EC2U, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
 import { Event as SchemaEvent } from "@/vocabularies/schema/event.js";
 import { reference } from "@metreeca/blue/reference";
@@ -68,8 +68,8 @@ export function Event() {
 
 		publisher: optional(reference(Organization)),
 
-		about: multiple(reference(EventTopic())),
-		audience: multiple(reference(resource(Topic, {}, { pattern: `${stakeholderTopics.id}/*` })))
+		about: multiple(reference(EventTopic)),
+		audience: multiple(reference(StakeholderTopic))
 
 	}, {
 

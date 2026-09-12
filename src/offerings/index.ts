@@ -15,8 +15,8 @@
  */
 
 import { Resource } from "@/datasets/index.js";
-import { ISCED2011Topic } from "@/taxonomies/pipes/isced-2011.js";
-import { ISCEDF2013Topic } from "@/taxonomies/pipes/isced-f-2013.js";
+import { ISCED2011Topic } from "@/taxonomies/pipes/isced-2011.core.js";
+import { ISCEDF2013Topic } from "@/taxonomies/pipes/isced-f-2013.core.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
 import { LearningResource } from "@/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";

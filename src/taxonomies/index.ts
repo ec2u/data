@@ -14,39 +14,14 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Dataset, Resource } from "@/datasets/index.js";
-import { base, EC2U, ec2u } from "@/vocabularies/ec2u.js";
+import { ec2u } from "@/vocabularies/ec2u.js";
 import { Concept, ConceptScheme } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, required, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
 import { markdown } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/structures";
 
-
-export const taxonomies = immutable({
-
-	id: `${base}/taxonomies`,
-
-	isDefinedBy: `${base}/datasets/taxonomies`,
-	dataset: datasets.id,
-
-	label: "EC2U Taxonomies",
-
-	title: "EC2U Classification Taxonomies",
-	alternative: "EC2U Taxonomies",
-	description: "Standardised topic taxonomies and other concept schemes for classifying resources.",
-
-	publisher: EC2U,
-
-	rights: Copyright,
-	license: [CCBYNCND40]
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Taxonomy() {
 	return resource(Dataset, ConceptScheme, {
@@ -95,4 +70,3 @@ export function Topic() {
 
 	});
 }
-export { EventTopic } from "@/taxonomies/pipes/events.js";
