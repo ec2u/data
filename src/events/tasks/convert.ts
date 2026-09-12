@@ -17,9 +17,9 @@
 import { createEventId, type Event, events } from "@/events/index.js";
 import { EventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
 import { Location } from "@/vocabularies/schema/location.js";
-import type { State } from "@metreeca/blue/value";
+import type { Instance } from "@metreeca/blue/value";
 import { type Object, opt, type Optional } from "@metreeca/core";
-import { multiple, optional, required } from "@metreeca/core/arrays";
+import { multiple, nonempty, optional, required } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Task } from "@metreeca/flow";
@@ -73,7 +73,7 @@ export function convert(university: {
 				generated: true,
 
 				id: createEventId(url),
-				url: multiple(url),
+				url: nonempty(url),
 
 				dataset: events.id,
 
@@ -107,7 +107,7 @@ export function convert(university: {
 				// 	copyrightNotice: optional(path("imageCredits").map(string))
 				// }))),
 
-				location: optional<State<typeof Location>>(
+				location: optional<Instance<typeof Location>>(
 					opt(attendanceURL, url => ({ url: [url] }))
 					?? opt(venueAddress ?? venueCity, () => ({
 						name: venueName, streetAddress: venueAddress, addressLocality: venueCity
@@ -138,7 +138,7 @@ function stamp(date: string, time: Optional<string>, zone: string): string { // 
 }
 
 
-function attendance(mode: string): Optional<State<typeof EventAttendanceModeEnumeration>> { // !!! type
+function attendance(mode: string): Optional<Instance<typeof EventAttendanceModeEnumeration>> { // !!! type
 	return mode === "offline" ? "OfflineEventAttendanceMode"
 		: mode === "online" ? "OnlineEventAttendanceMode"
 			: mode === "mixed" ? "MixedEventAttendanceMode"

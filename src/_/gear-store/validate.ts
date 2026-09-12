@@ -16,7 +16,7 @@
 
 import { validate as validator } from "@metreeca/blue";
 import { getShapeId, type ResourceShape } from "@metreeca/blue/resource";
-import type { State } from "@metreeca/blue/value";
+import type { Instance } from "@metreeca/blue/value";
 import type { Lazy } from "@metreeca/core";
 import { Task } from "@metreeca/flow";
 import { filter } from "@metreeca/flow/tasks";
@@ -43,7 +43,7 @@ const logger = log(import.meta.url);
  *
  * @throws {@link !RangeError RangeError} While the feed is consumed, if `shape` is malformed
  */
-export function validate<S extends Lazy<ResourceShape>>(shape: S): Task<State<S>> {
+export function validate<S extends Lazy<ResourceShape>>(shape: S): Task<Instance<S>> {
 
 	return filter(value => validator(value, { shape })({
 

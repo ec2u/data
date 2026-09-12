@@ -16,7 +16,7 @@
 
 import { digest } from "@/_/gear-store/_digest.js";
 import { Topic } from "@/taxonomies/index.js";
-import type { State } from "@metreeca/blue/value";
+import type { Instance } from "@metreeca/blue/value";
 import { required } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
@@ -52,7 +52,7 @@ export function convert(taxonomy: {
 
 	readonly id: IRI
 
-}): Task<Record, State<typeof Topic>> {
+}): Task<Record, Instance<typeof Topic>> {
 
 	return map(record => topic(taxonomy, record));
 
@@ -85,7 +85,7 @@ export function createTopicId(taxonomy: {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function topic(taxonomy: { readonly id: IRI }, record: Record): State<typeof Topic> {
+function topic(taxonomy: { readonly id: IRI }, record: Record): Instance<typeof Topic> {
 
 	const id = required(field(record, "id"));
 	const prefLabel = required(field(record, "label"));

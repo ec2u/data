@@ -23,7 +23,7 @@ import { Event as SchemaEvent } from "@/vocabularies/schema/event.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
-import type { State } from "@metreeca/blue/value";
+import type { Instance } from "@metreeca/blue/value";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import * as uuid from "uuid";
@@ -54,7 +54,7 @@ export const events = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type Event = State<typeof Event> // !!! remove
+export type Event = Instance<typeof Event> // !!! remove
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
