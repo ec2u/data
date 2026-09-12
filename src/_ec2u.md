@@ -19,12 +19,6 @@ carries instead.
 - `about`, `audience` — `multiple(Topic)` ported without the id patterns pinning them to the EC2U events and
   stakeholders taxonomies.
 
-## ImageObject
-
-- Extends `Base`, the shared `schema:Thing` core carrying `url`, `identifier`, `name`, `description` and
-  `disambiguatingDescription`, rather than `Thing` itself: `Thing.image` targets `ImageObject`, so inheriting `image`
-  makes the member tree unbounded (`image.image.image…`). Images therefore carry no `image` of their own.
-
 ## Offering
 
 - `educationalLevel`, `about` — `multiple(Topic)` ported without the id patterns pinning them to the ISCED 2011 and
