@@ -19,7 +19,8 @@ import { compress, createEmbedder, embeddable } from "@/_/muse/embedder/index.js
 import { createTopicId, Taxonomy, Topic } from "@/taxonomies/index.js";
 import { CommentLength } from "@/vocabularies/ec2u.js";
 import type { Instance } from "@metreeca/blue/value";
-import { required } from "@metreeca/core/arrays";
+import type { Optional } from "@metreeca/core";
+import { multiple, optional, required } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
@@ -66,19 +67,53 @@ export function convert(taxonomy: Instance<typeof Taxonomy>): Task<Record, Insta
 
 	return map(async record => {
 
-		const stated = topic(taxonomy, record);
+		const id = required(field(record, "id"));
+		const path = segments(id);
+
+		// a purely numeric identifier doubles as the notation of the topic it names
+
+		const notation = field(record, "notation") ?? (NotationPattern.test(id) ? id : undefined);
+
+		const preferredLabel = required(field(record, "label"));
+		const alternativeLabels = labels(record, "alternative");
+		const hiddenLabels = labels(record, "hidden");
+		const definition = field(record, "definition");
+
+		const broader = ancestors(taxonomy, path);
 
 		// the labels and the definition together stand for the topic, as a resource is classified by what it is about
 		// rather than by the wording of its preferred label alone
 
 		const embedding = await embedder(embeddable(
-			stated.prefLabel,
-			...stated.altLabel ?? [],
-			...stated.hiddenLabel ?? [],
-			stated.definition
+			preferredLabel, ...alternativeLabels, ...hiddenLabels, definition
 		));
 
-		return immutable({ ...stated, embedding: compress(embedding) });
+		return immutable({
+
+			id: createTopicId(taxonomy, path),
+
+			dataset: required(taxonomy.id),
+
+			label: required(notation === undefined ? preferredLabel : `${notation} - ${preferredLabel}`),
+			comment: optional(definition === undefined ? undefined : clip(definition, CommentLength)),
+
+			notation: optional(notation),
+
+			prefLabel: required(preferredLabel),
+			altLabel: multiple(alternativeLabels),
+			hiddenLabel: multiple(hiddenLabels),
+			definition: optional(definition),
+
+			inScheme: required(taxonomy.id),
+			topConceptOf: optional(broader.length === 0 ? taxonomy.id : undefined),
+
+			broader: multiple(broader.slice(-1)),
+			broaderTransitive: multiple(broader),
+
+			digest: required(digest(record)),
+			embedding: required(compress(embedding))
+
+		});
 
 	});
 
@@ -104,53 +139,14 @@ export function readTopicId(taxonomy: Instance<typeof Taxonomy>, record: Record)
 
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function topic(taxonomy: Instance<typeof Taxonomy>, record: Record): Omit<Instance<typeof Topic>, "embedding"> {
+function ancestors(taxonomy: Instance<typeof Taxonomy>, path: readonly string[]): readonly IRI[] {
 
-	const id = required(field(record, "id"));
-	const prefLabel = required(field(record, "label"));
-
-	// a purely numeric identifier doubles as the notation of the topic it names
-
-	const notation = field(record, "notation") ?? (NotationPattern.test(id) ? id : undefined);
-	const definition = field(record, "definition");
-
-	const broader = ancestors(taxonomy, id);
-
-	return immutable({
-
-		id: createTopicId(taxonomy, segments(id)),
-
-		dataset: taxonomy.id,
-
-		digest: digest(record),
-
-		label: notation === undefined ? prefLabel : `${notation} - ${prefLabel}`,
-		comment: definition === undefined ? undefined : clip(definition, CommentLength),
-
-		notation,
-
-		prefLabel,
-		altLabel: labels(record, "alternative"),
-		hiddenLabel: labels(record, "hidden"),
-		definition,
-
-		inScheme: taxonomy.id,
-		topConceptOf: broader.length === 0 ? taxonomy.id : undefined,
-
-		broader: broader.slice(-1),
-		broaderTransitive: broader
-
-	});
-
-}
-
-function ancestors(taxonomy: Instance<typeof Taxonomy>, id: string): readonly IRI[] {
-
-	const path = segments(id);
-
-	return path.slice(0, -1).map((_, index) => createTopicId(taxonomy, path.slice(0, index+1)));
+	return path
+		.slice(0, -1)
+		.map((_, index) => createTopicId(taxonomy, path.slice(0, index+1)));
 
 }
 
@@ -170,9 +166,9 @@ function labels(record: Record, column: string): readonly string[] {
 
 }
 
-function field(record: Record, column: string): undefined | string {
+function field(record: Record, column: string): Optional<string> {
 
-	const value: undefined | string = record[column];
+	const value: Optional<string> = record[column];
 	const trimmed = value?.trim();
 
 	return trimmed === undefined || trimmed === "" ? undefined : trimmed;
