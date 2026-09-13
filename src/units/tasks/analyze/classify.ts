@@ -17,7 +17,8 @@
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { topics } from "@/taxonomies/_/store.js";
-import { matchTopics } from "@/taxonomies/_/tools/matchTopics.js";
+import { matchTopics } from "@/taxonomies/tools/matchTopics.js";
+import { organizations } from "@/taxonomies/pipes/organizations.core.js";
 import { Unit } from "@/units/_index.js";
 import { Type } from "@google/genai";
 import { markdown } from "@metreeca/core/strings";
@@ -34,7 +35,10 @@ const logger = log(import.meta.url);
 
 
 const tools = [
-	matchTopics({ topics: scheme => topics.select({ scheme }) })
+	matchTopics(organizations.id, {
+		focus: `${organizations.id}/university-unit`,
+		narrowing: 1.05 // slightly penalise over-specific typologies
+	})
 ];
 
 

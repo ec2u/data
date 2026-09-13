@@ -55,9 +55,9 @@ Before returning output, verify:
 **REQUIRED Settings for Each Call**:
 
 - Call `matchTopics` for EACH keyword separately to get matching topics
-- Use scheme: `https://data.ec2u.eu/taxonomies/euroscivoc/`
 - Set limit: 1 for each keyword match
-- Set threshold: 0.6 (reject matches with distance > 0.6 as too dissimilar)
+- Do NOT state a scheme or a threshold: the tool is already bound to the EuroSciVoc taxonomy and rejects matches that
+  are too dissimilar on its own
 
 ### Execution Pattern
 
@@ -70,9 +70,9 @@ Before returning output, verify:
 
 **Example**: For keywords ["Machine Learning", "Robotics", "Data Science"], make THREE parallel calls:
 
-- `matchTopics(text: "Machine Learning", scheme: "...", limit: 1, threshold: 0.6)`
-- `matchTopics(text: "Robotics", scheme: "...", limit: 1, threshold: 0.6)`
-- `matchTopics(text: "Data Science", scheme: "...", limit: 1, threshold: 0.6)`
+- `matchTopics(text: "Machine Learning", limit: 1)`
+- `matchTopics(text: "Robotics", limit: 1)`
+- `matchTopics(text: "Data Science", limit: 1)`
 
 ### Output Handling
 
@@ -119,9 +119,8 @@ taxonomy IDs MUST come from tool results - no exceptions.
 
 - Call `matchTopics` once per keyword with individual keyword text
 - Make all calls in parallel for efficiency
-- Use threshold 0.6 to filter weak matches
-- Accept the top-1 match per keyword if it meets threshold
-- If no match meets threshold, omit that keyword
+- Accept the top-1 match per keyword
+- If the tool returns no match for a keyword, omit that keyword
 - Collect all matched topic IDs
 - Deduplicate if multiple keywords map to same topic
 - VALIDATION: Ensure all topic URLs start with `https://data.ec2u.eu/taxonomies/euroscivoc/`
@@ -130,9 +129,9 @@ taxonomy IDs MUST come from tool results - no exceptions.
 
 **All Keywords Fail to Match**:
 
-- If NO keywords match within threshold, return empty Topics list
-- Include note: "No topics matched within threshold"
-- Do NOT lower threshold or force weak matches
+- If NO keyword is answered with a match, return empty Topics list
+- Include note: "No topics matched"
+- Do NOT force weak matches or invent topics
 
 **Empty Keywords List**:
 

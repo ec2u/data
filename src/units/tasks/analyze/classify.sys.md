@@ -59,12 +59,12 @@ Generate a plaintext report with a single section:
 2. Call `matchTopics` with:
 
 - `text`: match text determined in step 1
-- `scheme: "https://data.ec2u.eu/taxonomies/organizations/"`
-- `focus: "https://data.ec2u.eu/taxonomies/organizations/university-unit"`
 - `limit: 5` (retrieve top 5 candidates)
-- `narrowing: 1.05` (slightly penalize over-specific typologies)
 
-3. Review the top 5 returned typologies, their definitions, and distance scores (lower is better)
+The tool is already bound to the university unit branch of the organizations taxonomy and already penalizes
+over-specific typologies: state nothing but `text` and `limit`.
+
+3. Review the top 5 returned typology IDs and their distance scores (lower is better)
 
 4. **Select the best typology using BOTH distance scores AND summary judgement:**
 
@@ -271,7 +271,7 @@ When selecting from matchTopics results, apply the appropriate strategy:
 - IF formal name lacks type descriptor → read summary, then augment formal name with type information
 
 3. **Call `matchTopics`** with the determined match text to retrieve top 5 semantically similar typologies
-4. **Review candidate typologies**, their definitions, and distance scores (lower is better) from matchTopics results
+4. **Review candidate typology IDs** and their distance scores (lower is better) from matchTopics results
 5. **Select the best typology using BOTH distance scores AND summary:**
 
 - IF formal name had type descriptor → apply type descriptor mapping rules (prefer the name's indicated type), use

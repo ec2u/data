@@ -17,7 +17,8 @@
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { topics } from "@/taxonomies/_/store.js";
-import { matchTopics } from "@/taxonomies/_/tools/matchTopics.js";
+import { matchTopics } from "@/taxonomies/tools/matchTopics.js";
+import { euroscivoc } from "@/taxonomies/pipes/euroscivoc.core.js";
 import { Unit } from "@/units/_index.js";
 import { Type } from "@google/genai";
 import { isString } from "@metreeca/core";
@@ -30,7 +31,7 @@ const logger = log(import.meta.url);
 
 
 const tools = [
-	matchTopics({ topics: scheme => topics.select({ scheme }) })
+	matchTopics(euroscivoc.id, { threshold: 0.6 })
 ];
 
 
