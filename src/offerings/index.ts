@@ -15,19 +15,19 @@
  */
 
 import { Resource } from "@/datasets/index.js";
+import { Organization } from "@/organizations/index.js";
 import { ISCED2011Topic } from "@/taxonomies/pipes/isced-2011.core.js";
 import { ISCEDF2013Topic } from "@/taxonomies/pipes/isced-f-2013.core.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
 import { LearningResource } from "@/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, resource } from "@metreeca/blue/resource";
+import { multiple, optional, resource } from "@metreeca/blue/resource";
 
 
 export function Offering() {
 	return resource(Resource, LearningResource, {
 
-		// ;( `provider` not narrowed to an embedded EC2U `Organization`: an inherited reference cannot be swapped
-		// ;( for an embedded resource
+		provider: optional(reference(Organization)),
 
 		educationalLevel: multiple(reference(ISCED2011Topic)),
 		about: multiple(reference(ISCEDF2013Topic))
