@@ -36,7 +36,7 @@ import { cosine, type Distance, type Embedding, type Index } from "./index.js";
  *
  * @typeParam T The type of the identifiers nodes are named by
  */
-export type Node<T> = {
+export type TreeNode<T> = {
 
 	/**
 	 * The identifier the node is named by and lookups answer with.
@@ -55,6 +55,47 @@ export type Node<T> = {
 
 }
 
+/**
+ * Tree index options.
+ *
+ * Confine the outcome to a branch of the tree, drop weak and comparatively weak matches, shift the balance between
+ * nodes near the root and nodes near the leaves, and cap the size of the outcome. Options are settled as the index is
+ * created and hold for every lookup made through it; those left undefined place no constraint of their own.
+ *
+ * @typeParam T The type of the identifiers nodes are named by
+ */
+export type TreeIndexOpts<T> = {
+
+	/**
+	 * The identifier of the node the index is to be restricted to the descendants of; if undefined, the whole tree is
+	 * searched.
+	 */
+	readonly focus?: T;
+
+	/**
+	 * The maximum number of matches a lookup returns, non-negative; if undefined, every match is returned.
+	 */
+	readonly limit?: number;
+
+	/**
+	 * The maximum distance a match is accepted at, non-negative; if undefined, matches are accepted at any distance.
+	 */
+	readonly threshold?: Distance;
+
+	/**
+	 * The relative distance from the best match a match is accepted within, non-negative, as a fraction of the room
+	 * left above the best distance; if undefined, matches are accepted however far from the best one.
+	 */
+	readonly tolerance?: number;
+
+	/**
+	 * The factor the distance of a node is scaled by for each step below the root of the tree, non-negative; values
+	 * above 1 penalise deep nodes, values below 1 favour them; if undefined, distances are taken as they stand.
+	 */
+	readonly narrowing?: number;
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -65,36 +106,20 @@ export type Node<T> = {
  * consumer retrieves what a text is about without matching its wording against labels. The tree is read off the
  * lineage of each node, so the index confines itself to a subtree and weighs nodes by their depth.
  *
- * The bounds narrow every lookup to the nodes worth acting on: `focus` restricts the index to a subtree, `threshold`
- * and `tolerance` drop weak and comparatively weak matches, `narrowing` shifts the balance between nodes near the root
- * and nodes near the leaves, and `limit` caps the size of the outcome.
- *
  * The nodes are read as the index is created and held as they stand, so one added, dropped or re-embedded afterwards
  * calls for an index of its own.
  *
  * @typeParam T The type of the identifiers nodes are named by
  *
- * @param options The index contents and the bounds every lookup is held to
- * @param options.nodes The nodes to index
- * @param options.focus The identifier of the node the index is to be restricted to the descendants of; if undefined,
- * the whole of `nodes` is searched
- * @param options.limit The maximum number of matches a lookup returns, non-negative; if undefined, every match is
- * returned
- * @param options.threshold The maximum distance a match is accepted at, non-negative; if undefined, matches are
- * accepted at any distance
- * @param options.tolerance The relative distance from the best match a match is accepted within, non-negative, as a
- * fraction of the room left above the best distance; if undefined, matches are accepted however far from the best one
- * @param options.narrowing The factor the distance of a node is scaled by for each step below the root of the tree,
- * non-negative; values above 1 penalise deep nodes, values below 1 favour them; if undefined, distances are taken as
- * they stand
+ * @param nodes The nodes to index
+ * @param options The {@link TreeIndexOpts} bounds every lookup is held to; if undefined, lookups are unbounded
  *
  * @returns An index answering with the nodes of `nodes` closest to the embedding it is looked up with
  *
- * @throws {@link !TypeError TypeError} If `limit`, `threshold`, `tolerance` or `narrowing` is negative
+ * @throws {@link !TypeError TypeError} If `options.limit`, `options.threshold`, `options.tolerance` or
+ * `options.narrowing` is negative
  */
-export function createTreeIndex<T>({
-
-	nodes,
+export function createTreeIndex<T>(nodes: readonly TreeNode<T>[], {
 
 	focus,
 	limit,
@@ -103,18 +128,7 @@ export function createTreeIndex<T>({
 	tolerance,
 	narrowing
 
-}: {
-
-	readonly nodes: readonly Node<T>[];
-
-	readonly focus?: T;
-	readonly limit?: number;
-
-	readonly threshold?: Distance;
-	readonly tolerance?: number;
-	readonly narrowing?: number;
-
-}): Index<T> {
+}: TreeIndexOpts<T>={}): Index<T> {
 
 	const $limit = assert(limit ?? Infinity, value => value >= 0, value => `negative limit <${value}>`);
 

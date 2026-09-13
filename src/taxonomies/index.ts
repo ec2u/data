@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { createStore } from "@/_/gear-store/index.js";
+import { decompress, type Index } from "@/_/muse/embedder/index.js";
+import { createTreeIndex, type TreeIndexOpts } from "@/_/muse/embedder/tree.js";
 import { Dataset, Resource } from "@/datasets/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
 import { SKOSConcept, SKOSConceptScheme } from "@/vocabularies/skos.js";
@@ -22,6 +25,7 @@ import { multiple, optional, required, resource } from "@metreeca/blue/resource"
 import { string } from "@metreeca/blue/string";
 import type { Instance } from "@metreeca/blue/value";
 import { markdown } from "@metreeca/core/strings";
+import { service } from "@metreeca/gear";
 import type { Reference } from "@metreeca/qest/resource";
 
 
@@ -85,6 +89,32 @@ export function Topic() {
 		class: ec2u.Topic
 
 	});
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export async function getTaxonomyIndex(id: Reference, opts: TreeIndexOpts<Reference> = {}): Promise<Index<Reference>> {
+
+	const store = service(createStore);
+
+	const taxonomy = await store.lookup({ // !!! replace with select
+
+		entry: id,
+		shape: Taxonomy,
+
+		model: { resources: [{ id: "", embedding: "", broaderTransitive: [""] }] }
+
+	});
+
+	const nodes = (taxonomy?.resources ?? []).map(({ id, embedding, broaderTransitive }) => ({
+		id,
+		embedding: decompress(embedding),
+		lineage: broaderTransitive
+	}));
+
+	return createTreeIndex(nodes, opts);
+
 }
 
 

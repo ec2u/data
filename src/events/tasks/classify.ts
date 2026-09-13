@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-import { createStore } from "@/_/gear-store/index.js";
-import { createEmbedder, decompress, embeddable, type Embedding, type Index } from "@/_/muse/embedder/index.js";
-import { createTreeIndex } from "@/_/muse/embedder/tree.js";
-import { Taxonomy } from "@/taxonomies/index.js";
+import { createEmbedder, embeddable, type Embedding, type Index } from "@/_/muse/embedder/index.js";
+import { getTaxonomyIndex } from "@/taxonomies/index.js";
 import { events as eventTopics } from "@/taxonomies/pipes/events.core.js";
 import { stakeholders as stakeholderTopics } from "@/taxonomies/pipes/stakeholders.core.js";
 import type { Object } from "@metreeca/core";
@@ -49,7 +47,6 @@ const threshold = 0.6; // the largest distance a topic is accepted at, as tuned 
  */
 export function classify(): Task<Object, Object> {
 
-	const store = service(createStore);
 	const embedder = service(createEmbedder);
 
 	let taxonomies: undefined | Promise<{ // indexed as the first event is classified and held for the run
@@ -62,53 +59,40 @@ export function classify(): Task<Object, Object> {
 	return map(async payload => {
 
 		if ( payload.event !== true ) { // a payload stating no event is dropped downstream, so it is not embedded
+
 			return payload;
+
+		} else {
+
+			if ( taxonomies === undefined ) {
+				taxonomies = Promise.all([index(eventTopics.id), index(stakeholderTopics.id)])
+					.then(([about, audience]) => ({ about, audience }));
+			}
+
+			const { about, audience } = await taxonomies;
+
+			const embedding = await embedder(embeddable(
+				payload.title as undefined | string,
+				payload.description as undefined | string
+			));
+
+			return {
+
+				...payload,
+
+				about: closest(embedding, about),
+				audience: closest(embedding, audience)
+
+			};
+
 		}
-
-		if ( taxonomies === undefined ) {
-			taxonomies = Promise.all([index(eventTopics.id), index(stakeholderTopics.id)])
-				.then(([about, audience]) => ({ about, audience }));
-		}
-
-		const { about, audience } = await taxonomies;
-
-		const embedding = await embedder(embeddable(
-			payload.title as undefined | string,
-			payload.description as undefined | string
-		));
-
-		return {
-
-			...payload,
-
-			about: closest(embedding, about),
-			audience: closest(embedding, audience)
-
-		};
 
 	});
 
 
 	async function index(taxonomy: Reference): Promise<Index<Reference>> {
 
-		const stated = await store.lookup({
-
-			entry: taxonomy,
-			shape: Taxonomy,
-
-			model: { resources: [{ id: "", embedding: "", broaderTransitive: [""] }] }
-
-		});
-
-		// embeddings are restored once as the taxonomy is indexed, rather than at every lookup
-
-		return createTreeIndex({
-
-			nodes: (stated?.resources ?? []).map(({ id, embedding, broaderTransitive }) => ({
-				id,
-				embedding: decompress(embedding),
-				lineage: broaderTransitive
-			})),
+		return await getTaxonomyIndex(taxonomy, {
 
 			threshold,
 			limit: 1
