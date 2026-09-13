@@ -72,6 +72,15 @@ export type Embedder = {
  */
 export type Embedding = readonly number[];
 
+/**
+ * Semantic distance.
+ *
+ * Measures how far apart two texts stand in meaning, the smaller figure standing for the closer pair. The scale and
+ * the range are the measure's own, so a consumer ranks distances and bounds them against figures tuned for the measure
+ * at hand, reading nothing absolute into either.
+ */
+export type Distance = number;
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -95,6 +104,25 @@ export function createEmbedder(): Embedder {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * Assembles the text standing for a resource.
+ *
+ * Blank and undefined fragments are left out and the rest joined one to a line, so that a caller hands over whatever
+ * a resource states without weeding out what it leaves unstated.
+ *
+ * @param texts The fragments describing the resource
+ *
+ * @returns The text of the fragments of `texts` that are neither undefined nor blank, one to a line
+ */
+export function embeddable(...texts: readonly (undefined | Text)[]): Text {
+
+	return texts
+		.filter(text => text !== undefined && text.trim() !== "")
+		.join("\n");
+
+}
+
+
+/**
  * Computes the cosine distance between two embeddings.
  *
  * Cosine distance is defined as `1 - cosine similarity`, where cosine similarity measures the cosine of the angle
@@ -114,7 +142,7 @@ export function createEmbedder(): Embedder {
  *
  * @see {@link https://en.wikipedia.org/wiki/Cosine_similarity Cosine similarity}
  */
-export function cosine(x: Embedding, y: Embedding): number {
+export function cosine(x: Embedding, y: Embedding): Distance {
 
 	if ( x.length !== y.length ) {
 		throw new RangeError(`mismatched embedding lengths <${x.length}>/<${y.length}>`);
