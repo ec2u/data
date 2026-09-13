@@ -16,7 +16,7 @@
 
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
-import { topics } from "@/taxonomies/_/store.js";
+import { topics } from "@/units/_/store.js";
 import { matchTopics } from "@/taxonomies/tools/matchTopics.js";
 import { organizations } from "@/taxonomies/pipes/organizations.core.js";
 import { Unit } from "@/units/_index.js";
