@@ -53,7 +53,7 @@ export function Topic() {
 		related: multiple(reference(Topic)),
 		exactMatch: multiple(reference(Topic)),
 
-		digest: required(string, {
+		digest: required(string, { // !!! factor?
 
 			hidden: true,
 

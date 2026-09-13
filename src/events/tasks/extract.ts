@@ -15,6 +15,7 @@
  */
 
 import { getDate } from "@/_/core/temporal.js";
+import { digest } from "@/_/gear-store/_digest.js";
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { Type } from "@google/genai";
@@ -32,6 +33,9 @@ import { service } from "@metreeca/gear";
  * Payloads are produced in the order pages are drawn. A page describing no single event, such as a listing or an error
  * page, is answered with a payload stating `event` false, so a caller MUST drop those rather than read them.
  *
+ * Every payload states under `digest` the state of the page it was drawn from, so that what is stored from it may be
+ * recorded together with the evidence for reading the page again only once the source has changed it.
+ *
  * @returns A task converting a feed of markdown event pages into a feed of the property payloads they state
  *
  * @throws {@link !Error Error} If no execution is running
@@ -44,7 +48,9 @@ export function extract(): Task<Text, Object> {
 
 	return documents => pipe(
 		items(documents)
-		(map(async document => json<Object>(await ai.models.generateContent({
+		(map(async document => ({
+
+			...json<Object>(await ai.models.generateContent({
 
 			model: "gemini-3.5-flash-lite",
 
@@ -173,7 +179,11 @@ export function extract(): Task<Text, Object> {
 
 			}
 
-		}))))
+		})),
+
+			digest: digest(document) // stated last, so that the page's own state is never overridden by the payload
+
+		})))
 	);
 
 }

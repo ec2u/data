@@ -56,6 +56,8 @@ export function convert(university: {
 		(filter(payload => payload.event === true))
 		(jpath(path => {
 
+			const digest = required(path("digest").map(string));
+
 			const url = required(path("url").map(link));
 			const title = required(path("title").map(string));
 
@@ -78,6 +80,8 @@ export function convert(university: {
 				dataset: events.id,
 
 				university: university.id,
+
+				digest,
 
 				label: title,
 

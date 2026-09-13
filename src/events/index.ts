@@ -24,9 +24,10 @@ import { base, CommentLength, EC2U, ec2u, LabelLength } from "@/vocabularies/ec2
 import { SchemaEvent } from "@/vocabularies/schema/event.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { text } from "@metreeca/blue/string";
+import { string, text } from "@metreeca/blue/string";
 import type { Instance } from "@metreeca/blue/value";
 import type { IRI } from "@metreeca/core/resource";
+import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import * as uuid from "uuid";
 
@@ -78,7 +79,19 @@ export function Event() {
 		publisher: optional(reference(Organization)),
 
 		about: multiple(reference(EventTopic)),
-		audience: multiple(reference(StakeholderTopic))
+		audience: multiple(reference(StakeholderTopic)),
+
+		digest: required(string, { // !!! factor?
+
+			hidden: true,
+
+			name: "Source Digest",
+			description: markdown`
+				Records the state of the source page the event was drawn from, so that an events sync
+				re-reads only the pages the source has changed.
+			`
+
+		})
 
 	}, {
 

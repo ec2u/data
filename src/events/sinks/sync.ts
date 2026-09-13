@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-import { digest, type Digest } from "@/_/gear-store/_digest.js";
+import { digest } from "@/_/gear-store/_digest.js";
+import { createStore } from "@/_/gear-store/index.js";
 import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.js";
 import { retire } from "@/_/gear-store/retire.js";
 import { validate } from "@/_/gear-store/validate.js";
-import { createEventId, Event, isStaleEvent, Publisher } from "@/events/index.js";
+import { Dataset } from "@/datasets/index.js";
+import { createEventId, Event, events, isStaleEvent, Publisher } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { partners } from "@/universities/index.js";
+import { reference } from "@metreeca/blue/reference";
+import { multiple, resource } from "@metreeca/blue/resource";
 import type { Instance } from "@metreeca/blue/value";
 import { assert, isDefined } from "@metreeca/core";
-import type { IRI } from "@metreeca/core/resource";
-import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
+import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { filter, fork, map, tee } from "@metreeca/flow/tasks";
+import { toSet } from "@metreeca/flow/sinks";
+import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
+import { service } from "@metreeca/gear";
 import { fetch, type URLLike } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 
@@ -39,6 +44,8 @@ const survival = 0.75; // the smallest fraction of the stored events a single ru
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function sync(publisher: Instance<typeof Publisher>): Sink<URLLike, Tally> {
+
+	const store = service(createStore);
 
 	const university = assert(partners[publisher.university], isDefined,
 		`unknown publisher university <${publisher.university}>`
@@ -69,7 +76,19 @@ export function sync(publisher: Instance<typeof Publisher>): Sink<URLLike, Tally
 
 		return urls => {
 
-			const digests = fingerprints(publisher);
+			const digests = pipe( // !!! replace with select()
+				(items(store.lookup({
+
+					entry: events.id,
+					shape: Catalogue,
+
+					model: { resources: [{ digest: "" }, { "?university": [university.id] }] }
+
+				})))
+				(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
+				(map(event => event.digest))
+				(toSet())
+			);
 
 			return pipe(
 				(items(urls))
@@ -95,7 +114,17 @@ export function sync(publisher: Instance<typeof Publisher>): Sink<URLLike, Tally
 
 		return urls => {
 
-			const existing = catalogue(university);
+			const existing = pipe( // !!! replace with select()
+				(items(store.lookup({
+
+					entry: events.id,
+					shape: Catalogue,
+
+					model: { resources: ["", { "?university": [university.id] }] }
+
+				})))
+				(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
+			);
 
 			return pipe(
 				(items(urls))
@@ -111,26 +140,13 @@ export function sync(publisher: Instance<typeof Publisher>): Sink<URLLike, Tally
 }
 
 
-//// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-async function fingerprints(publisher: {
+function Catalogue() { // the events dataset, drawing its members as the events they are
+	return resource(Dataset, {
 
-	readonly id: IRI
+		resources: multiple(reference(Event))
 
-}): Promise<ReadonlySet<Digest>> {
-
-	return new Set(); // !!! query the store, through `service(createStore)`, for the digests of the `publisher` pages
-
+	});
 }
 
-function catalogue(university: {
-
-	readonly id: IRI
-
-}): Feed<IRI> {
-
-	// !!! query the store, through `service(createStore)`, for the events published by `university`
-
-	return items([])
-
-}
