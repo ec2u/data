@@ -20,8 +20,8 @@ import { Person } from "@/persons/index.js";
 import { OrganizationTopic } from "@/taxonomies/pipes/organizations.core.js";
 import { Unit } from "@/units/index.js";
 import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
-import * as org from "@/vocabularies/org.js";
-import { Organization as SchemaOrganization } from "@/vocabularies/schema/organization.js";
+import { OrgOrganization } from "@/vocabularies/org.js";
+import { SchemaOrganization } from "@/vocabularies/schema/organization.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
 import { immutable } from "@metreeca/core/structures";
@@ -51,7 +51,7 @@ export const organizations = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Organization() {
-	return resource(Resource, org.Organization, SchemaOrganization, {
+	return resource(Resource, OrgOrganization, SchemaOrganization, {
 
 		subOrganizationOf: multiple(reference(Organization)),
 		hasSubOrganization: multiple(reference(Organization)),

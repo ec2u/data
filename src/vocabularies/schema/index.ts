@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { SchemaEvent } from "@/vocabularies/schema/event.js";
 import { multiple, nonempty, optional, resource } from "@metreeca/blue/resource";
 import { iri, markdown, string, text } from "@metreeca/blue/string";
 import { createNamespace } from "@metreeca/core/resource";
@@ -97,7 +98,7 @@ export const schema = createNamespace("https://schema.org/", [
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function Base() {
+export function SchemaBase() {
 	return resource({
 
 		url: multiple(iri),
@@ -115,16 +116,16 @@ export function Base() {
 	});
 }
 
-export function Thing() {
-	return resource(Base, {
+export function SchemaThing() {
+	return resource(SchemaBase, {
 
-		image: optional(ImageObject)
+		image: optional(SchemaImageObject)
 
 	});
 }
 
-export function ImageObject() {
-	return resource(Base, { // ;( extends Base, not Thing: the inherited `image` would nest ImageObject endlessly
+export function SchemaImageObject() {
+	return resource(SchemaBase, { // ;( extends Base, not Thing: the inherited `image` would nest ImageObject endlessly
 
 		url: nonempty(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
 

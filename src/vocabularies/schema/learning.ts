@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Course as EC2UCourse } from "@/courses/index.js";
-import { Person } from "@/vocabularies/foaf.js";
-import { EventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
-import { Thing, schema } from "@/vocabularies/schema/index.js";
-import { Organization } from "@/vocabularies/schema/organization.js";
-import { Concept } from "@/vocabularies/skos.js";
+import { Course } from "@/courses/index.js";
+import { FOAFPerson } from "@/vocabularies/foaf.js";
+import { SchemaEventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
+import { SchemaThing, schema } from "@/vocabularies/schema/index.js";
+import { SchemaOrganization } from "@/vocabularies/schema/organization.js";
+import { SKOSConcept } from "@/vocabularies/skos.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
@@ -27,7 +27,7 @@ import { multiple, optional, required, resource } from "@metreeca/blue/resource"
 import { duration, string, tag, text } from "@metreeca/blue/string";
 
 
-export function CredentialCategory() {
+export function SchemaCredentialCategory() {
 	return string({
 		in: [
 			"Degree",
@@ -40,8 +40,8 @@ export function CredentialCategory() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function LearningResource() {
-	return resource(Thing, {
+export function SchemaLearningResource() {
+	return resource(SchemaThing, {
 
 		numberOfCredits: optional(decimal({ minInclusive: 0 })),
 
@@ -49,25 +49,25 @@ export function LearningResource() {
 		assesses: optional(text),
 		competencyRequired: optional(text),
 
-		educationalCredentialAwarded: optional(EducationalOccupationalCredential),
-		occupationalCredentialAwarded: optional(EducationalOccupationalCredential),
+		educationalCredentialAwarded: optional(SchemaEducationalOccupationalCredential),
+		occupationalCredentialAwarded: optional(SchemaEducationalOccupationalCredential),
 
-		provider: optional(reference(Organization)),
+		provider: optional(reference(SchemaOrganization)),
 
-		educationalLevel: multiple(reference(Concept)),
-		about: multiple(reference(Concept))
+		educationalLevel: multiple(reference(SKOSConcept)),
+		about: multiple(reference(SKOSConcept))
 
 	});
 }
 
-export function EducationalOccupationalProgram() {
-	return resource(LearningResource, {
+export function SchemaEducationalOccupationalProgram() {
+	return resource(SchemaLearningResource, {
 
 		timeToComplete: optional(duration),
 
 		programPrerequisites: optional(text),
 
-		hasCourse: multiple(reference(EC2UCourse), {
+		hasCourse: multiple(reference(Course), {
 
 			foreign: true
 
@@ -76,8 +76,8 @@ export function EducationalOccupationalProgram() {
 	});
 }
 
-export function Course() {
-	return resource(LearningResource, {
+export function SchemaCourse() {
+	return resource(SchemaLearningResource, {
 
 		courseCode: optional(text),
 
@@ -89,25 +89,25 @@ export function Course() {
 	});
 }
 
-export function CourseInstance() {
-	return resource(Thing, {
+export function SchemaCourseInstance() {
+	return resource(SchemaThing, {
 
 		isAccessibleForFree: optional(boolean),
 		courseWorkload: optional(duration),
-		courseMode: optional(EventAttendanceModeEnumeration),
+		courseMode: optional(SchemaEventAttendanceModeEnumeration),
 
-		instructor: multiple(reference(Person)),
+		instructor: multiple(reference(FOAFPerson)),
 
-		about: multiple(reference(Concept)),
-		audience: multiple(reference(Concept))
+		about: multiple(reference(SKOSConcept)),
+		audience: multiple(reference(SKOSConcept))
 
 	});
 }
 
-export function EducationalOccupationalCredential() {
-	return resource(Thing, {
+export function SchemaEducationalOccupationalCredential() {
+	return resource(SchemaThing, {
 
-		credentialCategory: required(CredentialCategory)
+		credentialCategory: required(SchemaCredentialCategory)
 
 	}, {
 

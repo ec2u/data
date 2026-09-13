@@ -18,7 +18,7 @@ import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
 import { Organization } from "@/organizations/index.js";
 import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
-import * as foaf from "@/vocabularies/foaf.js";
+import { FOAFPerson } from "@/vocabularies/foaf.js";
 import { org } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
@@ -49,7 +49,7 @@ export const persons = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Person() {
-	return resource(Resource, foaf.Person, {
+	return resource(Resource, FOAFPerson, {
 
 		headOf: multiple(reference(Organization), {
 

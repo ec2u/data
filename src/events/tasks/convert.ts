@@ -15,8 +15,8 @@
  */
 
 import { createEventId, type Event, events } from "@/events/index.js";
-import { EventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
-import { Location } from "@/vocabularies/schema/location.js";
+import { SchemaEventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
+import { SchemaLocation } from "@/vocabularies/schema/location.js";
 import type { Instance } from "@metreeca/blue/value";
 import { type Object, opt, type Optional } from "@metreeca/core";
 import { multiple, nonempty, optional, required } from "@metreeca/core/arrays";
@@ -105,7 +105,7 @@ export function convert(university: {
 					copyrightNotice: optional(path("imageCredits").map(string))
 				}))),
 
-				location: optional<Instance<typeof Location>>(
+				location: optional<Instance<typeof SchemaLocation>>(
 					opt(attendanceURL, url => ({ url: [url] }))
 					?? opt(venueAddress ?? venueCity, () => ({
 						name: venueName, streetAddress: venueAddress, addressLocality: venueCity
@@ -136,7 +136,7 @@ function stamp(date: string, time: Optional<string>, zone: string): string { // 
 }
 
 
-function attendance(mode: string): Optional<Instance<typeof EventAttendanceModeEnumeration>> { // !!! type
+function attendance(mode: string): Optional<Instance<typeof SchemaEventAttendanceModeEnumeration>> { // !!! type
 	return mode === "offline" ? "OfflineEventAttendanceMode"
 		: mode === "online" ? "OnlineEventAttendanceMode"
 			: mode === "mixed" ? "MixedEventAttendanceMode"

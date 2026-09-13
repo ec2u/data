@@ -16,7 +16,7 @@
 
 import { Dataset, Resource } from "@/datasets/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
-import { Concept, ConceptScheme } from "@/vocabularies/skos.js";
+import { SKOSConcept, SKOSConceptScheme } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
@@ -24,7 +24,7 @@ import { markdown } from "@metreeca/core/strings";
 
 
 export function Taxonomy() {
-	return resource(Dataset, ConceptScheme, {
+	return resource(Dataset, SKOSConceptScheme, {
 
 		resources: multiple(reference(Topic)),
 
@@ -40,7 +40,7 @@ export function Taxonomy() {
 }
 
 export function Topic() {
-	return resource(Resource, Concept, {
+	return resource(Resource, SKOSConcept, {
 
 		inScheme: required(reference(Taxonomy)),
 		topConceptOf: optional(reference(Taxonomy)),

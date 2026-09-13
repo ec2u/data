@@ -20,7 +20,7 @@ import { EuroSciVocTopic } from "@/taxonomies/pipes/euroscivoc.core.js";
 import { dcat } from "@/vocabularies/dcat.js";
 import { dct } from "@/vocabularies/dct.js";
 import { base, EC2U, ec2u } from "@/vocabularies/ec2u.js";
-import { OrganizationalUnit } from "@/vocabularies/org.js";
+import { OrgOrganizationalUnit } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
@@ -53,7 +53,7 @@ export const units = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Unit() {
-	return resource(Organization, OrganizationalUnit, {
+	return resource(Organization, OrgOrganizationalUnit, {
 
 		unitOf: nonempty(reference(Organization)),
 

@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-import { Thing, schema } from "@/vocabularies/schema/index.js";
-import { Location } from "@/vocabularies/schema/location.js";
+import { SchemaThing, schema } from "@/vocabularies/schema/index.js";
+import { SchemaLocation } from "@/vocabularies/schema/location.js";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { email, phone, text } from "@metreeca/blue/string";
 
 
-export function Organization() {
-	return resource(Thing, {
+export function SchemaOrganization() {
+	return resource(SchemaThing, {
 
 		legalName: optional(text),
 
 		email: multiple(email),
 		telephone: multiple(phone),
 
-		location: optional(Location)
+		location: optional(SchemaLocation)
 
 	}, {
 

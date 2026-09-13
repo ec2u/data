@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import * as foaf from "@/vocabularies/foaf.js";
-import { Concept, skos } from "@/vocabularies/skos.js";
+import { FOAFOrganization, FOAFPerson } from "@/vocabularies/foaf.js";
+import { SKOSConcept, skos } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, optional, required, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
@@ -48,10 +48,10 @@ export const org = createNamespace("http://www.w3.org/ns/org#", [
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function OrganizationalUnit() {
-	return resource(Organization, {
+export function OrgOrganizationalUnit() {
+	return resource(OrgOrganization, {
 
-		unitOf: nonempty(reference(Organization), {
+		unitOf: nonempty(reference(OrgOrganization), {
 
 			forward: org,
 			reverse: org.hasUnit
@@ -65,8 +65,8 @@ export function OrganizationalUnit() {
 	});
 }
 
-export function Organization() {
-	return resource(foaf.Organization, {
+export function OrgOrganization() {
+	return resource(FOAFOrganization, {
 
 		// ;( `identifier` omitted: it would clash with `schema:identifier`, the term EC2U `Organization` publishes
 
@@ -88,23 +88,23 @@ export function Organization() {
 
 		}),
 
-		classification: multiple(reference(Concept)),
+		classification: multiple(reference(SKOSConcept)),
 
-		subOrganizationOf: multiple(reference(Organization)),
+		subOrganizationOf: multiple(reference(OrgOrganization)),
 
-		hasSubOrganization: multiple(reference(Organization), {
-
-			foreign: true
-
-		}),
-
-		hasUnit: multiple(reference(OrganizationalUnit), {
+		hasSubOrganization: multiple(reference(OrgOrganization), {
 
 			foreign: true
 
 		}),
 
-		hasHead: multiple(reference(foaf.Person), {
+		hasUnit: multiple(reference(OrgOrganizationalUnit), {
+
+			foreign: true
+
+		}),
+
+		hasHead: multiple(reference(FOAFPerson), {
 
 			foreign: true,
 
@@ -112,7 +112,7 @@ export function Organization() {
 
 		}),
 
-		hasMember: multiple(reference(foaf.Person), {
+		hasMember: multiple(reference(FOAFPerson), {
 
 			foreign: true
 
@@ -126,16 +126,16 @@ export function Organization() {
 	});
 }
 
-export function FormalOrganization() {
-	return resource(Organization, {}, {
+export function OrgFormalOrganization() {
+	return resource(OrgOrganization, {}, {
 
 		class: org.FormalOrganization
 
 	});
 }
 
-export function OrganizationalCollaboration() {
-	return resource(Organization, {}, {
+export function OrgOrganizationalCollaboration() {
+	return resource(OrgOrganization, {}, {
 
 		class: org.OrganizationalCollaboration
 

@@ -19,7 +19,7 @@ import { Dataset } from "@/datasets/index.js";
 import { Organization } from "@/organizations/index.js";
 import * as dict from "@/universities/index.core.js";
 import { EC2U, base, ec2u, Feature } from "@/vocabularies/ec2u.js";
-import { FormalOrganization } from "@/vocabularies/org.js";
+import { OrgFormalOrganization } from "@/vocabularies/org.js";
 import { int } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { nonempty, required, resource } from "@metreeca/blue/resource";
@@ -59,7 +59,7 @@ export const partners = immutable(Object.fromEntries(
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function University() {
-	return resource(Organization, Feature, FormalOrganization, {
+	return resource(Organization, Feature, OrgFormalOrganization, {
 
 		dataset: required(reference(resource(Dataset, {}, { hasValue: [ universities.id ] }))),
 

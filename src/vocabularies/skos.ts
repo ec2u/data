@@ -47,10 +47,10 @@ export const skos = createNamespace("http://www.w3.org/2004/02/skos/core#", [
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function ConceptScheme() {
+export function SKOSConceptScheme() {
 	return resource({
 
-		hasTopConcept: multiple(reference(Concept), {
+		hasTopConcept: multiple(reference(SKOSConcept), {
 
 			foreign: true,
 
@@ -58,7 +58,7 @@ export function ConceptScheme() {
 
 		}),
 
-		hasConcept: multiple(reference(Concept), {
+		hasConcept: multiple(reference(SKOSConcept), {
 
 			hidden: true,
 			foreign: true,
@@ -75,7 +75,7 @@ export function ConceptScheme() {
 	});
 }
 
-export function Concept() {
+export function SKOSConcept() {
 	return resource({
 
 		notation: optional(string), // ;( should be typed as per SKOS best practices
@@ -85,38 +85,38 @@ export function Concept() {
 		hiddenLabel: multiple(text),
 		definition: optional(text),
 
-		inScheme: required(reference(ConceptScheme)),
+		inScheme: required(reference(SKOSConceptScheme)),
 
-		topConceptOf: optional(reference(ConceptScheme), {
+		topConceptOf: optional(reference(SKOSConceptScheme), {
 
 			forward: skos,
 			reverse: skos.hasTopConcept
 
 		}),
 
-		broader: multiple(reference(Concept), {
+		broader: multiple(reference(SKOSConcept), {
 
 			forward: skos,
 			reverse: skos.narrower
 
 		}),
 
-		broaderTransitive: multiple(reference(Concept)),
+		broaderTransitive: multiple(reference(SKOSConcept)),
 
-		narrower: multiple(reference(Concept), {
+		narrower: multiple(reference(SKOSConcept), {
 
 			foreign: true
 
 		}),
 
-		related: multiple(reference(Concept), {
+		related: multiple(reference(SKOSConcept), {
 
 			forward: skos,
 			reverse: skos
 
 		}),
 
-		exactMatch: multiple(reference(Concept), {
+		exactMatch: multiple(reference(SKOSConcept), {
 
 			forward: skos,
 			reverse: skos

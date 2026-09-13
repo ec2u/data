@@ -40,7 +40,7 @@ export const foaf = createNamespace("http://xmlns.com/foaf/0.1/", [
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function Agent() {
+export function FOAFAgent() {
 	return resource({
 
 		depiction: multiple(iri),
@@ -57,16 +57,16 @@ export function Agent() {
 	});
 }
 
-export function Organization() {
-	return resource(Agent, {}, {
+export function FOAFOrganization() {
+	return resource(FOAFAgent, {}, {
 
 		class: foaf.Organization
 
 	});
 }
 
-export function Person() {
-	return resource(Agent, {
+export function FOAFPerson() {
+	return resource(FOAFAgent, {
 
 		title: optional(text),
 

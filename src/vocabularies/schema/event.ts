@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { Thing } from "@/vocabularies/schema/index.js";
-import { Location } from "@/vocabularies/schema/location.js";
-import { Organization } from "@/vocabularies/schema/organization.js";
-import { Concept } from "@/vocabularies/skos.js";
+import { SchemaThing } from "@/vocabularies/schema/index.js";
+import { SchemaLocation } from "@/vocabularies/schema/location.js";
+import { SchemaOrganization } from "@/vocabularies/schema/organization.js";
+import { SKOSConcept } from "@/vocabularies/skos.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, optional, required, resource } from "@metreeca/blue/resource";
 import { instant, iri, string, tag } from "@metreeca/blue/string";
 
 
-export function EventStatusType() {
+export function SchemaEventStatusType() {
 	return string({
 		in: [
 			"EventCancelled",
@@ -36,7 +36,7 @@ export function EventStatusType() {
 	});
 }
 
-export function EventAttendanceModeEnumeration() {
+export function SchemaEventAttendanceModeEnumeration() {
 	return string({
 		in: [
 			"OfflineEventAttendanceMode",
@@ -49,8 +49,8 @@ export function EventAttendanceModeEnumeration() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function Event() {
-	return resource(Thing, {
+export function SchemaEvent() {
+	return resource(SchemaThing, {
 
 		url: nonempty(iri),
 
@@ -60,15 +60,15 @@ export function Event() {
 		inLanguage: optional(tag),
 		isAccessibleForFree: optional(boolean),
 
-		eventStatus: optional(EventStatusType),
-		eventAttendanceMode: optional(EventAttendanceModeEnumeration),
+		eventStatus: optional(SchemaEventStatusType),
+		eventAttendanceMode: optional(SchemaEventAttendanceModeEnumeration),
 
-		location: optional(Location),
+		location: optional(SchemaLocation),
 
-		publisher: optional(reference(Organization)),
+		publisher: optional(reference(SchemaOrganization)),
 
-		about: multiple(reference(Concept)),
-		audience: multiple(reference(Concept))
+		about: multiple(reference(SKOSConcept)),
+		audience: multiple(reference(SKOSConcept))
 
 	});
 }

@@ -20,7 +20,7 @@ import { Organization } from "@/organizations/index.js";
 import { EventTopic } from "@/taxonomies/pipes/events.core.js";
 import { StakeholderTopic } from "@/taxonomies/pipes/stakeholders.core.js";
 import { base, CommentLength, EC2U, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
-import { Event as SchemaEvent } from "@/vocabularies/schema/event.js";
+import { SchemaEvent } from "@/vocabularies/schema/event.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";

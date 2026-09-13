@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Thing, schema } from "@/vocabularies/schema/index.js";
+import { SchemaThing, schema } from "@/vocabularies/schema/index.js";
 import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { nonempty, optional, required, resource } from "@metreeca/blue/resource";
@@ -22,19 +22,19 @@ import { email, iri, phone, text } from "@metreeca/blue/string";
 import { union } from "@metreeca/blue/union";
 
 
-export function Location() {
+export function SchemaLocation() {
 	return union(
 		text,
-		Place,
-		PostalAddress,
-		VirtualLocation
+		SchemaPlace,
+		SchemaPostalAddress,
+		SchemaVirtualLocation
 	);
 }
 
-export function Place() {
-	return resource(Thing, {
+export function SchemaPlace() {
+	return resource(SchemaThing, {
 
-		address: optional(reference(PostalAddress)),
+		address: optional(reference(SchemaPostalAddress)),
 
 		latitude: required(decimal),
 		longitude: required(decimal)
@@ -46,8 +46,8 @@ export function Place() {
 	});
 }
 
-export function PostalAddress() {
-	return resource(Thing, {
+export function SchemaPostalAddress() {
+	return resource(SchemaThing, {
 
 		addressCountry: optional(text),
 		addressRegion: optional(text),
@@ -66,8 +66,8 @@ export function PostalAddress() {
 	});
 }
 
-export function VirtualLocation() {
-	return resource(Thing, {
+export function SchemaVirtualLocation() {
+	return resource(SchemaThing, {
 
 		url: nonempty(iri)
 

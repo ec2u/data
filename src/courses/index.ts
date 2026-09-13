@@ -21,7 +21,7 @@ import { Program } from "@/programs/index.js";
 import { StakeholderTopic } from "@/taxonomies/pipes/stakeholders.core.js";
 import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import { schema } from "@/vocabularies/schema/index.js";
-import { Course as SchemaCourse, CourseInstance } from "@/vocabularies/schema/learning.js";
+import { SchemaCourse, SchemaCourseInstance } from "@/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
@@ -57,7 +57,7 @@ export const courses = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Course() {
-	return resource(Offering, SchemaCourse, CourseInstance, {
+	return resource(Offering, SchemaCourse, SchemaCourseInstance, {
 
 		year: optional(string({ pattern: YearPattern })),
 		term: multiple(Term),

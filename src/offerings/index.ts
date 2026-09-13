@@ -19,13 +19,13 @@ import { Organization } from "@/organizations/index.js";
 import { ISCED2011Topic } from "@/taxonomies/pipes/isced-2011.core.js";
 import { ISCEDF2013Topic } from "@/taxonomies/pipes/isced-f-2013.core.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
-import { LearningResource } from "@/vocabularies/schema/learning.js";
+import { SchemaLearningResource } from "@/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 
 
 export function Offering() {
-	return resource(Resource, LearningResource, {
+	return resource(Resource, SchemaLearningResource, {
 
 		provider: optional(reference(Organization)),
 

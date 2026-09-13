@@ -17,7 +17,7 @@
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Offering } from "@/offerings/index.js";
 import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
-import { EducationalOccupationalProgram } from "@/vocabularies/schema/learning.js";
+import { SchemaEducationalOccupationalProgram } from "@/vocabularies/schema/learning.js";
 import { resource } from "@metreeca/blue/resource";
 import { immutable } from "@metreeca/core/structures";
 
@@ -48,7 +48,7 @@ export const programs = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Program() {
-	return resource(Offering, EducationalOccupationalProgram, {}, {
+	return resource(Offering, SchemaEducationalOccupationalProgram, {}, {
 
 		space: ec2u,
 		class: ec2u.Program
