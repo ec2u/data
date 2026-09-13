@@ -18,8 +18,9 @@ import { digest, type Digest } from "@/_/gear-store/_digest.js";
 import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.js";
 import { retire } from "@/_/gear-store/retire.js";
 import { validate } from "@/_/gear-store/validate.js";
-import { Topic } from "@/taxonomies/index.js";
+import { Taxonomy, Topic } from "@/taxonomies/index.js";
 import { convert, createTopicId } from "@/taxonomies/tasks/convert.js";
+import type { Instance } from "@metreeca/blue/value";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
@@ -50,6 +51,9 @@ const CSVFormat = immutable({
  * the next run simply starts over. An entry whose digest matches the one recorded with the topic the store already
  * holds is dropped before it is converted, so an unchanged document costs a retrieval and a comparison per entry.
  *
+ * The taxonomy is stated as it is handed over, alongside the topics and under the same transaction, so a scheme is
+ * described wherever its topics are held.
+ *
  * Topics are named after the entries the document lists and stated as they are drawn. The ones the store holds for
  * the taxonomy and the document never named are retracted once it has been read whole, so nothing is retired on the
  * strength of a partial reading. A run leaving in place less than three quarters of the stored topics states nothing
@@ -65,23 +69,30 @@ const CSVFormat = immutable({
  *
  * @throws {@link !Error Error} While the feed is consumed, if any write fails, with nothing committed
  */
-export function sync(taxonomy: { // !!! persists taxonomy description
-
-	readonly id: IRI
-
-}): Sink<URLLike, Tally> {
+export function sync(taxonomy: Instance<typeof Taxonomy>): Sink<URLLike, Tally> {
 
 	return urls => pipe(
 		(items(urls))
 		(fetch())
 		(csv(CSVFormat))
 		(tee(
+			describe(),
 			insert(),
 			remove()
 		))
-		(persist(Topic, { atomic: true }))
+		(persist({ atomic: true }))
 	);
 
+
+	function describe(): Task<Record, Delta> {
+
+		return () => pipe(
+			(items([taxonomy]))
+			(validate(Taxonomy))
+			(map(taxonomy => delta(taxonomy.id, Taxonomy, taxonomy)))
+		);
+
+	}
 
 	function insert(): Task<Record, Delta> {
 
@@ -94,7 +105,7 @@ export function sync(taxonomy: { // !!! persists taxonomy description
 				(filter(async record => !(await digests).has(digest(record))))
 				(convert(taxonomy))
 				(validate(Topic))
-				(map(topic => delta(topic.id, topic)))
+				(map(topic => delta(topic.id, Topic, topic)))
 			);
 
 		};
@@ -111,7 +122,7 @@ export function sync(taxonomy: { // !!! persists taxonomy description
 				(items(records))
 				(map(record => createTopicId(taxonomy, record)))
 				(retire({ atomic: true, survival, existing }))
-				(map(id => delta(id)))
+				(map(id => delta(id, Topic)))
 			);
 
 		};

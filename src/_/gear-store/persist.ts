@@ -34,8 +34,10 @@ const logger = log(import.meta.url);
  * Target state of a single resource.
  *
  * A workflow settles on one of these for every resource it looks at, naming the state to store or, with `null`, the
- * removal. Whether it gathers resources or retires them the statement is the same, so all workflows close on the same
- * sink. `T` carries a workflow's own state type through to the store, so a state is not widened on the way.
+ * removal. Every delta names the shape it is stated under, so one feed carries resources of as many kinds as a
+ * workflow states and they all reach the store together. Whether it gathers resources or retires them the statement
+ * is the same, so all workflows close on the same sink. `T` carries a workflow's own state type through to the store,
+ * so a state is not widened on the way.
  *
  * @typeParam T The type of the states to be stored
  */
@@ -45,6 +47,11 @@ export type Delta<T extends Resource = Resource> = readonly [
 	 * The resource concerned.
 	 */
 	entry: Reference,
+
+	/**
+	 * The shape the resource is stated under.
+	 */
+	shape: Lazy<ResourceShape>,
 
 	/**
 	 * The state the resource is to be stored with, or `null` for a resource to be removed.
@@ -97,8 +104,6 @@ export interface Tally {
  * Sources that tolerate no mixed state are served by `atomic`, which trades all that for all-or-nothing: the whole
  * feed is drawn inside a single store transaction, and the first failing write leaves the store exactly as it was.
  *
- * @param shape The shape the states are validated against before they reach the store
- *
  * @param options Options governing how the deltas are committed
  * @param options.atomic Whether the deltas are committed as a single transaction, dropping them all as soon as one
  * write fails; defaults to `false`, committing each delta on its own and absorbing individual failures
@@ -109,7 +114,7 @@ export interface Tally {
  *
  * @throws {@link !Error Error} Under `atomic`, while the feed is consumed, if any write fails, with nothing committed
  */
-export function persist(shape: Lazy<ResourceShape>, {
+export function persist({
 
 	atomic = false
 
@@ -129,7 +134,7 @@ export function persist(shape: Lazy<ResourceShape>, {
 
 
 	function collect(client: StoreClient): Sink<Delta, Tally> {
-		return reduce(async (tally, [entry, state]) => {
+		return reduce(async (tally, [entry, shape, state]) => {
 
 			try {
 
@@ -193,12 +198,13 @@ export function persist(shape: Lazy<ResourceShape>, {
  * @typeParam T The type of the state to be stored
  *
  * @param entry The resource concerned
+ * @param shape The shape the resource is stated under
  * @param state The state the resource is to be stored with; omit to state its removal
  *
- * @returns An immutable {@link Delta} pairing `entry` with `state`, or with `null` if `state` is omitted
+ * @returns An immutable {@link Delta} pairing `entry` and `shape` with `state`, or with `null` if `state` is omitted
  */
-export function delta<T extends Resource>(entry: Reference, state?: T): Delta<T> {
+export function delta<T extends Resource>(entry: Reference, shape: Lazy<ResourceShape>, state?: T): Delta<T> {
 
-	return Object.freeze([entry, state ?? null]);
+	return Object.freeze([entry, shape, state ?? null]);
 
 }

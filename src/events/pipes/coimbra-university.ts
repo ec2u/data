@@ -16,6 +16,7 @@
 
 import { sync } from "@/events/sinks/sync.js";
 import { execute } from "@/index.core.js";
+import { organizations } from "@/organizations/index.js";
 import { coimbra } from "@/universities/index.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
@@ -31,8 +32,11 @@ const Events = "https://agenda.coimbra.pt/event";
 const Publisher = immutable({
 
 	id: "https://www.uc.pt/dri/noticias/eventos",
+
+	dataset: organizations.id,
 	university: coimbra.id,
 
+	label: "Coimbra Agenda",
 	prefLabel: "Coimbra Agenda"
 
 });

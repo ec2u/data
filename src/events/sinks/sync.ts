@@ -18,10 +18,11 @@ import { digest, type Digest } from "@/_/gear-store/_digest.js";
 import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.js";
 import { retire } from "@/_/gear-store/retire.js";
 import { validate } from "@/_/gear-store/validate.js";
-import { createEventId, Event, isStaleEvent } from "@/events/index.js";
+import { createEventId, Event, isStaleEvent, Publisher } from "@/events/index.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { partners } from "@/universities/index.js";
+import type { Instance } from "@metreeca/blue/value";
 import { assert, isDefined } from "@metreeca/core";
 import type { IRI } from "@metreeca/core/resource";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
@@ -37,12 +38,7 @@ const survival = 0.75; // the smallest fraction of the stored events a single ru
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function sync(publisher: { // !!! persist publisher description
-
-	readonly id: IRI
-	readonly university: IRI
-
-}): Sink<URLLike, Tally> {
+export function sync(publisher: Instance<typeof Publisher>): Sink<URLLike, Tally> {
 
 	const university = assert(partners[publisher.university], isDefined,
 		`unknown publisher university <${publisher.university}>`
@@ -51,12 +47,23 @@ export function sync(publisher: { // !!! persist publisher description
 	return urls => pipe(
 		(items(urls))
 		(tee(
+			describe(),
 			insert(),
 			remove()
 		))
-		(persist(Event))
+		(persist())
 	);
 
+
+	function describe(): Task<URLLike, Delta> {
+
+		return () => pipe(
+			(items([publisher]))
+			(validate(Publisher))
+			(map(publisher => delta(publisher.id, Publisher, publisher)))
+		);
+
+	}
 
 	function insert(): Task<URLLike, Delta> {
 
@@ -76,7 +83,7 @@ export function sync(publisher: { // !!! persist publisher description
 					(extract())
 					(convert(university))
 					(validate(Event))
-					(map(event => isStaleEvent(event) ? delta(event.id) : delta(event.id, event)))
+					(map(event => isStaleEvent(event) ? delta(event.id, Event) : delta(event.id, Event, event)))
 				)))
 			);
 
@@ -94,7 +101,7 @@ export function sync(publisher: { // !!! persist publisher description
 				(items(urls))
 				(map(createEventId))
 				(retire({ survival, existing }))
-				(map(id => delta(id)))
+				(map(id => delta(id, Event)))
 			);
 
 		};

@@ -19,10 +19,11 @@ import { Resource } from "@/datasets/index.js";
 import { Organization } from "@/organizations/index.js";
 import { EventTopic } from "@/taxonomies/pipes/events.core.js";
 import { StakeholderTopic } from "@/taxonomies/pipes/stakeholders.core.js";
+import { University } from "@/universities/index.js";
 import { base, CommentLength, EC2U, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
 import { SchemaEvent } from "@/vocabularies/schema/event.js";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, resource } from "@metreeca/blue/resource";
+import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
 import type { Instance } from "@metreeca/blue/value";
 import type { IRI } from "@metreeca/core/resource";
@@ -59,6 +60,14 @@ export type Event = Instance<typeof Event> // !!! remove
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Publisher() {
+	return resource(Organization, {
+
+		university: required(reference(University))
+
+	});
+}
 
 export function Event() {
 	return resource(Resource, SchemaEvent, {
