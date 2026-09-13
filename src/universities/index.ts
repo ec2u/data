@@ -17,13 +17,12 @@
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Dataset } from "@/datasets/index.js";
 import { Organization } from "@/organizations/index.js";
-import { Unit } from "@/units/index.js";
 import * as dict from "@/universities/index.core.js";
 import { EC2U, base, ec2u, Feature } from "@/vocabularies/ec2u.js";
 import { FormalOrganization } from "@/vocabularies/org.js";
 import { int } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, nonempty, required, resource } from "@metreeca/blue/resource";
+import { nonempty, required, resource } from "@metreeca/blue/resource";
 import { iri, year } from "@metreeca/blue/string";
 import { immutable } from "@metreeca/core/structures";
 
@@ -63,11 +62,6 @@ export function University() {
 	return resource(Organization, Feature, FormalOrganization, {
 
 		dataset: required(reference(resource(Dataset, {}, { hasValue: [ universities.id ] }))),
-
-		subOrganizationOf: multiple(reference(Organization)),
-		hasSubOrganization: multiple(reference(Organization)),
-
-		hasUnit: multiple(reference(Unit)),
 
 		depiction: nonempty(iri),
 		homepage: nonempty(iri),

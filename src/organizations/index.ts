@@ -18,6 +18,7 @@ import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
 import { Person } from "@/persons/index.js";
 import { OrganizationTopic } from "@/taxonomies/pipes/organizations.core.js";
+import { Unit } from "@/units/index.js";
 import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import * as org from "@/vocabularies/org.js";
 import { Organization as SchemaOrganization } from "@/vocabularies/schema/organization.js";
@@ -52,11 +53,10 @@ export const organizations = immutable({
 export function Organization() {
 	return resource(Resource, org.Organization, SchemaOrganization, {
 
-		// ;( `hasUnit` not narrowed to `Unit`: `Unit` extends this very shape, so resolving the override closes a
-		// ;( circular definition
-
 		subOrganizationOf: multiple(reference(Organization)),
 		hasSubOrganization: multiple(reference(Organization)),
+
+		hasUnit: multiple(reference(Unit)),
 
 		classification: multiple(reference(OrganizationTopic)),
 

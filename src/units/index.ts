@@ -57,11 +57,6 @@ export function Unit() {
 
 		unitOf: nonempty(reference(Organization)),
 
-		subOrganizationOf: multiple(reference(Organization)),
-		hasSubOrganization: multiple(reference(Organization)),
-
-		hasUnit: multiple(reference(Unit)),
-
 		subject: multiple(reference(EuroSciVocTopic), { forward: dct }),
 		keyword: multiple(text, { forward: dcat })
 
