@@ -99,7 +99,7 @@ export function retire({
 			const action = atomic ? "prevented" : "skipping";
 			const share = Math.round($survival*100);
 
-			const message = `${action} mass retirement leaving less than <${share}%> of <${current}> current items`;
+			const message = `${action} mass retirement leaving less than <${share}%> of <${current}> current resources`;
 
 			if ( atomic ) { // a throw aborts the whole update, leaving the collection as the last sound run left it
 
@@ -115,7 +115,7 @@ export function retire({
 
 		} else {
 
-			logger.info`retiring <${dropped}> of <${current}> current items`;
+			logger.info`retiring <${dropped}> of <${current}> current resources`;
 
 			return retired;
 
