@@ -20,12 +20,12 @@ import { SchemaLocation } from "@/vocabularies/schema/location.js";
 import type { Instance } from "@metreeca/blue/value";
 import { type Object, opt, type Optional } from "@metreeca/core";
 import { multiple, nonempty, optional, required } from "@metreeca/core/arrays";
-import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter } from "@metreeca/flow/tasks";
 import { jpath, link, string } from "@metreeca/gear-json";
+import type { Reference } from "@metreeca/qest/resource";
 
 
 /**
@@ -46,10 +46,10 @@ import { jpath, link, string } from "@metreeca/gear-json";
  */
 export function convert(university: {
 
-	readonly id: IRI
+	readonly id: Reference
 	readonly zone: string
 
-}): Task<Object, Event> {
+}): Task<Object, Instance<typeof Event>> {
 
 	return payloads => pipe(
 		items(payloads)
@@ -85,8 +85,8 @@ export function convert(university: {
 
 				label: title,
 
-				about: multiple(path("topic").map(string).flatMap(about)),
-				audience: multiple(path("audience").map(string).flatMap(audience)),
+				about: multiple(path("about").map(link)),
+				audience: multiple(path("audience").map(link)),
 
 				name: title,
 				description: optional(path("description").map(string)),
@@ -148,12 +148,3 @@ function attendance(mode: string): Optional<Instance<typeof SchemaEventAttendanc
 }
 
 
-//// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function about(topic: string): readonly IRI[] {
-	return []; // !!! match `topic` against the EC2U events taxonomy, keeping the closest concept
-}
-
-function audience(stakeholder: string): readonly IRI[] {
-	return []; // !!! match `stakeholder` against the EC2U stakeholders taxonomy, keeping the closest concept
-}

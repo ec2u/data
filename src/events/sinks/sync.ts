@@ -21,6 +21,7 @@ import { retire } from "@/_/gear-store/retire.js";
 import { validate } from "@/_/gear-store/validate.js";
 import { Dataset } from "@/datasets/index.js";
 import { createEventId, Event, events, isStaleEvent, Publisher } from "@/events/index.js";
+import { classify } from "@/events/tasks/classify.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { partners } from "@/universities/index.js";
@@ -100,6 +101,7 @@ export function sync(publisher: Instance<typeof Publisher>, force = false): Sink
 					(untag())
 					(filter(async page => !(await digests).has(digest(page))))
 					(extract())
+					(classify())
 					(convert(university))
 					(validate(Event))
 					(map(event => isStaleEvent(event) ? delta(event.id, Event) : delta(event.id, Event, event)))

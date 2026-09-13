@@ -29,6 +29,7 @@ import type { Instance } from "@metreeca/blue/value";
 import type { IRI } from "@metreeca/core/resource";
 import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
+import type { Reference } from "@metreeca/qest/resource";
 import * as uuid from "uuid";
 
 
@@ -56,19 +57,6 @@ export const events = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type Event = Instance<typeof Event> // !!! remove
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function Publisher() {
-	return resource(Organization, {
-
-		university: required(reference(University))
-
-	});
-}
 
 export function Event() {
 	return resource(Resource, SchemaEvent, {
@@ -101,16 +89,24 @@ export function Event() {
 	});
 }
 
+export function Publisher() {
+	return resource(Organization, {
+
+		university: required(reference(University))
+
+	});
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function isStaleEvent(event: Event): boolean {
+export function isStaleEvent(event: Instance<typeof Event>): boolean {
 
 	return false; // !!! tbi
 
 }
 
-export function createEventId(url: string | URL): IRI {
+export function createEventId(url: string | URL): Reference {
 
 	return `${(events.id)}/${uuid.v3(String(url), uuid.v3.URL)}`;
 

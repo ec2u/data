@@ -151,14 +151,6 @@ export function extract(): Task<Text, Object> {
 							type: Type.STRING
 						},
 
-						topic: {
-							type: Type.STRING
-						},
-
-						audience: {
-							type: Type.STRING
-						},
-
 						language: {
 							type: Type.STRING,
 							pattern: "^[a-z]{2}$"
