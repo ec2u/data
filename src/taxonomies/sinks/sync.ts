@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-import { digest, type Digest } from "@/_/gear-store/_digest.js";
+import { digest } from "@/_/gear-store/_digest.js";
+import { createStore } from "@/_/gear-store/index.js";
 import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.js";
 import { retire } from "@/_/gear-store/retire.js";
 import { validate } from "@/_/gear-store/validate.js";
 import { Taxonomy, Topic } from "@/taxonomies/index.js";
 import { convert, createTopicId } from "@/taxonomies/tasks/convert.js";
 import type { Instance } from "@metreeca/blue/value";
-import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/structures";
-import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
+import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { filter, map, tee } from "@metreeca/flow/tasks";
+import { toSet } from "@metreeca/flow/sinks";
+import { filter, flat, map, tee } from "@metreeca/flow/tasks";
+import { service } from "@metreeca/gear";
 import { csv, type Record } from "@metreeca/gear-csv";
 import { fetch, type URLLike } from "@metreeca/gear-url";
 
@@ -71,6 +73,9 @@ const CSVFormat = immutable({
  */
 export function sync(taxonomy: Instance<typeof Taxonomy>): Sink<URLLike, Tally> {
 
+	const store = service(createStore);
+
+
 	return urls => pipe(
 		(items(urls))
 		(fetch())
@@ -98,7 +103,19 @@ export function sync(taxonomy: Instance<typeof Taxonomy>): Sink<URLLike, Tally> 
 
 		return records => {
 
-			const digests = fingerprints(taxonomy);
+			const digests = pipe(
+				(items(store.lookup({ // !!! replace with select()
+
+					entry: taxonomy.id,
+					shape: Taxonomy,
+
+					model: { resources: [{ digest: "" }] }
+
+				})))
+				(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
+				(map(topic => topic.digest))
+				(toSet())
+			);
 
 			return pipe(
 				(items(records))
@@ -116,7 +133,17 @@ export function sync(taxonomy: Instance<typeof Taxonomy>): Sink<URLLike, Tally> 
 
 		return records => {
 
-			const existing = catalogue(taxonomy);
+			const existing = pipe( // !!! replace with select()
+				(items(store.lookup({
+
+					entry: taxonomy.id,
+					shape: Taxonomy,
+
+					model: { resources: [""] }
+
+				})))
+				(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
+			);
 
 			return pipe(
 				(items(records))
@@ -128,32 +155,5 @@ export function sync(taxonomy: Instance<typeof Taxonomy>): Sink<URLLike, Tally> 
 		};
 
 	}
-
-}
-
-
-//// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-async function fingerprints(taxonomy: {
-
-	readonly id: IRI
-
-}): Promise<ReadonlySet<Digest>> {
-
-	return new Set(); // !!! query the store, through `service(createStore)`, for the digests of the `taxonomy` entries
-
-	// !!! record each digest alongside its topic, so that only a committed state justifies skipping it
-
-}
-
- function catalogue(taxonomy: {
-
-	readonly id: IRI
-
-}): Feed<IRI> {
-
-	// !!! query the store, through `service(createStore)`, for the topics of `taxonomy`
-
-	 return items([])
 
 }
