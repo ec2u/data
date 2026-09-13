@@ -23,10 +23,11 @@ import { reduce } from "@metreeca/flow/sinks";
 import { service } from "@metreeca/gear";
 import type { StoreClient } from "@metreeca/keep";
 import type { Reference, Resource } from "@metreeca/qest/resource";
-import { log, report } from "@metreeca/tape";
+import { log, report, time } from "@metreeca/tape";
 
 
 const logger = log(import.meta.url);
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -64,25 +65,24 @@ export type Delta<T extends Resource = Resource> = readonly [
  * Counts of what a run did to the resources it drew.
  *
  * Every resource falls under exactly one count, so the three add up to the number of deltas drawn and a run went
- * cleanly exactly when `failed` is zero.
+ * cleanly exactly when `reject` is zero.
  */
 export interface Tally {
 
 	/**
 	 * The number of resources stored, whether afresh or over a state already held.
 	 */
-	readonly stored: number;
+	readonly insert: number;
 
 	/**
 	 * The number of resources removed, whether or not the store held them.
 	 */
-	readonly removed: number;
+	readonly remove: number;
 
 	/**
-	 * The number of resources a failed write left exactly as the store already held them, to be reconsidered by the
-	 * next run.
+	 * The number of resources a failed write left exactly as the store already held them.
 	 */
-	readonly failed: number;
+	readonly reject: number;
 
 }
 
@@ -127,10 +127,20 @@ export function persist({
 	const store = service(createStore);
 
 
-	return async feed => immutable(atomic
+	return async feed => time(async () => immutable(atomic
 		? await store.execute(client => feed(collect(client)))
 		: await feed(collect(store))
-	);
+
+	), ({ insert, remove, reject }, elapsed) => {
+
+		const total = insert+remove+reject;
+
+		const resources = total === 1 ? "resource" : "resources";
+		const counts = `insert <${report(insert)}> | remove <${report(remove)}> | reject <${report(reject)}>`;
+
+		logger.info`persisted <${report(total)}> ${resources} in <${report(elapsed)}> ms | ${counts}`;
+
+	});
 
 
 	function collect(client: StoreClient): Sink<Delta, Tally> {
@@ -144,7 +154,7 @@ export function persist({
 
 					logger.info`removed resource <${entry}>`;
 
-					return { ...tally, removed: tally.removed+1 };
+					return { ...tally, remove: tally.remove+1 };
 
 				} else {
 
@@ -152,7 +162,7 @@ export function persist({
 
 					logger.info`inserted resource <${entry}>`;
 
-					return { ...tally, stored: tally.stored+1 };
+					return { ...tally, insert: tally.insert+1 };
 
 				}
 
@@ -167,19 +177,19 @@ export function persist({
 
 				} else {
 
-					logger.warning`unable to write resource <${entry}>: ${report(error)}`;
+					logger.warning`unable to mutate resource <${entry}> (${report(error)})`;
 
+					return { ...tally, reject: tally.reject+1 };
 
-					return { ...tally, failed: tally.failed+1 };
 				}
 
 			}
 
 		}, {
 
-			stored: 0,
-			removed: 0,
-			failed: 0
+			insert: 0,
+			remove: 0,
+			reject: 0
 
 		});
 	}
