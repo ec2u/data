@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Thing } from "@/vocabularies/schema/index.js";
+import { Thing, schema } from "@/vocabularies/schema/index.js";
 import { Location } from "@/vocabularies/schema/location.js";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { email, phone, text } from "@metreeca/blue/string";
@@ -29,6 +29,10 @@ export function Organization() {
 		telephone: multiple(phone),
 
 		location: optional(Location)
+
+	}, {
+
+		class: schema.Organization
 
 	});
 }

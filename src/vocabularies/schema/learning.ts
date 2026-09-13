@@ -17,7 +17,7 @@
 import { Course as EC2UCourse } from "@/courses/index.js";
 import { Person } from "@/vocabularies/foaf.js";
 import { EventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
-import { Thing } from "@/vocabularies/schema/index.js";
+import { Thing, schema } from "@/vocabularies/schema/index.js";
 import { Organization } from "@/vocabularies/schema/organization.js";
 import { Concept } from "@/vocabularies/skos.js";
 import { boolean } from "@metreeca/blue/boolean";
@@ -108,6 +108,10 @@ export function EducationalOccupationalCredential() {
 	return resource(Thing, {
 
 		credentialCategory: required(CredentialCategory)
+
+	}, {
+
+		class: schema.EducationalOccupationalCredential
 
 	});
 }

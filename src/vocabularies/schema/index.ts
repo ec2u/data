@@ -21,6 +21,16 @@ import { createNamespace } from "@metreeca/core/resource";
 
 export const schema = createNamespace("https://schema.org/", [
 
+	"ImageObject",
+
+	"Place",
+	"PostalAddress",
+	"VirtualLocation",
+
+	"Organization",
+
+	"EducationalOccupationalCredential",
+
 	"url",
 	"identifier",
 
@@ -121,6 +131,10 @@ export function ImageObject() {
 		caption: optional(text),
 		author: optional(text),
 		copyrightNotice: optional(text)
+
+	}, {
+
+		class: schema.ImageObject
 
 	});
 }
