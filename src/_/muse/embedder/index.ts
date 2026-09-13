@@ -18,8 +18,8 @@
  * Text embedding.
  *
  * Provides the {@link Embedder} contract for mapping text to an {@link Embedding} positioning its meaning in a
- * semantic space, decoupling consumers from the embedding strategy, alongside the tools for ranking embeddings by
- * semantic proximity and retaining them in a compact form.
+ * semantic space, decoupling consumers from the embedding strategy, along with the means for searching a body of
+ * embedded texts by meaning, ranking embeddings by semantic proximity and retaining them in a compact form.
  *
  * @module index
  *
@@ -72,6 +72,35 @@ export type Embedder = {
  */
 export type Embedding = readonly number[];
 
+
+/**
+ * A semantic index.
+ *
+ * Answers an embedded text with the entries closest to it in meaning, ranked by semantic distance, so that a consumer
+ * searches as many texts as it likes against a body of entries handed over once, under bounds settled once. Entries
+ * are named by an identifier of the consumer's own, so whatever they carry besides their embedding stays with it.
+ *
+ * @typeParam T The type of the identifiers the indexed entries are named by
+ */
+export type Index<T> = {
+
+	/**
+	 * Looks up the entries closest to an embedded text.
+	 *
+	 * Embeddings are comparable only if computed by the same embedder, so `query` is expected to be drawn from the one
+	 * the indexed entries were embedded with.
+	 *
+	 * @param query The embedding of the text to search the index with
+	 *
+	 * @returns An immutable list of `[id, distance]` pairs naming the matching entries, ordered by increasing distance
+	 * from `query`, limited to the entries accepted by the bounds the index was created under
+	 *
+	 * @throws {@link !RangeError RangeError} If `query` is not comparable to the embeddings the index holds
+	 */
+	(query: Embedding): readonly [T, Distance][];
+
+};
+
 /**
  * Semantic distance.
  *
@@ -111,7 +140,7 @@ export function createEmbedder(): Embedder {
  *
  * @param texts The fragments describing the resource
  *
- * @returns The text of the fragments of `texts` that are neither undefined nor blank, one to a line
+ * @returns The fragments of `texts` that are neither undefined nor blank, joined one to a line
  */
 export function embeddable(...texts: readonly (undefined | Text)[]): Text {
 
