@@ -24,11 +24,10 @@ import { createEventId, Event, events, isStaleEvent, Publisher } from "@/events/
 import { classify } from "@/events/tasks/classify.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
-import { partners } from "@/universities/index.js";
+import { getUniversity } from "@/universities/index.core.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
 import type { Instance } from "@metreeca/blue/value";
-import { assert, isDefined } from "@metreeca/core";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
@@ -48,9 +47,7 @@ export function sync(publisher: Instance<typeof Publisher>, force = false): Sink
 
 	const store = service(createStore);
 
-	const university = assert(partners[publisher.university], isDefined,
-		`unknown publisher university <${publisher.university}>`
-	);
+	const university = getUniversity(publisher.university);
 
 	return urls => pipe(
 		(items(urls))

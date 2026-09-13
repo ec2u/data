@@ -15,8 +15,22 @@
  */
 
 import { base } from "@/vocabularies/ec2u.js";
+import { assert, isDefined } from "@metreeca/core";
+import type { Tag } from "@metreeca/core/language";
 import { immutable } from "@metreeca/core/structures";
+import type { Reference } from "@metreeca/qest/resource";
 
+
+export type University = {
+
+	readonly id: Reference
+	readonly locale: Tag
+	readonly zone: string // !!! type
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const coimbra = immutable({
 	id: `${base}/universities/coimbra`,
@@ -71,3 +85,19 @@ export const umea = immutable({
 	locale: "sv",
 	zone: "Europe/Stockholm"
 });
+
+
+export const universities: { readonly [id: Reference] : University } = immutable(Object.fromEntries(
+	[coimbra, iasi, jena, linz, pavia, poitiers, salamanca, turku, umea].map(
+		university => [university.id, university]
+	)
+));
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function getUniversity(id: Reference) {
+
+	return assert(universities[id], isDefined, `unknown university <${id}>`);
+
+}

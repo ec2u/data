@@ -17,7 +17,7 @@
 import { sync } from "@/events/sinks/sync.js";
 import { execute } from "@/index.core.js";
 import { organizations } from "@/organizations/index.js";
-import { coimbra } from "@/universities/index.js";
+import { coimbra } from "@/universities/index.core.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";

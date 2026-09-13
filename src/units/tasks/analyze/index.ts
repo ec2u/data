@@ -19,7 +19,7 @@ import { _units } from "@/units/store.js";
 import { analyze } from "@/units/tasks/analyze/analyze.js";
 import { annotate } from "@/units/tasks/analyze/annotate.js";
 import { classify } from "@/units/tasks/analyze/classify.js";
-import { pavia } from "@/universities/index.js";
+import { pavia } from "@/universities/index.core.js";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";

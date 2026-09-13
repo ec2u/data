@@ -22,7 +22,7 @@ import { fetchPage } from "@/_pages/tools/fetchPage.js";
 import { matches, merge, Unit } from "@/units/_index.js";
 import { units } from "@/units/index.js";
 import { _units } from "@/units/store.js";
-import { pavia } from "@/universities/index.js";
+import { pavia } from "@/universities/index.core.js";
 import { Type } from "@google/genai";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
