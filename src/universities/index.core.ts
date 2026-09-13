@@ -87,7 +87,7 @@ export const umea = immutable({
 });
 
 
-export const universities: { readonly [id: Reference] : University } = immutable(Object.fromEntries(
+export const universities = immutable(Object.fromEntries(
 	[coimbra, iasi, jena, linz, pavia, poitiers, salamanca, turku, umea].map(
 		university => [university.id, university]
 	)
