@@ -23,7 +23,9 @@ export default defineConfig({
 		typecheck: {
 
 			enabled: true,
-			ignoreSourceErrors: true
+			ignoreSourceErrors: true,
+
+			tsconfig: "tsconfig.test.json" // the build config leaves test modules out, so type tests go unchecked under it
 
 		}
 
