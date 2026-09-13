@@ -14,15 +14,22 @@
 # limitations under the License.
 #
 
-# Select actions: default to all, unless requested on the command line
+# Select actions: the caller names the actions it needs, so an empty command line is a direct execution
 
 gcp=
 link=
 
-options=" ${*:---gcp --link} "
+case "$*" in
 
-case "${options}" in *" --gcp "*) gcp=1 ;; esac
-case "${options}" in *" --link "*) link=1 ;; esac
+	"--gcp") gcp=1 ;;
+	"--link") link=1 ;;
+	"--gcp --link" | "--link --gcp") gcp=1; link=1 ;;
+
+	"") echo "package.sh is a project task and is not meant to be run on its own" >&2; exit 1 ;;
+
+	*) echo "unsupported options <$*>" >&2; exit 1 ;;
+
+esac
 
 
 # Configure GCP project for local testing
