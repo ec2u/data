@@ -41,7 +41,8 @@ export const execute = executor(
 	})),
 	bind(createFetch, () => createFetch(cache({
 		ttl: 60*minute,
-		store: service(createCache)
+		store: service(createCache),
+		skip: "https://docs.google.com/**"
 	}))),
 	bind(createStore, async () => createSPARQLStore(createRDF4JRepository({
 		server: "https://graphdb.ec2u.net",
