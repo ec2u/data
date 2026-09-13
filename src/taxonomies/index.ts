@@ -20,7 +20,9 @@ import { SKOSConcept, SKOSConceptScheme } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
+import type { Instance } from "@metreeca/blue/value";
 import { markdown } from "@metreeca/core/strings";
+import type { Reference } from "@metreeca/qest/resource";
 
 
 export function Taxonomy() {
@@ -63,6 +65,18 @@ export function Topic() {
 				reprocesses only the entries the source document has changed.
 			`
 
+		}),
+
+		embedding: required(string, {
+
+			hidden: true,
+
+			name: "Semantic Embedding",
+			description: markdown`
+				Positions the meaning of the topic in a semantic space, so that a resource is classified under
+				the topics its text is closest to without matching its wording against labels.
+			`
+
 		})
 
 	}, {
@@ -71,4 +85,23 @@ export function Topic() {
 		class: ec2u.Topic
 
 	});
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Names a topic of a taxonomy.
+ *
+ * @param taxonomy The taxonomy the topic is attributed to
+ * @param taxonomy.id The identifier of the concept scheme the topic belongs to
+ * @param path The labels locating the topic in the hierarchy of `taxonomy`, from the root down; each is escaped, so a
+ * label is free to contain characters an IRI reserves, `/` included
+ *
+ * @returns The identifier of the topic `path` locates within `taxonomy`
+ */
+export function createTopicId(taxonomy: Instance<typeof Taxonomy>, path: readonly string[]): Reference {
+
+	return `${taxonomy.id}/${path.map(encodeURIComponent).join("/")}`;
+
 }

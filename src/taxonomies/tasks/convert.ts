@@ -15,7 +15,8 @@
  */
 
 import { digest } from "@/_/gear-store/_digest.js";
-import { Topic } from "@/taxonomies/index.js";
+import { compress, createEmbedder, embeddable } from "@/_/muse/embedder/index.js";
+import { createTopicId, Taxonomy, Topic } from "@/taxonomies/index.js";
 import { CommentLength } from "@/vocabularies/ec2u.js";
 import type { Instance } from "@metreeca/blue/value";
 import { required } from "@metreeca/core/arrays";
@@ -24,6 +25,7 @@ import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import type { Task } from "@metreeca/flow";
 import { map } from "@metreeca/flow/tasks";
+import { service } from "@metreeca/gear";
 import type { Record } from "@metreeca/gear-csv";
 
 
@@ -39,25 +41,44 @@ const LabelSeparator = ";";
  * left alone. The definition doubles as the comment of the topic, clipped to the budget a topic comment admits, so an
  * overlong entry is summarised rather than rejected and its full text stays available as the definition.
  *
- * Each record is identified by {@link createTopicId}, so the same row always yields the same topic. The hierarchy is
+ * Each record is identified by {@link readTopicId}, so the same row always yields the same topic. The hierarchy is
  * read off that identifier, taken as a `/`-separated path: a topic is linked to the topics its ancestor paths name,
  * and one sitting at the root of the path is flagged as a top concept of `taxonomy`. Records are converted one at a
  * time, so every ancestor path is expected to be stated by a record of its own.
+ *
+ * Every topic carries the embedding of its labels and definition, so that a resource is later classified under it
+ * without embedding the taxonomy again: the cost is paid once, as the record is converted.
  *
  * @param taxonomy The taxonomy the topics are attributed to
  * @param taxonomy.id The identifier of the concept scheme the topics belong to
  *
  * @returns A task converting a feed of tabular concept definitions into a feed of immutable topic records
  *
+ * @throws {@link !Error Error} If no execution is running, as the embedder is resolved from the enclosing one
+ *
  * @throws {@link !TypeError TypeError} While the feed is consumed, if a record states no identifier or no label
  */
-export function convert(taxonomy: {
+export function convert(taxonomy: Instance<typeof Taxonomy>): Task<Record, Instance<typeof Topic>> {
 
-	readonly id: IRI
+	const embedder = service(createEmbedder);
 
-}): Task<Record, Instance<typeof Topic>> {
+	return map(async record => {
 
-	return map(record => topic(taxonomy, record));
+		const stated = topic(taxonomy, record);
+
+		// the labels and the definition together stand for the topic, as a resource is classified by what it is about
+		// rather than by the wording of its preferred label alone
+
+		const embedding = await embedder(embeddable(
+			stated.prefLabel,
+			...stated.altLabel ?? [],
+			...stated.hiddenLabel ?? [],
+			stated.definition
+		));
+
+		return immutable({ ...stated, embedding: compress(embedding) });
+
+	});
 
 }
 
@@ -75,20 +96,15 @@ export function convert(taxonomy: {
  *
  * @throws {@link !TypeError TypeError} If `record` states no identifier
  */
-export function createTopicId(taxonomy: {
+export function readTopicId(taxonomy: Instance<typeof Taxonomy>, record: Record): IRI {
 
-	readonly id: IRI
-
-}, record: Record): IRI {
-
-	return identify(taxonomy, required(field(record, "id")));
+	return createTopicId(taxonomy, segments(required(field(record, "id"))));
 
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function topic(taxonomy: { readonly id: IRI }, record: Record): Instance<typeof Topic> {
+function topic(taxonomy: Instance<typeof Taxonomy>, record: Record): Omit<Instance<typeof Topic>, "embedding"> {
 
 	const id = required(field(record, "id"));
 	const prefLabel = required(field(record, "label"));
@@ -102,7 +118,7 @@ function topic(taxonomy: { readonly id: IRI }, record: Record): Instance<typeof 
 
 	return immutable({
 
-		id: createTopicId(taxonomy, record),
+		id: createTopicId(taxonomy, segments(id)),
 
 		dataset: taxonomy.id,
 
@@ -128,20 +144,20 @@ function topic(taxonomy: { readonly id: IRI }, record: Record): Instance<typeof 
 
 }
 
+function ancestors(taxonomy: Instance<typeof Taxonomy>, id: string): readonly IRI[] {
 
-function ancestors(taxonomy: { readonly id: IRI }, id: string): readonly IRI[] {
+	const path = segments(id);
 
-	const segments = id.split("/");
+	return path.slice(0, -1).map((_, index) => createTopicId(taxonomy, path.slice(0, index+1)));
 
-	return segments.slice(0, -1).map((_, index) => identify(taxonomy, segments.slice(0, index+1).join("/")));
+}
+
+function segments(id: string): readonly string[] {
+
+	return id.split("/");
 
 }
 
-function identify(taxonomy: { readonly id: IRI }, path: string): IRI {
-
-	return `${taxonomy.id}/${path}`;
-
-}
 
 function labels(record: Record, column: string): readonly string[] {
 
