@@ -16,9 +16,11 @@
 
 import { digest } from "@/_/gear-store/_digest.js";
 import { Topic } from "@/taxonomies/index.js";
+import { CommentLength } from "@/vocabularies/ec2u.js";
 import type { Instance } from "@metreeca/blue/value";
 import { required } from "@metreeca/core/arrays";
 import type { IRI } from "@metreeca/core/resource";
+import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import type { Task } from "@metreeca/flow";
 import { map } from "@metreeca/flow/tasks";
@@ -34,7 +36,8 @@ const LabelSeparator = ";";
  *
  * Records are read from the `id`, `notation`, `label`, `alternative`, `hidden` and `definition` columns, with
  * `alternative` and `hidden` holding `;`-separated lists of labels; blank fields are ignored and other columns are
- * left alone.
+ * left alone. The definition doubles as the comment of the topic, clipped to the budget a topic comment admits, so an
+ * overlong entry is summarised rather than rejected and its full text stays available as the definition.
  *
  * Each record is identified by {@link createTopicId}, so the same row always yields the same topic. The hierarchy is
  * read off that identifier, taken as a `/`-separated path: a topic is linked to the topics its ancestor paths name,
@@ -106,7 +109,7 @@ function topic(taxonomy: { readonly id: IRI }, record: Record): Instance<typeof 
 		digest: digest(record),
 
 		label: notation === undefined ? prefLabel : `${notation} - ${prefLabel}`,
-		comment: definition,
+		comment: definition === undefined ? undefined : clip(definition, CommentLength),
 
 		notation,
 
