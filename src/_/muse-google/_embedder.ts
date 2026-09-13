@@ -29,14 +29,32 @@ import { createGoogleAI, embedding } from "@/_/muse-google/index.js";
 import type { Embedder, Embedding } from "@/_/muse/embedder/index.js";
 import type { Text } from "@metreeca/core/strings";
 import { service } from "@metreeca/gear";
+import { log, report, time } from "@metreeca/tape";
+
+
+const logger = log(import.meta.url);
 
 
 /**
  * The Gemini model embeddings are computed by.
  *
+ * States the current embedding generation, which supersedes the retired `text-embedding-004`: a body embedded with the
+ * retired model is not comparable to one embedded here and must be embedded again.
+ *
  * @see {@link https://ai.google.dev/models Gemini models}
  */
-const Model = "text-embedding-004";
+const Model = "gemini-embedding-2";
+
+/**
+ * The number of components embeddings carry.
+ *
+ * Holds the embedding to a quarter of the 3072 components the model computes natively, so that a body embedded in bulk
+ * is retained and compared at a fraction of the cost, at the accuracy a shorter embedding affords. The model truncates
+ * and renormalises its own output, so components stay within the `[-1, 1]` range regardless of the figure stated here.
+ *
+ * @see {@link https://ai.google.dev/gemini-api/docs/embeddings#control-embedding-size Control embedding size}
+ */
+const Size = 768;
 
 /**
  * The task embeddings are optimised for.
@@ -71,7 +89,7 @@ const Task = "CLASSIFICATION";
  */
 export function createGoogleEmbedder(): Embedder {
 
-	const $ai = service(createGoogleAI);
+	const ai = service(createGoogleAI);
 
 	return async (text: Text): Promise<Embedding> => {
 
@@ -79,16 +97,19 @@ export function createGoogleEmbedder(): Embedder {
 			throw new RangeError("expected non-blank text");
 		}
 
-		return embedding(await $ai.models.embedContent({
+		return time(async () => embedding(await ai.models.embedContent({
 
 			model: Model,
 			contents: text,
 
 			config: {
-				taskType: Task
+				taskType: Task,
+				outputDimensionality: Size
 			}
 
-		}));
+		})), (value, elapsed) => logger.info
+			`embedded <${report(text.length)}> chars as <${report(value.length)}> components in <${report(elapsed)}> ms`
+		);
 
 	};
 
