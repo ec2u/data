@@ -26,9 +26,6 @@ import { markdown } from "@metreeca/core/strings";
 export function Taxonomy() {
 	return resource(Dataset, ConceptScheme, {
 
-		// ;( the `Taxonomy`/`Topic` pair admits one refined direction only: refining `Topic.dataset`, `inScheme` and
-		// ;( `topConceptOf` back to `Taxonomy` would close a circular definition
-
 		resources: multiple(reference(Topic)),
 
 		hasConcept: multiple(reference(Topic)),
@@ -45,11 +42,7 @@ export function Taxonomy() {
 export function Topic() {
 	return resource(Resource, Concept, {
 
-		// ;( `broader`, `broaderTransitive`, `narrower`, `related` and `exactMatch` not narrowed to `Topic`: an
-		// ;( override targeting the very shape that declares it closes a circular definition
-
-		// ;( `inScheme`, `topConceptOf` and `dataset` not narrowed to `Taxonomy`: `Taxonomy` already narrows the
-		// ;( opposite direction, and refining both ends closes a circular definition
+		inScheme: required(reference(Taxonomy)),
 
 		digest: required(string, {
 
