@@ -26,6 +26,7 @@
  * @see {@link https://en.wikipedia.org/wiki/Cosine_similarity Cosine similarity}
  */
 
+import type { Optional } from "@metreeca/core";
 import type { Awaitable } from "@metreeca/core/async";
 import type { Text } from "@metreeca/core/strings";
 
@@ -138,13 +139,13 @@ export function createEmbedder(): Embedder {
  * Blank and undefined fragments are left out and the rest joined one to a line, so that a caller hands over whatever
  * a resource states without weeding out what it leaves unstated.
  *
- * @param texts The fragments describing the resource
+ * @param values The fragments describing the resource
  *
- * @returns The fragments of `texts` that are neither undefined nor blank, joined one to a line
+ * @returns The text standing for the resource `values` describes, empty if none of them states anything
  */
-export function embeddable(...texts: readonly (undefined | Text)[]): Text {
+export function embeddable(...values: readonly Optional<string>[]): string {
 
-	return texts
+	return values
 		.filter(text => text !== undefined && text.trim() !== "")
 		.join("\n");
 
