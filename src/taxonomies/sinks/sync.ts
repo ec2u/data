@@ -81,7 +81,7 @@ export function sync(taxonomy: Instance<typeof Taxonomy>): Sink<URLLike, Tally> 
 		(fetch())
 		(csv(CSVFormat))
 		(tee(
-			describe(),
+			define(),
 			insert(),
 			remove()
 		))
@@ -89,7 +89,7 @@ export function sync(taxonomy: Instance<typeof Taxonomy>): Sink<URLLike, Tally> 
 	);
 
 
-	function describe(): Task<Record, Delta> {
+	function define(): Task<Record, Delta> {
 
 		return () => pipe(
 			(items([taxonomy]))

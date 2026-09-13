@@ -47,7 +47,7 @@ export function sync(publisher: Instance<typeof Publisher>): Sink<URLLike, Tally
 	return urls => pipe(
 		(items(urls))
 		(tee(
-			describe(),
+			define(),
 			insert(),
 			remove()
 		))
@@ -55,7 +55,7 @@ export function sync(publisher: Instance<typeof Publisher>): Sink<URLLike, Tally
 	);
 
 
-	function describe(): Task<URLLike, Delta> {
+	function define(): Task<URLLike, Delta> {
 
 		return () => pipe(
 			(items([publisher]))
