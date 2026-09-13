@@ -60,32 +60,6 @@ import static java.util.function.Predicate.not;
 @Namespace("[ec2u]")
 public interface Event extends Resource, SchemaEvent {
 
-    static Optional<EventFrame> review(final EventFrame event) {
-
-        if ( event == null ) {
-            throw new NullPointerException("null event");
-        }
-
-        return Optional.of(event) // translate before English-based classification
-                .map(e -> localize(e, locale -> translate(e, locale)))
-                .map(e -> about(e))
-                .map(e -> audience(e))
-                .flatMap(new Validate<>());
-    }
-
-
-    private static EventFrame translate(final EventFrame event, final Locale source) {
-
-        final Translator translator=service(translator());
-
-        return event // translate also customized labels/comments ;(translated text must be clipped again)
-                .label(Reference.label(translator.texts(event.label(), source, EN)))
-                .comment(Reference.comment(translator.texts(event.comment(), source, EN)))
-                .name(translator.texts(event.name(), source, EN))
-                .description(translator.texts(event.description(), source, EN))
-                .disambiguatingDescription(translator.texts(event.disambiguatingDescription(), source, EN));
-    }
-
     private static EventFrame about(final EventFrame event) {
         return event.about(Optional.ofNullable(event.about())
                 .filter(not(Set::isEmpty))
