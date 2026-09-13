@@ -52,11 +52,11 @@ export const organizations = immutable({
 export function Organization() {
 	return resource(Resource, org.Organization, SchemaOrganization, {
 
-		// ;( `subOrganizationOf` and `hasSubOrganization` not narrowed: an override targeting the very shape that
-		// ;( declares it closes a circular definition; `Unit` and `University` narrow them on their own
-
 		// ;( `hasUnit` not narrowed to `Unit`: `Unit` extends this very shape, so resolving the override closes a
 		// ;( circular definition
+
+		subOrganizationOf: multiple(reference(Organization)),
+		hasSubOrganization: multiple(reference(Organization)),
 
 		classification: multiple(reference(OrganizationTopic)),
 

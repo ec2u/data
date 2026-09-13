@@ -55,13 +55,12 @@ export const units = immutable({
 export function Unit() {
 	return resource(Organization, OrganizationalUnit, {
 
-		// ;( `hasUnit` not narrowed to `Unit`: an override targeting the very shape that declares it closes a
-		// ;( circular definition
-
 		unitOf: nonempty(reference(Organization)),
 
 		subOrganizationOf: multiple(reference(Organization)),
 		hasSubOrganization: multiple(reference(Organization)),
+
+		hasUnit: multiple(reference(Unit)),
 
 		subject: multiple(reference(EuroSciVocTopic), { forward: dct }),
 		keyword: multiple(text, { forward: dcat })

@@ -72,7 +72,7 @@ export function Document() {
 
 		creator: optional(Person),
 		contributor: multiple(Person),
-		publisher: optional(Organization),
+		publisher: optional(reference(Organization)),
 
 		created: optional(date),
 		issued: optional(date),

@@ -18,7 +18,7 @@ import { Dataset, Resource } from "@/datasets/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
 import { Concept, ConceptScheme } from "@/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, required, resource } from "@metreeca/blue/resource";
+import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
 import { markdown } from "@metreeca/core/strings";
 
@@ -43,6 +43,15 @@ export function Topic() {
 	return resource(Resource, Concept, {
 
 		inScheme: required(reference(Taxonomy)),
+		topConceptOf: optional(reference(Taxonomy)),
+
+		dataset: required(reference(Taxonomy)),
+
+		broader: multiple(reference(Topic)),
+		broaderTransitive: multiple(reference(Topic)),
+		narrower: multiple(reference(Topic)),
+		related: multiple(reference(Topic)),
+		exactMatch: multiple(reference(Topic)),
 
 		digest: required(string, {
 
