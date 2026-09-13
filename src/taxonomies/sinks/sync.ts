@@ -51,7 +51,9 @@ const CSVFormat = immutable({
  * The document is retrieved and its topics committed under a single store transaction, so the taxonomy is never half
  * published: a failing write, a refused retraction or a parse dying part way leaves the store exactly as it was and
  * the next run simply starts over. An entry whose digest matches the one recorded with the topic the store already
- * holds is dropped before it is converted, so an unchanged document costs a retrieval and a comparison per entry.
+ * holds is dropped before it is converted, so an unchanged document costs a retrieval and a comparison per entry;
+ * under `force` every entry is converted and stated afresh, whatever the store holds, so a topic whose conversion
+ * changed without its entry changing is brought back in line.
  *
  * The taxonomy is stated as it is handed over, alongside the topics and under the same transaction, so a scheme is
  * described wherever its topics are held.
@@ -64,6 +66,9 @@ const CSVFormat = immutable({
  * @param taxonomy The taxonomy the topics are attributed to
  * @param taxonomy.id The identifier of the concept scheme the topics belong to
  *
+ * @param force Whether every entry is stated afresh, ignoring the digests recorded with the stored topics; defaults
+ * to `false`
+ *
  * @returns A sink retrieving a feed of CSV documents and resolving to a tally of what it did
  *
  * @throws {@link !RangeError RangeError} While the feed is consumed, if the run would leave in place less than three
@@ -71,7 +76,7 @@ const CSVFormat = immutable({
  *
  * @throws {@link !Error Error} While the feed is consumed, if any write fails, with nothing committed
  */
-export function sync(taxonomy: Instance<typeof Taxonomy>): Sink<URLLike, Tally> {
+export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<URLLike, Tally> {
 
 	const store = service(createStore);
 
@@ -103,7 +108,7 @@ export function sync(taxonomy: Instance<typeof Taxonomy>): Sink<URLLike, Tally> 
 
 		return records => {
 
-			const digests = pipe(
+			const digests = force ? new Set<string>() : pipe(
 				(items(store.lookup({ // !!! replace with select()
 
 					entry: taxonomy.id,

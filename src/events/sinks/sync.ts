@@ -43,7 +43,7 @@ const survival = 0.75; // the smallest fraction of the stored events a single ru
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function sync(publisher: Instance<typeof Publisher>): Sink<URLLike, Tally> {
+export function sync(publisher: Instance<typeof Publisher>, force = false): Sink<URLLike, Tally> {
 
 	const store = service(createStore);
 
@@ -76,11 +76,11 @@ export function sync(publisher: Instance<typeof Publisher>): Sink<URLLike, Tally
 
 		return urls => {
 
-			const digests = pipe( // !!! replace with select()
+			const digests = force ? new Set<string>() : pipe( // !!! replace with select()
 				(items(store.lookup({
 
 					entry: events.id,
-					shape: Catalogue,
+					shape: Events,
 
 					model: { resources: [{ digest: "" }, { "?university": [university.id] }] }
 
@@ -118,7 +118,7 @@ export function sync(publisher: Instance<typeof Publisher>): Sink<URLLike, Tally
 				(items(store.lookup({
 
 					entry: events.id,
-					shape: Catalogue,
+					shape: Events,
 
 					model: { resources: ["", { "?university": [university.id] }] }
 
@@ -140,13 +140,12 @@ export function sync(publisher: Instance<typeof Publisher>): Sink<URLLike, Tally
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// !!! Remove ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function Catalogue() { // the events dataset, drawing its members as the events they are
+function Events() {
 	return resource(Dataset, {
 
 		resources: multiple(reference(Event))
 
 	});
 }
-
