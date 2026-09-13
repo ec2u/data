@@ -96,20 +96,11 @@ export function convert(taxonomy: Instance<typeof Taxonomy>): Task<Record, Insta
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function getLineage(taxonomy: Instance<typeof Taxonomy>, path: readonly string[]): readonly Reference[] {
-
-	return path
-		.slice(0, -1)
-		.map((_, index) => createTopicId(taxonomy, path.slice(0, index+1)));
-
-}
-
 export function getPath(record: Record): readonly string[] {
 
 	return required(record.id).split("/");
 
 }
-
 
 function labels(record: Record, column: string): readonly string[] {
 
@@ -118,5 +109,16 @@ function labels(record: Record, column: string): readonly string[] {
 			.map(label => label.trim())
 			.filter(label => label !== "")
 		?? [];
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function getLineage(taxonomy: Instance<typeof Taxonomy>, path: readonly string[]): readonly Reference[] {
+
+	return path
+		.slice(0, -1)
+		.map((_, index) => createTopicId(taxonomy, path.slice(0, index+1)));
 
 }
