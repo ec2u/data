@@ -58,9 +58,9 @@ export type TreeNode<T> = {
 /**
  * Tree index options.
  *
- * Confine the outcome to a branch of the tree, drop weak and comparatively weak matches, shift the balance between
- * nodes near the root and nodes near the leaves, and cap the size of the outcome. Options are settled as the index is
- * created and hold for every lookup made through it; those left undefined place no constraint of their own.
+ * Confine the outcome to a branch of the tree, drop weak and comparatively weak matches, and shift the balance between
+ * nodes near the root and nodes near the leaves. Options are settled as the index is created and hold for every lookup
+ * made through it; those left undefined place no constraint of their own.
  *
  * @typeParam T The type of the identifiers nodes are named by
  */
@@ -71,11 +71,6 @@ export type TreeIndexOpts<T> = {
 	 * searched.
 	 */
 	readonly focus?: T;
-
-	/**
-	 * The maximum number of matches a lookup returns, non-negative; if undefined, every match is returned.
-	 */
-	readonly limit?: number;
 
 	/**
 	 * The maximum distance a match is accepted at, non-negative; if undefined, matches are accepted at any distance.
@@ -112,25 +107,23 @@ export type TreeIndexOpts<T> = {
  * @typeParam T The type of the identifiers nodes are named by
  *
  * @param nodes The nodes to index
- * @param options The {@link TreeIndexOpts} bounds every lookup is held to; if undefined, lookups are unbounded
+ * @param options The {@link TreeIndexOpts} bounds every lookup made through the index is held to; if undefined,
+ * lookups are bounded only by the limit they state
  *
- * @returns An index answering with the nodes of `nodes` closest to the embedding it is looked up with
+ * @returns An index answering with the nodes of `nodes` closest to the embedding it is looked up with, at most as many
+ * as the lookup asks for
  *
- * @throws {@link !TypeError TypeError} If `options.limit`, `options.threshold`, `options.tolerance` or
- * `options.narrowing` is negative
+ * @throws {@link !TypeError TypeError} If `options.threshold`, `options.tolerance` or `options.narrowing` is negative
  */
 export function createTreeIndex<T>(nodes: readonly TreeNode<T>[], {
 
 	focus,
-	limit,
 
 	threshold,
 	tolerance,
 	narrowing
 
 }: TreeIndexOpts<T>={}): Index<T> {
-
-	const $limit = assert(limit ?? Infinity, value => value >= 0, value => `negative limit <${value}>`);
 
 	const $threshold = assert(threshold ?? Infinity, value => value >= 0, value => `negative threshold <${value}>`);
 	const $tolerance = assert(tolerance, value => value === undefined || value >= 0, value => `negative tolerance <${value}>`);
@@ -150,7 +143,16 @@ export function createTreeIndex<T>(nodes: readonly TreeNode<T>[], {
 			narrowing: Math.pow($narrowing, lineage.length)
 		}));
 
-	return query => {
+	// the outcome shape follows the limit stated at the call site, which a single implementation cannot state on its
+	// own, so the lookup is written against the widest shape and handed over under the contract it honours
+
+	return ((query: Embedding, limit?: number) => { // ;(cast) conditional return type
+
+		const $limit = limit ?? 1;
+
+		if ( !Number.isInteger($limit) || $limit <= 0 ) {
+			throw new RangeError(`invalid limit <${$limit}>`);
+		}
 
 		const sorted = indexed
 
@@ -165,10 +167,12 @@ export function createTreeIndex<T>(nodes: readonly TreeNode<T>[], {
 		const best = sorted[0]?.[1] ?? 0;
 		const bound = $tolerance === undefined ? Infinity : best+Math.max(1-best, 0)*$tolerance;
 
-		return sorted
+		const matches = sorted
 			.filter(([, distance]) => distance <= bound)
 			.slice(0, $limit);
 
-	};
+		return limit === undefined ? matches[0] : matches;
+
+	}) as Index<T>;
 
 }

@@ -38,7 +38,7 @@ const threshold = 0.6; // the largest distance a topic is accepted at, as tuned 
  * The event is classified on its title and description taken together, as the page states them, so that a page saying
  * nothing about its topic is classified on what it is about rather than left unclassified.
  *
- * Both taxonomies are retrieved once, as the first payload is classified, and held for the run.
+ * Both taxonomies are retrieved once, as the task is created, and held for the run.
  *
  * @returns A task answering a feed of extracted property payloads with the same payloads, classified
  *
@@ -49,12 +49,8 @@ export function classify(): Task<Object, Object> {
 
 	const embedder = service(createEmbedder);
 
-	let taxonomies: undefined | Promise<{ // indexed as the first event is classified and held for the run
-
-		readonly about: Index<Reference>;
-		readonly audience: Index<Reference>;
-
-	}>;
+	const about = getTaxonomyIndex(eventTopics.id, { threshold });
+	const audience = getTaxonomyIndex(stakeholderTopics.id, { threshold });
 
 	return map(async payload => {
 
@@ -63,13 +59,6 @@ export function classify(): Task<Object, Object> {
 			return payload;
 
 		} else {
-
-			if ( taxonomies === undefined ) {
-				taxonomies = Promise.all([index(eventTopics.id), index(stakeholderTopics.id)])
-					.then(([about, audience]) => ({ about, audience }));
-			}
-
-			const { about, audience } = await taxonomies;
 
 			const embedding = await embedder(embeddable(
 				payload.title as undefined | string,
@@ -80,8 +69,8 @@ export function classify(): Task<Object, Object> {
 
 				...payload,
 
-				about: closest(embedding, about),
-				audience: closest(embedding, audience)
+				about: match(embedding, await about),
+				audience: match(embedding, await audience)
 
 			};
 
@@ -90,21 +79,8 @@ export function classify(): Task<Object, Object> {
 	});
 
 
-	async function index(taxonomy: Reference): Promise<Index<Reference>> {
-
-		return await getTaxonomyIndex(taxonomy, {
-
-			threshold,
-			limit: 1
-
-		});
-
-	}
-
-	function closest(embedding: Embedding, index: Index<Reference>): readonly Reference[] {
-
-		return index(embedding).map(([id]) => id);
-
+	function match(embedding: Embedding, index: Index<Reference>): readonly Reference[] {
+		return index(embedding, 1).map(([id]) => id);
 	}
 
 }

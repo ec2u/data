@@ -38,7 +38,7 @@ describe("createTreeIndex", () => {
 
 			const index = createTreeIndex([away, near, side]);
 
-			expect(ids(index(query))).toEqual(["near", "side", "away"]);
+			expect(ids(index(query, 3))).toEqual(["near", "side", "away"]);
 
 		});
 
@@ -46,13 +46,13 @@ describe("createTreeIndex", () => {
 
 			const index = createTreeIndex([near, side, away]);
 
-			expect(index(query).map(([, distance]) => distance)).toEqual([0, 1, 2]);
+			expect(index(query, 3).map(([, distance]) => distance)).toEqual([0, 1, 2]);
 
 		});
 
 		it("answers with nothing where no node is indexed", async () => {
 
-			expect(createTreeIndex<string>([])(query)).toEqual([]);
+			expect(createTreeIndex<string>([])(query)).toBeUndefined();
 
 		});
 
@@ -63,7 +63,7 @@ describe("createTreeIndex", () => {
 
 			nodes.push(side);
 
-			expect(ids(index(query))).toEqual(["near"]);
+			expect(ids(index(query, 2))).toEqual(["near"]);
 
 		});
 
@@ -89,7 +89,7 @@ describe("createTreeIndex", () => {
 
 			const index = createTreeIndex([root, branch, leaf, other], { focus: "branch" });
 
-			expect(ids(index(query))).toEqual(["leaf"]);
+			expect(ids(index(query, 4))).toEqual(["leaf"]);
 
 		});
 
@@ -97,7 +97,7 @@ describe("createTreeIndex", () => {
 
 			const index = createTreeIndex([root, branch, leaf], { focus: "root" });
 
-			expect(ids(index(query))).toEqual(["branch", "leaf"]);
+			expect(ids(index(query, 3))).toEqual(["branch", "leaf"]);
 
 		});
 
@@ -105,7 +105,7 @@ describe("createTreeIndex", () => {
 
 			const index = createTreeIndex([root, branch, leaf, other]);
 
-			expect(ids(index(query))).toHaveLength(4);
+			expect(ids(index(query, 4))).toHaveLength(4);
 
 		});
 
@@ -116,21 +116,35 @@ describe("createTreeIndex", () => {
 
 		it("caps the size of the outcome", async () => {
 
-			const index = createTreeIndex([near, side, away], { limit: 2 });
+			const index = createTreeIndex([near, side, away]);
 
-			expect(ids(index(query))).toEqual(["near", "side"]);
-
-		});
-
-		it("answers with nothing under a limit of 0", async () => {
-
-			expect(createTreeIndex([near, side], { limit: 0 })(query)).toEqual([]);
+			expect(ids(index(query, 2))).toEqual(["near", "side"]);
 
 		});
 
-		it("rejects a negative limit", async () => {
+		it("answers with the closest match alone where no limit is stated", async () => {
 
-			expect(() => createTreeIndex([near], { limit: -1 })).toThrow(TypeError);
+			const index = createTreeIndex([near, side, away]);
+
+			expect(index(query)).toEqual(["near", 0]);
+			expect(index(query, 1)).toEqual([["near", 0]]);
+
+		});
+
+		it("rejects a limit not greater than 0", async () => {
+
+			const index = createTreeIndex([near]);
+
+			expect(() => index(query, 0)).toThrow(RangeError);
+			expect(() => index(query, -1)).toThrow(RangeError);
+
+		});
+
+		it("rejects a fractional limit", async () => {
+
+			const index = createTreeIndex([near]);
+
+			expect(() => index(query, 1.5)).toThrow(RangeError);
 
 		});
 
@@ -143,7 +157,7 @@ describe("createTreeIndex", () => {
 
 			const index = createTreeIndex([near, side, away], { threshold: 1 });
 
-			expect(ids(index(query))).toEqual(["near", "side"]);
+			expect(ids(index(query, 3))).toEqual(["near", "side"]);
 
 		});
 
@@ -162,7 +176,7 @@ describe("createTreeIndex", () => {
 
 			const index = createTreeIndex([near, side, away], { tolerance: 0.5 });
 
-			expect(ids(index(query))).toEqual(["near"]); // the room above the best match is 1, so the bound is 0.5
+			expect(ids(index(query, 3))).toEqual(["near"]); // the room above the best match is 1, so the bound is 0.5
 
 		});
 
@@ -170,7 +184,7 @@ describe("createTreeIndex", () => {
 
 			const index = createTreeIndex([near, side, away]);
 
-			expect(ids(index(query))).toHaveLength(3);
+			expect(ids(index(query, 3))).toHaveLength(3);
 
 		});
 
@@ -195,7 +209,7 @@ describe("createTreeIndex", () => {
 
 			const index = createTreeIndex([shallow, deep]);
 
-			expect(ids(index(query))).toEqual(["shallow", "deep"]);
+			expect(ids(index(query, 2))).toEqual(["shallow", "deep"]);
 
 		});
 
@@ -203,7 +217,7 @@ describe("createTreeIndex", () => {
 
 			const index = createTreeIndex([shallow, deep], { narrowing: 0.5 });
 
-			expect(ids(index(query))).toEqual(["deep", "shallow"]);
+			expect(ids(index(query, 2))).toEqual(["deep", "shallow"]);
 
 		});
 
@@ -220,7 +234,7 @@ describe("createTreeIndex", () => {
 
 			});
 
-			expect(ids(index(query))).toEqual(["shallow", "deep"]);
+			expect(ids(index(query, 2))).toEqual(["shallow", "deep"]);
 
 		});
 
@@ -228,7 +242,7 @@ describe("createTreeIndex", () => {
 
 			const index = createTreeIndex([side], { narrowing: 0 }); // a root is scaled by narrowing^0
 
-			expect(index(query).map(([, distance]) => distance)).toEqual([1]);
+			expect(index(query)?.[1]).toEqual(1);
 
 		});
 

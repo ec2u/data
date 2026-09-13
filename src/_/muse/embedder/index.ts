@@ -91,16 +91,35 @@ export type Index<T> = {
 	 * Embeddings are comparable only if computed by the same embedder, so `query` is expected to be drawn from the one
 	 * the indexed entries were embedded with.
 	 *
+	 * @typeParam L The type of the `limit` the lookup is stated with, settling the shape of the outcome; undefined
+	 * where the lookup states none
+	 *
 	 * @param query The embedding of the text to search the index with
+	 * @param limit The maximum number of entries to answer with, an integer greater than 0; if undefined, the lookup
+	 * answers with the closest entry alone
 	 *
-	 * @returns An immutable list of `[id, distance]` pairs naming the matching entries, ordered by increasing distance
-	 * from `query`, limited to the entries accepted by the bounds the index was created under
+	 * @returns Where `limit` is undefined, the closest {@link Match}, or undefined if no entry is accepted by the
+	 * bounds the index was created under; otherwise an immutable list of the accepted entries, ordered by increasing
+	 * distance from `query` and capped at `limit`
 	 *
-	 * @throws {@link !RangeError RangeError} If `query` is not comparable to the embeddings the index holds
+	 * @throws {@link !RangeError RangeError} If `query` is not comparable to the embeddings the index holds or if
+	 * `limit` is not an integer greater than 0
 	 */
-	(query: Embedding): readonly [T, Distance][];
+	<L extends Optional<number>=undefined>(query: Embedding, limit?: L): L extends undefined
+		? Optional<Match<T>>
+		: readonly Match<T>[];
 
 };
+
+/**
+ * An index match.
+ *
+ * Names an entry an {@link Index} lookup answers with, alongside the {@link Distance} it stands at from the query, so
+ * that a consumer weighs how closely the entry matches rather than reading the ranking alone.
+ *
+ * @typeParam T The type of the identifiers the indexed entries are named by
+ */
+export type Match<T> = readonly [T, Distance];
 
 /**
  * Semantic distance.
