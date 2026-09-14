@@ -31,7 +31,7 @@ const logger = log(import.meta.url);
 
 
 const tools = [
-	matchTopics(euroscivoc.id, { threshold: 0.6 })
+	matchTopics(euroscivoc, { threshold: 0.6 })
 ];
 
 

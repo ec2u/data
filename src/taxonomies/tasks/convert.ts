@@ -15,8 +15,8 @@
  */
 
 import { digest } from "@/_/gear-store/_digest.js";
-import { compress, createEmbedder, embeddable } from "@/_/muse/embedder/index.js";
-import { createTopicId, Taxonomy, Topic } from "@/taxonomies/index.js";
+import { compress, synopsis } from "@/_/muse/index.js";
+import { getTopicId, getTopicEmbedding, Taxonomy, Topic } from "@/taxonomies/index.js";
 import { CommentLength } from "@/vocabularies/ec2u.js";
 import type { Instance } from "@metreeca/blue/value";
 import { multiple, optional, required } from "@metreeca/core/arrays";
@@ -24,7 +24,6 @@ import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import type { Task } from "@metreeca/flow";
 import { map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
 import type { Record } from "@metreeca/gear-csv";
 import type { Reference } from "@metreeca/qest/resource";
 
@@ -36,8 +35,6 @@ const LabelSeparator = ";";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function convert(taxonomy: Instance<typeof Taxonomy>): Task<Record, Instance<typeof Topic>> {
-
-	const embedder = service(createEmbedder);
 
 	return map(async record => {
 
@@ -55,16 +52,16 @@ export function convert(taxonomy: Instance<typeof Taxonomy>): Task<Record, Insta
 
 		const broader = getLineage(taxonomy, path);
 
-		// the labels and the definition together stand for the topic, as a resource is classified by what it is about
-		// rather than by the wording of its preferred label alone
-
-		const embedding = await embedder(embeddable(
-			preferredLabel, ...alternativeLabels, ...hiddenLabels, definition
+		const embedding = await getTopicEmbedding(synopsis(
+			preferredLabel,
+			alternativeLabels,
+			hiddenLabels,
+			definition
 		));
 
 		return immutable({
 
-			id: createTopicId(taxonomy, path),
+			id: getTopicId(taxonomy, path),
 
 			dataset: required(taxonomy.id),
 
@@ -119,6 +116,6 @@ function getLineage(taxonomy: Instance<typeof Taxonomy>, path: readonly string[]
 
 	return path
 		.slice(0, -1)
-		.map((_, index) => createTopicId(taxonomy, path.slice(0, index+1)));
+		.map((_, index) => getTopicId(taxonomy, path.slice(0, index+1)));
 
 }

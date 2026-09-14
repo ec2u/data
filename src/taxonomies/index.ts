@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import { memoize } from "@/_/core/memoize.js";
 import { createStore } from "@/_/gear-store/index.js";
-import { decompress, type Index } from "@/_/muse/embedder/index.js";
-import { createTreeIndex, type TreeIndexOpts } from "@/_/muse/embedder/tree.js";
+import { createGoogleAI, embedding } from "@/_/muse-google/index.js";
+import { decompress, type Distance, type Vector } from "@/_/muse/index.js";
+import { cosine } from "@/_/muse/index.js";
 import { Dataset, Resource } from "@/datasets/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
 import { SKOSConcept, SKOSConceptScheme } from "@/vocabularies/skos.js";
@@ -24,10 +26,71 @@ import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
 import type { Instance } from "@metreeca/blue/value";
+import { by } from "@metreeca/core/order";
+import type { Markdown, Text } from "@metreeca/core/strings";
 import { markdown } from "@metreeca/core/strings";
 import { service } from "@metreeca/gear";
 import type { Reference } from "@metreeca/qest/resource";
+import { log, report, time } from "@metreeca/tape";
 
+
+const logger = log(import.meta.url);
+
+
+const taxonomies = memoize(async (id: Reference) => {
+
+	const store = service(createStore);
+
+	const topics = await store.lookup({ // !!! replace with select
+
+		entry: id,
+		shape: Taxonomy,
+
+		model: {
+
+			resources: [{
+				id: "",
+				prefLabel: "",
+				definition: "",
+				broaderTransitive: [""],
+				embedding: ""
+			}]
+
+		}
+
+	});
+
+	return (topics?.resources ?? []).map(({
+
+		prefLabel,
+		broaderTransitive,
+
+		embedding,
+
+		...topic
+
+	}) => ({
+
+		...topic,
+
+		label: prefLabel,
+		ancestors: broaderTransitive,
+
+		embedding: decompress(embedding)
+
+	}));
+
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Taxonomy = Instance<typeof Taxonomy>;
+export type Topic = Instance<typeof Topic>;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Taxonomy() {
 	return resource(Dataset, SKOSConceptScheme, {
@@ -59,7 +122,7 @@ export function Topic() {
 		related: multiple(reference(Topic)),
 		exactMatch: multiple(reference(Topic)),
 
-		digest: required(string, { // !!! factor?
+		digest: required(string, {
 
 			hidden: true,
 
@@ -77,8 +140,9 @@ export function Topic() {
 
 			name: "Semantic Embedding",
 			description: markdown`
-				Positions the meaning of the topic in a semantic space, so that a resource is classified under
-				the topics its text is closest to without matching its wording against labels.
+				Positions the meaning of the topic in a semantic space, so that a resource is classified under the
+				topics its text is closest to without matching its wording against labels. Encoded in compact
+				textual form, to be decoded back to a vector before it is compared to another embedding.
 			`
 
 		})
@@ -94,44 +158,75 @@ export function Topic() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function getTaxonomyIndex(id: Reference, opts: TreeIndexOpts<Reference> = {}): Promise<Index<Reference>> {
+export function getTopicId(taxonomy: Taxonomy, path: readonly string[]): Reference {
 
-	const store = service(createStore);
-
-	const taxonomy = await store.lookup({ // !!! replace with select
-
-		entry: id,
-		shape: Taxonomy,
-
-		model: { resources: [{ id: "", embedding: "", broaderTransitive: [""] }] }
-
-	});
-
-	const nodes = (taxonomy?.resources ?? []).map(({ id, embedding, broaderTransitive }) => ({
-		id,
-		embedding: decompress(embedding),
-		lineage: broaderTransitive
-	}));
-
-	return createTreeIndex(nodes, opts);
+	return `${taxonomy.id}/${path.map(encodeURIComponent).join("/")}`;
 
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Names a topic of a taxonomy.
- *
- * @param taxonomy The taxonomy the topic is attributed to
- * @param taxonomy.id The identifier of the concept scheme the topic belongs to
- * @param path The labels locating the topic in the hierarchy of `taxonomy`, from the root down; each is escaped, so a
- * label is free to contain characters an IRI reserves, `/` included
- *
- * @returns The identifier of the topic `path` locates within `taxonomy`
- */
-export function createTopicId(taxonomy: Instance<typeof Taxonomy>, path: readonly string[]): Reference {
+export async function getTopicEmbedding(text: Text): Promise<Vector> {
 
-	return `${taxonomy.id}/${path.map(encodeURIComponent).join("/")}`;
+	const ai = service(createGoogleAI);
+
+	if ( text.trim() === "" ) {
+		throw new RangeError("expected non-blank text");
+	}
+
+	return time(embed, (vector, elapsed) => logger.info
+		`embedded <${report(text.length)}> chars as <${report(vector.length)}> components in <${report(elapsed)}> ms`
+	);
+
+	async function embed() {
+		return embedding(await ai.models.embedContent({
+
+			model: "gemini-embedding-2",
+			contents: text,
+
+			config: {
+				taskType: "CLASSIFICATION",
+				outputDimensionality: 768
+			}
+
+		}));
+	}
+
+}
+
+export async function getTopicMatches(taxonomy: Taxonomy, query: Text): Promise<ReadonlyArray<{
+
+	readonly id: Reference
+
+	readonly label: Text,
+	readonly definition?: Markdown
+	readonly ancestors: readonly Reference[]
+
+	readonly distance: Distance
+
+}>> {
+
+	const [vector, topics] = await Promise.all([
+
+		getTopicEmbedding(query),
+		taxonomies(taxonomy.id)
+
+	]);
+
+	return topics
+
+		.map(({ id, label, definition, ancestors, embedding }) => ({
+
+			id,
+
+			label,
+			definition,
+			ancestors,
+
+			distance: cosine(vector, embedding)
+
+		}))
+
+		.sort(by(({ distance }) => distance));
 
 }

@@ -16,7 +16,7 @@
 
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { string, text } from "@metreeca/blue/string";
+import { markdown, string, text } from "@metreeca/blue/string";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -83,7 +83,7 @@ export function SKOSConcept() {
 		prefLabel: required(text),
 		altLabel: multiple(text),
 		hiddenLabel: multiple(text),
-		definition: optional(text),
+		definition: optional(markdown),
 
 		inScheme: required(reference(SKOSConceptScheme)),
 

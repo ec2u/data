@@ -20,7 +20,7 @@ import type { IRI } from "@metreeca/core/resource";
 import { type Feed, pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { recast } from "@metreeca/flow/tasks";
+import { chain } from "@metreeca/flow/tasks";
 import { log } from "@metreeca/tape";
 
 
@@ -79,7 +79,7 @@ export function retire({
 		`expected survival rate in [0, 1]`
 	);
 
-	return recast(async incoming => {
+	return chain(async incoming => {
 
 		const [$existing, $incoming] = await Promise.all([
 			existing(toSet()),

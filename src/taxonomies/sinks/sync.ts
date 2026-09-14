@@ -19,7 +19,7 @@ import { createStore } from "@/_/gear-store/index.js";
 import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.js";
 import { retire } from "@/_/gear-store/retire.js";
 import { validate } from "@/_/gear-store/validate.js";
-import { createTopicId, Taxonomy, Topic } from "@/taxonomies/index.js";
+import { getTopicId, Taxonomy, Topic } from "@/taxonomies/index.js";
 import { convert, getPath } from "@/taxonomies/tasks/convert.js";
 import type { Instance } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/structures";
@@ -152,7 +152,7 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 
 			return pipe(
 				(items(records))
-				(map(record => createTopicId(taxonomy, getPath(record))))
+				(map(record => getTopicId(taxonomy, getPath(record))))
 				(retire({ atomic: true, survival, existing }))
 				(map(id => delta(id, Topic)))
 			);

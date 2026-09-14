@@ -36,12 +36,11 @@
  * @module
  */
 
-import { createEmbedder, type Index } from "@/_/muse/embedder/index.js";
-import type { TreeIndexOpts } from "@/_/muse/embedder/tree.js";
-import { getTaxonomyIndex } from "@/taxonomies/index.js";
+import type { Distance } from "@/_/muse/index.js";
+import { getTopicMatches, type Taxonomy } from "@/taxonomies/index.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
+import { by } from "@metreeca/core/order";
 import { dedent } from "@metreeca/core/strings";
-import { service } from "@metreeca/gear";
 import type { Reference } from "@metreeca/qest/resource";
 import { log, report } from "@metreeca/tape";
 
@@ -61,25 +60,30 @@ const logger = log(import.meta.url);
  *
  * The taxonomy and the bounds are settled here and hold for every call, so that a generation states what it is
  * classifying and nothing about how the classification is bounded. The taxonomy is read from the store on the first
- * call and held for the life of the tool, so one edited afterwards calls for a tool of its own.
+ * call and retained for the lifetime of the process, so one edited afterwards is taken up by a later run.
  *
- * @param taxonomy The identifier of the taxonomy topics are matched against
- * @param options The {@link TreeIndexOpts} bounds every call is held to; if undefined, calls are bounded only by the
- * limit they state
+ * @param taxonomy The taxonomy topics are matched against
+ * @param options The bounds every call is held to: `focus` restricts matches to the topics standing under a given
+ * one, `threshold` states the largest distance a match is accepted at, and `narrowing` weighs a match down by a
+ * factor for each level it stands below the top of the taxonomy, so that an over-specific topic is passed over for a
+ * broader one standing almost as close; if undefined, calls are bounded only by the limit they state
  *
  * @returns A {@link https://googleapis.github.io/js-genai/release_docs/interfaces/types.CallableTool.html
  * CallableTool} declaring the `matchTopics` function and handling the calls the model makes to it
  *
  * @see {@link https://ai.google.dev/gemini-api/docs/function-calling Function calling with the Gemini API}
  */
-export function matchTopics(taxonomy: Reference, options: TreeIndexOpts<Reference> = {}): CallableTool {
+export function matchTopics(taxonomy: Taxonomy, options: {
+
+	readonly focus?: Reference
+	readonly threshold?: Distance
+	readonly narrowing?: number
+
+} = {}): CallableTool {
 
 	const name = "matchTopics";
 
-	// the store is resolved from the enclosing execution, which the tool is created outside of, so the taxonomy is read
-	// on the first call and retained rather than reread at each one
-
-	let index: undefined | Promise<Index<Reference>>; // ;(let) memoised on first use
+	const { focus, threshold, narrowing } = options;
 
 	return {
 
@@ -121,12 +125,11 @@ export function matchTopics(taxonomy: Reference, options: TreeIndexOpts<Referenc
 
 		callTool: async (functionCalls: FunctionCall[]): Promise<Part[]> => {
 
-			const embedder = service(createEmbedder);
 
 			return await Promise.all(
 				functionCalls.filter(call => call.name === name).map(async (call): Promise<Part> => {
 
-					const { text, limit = 1 } = call.args as { // ;(cast) unvalidated SDK boundary, as the model states the arguments
+					const { text, limit = 1 } = call.args as { // ;(cast) model arguments, unvalidated by the SDK
 
 						text: string
 						limit?: number
@@ -137,20 +140,33 @@ export function matchTopics(taxonomy: Reference, options: TreeIndexOpts<Referenc
 
 					try {
 
-						const matches = (await (index ??= getTaxonomyIndex(taxonomy, options)))(
-							await embedder(text), limit
-						);
+						const matches = (await getTopicMatches(taxonomy, text))
+
+							.filter(({ ancestors }) => focus === undefined || ancestors.includes(focus))
+
+							// a topic standing deeper in the taxonomy is weighed down, so that it is stated only where
+							// it stands closer than the broader ones it descends from by more than the factor
+
+							.map(({ id, ancestors, distance }) => ({
+								id,
+								distance: narrowing === undefined ? distance
+									: distance*Math.pow(narrowing, ancestors.length-1)
+							}))
+
+							.filter(({ distance }) => threshold === undefined || distance <= threshold)
+
+							.sort(by(({ distance }) => distance))
+
+							.slice(0, limit);
 
 						logger.info`matched ${matches.length} topics for query <${text}> ${
-							JSON.stringify(matches.map(([id]) => id))
+							JSON.stringify(matches.map(({ id }) => id))
 						}`;
 
 						return {
 							functionResponse: {
 								name,
-								response: {
-									matches: matches.map(([id, distance]) => ({ id, distance }))
-								}
+								response: { matches }
 							}
 						};
 

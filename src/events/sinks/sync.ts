@@ -20,7 +20,7 @@ import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.j
 import { retire } from "@/_/gear-store/retire.js";
 import { validate } from "@/_/gear-store/validate.js";
 import { Dataset } from "@/datasets/index.js";
-import { createEventId, Event, events, isStaleEvent, Publisher } from "@/events/index.js";
+import { getEventId, Event, events, isStaleEvent, Publisher } from "@/events/index.js";
 import { classify } from "@/events/tasks/classify.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
@@ -127,7 +127,7 @@ export function sync(publisher: Instance<typeof Publisher>, force = false): Sink
 
 			return pipe(
 				(items(urls))
-				(map(createEventId))
+				(map(getEventId))
 				(retire({ survival, existing }))
 				(map(id => delta(id, Event)))
 			);

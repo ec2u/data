@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { createEmbedder, embeddable, type Embedding, type Index } from "@/_/muse/embedder/index.js";
-import { getTaxonomyIndex } from "@/taxonomies/index.js";
+import { synopsis } from "@/_/muse/index.js";
+import { getTopicMatches, type Taxonomy } from "@/taxonomies/index.js";
 import { events as eventTopics } from "@/taxonomies/pipes/events.core.js";
 import { stakeholders as stakeholderTopics } from "@/taxonomies/pipes/stakeholders.core.js";
 import type { Object } from "@metreeca/core";
+import type { Text } from "@metreeca/core/strings";
 import type { Task } from "@metreeca/flow";
 import { map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
 import type { Reference } from "@metreeca/qest/resource";
 
 
@@ -38,7 +38,8 @@ const threshold = 0.6; // the largest distance a topic is accepted at, as tuned 
  * The event is classified on its title and description taken together, as the page states them, so that a page saying
  * nothing about its topic is classified on what it is about rather than left unclassified.
  *
- * Both taxonomies are retrieved once, as the task is created, and held for the run.
+ * Both taxonomies are read on the first payload they classify and held afterwards, so a taxonomy edited during a run
+ * is taken up by a later one.
  *
  * @returns A task answering a feed of extracted property payloads with the same payloads, classified
  *
@@ -46,11 +47,6 @@ const threshold = 0.6; // the largest distance a topic is accepted at, as tuned 
  * enclosing one
  */
 export function classify(): Task<Object, Object> {
-
-	const embedder = service(createEmbedder);
-
-	const about = getTaxonomyIndex(eventTopics.id, { threshold });
-	const audience = getTaxonomyIndex(stakeholderTopics.id, { threshold });
 
 	return map(async payload => {
 
@@ -60,17 +56,22 @@ export function classify(): Task<Object, Object> {
 
 		} else {
 
-			const embedding = await embedder(embeddable(
+			const query = synopsis(
 				payload.title as undefined | string,
 				payload.description as undefined | string
-			));
+			);
+
+			const [about, audience] = await Promise.all([
+				match(eventTopics, query),
+				match(stakeholderTopics, query)
+			]);
 
 			return {
 
 				...payload,
 
-				about: match(embedding, await about),
-				audience: match(embedding, await audience)
+				about,
+				audience
 
 			};
 
@@ -79,8 +80,11 @@ export function classify(): Task<Object, Object> {
 	});
 
 
-	function match(embedding: Embedding, index: Index<Reference>): readonly Reference[] {
-		return index(embedding, 1).map(([id]) => id);
+	async function match(taxonomy: Taxonomy, query: Text): Promise<readonly Reference[]> {
+		return (await getTopicMatches(taxonomy, query))
+			.filter(({ distance }) => distance <= threshold)
+			.slice(0, 1)
+			.map(({ id }) => id);
 	}
 
 }

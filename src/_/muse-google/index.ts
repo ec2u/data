@@ -37,7 +37,7 @@
  */
 
 import { memoize } from "@/_/core/memoize.js";
-import type { Embedding } from "@/_/muse/embedder/index.js";
+import type { Vector } from "@/_/muse/index.js";
 import {
 	ApiError,
 	CallableTool,
@@ -644,9 +644,9 @@ export function json<T extends Value = Value>(response: GenerateContentResponse)
  *
  * @param response The response of an `embedContent` request
  *
- * @returns The {@link Embedding} embedded for the first content of `response`, or an empty array if it carries none
+ * @returns The {@link Vector} embedded for the first content of `response`, or an empty array if it carries none
  */
-export function embedding(response: EmbedContentResponse): Embedding {
+export function embedding(response: EmbedContentResponse): Vector {
 
 	return response.embeddings?.[0]?.values ?? [];
 

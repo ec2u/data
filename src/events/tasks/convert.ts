@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createEventId, type Event, events } from "@/events/index.js";
+import { getEventId, type Event, events } from "@/events/index.js";
 import { SchemaEventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
 import { SchemaLocation } from "@/vocabularies/schema/location.js";
 import type { Instance } from "@metreeca/blue/value";
@@ -74,7 +74,7 @@ export function convert(university: {
 
 				generated: true,
 
-				id: createEventId(url),
+				id: getEventId(url),
 				url: nonempty(url),
 
 				dataset: events.id,
@@ -146,5 +146,3 @@ function attendance(mode: string): Optional<Instance<typeof SchemaEventAttendanc
 			: mode === "mixed" ? "MixedEventAttendanceMode"
 				: undefined;
 }
-
-

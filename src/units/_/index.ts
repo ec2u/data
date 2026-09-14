@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-import { createGoogleEmbedder } from "@/_/muse-google/_embedder.js";
-import { cosine } from "@/_/muse/embedder/index.js";
-
 export type Topic = {
 
 	readonly id: string;
@@ -92,38 +89,6 @@ export async function match(text: string, {
 
 }): Promise<readonly (readonly [Topic, number])[]> {
 
-	if ( limit !== undefined && limit < 0 ) {
-		throw new RangeError(`negative limit <${limit}>`);
-	}
-
-	if ( threshold !== undefined && threshold < 0 ) {
-		throw new RangeError(`negative threshold <${threshold}>`);
-	}
-
-	if ( tolerance !== undefined && tolerance < 0 ) {
-		throw new RangeError(`negative tolerance <${tolerance}>`);
-	}
-
-	if ( narrowing !== undefined && narrowing < 0 ) {
-		throw new RangeError(`negative narrowing <${narrowing}>`);
-	}
-
-	// queries are embedded by the same source topic embeddings were, as cosine distances compare only alike embeddings
-
-	const embedding = await createGoogleEmbedder()(text);
-
-	const sorted = topics
-		.filter(topic => focus === undefined || topic.lineage.includes(focus))
-		.map(topic => [topic,
-			cosine(embedding, topic.embedding)*(narrowing ? Math.pow(narrowing, topic.lineage.length-1) : 1)
-		] as const)
-		.filter(([, d]) => threshold === undefined || d <= threshold)
-		.sort((x, y) => x[1]-y[1]);
-
-	const best = sorted[0]?.[1];
-
-	return sorted
-		.filter(([, d]) => tolerance === undefined || d <= best+Math.max(1-best, 0)*tolerance)
-		.slice(0, limit);
+	throw new Error(";( to be implemented"); // !!!
 
 }

@@ -106,7 +106,7 @@ export function isStaleEvent(event: Instance<typeof Event>): boolean {
 
 }
 
-export function createEventId(url: string | URL): Reference {
+export function getEventId(url: string | URL): Reference {
 
 	return `${(events.id)}/${uuid.v3(String(url), uuid.v3.URL)}`;
 

@@ -35,7 +35,7 @@ const logger = log(import.meta.url);
 
 
 const tools = [
-	matchTopics(organizations.id, {
+	matchTopics(organizations, {
 		focus: `${organizations.id}/university-unit`,
 		narrowing: 1.05 // slightly penalise over-specific typologies
 	})

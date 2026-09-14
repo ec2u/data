@@ -36,7 +36,7 @@
  */
 
 import { memoize } from "@/_/core/memoize.js";
-import type { Embedding } from "@/_/muse/embedder/index.js";
+import type { Vector } from "@/_/muse/index.js";
 import { isObject, isString, type Value } from "@metreeca/core";
 import { createThrottle, type Throttle } from "@metreeca/core/async";
 import { TooManyRequests } from "@metreeca/http";
@@ -318,13 +318,13 @@ export function json<T extends Value = Value>(completion: OpenAI.ChatCompletion)
 }
 
 /**
- * Extracts the embedding of an embedding response.
+ * Extracts the embedding of an OpenAI API response.
  *
  * @param response The response of an `embeddings.create` request
  *
- * @returns The {@link Embedding} embedded for the first input of `response`, or an empty array if it carries none
+ * @returns The {@link Vector} embedded for the first input of `response`, or an empty array if it carries none
  */
-export function embedding(response: OpenAI.CreateEmbeddingResponse): Embedding {
+export function embedding(response: OpenAI.CreateEmbeddingResponse): Vector {
 
 	return response.data[0]?.embedding ?? [];
 
