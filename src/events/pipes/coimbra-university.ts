@@ -74,7 +74,7 @@ export async function CoimbraUniversity() {
 				(map(key => `${Events}/${key}`))
 			)
 		))
-		(sync(Publisher))
+		(sync(Publisher, true))
 	);
 
 }

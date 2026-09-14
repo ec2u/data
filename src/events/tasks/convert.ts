@@ -85,8 +85,8 @@ export function convert(university: {
 
 				label: title,
 
-				about: multiple(path("about").map(link)),
-				audience: multiple(path("audience").map(link)),
+				about: multiple(path("about[*]").map(link)),
+				audience: multiple(path("audience[*]").map(link)),
 
 				name: title,
 				description: optional(path("description").map(string)),
@@ -128,7 +128,11 @@ export function convert(university: {
 
 function stamp(date: string, time: Optional<string>, zone: string): string { // !!! to temporals?
 
-	const wall = `${date}T${time ?? "00:00"}`;
+	const clock = time ?? "00:00";
+
+	// times are stated to the minute, while a timestamp is read to the second
+
+	const wall = `${date}T${/^\d{2}:\d{2}$/.test(clock) ? `${clock}:00` : clock}`;
 
 	const shift = new Intl.DateTimeFormat("en", { timeZone: zone, timeZoneName: "longOffset" })
 		.formatToParts(new Date(`${wall}Z`))

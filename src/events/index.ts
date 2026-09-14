@@ -29,6 +29,7 @@ import type { Instance } from "@metreeca/blue/value";
 import type { IRI } from "@metreeca/core/resource";
 import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
+import type { URLLike } from "@metreeca/gear-url";
 import type { Reference } from "@metreeca/qest/resource";
 import * as uuid from "uuid";
 
@@ -54,6 +55,13 @@ export const events = immutable({
 	issued: "2022-01-01"
 
 });
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Event = Instance<typeof Event>;
+export type Publisher = Instance<typeof Publisher>;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,13 +108,16 @@ export function Publisher() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function isStaleEvent(event: Instance<typeof Event>): boolean {
+export function isStaleEvent(event: Event): boolean {
 
-	return false; // !!! tbi
+	const now = new Date();
+	const midnight = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+
+	return Date.parse(event.endDate ?? event.startDate) < midnight;
 
 }
 
-export function getEventId(url: string | URL): Reference {
+export function getEventId(url: URLLike): Reference {
 
 	return `${(events.id)}/${uuid.v3(String(url), uuid.v3.URL)}`;
 

@@ -20,18 +20,17 @@ import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.j
 import { retire } from "@/_/gear-store/retire.js";
 import { validate } from "@/_/gear-store/validate.js";
 import { Dataset } from "@/datasets/index.js";
-import { getEventId, Event, events, isStaleEvent, Publisher } from "@/events/index.js";
+import { Event, events, getEventId, isStaleEvent, Publisher } from "@/events/index.js";
 import { classify } from "@/events/tasks/classify.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { getUniversity } from "@/universities/index.core.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
-import type { Instance } from "@metreeca/blue/value";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, peek, take, tee } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { fetch, type URLLike } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
@@ -43,7 +42,7 @@ const survival = 0.75; // the smallest fraction of the stored events a single ru
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function sync(publisher: Instance<typeof Publisher>, force = false): Sink<URLLike, Tally> {
+export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> {
 
 	const store = service(createStore);
 
@@ -84,25 +83,30 @@ export function sync(publisher: Instance<typeof Publisher>, force = false): Sink
 
 				})))
 				(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
-				(map(event => event.digest))
-				(toSet())
+					(map(event => event.digest))
+					(toSet())
 			);
 
 			return pipe(
 				(items(urls))
-				(fork(concurrency, pages => pipe(
-					(pages)
-					(fetch())
-					(html())
-					(focus())
-					(untag())
-					(filter(async page => !(await digests).has(digest(page))))
-					(extract())
-					(classify())
-					(convert(university))
-					(validate(Event))
-					(map(event => isStaleEvent(event) ? delta(event.id, Event) : delta(event.id, Event, event)))
-				)))
+				(take(1)) // !!!
+					(fork(concurrency, pages => pipe(
+						(items(pages))
+						(fetch())
+						(html())
+						(focus())
+						(untag())
+						(filter(async page => !(await digests).has(digest(page))))
+						(extract())
+						(classify())
+						(peek(console.log)) // !!!
+							(convert(university))
+							(validate(Event))
+							(map(event => isStaleEvent(event)
+								? delta(event.id, Event)
+								: delta(event.id, Event, event)
+							))
+					)))
 			);
 
 		};

@@ -93,7 +93,7 @@ export function convert(taxonomy: Instance<typeof Taxonomy>): Task<Record, Insta
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function getPath(record: Record): readonly string[] {
+export function getPath(record: Record): readonly string[] { // !!! question export
 
 	return required(record.id).split("/");
 
