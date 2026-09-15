@@ -16,7 +16,6 @@
 
 import { type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { join } from "@metreeca/flow/tasks";
 
 
 export function route<V>(
@@ -38,94 +37,73 @@ export function route<V>(
 
 	return source => items((async function* () {
 
-		type Demand = { // the draw a reading is waiting on, settled as its next item is routed
+		type Reading = { // one side of the split, drawn by its task through a cursor of its own
 
-			readonly resolve: (result: IteratorResult<V, void>) => void;
-			readonly reject: (reason: unknown) => void;
-
-		};
-
-		type Node = { readonly value: V; next: Node | undefined } // an item routed to a reading not drawing at the time
-
-		type Reading = {
-
-			head: Node | undefined; // the oldest item routed here and not yet drawn
-			tail: Node | undefined;
-
-			demand: Demand | undefined; // the draw waiting for the next item, at most one per reading
-			live: boolean; // cleared as the reading stops drawing, from then on dropping the items due to it
+			pending: readonly V[]; // the items routed here while the reading wasn't drawing, oldest first
+			live: boolean; // cleared as the source runs dry or the reading stops drawing, dropping the items due to it
 
 		};
+
+		type Output = AsyncIterator<V, void, undefined>; // the feed reported by one task, drawn for its items
+		type Event = { readonly output: Output; readonly result: IteratorResult<V, void> };
 
 
 		// the single reader of the source: wrapping it in a generator serialises the draws issued by the readings
 
 		const reader = (async function* () { yield* source; })();
 
-		const passing: Reading = { head: undefined, tail: undefined, demand: undefined, live: true };
-		const failing: Reading = { head: undefined, tail: undefined, demand: undefined, live: true };
+		const passing: Reading = { pending: [], live: true };
+		const failing: Reading = { pending: [], live: true };
 
-		// the routing loop runs while a reading is waiting: no item is drawn beyond what the readings ask for
+		// the outputs of the two tasks are raced, so that either reports as soon as it has an item
 
-		const state: {
+		const outputs = [
+			pass(items(cursor(passing))),
+			fail ? fail(items(cursor(failing))) : items(cursor(failing))
+		].map<Output>(feed => feed[Symbol.asyncIterator]());
 
-			failure: { readonly reason: unknown } | undefined; // the failure reported by the source or the condition
-			ended: boolean;
-			routing: boolean;
+		const polls = new Map(outputs.map(output => [output, poll(output)]));
 
-		} = { failure: undefined, ended: false, routing: false };
-
-
-		const failed = items(cursor(failing));
 
 		try {
 
-			yield* items([pass(items(cursor(passing))), fail ? fail(failed) : failed])(join());
+			while ( polls.size > 0 ) {
+
+				const { output, result } = await Promise.race(polls.values());
+
+				if ( result.done ) { // the output ran dry: drop it from the race
+
+					polls.delete(output);
+
+				} else { // put the output back to work before yielding, so it keeps drawing meanwhile
+
+					polls.set(output, poll(output));
+
+					yield result.value;
+
+				}
+
+			}
 
 		} finally { // on failure or early termination as well
+
+			await Promise.allSettled([
+				...Array.from(polls.keys(), async output => output.return?.()), // close the outputs and
+				...polls.values() // suppress late failures from their abandoned polls
+			]);
 
 			await Promise.allSettled([reader.return()]); // close the source, now that no reading is drawing from it
 
 		}
 
 
-		async function serve(): Promise<void> { // a single loop serves both readings, however they interleave
+		function poll(output: Output): Promise<Event> {
 
-			if ( !state.routing ) {
+			const event = output.next().then(result => ({ output, result }));
 
-				state.routing = true;
+			event.catch(() => {}); // suppress unhandled rejection reports while the event waits its turn in the race
 
-				try {
-
-					while ( !state.ended && (passing.demand || failing.demand) ) {
-
-						const item = await reader.next();
-
-						if ( item.done ) {
-
-							close();
-
-						} else {
-
-							deliver(condition(item.value) ? passing : failing, item.value);
-
-						}
-
-					}
-
-				} catch ( reason ) {
-
-					state.failure = { reason };
-
-					close();
-
-				} finally {
-
-					state.routing = false;
-
-				}
-
-			}
+			return event;
 
 		}
 
@@ -133,54 +111,7 @@ export function route<V>(
 
 			if ( reading.live ) { // the items due to a reading that stopped drawing are dropped
 
-				const demand = reading.demand;
-
-				if ( demand ) {
-
-					reading.demand = undefined;
-
-					demand.resolve({ done: false, value });
-
-				} else {
-
-					const node: Node = { value, next: undefined };
-
-					if ( reading.tail ) { reading.tail.next = node; } else { reading.head = node; }
-
-					reading.tail = node;
-
-				}
-
-			}
-
-		}
-
-		function close(): void {
-
-			state.ended = true;
-
-			settle(passing);
-			settle(failing);
-
-		}
-
-		function settle(reading: Reading): void {
-
-			const demand = reading.demand;
-
-			if ( demand ) {
-
-				reading.demand = undefined;
-
-				if ( state.failure ) {
-
-					demand.reject(state.failure.reason);
-
-				} else {
-
-					demand.resolve({ done: true, value: undefined });
-
-				}
+				reading.pending = [...reading.pending, value];
 
 			}
 
@@ -192,33 +123,33 @@ export function route<V>(
 
 				next: async () => {
 
-					const head = reading.head;
+					const [value, ...rest] = reading.pending;
 
-					if ( head ) { // an item routed here while the reading wasn't drawing
+					if ( reading.pending.length > 0 ) { // an item routed here, possibly by the other reading
 
-						reading.head = head.next;
+						reading.pending = rest;
 
-						if ( !head.next ) { reading.tail = undefined; }
+						return { done: false, value };
 
-						return { done: false, value: head.value };
-
-					} else if ( state.failure ) {
-
-						throw state.failure.reason;
-
-					} else if ( state.ended || !reading.live ) {
+					} else if ( !reading.live ) {
 
 						return { done: true, value: undefined };
 
-					} else {
+					} else { // draw an item and route it, then look again: it may be due to the other reading
 
-						return new Promise<IteratorResult<V, void>>((resolve, reject) => {
+						const item = await reader.next();
 
-							reading.demand = { resolve, reject };
+						if ( item.done ) {
 
-							void serve();
+							reading.live = false;
 
-						});
+						} else {
+
+							deliver(condition(item.value) ? passing : failing, item.value);
+
+						}
+
+						return iterator.next();
 
 					}
 
@@ -227,11 +158,7 @@ export function route<V>(
 				return: async () => {
 
 					reading.live = false; // from here on the items due to this reading are dropped
-
-					reading.head = undefined;
-					reading.tail = undefined;
-
-					settle(reading);
+					reading.pending = [];
 
 					return { done: true, value: undefined };
 
