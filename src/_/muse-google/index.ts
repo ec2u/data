@@ -59,6 +59,7 @@ import { eager, isString, type Lazy, opt, type Optional, type Value } from "@met
 import { createThrottle, type Throttle } from "@metreeca/core/async";
 import { markdown } from "@metreeca/core/strings";
 import { BadRequest, TooManyRequests } from "@metreeca/http";
+import type { Dictionary } from "@metreeca/qest/resource";
 import { log, Logger, report } from "@metreeca/tape";
 
 
@@ -663,6 +664,11 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
  * restricts itself to, its length bounds, the bounds of a number and whether it admits integers alone. A string is
  * stated by the format its lexical pattern is drawn from, and by the pattern itself where it is drawn from none.
  *
+ * The guidance a shape states for a reader is carried through as well, so that a request briefs the model from the
+ * shape rather than from a prompt restating it: a resource is titled and described by the name and the description it
+ * carries, and so is each member, a member admitting more than one value annotating the array rather than its items. A
+ * localised name or description is carried as its English reading, and one stated in no English is left out.
+ *
  * The schema converted for a shape is handed back on every later request for the same shape, so a request declaring
  * the shape it expects converts it once, however often it runs.
  *
@@ -811,7 +817,7 @@ function compile(shape: Shape): Schema {
 		case "resource":
 
 			const members = Object.entries(shape.members).flatMap(([name, member]) =>
-				member.kind === "property" ? [{ name, range: member.range }] : []
+				member.kind === "property" ? [{ name, member, range: member.range }] : []
 			);
 
 			const required = members
@@ -822,10 +828,17 @@ function compile(shape: Shape): Schema {
 
 				type: Type.OBJECT,
 
-				properties: Object.fromEntries(members.map(({ name, range }) => [name, range.maxCount === 1
-					? compile(eager(range.shape))
-					: { type: Type.ARRAY, items: compile(eager(range.shape)) }
-				])),
+				...annotate(shape),
+
+				properties: Object.fromEntries(members.map(({ name, member, range }) => [name, {
+
+					...(range.maxCount === 1
+						? compile(eager(range.shape))
+						: { type: Type.ARRAY, items: compile(eager(range.shape)) }),
+
+					...annotate(member)
+
+				}])),
 
 				...(required.length > 0 ? { required } : {})
 
@@ -836,5 +849,44 @@ function compile(shape: Shape): Schema {
 			return { anyOf: shape.branches.map(branch => compile(eager(branch))) };
 
 	}
+
+}
+
+/**
+ * States the guidance a shape carries as schema annotations.
+ *
+ * @param constraints The name and the description to state, possibly localised, as a shape or one of its members
+ *                    carries them
+ *
+ * @returns An object carrying the English reading of the stated name as a title and of the stated description as a
+ *          description, each left out if undefined or stated in no English
+ */
+function annotate({ name, description }: {
+
+	readonly name?: string | Dictionary
+	readonly description?: string | Dictionary
+
+}): { readonly title?: string, readonly description?: string } {
+
+	return {
+		...opt(english(name), title => ({ title })),
+		...opt(english(description), text => ({ description: text }))
+	};
+
+}
+
+/**
+ * Reads a localised text in English.
+ *
+ * @param text The text to read, either a plain string or localised by language tag
+ *
+ * @returns The English reading of `text`, with the entries of a multi-valued one run together as paragraphs; undefined
+ *          if `text` is undefined or states no English entry
+ */
+function english(text: Optional<string | Dictionary>): Optional<string> {
+
+	return text === undefined ? undefined
+		: isString(text) ? text
+			: opt(text.en, entry => isString(entry) ? entry : entry.join("\n\n"));
 
 }

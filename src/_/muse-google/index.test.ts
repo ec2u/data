@@ -253,6 +253,117 @@ describe("schema", () => {
 
 	});
 
+	it("states the name and the description a resource carries", () => {
+
+		expect(schema(resource({
+
+			label: required(text)
+
+		}, {
+
+			name: "Event",
+			description: "The event as the source states it"
+
+		}))).toMatchObject({
+
+			title: "Event",
+			description: "The event as the source states it"
+
+		});
+
+	});
+
+	it("states the name and the description a member carries", () => {
+
+		const converted = schema(resource({
+
+			label: required(text, { name: "Title", description: "The name of the event" }),
+			keywords: multiple(text, { name: "Topics", description: "The topics the event is tagged with" })
+
+		}));
+
+		expect(converted).toMatchObject({
+
+			properties: {
+
+				label: {
+					type: Type.STRING,
+					title: "Title",
+					description: "The name of the event"
+				},
+
+				keywords: {
+					type: Type.ARRAY,
+					title: "Topics",
+					description: "The topics the event is tagged with"
+				}
+
+			}
+
+		});
+
+		expect(converted.properties?.keywords?.items).not.toHaveProperty("title");
+		expect(converted.properties?.keywords?.items).not.toHaveProperty("description");
+
+	});
+
+	it("states the English entry of a localised name and description", () => {
+
+		expect(schema(resource({
+
+			label: required(text, { name: { en: "Title", it: "Titolo" }, description: { en: "The name", it: "Il nome" } })
+
+		}, {
+
+			name: { en: "Event", it: "Evento" },
+			description: { en: "The event", it: "L'evento" }
+
+		}))).toMatchObject({
+
+			title: "Event",
+			description: "The event",
+
+			properties: {
+				label: { title: "Title", description: "The name" }
+			}
+
+		});
+
+	});
+
+	it("leaves out the name and the description of a shape carrying neither", () => {
+
+		const converted = schema(resource({ label: required(text) }));
+
+		expect(converted).not.toHaveProperty("title");
+		expect(converted).not.toHaveProperty("description");
+
+		expect(converted.properties?.label).not.toHaveProperty("title");
+		expect(converted.properties?.label).not.toHaveProperty("description");
+
+	});
+
+	it("leaves out a name and a description stated in no English", () => {
+
+		const converted = schema(resource({
+
+			label: required(text, { name: { it: "Titolo" }, description: { it: "Il nome" } })
+
+		}, {
+
+			name: { it: "Evento" },
+			description: { it: "L'evento" }
+
+		}));
+
+		expect(converted).not.toHaveProperty("title");
+		expect(converted).not.toHaveProperty("description");
+
+		expect(converted.properties?.label).not.toHaveProperty("title");
+		expect(converted.properties?.label).not.toHaveProperty("description");
+
+	});
+
 	it("reports a range with no counterpart in a response schema", () => {
 
 		expect(() => schema(resource({ label: required(dictionary) }))).toThrow(RangeError);
