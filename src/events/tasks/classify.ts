@@ -66,7 +66,7 @@ export function classify(): Task<Payload> {
 
 	return map(async payload => {
 
-		if ( payload.event !== true ) { // a payload stating no event is dropped downstream, so it is not classified
+		if ( !payload.event ) { // a payload stating no event is dropped downstream, so it is not classified
 
 			return payload;
 

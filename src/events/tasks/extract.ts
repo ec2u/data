@@ -33,41 +33,14 @@ import { service } from "@metreeca/gear";
 import { validate } from "@metreeca/gear-json";
 
 
-/**
- * Payload an extraction answers a page with.
- *
- * States under `digest` and `publishable` what the extraction settled for itself, whatever the model read into the
- * page; every other property is answered by the model and so stands or falls at run time.
- *
- * @see {@link Stated}
- */
-export type Payload = Stated & {
+export type Payload = Instance<typeof Extracted> & { // !!! remove
 
 	readonly publishable: boolean
-
-}
-
-/**
- * Reading of a page, anchored to the page it was drawn from.
- *
- * States under `digest` the page the reading was derived from, whatever the model read into it.
- */
-type Stated = Instance<typeof Extracted> & {
-
 	readonly digest: Digest
 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Shape of a reading, as the model states it.
- *
- * Mirrors the response schema the model answers with: the properties the schema requires are stated by every reading,
- * the others only where the page supports them.
- */
-export function Extracted() {
+function Extracted() {
 	return resource({
 
 		event: must(boolean),
@@ -100,6 +73,8 @@ export function Extracted() {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * Creates a task extracting event properties from event pages.
  *
@@ -131,31 +106,37 @@ export function extract(): Task<Text, Payload> {
 
 	return documents => pipe(
 		items(documents)
-		(map(async document => stated(document, json(await ai.models.generateContent({
+		(map(async document => ({
 
-			model: "gemini-3.5-flash-lite",
+			digest: digest(document),
 
-			contents: [
-				markdown`
-					- date: ${getDate()}
-				`,
-				document
-			],
+			...json<Instance<typeof Extracted>>(await ai.models.generateContent({
 
-			config: {
+				model: "gemini-3.5-flash-lite",
 
-				seed: 0,
-				temperature: 0,
-				maxOutputTokens: 16384,
+				contents: [
+					markdown`
+						- date: ${getDate()}
+					`,
+					document
+				],
 
-				systemInstruction: await file(".sys.md", import.meta.url),
+				config: {
 
-				responseMimeType: "application/json",
-				responseSchema: schema(Extracted)
+					seed: 0,
+					temperature: 0,
+					maxOutputTokens: 16384,
 
-			}
+					systemInstruction: await file(".sys.md", import.meta.url),
 
-		})))))
+					responseMimeType: "application/json",
+					responseSchema: schema(Extracted)
+
+				}
+
+			}))
+
+		})))
 		(validate(test(stated => stated.event ? Dates(stated) ?? true : true)))
 		(map(payload => ({
 
@@ -166,22 +147,10 @@ export function extract(): Task<Text, Payload> {
 		})))
 	);
 
-	function stated(document: Text, payload: Instance<typeof Extracted>): Stated {
-
-		return {
-
-			digest: digest(document),
-
-			...payload
-
-		};
-
-	}
-
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const isDate: Validator<unknown> = type(isString, all(
 	pattern(/^\d{4}-\d{2}-\d{2}$/),
