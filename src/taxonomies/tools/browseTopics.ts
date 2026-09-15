@@ -148,7 +148,11 @@ export function browseTopics(...taxonomies: readonly Taxonomy[]): CallableTool {
 
 					};
 
-					logger.info`calling ${name}(${JSON.stringify(call.args)})`;
+					// the taxonomy is fixed for the tool and the topics stand under it, so only what sets the call
+					// apart from the others is stated
+
+					logger.info`browsing ${requested?.map(id => id.replace(`${taxonomy}/`, "")).join(", ")
+						?? "top topics"}`;
 
 					try {
 

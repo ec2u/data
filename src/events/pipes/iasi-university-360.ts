@@ -55,19 +55,14 @@ export async function IasiUniversity360() {
 	return pipe(
 		(items(Publisher.id))
 		(crawl(
-
 			fork(concurrency, urls => pipe(
 				items(urls)
 				(fetch())
 				(html())
 				(xpath())
 			)),
-
 			path => path("//div[@class='archive-pagination']/a[contains(@class,'page-numbers')]/@href").map(link),
-
-			path => path("//article[contains(@class, 'category-evenimente')]/h2[@class='entry-title']/a[@rel='bookmark']/@href")
-				.map(link)
-
+			path => path("//article[contains(@class, 'category-evenimente')]/h2[@class='entry-title']/a[@rel='bookmark']/@href").map(link)
 		))
 		(sync(Publisher))
 	);

@@ -25,19 +25,24 @@ import { classify } from "@/events/tasks/classify.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
 import { getUniversity } from "@/universities/index.core.js";
+import { base, Page } from "@/vocabularies/ec2u.js";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, resource } from "@metreeca/blue/resource";
+import { id, multiple, resource } from "@metreeca/blue/resource";
+import { required } from "@metreeca/core/arrays";
+import { immutable } from "@metreeca/core/structures";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, peek, tee } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
+import { jpath, link, string } from "@metreeca/gear-json";
 import { fetch, type URLLike } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 
 
 const retrieval = 10; // the number of pages fetched at the same time from the source site // !!! as option
 const analysis = 25; // the number of pages analysed at the same time by the model // !!! as option
+
 const survival = 0.75; // the smallest fraction of the stored events a single run must leave in place // !!! as option
 
 
@@ -49,12 +54,14 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 	const university = getUniversity(publisher.university);
 
+
 	return urls => pipe(
 		(items(urls))
 		(tee(
 			define(),
 			insert(),
-			remove()
+			expire(),
+			delist()
 		))
 		(persist())
 	);
@@ -74,17 +81,17 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 		return urls => {
 
-			const digests = force ? new Set<string>() : pipe( // !!! replace with select()
-				(items(store.lookup({
+			const digests = force ? new Set<string>() : pipe(
+				(items(store.lookup({ // !!! replace with select()
 
-					entry: events.id,
-					shape: Events,
+					entry: base, // a virtual collection is gathered by class, so the entry is a placeholder
+					shape: Pages,
 
-					model: { resources: [{ digest: "" }, { "?university": [university.id] }] }
+					model: { pages: [{ digest: "" }, { "?source": [publisher.id] }] }
 
 				})))
-				(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
-					(map(event => event.digest))
+				(flat(map(stated => items(stated?.pages ?? [])))) // !!! remove
+					(map(page => page.digest))
 					(toSet())
 			);
 
@@ -101,13 +108,31 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 				(fork(analysis, pages => pipe( // analyses are capped on the tool sessions they hold, not on the rate
 					(items(pages))
 					(extract())
-					(classify())
-					(convert(university))
-					(peek(console.log)) // !!!
-					(validate(Event))
-					(map(event => isStaleEvent(event)
-						? delta(event.id, Event, null)
-						: delta(event.id, Event, event)
+					(tee(
+						payloads => pipe( // every page is recorded, however little it yielded
+							(items(payloads))
+							(jpath(path => immutable({
+								id: required(path("url").map(link)),
+								source: publisher.id,
+								digest: required(path("digest").map(string))
+							})))
+							(validate(Page))
+							(map(page => delta(page.id, Page, page)))
+						),
+						payloads => pipe( // a page stating nothing worth publishing withdraws what it once stated
+							(items(payloads))
+							(filter(payload => !payload.publishable))
+							(jpath(path => required(path("url").map(link))))
+							(map(url => delta(getEventId(url), Event, null)))
+						),
+						payloads => pipe( // only a page worth publishing reaches the model, classification being dear
+							(items(payloads))
+							(filter(payload => payload.publishable))
+							(classify())
+							(convert(university))
+							(validate(Event))
+							(map(event => delta(event.id, Event, event)))
+						)
 					))
 				)))
 			);
@@ -116,42 +141,82 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 	}
 
-	function remove(): Task<URLLike, Delta> {
+	function expire(): Task<URLLike, Delta> {
+
+		// an event stored while it was still to come goes stale on its own, leaving its source page untouched, so the
+		// crawl never offers it again and the sweep reads the dataset rather than the source
+
+		return () => pipe(
+			(items(store.lookup({ // !!! replace with select()
+
+				entry: events.id,
+				shape: Events,
+
+				model: { resources: [{ id: "", startDate: "", endDate: "" }, { "?university": [university.id] }] }
+
+			})))
+			(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
+				(filter(isStaleEvent))
+				(map(event => delta(event.id, Event, null)))
+		);
+
+	}
+
+	function delist(): Task<URLLike, Delta> {
 
 		return urls => {
 
-			const existing = pipe( // !!! replace with select()
-				(items(store.lookup({
+			const existing = pipe(
+				(items(store.lookup({ // !!! replace with select()
 
-					entry: events.id,
-					shape: Events,
+					entry: base, // a virtual collection is gathered by class, so the entry is a placeholder
+					shape: Pages,
 
-					model: { resources: ["", { "?university": [university.id] }] }
+					model: { pages: [{ id: "" }, { "?source": [publisher.id] }] }
 
 				})))
-				(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
+				(flat(map(stated => items(stated?.pages ?? [])))) // !!! remove
+					(map(page => page.id))
 			);
 
 			return pipe(
 				(items(urls))
-				(map(getEventId))
+				(map(String))
 				(retire({ survival, existing }))
-				(map(id => delta(id, Event, null)))
+				(flat(map(url => items([ // a page the source no longer lists takes its event with it
+					delta(url, Page, null),
+					delta(getEventId(url), Event, null)
+				]))))
 			);
 
 		};
 
 	}
 
+
 }
 
 
-//// !!! Remove ////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// !!! Remove after switching to select() ////////////////////////////////////////////////////////////////////////////
 
 function Events() {
 	return resource(Dataset, {
 
 		resources: multiple(reference(Event))
+
+	});
+}
+
+function Pages() {
+	return resource({
+
+		id: id(),
+
+		pages: multiple(reference(Page))
+
+	}, {
+
+		virtual: true // the pages are gathered by their own class, standing in no collection of their own
 
 	});
 }

@@ -23,10 +23,8 @@ import { base, CommentLength, EC2U, ec2u, LabelLength } from "@/vocabularies/ec2
 import { SchemaEvent } from "@/vocabularies/schema/event.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { string, text } from "@metreeca/blue/string";
+import { text } from "@metreeca/blue/string";
 import type { Instance } from "@metreeca/blue/value";
-import type { IRI } from "@metreeca/core/resource";
-import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import type { URLLike } from "@metreeca/gear-url";
 import type { Reference } from "@metreeca/qest/resource";
@@ -73,19 +71,7 @@ export function Event() {
 
 		publisher: optional(reference(Organization)),
 
-		keywords: multiple(reference(EventTopic)),
-
-		digest: required(string, {
-
-			hidden: true,
-
-			name: "Source Digest",
-			description: markdown`
-				Records the state of the source page the event was drawn from, so that an events sync
-				re-reads only the pages the source has changed.
-			`
-
-		})
+		keywords: multiple(reference(EventTopic))
 
 	}, {
 
@@ -106,7 +92,24 @@ export function Publisher() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function isStaleEvent(event: Event): boolean {
+/**
+ * Checks whether an event has run its course.
+ *
+ * An event is read as stale from the midnight opening the current UTC day, so that one still running today is left in
+ * place whatever the hour. An event stating no end is weighed by its start, as a single-day event.
+ *
+ * @param event The dates of the event to be checked
+ * @param event.startDate The timestamp the event starts at
+ * @param event.endDate The timestamp the event ends at; omit for an event stating none
+ *
+ * @returns `true` if `event` ended before the current UTC day; `false` otherwise
+ */
+export function isStaleEvent(event: {
+
+	readonly startDate: string
+	readonly endDate?: string
+
+}): boolean {
 
 	const now = new Date();
 	const midnight = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
@@ -115,6 +118,16 @@ export function isStaleEvent(event: Event): boolean {
 
 }
 
+/**
+ * Identifies the event a source page states.
+ *
+ * The same address always names the same event, so that a page re-read on a later run restates the event it already
+ * stood for rather than minting a second one.
+ *
+ * @param url The address of the source page the event is derived from
+ *
+ * @returns The identifier of the event stated by the page at `url`
+ */
 export function getEventId(url: URLLike): Reference {
 
 	return `${(events.id)}/${uuid.v3(String(url), uuid.v3.URL)}`;

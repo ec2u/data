@@ -15,11 +15,12 @@
  */
 
 import { getDate } from "@/_/core/temporal.js";
-import { digest } from "@/_/gear-store/_digest.js";
+import { digest, type Digest } from "@/_/gear-store/_digest.js";
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
+import { isStaleEvent } from "@/events/index.js";
 import { Type } from "@google/genai";
-import type { Object } from "@metreeca/core";
+import { isString, type Object } from "@metreeca/core";
 import { markdown, type Text } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -28,12 +29,36 @@ import { service } from "@metreeca/gear";
 
 
 /**
+ * Payload an extraction answers a page with.
+ *
+ * States under `digest` and `publishable` what the extraction settled for itself, whatever the model read into the
+ * page; every other property is answered by the model and so stands or falls at run time.
+ */
+export type Payload =
+	Object
+	& {
+
+		readonly digest: Digest
+		readonly publishable: boolean
+
+	}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
  * Creates a task extracting event properties from event pages.
  *
  * Payloads are produced in the order pages are drawn. A page describing no single event, such as a listing or an error
  * page, is answered with a payload stating `event` false, so a caller MUST drop those rather than read them.
  *
- * Every payload states under `digest` the state of the page it was drawn from, so that what is stored from it may be
+ * Every payload states under `publishable` whether anything is worth drawing from the page at all: a page stating no
+ * event, or one whose event has already run its course, answers `false`, so that a caller spends nothing further on it.
+ * The dates are weighed as the page states them, ahead of the conversion that anchors them to the time zone of the
+ * university: the two readings part only for an event ending within a day of the current one, which is left in place
+ * either way.
+ *
+ * Every payload states under `digest` the state of the page it was derived from, so that what is stored from it may be
  * recorded together with the evidence for reading the page again only once the source has changed it.
  *
  * @returns A task converting a feed of markdown event pages into a feed of the property payloads they state
@@ -42,15 +67,13 @@ import { service } from "@metreeca/gear";
  *
  * @throws {@link !Error Error} While the feed is consumed, if no properties can be extracted from a page
  */
-export function extract(): Task<Text, Object> {
+export function extract(): Task<Text, Payload> {
 
 	const ai = service(createGoogleAI);
 
 	return documents => pipe(
 		items(documents)
-		(map(async document => ({
-
-			...json<Object>(await ai.models.generateContent({
+		(map(async document => complete(document, json(await ai.models.generateContent({
 
 			model: "gemini-3.5-flash-lite",
 
@@ -171,11 +194,28 @@ export function extract(): Task<Text, Object> {
 
 			}
 
-		})),
-
-			digest: digest(document) // stated last, so that the page's own state is never overridden by the payload
-
-		})))
+		})))))
 	);
+
+	function complete(document: Text, payload: Object): Payload {
+
+		return {
+
+			...payload,
+
+			digest: digest(document),
+
+			publishable: payload.event === true
+				&& isString(payload.startDate)
+				&& !isStaleEvent({
+
+					startDate: payload.startDate,
+					endDate: isString(payload.endDate) ? payload.endDate : undefined
+
+				})
+
+		};
+
+	}
 
 }

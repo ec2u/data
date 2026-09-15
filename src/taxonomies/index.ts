@@ -27,7 +27,6 @@ import { string } from "@metreeca/blue/string";
 import type { Instance } from "@metreeca/blue/value";
 import { by } from "@metreeca/core/order";
 import type { Markdown, Text } from "@metreeca/core/strings";
-import { markdown } from "@metreeca/core/strings";
 import { service } from "@metreeca/gear";
 import type { Reference } from "@metreeca/qest/resource";
 import { log, report, time } from "@metreeca/tape";
@@ -164,10 +163,7 @@ export function Topic() {
 			hidden: true,
 
 			name: "Source Digest",
-			description: markdown`
-				Records the state of the source entry the topic was derived from, so that a taxonomy sync
-				reprocesses only the entries the source document has changed.
-			`
+			description: "A unique identification of the content the source entry carried when it was read."
 
 		}),
 
@@ -176,10 +172,9 @@ export function Topic() {
 			hidden: true,
 
 			name: "Semantic Embedding",
-			description: markdown`
-				Positions the meaning of the topic in a semantic space, so that a resource is classified under the
-				topics its text is closest to without matching its wording against labels. Encoded in compact
-				textual form, to be decoded back to a vector before it is compared to another embedding.
+			description: `
+				The position of the meaning of the topic in a semantic space, encoded in compact textual form, to be
+				decoded back to a vector before it is compared to another embedding.
 			`
 
 		})

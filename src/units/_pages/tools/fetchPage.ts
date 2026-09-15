@@ -114,7 +114,7 @@ export function fetchPage({
 
 				const { url } = call.args as { url: string };
 
-				logger.info`calling ${name}(${JSON.stringify(call.args)})`;
+				logger.info`fetching <${url}>`;
 
 				try {
 

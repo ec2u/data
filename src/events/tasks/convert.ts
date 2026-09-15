@@ -34,7 +34,7 @@ import type { Reference } from "@metreeca/qest/resource";
  * Creates a task converting extracted event properties into event records.
  *
  * Payloads stating no event are dropped, so the output of an extraction may be piped through unfiltered. Each record
- * is identified after the page it was drawn from, so the same page always yields the same event, and wall times are
+ * is identified after the page it was derived from, so the same page always yields the same event, and wall times are
  * anchored to the time zone of `university`.
  *
  * @param university The university the events are attributed to
@@ -58,8 +58,6 @@ export function convert(university: {
 		(filter(payload => payload.event === true))
 		(jpath(path => {
 
-			const digest = required(path("digest").map(string));
-
 			const url = required(path("url").map(link));
 			const title = clip(required(path("title").map(string)), LabelLength);
 
@@ -82,8 +80,6 @@ export function convert(university: {
 				dataset: events.id,
 
 				university: university.id,
-
-				digest,
 
 				label: title,
 

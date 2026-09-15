@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { WGSPoint, wgs } from "@/vocabularies/wgs.js";
+import { wgs, WGSPoint } from "@/vocabularies/wgs.js";
 import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { iri, markdown, text } from "@metreeca/blue/string";
+import { iri, markdown, string, text } from "@metreeca/blue/string";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -25,6 +25,7 @@ export const base = "https://data.ec2u.eu"; // the EC2U Knowledge Hub id space
 
 export const ec2u = createNamespace(`${base}/terms#`, [
 
+	"Page",
 	"Resource",
 	"Dataset",
 	"University",
@@ -40,8 +41,9 @@ export const ec2u = createNamespace(`${base}/terms#`, [
 	"Offering",
 
 	"generated",
-	"embedding",
+	"source",
 	"digest",
+	"embedding",
 
 	"year",
 	"term",
@@ -108,6 +110,33 @@ export function Feature() {
 	return resource(Entity, WGSPoint, {}, {
 
 		space: wgs
+
+	});
+}
+
+export function Page() {
+	return resource({
+
+		id: id(),
+
+		source: required(iri, {
+
+			name: "Page Source",
+			description: "The data source whose crawl reached the page."
+
+		}),
+
+		digest: required(string, {
+
+			name: "Page Digest",
+			description: "A unique identification of the content the page carried when it was read."
+
+		})
+
+	}, {
+
+		space: ec2u,
+		class: ec2u.Page
 
 	});
 }
