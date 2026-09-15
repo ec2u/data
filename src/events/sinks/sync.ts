@@ -149,8 +149,8 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 	function expire(): Task<URLLike, Delta> {
 
-		// an event stored while it was still to come goes stale on its own, leaving its source page untouched, so the
-		// crawl never offers it again and the sweep reads the dataset rather than the source
+		// an event stored while it was still to come goes stale on its own, leaving its source page untouched,
+		// so the crawl never offers it again and the sweep reads the dataset rather than the source
 
 		return () => pipe(
 			(items(store.lookup({ // !!! replace with select()
