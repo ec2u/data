@@ -34,7 +34,7 @@ export function SchemaLocation() {
 export function SchemaPlace() {
 	return resource(SchemaThing, {
 
-		address: optional(reference(SchemaPostalAddress)),
+		address: optional(SchemaPostalAddress),
 
 		latitude: required(decimal),
 		longitude: required(decimal)
@@ -49,7 +49,7 @@ export function SchemaPlace() {
 export function SchemaPostalAddress() {
 	return resource(SchemaThing, {
 
-		streetAddress: optional(text),
+		streetAddress: required(text),
 		postalCode: optional(text),
 
 		addressCountry: optional(text),

@@ -19,9 +19,9 @@ import { LabelLength } from "@/vocabularies/ec2u.js";
 import { SchemaEventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
 import { SchemaLocation } from "@/vocabularies/schema/location.js";
 import type { Instance } from "@metreeca/blue/value";
-import { type Object, opt, type Optional } from "@metreeca/core";
+import { type Object, opt, type Optional, type Value } from "@metreeca/core";
 import { multiple, nonempty, optional, required } from "@metreeca/core/arrays";
-import { clip } from "@metreeca/core/strings";
+import { clip, tidy } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -36,6 +36,9 @@ import type { Reference } from "@metreeca/qest/resource";
  * Payloads stating no event are dropped, so the output of an extraction may be piped through unfiltered. Each record
  * is identified after the page it was derived from, so the same page always yields the same event, and wall times are
  * anchored to the time zone of `university`.
+ *
+ * A venue is stated as a postal address only where the page names a street, a street being what tells an address from
+ * a virtual location; a venue named without one, or a bare city, is stated as plain text instead.
  *
  * @param university The university the events are attributed to
  * @param university.id The identifier the events are attributed to
@@ -66,9 +69,9 @@ export function convert(university: {
 			const endTime = optional(path("endTime").map(string));
 
 			const attendanceURL = optional(path("attendanceURL").map(link));
-			const venueName = optional(path("venueName").map(string));
-			const venueAddress = optional(path("venueAddress").map(string));
-			const venueCity = optional(path("venueCity").map(string));
+			const venueName = optional(line(path("venueName")));
+			const venueAddress = optional(line(path("venueAddress")));
+			const venueCity = optional(line(path("venueCity")));
 
 			return immutable({
 
@@ -108,10 +111,11 @@ export function convert(university: {
 
 				location: optional<Instance<typeof SchemaLocation>>(
 					opt(attendanceURL, url => ({ url: [url] }))
-					?? opt(venueAddress ?? venueCity, () => ({
-						name: venueName, streetAddress: venueAddress, addressLocality: venueCity
+					?? opt(venueAddress, streetAddress => ({
+						name: venueName, streetAddress, addressLocality: venueCity
 					}))
 					?? venueName
+					?? venueCity
 				)
 
 			});
@@ -122,6 +126,14 @@ export function convert(university: {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// the location shape admits single unformatted lines, so a value the model pads, runs together or wraps is folded
+// before it is stated and one left with nothing is dropped
+
+function line(values: readonly Value[]): readonly string[] {
+	return values.map(string).map(value => tidy(value)).filter(value => value.length > 0);
+}
+
 
 function stamp(date: string, time: Optional<string>, zone: string): string { // !!! to temporals?
 
