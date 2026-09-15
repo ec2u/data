@@ -15,7 +15,7 @@
  */
 
 import { getDate } from "@/_/core/temporal.js";
-import { when } from "@/_/flow/when.js";
+import { route } from "@/_/flow/route.js";
 import { digest } from "@/_/gear-store/_digest.js";
 import { validate } from "@/_/gear-store/validate.js";
 import { file } from "@/_/gear/files.js";
@@ -32,9 +32,7 @@ import { map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 
 
-type Reading = Instance<typeof X>
-
-export type Payload = Reading & { // !!! remove
+export type Payload = Instance<typeof X> & { // !!! remove
 
 	readonly publishable: boolean
 
@@ -150,7 +148,7 @@ export function extract(): Task<Text, Payload> {
 			}))
 
 		})))
-		(when(extracted => extracted.event, validate(X)))
+		(route(extracted => extracted.event, validate(X)))
 		(map(extracted => ({
 
 			publishable: extracted.event && !isStaleEvent(extracted),
