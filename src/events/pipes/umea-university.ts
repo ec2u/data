@@ -50,14 +50,15 @@ if ( import.meta.main ) {
 
 export async function UmeaUniversity() {
 
-	// the calendar lists every event on a single page, so there is nothing to paginate through
-
 	return pipe(
 		(items(Publisher.id))
 		(fetch())
 		(html())
 		(xpath())
-		(flat(map(path => items(path("//a[@class='eventlink']/@href").map(link)))))
+		(flat(map(path => pipe(
+			items(path("//a[@class='eventlink']/@href"))
+			(map(link))
+		))))
 		(sync(Publisher))
 	);
 

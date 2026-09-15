@@ -21,7 +21,7 @@ import { turku } from "@/universities/index.core.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { fork } from "@metreeca/flow/tasks";
+import { fork, map } from "@metreeca/flow/tasks";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { html, link, xpath } from "@metreeca/gear-xml";
 
@@ -55,17 +55,20 @@ export async function TurkuUniversity() {
 	return pipe(
 		(items(Publisher.id))
 		(crawl(
-
 			fork(concurrency, urls => pipe(
 				items(urls)
 				(fetch())
 				(html())
 				(xpath())
 			)),
-
-			path => path("//nav[@class='pager']//li[contains(@class,'pager__item')]//a/@href").map(link),
-			path => path("//h3[@class='event__title']/a/@href").map(link)
-
+			path => pipe(
+				items(path("//nav[@class='pager']//li[contains(@class,'pager__item')]//a/@href"))
+				(map(link))
+			),
+			path => pipe(
+				items(path("//h3[@class='event__title']/a/@href"))
+				(map(link))
+			)
 		))
 		(sync(Publisher))
 	);

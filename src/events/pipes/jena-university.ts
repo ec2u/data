@@ -22,7 +22,7 @@ import { jena } from "@/universities/index.core.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { fork } from "@metreeca/flow/tasks";
+import { fork, map } from "@metreeca/flow/tasks";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { html, link, string, xpath } from "@metreeca/gear-xml";
 
@@ -113,14 +113,15 @@ export async function JenaUniversity() {
 				(html())
 				(xpath())
 			)),
-
-			// the calendar paginates through a form button per page, the current and the out-of-range ones disabled
-
-			path => path("//div[@class='pagination']/button[@name='page' and not(@disabled)]/@value")
-				.map(string)
-				.map(page => `${publisher.id}?page=${page}&block=body-0`),
-
-			path => path("//ol/li/article/a/@href").map(link)
+			path => pipe( // the calendar paginates through a form button per page
+				items(path("//div[@class='pagination']/button[@name='page' and not(@disabled)]/@value"))
+				(map(string))
+				(map(page => `${publisher.id}?page=${page}&block=body-0`))
+			),
+			path => pipe(
+				items(path("//ol/li/article/a/@href"))
+				(map(link))
+			)
 		))
 		(sync(publisher))
 	)));

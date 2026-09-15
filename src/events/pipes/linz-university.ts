@@ -21,7 +21,7 @@ import { linz } from "@/universities/index.core.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { fork } from "@metreeca/flow/tasks";
+import { fork, map } from "@metreeca/flow/tasks";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { html, link, xpath } from "@metreeca/gear-xml";
 
@@ -55,17 +55,20 @@ export async function LinzUniversity() {
 	return pipe(
 		(items(Publisher.id))
 		(crawl(
-
 			fork(concurrency, urls => pipe(
 				items(urls)
 				(fetch())
 				(html())
 				(xpath())
 			)),
-
-			path => path("//*[contains(@class,'f3-widget-paginator')]/li/a/@href").map(link),
-			path => path("//*[contains(@class,'news_list_item')]/a/@href").map(link)
-
+			path => pipe(
+				items(path("//*[contains(@class,'f3-widget-paginator')]/li/a/@href"))
+				(map(link))
+			),
+			path => pipe(
+				items(path("//*[contains(@class,'news_list_item')]/a/@href"))
+				(map(link))
+			)
 		))
 		(sync(Publisher))
 	);

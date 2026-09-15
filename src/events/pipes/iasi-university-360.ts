@@ -21,7 +21,7 @@ import { iasi } from "@/universities/index.core.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { fork } from "@metreeca/flow/tasks";
+import { fork, map } from "@metreeca/flow/tasks";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { html, link, xpath } from "@metreeca/gear-xml";
 
@@ -61,8 +61,14 @@ export async function IasiUniversity360() {
 				(html())
 				(xpath())
 			)),
-			path => path("//div[@class='archive-pagination']/a[contains(@class,'page-numbers')]/@href").map(link),
-			path => path("//article[contains(@class, 'category-evenimente')]/h2[@class='entry-title']/a[@rel='bookmark']/@href").map(link)
+			path => pipe(
+				items(path("//div[@class='archive-pagination']/a[contains(@class,'page-numbers')]/@href"))
+				(map(link))
+			),
+			path => pipe(
+				items(path("//article[contains(@class, 'category-evenimente')]/h2[@class='entry-title']/a[@rel='bookmark']/@href"))
+				(map(link))
+			)
 		))
 		(sync(Publisher))
 	);

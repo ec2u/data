@@ -21,7 +21,7 @@ import { pavia } from "@/universities/index.core.js";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { fork } from "@metreeca/flow/tasks";
+import { fork, map } from "@metreeca/flow/tasks";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { html, link, xpath } from "@metreeca/gear-xml";
 
@@ -61,8 +61,14 @@ export async function PaviaUniversity() {
 				(html())
 				(xpath())
 			)),
-			path => path("//a[contains(concat(' ', normalize-space(@class), ' '), ' page-link ')]/@href").map(link),
-			path => path("//*[contains(concat(' ', normalize-space(@class), ' '), ' eventi-card ')]//a/@href").map(link)
+			path => pipe(
+				items(path("//a[contains(concat(' ', normalize-space(@class), ' '), ' page-link ')]/@href"))
+				(map(link))
+			),
+			path => pipe(
+				items(path("//*[contains(concat(' ', normalize-space(@class), ' '), ' eventi-card ')]//a/@href"))
+				(map(link))
+			)
 		))
 		(sync(Publisher))
 	);

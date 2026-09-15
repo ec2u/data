@@ -22,7 +22,7 @@ import { isString } from "@metreeca/core";
 import { immutable } from "@metreeca/core/structures";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { fork, map } from "@metreeca/flow/tasks";
+import { filter, fork, map } from "@metreeca/flow/tasks";
 import { crawl, fetch } from "@metreeca/gear-url";
 import { html, link, string, xpath } from "@metreeca/gear-xml";
 
@@ -63,7 +63,6 @@ export async function SalamancaUniversity() {
 	return pipe(
 		(items(`${Search}/1`))
 		(crawl(
-
 			fork(concurrency, urls => pipe(
 				items(urls)
 				(map(url => new Request(url, {
@@ -77,19 +76,17 @@ export async function SalamancaUniversity() {
 				(html())
 				(xpath())
 			)),
-
-			// the pager states the other pages as fragments of the search page, rather than as addresses of their own
-
-			path => path("//ul[@class='pagination']/li/a/@href")
-				.map(string)
-				.map(href => PagePattern.exec(href)?.[1]) // the next and previous links state no page of their own
-				.filter(isString)
-				.map(page => `${Search}/${page}`),
-
-			// a card links its event twice, from its image and from its title, so the title link alone is followed
-
-			path => path("//p[@class='main']/a/@href").map(link)
-
+			path => pipe( // the pager states pages as fragments, rather than as addresses of their own
+				items(path("//ul[@class='pagination']/li/a/@href"))
+				(map(string))
+				(map(href => PagePattern.exec(href)?.[1])) // the next and previous links state no page of their own
+				(filter(isString))
+				(map(page => `${Search}/${page}`))
+			),
+			path => pipe( // a card links its event from its image too, so only the title link is followed
+				items(path("//p[@class='main']/a/@href"))
+				(map(link))
+			)
 		))
 		(sync(Publisher))
 	);
