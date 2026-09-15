@@ -51,7 +51,7 @@ export function validate<S extends Lazy<ResourceShape>>(shape: S): Task<Instance
 
 		trace: trace => {
 
-			logger.warn`invalid value ${JSON.stringify(value)} (${JSON.stringify(trace)})`;
+			logger.warn`invalid value (${JSON.stringify(trace)})`;
 
 			return false;
 
