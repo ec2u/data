@@ -17,9 +17,10 @@
 /**
  * Gemini API access.
  *
- * Provides a Gemini API client for content generation, function calling and embedding, together with the accessors
- * turning a model response into the text, JSON payload or embedding it was requested for, so that a consumer draws on
- * the Gemini models without pacing requests or unpacking responses of its own.
+ * Provides a Gemini API client for content generation, function calling and embedding, together with the conversions
+ * stating a request payload as a response schema and turning a model response into the text, JSON payload or embedding
+ * it was requested for, so that a consumer draws on the Gemini models without pacing requests, restating payloads or
+ * unpacking responses of its own.
  *
  * @module index
  *
@@ -28,9 +29,9 @@
  * Clients are configured by the consumer binding them, so that credentials and endpoint are settled once for a whole
  * execution rather than by each job. Two limitations of the API are taken over on the consumer's behalf: requests are
  * paced against the published rate quotas and resumed after the delay the API advertises, and a requested response
- * schema is honoured on every model, including the ones rejecting it alongside tools. Responses are unpacked by
- * {@link text}, {@link json} and {@link embedding}, which fail on incomplete or malformed generations rather than
- * handing a partial result over.
+ * schema is honoured on every model, including the ones rejecting it alongside tools. An expected payload is declared
+ * by the shape already describing it rather than by a schema restating it by hand, and a response is unpacked only if
+ * complete and well-formed, an incomplete or malformed generation being rejected rather than handed over in part.
  *
  * @see {@link https://ai.google.dev/gemini-api/docs Gemini API}
  * @see {@link https://googleapis.github.io/js-genai/release_docs/index.html Google GenAI SDK}
@@ -47,13 +48,49 @@ import {
 	GenerateContentResponse,
 	GoogleGenAI,
 	GoogleGenAIOptions,
-	Part
+	Part,
+	type Schema,
+	Type
 } from "@google/genai";
-import { isString, type Value } from "@metreeca/core";
+import type { ResourceShape } from "@metreeca/blue/resource";
+import { date, email, instant, iri, time, timestamp, url } from "@metreeca/blue/string";
+import type { Shape } from "@metreeca/blue/value";
+import { eager, isString, type Lazy, opt, type Value } from "@metreeca/core";
 import { createThrottle, type Throttle } from "@metreeca/core/async";
 import { markdown } from "@metreeca/core/strings";
 import { BadRequest, TooManyRequests } from "@metreeca/http";
 import { log, Logger, report } from "@metreeca/tape";
+
+
+/**
+ * The response schema format each well-known lexical pattern stands for.
+ *
+ * Tells apart the textual shapes an XSD datatype leaves undistinguished, a URL and a language tag alike being stated as
+ * strings: the pattern a shape factory fixes stands for the lexical form its values are drawn from, so a shape stating
+ * that pattern is described by the format rather than by the pattern spelling it out. A shape stating a pattern of its
+ * own is described by that pattern instead, whatever datatype it is filed under, as the pattern is then the only form
+ * its values are actually held to.
+ */
+const lexicons = new Map([
+
+	[url().pattern, "uri"],
+	[iri().pattern, "uri"],
+	[email().pattern, "email"],
+
+	[date().pattern, "date"],
+	[time().pattern, "time"],
+	[instant().pattern, "date-time"],
+	[timestamp().pattern, "date-time"]
+
+]);
+
+/**
+ * The response schema converted for a shape, retained for the lifetime of the module (see {@link memoize}).
+ */
+const schemas = memoize((shape: Lazy<ResourceShape>): Schema =>
+	compile(eager(shape))
+);
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -583,6 +620,38 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * Converts a resource shape into a Gemini response schema.
+ *
+ * States as a response schema the payload a shape already describes, so that a request declares what it expects once
+ * rather than as a schema restating it by hand.
+ *
+ * A resource is stated as an object carrying one property per member: the members admitting at least one value are
+ * listed as required, a member admitting more than one is stated as an array of its range, and the identifier and
+ * class members naming a resource are left out, as a model states neither. A reference is stated as the identifier it
+ * carries, a nested resource as a nested object, and a union as the alternatives it admits.
+ *
+ * The constraints a model can be held to are carried through: the lexical form a string is drawn from, the values it
+ * restricts itself to, its length bounds, the bounds of a number and whether it admits integers alone. A string is
+ * stated by the format its lexical pattern is drawn from, and by the pattern itself where it is drawn from none.
+ *
+ * The schema converted for a shape is handed back on every later request for the same shape, so a request declaring
+ * the shape it expects converts it once, however often it runs.
+ *
+ * @param shape The shape describing the expected payload, possibly deferred
+ *
+ * @returns The response schema describing the values `shape` admits
+ *
+ * @throws {@link !RangeError RangeError} If `shape` admits at any depth a range with no counterpart in a response
+ * schema, as a localised value keyed by the language tags it happens to carry has none
+ *
+ * @see {@link https://ai.google.dev/gemini-api/docs/structured-output Structured output}
+ */
+export function schema(shape: Lazy<ResourceShape>): Schema {
+	return schemas(shape);
+}
+
+
+/**
  * Extracts the output text of a Gemini API response.
  *
  * Thinking parts and function calls are skipped, so only the text generated for the caller is returned. Responses that
@@ -624,6 +693,8 @@ export function text(response: GenerateContentResponse): string {
  *
  * @throws {@link !Error Error} If `response` carries no output text (see {@link text}) or its text is not well-formed
  * JSON
+ *
+ * @see {@link schema}
  */
 export function json<T extends Value = Value>(response: GenerateContentResponse): T {
 
@@ -649,5 +720,92 @@ export function json<T extends Value = Value>(response: GenerateContentResponse)
 export function embedding(response: EmbedContentResponse): Vector {
 
 	return response.embeddings?.[0]?.values ?? [];
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Describes the values a shape admits.
+ *
+ * @param shape The shape to describe
+ *
+ * @returns The response schema describing the values `shape` admits
+ *
+ * @throws {@link !RangeError RangeError} If `shape`, or a shape reached from it, has no counterpart in a response
+ * schema
+ */
+function compile(shape: Shape): Schema {
+
+	switch ( shape.kind ) {
+
+		case "boolean":
+
+			return { type: Type.BOOLEAN };
+
+		case "number":
+
+			return {
+
+				type: shape.integral ? Type.INTEGER : Type.NUMBER,
+
+				...(shape.minInclusive !== undefined ? { minimum: shape.minInclusive } : {}),
+				...(shape.maxInclusive !== undefined ? { maximum: shape.maxInclusive } : {})
+
+			};
+
+		case "dictionary": // keyed by the language tags a value happens to carry, which a schema has no way to name
+
+			throw new RangeError(`unsupported localised <${shape.kind}> range in response schema`);
+
+		case "string":
+
+			return {
+
+				type: Type.STRING,
+
+				...(opt(shape.in, values => ({ format: "enum", enum: [...values] }))
+					?? opt(lexicons.get(shape.pattern), format => ({ format }))
+					?? opt(shape.pattern, pattern => ({ pattern }))
+					?? {}),
+
+				...(shape.minLength !== undefined ? { minLength: `${shape.minLength}` } : {}),
+				...(shape.maxLength !== undefined ? { maxLength: `${shape.maxLength}` } : {})
+
+			};
+
+		case "reference":
+
+			return { type: Type.STRING, format: "uri" };
+
+		case "resource":
+
+			const members = Object.entries(shape.members).flatMap(([name, member]) =>
+				member.kind === "property" ? [{ name, range: member.range }] : []
+			);
+
+			const required = members
+				.filter(({ range }) => (range.minCount ?? 0) > 0)
+				.map(({ name }) => name);
+
+			return {
+
+				type: Type.OBJECT,
+
+				properties: Object.fromEntries(members.map(({ name, range }) => [name, range.maxCount === 1
+					? compile(eager(range.shape))
+					: { type: Type.ARRAY, items: compile(eager(range.shape)) }
+				])),
+
+				...(required.length > 0 ? { required } : {})
+
+			};
+
+		case "union":
+
+			return { anyOf: shape.branches.map(branch => compile(eager(branch))) };
+
+	}
 
 }
