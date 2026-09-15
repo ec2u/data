@@ -16,12 +16,13 @@
 
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
+import type { Payload } from "@/events/tasks/extract.js";
 import { getTopicEntries } from "@/taxonomies/index.js";
 import { events } from "@/taxonomies/pipes/events.core.js";
 import { browseTopics } from "@/taxonomies/tools/browseTopics.js";
 import { searchTopics } from "@/taxonomies/tools/searchTopics.js";
 import { Type } from "@google/genai";
-import { isString, type Object } from "@metreeca/core";
+import { isString } from "@metreeca/core";
 import { markdown } from "@metreeca/core/strings";
 import type { Task } from "@metreeca/flow";
 import { map } from "@metreeca/flow/tasks";
@@ -54,11 +55,12 @@ const logger = log(import.meta.url);
  * Topics the taxonomy doesn't hold are dropped, as identifiers are stated by the model rather than copied from the
  * vocabulary by construction.
  *
- * @returns A task answering a feed of extracted property payloads with the same payloads, classified
+ * @returns A task answering a feed of extracted property payloads with the same payloads, classified; what the
+ * extraction settled for itself is carried through untouched
  *
  * @throws {@link !Error Error} If no execution is running, as the Gemini client is resolved from the enclosing one
  */
-export function classify(): Task<Object, Object> {
+export function classify(): Task<Payload> {
 
 	const ai = service(createGoogleAI);
 

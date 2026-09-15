@@ -20,12 +20,16 @@ import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { isStaleEvent } from "@/events/index.js";
 import { Type } from "@google/genai";
-import { isString, type Object } from "@metreeca/core";
+import { isAny, isObject, isOptional, isString, key, type Object } from "@metreeca/core";
 import { markdown, type Text } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { map } from "@metreeca/flow/tasks";
+import { filter, map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
+import { log } from "@metreeca/tape";
+
+
+const logger = log(import.meta.url);
 
 
 /**
@@ -57,6 +61,10 @@ export type Payload =
  * The dates are weighed as the page states them, ahead of the conversion that anchors them to the time zone of the
  * university: the two readings part only for an event ending within a day of the current one, which is left in place
  * either way.
+ *
+ * A page the model answers with values a conversion cannot carry yields no payload at all, as against one answered
+ * `publishable` false: the first is a reading that failed and is worth attempting again, the second a page settled as
+ * bearing nothing.
  *
  * Every payload states under `digest` the state of the page it was derived from, so that what is stored from it may be
  * recorded together with the evidence for reading the page again only once the source has changed it.
@@ -195,6 +203,7 @@ export function extract(): Task<Text, Payload> {
 			}
 
 		})))))
+		(filter(intact))
 	);
 
 	function complete(document: Text, payload: Object): Payload {
@@ -206,11 +215,11 @@ export function extract(): Task<Text, Payload> {
 			digest: digest(document),
 
 			publishable: payload.event === true
-				&& isString(payload.startDate)
+				&& isDay(payload.startDate)
 				&& !isStaleEvent({
 
 					startDate: payload.startDate,
-					endDate: isString(payload.endDate) ? payload.endDate : undefined
+					endDate: isDay(payload.endDate) ? payload.endDate : undefined
 
 				})
 
@@ -218,4 +227,39 @@ export function extract(): Task<Text, Payload> {
 
 	}
 
+	// a payload the model fills with values a conversion cannot carry is a failed reading, not a page settled as
+	// bearing nothing: it is dropped rather than answered, so that a caller records nothing and reads the page again
+
+	function intact(payload: Payload): boolean {
+
+		const sound: boolean = payload.event !== true || isObject(payload, { // annotated, or the guard narrows the miss
+
+			startDate: isDay,
+			endDate: value => isOptional(value, isDay),
+			startTime: value => isOptional(value, isClock),
+			endTime: value => isOptional(value, isClock),
+
+			[key]: isAny
+
+		});
+
+		if ( !sound ) {
+			logger.warning`dropping malformed event extracted from <${payload.url}>`;
+		}
+
+		return sound;
+
+	}
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function isDay(value: unknown): value is string {
+	return isString(value) && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value));
+}
+
+function isClock(value: unknown): value is string {
+	return isString(value) && /^\d{2}:\d{2}$/.test(value) && !Number.isNaN(Date.parse(`1970-01-01T${value}:00Z`));
 }

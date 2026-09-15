@@ -59,17 +59,14 @@ export async function PoitiersUniversity() {
 	return pipe(
 		(items(Search))
 		(crawl(
-
 			fork(concurrency, urls => pipe(
 				items(urls)
 				(fetch())
 				(html())
 				(xpath())
 			)),
-
 			path => path("//div[@class='wp-pagenavi']//a/@href").map(link),
 			path => path("//li[@class='post']/a/@href").map(link)
-
 		))
 		(sync(Publisher))
 	);

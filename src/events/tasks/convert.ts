@@ -131,12 +131,25 @@ function stamp(date: string, time: Optional<string>, zone: string): string { // 
 
 	const wall = `${date}T${/^\d{2}:\d{2}$/.test(clock) ? `${clock}:00` : clock}`;
 
-	const shift = new Intl.DateTimeFormat("en", { timeZone: zone, timeZoneName: "longOffset" })
-		.formatToParts(new Date(`${wall}Z`))
-		.find(({ type }) => type === "timeZoneName")
-		?.value ?? "GMT";
+	// an extraction vets the dates it answers, so an unreadable wall time is left unanchored for the shape to reject
+	// rather than aborting the run the conversion runs in
 
-	return `${wall}${shift === "GMT" ? "Z" : shift.slice(3)}`;
+	const instant = new Date(`${wall}Z`);
+
+	if ( Number.isNaN(instant.getTime()) ) {
+
+		return `${wall}Z`;
+
+	} else {
+
+		const shift = new Intl.DateTimeFormat("en", { timeZone: zone, timeZoneName: "longOffset" })
+			.formatToParts(instant)
+			.find(({ type }) => type === "timeZoneName")
+			?.value ?? "GMT";
+
+		return `${wall}${shift === "GMT" ? "Z" : shift.slice(3)}`;
+
+	}
 
 }
 

@@ -109,29 +109,35 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					(items(pages))
 					(extract())
 					(tee(
-						payloads => pipe( // every page is recorded, however little it yielded
-							(items(payloads))
-							(jpath(path => immutable({
-								id: required(path("url").map(link)),
-								source: publisher.id,
-								digest: required(path("digest").map(string))
-							})))
-							(validate(Page))
-							(map(page => delta(page.id, Page, page)))
-						),
 						payloads => pipe( // a page stating nothing worth publishing withdraws what it once stated
 							(items(payloads))
 							(filter(payload => !payload.publishable))
-							(jpath(path => required(path("url").map(link))))
-							(map(url => delta(getEventId(url), Event, null)))
+							(jpath(path => ({
+								url: required(path("url").map(link)),
+								digest: required(path("digest").map(string))
+							})))
+							(flat(map(({ url, digest }) => items([
+								delta(url, Page, immutable({ id: url, source: publisher.id, digest })),
+								delta(getEventId(url), Event, null)
+							]))))
 						),
 						payloads => pipe( // only a page worth publishing reaches the model, classification being dear
 							(items(payloads))
 							(filter(payload => payload.publishable))
 							(classify())
-							(convert(university))
-							(validate(Event))
-							(map(event => delta(event.id, Event, event)))
+							(flat(map(payload => pipe( // converted one at a time, to keep the digest within reach
+								(items([payload]))
+								(convert(university))
+								(validate(Event))
+								(flat(map(event => items([
+									delta(event.id, Event, event),
+									delta(event.url[0], Page, immutable({
+										id: event.url[0],
+										source: publisher.id,
+										digest: payload.digest
+									}))
+								]))))
+							))))
 						)
 					))
 				)))
