@@ -26,13 +26,13 @@ import { immutable } from "@metreeca/core/structures";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, map, tee } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { csv, type Record } from "@metreeca/gear-csv";
 import { fetch, type URLLike } from "@metreeca/gear-url";
 
 
-const survival = 0.75; // the smallest fraction of the stored topics a single run must leave in place // !!! as option
+const survival = 0.75; // the smallest fraction of the stored topics a document must account for // !!! as option
 
 const CSVFormat = immutable({
 
@@ -55,13 +55,18 @@ const CSVFormat = immutable({
  * under `force` every entry is converted and stated afresh, whatever the store holds, so a topic whose conversion
  * changed without its entry changing is brought back in line.
  *
+ * Conversions run concurrently, one for every entry left to convert, so a document costs about as long as its slowest
+ * entry rather than the sum of them all. The embedding each conversion requests is paced by the quota throttle the
+ * Gemini client carries, so the run keeps within the published rate however many entries it opens at once.
+ *
  * The taxonomy is stated as it is handed over, alongside the topics and under the same transaction, so a scheme is
  * described wherever its topics are held.
  *
  * Topics are named after the entries the document lists and stated as they are drawn. The ones the store holds for
  * the taxonomy and the document never named are retracted once it has been read whole, so nothing is retired on the
- * strength of a partial reading. A run leaving in place less than three quarters of the stored topics states nothing
- * and fails, so a truncated, misserved or unreachable document costs a run rather than the taxonomy.
+ * strength of a partial reading. A document listing fewer than three quarters of the stored topics states nothing and
+ * fails, so a truncated or unreachable document costs a run rather than the taxonomy, while one that renames its
+ * topics wholesale is published as it stands.
  *
  * @param taxonomy The taxonomy the topics are attributed to
  * @param taxonomy.id The identifier of the concept scheme the topics belong to
@@ -125,7 +130,7 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 			return pipe(
 				(items(records))
 				(filter(async record => !(await digests).has(digest(record))))
-				(convert(taxonomy))
+				(fork(0, convert(taxonomy)))
 				(validate(Topic))
 				(map(topic => delta(topic.id, Topic, topic)))
 			);

@@ -36,7 +36,8 @@ import { fetch, type URLLike } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 
 
-const concurrency = 10; // the number of pages fetched at the same time from the source site // !!! as option
+const retrieval = 10; // the number of pages fetched at the same time from the source site // !!! as option
+const analysis = 25; // the number of pages analysed at the same time by the model // !!! as option
 const survival = 0.75; // the smallest fraction of the stored events a single run must leave in place // !!! as option
 
 
@@ -89,22 +90,25 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 			return pipe(
 				(items(urls))
-				(fork(concurrency, pages => pipe(
+				(fork(retrieval, pages => pipe( // retrievals are capped out of courtesy to the source site
 					(items(pages))
 					(fetch())
 					(html())
 					(focus())
 					(untag())
 					(filter(async page => !(await digests).has(digest(page))))
+				)))
+				(fork(analysis, pages => pipe( // analyses are capped on the tool sessions they hold, not on the rate
+					(items(pages))
 					(extract())
 					(classify())
 					(convert(university))
 					(peek(console.log)) // !!!
-						(validate(Event))
-						(map(event => isStaleEvent(event)
-							? delta(event.id, Event)
-							: delta(event.id, Event, event)
-						))
+					(validate(Event))
+					(map(event => isStaleEvent(event)
+						? delta(event.id, Event)
+						: delta(event.id, Event, event)
+					))
 				)))
 			);
 
