@@ -24,7 +24,6 @@ import { Event, events, getEventId, isStaleEvent, Publisher } from "@/events/ind
 import { classify } from "@/events/tasks/classify.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
-import { getUniversity } from "@/universities/index.core.js";
 import { base, Page } from "@/vocabularies/ec2u.js";
 import { reference } from "@metreeca/blue/reference";
 import { id, multiple, resource } from "@metreeca/blue/resource";
@@ -33,7 +32,7 @@ import { immutable } from "@metreeca/core/structures";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, join, map, tee } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, mix, tee } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { jpath, link, string } from "@metreeca/gear-json";
 import { fetch, type URLLike } from "@metreeca/gear-url";
@@ -52,25 +51,17 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 	const store = service(createStore);
 
-	const university = getUniversity(publisher.university);
-
 
 	return urls => pipe(
-		(items([
-
+		(items(urls))
+		(tee(
+			insert(),
+			delist()
+		))
+		(mix(
 			define(),
-			expire(),
-
-			pipe(
-				(items(urls))
-				(tee(
-					insert(),
-					delist()
-				))
-			)
-
-		]))
-		(join())
+			expire()
+		))
 		(persist())
 	);
 
@@ -137,7 +128,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 							(classify())
 							(flat(map(payload => pipe( // converted one at a time, to keep the digest within reach
 								(items([payload]))
-								(convert(university))
+								(convert(publisher))
 								(validate(Event))
 								(flat(map(event => items([
 									delta(event.id, Event, event),
@@ -168,7 +159,13 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 				entry: events.id,
 				shape: Events,
 
-				model: { resources: [{ id: "", startDate: "", endDate: "" }, { "?university": [university.id] }] }
+				model: {
+					resources: [{
+						id: "",
+						startDate: "",
+						endDate: ""
+					}, { "?university": [publisher.university] }]
+				}
 
 			})))
 			(flat(map(events => items(events?.resources ?? [])))) // !!! remove
