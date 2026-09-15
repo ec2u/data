@@ -39,7 +39,7 @@ export async function Events() {
 
 	return pipe(
 		(items(await vault(DataURL)))
-		(sync(events, true))
+		(sync(events))
 	);
 
 }
