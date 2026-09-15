@@ -43,23 +43,6 @@ const logger = log(import.meta.url);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Creates a task classifying extracted event properties.
- *
- * Each payload is answered with the topics the event is tagged with, stated under `keywords`, so that a conversion
- * states a classification without matching anything of its own. Subject, format and audience are drawn from the same
- * taxonomy and stated together, so that a consumer tells the three apart by the branch a topic stands in rather than
- * by the property carrying it. The classification is left to the model, which reads the vocabulary itself and states
- * no topic where the event supports none, rather than being handed the closest one whatever its distance.
- *
- * Topics the taxonomy doesn't hold are dropped, as identifiers are stated by the model rather than copied from the
- * vocabulary by construction.
- *
- * @returns A task answering a feed of extracted property payloads with the same payloads, classified; what the
- * extraction settled for itself is carried through untouched
- *
- * @throws {@link !Error Error} If no execution is running, as the Gemini client is resolved from the enclosing one
- */
 export function classify(): Task<Payload> {
 
 	const ai = service(createGoogleAI);

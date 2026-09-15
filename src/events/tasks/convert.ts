@@ -30,33 +30,6 @@ import { filter } from "@metreeca/flow/tasks";
 import { jpath, link, string } from "@metreeca/gear-json";
 import type { Reference } from "@metreeca/qest/resource";
 
-
-/**
- * Creates a task converting extracted event properties into event records.
- *
- * Payloads stating no event are dropped, so the output of an extraction may be piped through unfiltered. Each record
- * is identified after the page it was derived from, so the same page always yields the same event.
- *
- * A page states a wall date and a wall time, carrying no zone of their own, and the record states the instant they
- * name in the zone `university` keeps, at the offset that zone keeps on the day in question rather than the one it
- * keeps today. An event stating no time opens at midnight, and one stating an end time alone closes on the day it
- * opens.
- *
- * A venue is stated as a postal address only where the page names a street, a street being what tells an address from
- * a virtual location; a venue named without one, or a bare city, is stated as plain text instead.
- *
- * @param publisher The publisher whose pages the events were drawn from; the university the events are attributed to,
- *   and the zone their wall dates and times are read in, are recovered from the one it names
- * @param publisher.id The identifier the events name their publisher by
- * @param publisher.university The university the publisher stands for
- *
- * @returns A task converting a feed of extracted property payloads into a feed of immutable event records
- *
- * @throws {@link !RangeError RangeError} If `publisher` names no known university
- *
- * @throws {@link !TypeError TypeError} While the feed is consumed, if a payload states no URL, title or start date, or
- * more than one of any of them
- */
 export function convert(publisher: {
 
 	readonly id: Reference

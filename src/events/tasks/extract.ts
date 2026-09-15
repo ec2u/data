@@ -86,37 +86,12 @@ function X() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Creates a task extracting event properties from event pages.
- *
- * Payloads are produced in the order pages are drawn. A page describing no single event, such as a listing or an error
- * page, is answered with a payload stating `event` false, so a caller MUST drop those rather than read them.
- *
- * Every payload states under `publishable` whether anything is worth drawing from the page at all: a page stating no
- * event, or one whose event has already run its course, answers `false`, so that a caller spends nothing further on it.
- * The dates are weighed as the page states them, ahead of the conversion that anchors them to the time zone of the
- * university: the two readings part only for an event ending within a day of the current one, which is left in place
- * either way.
- *
- * A page the model answers with values a conversion cannot carry yields no payload at all, as against one answered
- * `publishable` false: the first is a reading that failed and is worth attempting again, the second a page settled as
- * bearing nothing.
- *
- * Every payload states under `digest` the state of the page it was derived from, so that what is stored from it may be
- * recorded together with the evidence for reading the page again only once the source has changed it.
- *
- * @returns A task converting a feed of markdown event pages into a feed of the property payloads they state
- *
- * @throws {@link !Error Error} If no execution is running
- *
- * @throws {@link !Error Error} While the feed is consumed, if no properties can be extracted from a page
- */
 export function extract(): Task<Text, Payload> {
 
 	const ai = service(createGoogleAI);
 
 	return documents => pipe(
-		items(documents)
+		(items(documents))
 		(map(async document => ({
 
 			digest: digest(document),
