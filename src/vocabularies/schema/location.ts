@@ -49,12 +49,12 @@ export function SchemaPlace() {
 export function SchemaPostalAddress() {
 	return resource(SchemaThing, {
 
+		streetAddress: optional(text),
+		postalCode: optional(text),
+
 		addressCountry: optional(text),
 		addressRegion: optional(text),
 		addressLocality: optional(text),
-
-		postalCode: optional(text),
-		streetAddress: optional(text),
 
 		email: optional(email),
 		telephone: optional(phone)

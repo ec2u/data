@@ -199,7 +199,6 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 	}
 
-
 }
 
 

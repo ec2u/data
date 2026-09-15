@@ -55,17 +55,14 @@ export async function PaviaUniversity() {
 	return pipe(
 		(items(Publisher.id))
 		(crawl(
-
 			fork(concurrency, urls => pipe(
 				items(urls)
 				(fetch())
 				(html())
 				(xpath())
 			)),
-
 			path => path("//a[contains(concat(' ', normalize-space(@class), ' '), ' page-link ')]/@href").map(link),
 			path => path("//*[contains(concat(' ', normalize-space(@class), ' '), ' eventi-card ')]//a/@href").map(link)
-
 		))
 		(sync(Publisher))
 	);
