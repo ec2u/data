@@ -15,6 +15,7 @@
  */
 
 import { getEventId, type Event, events } from "@/events/index.js";
+import { getUniversity } from "@/universities/index.core.js";
 import { LabelLength } from "@/vocabularies/ec2u.js";
 import { SchemaEventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
 import { SchemaLocation } from "@/vocabularies/schema/location.js";
@@ -44,21 +45,26 @@ import type { Reference } from "@metreeca/qest/resource";
  * A venue is stated as a postal address only where the page names a street, a street being what tells an address from
  * a virtual location; a venue named without one, or a bare city, is stated as plain text instead.
  *
- * @param university The university the events are attributed to
- * @param university.id The identifier the events are attributed to
- * @param university.zone The IANA time zone the extracted dates and times are read in
+ * @param publisher The publisher whose pages the events were drawn from; the university the events are attributed to,
+ *   and the zone their wall dates and times are read in, are recovered from the one it names
+ * @param publisher.id The identifier the events name their publisher by
+ * @param publisher.university The university the publisher stands for
  *
  * @returns A task converting a feed of extracted property payloads into a feed of immutable event records
+ *
+ * @throws {@link !RangeError RangeError} If `publisher` names no known university
  *
  * @throws {@link !TypeError TypeError} While the feed is consumed, if a payload states no URL, title or start date, or
  * more than one of any of them
  */
-export function convert(university: {
+export function convert(publisher: {
 
 	readonly id: Reference
-	readonly zone: string
+	readonly university: Reference
 
 }): Task<Object, Instance<typeof Event>> {
+
+	const university = getUniversity(publisher.university);
 
 	return payloads => pipe(
 		items(payloads)
@@ -90,6 +96,7 @@ export function convert(university: {
 				dataset: events.id,
 
 				university: university.id,
+				publisher: publisher.id,
 
 				label: title,
 

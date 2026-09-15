@@ -23,8 +23,10 @@ import { toArray } from "@metreeca/flow/sinks";
 import { describe, expect, it } from "vitest";
 
 
-const coimbra = { id: `${universities.id}/coimbra`, zone: "Europe/Lisbon" }; // UTC+1 in summer, UTC+0 in winter
-const pavia = { id: `${universities.id}/pavia`, zone: "Europe/Rome" }; // UTC+2 in summer, UTC+1 in winter
+// a publisher names the university its events are attributed to, and the zone is recovered from that
+
+const coimbra = { id: "https://example.org/coimbra", university: `${universities.id}/coimbra` }; // UTC+1 / UTC+0
+const pavia = { id: "https://example.org/pavia", university: `${universities.id}/pavia` }; // UTC+2 / UTC+1
 
 
 function reading(dates: Object): Object {
@@ -42,10 +44,10 @@ function reading(dates: Object): Object {
 	};
 }
 
-async function converted(dates: Object, university = coimbra): Promise<Object> {
+async function converted(dates: Object, publisher = coimbra): Promise<Object> {
 	return (await pipe(
 		(items([reading(dates)]))
-		(convert(university))
+		(convert(publisher))
 		(toArray())
 	))[0] as unknown as Object;
 }
@@ -54,6 +56,33 @@ async function converted(dates: Object, university = coimbra): Promise<Object> {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 describe("convert", () => {
+
+	describe("provenance", () => {
+
+		it("references the publisher the events are drawn from", async () => {
+
+			expect(await converted({ startDate: "2026-07-02" }))
+				.toMatchObject({ publisher: coimbra.id });
+
+		});
+
+		it("references the university the publisher names", async () => {
+
+			expect(await converted({ startDate: "2026-07-02" }, pavia))
+				.toMatchObject({ university: pavia.university });
+
+		});
+
+		it("rejects a publisher naming no known university", async () => {
+
+			await expect(converted({ startDate: "2026-07-02" }, {
+				id: "https://example.org/events",
+				university: `${universities.id}/atlantis`
+			})).rejects.toThrow(/unknown university/);
+
+		});
+
+	});
 
 	describe("dates", () => {
 
