@@ -20,8 +20,9 @@ import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { isStaleEvent } from "@/events/index.js";
 import { Type } from "@google/genai";
-import { isAny, isObject, isOptional, isString, key, type Object } from "@metreeca/core";
+import { isString, key, type Object } from "@metreeca/core";
 import { markdown, type Text } from "@metreeca/core/strings";
+import { all, object, optional, pass, pattern, required, test, type, type Validator } from "@metreeca/core/trace";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, map } from "@metreeca/flow/tasks";
@@ -42,10 +43,10 @@ export type Payload =
 	Object
 	& {
 
-		readonly digest: Digest
-		readonly publishable: boolean
+	readonly digest: Digest
+	readonly publishable: boolean
 
-	}
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,24 +231,15 @@ export function extract(): Task<Text, Payload> {
 	// a payload the model fills with values a conversion cannot carry is a failed reading, not a page settled as
 	// bearing nothing: it is dropped rather than answered, so that a caller records nothing and reads the page again
 
-	function intact(payload: Payload): boolean {
+	function intact(payload: Payload): boolean { // !!! integrate into json()
 
-		const sound: boolean = payload.event !== true || isObject(payload, { // annotated, or the guard narrows the miss
+		const trace = payload.event === true ? Dates(payload) : undefined;
 
-			startDate: isDay,
-			endDate: value => isOptional(value, isDay),
-			startTime: value => isOptional(value, isClock),
-			endTime: value => isOptional(value, isClock),
-
-			[key]: isAny
-
-		});
-
-		if ( !sound ) {
-			logger.warning`dropping malformed event extracted from <${payload.url}>`;
+		if ( trace !== undefined ) {
+			logger.warning`dropping malformed event extracted from <${payload.url}> (${JSON.stringify(trace)})`;
 		}
 
-		return sound;
+		return trace === undefined;
 
 	}
 
@@ -256,10 +248,31 @@ export function extract(): Task<Text, Payload> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function isDay(value: unknown): value is string {
-	return isString(value) && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value));
-}
+const Day: Validator<unknown> = type(isString, all(
+	pattern(/^\d{4}-\d{2}-\d{2}$/),
+	test(value => !Number.isNaN(Date.parse(value)) || ["{day} expected a calendar date"])
+));
 
-function isClock(value: unknown): value is string {
-	return isString(value) && /^\d{2}:\d{2}$/.test(value) && !Number.isNaN(Date.parse(`1970-01-01T${value}:00Z`));
+const Clock: Validator<unknown> = type(isString, all(
+	pattern(/^\d{2}:\d{2}$/),
+	test(value => !Number.isNaN(Date.parse(`1970-01-01T${value}:00Z`)) || ["{clock} expected a wall clock time"])
+));
+
+/**
+ * The dates and times a conversion anchors, the only values it cannot carry as the model may state them.
+ */
+const Dates: Validator<Record<string, unknown>> = object({
+
+	startDate: required(Day),
+	endDate: optional(Day),
+	startTime: optional(Clock),
+	endTime: optional(Clock),
+
+	[key]: pass // every other value stands or falls at the shape the conversion states it under
+
+});
+
+
+function isDay(value: unknown): value is string {
+	return isString(value) && Day(value) === undefined;
 }
