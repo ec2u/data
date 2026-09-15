@@ -129,7 +129,6 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 							(flat(map(payload => pipe( // converted one at a time, to keep the digest within reach
 								(items([payload]))
 								(convert(publisher))
-								(validate(Event))
 								(flat(map(event => items([
 									delta(event.id, Event, event),
 									delta(event.url[0], Page, immutable({

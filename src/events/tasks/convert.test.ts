@@ -171,10 +171,10 @@ describe("convert", () => {
 
 		});
 
-		it("leaves an unreadable wall time unanchored, for the shape to reject", async () => {
+		it("drops an event whose wall time cannot be read", async () => {
 
 			expect(await converted({ startDate: "2026-13-45", startTime: "13:00:00" }))
-				.toMatchObject({ startDate: "2026-13-45T13:00:00Z" });
+				.toBeUndefined();
 
 		});
 

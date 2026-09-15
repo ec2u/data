@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-import { getEventId, type Event, events } from "@/events/index.js";
+import { validate } from "@/_/gear-store/validate.js";
+import { Event, getEventId, events } from "@/events/index.js";
+import type { Classified } from "@/events/tasks/classify.js";
 import { getUniversity } from "@/universities/index.core.js";
 import { LabelLength } from "@/vocabularies/ec2u.js";
 import { SchemaEventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
 import { SchemaLocation } from "@/vocabularies/schema/location.js";
 import type { Instance } from "@metreeca/blue/value";
-import { type Object, opt, type Optional, type Value } from "@metreeca/core";
-import { multiple, nonempty, optional, required } from "@metreeca/core/arrays";
+import { opt, type Optional } from "@metreeca/core";
+import { multiple, nonempty, optional } from "@metreeca/core/arrays";
 import { clip, tidy } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { filter } from "@metreeca/flow/tasks";
-import { jpath, link, string } from "@metreeca/gear-json";
+import { filter, map } from "@metreeca/flow/tasks";
 import type { Reference } from "@metreeca/qest/resource";
 
 export function convert(publisher: {
@@ -35,29 +36,29 @@ export function convert(publisher: {
 	readonly id: Reference
 	readonly university: Reference
 
-}): Task<Object, Instance<typeof Event>> {
+}): Task<Instance<typeof Classified>, Instance<typeof Event>> {
 
 	const university = getUniversity(publisher.university);
 
 	return payloads => pipe(
-		items(payloads)
-		(filter(payload => payload.event === true))
-		(jpath(path => {
+		(items(payloads))
+		(filter(payload => payload.event))
+		(map(payload => {
 
-			const url = required(path("url").map(link));
+			const url = payload.url;
 
 			// folded before it is clipped, so the budget is spent on the line the label and the name are held to
 
-			const title = clip(tidy(required(path("title").map(string))), LabelLength);
+			const title = clip(tidy(payload.title), LabelLength);
 
-			const startDate = required(path("startDate").map(string));
-			const endDate = optional(path("endDate").map(string));
-			const endTime = optional(path("endTime").map(string));
+			const startDate = payload.startDate;
+			const endDate = payload.endDate;
+			const endTime = payload.endTime;
 
-			const attendanceURL = optional(path("attendanceURL").map(link));
-			const venueName = optional(line(path("venueName")));
-			const venueAddress = optional(line(path("venueAddress")));
-			const venueCity = optional(line(path("venueCity")));
+			const attendanceURL = payload.attendanceURL;
+			const venueName = line(payload.venueName);
+			const venueAddress = line(payload.venueAddress);
+			const venueCity = line(payload.venueCity);
 
 			return immutable({
 
@@ -73,28 +74,28 @@ export function convert(publisher: {
 
 				label: title,
 
-				keywords: multiple(path("keywords[*]").map(link)),
+				keywords: multiple(payload.keywords),
 
 				name: title,
-				description: optional(path("description").map(string)),
-				disambiguatingDescription: optional(path("summary").map(string)),
+				description: payload.description,
+				disambiguatingDescription: payload.summary,
 
-				startDate: required(stamp(startDate, optional(path("startTime").map(string)), university.zone)),
+				startDate: stamp(startDate, payload.startTime, university.zone),
 
 				endDate: optional(endDate === undefined && endTime === undefined
 					? undefined
 					: stamp(endDate ?? startDate, endTime, university.zone)
 				),
 
-				inLanguage: optional(path("language").map(string)),
+				inLanguage: payload.language,
 
-				isAccessibleForFree: optional(path("entryFees").map(string).map(fees => fees === "free")),
-				eventAttendanceMode: optional(path("attendanceMode").map(string).map(attendance)),
+				isAccessibleForFree: opt(payload.entryFees, fees => fees === "free"),
+				eventAttendanceMode: opt(payload.attendanceMode, attendance),
 
-				image: optional(path("imageURL").map(link).map(url => ({
+				image: opt(payload.imageURL, url => ({
 					url: nonempty(url),
-					copyrightNotice: optional(line(path("imageCredits")))
-				}))),
+					copyrightNotice: line(payload.imageCredits)
+				})),
 
 				location: optional<Instance<typeof SchemaLocation>>(
 					opt(attendanceURL, url => ({ url: [url] }))
@@ -107,7 +108,9 @@ export function convert(publisher: {
 
 			});
 
-		})));
+		}))
+		(validate(Event))
+	);
 
 }
 
@@ -117,8 +120,12 @@ export function convert(publisher: {
 // a plain text slot admits a single unformatted line, so a value the model pads, runs together or wraps is folded
 // before it is stated and one left with nothing is dropped
 
-function line(values: readonly Value[]): readonly string[] {
-	return values.map(string).map(value => tidy(value)).filter(value => value.length > 0);
+function line(value: Optional<string>): Optional<string> {
+
+	const folded = opt(value, tidy);
+
+	return folded === undefined || folded.length === 0 ? undefined : folded;
+
 }
 
 

@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
+import { route } from "@/_/flow/route.js";
+import { validate } from "@/_/gear-store/validate.js";
 import { file } from "@/_/gear/files.js";
-import { createGoogleAI, json } from "@/_/muse-google/index.js";
-import type { Payload } from "@/events/tasks/extract.js";
+import { createGoogleAI, json, schema } from "@/_/muse-google/index.js";
+import { Extracted } from "@/events/tasks/extract.js";
 import { getTopicEntries } from "@/taxonomies/index.js";
 import { events } from "@/taxonomies/pipes/events.core.js";
 import { browseTopics } from "@/taxonomies/tools/browseTopics.js";
 import { searchTopics } from "@/taxonomies/tools/searchTopics.js";
-import { Type } from "@google/genai";
+import { multiple, resource } from "@metreeca/blue/resource";
+import { iri } from "@metreeca/blue/string";
+import type { Instance } from "@metreeca/blue/value";
 import { isString } from "@metreeca/core";
 import { markdown } from "@metreeca/core/strings";
-import type { Task } from "@metreeca/flow";
-import { map } from "@metreeca/flow/tasks";
+import { pipe, type Task } from "@metreeca/flow";
+import { items } from "@metreeca/flow/feeds";
+import { flat, map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import type { Reference } from "@metreeca/qest/resource";
 import { log } from "@metreeca/tape";
-
 
 
 const tools = [
@@ -37,86 +41,105 @@ const tools = [
 	browseTopics(events)
 ];
 
-
 const logger = log(import.meta.url);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function classify(): Task<Payload> {
+export function Classified() {
+	return resource(Extracted, {
+
+		keywords: multiple(iri, {
+			name: "Topics",
+			description: "The topics of the event vocabulary the event is tagged with"
+		})
+
+	}, {
+
+		name: "Classified Event",
+		description: "An extracted event with the vocabulary topics the model tagged it with"
+
+	});
+}
+
+export function Reported() {
+	return resource({
+
+		keywords: multiple(iri, {
+			name: "Topics",
+			description: `
+				The identifiers of the topics from <${events.id}> the event is tagged with, drawn from any combination
+				of the subject, format and audience branches, empty where none applies; only identifiers read from a
+				tool response, copied exactly.
+			`
+		})
+
+	}, {
+
+		name: "Event Topics",
+		description: "The topics of the event vocabulary a single event is tagged with"
+
+	});
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function classify(): Task<Instance<typeof Extracted>, Instance<typeof Classified>> {
 
 	const ai = service(createGoogleAI);
 
-	return map(async payload => {
+	// an extracted payload stating no event is dropped downstream, so it is passed through unclassified
 
-		if ( !payload.event ) { // a payload stating no event is dropped downstream, so it is not classified
+	return extracteds => pipe(
+		(items(extracteds))
+		(route(extracted => extracted.event, flat(map(async extracted => pipe(
+				(items([
 
-			return payload;
+					json<Instance<typeof Reported>>(await ai.models.generateContent({
 
-		} else {
+						model: "gemini-3.6-flash",
 
-			const { keywords } = json<{
+						contents: markdown`
+						title: ${extracted.title ?? ""}
+						description: ${extracted.description ?? ""}
+					`,
 
-				keywords?: readonly string[]
+						config: {
 
-			}>(await ai.models.generateContent({
+							seed: 0,
+							temperature: 0,
 
-				model: "gemini-3.6-flash",
+							systemInstruction: await file(".sys.md", import.meta.url),
 
-				contents: markdown`
-					title: ${payload.title as undefined | string ?? ""}
-					description: ${payload.description as undefined | string ?? ""}
-				`,
+							tools,
 
-				config: {
+							automaticFunctionCalling: {
+								maximumRemoteCalls: 50
+							},
 
-					seed: 0,
-					temperature: 0,
+							responseMimeType: "application/json",
+							responseSchema: schema(Reported)
 
-					systemInstruction: await file(".sys.md", import.meta.url),
+						}
 
-					tools,
-					automaticFunctionCalling: {
-						maximumRemoteCalls: 50
-					},
+					}))
 
-					responseMimeType: "application/json",
-					responseSchema: {
+				]))
+				(validate(Reported))
+				(map(async ({ keywords }) => ({
 
-						type: Type.OBJECT,
+					keywords: await known(keywords),
 
-						properties: {
+					...extracted
 
-							keywords: {
-								type: Type.ARRAY,
-								items: { type: Type.STRING },
-								description: `Identifiers of the topics from <${events.id}> the event is tagged with`
-							}
-
-						},
-
-						required: ["keywords"]
-
-					}
-
-				}
-
-			}));
-
-			return {
-
-				...payload,
-
-				keywords: await stated(keywords)
-
-			};
-
-		}
-
-	});
+				})))
+			)))
+		))
+	);
 
 
-	async function stated(ids: readonly string[] = []): Promise<readonly Reference[]> {
+	async function known(ids: readonly Reference[] = []): Promise<readonly Reference[]> { // !!! review
 
 		const topics = await Promise.all(ids.map(async id => {
 
