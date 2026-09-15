@@ -15,11 +15,13 @@
  */
 
 import { getEventId, type Event, events } from "@/events/index.js";
+import { LabelLength } from "@/vocabularies/ec2u.js";
 import { SchemaEventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
 import { SchemaLocation } from "@/vocabularies/schema/location.js";
 import type { Instance } from "@metreeca/blue/value";
 import { type Object, opt, type Optional } from "@metreeca/core";
 import { multiple, nonempty, optional, required } from "@metreeca/core/arrays";
+import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -59,7 +61,7 @@ export function convert(university: {
 			const digest = required(path("digest").map(string));
 
 			const url = required(path("url").map(link));
-			const title = required(path("title").map(string));
+			const title = clip(required(path("title").map(string)), LabelLength);
 
 			const startDate = required(path("startDate").map(string));
 			const endDate = optional(path("endDate").map(string));

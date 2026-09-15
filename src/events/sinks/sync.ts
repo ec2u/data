@@ -30,7 +30,7 @@ import { multiple, resource } from "@metreeca/blue/resource";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, peek, take, tee } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, peek, tee } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { fetch, type URLLike } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
@@ -89,24 +89,23 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 			return pipe(
 				(items(urls))
-				(take(1)) // !!!
-					(fork(concurrency, pages => pipe(
-						(items(pages))
-						(fetch())
-						(html())
-						(focus())
-						(untag())
-						(filter(async page => !(await digests).has(digest(page))))
-						(extract())
-						(classify())
-						(peek(console.log)) // !!!
-							(convert(university))
-							(validate(Event))
-							(map(event => isStaleEvent(event)
-								? delta(event.id, Event)
-								: delta(event.id, Event, event)
-							))
-					)))
+				(fork(concurrency, pages => pipe(
+					(items(pages))
+					(fetch())
+					(html())
+					(focus())
+					(untag())
+					(filter(async page => !(await digests).has(digest(page))))
+					(extract())
+					(classify())
+					(convert(university))
+					(peek(console.log)) // !!!
+						(validate(Event))
+						(map(event => isStaleEvent(event)
+							? delta(event.id, Event)
+							: delta(event.id, Event, event)
+						))
+				)))
 			);
 
 		};
