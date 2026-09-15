@@ -24,11 +24,13 @@ Extract the following properties from the provided document:
   description H1 (#) headings with the document title; NEVER carry over navigation, listings of other events, or the
   page as a whole
 - start date in ISO format (yyyy-mm-dd), resolving relative dates against the current date
-- start time as an ISO time of day, converting whatever notation the document states it in (18h30, 18.30, 6.30pm) into
-  that form; NEVER leave the time out because the document states it in another notation
+- start time in ISO format (hh:mm:ss), the local time a clock at the venue reads, converting whatever notation the
+  document states it in (18h30, 18.30, 6.30pm) into that form; NEVER leave the time out because the document states it
+  in another notation
 - end date in ISO format (yyyy-mm-dd), resolving relative dates against the current date
-- end time as an ISO time of day, converting whatever notation the document states it in (18h30, 18.30, 6.30pm) into
-  that form; NEVER leave the time out because the document states it in another notation
+- end time in ISO format (hh:mm:ss), the local time a clock at the venue reads, converting whatever notation the
+  document states it in (18h30, 18.30, 6.30pm) into that form; NEVER leave the time out because the document states it
+  in another notation
 - entry fees (free, paid); include only if absolutely confident; make sure not to mix up registration required with paid
   entry fees
 - attendance mode (offline, online, mixed)

@@ -55,7 +55,7 @@ import {
 import type { ResourceShape } from "@metreeca/blue/resource";
 import { date, email, instant, iri, time, timestamp, url } from "@metreeca/blue/string";
 import type { Shape } from "@metreeca/blue/value";
-import { eager, isString, type Lazy, opt, type Value } from "@metreeca/core";
+import { eager, isString, type Lazy, opt, type Optional, type Value } from "@metreeca/core";
 import { createThrottle, type Throttle } from "@metreeca/core/async";
 import { markdown } from "@metreeca/core/strings";
 import { BadRequest, TooManyRequests } from "@metreeca/http";
@@ -63,31 +63,36 @@ import { log, Logger, report } from "@metreeca/tape";
 
 
 /**
- * The response schema format each well-known lexical pattern stands for.
+ * The response schema constraint each well-known lexical pattern stands for.
  *
  * Tells apart the textual shapes an XSD datatype leaves undistinguished, a URL and a language tag alike being stated as
  * strings: the pattern a shape factory fixes stands for the lexical form its values are drawn from, so a shape stating
- * that pattern is described by the format rather than by the pattern spelling it out. A shape stating a pattern of its
+ * that pattern is described by that form rather than by the pattern spelling it out. A shape stating a pattern of its
  * own is described by that pattern instead, whatever datatype it is filed under, as the pattern is then the only form
  * its values are actually held to.
+ *
+ * A date and a time are stated as a pattern rather than as the format they would otherwise be drawn from: the format
+ * names the RFC 3339 reading, which carries a zone designator, and a model offered it answers one even where the
+ * values it is describing carry no zone at all.
  */
-const lexicons = new Map([
+const lexicons = new Map<Optional<string>, Schema>([
 
-	[url().pattern, "uri"],
-	[iri().pattern, "uri"],
-	[email().pattern, "email"],
+	[url().pattern, { format: "uri" }],
+	[iri().pattern, { format: "uri" }],
+	[email().pattern, { format: "email" }],
 
-	[date().pattern, "date"],
-	[time().pattern, "time"],
-	[instant().pattern, "date-time"],
-	[timestamp().pattern, "date-time"]
+	[date().pattern, { pattern: "^\\d{4}-\\d{2}-\\d{2}$" }],
+	[time().pattern, { pattern: "^\\d{2}:\\d{2}:\\d{2}$" }],
+
+	[instant().pattern, { format: "date-time" }],
+	[timestamp().pattern, { format: "date-time" }]
 
 ]);
 
 /**
  * The response schema converted for a shape, retained for the lifetime of the module (see {@link memoize}).
  */
-const schemas = memoize((shape: Lazy<ResourceShape>): Schema =>
+const schemas: (shape: Lazy<ResourceShape>) => Schema  = memoize(shape =>
 	compile(eager(shape))
 );
 
@@ -766,7 +771,7 @@ function compile(shape: Shape): Schema {
 				type: Type.STRING,
 
 				...(opt(shape.in, values => ({ format: "enum", enum: [...values] }))
-					?? opt(lexicons.get(shape.pattern), format => ({ format }))
+					?? lexicons.get(shape.pattern)
 					?? opt(shape.pattern, pattern => ({ pattern }))
 					?? {}),
 

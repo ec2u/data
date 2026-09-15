@@ -21,7 +21,7 @@ import { dictionary } from "@metreeca/blue/dictionary";
 import { integer } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { id, multiple, nonempty, optional, required, resource, type } from "@metreeca/blue/resource";
-import { date, string, text, url } from "@metreeca/blue/string";
+import { date, string, text, time, url } from "@metreeca/blue/string";
 import { union } from "@metreeca/blue/union";
 import { xsd } from "@metreeca/core/datatype";
 import { describe, expect, it } from "vitest";
@@ -102,7 +102,6 @@ describe("schema", () => {
 
 		const converted = schema(resource({
 
-			day: required(date),
 			link: required(url)
 
 		}));
@@ -110,14 +109,35 @@ describe("schema", () => {
 		expect(converted).toMatchObject({
 
 			properties: {
-				day: { type: Type.STRING, format: "date" },
 				link: { type: Type.STRING, format: "uri" }
 			}
 
 		});
 
-		expect(converted.properties?.day).not.toHaveProperty("pattern");
 		expect(converted.properties?.link).not.toHaveProperty("pattern");
+
+	});
+
+	it("states a date and a time as the form they carry no zone in", () => {
+
+		const converted = schema(resource({
+
+			day: required(date),
+			clock: required(time)
+
+		}));
+
+		expect(converted).toMatchObject({
+
+			properties: {
+				day: { type: Type.STRING, pattern: "^\\d{4}-\\d{2}-\\d{2}$" },
+				clock: { type: Type.STRING, pattern: "^\\d{2}:\\d{2}:\\d{2}$" }
+			}
+
+		});
+
+		expect(converted.properties?.day).not.toHaveProperty("format");
+		expect(converted.properties?.clock).not.toHaveProperty("format");
 
 	});
 

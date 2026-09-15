@@ -131,19 +131,21 @@ CRITICAL: never drop `required` to make some other answer expressible. Coverage 
 
 ## Time Format
 
-The prompt asks for an ISO time of day and nothing more particular than that. The model answers `16:00:00.000Z`, and
-the conversion sets the fraction and the designator aside and anchors the wall time to the zone of the university.
+Dates come back as `yyyy-mm-dd` and times as `hh:mm:ss`, carrying no zone designator and no fraction of a second.
 
-The shape states the two times as `xsd:time`, so the schema derived from it declares `format: "time"` and the API
-constrains the answer to RFC 3339, which carries a designator. The prompt cannot talk the model out of that: three
-wordings forbidding fractions and offsets, one of them counting the characters of the answer, left the output
-byte-identical across every page carrying a time. What they did change was the case, and for the worse — under the
-prohibition one page answered `16:00:00z`, lowercase, which `xsd:time` rejects outright, so the page was dropped where
-an unfought `16:00:00.000Z` would have converted correctly.
+This rests on the response schema, not on the prompt. The schema states a date and a time as a lexical pattern rather
+than as the `date` and `time` formats they would otherwise be drawn from: those formats name the RFC 3339 readings,
+which carry a designator, and a model offered one answers a designator even where the values carry no zone at all.
+Under the formats every page carrying a time answered `13:00:00.000Z` and the like, and two pages in ninety answered
+`16:00:00z`, lowercase, which `xsd:time` rejects outright, so those pages were dropped whole. Under the patterns,
+ninety pages and a hundred and two times came back clean.
 
-CRITICAL: the format the schema declares decides what the model answers, not the prompt. A prompt pulling against it
-does not win, it only makes the answer malformed at the edges. Ask for the form the schema already implies and clean
-the answer up in the conversion, which is the one place that can.
+The prompt cannot carry this. Three wordings were tried against the formats — forbidding fractions and offsets,
+stating the standard positively, counting the characters of the answer — and the output was byte-identical each time.
+The prompt now simply names the form the schema states, so the two agree.
+
+CRITICAL: what the schema declares decides what the model answers. A prompt pulling against it does not win, it only
+makes the answer malformed at the edges. Never restore the `date` and `time` formats in the response schema.
 
 ## Times An Event Holds As Its Own
 
