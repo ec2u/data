@@ -22,6 +22,61 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 	- [API Pricing](https://ai.google.dev/pricing)
 	- [Rate Limits](https://ai.google.dev/rate-limits)
 
+# Data Source Integration Notes
+
+Each pipe carries a standalone integration-notes Markdown file alongside it (for example,
+`src/events/pipes/turku-university.md` next to `turku-university.ts`). The file is the authoritative, non-technical
+status record for that source and must read as a brief standalone document.
+
+## Structure
+
+- **Front matter** — YAML with `title`, `summary`, `description`, and `status` (`active`, or `planned` for a source not
+  yet integrated). The `title` is a breadcrumb following the pipe name segments, `Dataset › University` (e.g.
+  `Events › Turku › University`, `Events › Iași › University › 360`, `Events › Pavia › Ghislieri`). No H1 heading: the
+  title lives in the front matter. Do not duplicate the university or dataset (already in the title) or a version date
+  (already the newest version section) as separate keys.
+- **Intro** — one short paragraph noting that the most recent version is listed first and superseded versions are kept
+  below (drop the superseded clause when there is only one version).
+- **One section per major version**, newest first, headed `# <YYYY-MM-DD> – <name>` where the date is the version's
+  start. A new **major** version means the source was completely changed; **minor** reworks (tweaking the source set,
+  adjusting the data model) and **patches** (bug fixes) stay as change-log entries within the current version. Each
+  section holds, in order:
+	- a one-line description of the integration approach (no `Integration` heading);
+	- a sources table (no `Sources` heading), **one row per URL**, with columns:
+		- `Source` — the full URL **inline** (no reference links);
+		- `Description` — the source name followed by a lowercase ISO language tag in brackets, e.g.
+		  `General university events [de]`, `International Office [en]`;
+		- `Notes` — optional, included only when a row needs an extra remark;
+	- a change log: a plain bullet list (no heading), newest first, each `- **<YYYY-MM-DD>** – <change>`, ending with an
+	  `initial integration` entry dated to the version's start.
+- Record what a maintainer must respect to re-derive the crawl: the endpoints and selectors the pipe depends on, and
+  the quirks that forced them (a form post where a page renders nothing of its own, a pager stating fragments rather
+  than addresses, a card linking its event more than once).
+- Use en dashes (`–`) as the date/label separator; ISO dates and list bullets keep hyphens; no em dashes.
+- Inline source URLs make some table rows exceed 120 columns; that is accepted for these reports. Run the IDE formatter
+  (`mcp__idea__reformat_file`) after editing rather than hand-aligning.
+- Preserve the whole source URL. Show it inline when it has no query string. When a URL has a query string (regardless
+  of length) or is otherwise overly long, use a Markdown **reference-style link**: a shortened display label
+  (host + path + `…`) as the link text and the complete, unaltered URL in a `[id]: <full-url>` definition collected at
+  the bottom of the file. Only the displayed label is shortened, never the actual URL.
+- Do not keep sample payloads, pending/TODO sections (track those as issues), or a separate `Legacy` block (superseded
+  versions are their own sections). A retired alternative source that never had its own version may be noted as a
+  struck-through entry under a short trailing `## Notes`.
+
+## Maintenance
+
+- Keep the relevant `.md` up to date after every change that affects how a source is harvested (source URLs, selectors,
+  mapped fields, known issues).
+- Keep the consolidated summary in sync: the **Knowledge Hub - Status** page on Confluence
+  (https://ec2u.atlassian.net/wiki/x/b4FKF, space *Infrastructure*, page id `340427119`), a dataset × university
+  integration matrix.
+- Confluence is reachable through the Atlassian Rovo MCP connector (read/write page scopes; available from the desktop
+  app). Fetch and update pages with the `mcp__claude_ai_Atlassian_Rovo__*` tools, using cloud id
+  `d5be8c79-ba10-4633-b4c5-f9ccaae17563`.
+
+**Commit checklist**: when a commit changes how a source is harvested, update that source's integration-notes `.md` and
+the Confluence **Knowledge Hub - Status** page in the same change before committing.
+
 # Task Workflows
 
 ## NPM Scripts
