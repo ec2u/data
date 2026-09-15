@@ -63,6 +63,12 @@ import { log, Logger, report } from "@metreeca/tape";
 
 
 /**
+ * The number of attempts a request is submitted for, the initial one included, before a transient rejection is handed
+ * over to the throttle (see {@link createGoogleAI}).
+ */
+const attempts = 5;
+
+/**
  * The response schema constraint each well-known lexical pattern stands for.
  *
  * Tells apart the textual shapes an XSD datatype leaves undistinguished, a URL and a language tag alike being stated as
@@ -107,7 +113,8 @@ const schemas: (shape: Lazy<ResourceShape>) => Schema  = memoize(shape =>
  * honouring a requested response schema on every model.
  *
  * @param options The client options, as accepted by the {@link GoogleGenAI} constructor; if omitted, the SDK
- *                defaults apply, reading the API key from the environment
+ *                defaults apply, reading the API key from the environment. Retry options are stated on the caller's
+ *                behalf unless `httpOptions.retryOptions` states its own
  *
  * @returns A patched client sharing throttling, logging and structured output capability among all requests naming
  *          the same model, keyed by the exact model id, so the bare and `models/`-prefixed forms of a model id are
@@ -119,7 +126,10 @@ const schemas: (shape: Lazy<ResourceShape>) => Schema  = memoize(shape =>
  *
  * - **Quota control**: every request is paced against a per-model adaptive throttle and retried after the `RetryInfo`
  *   delay the API advertises, so that a long run keeps within the published rate quota instead of failing on the 429
- *   errors the SDK neither paces nor recovers from. Function calling turns are driven here rather than by the SDK, one
+ *   errors the SDK neither paces nor recovers from. A transient rejection short of a quota one, as a model reporting
+ *   itself overloaded, is retried by the SDK before ever reaching the throttle, which the SDK does only where retry
+ *   options are stated: a run outlives a spike in demand on the model rather than aborting on the first one. Function
+ *   calling turns are driven here rather than by the SDK, one
  *   throttled request each, unlimited unless `automaticFunctionCalling.maximumRemoteCalls` bounds them; only
  *   `CallableTool` tools are dispatched, and a request disabling automatic function calling is submitted once, with
  *   its function calls left to the caller.
@@ -136,7 +146,22 @@ const schemas: (shape: Lazy<ResourceShape>) => Schema  = memoize(shape =>
  */
 export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 
-	const ai = new GoogleGenAI(options);
+	const ai = new GoogleGenAI({
+
+		...options,
+
+		httpOptions: {
+
+			// the SDK retries a transient rejection only where retry options are stated, otherwise
+			// failing the request outright: a spike in demand on the model would abort a whole run
+
+			retryOptions: { attempts },
+
+			...options.httpOptions
+
+		}
+
+	});
 
 	/**
 	 * Retrieves the request channel shared by all requests to a model, opening it on first request.
