@@ -7,6 +7,7 @@ description: Reviews the keyword assignments on the 46 stored Pavia events, list
 
 
 !!! at most 5 keywords
+!!! performance
 
 # Scope
 
@@ -54,13 +55,13 @@ An event is stated as being two formats at once, where the taxonomy offers the s
 ## Mixed granularity
 
 Bare parents are used where other events reach the leaf: `format/talks` on one event against 14 uses of
-`format/talks/lecture`, and `subject/environment` against its own children. A filter on the leaf misses the event
-filed under the parent.
+`format/talks/lecture`, and `subject/environment` against its own children. A filter on the leaf misses the event filed
+under the parent.
 
 ## Unbounded tag count
 
-Nothing caps the assignments, per facet or in total: the distribution runs 2 keywords (5 events), 3 (15), 4 (11),
-5 (3), 6 (7), 7 (4), 9 (1), and almost every defect above sits in the 6-to-9 band.
+Nothing caps the assignments, per facet or in total: the distribution runs 2 keywords (5 events), 3 (15), 4 (11), 5 (3),
+6 (7), 7 (4), 9 (1), and almost every defect above sits in the 6-to-9 band.
 
 ## Systematic taxonomy gaps
 
