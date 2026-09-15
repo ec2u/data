@@ -62,7 +62,10 @@ export function convert(university: {
 		(jpath(path => {
 
 			const url = required(path("url").map(link));
-			const title = clip(required(path("title").map(string)), LabelLength);
+
+			// folded before it is clipped, so the budget is spent on the line the label and the name are held to
+
+			const title = clip(tidy(required(path("title").map(string))), LabelLength);
 
 			const startDate = required(path("startDate").map(string));
 			const endDate = optional(path("endDate").map(string));
@@ -106,7 +109,7 @@ export function convert(university: {
 
 				image: optional(path("imageURL").map(link).map(url => ({
 					url: nonempty(url),
-					copyrightNotice: optional(path("imageCredits").map(string))
+					copyrightNotice: optional(line(path("imageCredits")))
 				}))),
 
 				location: optional<Instance<typeof SchemaLocation>>(
@@ -127,7 +130,7 @@ export function convert(university: {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// the location shape admits single unformatted lines, so a value the model pads, runs together or wraps is folded
+// a plain text slot admits a single unformatted line, so a value the model pads, runs together or wraps is folded
 // before it is stated and one left with nothing is dropped
 
 function line(values: readonly Value[]): readonly string[] {

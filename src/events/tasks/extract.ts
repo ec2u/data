@@ -268,7 +268,7 @@ const Dates: Validator<Record<string, unknown>> = object({
 	startTime: optional(Clock),
 	endTime: optional(Clock),
 
-	[key]: pass // every other value stands or falls at the shape the conversion states it under
+	[key]: pass
 
 });
 
