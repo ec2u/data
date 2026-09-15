@@ -202,19 +202,19 @@ export function persist({
 /**
  * Creates a delta for a resource.
  *
- * Omitting `state` states the removal of the resource, so a workflow that gathers resources and one that retires them
+ * A `null` state states the removal of the resource, so a workflow that gathers resources and one that retires them
  * both close on the same call.
  *
  * @typeParam T The type of the state to be stored
  *
  * @param entry The resource concerned
  * @param shape The shape the resource is stated under
- * @param state The state the resource is to be stored with; omit to state its removal
+ * @param state The state the resource is to be stored with; `null` to state its removal
  *
- * @returns An immutable {@link Delta} pairing `entry` and `shape` with `state`, or with `null` if `state` is omitted
+ * @returns An immutable {@link Delta} pairing `entry` and `shape` with `state`
  */
-export function delta<T extends Resource>(entry: Reference, shape: Lazy<ResourceShape>, state?: T): Delta<T> {
+export function delta<T extends Resource>(entry: Reference, shape: Lazy<ResourceShape>, state: null | T): Delta<T> {
 
-	return Object.freeze([entry, shape, state ?? null]);
+	return Object.freeze([entry, shape, state]);
 
 }

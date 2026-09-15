@@ -159,7 +159,7 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 				(items(records))
 				(map(record => getTopicId(taxonomy, getPath(record))))
 				(retire({ atomic: true, survival, existing }))
-				(map(id => delta(id, Topic)))
+				(map(id => delta(id, Topic, null)))
 			);
 
 		};

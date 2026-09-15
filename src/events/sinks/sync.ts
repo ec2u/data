@@ -106,7 +106,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					(peek(console.log)) // !!!
 					(validate(Event))
 					(map(event => isStaleEvent(event)
-						? delta(event.id, Event)
+						? delta(event.id, Event, null)
 						: delta(event.id, Event, event)
 					))
 				)))
@@ -136,7 +136,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 				(items(urls))
 				(map(getEventId))
 				(retire({ survival, existing }))
-				(map(id => delta(id, Event)))
+				(map(id => delta(id, Event, null)))
 			);
 
 		};
