@@ -23,6 +23,6 @@ export function universities(): Router {
 
 	return Router()
 		.use("/universities", data())
-		.use("/~universities", cron());
+		.use("/universities~", cron());
 
 }

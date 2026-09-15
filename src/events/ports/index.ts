@@ -23,6 +23,6 @@ export function events(): Router {
 
 	return Router()
 		.use("/events", data())
-		.use("/~events", cron());
+		.use("/events~", cron());
 
 }

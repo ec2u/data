@@ -23,6 +23,6 @@ export function units(): Router {
 
 	return Router()
 		.use("/units", data())
-		.use("/~units", cron());
+		.use("/units~", cron());
 
 }
