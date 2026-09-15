@@ -34,8 +34,12 @@ import type { Reference } from "@metreeca/qest/resource";
  * Creates a task converting extracted event properties into event records.
  *
  * Payloads stating no event are dropped, so the output of an extraction may be piped through unfiltered. Each record
- * is identified after the page it was derived from, so the same page always yields the same event, and wall times are
- * anchored to the time zone of `university`.
+ * is identified after the page it was derived from, so the same page always yields the same event.
+ *
+ * A page states a wall date and a wall time, carrying no zone of their own, and the record states the instant they
+ * name in the zone `university` keeps, at the offset that zone keeps on the day in question rather than the one it
+ * keeps today. An event stating no time opens at midnight, and one stating an end time alone closes on the day it
+ * opens.
  *
  * A venue is stated as a postal address only where the page names a street, a street being what tells an address from
  * a virtual location; a venue named without one, or a bare city, is stated as plain text instead.
@@ -138,13 +142,17 @@ function line(values: readonly Value[]): readonly string[] {
 }
 
 
+// the fraction of a second and the zone designator an XSD date and time may carry: a page states the hour as a clock
+// at the venue reads it, so a model stating one anyway is naming that same wall time and the tail is set aside
+
+const appended = /(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/;
+
+
 function stamp(date: string, time: Optional<string>, zone: string): string { // !!! to temporals?
 
-	const clock = time ?? "00:00";
+	// the wall date and time the page states, taken bare, whatever the extraction appended to them
 
-	// times are stated to the minute, while a timestamp is read to the second
-
-	const wall = `${date}T${/^\d{2}:\d{2}$/.test(clock) ? `${clock}:00` : clock}`;
+	const wall = `${date.replace(appended, "")}T${(time ?? "00:00:00").replace(appended, "")}`;
 
 	// an extraction vets the dates it answers, so an unreadable wall time is left unanchored for the shape to reject
 	// rather than aborting the run the conversion runs in
@@ -157,15 +165,29 @@ function stamp(date: string, time: Optional<string>, zone: string): string { // 
 
 	} else {
 
-		const shift = new Intl.DateTimeFormat("en", { timeZone: zone, timeZoneName: "longOffset" })
-			.formatToParts(instant)
-			.find(({ type }) => type === "timeZoneName")
-			?.value ?? "GMT";
+		// the offset is the one the zone keeps at the instant the wall time names in the zone, not at the one it names
+		// in UTC: on the day a zone shifts, the two fall either side of the shift and the event is stamped an hour out
 
-		return `${wall}${shift === "GMT" ? "Z" : shift.slice(3)}`;
+		return `${wall}${shift(zone, new Date(instant.getTime()-millis(shift(zone, instant))))}`;
 
 	}
 
+}
+
+function shift(zone: string, instant: Date): string {
+
+	const name = new Intl.DateTimeFormat("en", { timeZone: zone, timeZoneName: "longOffset" })
+		.formatToParts(instant)
+		.find(({ type }) => type === "timeZoneName")
+		?.value ?? "GMT";
+
+	return name === "GMT" ? "Z" : name.slice(3);
+
+}
+
+function millis(offset: string): number {
+	return offset === "Z" ? 0
+		: (offset.startsWith("-") ? -1 : 1)*(Number(offset.slice(1, 3))*60+Number(offset.slice(4, 6)))*60*1000;
 }
 
 

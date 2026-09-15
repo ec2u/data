@@ -15,29 +15,23 @@
  */
 
 import { getDate } from "@/_/core/temporal.js";
-import { digest, type Digest } from "@/_/gear-store/_digest.js";
+import { digest } from "@/_/gear-store/_digest.js";
+import { validate } from "@/_/gear-store/validate.js";
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json, schema } from "@/_/muse-google/index.js";
 import { isStaleEvent } from "@/events/index.js";
 import { boolean } from "@metreeca/blue/boolean";
-import { optional as maybe, required as must, resource } from "@metreeca/blue/resource";
+import { optional, required, resource } from "@metreeca/blue/resource";
 import { date, string, tag, time, url } from "@metreeca/blue/string";
 import type { Instance } from "@metreeca/blue/value";
-import { isString, key } from "@metreeca/core";
 import { markdown, type Text } from "@metreeca/core/strings";
-import { all, object, optional, pass, pattern, required, test, type, type Validator } from "@metreeca/core/trace";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, map, tee } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
-import { validate } from "@metreeca/gear-json";
 
 
-type Reading = Instance<typeof Extracted> & {
-
-	readonly digest: Digest
-
-}
+type Reading = Instance<typeof X>
 
 export type Payload = Reading & { // !!! remove
 
@@ -45,34 +39,47 @@ export type Payload = Reading & { // !!! remove
 
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function Extracted() {
 	return resource({
 
-		event: must(boolean),
+		event: required(boolean),
 
-		url: must(url),
-		title: must(string),
-		summary: maybe(string),
-		description: must(string),
+		url: required(url),
+		title: required(string),
+		summary: optional(string),
+		description: required(string),
 
-		startDate: must(date),
-		startTime: maybe(time),
-		endDate: maybe(date),
-		endTime: maybe(time),
+		startDate: required(date),
+		startTime: optional(time),
+		endDate: optional(date),
+		endTime: optional(time),
 
-		entryFees: maybe(string),
+		entryFees: optional(string),
 
-		attendanceMode: maybe(string),
-		attendanceURL: maybe(url),
+		attendanceMode: optional(string),
+		attendanceURL: optional(url),
 
-		venueName: maybe(string),
-		venueAddress: maybe(string),
-		venueCity: maybe(string),
+		venueName: optional(string),
+		venueAddress: optional(string),
+		venueCity: optional(string),
 
-		imageURL: maybe(url),
-		imageCredits: maybe(string),
+		imageURL: optional(url),
+		imageCredits: optional(string),
 
-		language: must(tag)
+		language: required(tag)
+
+	});
+}
+
+
+function X() {
+	return resource(Extracted, {
+
+		digest: required(string)
 
 	});
 }
@@ -142,21 +149,12 @@ export function extract(): Task<Text, Payload> {
 			}))
 
 		})))
-		(when(extracted => extracted.event, validate<Reading>(object({
+		(when(extracted => extracted.event, validate(X)))
+		(map(extracted => ({
 
-			startDate: required(isDate),
-			endDate: optional(isDate),
-			startTime: optional(isTime),
-			endTime: optional(isTime),
+			publishable: extracted.event && !isStaleEvent(extracted),
 
-			[key]: pass
-
-		}))))
-		(map(payload => ({
-
-			publishable: payload.event && !isStaleEvent(payload),
-
-			...payload
+			...extracted
 
 		})))
 	);
@@ -165,17 +163,6 @@ export function extract(): Task<Text, Payload> {
 
 
 //// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const isDate: Validator<unknown> = type(isString, all(
-	pattern(/^\d{4}-\d{2}-\d{2}$/),
-	test(value => !Number.isNaN(Date.parse(value)) || ["{day} expected a calendar date"])
-));
-
-const isTime: Validator<unknown> = type(isString, all(
-	pattern(/^\d{2}:\d{2}$/),
-	test(value => !Number.isNaN(Date.parse(`1970-01-01T${value}:00Z`)) || ["{time} expected a wall clock time"])
-));
-
 
 /**
  * Creates a task routing the items on a condition.

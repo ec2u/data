@@ -131,15 +131,19 @@ CRITICAL: never drop `required` to make some other answer expressible. Coverage 
 
 ## Time Format
 
-Times are stated as `hh:mm`.
+The prompt asks for an ISO time of day and nothing more particular than that. The model answers `16:00:00.000Z`, and
+the conversion sets the fraction and the designator aside and anchors the wall time to the zone of the university.
 
-The schema originally declared `format: "time"` on `startTime`/`endTime`, which the model read as RFC 3339 and answered
-with `13:00:00-00:00` and `15:30:00.000Z` on every page carrying times; the conversion downstream builds an instant by
-concatenation and rejected all of them. The format was replaced by a `^[0-9]{2}:[0-9]{2}$` pattern, which left a page
-answering in local notation (`18h30`), and the prompt now forbids seconds, offsets and local notation by name.
+The shape states the two times as `xsd:time`, so the schema derived from it declares `format: "time"` and the API
+constrains the answer to RFC 3339, which carries a designator. The prompt cannot talk the model out of that: three
+wordings forbidding fractions and offsets, one of them counting the characters of the answer, left the output
+byte-identical across every page carrying a time. What they did change was the case, and for the worse — under the
+prohibition one page answered `16:00:00z`, lowercase, which `xsd:time` rejects outright, so the page was dropped where
+an unfought `16:00:00.000Z` would have converted correctly.
 
-CRITICAL: the schema pattern steers the model but is not enforced by the API. The prohibition in the prompt is what
-carries this behaviour, so never weaken it to save a line.
+CRITICAL: the format the schema declares decides what the model answers, not the prompt. A prompt pulling against it
+does not win, it only makes the answer malformed at the edges. Ask for the form the schema already implies and clean
+the answer up in the conversion, which is the one place that can.
 
 ## Times An Event Holds As Its Own
 
