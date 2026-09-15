@@ -37,27 +37,29 @@ const logger = log(import.meta.url);
  * unnamed among them is named for retirement. What comes out is always part of `existing`, each identifier at most
  * once, and nothing comes out before the scan runs dry, so no retirement rests on a partial reading.
  *
- * A scan that comes back short more often means a broken source than a genuine emptying, so a retirement that would
- * leave in place less than `survival` of the existing identifiers is refused. The refusal by default skips just the
- * retirements and lets the rest of the update land, so a source restored to health retires the same identifiers on
- * its next scan. Sources that tolerate no mixed state are served by `atomic`, which fails the whole update instead.
+ * A scan that comes back short more often means a broken source than a genuine emptying, so a scan naming fewer than
+ * `survival` of the existing identifiers is refused. The floor weighs how much the scan accounts for, not how much of
+ * it the collection already held, so a source that renames its resources wholesale is carried over intact while a
+ * truncated or unreachable one is still caught. The refusal by default skips just the retirements and lets the rest of
+ * the update land, so a source restored to health retires the same identifiers on its next scan. Sources that tolerate
+ * no mixed state are served by `atomic`, which fails the whole update instead.
  *
- * A `survival` of `0` lifts the safeguard altogether, letting a scan retire everything, while `1` refuses every
- * retirement, making the update append-only.
+ * A `survival` of `0` lifts the safeguard altogether, letting an empty scan retire everything, while `1` refuses every
+ * scan that would shrink the collection.
  *
  * @param options The existing resource identifiers and the limits governing what a single run may retire
  * @param options.atomic Whether a refused retirement fails the whole update, rather than skipping just the
  * retirements; defaults to `false`
- * @param options.survival The smallest fraction of the existing identifiers a single run must leave in place, in
- * [0, 1], rounded up to a whole identifier
+ * @param options.survival The smallest fraction of the existing identifiers a scan must account for, in [0, 1],
+ * rounded up to a whole identifier
  * @param options.existing A feed of the resource identifiers currently in place
  *
  * @returns A task replacing a feed of the resource identifiers a source names with the identifiers to be retired
  *
  * @throws {@link !TypeError TypeError} If `survival` is outside [0, 1]
  *
- * @throws {@link !RangeError RangeError} Under `atomic`, while the feed is consumed, if the run would leave in place
- * less than `survival` of the existing identifiers
+ * @throws {@link !RangeError RangeError} Under `atomic`, while the feed is consumed, if the scan names fewer than
+ * `survival` of the existing identifiers
  */
 export function retire({
 
@@ -92,9 +94,9 @@ export function retire({
 		const dropped = retired.length;
 
 		const minimum = current*$survival;
-		const holding = current-dropped;
+		const scanned = $incoming.size; // what the scan leaves in place, whether or not it renames it
 
-		if ( holding < minimum ) { // a mass retirement is read as a broken source rather than a genuine emptying
+		if ( scanned < minimum ) { // a scan come back short is read as a broken source rather than a genuine emptying
 
 			const action = atomic ? "prevented" : "skipping";
 			const share = Math.round($survival*100);

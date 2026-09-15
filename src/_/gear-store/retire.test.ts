@@ -88,6 +88,26 @@ describe("retire", () => {
 
 		});
 
+		it("retires every existing item where the scan renames them all", async () => {
+
+			const existing = items(["/items/1", "/items/2", "/items/3", "/items/4"]);
+
+			expect(await items(["/renamed/1", "/renamed/2", "/renamed/3", "/renamed/4"])
+			(retire({ survival: 0.75, existing }))(toArray()))
+				.toEqual(["/items/1", "/items/2", "/items/3", "/items/4"]);
+
+		});
+
+		it("weighs the scan rather than the identifiers it carries over", async () => {
+
+			const existing = items(["/items/1", "/items/2", "/items/3", "/items/4"]);
+
+			expect(await items(["/items/1", "/renamed/2", "/renamed/3", "/renamed/4"])
+			(retire({ survival: 0.75, existing }))(toArray()))
+				.toEqual(["/items/2", "/items/3", "/items/4"]);
+
+		});
+
 	});
 
 
@@ -108,6 +128,15 @@ describe("retire", () => {
 
 			await expect(items(["/items/1"])(retire({ atomic: true, survival: 0.75, existing }))(toArray()))
 				.rejects.toThrow(RangeError);
+
+		});
+
+		it("skips the retirements where a short scan names none of the existing items", async () => {
+
+			const existing = items(["/items/1", "/items/2", "/items/3", "/items/4"]);
+
+			expect(await items(["/renamed/1"])(retire({ survival: 0.75, existing }))(toArray()))
+				.toEqual([]);
 
 		});
 
