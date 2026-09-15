@@ -17,20 +17,20 @@
 import { getDate } from "@/_/core/temporal.js";
 import { digest, type Digest } from "@/_/gear-store/_digest.js";
 import { file } from "@/_/gear/files.js";
-import { createGoogleAI, json } from "@/_/muse-google/index.js";
+import { createGoogleAI, json, schema } from "@/_/muse-google/index.js";
 import { isStaleEvent } from "@/events/index.js";
-import { Type } from "@google/genai";
-import { isString, key, type Object } from "@metreeca/core";
+import { boolean } from "@metreeca/blue/boolean";
+import { optional as maybe, required as must, resource } from "@metreeca/blue/resource";
+import { date, string, tag, time, url } from "@metreeca/blue/string";
+import type { Instance } from "@metreeca/blue/value";
+import { isString, key } from "@metreeca/core";
 import { markdown, type Text } from "@metreeca/core/strings";
 import { all, object, optional, pass, pattern, required, test, type, type Validator } from "@metreeca/core/trace";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { filter, map } from "@metreeca/flow/tasks";
+import { map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
-import { log } from "@metreeca/tape";
-
-
-const logger = log(import.meta.url);
+import { validate } from "@metreeca/gear-json";
 
 
 /**
@@ -38,18 +38,67 @@ const logger = log(import.meta.url);
  *
  * States under `digest` and `publishable` what the extraction settled for itself, whatever the model read into the
  * page; every other property is answered by the model and so stands or falls at run time.
+ *
+ * @see {@link Stated}
  */
-export type Payload =
-	Object
-	& {
+export type Payload = Stated & {
+
+	readonly publishable: boolean
+
+}
+
+/**
+ * Reading of a page, anchored to the page it was drawn from.
+ *
+ * States under `digest` the page the reading was derived from, whatever the model read into it.
+ */
+type Stated = Instance<typeof Extracted> & {
 
 	readonly digest: Digest
-	readonly publishable: boolean
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Shape of a reading, as the model states it.
+ *
+ * Mirrors the response schema the model answers with: the properties the schema requires are stated by every reading,
+ * the others only where the page supports them.
+ */
+export function Extracted() {
+	return resource({
+
+		event: must(boolean),
+
+		url: must(url),
+		title: must(string),
+		summary: maybe(string),
+		description: must(string),
+
+		startDate: must(date),
+		startTime: maybe(time),
+		endDate: maybe(date),
+		endTime: maybe(time),
+
+		entryFees: maybe(string),
+
+		attendanceMode: maybe(string),
+		attendanceURL: maybe(url),
+
+		venueName: maybe(string),
+		venueAddress: maybe(string),
+		venueCity: maybe(string),
+
+		imageURL: maybe(url),
+		imageCredits: maybe(string),
+
+		language: must(tag)
+
+	});
+}
+
 
 /**
  * Creates a task extracting event properties from event pages.
@@ -82,14 +131,14 @@ export function extract(): Task<Text, Payload> {
 
 	return documents => pipe(
 		items(documents)
-		(map(async document => complete(document, json(await ai.models.generateContent({
+		(map(async document => stated(document, json(await ai.models.generateContent({
 
 			model: "gemini-3.5-flash-lite",
 
 			contents: [
 				markdown`
-						- date: ${getDate()}
-					`,
+					- date: ${getDate()}
+				`,
 				document
 			],
 
@@ -102,144 +151,30 @@ export function extract(): Task<Text, Payload> {
 				systemInstruction: await file(".sys.md", import.meta.url),
 
 				responseMimeType: "application/json",
-				responseSchema: {
-
-					type: Type.OBJECT,
-
-					properties: {
-
-						event: {
-							type: Type.BOOLEAN
-						},
-
-						url: {
-							type: Type.STRING,
-							format: "uri"
-						},
-
-						title: {
-							type: Type.STRING
-						},
-
-						summary: {
-							type: Type.STRING
-						},
-
-						description: {
-							type: Type.STRING
-						},
-
-						startDate: {
-							type: Type.STRING,
-							format: "date"
-						},
-
-						startTime: {
-							type: Type.STRING,
-							pattern: "^[0-9]{2}:[0-9]{2}$"
-						},
-
-						endDate: {
-							type: Type.STRING,
-							format: "date"
-						},
-
-						endTime: {
-							type: Type.STRING,
-							pattern: "^[0-9]{2}:[0-9]{2}$"
-						},
-
-						entryFees: {
-							type: Type.STRING
-						},
-
-						attendanceMode: {
-							type: Type.STRING
-						},
-
-						attendanceURL: {
-							type: Type.STRING,
-							format: "uri"
-						},
-
-						venueName: {
-							type: Type.STRING
-						},
-
-						venueAddress: {
-							type: Type.STRING
-						},
-
-						venueCity: {
-							type: Type.STRING
-						},
-
-						imageURL: {
-							type: Type.STRING,
-							format: "uri"
-						},
-
-						imageCredits: {
-							type: Type.STRING
-						},
-
-						language: {
-							type: Type.STRING,
-							pattern: "^[a-z]{2}$"
-						}
-
-					},
-
-					required: [
-						"event",
-						"url",
-						"title",
-						"description",
-						"startDate",
-						"language"
-					]
-
-				}
+				responseSchema: schema(Extracted)
 
 			}
 
 		})))))
-		(filter(intact))
-	);
-
-	function complete(document: Text, payload: Object): Payload {
-
-		return {
+		(validate(test(stated => stated.event ? Dates(stated) ?? true : true)))
+		(map(payload => ({
 
 			...payload,
 
+			publishable: payload.event && !isStaleEvent(payload)
+
+		})))
+	);
+
+	function stated(document: Text, payload: Instance<typeof Extracted>): Stated {
+
+		return {
+
 			digest: digest(document),
 
-			publishable: payload.event === true
-				&& isDay(payload.startDate)
-				&& !isStaleEvent({
-
-					startDate: payload.startDate,
-					endDate: isDay(payload.endDate) ? payload.endDate : undefined
-
-				})
+			...payload
 
 		};
-
-	}
-
-	// a payload the model fills with values a conversion cannot carry is a failed reading, not a page settled as
-	// bearing nothing: it is dropped rather than answered, so that a caller records nothing and reads the page again
-
-	function intact(payload: Payload): boolean { // !!! integrate into json()
-
-		const trace = payload.event === true ? Dates(payload) : undefined;
-
-		if ( trace !== undefined ) {
-			logger.warning`dropping malformed event extracted from <${payload.url}> (${JSON.stringify(trace)})`;
-		}
-
-		return trace === undefined;
 
 	}
 
@@ -248,14 +183,14 @@ export function extract(): Task<Text, Payload> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const Day: Validator<unknown> = type(isString, all(
+const isDate: Validator<unknown> = type(isString, all(
 	pattern(/^\d{4}-\d{2}-\d{2}$/),
 	test(value => !Number.isNaN(Date.parse(value)) || ["{day} expected a calendar date"])
 ));
 
-const Clock: Validator<unknown> = type(isString, all(
+const isTime: Validator<unknown> = type(isString, all(
 	pattern(/^\d{2}:\d{2}$/),
-	test(value => !Number.isNaN(Date.parse(`1970-01-01T${value}:00Z`)) || ["{clock} expected a wall clock time"])
+	test(value => !Number.isNaN(Date.parse(`1970-01-01T${value}:00Z`)) || ["{time} expected a wall clock time"])
 ));
 
 /**
@@ -263,16 +198,11 @@ const Clock: Validator<unknown> = type(isString, all(
  */
 const Dates: Validator<Record<string, unknown>> = object({
 
-	startDate: required(Day),
-	endDate: optional(Day),
-	startTime: optional(Clock),
-	endTime: optional(Clock),
+	startDate: required(isDate),
+	endDate: optional(isDate),
+	startTime: optional(isTime),
+	endTime: optional(isTime),
 
 	[key]: pass
 
 });
-
-
-function isDay(value: unknown): value is string {
-	return isString(value) && Day(value) === undefined;
-}
