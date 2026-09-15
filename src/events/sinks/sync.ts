@@ -30,10 +30,10 @@ import { reference } from "@metreeca/blue/reference";
 import { id, multiple, resource } from "@metreeca/blue/resource";
 import { required } from "@metreeca/core/arrays";
 import { immutable } from "@metreeca/core/structures";
-import { pipe, type Sink, type Task } from "@metreeca/flow";
+import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
+import { filter, flat, fork, join, map, tee } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { jpath, link, string } from "@metreeca/gear-json";
 import { fetch, type URLLike } from "@metreeca/gear-url";
@@ -56,23 +56,33 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 
 	return urls => pipe(
-		(items(urls))
-		(tee(
+		(items([
+
 			define(),
-			insert(),
 			expire(),
-			delist()
-		))
+
+			pipe(
+				(items(urls))
+				(tee(
+					insert(),
+					delist()
+				))
+			)
+
+		]))
+		(join())
 		(persist())
 	);
 
 
-	function define(): Task<URLLike, Delta> {
+	function define(): Feed<Delta> {
 
-		return () => pipe(
+		return pipe(
 			(items([publisher]))
 			(validate(Publisher))
-			(map(publisher => delta(publisher.id, Publisher, publisher)))
+			(map(publisher =>
+				delta(publisher.id, Publisher, publisher)
+			))
 		);
 
 	}
@@ -147,12 +157,12 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 	}
 
-	function expire(): Task<URLLike, Delta> {
+	function expire(): Feed<Delta> {
 
 		// an event stored while it was still to come goes stale on its own, leaving its source page untouched,
 		// so the crawl never offers it again and the sweep reads the dataset rather than the source
 
-		return () => pipe(
+		return pipe(
 			(items(store.lookup({ // !!! replace with select()
 
 				entry: events.id,
@@ -161,9 +171,11 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 				model: { resources: [{ id: "", startDate: "", endDate: "" }, { "?university": [university.id] }] }
 
 			})))
-			(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
+			(flat(map(events => items(events?.resources ?? [])))) // !!! remove
 				(filter(isStaleEvent))
-				(map(event => delta(event.id, Event, null)))
+				(map(event =>
+					delta(event.id, Event, null)
+				))
 		);
 
 	}
@@ -181,7 +193,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					model: { pages: [{ id: "" }, { "?source": [publisher.id] }] }
 
 				})))
-				(flat(map(stated => items(stated?.pages ?? [])))) // !!! remove
+				(flat(map(pages => items(pages?.pages ?? [])))) // !!! remove
 					(map(page => page.id))
 			);
 
