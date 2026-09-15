@@ -14,64 +14,124 @@
  * limitations under the License.
  */
 
-import { synopsis } from "@/_/muse/index.js";
-import { getTopicMatches, type Taxonomy } from "@/taxonomies/index.js";
+import { file } from "@/_/gear/files.js";
+import { createGoogleAI, json } from "@/_/muse-google/index.js";
+import { getTopicEntries, type Taxonomy } from "@/taxonomies/index.js";
 import { events as eventTopics } from "@/taxonomies/pipes/events.core.js";
 import { stakeholders as stakeholderTopics } from "@/taxonomies/pipes/stakeholders.core.js";
-import type { Object } from "@metreeca/core";
-import type { Text } from "@metreeca/core/strings";
+import { browseTopics } from "@/taxonomies/tools/browseTopics.js";
+import { searchTopics } from "@/taxonomies/tools/searchTopics.js";
+import { Type } from "@google/genai";
+import { isString, type Object } from "@metreeca/core";
+import { markdown } from "@metreeca/core/strings";
 import type { Task } from "@metreeca/flow";
 import { map } from "@metreeca/flow/tasks";
+import { service } from "@metreeca/gear";
 import type { Reference } from "@metreeca/qest/resource";
+import { log } from "@metreeca/tape";
 
 
-const threshold = 0.6; // the largest distance a topic is accepted at, as tuned on the legacy pipeline // !!! as option
+const logger = log(import.meta.url);
 
+
+const vocabularies = [eventTopics, stakeholderTopics];
+
+const tools = [
+	searchTopics(vocabularies),
+	browseTopics(vocabularies)
+];
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Creates a task classifying extracted event properties.
  *
- * Each payload is answered with the topic and the stakeholder type it stands closest to, stated under `about` and
- * `audience`, so that a conversion states a classification without matching or embedding anything of its own. A
- * payload no topic stands close enough to is answered with none, rather than with the least distant one.
+ * Each payload is answered with the topics and the stakeholder types the event is about, stated under `about` and
+ * `audience`, so that a conversion states a classification without matching anything of its own. The classification is
+ * left to the model, which reads the vocabularies itself and states no topic where the event supports none, rather
+ * than being handed the closest one whatever its distance.
  *
- * The event is classified on its title and description taken together, as the page states them, so that a page saying
- * nothing about its topic is classified on what it is about rather than left unclassified.
- *
- * Both taxonomies are read on the first payload they classify and held afterwards, so a taxonomy edited during a run
- * is taken up by a later one.
+ * Topics the taxonomies don't hold are dropped, as identifiers are stated by the model rather than copied from the
+ * vocabulary by construction.
  *
  * @returns A task answering a feed of extracted property payloads with the same payloads, classified
  *
- * @throws {@link !Error Error} If no execution is running, as the store and the embedder are resolved from the
- * enclosing one
+ * @throws {@link !Error Error} If no execution is running, as the Gemini client is resolved from the enclosing one
  */
 export function classify(): Task<Object, Object> {
 
+	const ai = service(createGoogleAI);
+
 	return map(async payload => {
 
-		if ( payload.event !== true ) { // a payload stating no event is dropped downstream, so it is not embedded
+		if ( payload.event !== true ) { // a payload stating no event is dropped downstream, so it is not classified
 
 			return payload;
 
 		} else {
 
-			const query = synopsis(
-				payload.title as undefined | string,
-				payload.description as undefined | string
-			);
+			const { about, audience } = json<{
 
-			const [about, audience] = await Promise.all([
-				match(eventTopics, query),
-				match(stakeholderTopics, query)
-			]);
+				about?: readonly string[]
+				audience?: readonly string[]
+
+			}>(await ai.models.generateContent({
+
+				model: "gemini-3.6-flash",
+
+				contents: markdown`
+					title: ${payload.title as undefined | string ?? ""}
+					description: ${payload.description as undefined | string ?? ""}
+				`,
+
+				config: {
+
+					seed: 0,
+					temperature: 0,
+
+					systemInstruction: await file(".sys.md", import.meta.url),
+
+					tools,
+					automaticFunctionCalling: {
+						maximumRemoteCalls: 50
+					},
+
+					responseMimeType: "application/json",
+					responseSchema: {
+
+						type: Type.OBJECT,
+
+						properties: {
+
+							about: {
+								type: Type.ARRAY,
+								items: { type: Type.STRING },
+								description: `Identifiers of the topics from <${eventTopics.id}> the event is about`
+							},
+
+							audience: {
+								type: Type.ARRAY,
+								items: { type: Type.STRING },
+								description: `Identifiers of the stakeholder types from <${stakeholderTopics.id}> the event is for`
+							}
+
+						},
+
+						required: ["about", "audience"]
+
+					}
+
+				}
+
+			}));
 
 			return {
 
 				...payload,
 
-				about,
-				audience
+				about: await stated(eventTopics, about),
+				audience: await stated(stakeholderTopics, audience)
 
 			};
 
@@ -80,11 +140,26 @@ export function classify(): Task<Object, Object> {
 	});
 
 
-	async function match(taxonomy: Taxonomy, query: Text): Promise<readonly Reference[]> {
-		return (await getTopicMatches(taxonomy, query))
-			.filter(({ distance }) => distance <= threshold)
-			.slice(0, 1)
-			.map(({ id }) => id);
+	async function stated(taxonomy: Taxonomy, ids: readonly string[] = []): Promise<readonly Reference[]> {
+
+		const topics = await Promise.all(ids.map(async id => {
+
+			if ( (await getTopicEntries(taxonomy, [id])).length > 0 ) {
+
+				return id;
+
+			} else {
+
+				logger.warning`unknown topic <${id}> for taxonomy <${taxonomy.id}>`;
+
+				return undefined;
+
+			}
+
+		}));
+
+		return topics.filter(isString);
+
 	}
 
 }

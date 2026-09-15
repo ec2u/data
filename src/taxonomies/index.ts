@@ -17,8 +17,7 @@
 import { memoize } from "@/_/core/memoize.js";
 import { createStore } from "@/_/gear-store/index.js";
 import { createGoogleAI, embedding } from "@/_/muse-google/index.js";
-import { decompress, type Distance, type Vector } from "@/_/muse/index.js";
-import { cosine } from "@/_/muse/index.js";
+import { cosine, decompress, type Distance, type Vector } from "@/_/muse/index.js";
 import { Dataset, Resource } from "@/datasets/index.js";
 import { ec2u } from "@/vocabularies/ec2u.js";
 import { SKOSConcept, SKOSConceptScheme } from "@/vocabularies/skos.js";
@@ -51,8 +50,11 @@ const taxonomies = memoize(async (id: Reference) => {
 			resources: [{
 				id: "",
 				prefLabel: "",
+				altLabel: [""],
 				definition: "",
-				broaderTransitive: [""],
+				broader: [""],
+				narrower: [""],
+				related: [""],
 				embedding: ""
 			}]
 
@@ -60,34 +62,69 @@ const taxonomies = memoize(async (id: Reference) => {
 
 	});
 
-	return (topics?.resources ?? []).map(({
+	const stated = topics?.resources ?? [];
 
-		prefLabel,
-		broaderTransitive,
+	// linked topics are named alongside their labels, so that a consumer weighs a topic against the neighbourhood it
+	// stands in without looking every reference up
 
-		embedding,
+	const labels = new Map(stated.map(({ id, prefLabel }) => [id, prefLabel]));
 
-		...topic
-
-	}) => ({
+	return stated.map(({ altLabel, broader, narrower, related, embedding, ...topic }) => ({
 
 		...topic,
 
-		label: prefLabel,
-		ancestors: broaderTransitive,
+		// a property the topic states nothing for is left out of the model, rather than stated as an empty array
+
+		altLabel: altLabel ?? [],
+
+		broader: refs(broader),
+		narrower: refs(narrower),
+		related: refs(related),
 
 		embedding: decompress(embedding)
 
 	}));
 
-});
 
+	function refs(ids: undefined | readonly Reference[]): readonly TopicReference[] {
+		return (ids ?? []).map(id => ({ id, prefLabel: labels.get(id) }));
+	}
+
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type Taxonomy = Instance<typeof Taxonomy>;
 export type Topic = Instance<typeof Topic>;
+
+
+export type TopicMatch = TopicEntry & {
+
+	readonly distance: Distance
+
+}
+
+export type TopicEntry = {
+
+	readonly id: Reference
+
+	readonly prefLabel: Text
+	readonly altLabel: readonly Text[]
+	readonly definition?: Markdown
+
+	readonly broader: readonly TopicReference[]
+	readonly narrower: readonly TopicReference[]
+	readonly related: readonly TopicReference[]
+
+}
+
+export type TopicReference = {
+
+	readonly id: Reference
+	readonly prefLabel?: Text
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,7 +201,6 @@ export function getTopicId(taxonomy: Taxonomy, path: readonly string[]): Referen
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export async function getTopicEmbedding(text: Text): Promise<Vector> {
 
@@ -194,17 +230,7 @@ export async function getTopicEmbedding(text: Text): Promise<Vector> {
 
 }
 
-export async function getTopicMatches(taxonomy: Taxonomy, query: Text): Promise<ReadonlyArray<{
-
-	readonly id: Reference
-
-	readonly label: Text,
-	readonly definition?: Markdown
-	readonly ancestors: readonly Reference[]
-
-	readonly distance: Distance
-
-}>> {
+export async function getTopicMatches(taxonomy: Taxonomy, query: Text): Promise<readonly TopicMatch[]> {
 
 	const [vector, topics] = await Promise.all([
 
@@ -215,18 +241,30 @@ export async function getTopicMatches(taxonomy: Taxonomy, query: Text): Promise<
 
 	return topics
 
-		.map(({ id, label, definition, ancestors, embedding }) => ({
+		.map(({ embedding, ...topic }) => ({
 
-			id,
-
-			label,
-			definition,
-			ancestors,
+			...topic,
 
 			distance: cosine(vector, embedding)
 
 		}))
 
 		.sort(by(({ distance }) => distance));
+
+}
+
+export async function getTopicEntries(taxonomy: Taxonomy, topics?: readonly Reference[]): Promise<readonly TopicEntry[]> {
+
+	return (await taxonomies(taxonomy.id))
+
+		.filter(({ id, broader }) =>
+			topics === undefined || topics.length === 0
+				? broader.length === 0
+				: topics.includes(id)
+		)
+
+		.sort(by(({ id }) => id))
+
+		.map(({ embedding, ...record }) => record);
 
 }

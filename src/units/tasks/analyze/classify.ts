@@ -17,7 +17,7 @@
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
 import { topics } from "@/units/_/store.js";
-import { matchTopics } from "@/taxonomies/tools/matchTopics.js";
+import { searchTopics } from "@/taxonomies/tools/searchTopics.js";
 import { organizations } from "@/taxonomies/pipes/organizations.core.js";
 import { Unit } from "@/units/_index.js";
 import { Type } from "@google/genai";
@@ -35,10 +35,7 @@ const logger = log(import.meta.url);
 
 
 const tools = [
-	matchTopics(organizations, {
-		focus: `${organizations.id}/university-unit`,
-		narrowing: 1.05 // slightly penalise over-specific typologies
-	})
+	searchTopics([organizations]) // !!! prompt still states the legacy `matchTopics` function, focus and narrowing
 ];
 
 

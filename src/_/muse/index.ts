@@ -61,17 +61,6 @@ export type Vector =
 export type Distance =
 	number;
 
-/**
- * A match returned by a vector lookup.
- *
- * Names an entry a lookup answers with, together with the {@link Distance} it stands at from the query, so that a
- * caller can weigh how close the match is rather than rely on the ranking alone.
- *
- * @typeParam T The type of the identifiers matched entries are named by
- */
-export type Match<T> =
-	readonly [T, Distance];
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
