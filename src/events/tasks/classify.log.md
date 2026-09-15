@@ -13,13 +13,21 @@ human-readable documentation, not an automated test suite; see the `prompt-engin
 The prompt replaces a nearest-neighbour classifier that ranked an event embedding against every topic of a vocabulary
 and stated the closest one. That classifier could not abstain: with the stakeholder vocabulary lying in a 0.068 band
 for a page saying nothing about audience, it stated whichever topic happened to win by 0.0096. Judgement now rests
-with the model, which reads the vocabularies through `searchTopics` and `browseTopics` and states nothing where the
-text gives no ground.
+with the model, which reads the vocabulary through `searchTopics` and `browseTopics` and states nothing where the text
+gives no ground.
+
+Subject, format and audience are three branches of the single `EC2U Events` scheme, stated together under `keywords`
+and told apart by the branch a topic descends from. The `EC2U Stakeholders` scheme no longer classifies events: it maps
+parties with an interest in the institution (funding bodies, regulators, publishers), which is not who turns up to a
+lecture, and its student branch splits on enrolment status that no event page states.
 
 # Inbox
 
 - No run of the reworked prompt has been read yet: every requirement below states an expectation, not an observation.
   Run the Coimbra feed and record what the model actually does before tightening anything.
+- The Model Comparison below was measured against the two-vocabulary prompt and the stakeholder identifiers it stated.
+  Its wall clock and browse behaviour carry over; its identifiers do not. Re-run it once the three-branch scheme is
+  published.
 - The model is `gemini-3.6-flash`, the tier documented for general agentic tasks. `gemini-3.7-flash` is the fallback
   where it drops below the standard set below; `gemini-3.5-flash-lite` was measured and rejected.
 
@@ -49,12 +57,14 @@ It also made no `browseTopics` calls at all, where the other tiers descended int
 
 ## Abstention Where The Text States No Audience
 
-A page describing a permanent museum exhibition, with no word about who it is for, MUST come back with an empty
-`audience`. The nearest-neighbour classifier answered `visiting-teaching-staff` for exactly this page, on a margin of
-0.0096 over the runner-up.
+A page describing a permanent museum exhibition, with no word about who it is for, MUST come back with no topic of the
+audience branch, while still carrying its subject and format topics. The nearest-neighbour classifier answered
+`visiting-teaching-staff` for exactly this page, on a margin of 0.0096 over the runner-up.
 
 **CRITICAL**: an audience the text does not support is the defect this prompt exists to fix. Never relax the
-abstention requirement to raise coverage.
+abstention requirement to raise coverage. Collapsing the three branches into one `keywords` array makes a partial
+answer look complete: a payload carrying subject and format topics alone is the expected shape for such a page, not a
+truncated one.
 
 ## Identifiers Copied From Tool Responses
 
@@ -62,10 +72,11 @@ Every identifier stated MUST appear verbatim in a tool response of the same gene
 recalled identifiers are dropped by the task, which logs `unknown topic <...>`: a warning in the run log is evidence
 of this failure, not of a vocabulary gap.
 
-## One Search Per Vocabulary At Least
+## One Search Per Branch At Least
 
-A generation stating topics without having called `searchTopics` for that vocabulary has answered from memory of the
-vocabulary rather than from the vocabulary. Read the call log alongside the payload when validating.
+A generation stating topics without having called `searchTopics` for each of subject, format and audience has answered
+from memory of the vocabulary rather than from the vocabulary. Read the call log alongside the payload when
+validating: three searches phrased for three different aspects, not one search whose shortlist is mined for all three.
 
 ## Distances Are Not Verdicts
 
@@ -76,4 +87,16 @@ ranking as a decision, which the requirements forbid.
 ## Topical Wording Does Not Settle Audience
 
 The audience query MUST be phrased for who the event addresses, not for what it covers. A generation reusing the
-topical query for both vocabularies reproduces the failure of the classifier this prompt replaced.
+topical query across branches reproduces the failure of the classifier this prompt replaced.
+
+## Branch Top Concepts Are Never Answers
+
+`subject`, `format` and `audience` divide the scheme; they say nothing about an event on their own. A generation
+stating one of them has answered that a branch applies without saying how, which the requirements forbid: browse for
+the narrower concept, or state nothing for that branch.
+
+## Format Is Read Independently Of Subject
+
+A conference on climate policy carries both a format topic and a subject topic; a conference on nothing in particular
+carries a format topic alone. A generation that lets the subject decide the format, or declines to state a format
+because the subject is unclear, has collapsed two independent branches.

@@ -67,8 +67,7 @@ export function SchemaEvent() {
 
 		publisher: optional(reference(SchemaOrganization)),
 
-		about: multiple(reference(SKOSConcept)),
-		audience: multiple(reference(SKOSConcept))
+		keywords: multiple(reference(SKOSConcept))
 
 	});
 }

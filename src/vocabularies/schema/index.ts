@@ -69,6 +69,7 @@ export const schema = createNamespace("https://schema.org/", [
 	"publisher",
 	"about",
 	"audience",
+	"keywords",
 
 	"numberOfCredits",
 	"teaches",

@@ -87,8 +87,7 @@ export function convert(university: {
 
 				label: title,
 
-				about: multiple(path("about[*]").map(link)),
-				audience: multiple(path("audience[*]").map(link)),
+				keywords: multiple(path("keywords[*]").map(link)),
 
 				name: title,
 				description: optional(path("description").map(string)),

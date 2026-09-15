@@ -18,7 +18,6 @@ import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { Resource } from "@/datasets/index.js";
 import { Organization } from "@/organizations/index.js";
 import { EventTopic } from "@/taxonomies/pipes/events.core.js";
-import { StakeholderTopic } from "@/taxonomies/pipes/stakeholders.core.js";
 import { University } from "@/universities/index.js";
 import { base, CommentLength, EC2U, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
 import { SchemaEvent } from "@/vocabularies/schema/event.js";
@@ -74,10 +73,9 @@ export function Event() {
 
 		publisher: optional(reference(Organization)),
 
-		about: multiple(reference(EventTopic)),
-		audience: multiple(reference(StakeholderTopic)),
+		keywords: multiple(reference(EventTopic)),
 
-		digest: required(string, { // !!! factor?
+		digest: required(string, {
 
 			hidden: true,
 

@@ -35,7 +35,7 @@ const logger = log(import.meta.url);
 
 
 const tools = [
-	searchTopics([organizations]) // !!! prompt still states the legacy `matchTopics` function, focus and narrowing
+	searchTopics(organizations) // !!! prompt still states the legacy `matchTopics` function, focus and narrowing
 ];
 
 

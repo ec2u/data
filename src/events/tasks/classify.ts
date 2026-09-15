@@ -16,9 +16,8 @@
 
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json } from "@/_/muse-google/index.js";
-import { getTopicEntries, type Taxonomy } from "@/taxonomies/index.js";
-import { events as eventTopics } from "@/taxonomies/pipes/events.core.js";
-import { stakeholders as stakeholderTopics } from "@/taxonomies/pipes/stakeholders.core.js";
+import { getTopicEntries } from "@/taxonomies/index.js";
+import { events } from "@/taxonomies/pipes/events.core.js";
 import { browseTopics } from "@/taxonomies/tools/browseTopics.js";
 import { searchTopics } from "@/taxonomies/tools/searchTopics.js";
 import { Type } from "@google/genai";
@@ -31,15 +30,14 @@ import type { Reference } from "@metreeca/qest/resource";
 import { log } from "@metreeca/tape";
 
 
-const logger = log(import.meta.url);
-
-
-const vocabularies = [eventTopics, stakeholderTopics];
 
 const tools = [
-	searchTopics(vocabularies),
-	browseTopics(vocabularies)
+	searchTopics(events),
+	browseTopics(events)
 ];
+
+
+const logger = log(import.meta.url);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,12 +45,13 @@ const tools = [
 /**
  * Creates a task classifying extracted event properties.
  *
- * Each payload is answered with the topics and the stakeholder types the event is about, stated under `about` and
- * `audience`, so that a conversion states a classification without matching anything of its own. The classification is
- * left to the model, which reads the vocabularies itself and states no topic where the event supports none, rather
- * than being handed the closest one whatever its distance.
+ * Each payload is answered with the topics the event is tagged with, stated under `keywords`, so that a conversion
+ * states a classification without matching anything of its own. Subject, format and audience are drawn from the same
+ * taxonomy and stated together, so that a consumer tells the three apart by the branch a topic stands in rather than
+ * by the property carrying it. The classification is left to the model, which reads the vocabulary itself and states
+ * no topic where the event supports none, rather than being handed the closest one whatever its distance.
  *
- * Topics the taxonomies don't hold are dropped, as identifiers are stated by the model rather than copied from the
+ * Topics the taxonomy doesn't hold are dropped, as identifiers are stated by the model rather than copied from the
  * vocabulary by construction.
  *
  * @returns A task answering a feed of extracted property payloads with the same payloads, classified
@@ -71,10 +70,9 @@ export function classify(): Task<Object, Object> {
 
 		} else {
 
-			const { about, audience } = json<{
+			const { keywords } = json<{
 
-				about?: readonly string[]
-				audience?: readonly string[]
+				keywords?: readonly string[]
 
 			}>(await ai.models.generateContent({
 
@@ -104,21 +102,15 @@ export function classify(): Task<Object, Object> {
 
 						properties: {
 
-							about: {
+							keywords: {
 								type: Type.ARRAY,
 								items: { type: Type.STRING },
-								description: `Identifiers of the topics from <${eventTopics.id}> the event is about`
-							},
-
-							audience: {
-								type: Type.ARRAY,
-								items: { type: Type.STRING },
-								description: `Identifiers of the stakeholder types from <${stakeholderTopics.id}> the event is for`
+								description: `Identifiers of the topics from <${events.id}> the event is tagged with`
 							}
 
 						},
 
-						required: ["about", "audience"]
+						required: ["keywords"]
 
 					}
 
@@ -130,8 +122,7 @@ export function classify(): Task<Object, Object> {
 
 				...payload,
 
-				about: await stated(eventTopics, about),
-				audience: await stated(stakeholderTopics, audience)
+				keywords: await stated(keywords)
 
 			};
 
@@ -140,17 +131,17 @@ export function classify(): Task<Object, Object> {
 	});
 
 
-	async function stated(taxonomy: Taxonomy, ids: readonly string[] = []): Promise<readonly Reference[]> {
+	async function stated(ids: readonly string[] = []): Promise<readonly Reference[]> {
 
 		const topics = await Promise.all(ids.map(async id => {
 
-			if ( (await getTopicEntries(taxonomy, [id])).length > 0 ) {
+			if ( (await getTopicEntries(events, [id])).length > 0 ) {
 
 				return id;
 
 			} else {
 
-				logger.warning`unknown topic <${id}> for taxonomy <${taxonomy.id}>`;
+				logger.warning`unknown topic <${id}> for taxonomy <${events.id}>`;
 
 				return undefined;
 

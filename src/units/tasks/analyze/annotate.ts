@@ -31,7 +31,7 @@ const logger = log(import.meta.url);
 
 
 const tools = [
-	searchTopics([euroscivoc]) // !!! prompt still states the legacy `matchTopics` function
+	searchTopics(euroscivoc) // !!! prompt still states the legacy `matchTopics` function
 ];
 
 

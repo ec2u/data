@@ -74,11 +74,11 @@ const logger = log(import.meta.url);
  * @returns A {@link https://googleapis.github.io/js-genai/release_docs/interfaces/types.CallableTool.html
  * CallableTool} declaring the `browseTopics` function and handling the calls the model makes to it
  *
- * @throws {@link !RangeError RangeError} If `taxonomies` is empty, as a generation would have nothing to walk
+ * @throws {@link !RangeError RangeError} If no taxonomy is stated, as a generation would have nothing to walk
  *
  * @see {@link https://ai.google.dev/gemini-api/docs/function-calling Function calling with the Gemini API}
  */
-export function browseTopics(taxonomies: readonly Taxonomy[]): CallableTool {
+export function browseTopics(...taxonomies: readonly Taxonomy[]): CallableTool {
 
 	if ( taxonomies.length === 0 ) {
 		throw new RangeError("expected non-empty taxonomies");
