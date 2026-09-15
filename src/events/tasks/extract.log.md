@@ -200,12 +200,28 @@ resolving relative dates against its own idea of today.
 
 ## Title Suffix
 
-Pages whose markdown title carries a site or institution suffix (`… - Agenda de Coimbra`, `… - University of
-Coimbra`) yield a `title` without it.
+Pages whose markdown title carries site furniture (`… - Agenda de Coimbra`, `… | unipv.news | The University of Pavia
+Magazine`) yield a `title` without it.
 
-The prompt asks for no trimming, so this is model judgment rather than instructed behaviour: an edit that starts
-producing the suffix is a change of behaviour, not a regression. Sources vary in how they build page titles, so recheck
-this on every source added.
+This held on the Coimbra test set as model judgment while the prompt asked for no trimming, and stopped holding as soon
+as a second source was read: Pavia pages joining the site and magazine names with pipes came back with the whole chain,
+which the downstream clip then spent the label budget on. The prompt now names the furniture (site, publication,
+section, tagline, breadcrumb), states that the separator does not matter, and points the model at the body heading
+where trimming would leave nothing.
+
+Stripping and translating pull against each other, and the first wording of the fallback lost the second: pointed at
+the body heading where trimming would leave nothing, the model read the instruction as licence to quote, and one page
+of three came back half translated (`… (I Edizione): i reati contro la sfera sessuale`) where the stored title had been
+fully English. The bullet now states that stripping settles what to state and never whether to translate it, and all
+three pages come back in English.
+
+CRITICAL: a title reads as clean until a source builds its headings another way, and the failure is silent because the
+clipped label still looks like a title. Recheck this on every source added, and read the title against the page rather
+than against how plausible it looks.
+
+CRITICAL: any instruction pointing the title at a particular piece of the page competes with the English rule, which
+sits further down the prompt and does not win by itself. After touching this bullet, read the titles of a non-English
+source, not only their trimming.
 
 ## Property Set
 

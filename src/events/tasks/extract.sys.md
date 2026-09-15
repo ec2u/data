@@ -18,7 +18,12 @@ Extract the following properties from the provided document:
 - event: whether the document describes a single event (see Error Handling)
 - url, copied verbatim from the `url` field of the frontmatter, query component included; NEVER state a link found in
   the body of the document, a canonical link, a shortened form, or an address you complete or tidy up in any way
-- title
+- title of the event alone, stripped of the page furniture the document builds its heading out of: a site name, a
+  publication or section name, a tagline and a breadcrumb trail are NEVER carried over, however the document joins them
+  to the title (`… | unipv.news | The University of Pavia Magazine`, `… - Agenda de Coimbra`, `Events :: Faculty of
+  Law`); where stripping them would leave nothing, draw the title from the heading the body gives the event. The title
+  is stated in English whichever heading it is drawn from: stripping settles what to state, NEVER whether to translate
+  it, and a title left part in the document's own language is wrong however faithfully it quotes the page
 - plain text summary of less than 500 characters with strictly no markdown formatting
 - complete descriptive text as included in the document in markdown format; make absolutely sure not to include in the
   description H1 (#) headings with the document title; NEVER carry over navigation, listings of other events, or the
