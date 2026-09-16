@@ -23,16 +23,16 @@ import { email, phone, text } from "@metreeca/blue/string";
 export function SchemaOrganization() {
 	return resource(SchemaThing, {
 
+		class: schema.Organization
+
+	}, {
+
 		legalName: optional(text),
 
 		email: multiple(email),
 		telephone: multiple(phone),
 
 		location: optional(SchemaLocation)
-
-	}, {
-
-		class: schema.Organization
 
 	});
 }

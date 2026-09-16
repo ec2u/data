@@ -131,21 +131,26 @@ export type TopicReference = {
 export function Taxonomy() {
 	return resource(Dataset, SKOSConceptScheme, {
 
+		space: ec2u,
+		class: ec2u.Taxonomy
+
+	}, {
+
 		resources: multiple(reference(Topic)),
 
 		hasConcept: multiple(reference(Topic)),
 		hasTopConcept: multiple(reference(Topic))
-
-	}, {
-
-		space: ec2u,
-		class: ec2u.Taxonomy
 
 	});
 }
 
 export function Topic() {
 	return resource(Resource, SKOSConcept, {
+
+		space: ec2u,
+		class: ec2u.Topic
+
+	}, {
 
 		inScheme: required(reference(Taxonomy)),
 		topConceptOf: optional(reference(Taxonomy)),
@@ -178,11 +183,6 @@ export function Topic() {
 			`
 
 		})
-
-	}, {
-
-		space: ec2u,
-		class: ec2u.Topic
 
 	});
 }

@@ -54,7 +54,12 @@ export const universities = immutable({
 export function University() {
 	return resource(Organization, Feature, OrgFormalOrganization, {
 
-		dataset: required(reference(resource(Dataset, {}, { hasValue: [ universities.id ] }))),
+		space: ec2u,
+		class: ec2u.University
+
+	}, {
+
+		dataset: required(reference(resource(Dataset, { hasValue: [ universities.id ] }, {}))),
 
 		depiction: nonempty(iri),
 		homepage: nonempty(iri),
@@ -64,11 +69,6 @@ export function University() {
 
 		city: required(Feature), // !!! reference?
 		country: required(Feature) // !!! reference?
-
-	}, {
-
-		space: ec2u,
-		class: ec2u.University
 
 	});
 }

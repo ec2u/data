@@ -86,6 +86,10 @@ export const CommentLength = 500;
 export function Entity() {
 	return resource({
 
+		space: rdfs
+
+	}, {
+
 		id: id(),
 
 		label: required(text({
@@ -99,23 +103,24 @@ export function Entity() {
 		isDefinedBy: optional(iri),
 		seeAlso: multiple(iri)
 
-	}, {
-
-		space: rdfs
-
 	});
 }
 
 export function Feature() {
-	return resource(Entity, WGSPoint, {}, {
+	return resource(Entity, WGSPoint, {
 
 		space: wgs
 
-	});
+	}, {});
 }
 
 export function Page() {
 	return resource({
+
+		space: ec2u,
+		class: ec2u.Page
+
+	}, {
 
 		id: id(),
 
@@ -132,11 +137,6 @@ export function Page() {
 			description: "A unique identification of the content the page carried when it was read."
 
 		})
-
-	}, {
-
-		space: ec2u,
-		class: ec2u.Page
 
 	});
 }

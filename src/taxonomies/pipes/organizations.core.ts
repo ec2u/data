@@ -47,5 +47,5 @@ export const organizations = immutable({ // !!! sync from `taxonomies-ec2u-organ
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function OrganizationTopic() {
-	return resource(Topic, {}, { pattern: `${organizations.id}/*` });
+	return resource(Topic, { pattern: `${organizations.id}/*` }, {});
 }

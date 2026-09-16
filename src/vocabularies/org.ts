@@ -51,6 +51,10 @@ export const org = createNamespace("http://www.w3.org/ns/org#", [
 export function OrgOrganizationalUnit() {
 	return resource(OrgOrganization, {
 
+		class: org.OrganizationalUnit
+
+	}, {
+
 		unitOf: nonempty(reference(OrgOrganization), {
 
 			forward: org,
@@ -58,15 +62,16 @@ export function OrgOrganizationalUnit() {
 
 		})
 
-	}, {
-
-		class: org.OrganizationalUnit
-
 	});
 }
 
 export function OrgOrganization() {
 	return resource(FOAFOrganization, {
+
+		space: org,
+		class: org.Organization
+
+	}, {
 
 		// ;( `identifier` omitted: it would clash with `schema:identifier`, the term EC2U `Organization` publishes
 
@@ -118,26 +123,21 @@ export function OrgOrganization() {
 
 		})
 
-	}, {
-
-		space: org,
-		class: org.Organization
-
 	});
 }
 
 export function OrgFormalOrganization() {
-	return resource(OrgOrganization, {}, {
+	return resource(OrgOrganization, {
 
 		class: org.FormalOrganization
 
-	});
+	}, {});
 }
 
 export function OrgOrganizationalCollaboration() {
-	return resource(OrgOrganization, {}, {
+	return resource(OrgOrganization, {
 
 		class: org.OrganizationalCollaboration
 
-	});
+	}, {});
 }

@@ -257,12 +257,12 @@ describe("schema", () => {
 
 		expect(schema(resource({
 
-			label: required(text)
+			name: "Event",
+			description: "The event as the source states it"
 
 		}, {
 
-			name: "Event",
-			description: "The event as the source states it"
+			label: required(text)
 
 		}))).toMatchObject({
 
@@ -311,12 +311,12 @@ describe("schema", () => {
 
 		expect(schema(resource({
 
-			label: required(text, { name: { en: "Title", it: "Titolo" }, description: { en: "The name", it: "Il nome" } })
+			name: { en: "Event", it: "Evento" },
+			description: { en: "The event", it: "L'evento" }
 
 		}, {
 
-			name: { en: "Event", it: "Evento" },
-			description: { en: "The event", it: "L'evento" }
+			label: required(text, { name: { en: "Title", it: "Titolo" }, description: { en: "The name", it: "Il nome" } })
 
 		}))).toMatchObject({
 
@@ -347,12 +347,12 @@ describe("schema", () => {
 
 		const converted = schema(resource({
 
-			label: required(text, { name: { it: "Titolo" }, description: { it: "Il nome" } })
+			name: { it: "Evento" },
+			description: { it: "L'evento" }
 
 		}, {
 
-			name: { it: "Evento" },
-			description: { it: "L'evento" }
+			label: required(text, { name: { it: "Titolo" }, description: { it: "Il nome" } })
 
 		}));
 

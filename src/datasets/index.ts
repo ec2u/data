@@ -28,6 +28,11 @@ import { date, markdown, text } from "@metreeca/blue/string";
 export function Dataset() {
 	return resource(Resource, {
 
+		space: dct,
+		class: ec2u.Dataset
+
+	}, {
+
 		title: required(text),
 		alternative: optional(text),
 		description: required(markdown),
@@ -54,16 +59,16 @@ export function Dataset() {
 
 		})
 
-	}, {
-
-		space: dct,
-		class: ec2u.Dataset
-
 	});
 }
 
 export function Resource() {
 	return resource(Entity, {
+
+		space: ec2u,
+		class: ec2u.Resource
+
+	}, {
 
 		generated: optional(boolean, {
 
@@ -79,11 +84,6 @@ export function Resource() {
 		}),
 
 		university: optional(reference(University))
-
-	}, {
-
-		space: ec2u,
-		class: ec2u.Resource
 
 	});
 }

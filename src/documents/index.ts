@@ -58,6 +58,11 @@ export const documents = immutable({
 export function Document() {
 	return resource(Resource, {
 
+		space: dct,
+		class: ec2u.Document
+
+	}, {
+
 		url: multiple(iri, {
 
 			forward: schema
@@ -94,11 +99,6 @@ export function Document() {
 		audience: multiple(reference(StakeholderTopic)),
 
 		relation: multiple(reference(Document))
-
-	}, {
-
-		space: dct,
-		class: ec2u.Document
 
 	});
 }

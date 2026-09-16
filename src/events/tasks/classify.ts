@@ -49,21 +49,26 @@ const logger = log(import.meta.url);
 export function Classified() {
 	return resource(Extracted, {
 
+		name: "Classified Event",
+		description: "An extracted event with the vocabulary topics the model tagged it with"
+
+	}, {
+
 		keywords: multiple(iri, {
 			name: "Topics",
 			description: "The topics of the event vocabulary the event is tagged with"
 		})
-
-	}, {
-
-		name: "Classified Event",
-		description: "An extracted event with the vocabulary topics the model tagged it with"
 
 	});
 }
 
 export function Reported() {
 	return resource({
+
+		name: "Event Topics",
+		description: "The topics of the event vocabulary a single event is tagged with"
+
+	}, {
 
 		keywords: multiple(iri, {
 			name: "Topics",
@@ -73,11 +78,6 @@ export function Reported() {
 				tool response, copied exactly.
 			`
 		})
-
-	}, {
-
-		name: "Event Topics",
-		description: "The topics of the event vocabulary a single event is tagged with"
 
 	});
 }

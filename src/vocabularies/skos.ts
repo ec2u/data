@@ -50,6 +50,11 @@ export const skos = createNamespace("http://www.w3.org/2004/02/skos/core#", [
 export function SKOSConceptScheme() {
 	return resource({
 
+		space: skos,
+		class: skos.ConceptScheme
+
+	}, {
+
 		hasTopConcept: multiple(reference(SKOSConcept), {
 
 			foreign: true,
@@ -67,16 +72,16 @@ export function SKOSConceptScheme() {
 
 		})
 
-	}, {
-
-		space: skos,
-		class: skos.ConceptScheme
-
 	});
 }
 
 export function SKOSConcept() {
 	return resource({
+
+		space: skos,
+		class: skos.Concept
+
+	}, {
 
 		notation: optional(string), // ;( should be typed as per SKOS best practices
 
@@ -122,11 +127,6 @@ export function SKOSConcept() {
 			reverse: skos
 
 		})
-
-	}, {
-
-		space: skos,
-		class: skos.Concept
 
 	});
 }

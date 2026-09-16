@@ -102,6 +102,10 @@ export const schema = createNamespace("https://schema.org/", [
 export function SchemaBase() {
 	return resource({
 
+		space: schema
+
+	}, {
+
 		url: multiple(iri),
 
 		identifier: optional(string), // ;( single plain string: the standard range is Text | URL | PropertyValue
@@ -109,10 +113,6 @@ export function SchemaBase() {
 		name: optional(text),
 		description: optional(markdown),
 		disambiguatingDescription: optional(markdown)
-
-	}, {
-
-		space: schema
 
 	});
 }
@@ -126,17 +126,17 @@ export function SchemaThing() {
 }
 
 export function SchemaImageObject() {
-	return resource(SchemaBase, { // ;( extends Base, not Thing: the inherited `image` would nest ImageObject endlessly
+	return resource(SchemaBase, {
+
+		class: schema.ImageObject
+
+	}, { // ;( extends Base, not Thing: the inherited `image` would nest ImageObject endlessly
 
 		url: nonempty(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
 
 		caption: optional(text),
 		author: optional(text),
 		copyrightNotice: optional(text)
-
-	}, {
-
-		class: schema.ImageObject
 
 	});
 }

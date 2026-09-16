@@ -55,15 +55,15 @@ export const units = immutable({
 export function Unit() {
 	return resource(Organization, OrgOrganizationalUnit, {
 
+		space: ec2u,
+		class: ec2u.Unit
+
+	}, {
+
 		unitOf: nonempty(reference(Organization)),
 
 		subject: multiple(reference(EuroSciVocTopic), { forward: dct }),
 		keyword: multiple(text, { forward: dcat })
-
-	}, {
-
-		space: ec2u,
-		class: ec2u.Unit
 
 	});
 }

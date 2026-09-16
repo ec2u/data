@@ -34,20 +34,24 @@ export function SchemaLocation() {
 export function SchemaPlace() {
 	return resource(SchemaThing, {
 
+		class: schema.Place
+
+	}, {
+
 		address: optional(SchemaPostalAddress),
 
 		latitude: required(decimal),
 		longitude: required(decimal)
-
-	}, {
-
-		class: schema.Place
 
 	});
 }
 
 export function SchemaPostalAddress() {
 	return resource(SchemaThing, {
+
+		class: schema.PostalAddress
+
+	}, {
 
 		streetAddress: required(text),
 		postalCode: optional(text),
@@ -59,21 +63,17 @@ export function SchemaPostalAddress() {
 		email: optional(email),
 		telephone: optional(phone)
 
-	}, {
-
-		class: schema.PostalAddress
-
 	});
 }
 
 export function SchemaVirtualLocation() {
 	return resource(SchemaThing, {
 
-		url: nonempty(iri)
+		class: schema.VirtualLocation
 
 	}, {
 
-		class: schema.VirtualLocation
+		url: nonempty(iri)
 
 	});
 }

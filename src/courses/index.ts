@@ -59,6 +59,11 @@ export const courses = immutable({
 export function Course() {
 	return resource(Offering, SchemaCourse, SchemaCourseInstance, {
 
+		space: ec2u,
+		class: ec2u.Course
+
+	}, {
+
 		year: optional(string({ pattern: YearPattern })),
 		term: multiple(Term),
 
@@ -70,11 +75,6 @@ export function Course() {
 			reverse: schema.hasCourse
 
 		})
-
-	}, {
-
-		space: ec2u,
-		class: ec2u.Course
 
 	});
 }

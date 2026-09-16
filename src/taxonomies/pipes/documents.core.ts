@@ -47,5 +47,5 @@ export const documents = immutable({ // !!! sync from `taxonomies-ec2u-documents
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function DocumentTopic() {
-	return resource(Topic, {}, { pattern: `${documents.id}/*` });
+	return resource(Topic, { pattern: `${documents.id}/*` }, {});
 }

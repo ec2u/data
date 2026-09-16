@@ -47,5 +47,5 @@ export const stakeholders = immutable({ // !!! sync from `taxonomies-ec2u-stakeh
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function StakeholderTopic() {
-	return resource(Topic, {}, { pattern: `${stakeholders.id}/*` });
+	return resource(Topic, { pattern: `${stakeholders.id}/*` }, {});
 }

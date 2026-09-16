@@ -48,10 +48,10 @@ export const programs = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Program() {
-	return resource(Offering, SchemaEducationalOccupationalProgram, {}, {
+	return resource(Offering, SchemaEducationalOccupationalProgram, {
 
 		space: ec2u,
 		class: ec2u.Program
 
-	});
+	}, {});
 }

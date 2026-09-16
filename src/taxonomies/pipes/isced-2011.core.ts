@@ -51,5 +51,5 @@ export const isced2011 = immutable({ // !!! persist
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function ISCED2011Topic() {
-	return resource(Topic, {}, { pattern: `${isced2011.id}/*` });
+	return resource(Topic, { pattern: `${isced2011.id}/*` }, {});
 }

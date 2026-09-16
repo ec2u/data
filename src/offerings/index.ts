@@ -27,15 +27,15 @@ import { multiple, optional, resource } from "@metreeca/blue/resource";
 export function Offering() {
 	return resource(Resource, SchemaLearningResource, {
 
+		space: ec2u,
+		class: ec2u.Offering
+
+	}, {
+
 		provider: optional(reference(Organization)),
 
 		educationalLevel: multiple(reference(ISCED2011Topic)),
 		about: multiple(reference(ISCEDF2013Topic))
-
-	}, {
-
-		space: ec2u,
-		class: ec2u.Offering
 
 	});
 }

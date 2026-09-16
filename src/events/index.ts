@@ -66,17 +66,17 @@ export type Publisher = Instance<typeof Publisher>;
 export function Event() {
 	return resource(Resource, SchemaEvent, {
 
+		space: ec2u,
+		class: ec2u.Event
+
+	}, {
+
 		name: optional(text({ maxLength: LabelLength })),
 		disambiguatingDescription: optional(text({ maxLength: CommentLength })),
 
 		publisher: optional(reference(Organization)),
 
 		keywords: multiple(reference(EventTopic))
-
-	}, {
-
-		space: ec2u,
-		class: ec2u.Event
 
 	});
 }

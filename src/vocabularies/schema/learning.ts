@@ -107,11 +107,11 @@ export function SchemaCourseInstance() {
 export function SchemaEducationalOccupationalCredential() {
 	return resource(SchemaThing, {
 
-		credentialCategory: required(SchemaCredentialCategory)
+		class: schema.EducationalOccupationalCredential
 
 	}, {
 
-		class: schema.EducationalOccupationalCredential
+		credentialCategory: required(SchemaCredentialCategory)
 
 	});
 }

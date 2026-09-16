@@ -223,13 +223,13 @@ function Events() {
 function Pages() {
 	return resource({
 
-		id: id(),
-
-		pages: multiple(reference(Page))
+		virtual: true // the pages are gathered by their own class, standing in no collection of their own
 
 	}, {
 
-		virtual: true // the pages are gathered by their own class, standing in no collection of their own
+		id: id(),
+
+		pages: multiple(reference(Page))
 
 	});
 }

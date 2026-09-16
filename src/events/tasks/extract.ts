@@ -35,6 +35,11 @@ import { service } from "@metreeca/gear";
 export function Extracted() {
 	return resource(Reported, {
 
+		name: "Extracted Event",
+		description: "A reported event with the publication status and the source digest the pipeline settles itself"
+
+	}, {
+
 		publishable: required(boolean, {
 			name: "Fit for Publication",
 			description: "Whether the event is to be carried downstream, being an event and not yet past"
@@ -49,16 +54,16 @@ export function Extracted() {
 			`
 		})
 
-	}, {
-
-		name: "Extracted Event",
-		description: "A reported event with the publication status and the source digest the pipeline settles itself"
-
 	});
 }
 
 export function Reported() {
 	return resource({
+
+		name: "Reported Event",
+		description: "An academic or cultural event as a source document describes it"
+
+	}, {
 
 		event: required(boolean, {
 			name: "Single Event",
@@ -175,11 +180,6 @@ export function Reported() {
 				stated in.
 			`
 		})
-
-	}, {
-
-		name: "Reported Event",
-		description: "An academic or cultural event as a source document describes it"
 
 	});
 }

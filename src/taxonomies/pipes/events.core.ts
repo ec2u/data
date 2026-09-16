@@ -47,5 +47,5 @@ export const events = immutable({ // !!! sync from `taxonomies-ec2u-events`
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function EventTopic() {
-	return resource(Topic, {}, { pattern: `${events.id}/*` });
+	return resource(Topic, { pattern: `${events.id}/*` }, {});
 }

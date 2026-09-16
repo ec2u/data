@@ -43,39 +43,39 @@ export const foaf = createNamespace("http://xmlns.com/foaf/0.1/", [
 export function FOAFAgent() {
 	return resource({
 
+		space: foaf,
+		class: foaf.Agent
+
+	}, {
+
 		depiction: multiple(iri),
 		homepage: multiple(iri),
 
 		mbox: multiple(email),
 		phone: multiple(phone)
 
-	}, {
-
-		space: foaf,
-		class: foaf.Agent
-
 	});
 }
 
 export function FOAFOrganization() {
-	return resource(FOAFAgent, {}, {
+	return resource(FOAFAgent, {
 
 		class: foaf.Organization
 
-	});
+	}, {});
 }
 
 export function FOAFPerson() {
 	return resource(FOAFAgent, {
 
+		class: foaf.Person
+
+	}, {
+
 		title: optional(text),
 
 		givenName: required(text),
 		familyName: required(text)
-
-	}, {
-
-		class: foaf.Person
 
 	});
 }

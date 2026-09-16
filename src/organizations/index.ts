@@ -53,6 +53,11 @@ export const organizations = immutable({
 export function Organization() {
 	return resource(Resource, OrgOrganization, SchemaOrganization, {
 
+		space: ec2u,
+		class: ec2u.Organization
+
+	}, {
+
 		subOrganizationOf: multiple(reference(Organization)),
 		hasSubOrganization: multiple(reference(Organization)),
 
@@ -62,11 +67,6 @@ export function Organization() {
 
 		hasHead: multiple(reference(Person)),
 		hasMember: multiple(reference(Person))
-
-	}, {
-
-		space: ec2u,
-		class: ec2u.Organization
 
 	});
 }
