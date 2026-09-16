@@ -15,7 +15,7 @@
  */
 
 import { getDate } from "@/_/core/temporal.js";
-import { route } from "@/_/flow/route.js";
+import { when } from "@/_/flow/when.js";
 import { digest } from "@/_/gear-store/_digest.js";
 import { validate } from "@/_/gear-store/validate.js";
 import { file } from "@/_/gear/files.js";
@@ -223,7 +223,7 @@ export function extract(): Task<Text, Instance<typeof Extracted>> {
 				}))
 
 			]))
-			(route(extracted => extracted.event, validate(Reported)))
+			(when(extracted => extracted.event, validate(Reported)))
 			(map(extracted => ({
 
 				publishable: extracted.event && !isStaleEvent(extracted),

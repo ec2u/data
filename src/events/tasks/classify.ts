@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { route } from "@/_/flow/route.js";
+import { when } from "@/_/flow/when.js";
 import { validate } from "@/_/gear-store/validate.js";
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json, schema } from "@/_/muse-google/index.js";
@@ -93,7 +93,7 @@ export function classify(): Task<Instance<typeof Extracted>, Instance<typeof Cla
 
 	return extracteds => pipe(
 		(items(extracteds))
-		(route(extracted => extracted.event, flat(map(async extracted => pipe(
+		(when(extracted => extracted.event, flat(map(async extracted => pipe(
 				(items([
 
 					json<Instance<typeof Reported>>(await ai.models.generateContent({

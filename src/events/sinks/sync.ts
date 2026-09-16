@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { when } from "@/_/flow/when.js";
 import { digest } from "@/_/gear-store/_digest.js";
 import { createStore } from "@/_/gear-store/index.js";
 import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.js";
@@ -27,14 +28,12 @@ import { extract } from "@/events/tasks/extract.js";
 import { base, Page } from "@/vocabularies/ec2u.js";
 import { reference } from "@metreeca/blue/reference";
 import { id, multiple, resource } from "@metreeca/blue/resource";
-import { required } from "@metreeca/core/arrays";
 import { immutable } from "@metreeca/core/structures";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
 import { filter, flat, fork, map, mix, tee } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
-import { jpath, link, string } from "@metreeca/gear-json";
 import { fetch, type URLLike } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 
@@ -109,24 +108,11 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 				(fork(analysis, pages => pipe( // analyses are capped on the tool sessions they hold, not on the rate
 					(items(pages))
 					(extract())
-					(tee(
-						payloads => pipe( // a page stating nothing worth publishing withdraws what it once stated
-							(items(payloads))
-							(filter(payload => !payload.publishable))
-							(jpath(path => ({
-								url: required(path("url").map(link)),
-								digest: required(path("digest").map(string))
-							})))
-							(flat(map(({ url, digest }) => items([
-								delta(url, Page, immutable({ id: url, source: publisher.id, digest })),
-								delta(getEventId(url), Event, null)
-							]))))
-						),
-						payloads => pipe( // only a page worth publishing reaches the model, classification being dear
-							(items(payloads))
-							(filter(payload => payload.publishable))
+					(when(payload => payload.publishable,
+						payload => pipe(
+							(items(payload))
 							(classify())
-							(flat(map(payload => pipe( // converted one at a time, to keep the digest within reach
+							(flat(map(payload => pipe(
 								(items([payload]))
 								(convert(publisher))
 								(flat(map(event => items([
@@ -138,6 +124,13 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 									}))
 								]))))
 							))))
+						),
+						payload => pipe( // a page stating nothing worth publishing withdraws what it once stated
+							(items(payload))
+							(flat(map(({ url, digest }) => items([
+								delta(url, Page, immutable({ id: url, source: publisher.id, digest })),
+								delta(getEventId(url), Event, null)
+							]))))
 						)
 					))
 				)))

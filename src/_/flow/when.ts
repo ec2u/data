@@ -18,19 +18,19 @@ import { type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 
 
-export function route<V>(
-	condition: (value: NoInfer<V>) => boolean,
+export function when<V>(
+	test: (value: NoInfer<V>) => boolean,
 	pass: Task<NoInfer<V>>
 ): Task<V>
 
-export function route<V, R>(
-	condition: (value: NoInfer<V>) => boolean,
+export function when<V, R>(
+	test: (value: NoInfer<V>) => boolean,
 	pass: Task<NoInfer<V>, R>,
 	fail: Task<NoInfer<V>, R>
 ): Task<V, R>
 
-export function route<V>(
-	condition: (value: V) => boolean,
+export function when<V>(
+	test: (value: V) => boolean,
 	pass: Task<V>,
 	fail?: Task<V>
 ): Task<V> {
@@ -145,7 +145,7 @@ export function route<V>(
 
 						} else {
 
-							deliver(condition(item.value) ? passing : failing, item.value);
+							deliver(test(item.value) ? passing : failing, item.value);
 
 						}
 

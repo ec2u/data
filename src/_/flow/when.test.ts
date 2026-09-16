@@ -20,7 +20,7 @@ import { inlet, items } from "@metreeca/flow/feeds";
 import { toArray, toSet } from "@metreeca/flow/sinks";
 import { filter, map, take } from "@metreeca/flow/tasks";
 import { describe, expect, it, vi } from "vitest";
-import { route } from "./route.js";
+import { when } from "./when.js";
 
 
 class TaskError extends Error {}
@@ -44,13 +44,13 @@ function tracked(drawn: number[], values: readonly number[]): Feed<number> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-describe("route", () => {
+describe("when", () => {
 
 	it("hands the items meeting the condition to the task", async () => {
 
 		expect(await pipe(
 			(items([1, 2, 3, 4]))
-			(route(even, map(value => value*10)))
+			(when(even, map(value => value*10)))
 			(toSet())
 		)).toEqual(new Set([1, 3, 20, 40]));
 
@@ -60,7 +60,7 @@ describe("route", () => {
 
 		expect(await pipe(
 			(items([1, 2, 3]))
-			(route(even, filter(() => false)))
+			(when(even, filter(() => false)))
 			(toSet())
 		)).toEqual(new Set([1, 3]));
 
@@ -70,7 +70,7 @@ describe("route", () => {
 
 		expect(await pipe(
 			(items([1, 2, 3, 4]))
-			(route(even, map(value => `${value} even`), map(value => `${value} odd`)))
+			(when(even, map(value => `${value} even`), map(value => `${value} odd`)))
 			(toSet())
 		)).toEqual(new Set(["2 even", "4 even", "1 odd", "3 odd"]));
 
@@ -80,7 +80,7 @@ describe("route", () => {
 
 		expect(await pipe(
 			(items([1, 2, 3, 4]))
-			(route(even, map(value => `${value} even`), map(value => `${value} odd`)))
+			(when(even, map(value => `${value} even`), map(value => `${value} odd`)))
 			(toSet())
 		)).not.toContain("2 odd");
 
@@ -90,7 +90,7 @@ describe("route", () => {
 
 		expect(await pipe(
 			(items([1, 2, 3, 4]))
-			(route(even, filter(value => value > 2), filter(() => false)))
+			(when(even, filter(value => value > 2), filter(() => false)))
 			(toSet())
 		)).toEqual(new Set([4]));
 
@@ -100,7 +100,7 @@ describe("route", () => {
 
 		expect(await pipe(
 			(items<number>([]))
-			(route(even, map(value => value*10)))
+			(when(even, map(value => value*10)))
 			(toSet())
 		)).toEqual(new Set());
 
@@ -110,7 +110,7 @@ describe("route", () => {
 
 		const values = await pipe(
 			(items([1, 2, 3, 4, 5, 6]))
-			(route(even, map(value => value*10)))
+			(when(even, map(value => value*10)))
 			(toArray())
 		);
 
@@ -125,7 +125,7 @@ describe("route", () => {
 
 		const values = await pipe(
 			(tracked(drawn, [1, 2, 3, 4]))
-			(route(even, map(value => value*10)))
+			(when(even, map(value => value*10)))
 			(toSet())
 		);
 
@@ -140,7 +140,7 @@ describe("route", () => {
 
 		const values = await pipe( // an infinite feed completes, as the quota downstream is met before it runs dry
 			(inlet(() => ++count.next))
-			(route(even, map(value => -value)))
+			(when(even, map(value => -value)))
 			(take(4))
 			(toSet())
 		);
@@ -155,7 +155,7 @@ describe("route", () => {
 
 		await pipe(
 			(items([1, 2, 3]))
-			(route(condition, map(value => value)))
+			(when(condition, map(value => value)))
 			(toSet())
 		);
 
@@ -169,7 +169,7 @@ describe("route", () => {
 
 		await pipe(
 			(items([1, 2, 3]))
-			(route(condition, map(value => value), map(value => value)))
+			(when(condition, map(value => value), map(value => value)))
 			(toSet())
 		);
 
@@ -181,7 +181,7 @@ describe("route", () => {
 
 		const values = await pipe(
 			(items([1, 2, 3, 4]))
-			(route(even, map(async value => {
+			(when(even, map(async value => {
 				await sleep(20); // the other reading runs ahead while this one works
 				return value*10;
 			})))
@@ -197,7 +197,7 @@ describe("route", () => {
 
 		expect(await pipe(
 			(items([1, 2, 3, 4, 5, 6]))
-			(route(even, take(2), take(2)))
+			(when(even, take(2), take(2)))
 			(toSet())
 		)).toEqual(new Set([1, 2, 3, 4]));
 
@@ -207,7 +207,7 @@ describe("route", () => {
 
 		expect(await pipe(
 			(items([1, 2, 3, 4]))
-			(route(even, take(1), map(value => value*100)))
+			(when(even, take(1), map(value => value*100)))
 			(toSet())
 		)).toEqual(new Set([2, 100, 300]));
 
@@ -217,7 +217,7 @@ describe("route", () => {
 
 		const values = await pipe(
 			(items([1, 2]))
-			(route(even, map(async value => {
+			(when(even, map(async value => {
 				await sleep(20);
 				return value*10;
 			}), map(value => value*100)))
@@ -232,7 +232,7 @@ describe("route", () => {
 
 		await expect(pipe(
 			(items([1, 2, 3]))
-			(route(value => {
+			(when(value => {
 
 				if ( value === 2 ) { throw new TaskError("condition failed"); }
 
@@ -248,7 +248,7 @@ describe("route", () => {
 
 		await expect(pipe(
 			(items([1, 2, 3]))
-			(route(even, map(() => { throw new TaskError("task failed"); })))
+			(when(even, map(() => { throw new TaskError("task failed"); })))
 			(toSet())
 		)).rejects.toThrow(TaskError);
 
