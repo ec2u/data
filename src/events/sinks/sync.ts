@@ -28,6 +28,7 @@ import { extract } from "@/events/tasks/extract.js";
 import { base, Page } from "@/vocabularies/ec2u.js";
 import { reference } from "@metreeca/blue/reference";
 import { id, multiple, resource } from "@metreeca/blue/resource";
+import type { Markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -95,42 +96,49 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					(toSet())
 			);
 
-			return pipe(
-				(items(urls))
-				(fork(retrieval, pages => pipe( // retrievals are capped out of courtesy to the source site
+
+			async function modified(page: Markdown) {
+				return !(await digests).has(digest(page));
+			}
+
+
+			return pipe(urls
+				(fork(retrieval, pages => pipe(
 					(items(pages))
 					(fetch())
 					(html())
 					(focus())
 					(untag())
-					(filter(async page => !(await digests).has(digest(page))))
+					(filter(modified))
 				)))
-				(fork(analysis, pages => pipe( // analyses are capped on the tool sessions they hold, not on the rate
+				(fork(analysis, pages => pipe(
 					(items(pages))
 					(extract())
-					(when(payload => payload.publishable,
-						payload => pipe(
-							(items(payload))
-							(classify())
-							(flat(map(payload => pipe(
-								(items([payload]))
-								(convert(publisher))
-								(flat(map(event => items([
-									delta(event.id, Event, event),
-									delta(event.url[0], Page, immutable({
-										id: event.url[0],
-										source: publisher.id,
-										digest: payload.digest
-									}))
-								]))))
-							))))
+					(tee(
+						payloads => pipe( // every page states its digest, so the crawl won't offer it again
+							(items(payloads))
+							(map(({ url, digest }) =>
+								delta(url, Page, immutable({ id: url, source: publisher.id, digest }))
+							))
 						),
-						payload => pipe( // a page stating nothing worth publishing withdraws what it once stated
-							(items(payload))
-							(flat(map(({ url, digest }) => items([
-								delta(url, Page, immutable({ id: url, source: publisher.id, digest })),
-								delta(getEventId(url), Event, null)
-							]))))
+						payloads => pipe(
+							(items(payloads))
+							(when(payload => payload.publishable,
+								publishable => pipe(
+									(items(publishable))
+									(classify())
+									(convert(publisher))
+									(map(event =>
+										delta(event.id, Event, event)
+									))
+								),
+								withdrawn => pipe( // a page not worth publishing withdraws the event it once stated
+									(items(withdrawn))
+									(map(({ url }) =>
+										delta(getEventId(url), Event, null)
+									))
+								))
+							)
 						)
 					))
 				)))
