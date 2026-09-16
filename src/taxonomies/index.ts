@@ -15,7 +15,7 @@
  */
 
 import { memoize } from "@/_/core/memoize.js";
-import { createStore } from "@/_/gear-store/index.js";
+import { createStore } from "@/_/tide-store/index.js";
 import { createGoogleAI, embedding } from "@/_/muse-google/index.js";
 import { cosine, decompress, type Distance, type Vector } from "@/_/muse/index.js";
 import { Dataset, Resource } from "@/datasets/index.js";

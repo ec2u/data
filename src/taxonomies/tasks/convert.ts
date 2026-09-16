@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { digest } from "@/_/gear-store/_digest.js";
+import { digest } from "@/_/tide-store/_digest.js";
 import { compress, synopsis } from "@/_/muse/index.js";
 import { getTopicId, getTopicEmbedding, Taxonomy, Topic } from "@/taxonomies/index.js";
 import { CommentLength } from "@/vocabularies/ec2u.js";

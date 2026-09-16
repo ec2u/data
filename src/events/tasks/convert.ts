@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { validate } from "@/_/gear-store/validate.js";
+import { validate } from "@/_/tide-store/validate.js";
 import { Event, getEventId, events } from "@/events/index.js";
 import type { Classified } from "@/events/tasks/classify.js";
 import { getUniversity } from "@/universities/index.core.js";

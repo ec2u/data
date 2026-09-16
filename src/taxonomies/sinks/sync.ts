@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { digest } from "@/_/gear-store/_digest.js";
-import { createStore } from "@/_/gear-store/index.js";
-import { delta, type Delta, persist, type Tally } from "@/_/gear-store/persist.js";
-import { retire } from "@/_/gear-store/retire.js";
-import { validate } from "@/_/gear-store/validate.js";
+import { digest } from "@/_/tide-store/_digest.js";
+import { createStore } from "@/_/tide-store/index.js";
+import { delta, type Delta, persist, type Tally } from "@/_/tide-store/persist.js";
+import { retire } from "@/_/tide-store/retire.js";
+import { validate } from "@/_/tide-store/validate.js";
 import { getTopicId, Taxonomy, Topic } from "@/taxonomies/index.js";
 import { convert, getPath } from "@/taxonomies/tasks/convert.js";
 import type { Instance } from "@metreeca/blue/value";

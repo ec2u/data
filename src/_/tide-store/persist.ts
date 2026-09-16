@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createStore } from "@/_/gear-store/index.js";
+import { createStore } from "@/_/tide-store/index.js";
 import type { ResourceShape } from "@metreeca/blue/resource";
 import type { Lazy } from "@metreeca/core";
 import { immutable } from "@metreeca/core/structures";

@@ -15,7 +15,7 @@
  */
 
 import { when } from "@/_/flow/when.js";
-import { validate } from "@/_/gear-store/validate.js";
+import { validate } from "@/_/tide-store/validate.js";
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json, schema } from "@/_/muse-google/index.js";
 import { Extracted } from "@/events/tasks/extract.js";

@@ -16,8 +16,8 @@
 
 import { getDate } from "@/_/core/temporal.js";
 import { when } from "@/_/flow/when.js";
-import { digest } from "@/_/gear-store/_digest.js";
-import { validate } from "@/_/gear-store/validate.js";
+import { digest } from "@/_/tide-store/_digest.js";
+import { validate } from "@/_/tide-store/validate.js";
 import { file } from "@/_/gear/files.js";
 import { createGoogleAI, json, schema } from "@/_/muse-google/index.js";
 import { isStaleEvent } from "@/events/index.js";
