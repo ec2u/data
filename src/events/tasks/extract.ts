@@ -48,9 +48,9 @@ export function Extracted() {
 		digest: required(string, {
 			name: "Source Digest",
 			description: `
-				The SHA-256 digest of the source document the event was extracted from, identifying the content the
-				document carried rather than the document itself, so that a later run tells by comparison whether the
-				source has since changed and the event is to be extracted again.
+				A unique digest of the source document the event was extracted from, identifying the content the
+				document carried rather than the document itself, so that a later run tells by comparison whether
+				the source has since changed and the event is to be extracted again.
 			`
 		})
 
@@ -149,7 +149,7 @@ export function Reported() {
 		}),
 
 		venueName: optional(string, {
-			name: "Venue",
+			name: "Venue Name",
 			description: "The name of the venue, as the document states it"
 		}),
 
@@ -164,7 +164,7 @@ export function Reported() {
 		}),
 
 		imageURL: optional(url, {
-			name: "Image Address",
+			name: "Image URL",
 			description: "The address of the image illustrating the event, stated only where reasonably sure"
 		}),
 

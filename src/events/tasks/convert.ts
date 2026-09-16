@@ -46,9 +46,7 @@ export function convert(publisher: {
 		(map(payload => {
 
 			const url = payload.url;
-
-			// folded before it is clipped, so the budget is spent on the line the label and the name are held to
-
+			
 			const title = clip(tidy(payload.title), LabelLength);
 
 			const startDate = payload.startDate;

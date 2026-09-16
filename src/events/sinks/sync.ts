@@ -163,7 +163,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 						id: "",
 						startDate: "",
 						endDate: ""
-					}, { "?university": [publisher.university] }]
+					}, { "?university": [publisher.university] }] // !!! publisher
 				}
 
 			})))
