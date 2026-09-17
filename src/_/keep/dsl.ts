@@ -20,7 +20,7 @@ import type { Identifier, Lazy, Optional } from "@metreeca/core";
 import type { TagRange } from "@metreeca/core/language";
 import type { Criteria, Options, Order } from "@metreeca/qest/model";
 import type { Dictionary, Literal, Reference, Values } from "@metreeca/qest/state";
-import type { Arity, Carried, Target } from "./inference.js";
+import type { Arity, Carried, Skippable, Target } from "./inference.js";
 import type { Lookup, Select } from "./work.js";
 
 
@@ -110,43 +110,58 @@ export declare function compile<S extends Lazy<ResourceShape>>(shape: S, documen
 
 //// Cursors ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Resolved from `Carried<S>`: the shape states which members a cursor offers and what each one carries.
+// Resolved from `Carried<S>`: the shape states which members a cursor offers and what each one carries. `L` and `U`
+// state the arity of the path already walked, so a member reached through it carries the arity of the whole path and
+// not of its own declaration alone.
 
-export declare type Cursor<S extends Lazy<ResourceShape>> = {
+export declare type Cursor<
+	S extends Lazy<ResourceShape>,
+	L extends Optional<number> = 1,
+	U extends Optional<number> = 1
+> = {
 
-	readonly [member in keyof Carried<S>]: Noded<Carried<S>[member]>
+	readonly [member in keyof Carried<S>]: Noded<Carried<S>[member], L, U>
 
 }
 
 // A member as the cursor offers it: the naming members carry their reference, a property carries its range.
 
-export declare type Noded<P> =
-	P extends Id ? Field<Reference>
-		: P extends Type ? Field<Optional<Reference>>
-			: P extends Property<infer R, infer L, infer U> ? Node<R, L, U>
+export declare type Noded<P, L extends Optional<number>, U extends Optional<number>> =
+	P extends Id ? Field<Arity<Reference, L, U>>
+		: P extends Type ? Field<Arity<Optional<Reference>, L, U>>
+			: P extends Property<infer R, infer PL, infer PU> ? Node<R, Least<L, PL>, Most<U, PU>>
 				: never
+
+// The arity of two steps walked in sequence: the values are optional where either step admits none, and stay single
+// only where both do.
+
+export declare type Least<L extends Optional<number>, PL extends Optional<number>> =
+	Skippable<L> extends true ? 0 : Skippable<PL> extends true ? 0 : 1
+
+export declare type Most<U extends Optional<number>, PU extends Optional<number>> =
+	[U] extends [1] ? [PU] extends [1] ? 1 : undefined : undefined
 
 // !!! opaque token pairing the wire expression with the type it carries
 
-export declare type Field<V> = { readonly value?: V }
+export declare type Field<V> = { readonly value: V }
 
 // A property read three ways: as the values it carries, as the members it leads to, and as a nested retrieval.
 // The arity rides along, so a collection stays a collection however it is read.
 
 export declare type Node<R extends Lazy<Shape>, L extends Optional<number>, U extends Optional<number>> =
 	& Field<Arity<Plain<R>, L, U>>
-	& Traversed<R>
+	& Traversed<R, L, U>
 	& {
 
-		select<M extends Slots>(model: (cursor: Traversed<R>) => M): Field<Arity<Data<M>, L, U>>;
+		select<M extends Slots>(model: (cursor: Traversed<R, 1, 1>) => M): Field<Arity<Data<M>, L, U>>;
 		at<T extends TagRange>(...ranges: readonly T[]): Field<Arity<Dictionary, L, 1>>;
 
 	}
 
 // The members reachable onward, none where the range carries values rather than links.
 
-export declare type Traversed<R extends Lazy<Shape>> =
-	Target<R> extends infer T extends Lazy<ResourceShape> ? Cursor<T> : {}
+export declare type Traversed<R extends Lazy<Shape>, L extends Optional<number>, U extends Optional<number>> =
+	Target<R> extends infer T extends Lazy<ResourceShape> ? Cursor<T, L, U> : {}
 
 // !!! the value a slot carries, unwrapping a field and recurring into a nested model
 
