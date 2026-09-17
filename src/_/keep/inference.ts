@@ -62,12 +62,26 @@ export type Valued<R extends Lazy<Shape>, T> =
 					: Eager<R> extends UnionShape<infer B> ? Branched<B, T> // one value per branch
 						: never
 
-// The resource a range leads to, so a traversal may carry on through a link; `never` where it carries values.
+// The resource a range leads to, so a traversal may carry on through a link; `never` where it carries values. A union
+// range leads to the resources its branches lead to, and to nothing for the branches carrying values.
+//
+// !!! a path stops at a union range: `Carried` resolves no member for one, so `event.location.name` is refused even
+// !!! where every branch declares `name`. Resolving the member table per branch exceeds the instantiation ceiling on
+// !!! shapes of this depth, and would still leave a member only one branch declares unreachable, as the members a
+// !!! traversal offers are the ones the branches share. Branches are read one level deep for the same reason: a
+// !!! branch that is itself a union leads nowhere rather than being unfolded again.
 
 export type Target<R extends Lazy<Shape>> =
-	Eager<R> extends ReferenceShape<infer L> ? L
-		: Eager<R> extends ResourceShape ? R & Lazy<ResourceShape>
-			: never
+	R extends unknown // distribute over union arms
+		? Eager<R> extends UnionShape<infer B> ? Reached<B[number]> : Reached<R>
+		: never
+
+export type Reached<R extends Lazy<Shape>> =
+	R extends unknown // distribute over branches
+		? Eager<R> extends ReferenceShape<infer L> ? L
+			: Eager<R> extends ResourceShape ? R & Lazy<ResourceShape>
+				: never
+		: never
 
 
 // Localised text is carried whole, so the tag ranges the node lists map to plain strings.
@@ -91,6 +105,9 @@ export type Branched<B extends readonly Lazy<Shape>[], T> = {
 
 // The members a shape carries, declared over inherited, unflattened: the range survives, so a nested model has
 // something to recurse into, which is exactly what blue's own `Retrieved` loses.
+
+// !!! not distributed over union arms: the inheritance merge re-runs per branch and exceeds the instantiation ceiling
+// !!! on shapes of this depth, so a range leading to several resources carries no member rather than their common ones
 
 export type Carried<S extends Lazy<ResourceShape>> =
 	Eager<S> extends ResourceShape<infer P, infer M> ? Merged<Inherited<P>, M> : {}

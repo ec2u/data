@@ -87,6 +87,7 @@ export type Delivery<S extends Lazy<ResourceShape>, M> =
 	M extends (cursor: Cursor<S>) => infer R ? Data<R> : Decoded<S>
 
 
+
 //// Slots ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type Slots = { readonly [alias: Identifier]: Slot }

@@ -31,7 +31,7 @@ cursor refuses anything the shape does not declare, and the data type is one map
 
 The released `Instance<T>` resolves a result type from the template alone, because a leaf is a typed placeholder:
 `name: ""` yields `string`, `price: 0` yields `number`, `tags: [""]` yields an array. The reworked model replaces those
-with `Terminal`, an empty object branded by the `key` unique symbol, so a leaf now carries a position and nothing else.
+with `Atomic`, an empty object branded by the `key` unique symbol, so a leaf now carries a position and nothing else.
 
 Every value type therefore has to come from the shape. What remained open was when the shape is consulted: at the type
 level, when a literal is checked, or at the value level, when the model is composed.
@@ -46,9 +46,8 @@ projections.
 the request generic in the shape is a precondition for anything further.
 
 > [!NOTE]
-> `@metreeca/keep` imports `Instance` and `Template` from `@metreeca/qest/template`, an entry point the installed
-> `@metreeca/qest@0.10.0` does not declare (`.`, `./state` and `./model` only), and the shipped declarations name
-> `Criteria` where the bundled sources still say `Selection`. The two packages are out of step.
+> `@metreeca/keep` imports `Instance` and `Template` from `@metreeca/qest/model`, and the installed qest no longer
+> exports `Instance`: the reworked module withdraws the inference utilities outright. The two packages are out of step.
 
 **Plain fields resolve, at a price.** Driving the walk from the model terminates even against a cyclic shape, and every
 step has a helper in `@metreeca/blue`: `Eager` unwraps a deferred shape, `Variant` splits a union range, `Localised` and
@@ -160,6 +159,10 @@ and `Delivery<S, M>` becomes a walk over the shape and the model together, which
 - **Expansion and path differ only by call**: `event.publisher.select(…)` expands, `event.publisher.label` binds a
   path. Whether that reads clearly enough without distinct names is unsettled.
 - **Locale maps**: `field.at("en", "fi")` narrows to tag ranges; retrieving the whole map has no notation yet.
-- **Unions**: branch selection has no counterpart on the cursor.
+- **Unions**: branch selection has no counterpart on the cursor, and a path cannot reach through one. A property
+  ranging on a union offers no member to carry on with, so `event.location.name` is refused even where every branch
+  declares `name`. Offering the members the branches share needs the member table resolved per branch, which exceeds
+  the instantiation ceiling on shapes of this depth; even then a member only one branch declares stays unreachable,
+  and a branch that is itself a union is not unfolded again.
 - **Placement**: the surface needs `@metreeca/blue` and `@metreeca/qest` together, which is where `@metreeca/keep`
   already sits.
