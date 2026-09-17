@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import type { ResourceShape } from "@metreeca/blue/resource";
-import type { Instance } from "@metreeca/blue/value";
+import type { Id, Property, ResourceShape, Type } from "@metreeca/blue/resource";
+import type { Instance, Instance as Plain, Shape } from "@metreeca/blue/value";
 import type { Identifier, Lazy, Optional } from "@metreeca/core";
 import type { TagRange } from "@metreeca/core/language";
 import type { Criteria, Options, Order } from "@metreeca/qest/model";
 import type { Dictionary, Literal, Reference, Values } from "@metreeca/qest/state";
+import type { Arity, Carried, Target } from "./inference.js";
 import type { Lookup, Select } from "./work.js";
 
 
@@ -41,16 +42,16 @@ export declare function from<S extends Lazy<ResourceShape>>(
 
 export declare function from<S extends Lazy<ResourceShape>, M extends Model>(
 
-	entry: Reference,
 	shape: S,
+	entry: Reference,
 	model: (cursor: Cursor<S>) => M
 
 ): Lookup<Data<M>>;
 
 export declare function from<S extends Lazy<ResourceShape>>(
 
-	entry: Reference,
 	shape: S,
+	entry: Reference,
 	model: Compiled<S>
 
 ): Lookup<Decoded<S>>;
@@ -64,7 +65,7 @@ export type Slot = Field<Optional<Values>> | Model
 
 export declare function where(...criteria: readonly Criterion[]): Criteria;
 
-export declare function as<M extends Model>(model: M, criteria: Criteria): M;
+export declare function as<M extends Model>(model: M, criteria?: Criteria): M;
 
 export type Data<M> = { readonly [alias in keyof M]: Valued<M[alias]> }
 
@@ -79,25 +80,50 @@ export declare function compile<S extends Lazy<ResourceShape>>(shape: S, documen
 
 //// Cursors ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// !!! resolved from `Carried<S>` once per shape and memoised; depth-capped against cyclic shapes
-// !!! until then every member stands as a literal, whatever the range its shape declares
+// !!! resolved from `Carried<S>`: the shape states which members a cursor offers and what each one carries
 
-export declare type Cursor<S extends Lazy<ResourceShape>> = { readonly [member: Identifier]: Node<Literal> }
+export declare type Cursor<S extends Lazy<ResourceShape>> = {
 
-// !!! opaque token pairing the wire expression with the type it carries
-
-export declare type Field<V extends Optional<Values>> = { readonly value?: V }
-
-export declare type Node<V extends Optional<Values>> = Field<V> & Cursor<ResourceShape> & {
-
-	select<M extends Model>(model: (cursor: Cursor<ResourceShape>) => M): Field<Data<M>>;
-	at<T extends TagRange>(...ranges: readonly T[]): Field<Dictionary>;
+	readonly [member in keyof Carried<S>]: Noded<Carried<S>[member]>
 
 }
 
+// !!! a member as the cursor offers it: the naming members carry their reference, a property carries its range
+
+export declare type Noded<P> =
+	P extends Id ? Field<Reference>
+		: P extends Type ? Field<Optional<Reference>>
+			: P extends Property<infer R, infer L, infer U> ? Node<R, L, U>
+				: never
+
+// !!! opaque token pairing the wire expression with the type it carries
+
+export declare type Field<V> = { readonly value?: V }
+
+// !!! a property read three ways: as the values it carries, as the members it leads to, and as a nested retrieval
+// !!! the arity rides along, so a collection stays a collection however it is read
+
+export declare type Node<R extends Lazy<Shape>, L extends Optional<number>, U extends Optional<number>> =
+	& Field<Arity<Plain<R>, L, U>>
+	& Traversed<R>
+	& {
+
+		select<M extends Model>(model: (cursor: Traversed<R>) => M): Field<Arity<Data<M>, L, U>>;
+		at<T extends TagRange>(...ranges: readonly T[]): Field<Arity<Dictionary, L, 1>>;
+
+	}
+
+// !!! the members reachable onward, none where the range carries values rather than links
+
+export declare type Traversed<R extends Lazy<Shape>> =
+	Target<R> extends infer T extends Lazy<ResourceShape> ? Cursor<T> : {}
+
 // !!! the value a slot carries, unwrapping a field and recurring into a nested model
 
-export declare type Valued<S> = S
+export declare type Valued<S> =
+	S extends Field<infer V> ? Extract<V, Optional<Values>>
+		: S extends Model ? Data<S>
+			: never
 
 
 //// Transforms ////////////////////////////////////////////////////////////////////////////////////////////////////////

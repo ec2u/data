@@ -57,7 +57,14 @@ export type Lookup<T extends Resource> = {
 }
 
 
-//// Lookup ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+await store.lookup(from(Page, "https://data.ec2u.eu/pages/1", page => as({
+
+	digest: page.digest
+
+})));
 
 await store.select(from(Page, page => as({
 
@@ -68,16 +75,6 @@ await store.select(from(Page, page => as({
 	some(page.source, "https://example.edu/news"),
 	limit(100)
 ))));
-
-
-await store.lookup(from("https://data.ec2u.eu/pages/1", Page, page => ({
-
-	digest: page.digest
-
-})));
-
-
-//// Select ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 await store.select(from(Event, event => as({
 
