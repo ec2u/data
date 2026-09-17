@@ -20,7 +20,9 @@ import type { ResourceShape } from "@metreeca/blue/resource";
 import { error, type Lazy, type Optional } from "@metreeca/core";
 import type { StoreOpts } from "@metreeca/keep";
 import type { Reference } from "@metreeca/qest/state";
-import { as, compile, count, type Delivery, from, gte, limit, max, type Model, order, some, where } from "./dsl.js";
+import {
+	as, by, compile, count, type Delivery, from, gte, limit, max, type Model, order, some, where
+} from "./dsl.js";
 
 
 const store: Store = error("!!!");
@@ -37,7 +39,7 @@ interface Store {
 
 		readonly Delivery<S, M>[]
 
-	>;
+	>
 
 	lookup<
 
@@ -48,7 +50,7 @@ interface Store {
 
 		Optional<Delivery<S, M>>
 
-	>;
+	>
 
 }
 
@@ -57,16 +59,16 @@ interface Store {
 
 export type Select<S extends Lazy<ResourceShape>, M extends Model<S>> = {
 
-	readonly shape: S;
-	readonly model: M;
+	readonly shape: S
+	readonly model: M
 
 }
 
 export type Lookup<S extends Lazy<ResourceShape>, M extends Model<S>> = {
 
-	readonly entry: Reference;
-	readonly shape: S;
-	readonly model: M;
+	readonly entry: Reference
+	readonly shape: S
+	readonly model: M
 
 }
 
@@ -110,11 +112,22 @@ await store.select(from(Event, event => as({
 	}, where(
 		order(topic.label),
 		limit(10)
-	))),
+	)))
 
-	publisherLabel: event.publisher.label,
+}, where(
+	gte(event.startDate, "2026-01-01"),
+	order(event.startDate, "desc")
+))));
 
-	topics: count(event.keywords),
+
+//// Grouping /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+await store.select(from(Event, event => by({
+
+	publisher: event.publisher.label,
+	keyword: event.keywords.label,
+
+	events: count(event.id),
 	latest: max(event.startDate)
 
 }, where(

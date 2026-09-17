@@ -95,9 +95,51 @@ export type Slot = Field<Optional<Values>> | Slots
 
 export declare function where(...criteria: readonly Criterion[]): Criteria;
 
-export declare function as<M extends Slots>(model: M, criteria?: Criteria): M;
+// A model states one datum per resource, or one row per combination of the values it binds, and the two are never
+// mixed. A resource names the properties it retrieves, so every slot stands for a member the shape declares; a row
+// names expressions, so a slot may reach through a link or apply a transform. `as` states a resource, `by` states a
+// row, and a slot admitted by one is not admitted by the other.
 
-export type Data<M> = { readonly [alias in keyof M]: Valued<M[alias]> }
+export declare function as<M extends Stateable<M>>(model: M, criteria?: Criteria): M & Stated;
+
+export declare function by<M extends Slots>(model: M, criteria?: Criteria): M & Grouped;
+
+// Branded on a symbol key, as a string one would land in the alias space a model states its slots under.
+
+declare const stated: unique symbol;
+declare const grouped: unique symbol;
+declare const expressed: unique symbol;
+
+export declare type Stated = { readonly [stated]?: never }
+
+export declare type Grouped = { readonly [grouped]?: never }
+
+// A slot computed rather than named: a member reached through a link, or a value a transform derived. Both are
+// bindings, which a row admits and a resource does not.
+
+export declare type Expressed = { readonly [expressed]?: never }
+
+export type Expression<D extends boolean> = D extends true ? Expressed : unknown
+
+// A resource retrieves the properties it names, so a computed slot resolves to `never` and the model is refused where
+// it is written.
+
+export type Stateable<M> = {
+
+	readonly [alias in keyof M]: M[alias] extends Expressed ? never : Slot
+
+}
+
+// What a model retrieves, slot by slot. A row holds one value per binding, so a multi-valued binding contributes one
+// of its values per row; a resource keeps the value set whole. Absence is preserved either way, as a link the
+// resource does not state binds no value.
+
+export type Data<M> =
+	M extends Grouped
+		? { readonly [alias in keyof M]: Single<Valued<M[alias]>> }
+		: { readonly [alias in keyof M]: Valued<M[alias]> }
+
+export type Single<V> = V extends readonly (infer E)[] ? E : V
 
 
 export declare type Compiled<S extends Lazy<ResourceShape>> = Slots & { readonly shape?: S }
@@ -117,19 +159,21 @@ export declare function compile<S extends Lazy<ResourceShape>>(shape: S, documen
 export declare type Cursor<
 	S extends Lazy<ResourceShape>,
 	L extends Optional<number> = 1,
-	U extends Optional<number> = 1
+	U extends Optional<number> = 1,
+	D extends boolean = false
 > = {
 
-	readonly [member in keyof Carried<S>]: Noded<Carried<S>[member], L, U>
+	readonly [member in keyof Carried<S>]: Noded<Carried<S>[member], L, U, D>
 
 }
 
-// A member as the cursor offers it: the naming members carry their reference, a property carries its range.
+// A member as the cursor offers it: the naming members carry their reference, a property carries its range. `D` marks
+// a member reached through a link, which is a binding rather than a property the enclosing resource names.
 
-export declare type Noded<P, L extends Optional<number>, U extends Optional<number>> =
-	P extends Id ? Field<Arity<Reference, L, U>>
-		: P extends Type ? Field<Arity<Optional<Reference>, L, U>>
-			: P extends Property<infer R, infer PL, infer PU> ? Node<R, Least<L, PL>, Most<U, PU>>
+export declare type Noded<P, L extends Optional<number>, U extends Optional<number>, D extends boolean> =
+	P extends Id ? Field<Arity<Reference, L, U>> & Expression<D>
+		: P extends Type ? Field<Arity<Optional<Reference>, L, U>> & Expression<D>
+			: P extends Property<infer R, infer PL, infer PU> ? Node<R, Least<L, PL>, Most<U, PU>, D>
 				: never
 
 // The arity of two steps walked in sequence: the values are optional where either step admits none, and stay single
@@ -148,20 +192,33 @@ export declare type Field<V> = { readonly value: V }
 // A property read three ways: as the values it carries, as the members it leads to, and as a nested retrieval.
 // The arity rides along, so a collection stays a collection however it is read.
 
-export declare type Node<R extends Lazy<Shape>, L extends Optional<number>, U extends Optional<number>> =
+export declare type Node<
+	R extends Lazy<Shape>,
+	L extends Optional<number>,
+	U extends Optional<number>,
+	D extends boolean
+> =
 	& Field<Arity<Plain<R>, L, U>>
+	& Expression<D>
 	& Traversed<R, L, U>
 	& {
 
-		select<M extends Slots>(model: (cursor: Traversed<R, 1, 1>) => M): Field<Arity<Data<M>, L, U>>;
-		at<T extends TagRange>(...ranges: readonly T[]): Field<Arity<Dictionary, L, 1>>;
+		select<M extends Slots>(model: (cursor: Cursor<Linked<R>>) => M): Field<Arity<Data<M>, L, U>> & Expression<D>;
+		at<T extends TagRange>(...ranges: readonly T[]): Field<Arity<Dictionary, L, 1>> & Expression<D>;
 
 	}
 
-// The members reachable onward, none where the range carries values rather than links.
+// The members reachable onward, none where the range carries values rather than links. Reaching one is a traversal,
+// so whatever it offers is a binding whether or not the member it started from was.
 
 export declare type Traversed<R extends Lazy<Shape>, L extends Optional<number>, U extends Optional<number>> =
-	Target<R> extends infer T extends Lazy<ResourceShape> ? Cursor<T, L, U> : {}
+	Target<R> extends infer T extends Lazy<ResourceShape> ? Cursor<T, L, U, true> : {}
+
+// The resource a link leads to, as a nested retrieval states it: the arity and the traversal both start over, since
+// the nested model names the linked resource's own properties.
+
+export declare type Linked<R extends Lazy<Shape>> =
+	Target<R> extends infer T extends Lazy<ResourceShape> ? T : never
 
 // !!! the value a slot carries, unwrapping a field and recurring into a nested model
 
@@ -173,17 +230,20 @@ export declare type Valued<S> =
 
 //// Transforms ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export declare function count(values: Field<Optional<Values>>): Field<number>;
+// A transform derives a value rather than naming a property, so what it yields is a binding a row admits and a
+// resource does not.
 
-export declare function max<V extends Literal>(values: Field<V>): Field<Optional<V>>;
+export declare function count(values: Field<Optional<Values>>): Field<number> & Expressed;
 
-export declare function avg(values: Field<number>): Field<Optional<number>>;
+export declare function max<V extends Literal>(values: Field<V>): Field<Optional<V>> & Expressed;
 
-export declare function upper(value: Field<string>): Field<string>;
+export declare function avg(values: Field<number>): Field<Optional<number>> & Expressed;
+
+export declare function upper(value: Field<string>): Field<string> & Expressed;
 
 // !!! the temporal domain has no type of its own yet
 
-export declare function year(value: Field<string>): Field<number>;
+export declare function year(value: Field<string>): Field<number> & Expressed;
 
 
 //// Criteria //////////////////////////////////////////////////////////////////////////////////////////////////////////
