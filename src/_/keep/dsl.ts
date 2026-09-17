@@ -15,7 +15,7 @@
  */
 
 import type { Id, Property, ResourceShape, Type } from "@metreeca/blue/resource";
-import type { Instance, Instance as Plain, Shape } from "@metreeca/blue/value";
+import type { Instance as Plain, Shape } from "@metreeca/blue/value";
 import type { Identifier, Lazy, Optional } from "@metreeca/core";
 import type { TagRange } from "@metreeca/core/language";
 import type { Criteria, Options, Order } from "@metreeca/qest/model";
@@ -26,14 +26,14 @@ import type { Lookup, Select } from "./work.js";
 
 //// Retrieval /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export declare function from<S extends Lazy<ResourceShape>, M extends Modeller<S>>(
+export declare function from<S extends Lazy<ResourceShape>, M extends Model<S>>(
 
 	shape: S,
 	model: M
 
 ): Select<S, M>;
 
-export declare function from<S extends Lazy<ResourceShape>, M extends Modeller<S>>(
+export declare function from<S extends Lazy<ResourceShape>, M extends Model<S>>(
 
 	shape: S,
 	entry: Reference,
@@ -42,36 +42,68 @@ export declare function from<S extends Lazy<ResourceShape>, M extends Modeller<S
 ): Lookup<S, M>;
 
 
-// A model stated against a shape: a traversal starting from its cursor, or a document compiled against it.
-// The cursor is the only way to name a member, so a traversal can only reach what the shape carries.
-
-export type Modeller<S extends Lazy<ResourceShape>> =
-	| ((cursor: Cursor<S>) => Model)
+/**
+ * A retrieval a shape admits.
+ *
+ * States what a call site may ask of a shape, as the dual of {@link @metreeca/blue/value!Instance | Instance}, which
+ * states what the shape yields: a caller writes a `Model` and reads back a {@link Delivery}, and the shape decides
+ * what either may contain.
+ * A model takes either form the surface accepts, a traversal composed against the shape's {@link Cursor}, or a
+ * document {@link compile | compiled} against the shape.
+ *
+ * A traversal is held to the shape where it is written, since the cursor offers no member the shape does not carry.
+ * A compiled document is held to it where it is decoded, so a document naming an undeclared member is refused at run
+ * time rather than at the call site.
+ *
+ * @typeParam S The shape the retrieval is stated against, possibly deferred to break definition cycles
+ *
+ * @remarks
+ *
+ * Stated as the two forms a model is written in rather than as the retrievals the shape admits. Defining it
+ * structurally, as a template narrowed to the members the shape carries, would hold a compiled document to the shape
+ * at the call site as well and would let {@link Delivery} read a single well-formed model rather than tell the two
+ * forms apart.
+ *
+ * @see {@link Delivery} for what a model of this shape hands back
+ */
+export type Model<S extends Lazy<ResourceShape>> =
+	| ((cursor: Cursor<S>) => Slots)
 	| Compiled<S>
 
-// The datum a model retrieves: the traversal it builds, or the shape narrowed by the document it compiled.
-
-export type Datum<S extends Lazy<ResourceShape>, M> =
+/**
+ * What a retrieval hands back.
+ *
+ * Resolves the data a call site reads for a given shape and model, so that it is never wider than what the caller
+ * asked for and never wider than what the shape declares. A traversal yields the fields it named, each carrying the
+ * type the shape resolved for it; a compiled document yields the shape narrowed to the fields the document may state,
+ * leaving a binding untyped, as the expression behind it is known only at run time.
+ *
+ * @typeParam S The shape the retrieval was stated against, possibly deferred to break definition cycles
+ * @typeParam M The retrieval stated against it
+ *
+ * @see {@link Model} for the retrievals a shape admits
+ */
+export type Delivery<S extends Lazy<ResourceShape>, M> =
 	M extends (cursor: Cursor<S>) => infer R ? Data<R> : Decoded<S>
 
 
-//// Models ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// Slots ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type Model = { readonly [alias: Identifier]: Slot }
+export type Slots = { readonly [alias: Identifier]: Slot }
 
-export type Slot = Field<Optional<Values>> | Model
+export type Slot = Field<Optional<Values>> | Slots
 
 export declare function where(...criteria: readonly Criterion[]): Criteria;
 
-export declare function as<M extends Model>(model: M, criteria?: Criteria): M;
+export declare function as<M extends Slots>(model: M, criteria?: Criteria): M;
 
 export type Data<M> = { readonly [alias in keyof M]: Valued<M[alias]> }
 
 
-export declare type Compiled<S extends Lazy<ResourceShape>> = Model & { readonly shape?: S }
+export declare type Compiled<S extends Lazy<ResourceShape>> = Slots & { readonly shape?: S }
 
 export declare type Decoded<S extends Lazy<ResourceShape>> =
-	Partial<Instance<S>> & { readonly [alias: Identifier]: Optional<Values> }
+	Partial<Plain<S>> & { readonly [alias: Identifier]: Optional<Values> }
 
 export declare function compile<S extends Lazy<ResourceShape>>(shape: S, document: unknown): Compiled<S>;
 
@@ -106,7 +138,7 @@ export declare type Node<R extends Lazy<Shape>, L extends Optional<number>, U ex
 	& Traversed<R>
 	& {
 
-		select<M extends Model>(model: (cursor: Traversed<R>) => M): Field<Arity<Data<M>, L, U>>;
+		select<M extends Slots>(model: (cursor: Traversed<R>) => M): Field<Arity<Data<M>, L, U>>;
 		at<T extends TagRange>(...ranges: readonly T[]): Field<Arity<Dictionary, L, 1>>;
 
 	}
@@ -120,7 +152,7 @@ export declare type Traversed<R extends Lazy<Shape>> =
 
 export declare type Valued<S> =
 	S extends Field<infer V> ? Extract<V, Optional<Values>>
-		: S extends Model ? Data<S>
+		: S extends Slots ? Data<S>
 			: never
 
 

@@ -20,9 +20,7 @@ import type { ResourceShape } from "@metreeca/blue/resource";
 import { error, type Lazy, type Optional } from "@metreeca/core";
 import type { StoreOpts } from "@metreeca/keep";
 import type { Reference } from "@metreeca/qest/state";
-import {
-	as, compile, count, type Datum, from, gte, limit, max, type Modeller, order, some, where
-} from "./dsl.js";
+import { as, compile, count, type Delivery, from, gte, limit, max, type Model, order, some, where } from "./dsl.js";
 
 
 const store: Store = error("!!!");
@@ -31,17 +29,25 @@ const store: Store = error("!!!");
 interface Store {
 
 	select<
+
 		S extends Lazy<ResourceShape>,
-		T extends Modeller<S>
-	>(request: Select<S, T>, opts?: StoreOpts): Promise<
-		readonly Datum<S, T>[]
+		M extends Model<S>
+
+	>(request: Select<S, M>, opts?: StoreOpts): Promise<
+
+		readonly Delivery<S, M>[]
+
 	>;
 
 	lookup<
+
 		S extends Lazy<ResourceShape>,
-		T extends Modeller<S>
-	>(request: Lookup<S, T>, opts?: StoreOpts): Promise<
-		Optional<Datum<S, T>>
+		M extends Model<S>
+
+	>(request: Lookup<S, M>, opts?: StoreOpts): Promise<
+
+		Optional<Delivery<S, M>>
+
 	>;
 
 }
@@ -49,21 +55,20 @@ interface Store {
 
 // The shape and the model travel together, so the datum is resolved from the pair rather than carried alongside it.
 
-export type Select<S extends Lazy<ResourceShape>, M extends Modeller<S>> = {
+export type Select<S extends Lazy<ResourceShape>, M extends Model<S>> = {
 
 	readonly shape: S;
 	readonly model: M;
 
 }
 
-export type Lookup<S extends Lazy<ResourceShape>, M extends Modeller<S>> = {
+export type Lookup<S extends Lazy<ResourceShape>, M extends Model<S>> = {
 
 	readonly entry: Reference;
 	readonly shape: S;
 	readonly model: M;
 
 }
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

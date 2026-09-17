@@ -126,6 +126,33 @@ The data it yields is `Decoded<S>`: every plain field the document may state car
 it, and a binding stays `unknown`, as the expression behind it is known only at run time. A call site wanting more
 narrows through a guard of its own rather than through a type argument.
 
+# The Types a Shape Resolves
+
+A shape answers two questions, and a call site meets both:
+
+| Type                | Answers                                | Paired with                                  |
+|---------------------|----------------------------------------|----------------------------------------------|
+| `Instance<S>`       | what the shape yields                  | the state a writer submits                   |
+| `Model<S>`          | what the shape admits being asked for  | the request a reader states                  |
+| `Delivery<S, M>`    | what a given model hands back          | neither; it eliminates the pair              |
+
+Read as duals, `Instance<S>` and `Model<S>` bracket the exchange: one states everything the shape carries, the other
+everything a caller may ask of it. `Delivery<S, M>` then resolves the pair, so the type a call site reads back is never
+wider than what it asked for and never wider than what the shape declares.
+
+`Model<S>` does not yet meet that definition. It is stated as a union of the two ways a model is **written**, a cursor
+traversal or a compiled document, rather than as the templates the shape **admits**. The consequences are visible at
+the call site:
+
+- Only a traversal is held to the shape at compile time. A compiled document satisfies `Compiled<S>` for any shape, so
+  a document naming members the shape does not carry is refused when it is decoded rather than where it is written.
+- `Delivery<S, M>` needs a conditional to tell the two arms apart, rather than reading a single well-formed model.
+
+Defining `Model<S>` structurally, as `Template` narrowed to the members the shape carries and recursing through their
+ranges, would close both. The cursor then becomes one way of producing a value of that type rather than its definition,
+and `Delivery<S, M>` becomes a walk over the shape and the model together, which is what
+[`inference.ts`](./inference.ts) already sketches and nothing currently calls.
+
 # Open Points
 
 - **Node and leaf are the same object**: `event.publisher` is both navigable and a value, which is friendly to write
