@@ -46,16 +46,16 @@ const taxonomies = memoize(async (id: Reference) => {
 
 		model: {
 
-			resources: [{
-				id: "",
-				prefLabel: "",
-				altLabel: [""],
-				definition: "",
-				broader: [""],
-				narrower: [""],
-				related: [""],
-				embedding: ""
-			}]
+			resources: {
+				id: {},
+				prefLabel: {},
+				altLabel: {},
+				definition: {},
+				broader: {},
+				narrower: {},
+				related: {},
+				embedding: {}
+			}
 
 		}
 

@@ -88,7 +88,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					entry: base, // a virtual collection is gathered by class, so the entry is a placeholder
 					shape: Pages,
 
-					model: { pages: [{ digest: "" }, { "?source": [publisher.id] }] }
+					model: { pages: { digest: {}, "?source": [publisher.id] } }
 
 				})))
 				(flat(map(stated => items(stated?.pages ?? [])))) // !!! remove
@@ -160,11 +160,12 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 				shape: Events,
 
 				model: {
-					resources: [{
-						id: "",
-						startDate: "",
-						endDate: ""
-					}, { "?university": [publisher.university] }] // !!! publisher
+					resources: {
+						id: {},
+						startDate: {},
+						endDate: {},
+						"?university": [publisher.university] // !!! publisher
+					}
 				}
 
 			})))
@@ -187,7 +188,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					entry: base, // a virtual collection is gathered by class, so the entry is a placeholder
 					shape: Pages,
 
-					model: { pages: [{ id: "" }, { "?source": [publisher.id] }] }
+					model: { pages: { id: {}, "?source": [publisher.id] } }
 
 				})))
 				(flat(map(pages => items(pages?.pages ?? [])))) // !!! remove

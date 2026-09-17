@@ -119,7 +119,7 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 					entry: taxonomy.id,
 					shape: Taxonomy,
 
-					model: { resources: [{ digest: "" }] }
+					model: { resources: { digest: {} } }
 
 				})))
 				(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
@@ -149,7 +149,7 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 					entry: taxonomy.id,
 					shape: Taxonomy,
 
-					model: { resources: [""] }
+					model: { resources: {} }
 
 				})))
 				(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
