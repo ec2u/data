@@ -18,28 +18,12 @@ import type { ResourceShape } from "@metreeca/blue/resource";
 import type { Instance } from "@metreeca/blue/value";
 import type { Identifier, Lazy, Optional } from "@metreeca/core";
 import type { TagRange } from "@metreeca/core/language";
-import type { Criteria, Options, Order, Template } from "@metreeca/qest/model";
-import type { Dictionary, Literal, Reference } from "@metreeca/qest/state";
+import type { Criteria, Options, Order } from "@metreeca/qest/model";
+import type { Dictionary, Literal, Reference, Values } from "@metreeca/qest/state";
+import type { Lookup, Select } from "./work.js";
 
 
 //// Retrieval /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// !!! `data` is a phantom slot: the request carries the type of a single datum, the store the arity it yields
-
-export type Select<D> = {
-
-	readonly shape: Lazy<ResourceShape>;
-	readonly model: Template;
-	readonly data?: D;
-
-}
-
-export type Lookup<D> = Select<D> & {
-
-	readonly entry: Reference;
-
-}
-
 
 export declare function from<S extends Lazy<ResourceShape>, M extends Model>(
 
@@ -55,17 +39,18 @@ export declare function from<S extends Lazy<ResourceShape>>(
 
 ): Select<Decoded<S>>;
 
+export declare function from<S extends Lazy<ResourceShape>, M extends Model>(
 
-export declare function lookup<S extends Lazy<ResourceShape>, M extends Model>(
 	entry: Reference,
 	shape: S,
 	model: (cursor: Cursor<S>) => M
+
 ): Lookup<Data<M>>;
 
-export declare function lookup<S extends Lazy<ResourceShape>>(
+export declare function from<S extends Lazy<ResourceShape>>(
 
-	shape: S,
 	entry: Reference,
+	shape: S,
 	model: Compiled<S>
 
 ): Lookup<Decoded<S>>;
@@ -75,7 +60,7 @@ export declare function lookup<S extends Lazy<ResourceShape>>(
 
 export type Model = { readonly [alias: Identifier]: Slot }
 
-export type Slot = Field<unknown> | Model
+export type Slot = Field<Optional<Values>> | Model
 
 export declare function where(...criteria: readonly Criterion[]): Criteria;
 
@@ -87,7 +72,7 @@ export type Data<M> = { readonly [alias in keyof M]: Valued<M[alias]> }
 export declare type Compiled<S extends Lazy<ResourceShape>> = Model & { readonly shape?: S }
 
 export declare type Decoded<S extends Lazy<ResourceShape>> =
-	Partial<Instance<S>> & { readonly [alias: Identifier]: unknown }
+	Partial<Instance<S>> & { readonly [alias: Identifier]: Optional<Values> }
 
 export declare function compile<S extends Lazy<ResourceShape>>(shape: S, document: unknown): Compiled<S>;
 
@@ -101,9 +86,9 @@ export declare type Cursor<S extends Lazy<ResourceShape>> = { readonly [member: 
 
 // !!! opaque token pairing the wire expression with the type it carries
 
-export declare type Field<V> = { readonly value?: V }
+export declare type Field<V extends Optional<Values>> = { readonly value?: V }
 
-export declare type Node<V> = Field<V> & Cursor<ResourceShape> & {
+export declare type Node<V extends Optional<Values>> = Field<V> & Cursor<ResourceShape> & {
 
 	select<M extends Model>(model: (cursor: Cursor<ResourceShape>) => M): Field<Data<M>>;
 	at<T extends TagRange>(...ranges: readonly T[]): Field<Dictionary>;
@@ -117,7 +102,7 @@ export declare type Valued<S> = S
 
 //// Transforms ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export declare function count(values: Field<unknown>): Field<number>;
+export declare function count(values: Field<Optional<Values>>): Field<number>;
 
 export declare function max<V extends Literal>(values: Field<V>): Field<Optional<V>>;
 
@@ -139,10 +124,10 @@ export type Entry<T> = { [K in keyof T]-?: readonly [K, Required<T>[K]] }[keyof 
 
 // !!! `options` constrained by `V`, so that a localised field demands tagged values and a plain one refuses them
 
-export declare function some<V>(field: Field<V>, options: Options): Criterion;
+export declare function some<V extends Optional<Values>>(field: Field<V>, options: Options): Criterion;
 
 export declare function gte<V extends Literal>(field: Field<V>, bound: V): Criterion;
 
-export declare function order<V>(field: Field<V>, criterion?: Order): Criterion;
+export declare function order<V extends Optional<Values>>(field: Field<V>, criterion?: Order): Criterion;
 
 export declare function limit(count: number): Criterion;

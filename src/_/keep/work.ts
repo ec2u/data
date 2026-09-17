@@ -19,9 +19,9 @@ import { Page } from "@/vocabularies/ec2u.js";
 import type { ResourceShape } from "@metreeca/blue/resource";
 import { error, type Lazy, type Optional } from "@metreeca/core";
 import type { StoreOpts } from "@metreeca/keep";
-import type { Instance, Projection, Template } from "@metreeca/qest/model";
-import type { Reference } from "@metreeca/qest/state";
-import { as, compile, count, from, gte, limit, lookup, max, order, some, where } from "./dsl.js";
+import type { Projection, Template } from "@metreeca/qest/work";
+import type { Reference, Resource } from "@metreeca/qest/state";
+import { as, compile, count, from, gte, limit, max, order, some, where } from "./dsl.js";
 
 
 // !!! shape >> model
@@ -34,25 +34,25 @@ const store: Store = error("!!!");
 
 interface Store {
 
-	select<T extends Template>(request: Select<T>, opts?: StoreOpts): Promise<readonly Instance<T>[]>;
+	select<T extends Resource>(request: Select<T>, opts?: StoreOpts): Promise<readonly T[]>;
 
-	lookup<T extends Template>(request: Lookup<T>, opts?: StoreOpts): Promise<Optional<Instance<T>>>;
+	lookup<T extends Resource>(request: Lookup<T>, opts?: StoreOpts): Promise<Optional<T>>;
 
 }
 
 
-export type Select<T extends Template | Projection> = { // !!! extend to declare the return type
+export type Select<T extends Resource> = {
 
 	readonly shape: Lazy<ResourceShape>;
-	readonly model: T;
+	readonly model: Template<T> | Projection<T>;
 
 }
 
-export type Lookup<T extends Template> = { // !!! extend to declare the return type
+export type Lookup<T extends Resource> = {
 
 	readonly entry: Reference;
 	readonly shape: Lazy<ResourceShape>;
-	readonly model: T;
+	readonly model: Template<T>;
 
 }
 
@@ -70,7 +70,7 @@ await store.select(from(Page, page => as({
 ))));
 
 
-await store.lookup(lookup("https://data.ec2u.eu/pages/1", Page, page => ({
+await store.lookup(from("https://data.ec2u.eu/pages/1", Page, page => ({
 
 	digest: page.digest
 
@@ -97,7 +97,10 @@ await store.select(from(Event, event => as({
 		id: topic.id,
 		label: topic.label
 
-	}, where(order(topic.label), limit(10)))),
+	}, where(
+		order(topic.label),
+		limit(10)
+	))),
 
 	publisherLabel: event.publisher.label,
 
