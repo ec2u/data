@@ -26,35 +26,33 @@ import type { Lookup, Select } from "./work.js";
 
 //// Retrieval /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export declare function from<S extends Lazy<ResourceShape>, M extends Model>(
+export declare function from<S extends Lazy<ResourceShape>, M extends Modeller<S>>(
 
 	shape: S,
-	model: (cursor: Cursor<S>) => M
+	model: M
 
-): Select<Data<M>>;
+): Select<S, M>;
 
-export declare function from<S extends Lazy<ResourceShape>>(
-
-	shape: S,
-	model: Compiled<S>
-
-): Select<Decoded<S>>;
-
-export declare function from<S extends Lazy<ResourceShape>, M extends Model>(
+export declare function from<S extends Lazy<ResourceShape>, M extends Modeller<S>>(
 
 	shape: S,
 	entry: Reference,
-	model: (cursor: Cursor<S>) => M
+	model: M
 
-): Lookup<Data<M>>;
+): Lookup<S, M>;
 
-export declare function from<S extends Lazy<ResourceShape>>(
 
-	shape: S,
-	entry: Reference,
-	model: Compiled<S>
+// A model stated against a shape: a traversal starting from its cursor, or a document compiled against it.
+// The cursor is the only way to name a member, so a traversal can only reach what the shape carries.
 
-): Lookup<Decoded<S>>;
+export type Modeller<S extends Lazy<ResourceShape>> =
+	| ((cursor: Cursor<S>) => Model)
+	| Compiled<S>
+
+// The datum a model retrieves: the traversal it builds, or the shape narrowed by the document it compiled.
+
+export type Datum<S extends Lazy<ResourceShape>, M> =
+	M extends (cursor: Cursor<S>) => infer R ? Data<R> : Decoded<S>
 
 
 //// Models ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,7 +78,7 @@ export declare function compile<S extends Lazy<ResourceShape>>(shape: S, documen
 
 //// Cursors ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// !!! resolved from `Carried<S>`: the shape states which members a cursor offers and what each one carries
+// Resolved from `Carried<S>`: the shape states which members a cursor offers and what each one carries.
 
 export declare type Cursor<S extends Lazy<ResourceShape>> = {
 
@@ -88,7 +86,7 @@ export declare type Cursor<S extends Lazy<ResourceShape>> = {
 
 }
 
-// !!! a member as the cursor offers it: the naming members carry their reference, a property carries its range
+// A member as the cursor offers it: the naming members carry their reference, a property carries its range.
 
 export declare type Noded<P> =
 	P extends Id ? Field<Reference>
@@ -100,8 +98,8 @@ export declare type Noded<P> =
 
 export declare type Field<V> = { readonly value?: V }
 
-// !!! a property read three ways: as the values it carries, as the members it leads to, and as a nested retrieval
-// !!! the arity rides along, so a collection stays a collection however it is read
+// A property read three ways: as the values it carries, as the members it leads to, and as a nested retrieval.
+// The arity rides along, so a collection stays a collection however it is read.
 
 export declare type Node<R extends Lazy<Shape>, L extends Optional<number>, U extends Optional<number>> =
 	& Field<Arity<Plain<R>, L, U>>
@@ -113,7 +111,7 @@ export declare type Node<R extends Lazy<Shape>, L extends Optional<number>, U ex
 
 	}
 
-// !!! the members reachable onward, none where the range carries values rather than links
+// The members reachable onward, none where the range carries values rather than links.
 
 export declare type Traversed<R extends Lazy<Shape>> =
 	Target<R> extends infer T extends Lazy<ResourceShape> ? Cursor<T> : {}

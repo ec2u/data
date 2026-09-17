@@ -24,26 +24,26 @@ import type { Criteria } from "@metreeca/qest/model";
 import type { Reference } from "@metreeca/qest/state";
 
 
-// !!! self-contained: blue keeps the member-level helpers private, so they are restated here rather than imported
-// !!! the model chooses the keys and the depth; the shape decides the type, the arity and the optionality
+// The model chooses the keys and the depth; the shape decides the type, the arity and the optionality.
+// Blue keeps its member-level helpers private, so they are restated here rather than imported.
 
 
 //// Retrieval /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// !!! the subset of `S` a model `M` retrieves, keys the shape does not carry dropped rather than typed
+// The subset of `S` a model `M` retrieves, keys the shape does not carry dropped rather than typed.
 
 export type Retrieved<S extends Lazy<ResourceShape>, M> =
 	Loose<{ readonly [field in keyof Keys<M> & keyof Carried<S>]: Slot<Carried<S>[field], Keys<M>[field]> }>
 
-// !!! a model node states its selection alongside its own criteria: the criteria keys are a known set, so they drop
-// !!! without parsing key spellings, which is what made the template-driven rewrite brittle
+// A model node states its selection alongside its own criteria: the criteria keys are a known set, so they drop
+// without parsing key spellings, which is what made the template-driven rewrite brittle.
 
 export type Keys<M> = Omit<M, keyof Criteria>
 
 
 //// Slots /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// !!! a member paired with the model node selecting it; the member owns the arity, the node owns the depth
+// A member paired with the model node selecting it; the member owns the arity, the node owns the depth.
 
 export type Slot<P, T> =
 	P extends Id ? Reference
@@ -51,8 +51,8 @@ export type Slot<P, T> =
 			: P extends Property<infer R, infer L, infer U> ? Arity<Valued<R, T>, L, U>
 				: never
 
-// !!! the value a range carries under a model node, dispatched on the range rather than on the node: a locale and a
-// !!! nested template are both identifier-keyed maps of empty objects, so only the shape tells them apart
+// The value a range carries under a model node, dispatched on the range rather than on the node: a locale and a
+// nested template are both identifier-keyed maps of empty objects, so only the shape tells them apart.
 
 export type Valued<R extends Lazy<Shape>, T> =
 	[keyof Keys<T>] extends [never] ? Plain<R> // terminal: whatever the range carries on its own
@@ -62,7 +62,7 @@ export type Valued<R extends Lazy<Shape>, T> =
 					: Eager<R> extends UnionShape<infer B> ? Branched<B, T> // one value per branch
 						: never
 
-// !!! the resource a range leads to, so a traversal may carry on through a link; `never` where it carries values
+// The resource a range leads to, so a traversal may carry on through a link; `never` where it carries values.
 
 export type Target<R extends Lazy<Shape>> =
 	Eager<R> extends ReferenceShape<infer L> ? L
@@ -70,7 +70,7 @@ export type Target<R extends Lazy<Shape>> =
 			: never
 
 
-// !!! localised text is carried whole, so the tag ranges the node lists map to plain strings
+// Localised text is carried whole, so the tag ranges the node lists map to plain strings.
 
 export type Tagged<T> = {
 
@@ -78,7 +78,7 @@ export type Tagged<T> = {
 
 }
 
-// !!! a union node keys its branches by position: each branch pairs with the node stated under its own index
+// A union node keys its branches by position: each branch pairs with the node stated under its own index.
 
 export type Branched<B extends readonly Lazy<Shape>[], T> = {
 
@@ -89,8 +89,8 @@ export type Branched<B extends readonly Lazy<Shape>[], T> = {
 
 //// Members ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// !!! the members a shape carries, declared over inherited, unflattened: the range survives, so a nested model has
-// !!! something to recurse into — which is exactly what blue's own `Retrieved` loses
+// The members a shape carries, declared over inherited, unflattened: the range survives, so a nested model has
+// something to recurse into, which is exactly what blue's own `Retrieved` loses.
 
 export type Carried<S extends Lazy<ResourceShape>> =
 	Eager<S> extends ResourceShape<infer P, infer M> ? Merged<Inherited<P>, M> : {}
@@ -120,7 +120,7 @@ export type Outline<M> =
 
 //// Cardinality ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// !!! a bare value where the range admits at most one, an array otherwise, optional where it may be left out
+// A bare value where the range admits at most one, an array otherwise, optional where it may be left out.
 
 export type Arity<V, L extends Optional<number>, U extends Optional<number>> =
 	Skippable<L> extends true
@@ -130,7 +130,7 @@ export type Arity<V, L extends Optional<number>, U extends Optional<number>> =
 export type Skippable<L extends Optional<number>> =
 	[L] extends [undefined] ? true : [L] extends [0] ? true : false
 
-// !!! carries the optionality `Arity` states through to the key modifier, so an absent value reads as an absent field
+// Carries the optionality `Arity` states through to the key modifier, so an absent value reads as an absent field.
 
 export type Loose<M> = (
 	& { readonly [field in keyof M as undefined extends M[field] ? never : field]: M[field] }

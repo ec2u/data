@@ -19,14 +19,10 @@ import { Page } from "@/vocabularies/ec2u.js";
 import type { ResourceShape } from "@metreeca/blue/resource";
 import { error, type Lazy, type Optional } from "@metreeca/core";
 import type { StoreOpts } from "@metreeca/keep";
-import type { Projection, Template } from "@metreeca/qest/work";
-import type { Reference, Resource } from "@metreeca/qest/state";
-import { as, compile, count, from, gte, limit, max, order, some, where } from "./dsl.js";
-
-
-// !!! shape >> model
-// !!! shape+model >> type
-// !!! shape/model compatibility
+import type { Reference } from "@metreeca/qest/state";
+import {
+	as, compile, count, type Datum, from, gte, limit, max, type Modeller, order, some, where
+} from "./dsl.js";
 
 
 const store: Store = error("!!!");
@@ -34,25 +30,37 @@ const store: Store = error("!!!");
 
 interface Store {
 
-	select<T extends Resource>(request: Select<T>, opts?: StoreOpts): Promise<readonly T[]>;
+	select<
+		S extends Lazy<ResourceShape>,
+		T extends Modeller<S>
+	>(request: Select<S, T>, opts?: StoreOpts): Promise<
+		readonly Datum<S, T>[]
+	>;
 
-	lookup<T extends Resource>(request: Lookup<T>, opts?: StoreOpts): Promise<Optional<T>>;
+	lookup<
+		S extends Lazy<ResourceShape>,
+		T extends Modeller<S>
+	>(request: Lookup<S, T>, opts?: StoreOpts): Promise<
+		Optional<Datum<S, T>>
+	>;
 
 }
 
 
-export type Select<T extends Resource> = {
+// The shape and the model travel together, so the datum is resolved from the pair rather than carried alongside it.
 
-	readonly shape: Lazy<ResourceShape>;
-	readonly model: Template<T> | Projection<T>;
+export type Select<S extends Lazy<ResourceShape>, M extends Modeller<S>> = {
+
+	readonly shape: S;
+	readonly model: M;
 
 }
 
-export type Lookup<T extends Resource> = {
+export type Lookup<S extends Lazy<ResourceShape>, M extends Modeller<S>> = {
 
 	readonly entry: Reference;
-	readonly shape: Lazy<ResourceShape>;
-	readonly model: Template<T>;
+	readonly shape: S;
+	readonly model: M;
 
 }
 
