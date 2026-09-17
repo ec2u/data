@@ -114,7 +114,7 @@ await execute(async () => {
 	const stated = await service(createStore).lookup({
 		entry: "https://data.ec2u.eu/taxonomies/isced-2011",
 		shape: Taxonomy,
-		model: { label: "", resources: [{ id: "", digest: "" }] }
+		model: { label: {}, resources: { id: {}, digest: {} } }
 	});
 
 	console.log(JSON.stringify(stated, null, 2));
@@ -122,10 +122,11 @@ await execute(async () => {
 });
 ```
 
-The `model` is validated against the shape, so a mismatched field fails the call with a `TraceError [RangeError]:
-invalid model` naming the offending path: `label: {}` is rejected where the shape declares a plain `string`, and `""`
-is the right placeholder. A property that comes back absent means the shape did not resolve it, not that the data is
-missing: confirm at the triple level before concluding anything.
+Every leaf is the empty object `{}`, and a collection carries its criteria on the entry naming it rather than in a
+tuple beside it: a model states which values are wanted and never what they are, leaving type and cardinality to the
+shape. The model is still validated against the shape, so a property the shape does not declare fails the call with a
+`TraceError [RangeError]: invalid model` naming the offending path. A property that comes back absent means the shape
+did not resolve it, not that the data is missing: confirm at the triple level before concluding anything.
 
 **Triple level** - what the repository holds. Open the RDF4J repository directly, taking credentials from the vault:
 
@@ -153,3 +154,21 @@ await repository.execute(async client => {
 `client.select()` resolves to an array of tuples, not an async iterable, and the companion `ask()`, `construct()` and
 `update()` take the same form. Counting predicates forward from a resource and reverse into it is enough to settle
 whether a run committed and which links it left behind.
+
+## Diagnosing a Stalled Pipe
+
+A pipe that logs its crawl and then parks, with no error and nothing further printed, is waiting on the store rather
+than on the source: a sink settles its retrievals before it processes the first page, so an unanswered `lookup()`
+holds the whole pipeline with nothing to show for it. Cached pages make this look like progress, since the crawl
+completes without touching the network.
+
+Check the endpoint before reading any code, as it costs seconds and needs no credentials:
+
+```sh
+curl -sS -o /dev/null -w "tcp=%{time_connect}s tls=%{time_appconnect}s total=%{time_total}s\n" \
+	--max-time 20 https://graphdb.ec2u.net/
+```
+
+Fast `tcp` and `tls` times followed by a `total` running out to the timeout with zero bytes received place the fault
+in the infrastructure: the host and its TLS terminator are up and GraphDB behind them is not answering, so no change
+to a pipe or a retrieval model will move it. Reach for the two probes above only once the endpoint answers.
