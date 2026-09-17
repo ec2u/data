@@ -25,7 +25,7 @@ import { immutable } from "@metreeca/core/structures";
 import type { Task } from "@metreeca/flow";
 import { map } from "@metreeca/flow/tasks";
 import type { Record } from "@metreeca/gear-csv";
-import type { Reference } from "@metreeca/qest/resource";
+import type { Reference } from "@metreeca/qest/state";
 
 
 const NotationPattern = /^\d+$/;

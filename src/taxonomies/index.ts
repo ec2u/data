@@ -28,7 +28,7 @@ import type { Instance } from "@metreeca/blue/value";
 import { by } from "@metreeca/core/order";
 import type { Markdown, Text } from "@metreeca/core/strings";
 import { service } from "@metreeca/gear";
-import type { Reference } from "@metreeca/qest/resource";
+import type { Reference } from "@metreeca/qest/state";
 import { log, report, time } from "@metreeca/tape";
 
 

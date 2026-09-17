@@ -27,7 +27,7 @@ import { text } from "@metreeca/blue/string";
 import type { Instance } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/structures";
 import type { URLLike } from "@metreeca/gear-url";
-import type { Reference } from "@metreeca/qest/resource";
+import type { Reference } from "@metreeca/qest/state";
 import * as uuid from "uuid";
 
 
