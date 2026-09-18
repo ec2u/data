@@ -22,7 +22,7 @@ import { validate } from "@/_/tide-store/validate.js";
 import { getTopicId, Taxonomy, Topic } from "@/taxonomies/index.js";
 import { convert, getPath } from "@/taxonomies/tasks/convert.js";
 import type { Instance } from "@metreeca/blue/value";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";

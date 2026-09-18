@@ -25,7 +25,7 @@ import { SchemaCourse, SchemaCourseInstance } from "@/vocabularies/schema/learni
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 
 
 const YearPattern = "^\\d{4}/\\d{4}$";

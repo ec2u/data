@@ -19,7 +19,7 @@ import { execute } from "@/index.core.js";
 import { organizations } from "@/organizations/index.js";
 import { salamanca } from "@/universities/index.core.js";
 import { isString } from "@metreeca/core";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, fork, map } from "@metreeca/flow/tasks";

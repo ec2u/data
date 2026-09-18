@@ -24,7 +24,7 @@ import { OrgOrganization } from "@/vocabularies/org.js";
 import { SchemaOrganization } from "@/vocabularies/schema/organization.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 
 
 export const organizations = immutable({

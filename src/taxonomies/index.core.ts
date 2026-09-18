@@ -16,7 +16,7 @@
 
 import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
 import { base, EC2U } from "@/vocabularies/ec2u.js";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 
 
 export const taxonomies = immutable({

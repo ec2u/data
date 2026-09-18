@@ -25,7 +25,7 @@
 
 import { isDefined } from "@metreeca/core";
 import type { Markdown, Text } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";

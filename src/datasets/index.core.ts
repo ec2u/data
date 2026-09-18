@@ -15,7 +15,7 @@
  */
 
 import { EC2U, base } from "@/vocabularies/ec2u.js";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 
 
 // standalone from the shape module, so that a dataset defined alongside a shape doesn't have to import it back

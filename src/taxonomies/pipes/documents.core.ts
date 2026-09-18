@@ -19,7 +19,7 @@ import { taxonomies } from "@/taxonomies/index.core.js";
 import { Topic } from "@/taxonomies/index.js";
 import { EC2U } from "@/vocabularies/ec2u.js";
 import { resource } from "@metreeca/blue/resource";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 
 
 export const documents = immutable({ // !!! sync from `taxonomies-ec2u-documents`

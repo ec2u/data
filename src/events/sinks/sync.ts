@@ -30,7 +30,7 @@ import { base, Page } from "@/vocabularies/ec2u.js";
 import { reference } from "@metreeca/blue/reference";
 import { id, multiple, resource } from "@metreeca/blue/resource";
 import type { Markdown } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";

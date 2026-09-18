@@ -17,7 +17,7 @@
 import { base } from "@/vocabularies/ec2u.js";
 import { assert, isDefined } from "@metreeca/core";
 import type { Tag } from "@metreeca/core/language";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 import type { Reference } from "@metreeca/qest/resource";
 
 

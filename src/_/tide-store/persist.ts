@@ -17,7 +17,7 @@
 import { createStore } from "@/_/tide-store/index.js";
 import type { ResourceShape } from "@metreeca/blue/resource";
 import type { Lazy } from "@metreeca/core";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 import type { Sink } from "@metreeca/flow";
 import { reduce } from "@metreeca/flow/sinks";
 import { service } from "@metreeca/gear";
