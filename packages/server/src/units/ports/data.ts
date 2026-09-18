@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { _units } from "@/units/store.js";
+import { _units } from "@ec2u/data-loader/units/store.js";
 import { NotFound } from "@metreeca/http";
 import { Router } from "express";
 

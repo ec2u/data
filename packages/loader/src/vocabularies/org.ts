@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { FOAFOrganization, FOAFPerson } from "@/vocabularies/foaf.js";
-import { SKOSConcept, skos } from "@/vocabularies/skos.js";
+import { FOAFOrganization, FOAFPerson } from "@ec2u/data-loader/vocabularies/foaf.js";
+import { SKOSConcept, skos } from "@ec2u/data-loader/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, optional, required, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";

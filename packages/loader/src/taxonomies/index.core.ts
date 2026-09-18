@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
-import { base, EC2U } from "@/vocabularies/ec2u.js";
+import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-loader/datasets/index.core.js";
+import { base, EC2U } from "@ec2u/data-loader/vocabularies/ec2u.js";
 import { immutable } from "@metreeca/core/values";
 
 

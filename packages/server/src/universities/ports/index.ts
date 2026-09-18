@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { cron } from "@/universities/ports/cron.js";
-import { data } from "@/universities/ports/data.js";
+import { cron } from "@ec2u/data-server/universities/ports/cron.js";
+import { data } from "@ec2u/data-server/universities/ports/data.js";
 import { Router } from "express";
 
 

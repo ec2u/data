@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Resource } from "@/datasets/index.js";
-import { Organization } from "@/organizations/index.js";
-import { ISCED2011Topic } from "@/taxonomies/pipes/isced-2011.core.js";
-import { ISCEDF2013Topic } from "@/taxonomies/pipes/isced-f-2013.core.js";
-import { ec2u } from "@/vocabularies/ec2u.js";
-import { SchemaLearningResource } from "@/vocabularies/schema/learning.js";
+import { Resource } from "@ec2u/data-loader/datasets/index.js";
+import { Organization } from "@ec2u/data-loader/organizations/index.js";
+import { ISCED2011Topic } from "@ec2u/data-loader/taxonomies/pipes/isced-2011.core.js";
+import { ISCEDF2013Topic } from "@ec2u/data-loader/taxonomies/pipes/isced-f-2013.core.js";
+import { ec2u } from "@ec2u/data-loader/vocabularies/ec2u.js";
+import { SchemaLearningResource } from "@ec2u/data-loader/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 

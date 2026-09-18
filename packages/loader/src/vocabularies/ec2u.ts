@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { wgs, WGSPoint } from "@/vocabularies/wgs.js";
+import { wgs, WGSPoint } from "@ec2u/data-loader/vocabularies/wgs.js";
 import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { iri, markdown, string, text } from "@metreeca/blue/string";
 import { createNamespace } from "@metreeca/core/resource";

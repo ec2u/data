@@ -16,8 +16,8 @@
 
 import { digest } from "@metreeca/work/tide-store/_digest.js";
 import { compress, synopsis } from "@metreeca/work/muse/index.js";
-import { getTopicId, getTopicEmbedding, Taxonomy, Topic } from "@/taxonomies/index.js";
-import { CommentLength } from "@/vocabularies/ec2u.js";
+import { getTopicId, getTopicEmbedding, Taxonomy, Topic } from "@ec2u/data-loader/taxonomies/index.js";
+import { CommentLength } from "@ec2u/data-loader/vocabularies/ec2u.js";
 import type { Instance } from "@metreeca/blue/value";
 import { multiple, optional, required } from "@metreeca/core/arrays";
 import { clip } from "@metreeca/core/strings";

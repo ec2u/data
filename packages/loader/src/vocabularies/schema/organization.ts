@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { SchemaThing, schema } from "@/vocabularies/schema/index.js";
-import { SchemaLocation } from "@/vocabularies/schema/location.js";
+import { SchemaThing, schema } from "@ec2u/data-loader/vocabularies/schema/index.js";
+import { SchemaLocation } from "@ec2u/data-loader/vocabularies/schema/location.js";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { email, phone, text } from "@metreeca/blue/string";
 

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
-import { Resource } from "@/datasets/index.js";
-import { Organization } from "@/organizations/index.js";
-import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
-import { FOAFPerson } from "@/vocabularies/foaf.js";
-import { org } from "@/vocabularies/org.js";
+import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-loader/datasets/index.core.js";
+import { Resource } from "@ec2u/data-loader/datasets/index.js";
+import { Organization } from "@ec2u/data-loader/organizations/index.js";
+import { EC2U, base, ec2u } from "@ec2u/data-loader/vocabularies/ec2u.js";
+import { FOAFPerson } from "@ec2u/data-loader/vocabularies/foaf.js";
+import { org } from "@ec2u/data-loader/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
 import { immutable } from "@metreeca/core/values";

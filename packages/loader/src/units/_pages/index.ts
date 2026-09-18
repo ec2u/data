@@ -21,7 +21,7 @@
  */
 
 import type { Instant } from "@metreeca/work/core/temporal.js";
-import { type Link, scrape } from "@/units/_pages/_scraper.js";
+import { type Link, scrape } from "@ec2u/data-loader/units/_pages/_scraper.js";
 import type { Markdown, Text } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { log } from "@metreeca/tape";

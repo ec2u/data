@@ -12,7 +12,7 @@
     "setup": "npm ci && sh package.sh --gcp --link",
     "build": "rm -rf packages/*/lib && tsc --build tsconfig.build.json && cpy 'src/**/*.sys.md' lib --cwd=packages/loader",
     "check": "npx vitest run",
-    "serve": "npx tsx --conditions=@ec2u/source --tsconfig packages/loader/tsconfig.json --watch packages/loader/src/index.ts"
+    "serve": "npx tsx --conditions=@ec2u/source --tsconfig packages/server/tsconfig.json --watch packages/server/src/index.ts"
   },
   "dependencies": {
     "@google-cloud/datastore": "^10.1.1",

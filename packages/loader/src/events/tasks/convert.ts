@@ -15,12 +15,12 @@
  */
 
 import { validate } from "@metreeca/work/tide-store/validate.js";
-import { Event, getEventId, events } from "@/events/index.js";
-import type { Classified } from "@/events/tasks/classify.js";
-import { getUniversity } from "@/universities/index.core.js";
-import { LabelLength } from "@/vocabularies/ec2u.js";
-import { SchemaEventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
-import { SchemaLocation } from "@/vocabularies/schema/location.js";
+import { Event, getEventId, events } from "@ec2u/data-loader/events/index.js";
+import type { Classified } from "@ec2u/data-loader/events/tasks/classify.js";
+import { getUniversity } from "@ec2u/data-loader/universities/index.core.js";
+import { LabelLength } from "@ec2u/data-loader/vocabularies/ec2u.js";
+import { SchemaEventAttendanceModeEnumeration } from "@ec2u/data-loader/vocabularies/schema/event.js";
+import { SchemaLocation } from "@ec2u/data-loader/vocabularies/schema/location.js";
 import type { Instance } from "@metreeca/blue/value";
 import { opt, type Optional } from "@metreeca/core";
 import type { Awaitable } from "@metreeca/core/async";

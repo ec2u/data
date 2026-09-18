@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EC2U, base } from "@/vocabularies/ec2u.js";
+import { EC2U, base } from "@ec2u/data-loader/vocabularies/ec2u.js";
 import { immutable } from "@metreeca/core/values";
 
 

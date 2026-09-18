@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
-import { Offering } from "@/offerings/index.js";
-import { Person } from "@/persons/index.js";
-import { Program } from "@/programs/index.js";
-import { StakeholderTopic } from "@/taxonomies/pipes/stakeholders.core.js";
-import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
-import { schema } from "@/vocabularies/schema/index.js";
-import { SchemaCourse, SchemaCourseInstance } from "@/vocabularies/schema/learning.js";
+import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-loader/datasets/index.core.js";
+import { Offering } from "@ec2u/data-loader/offerings/index.js";
+import { Person } from "@ec2u/data-loader/persons/index.js";
+import { Program } from "@ec2u/data-loader/programs/index.js";
+import { StakeholderTopic } from "@ec2u/data-loader/taxonomies/pipes/stakeholders.core.js";
+import { EC2U, base, ec2u } from "@ec2u/data-loader/vocabularies/ec2u.js";
+import { schema } from "@ec2u/data-loader/vocabularies/schema/index.js";
+import { SchemaCourse, SchemaCourseInstance } from "@ec2u/data-loader/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";

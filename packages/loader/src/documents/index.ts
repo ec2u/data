@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
-import { Resource } from "@/datasets/index.js";
-import { Organization } from "@/organizations/index.js";
-import { Person } from "@/persons/index.js";
-import { DocumentTopic } from "@/taxonomies/pipes/documents.core.js";
-import { EuroSciVocTopic } from "@/taxonomies/pipes/euroscivoc.core.js";
-import { StakeholderTopic } from "@/taxonomies/pipes/stakeholders.core.js";
-import { dct } from "@/vocabularies/dct.js";
-import { EC2U, base, ec2u, Entity } from "@/vocabularies/ec2u.js";
-import { schema } from "@/vocabularies/schema/index.js";
+import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-loader/datasets/index.core.js";
+import { Resource } from "@ec2u/data-loader/datasets/index.js";
+import { Organization } from "@ec2u/data-loader/organizations/index.js";
+import { Person } from "@ec2u/data-loader/persons/index.js";
+import { DocumentTopic } from "@ec2u/data-loader/taxonomies/pipes/documents.core.js";
+import { EuroSciVocTopic } from "@ec2u/data-loader/taxonomies/pipes/euroscivoc.core.js";
+import { StakeholderTopic } from "@ec2u/data-loader/taxonomies/pipes/stakeholders.core.js";
+import { dct } from "@ec2u/data-loader/vocabularies/dct.js";
+import { EC2U, base, ec2u, Entity } from "@ec2u/data-loader/vocabularies/ec2u.js";
+import { schema } from "@ec2u/data-loader/vocabularies/schema/index.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { date, iri, tag, text } from "@metreeca/blue/string";

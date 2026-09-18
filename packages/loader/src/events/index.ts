@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
-import { Resource } from "@/datasets/index.js";
-import { Organization } from "@/organizations/index.js";
-import { EventTopic } from "@/taxonomies/pipes/events.core.js";
-import { University } from "@/universities/index.js";
-import { base, CommentLength, EC2U, ec2u, LabelLength } from "@/vocabularies/ec2u.js";
-import { SchemaEvent } from "@/vocabularies/schema/event.js";
+import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-loader/datasets/index.core.js";
+import { Resource } from "@ec2u/data-loader/datasets/index.js";
+import { Organization } from "@ec2u/data-loader/organizations/index.js";
+import { EventTopic } from "@ec2u/data-loader/taxonomies/pipes/events.core.js";
+import { University } from "@ec2u/data-loader/universities/index.js";
+import { base, CommentLength, EC2U, ec2u, LabelLength } from "@ec2u/data-loader/vocabularies/ec2u.js";
+import { SchemaEvent } from "@ec2u/data-loader/vocabularies/schema/event.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";

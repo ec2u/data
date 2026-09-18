@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
-import { Dataset } from "@/datasets/index.js";
-import { Organization } from "@/organizations/index.js";
-import { base, EC2U, ec2u, Feature } from "@/vocabularies/ec2u.js";
-import { OrgFormalOrganization } from "@/vocabularies/org.js";
+import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-loader/datasets/index.core.js";
+import { Dataset } from "@ec2u/data-loader/datasets/index.js";
+import { Organization } from "@ec2u/data-loader/organizations/index.js";
+import { base, EC2U, ec2u, Feature } from "@ec2u/data-loader/vocabularies/ec2u.js";
+import { OrgFormalOrganization } from "@ec2u/data-loader/vocabularies/org.js";
 import { int } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { nonempty, required, resource } from "@metreeca/blue/resource";

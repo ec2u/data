@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SchemaEvent } from "@/vocabularies/schema/event.js";
+import { SchemaEvent } from "@ec2u/data-loader/vocabularies/schema/event.js";
 import { multiple, nonempty, optional, resource } from "@metreeca/blue/resource";
 import { iri, markdown, string, text } from "@metreeca/blue/string";
 import { createNamespace } from "@metreeca/core/resource";

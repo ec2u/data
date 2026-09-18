@@ -3,12 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "./lib/index.js",
   "exports": {
-    ".": {
-      "@ec2u/source": "./src/index.ts",
-      "default": "./lib/index.js"
-    },
     "./*.js": {
       "@ec2u/source": "./src/*.ts",
       "default": "./lib/*.js"

@@ -15,6 +15,12 @@
   ],
   "references": [
     {
+      "path": "../_/tsconfig.build.json"
+    },
+    {
+      "path": "../loader/tsconfig.build.json"
+    },
+    {
       "path": "../shared/tsconfig.build.json"
     }
   ]

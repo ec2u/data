@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { execute } from "@/index.core.js";
-import { stakeholders } from "@/taxonomies/pipes/stakeholders.core.js";
-import { sync } from "@/taxonomies/sinks/sync.js";
+import { execute } from "@ec2u/data-loader/index.core.js";
+import { stakeholders } from "@ec2u/data-loader/taxonomies/pipes/stakeholders.core.js";
+import { sync } from "@ec2u/data-loader/taxonomies/sinks/sync.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { service } from "@metreeca/gear";

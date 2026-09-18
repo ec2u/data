@@ -16,10 +16,10 @@
 
 import { file } from "@metreeca/work/gear/files.js";
 import { createGoogleAI, json } from "@metreeca/work/muse-google/index.js";
-import { topics } from "@/units/_/store.js";
-import { searchTopics } from "@/taxonomies/tools/searchTopics.js";
-import { organizations } from "@/taxonomies/pipes/organizations.core.js";
-import { Unit } from "@/units/_index.js";
+import { topics } from "@ec2u/data-loader/units/_/store.js";
+import { searchTopics } from "@ec2u/data-loader/taxonomies/tools/searchTopics.js";
+import { organizations } from "@ec2u/data-loader/taxonomies/pipes/organizations.core.js";
+import { Unit } from "@ec2u/data-loader/units/_index.js";
 import { Type } from "@google/genai";
 import { markdown } from "@metreeca/core/strings";
 import { service } from "@metreeca/gear";

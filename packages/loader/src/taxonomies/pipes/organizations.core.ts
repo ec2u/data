@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright } from "@/datasets/index.core.js";
-import { taxonomies } from "@/taxonomies/index.core.js";
-import { Topic } from "@/taxonomies/index.js";
-import { EC2U } from "@/vocabularies/ec2u.js";
+import { CCBYNCND40, Copyright } from "@ec2u/data-loader/datasets/index.core.js";
+import { taxonomies } from "@ec2u/data-loader/taxonomies/index.core.js";
+import { Topic } from "@ec2u/data-loader/taxonomies/index.js";
+import { EC2U } from "@ec2u/data-loader/vocabularies/ec2u.js";
 import { resource } from "@metreeca/blue/resource";
 import { immutable } from "@metreeca/core/values";
 

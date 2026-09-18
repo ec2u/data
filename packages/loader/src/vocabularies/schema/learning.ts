@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Course } from "@/courses/index.js";
-import { FOAFPerson } from "@/vocabularies/foaf.js";
-import { SchemaEventAttendanceModeEnumeration } from "@/vocabularies/schema/event.js";
-import { SchemaThing, schema } from "@/vocabularies/schema/index.js";
-import { SchemaOrganization } from "@/vocabularies/schema/organization.js";
-import { SKOSConcept } from "@/vocabularies/skos.js";
+import { Course } from "@ec2u/data-loader/courses/index.js";
+import { FOAFPerson } from "@ec2u/data-loader/vocabularies/foaf.js";
+import { SchemaEventAttendanceModeEnumeration } from "@ec2u/data-loader/vocabularies/schema/event.js";
+import { SchemaThing, schema } from "@ec2u/data-loader/vocabularies/schema/index.js";
+import { SchemaOrganization } from "@ec2u/data-loader/vocabularies/schema/organization.js";
+import { SKOSConcept } from "@ec2u/data-loader/vocabularies/skos.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";

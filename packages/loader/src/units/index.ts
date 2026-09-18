@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
-import { Organization } from "@/organizations/index.js";
-import { EuroSciVocTopic } from "@/taxonomies/pipes/euroscivoc.core.js";
-import { dcat } from "@/vocabularies/dcat.js";
-import { dct } from "@/vocabularies/dct.js";
-import { base, EC2U, ec2u } from "@/vocabularies/ec2u.js";
-import { OrgOrganizationalUnit } from "@/vocabularies/org.js";
+import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-loader/datasets/index.core.js";
+import { Organization } from "@ec2u/data-loader/organizations/index.js";
+import { EuroSciVocTopic } from "@ec2u/data-loader/taxonomies/pipes/euroscivoc.core.js";
+import { dcat } from "@ec2u/data-loader/vocabularies/dcat.js";
+import { dct } from "@ec2u/data-loader/vocabularies/dct.js";
+import { base, EC2U, ec2u } from "@ec2u/data-loader/vocabularies/ec2u.js";
+import { OrgOrganizationalUnit } from "@ec2u/data-loader/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";

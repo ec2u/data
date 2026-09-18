@@ -12,11 +12,6 @@
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "sourceMap": true,
-    "skipLibCheck": true,
-    "paths": {
-      "@/*": [
-        "${configDir}/src/*"
-      ]
-    }
+    "skipLibCheck": true
   }
 }

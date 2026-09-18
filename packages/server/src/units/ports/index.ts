@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { cron } from "@/events/ports/cron.js";
-import { data } from "@/events/ports/data.js";
+import { cron } from "@ec2u/data-server/units/ports/cron.js";
+import { data } from "@ec2u/data-server/units/ports/data.js";
 import { Router } from "express";
 
 
-export function events(): Router {
+export function units(): Router {
 
 	return Router()
-		.use("/events", data())
-		.use("/events~", cron());
+		.use("/units", data())
+		.use("/units~", cron());
 
 }

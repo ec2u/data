@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SchemaThing, schema } from "@/vocabularies/schema/index.js";
+import { SchemaThing, schema } from "@ec2u/data-loader/vocabularies/schema/index.js";
 import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { nonempty, optional, required, resource } from "@metreeca/blue/resource";

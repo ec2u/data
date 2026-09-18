@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Organization } from "@/organizations/index.js";
-import { EuroSciVocTopic } from "@/taxonomies/pipes/euroscivoc.core.js";
-import { University } from "@/universities/index.js";
-import { dct } from "@/vocabularies/dct.js";
-import { ec2u, Entity, rdfs } from "@/vocabularies/ec2u.js";
+import { Organization } from "@ec2u/data-loader/organizations/index.js";
+import { EuroSciVocTopic } from "@ec2u/data-loader/taxonomies/pipes/euroscivoc.core.js";
+import { University } from "@ec2u/data-loader/universities/index.js";
+import { dct } from "@ec2u/data-loader/vocabularies/dct.js";
+import { ec2u, Entity, rdfs } from "@ec2u/data-loader/vocabularies/ec2u.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { sync } from "@/events/sinks/sync.js";
-import { execute } from "@/index.core.js";
-import { organizations } from "@/organizations/index.js";
-import { salamanca } from "@/universities/index.core.js";
+import { sync } from "@ec2u/data-loader/events/sinks/sync.js";
+import { execute } from "@ec2u/data-loader/index.core.js";
+import { organizations } from "@ec2u/data-loader/organizations/index.js";
+import { salamanca } from "@ec2u/data-loader/universities/index.core.js";
 import { isString } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";

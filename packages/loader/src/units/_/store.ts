@@ -16,7 +16,7 @@
 
 import { datastore } from "@metreeca/work/gear-gcp/datastore.js";
 import { compress, decompress } from "@metreeca/work/muse/index.js";
-import { Topic } from "@/units/_/index.js";
+import { Topic } from "@ec2u/data-loader/units/_/index.js";
 import { PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";
 import { log, report, time } from "@metreeca/tape";

@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
 
 	resolve: {
 
-		alias: { // the runtime resolves the `@/` prefix from the tsconfig paths, which the test runner doesn't read
-
-			"@/": `${fileURLToPath(new URL("src", import.meta.url))}/`
-
-		},
-
-		conditions: [ // resolve sibling packages to their sources, so a test run doesn't depend on a prior build
+		conditions: [ // resolve packages to their sources, so a test run doesn't depend on a prior build
 
 			"@ec2u/source",
 			"node",

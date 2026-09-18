@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@/vocabularies/ec2u.js";
+import { base } from "@ec2u/data-loader/vocabularies/ec2u.js";
 import { assert, isDefined } from "@metreeca/core";
 import type { Tag } from "@metreeca/core/language";
 import { immutable } from "@metreeca/core/values";

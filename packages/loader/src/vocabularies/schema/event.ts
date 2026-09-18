@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { SchemaThing } from "@/vocabularies/schema/index.js";
-import { SchemaLocation } from "@/vocabularies/schema/location.js";
-import { SchemaOrganization } from "@/vocabularies/schema/organization.js";
-import { SKOSConcept } from "@/vocabularies/skos.js";
+import { SchemaThing } from "@ec2u/data-loader/vocabularies/schema/index.js";
+import { SchemaLocation } from "@ec2u/data-loader/vocabularies/schema/location.js";
+import { SchemaOrganization } from "@ec2u/data-loader/vocabularies/schema/organization.js";
+import { SKOSConcept } from "@ec2u/data-loader/vocabularies/skos.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, optional, required, resource } from "@metreeca/blue/resource";

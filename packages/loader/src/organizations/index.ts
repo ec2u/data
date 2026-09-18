@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
-import { Resource } from "@/datasets/index.js";
-import { Person } from "@/persons/index.js";
-import { OrganizationTopic } from "@/taxonomies/pipes/organizations.core.js";
-import { Unit } from "@/units/index.js";
-import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
-import { OrgOrganization } from "@/vocabularies/org.js";
-import { SchemaOrganization } from "@/vocabularies/schema/organization.js";
+import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-loader/datasets/index.core.js";
+import { Resource } from "@ec2u/data-loader/datasets/index.js";
+import { Person } from "@ec2u/data-loader/persons/index.js";
+import { OrganizationTopic } from "@ec2u/data-loader/taxonomies/pipes/organizations.core.js";
+import { Unit } from "@ec2u/data-loader/units/index.js";
+import { EC2U, base, ec2u } from "@ec2u/data-loader/vocabularies/ec2u.js";
+import { OrgOrganization } from "@ec2u/data-loader/vocabularies/org.js";
+import { SchemaOrganization } from "@ec2u/data-loader/vocabularies/schema/organization.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
 import { immutable } from "@metreeca/core/values";

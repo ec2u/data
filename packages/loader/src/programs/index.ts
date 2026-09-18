@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@/datasets/index.core.js";
-import { Offering } from "@/offerings/index.js";
-import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
-import { SchemaEducationalOccupationalProgram } from "@/vocabularies/schema/learning.js";
+import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-loader/datasets/index.core.js";
+import { Offering } from "@ec2u/data-loader/offerings/index.js";
+import { EC2U, base, ec2u } from "@ec2u/data-loader/vocabularies/ec2u.js";
+import { SchemaEducationalOccupationalProgram } from "@ec2u/data-loader/vocabularies/schema/learning.js";
 import { resource } from "@metreeca/blue/resource";
 import { immutable } from "@metreeca/core/values";
 

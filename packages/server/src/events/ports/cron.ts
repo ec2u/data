@@ -15,16 +15,16 @@
  */
 
 import { job } from "@metreeca/work/gear-gcp/scheduler.js";
-import { CoimbraUniversity } from "@/events/pipes/coimbra-university.js";
-import { IasiUniversity360 } from "@/events/pipes/iasi-university-360.js";
-import { JenaUniversity } from "@/events/pipes/jena-university.js";
-import { LinzUniversity } from "@/events/pipes/linz-university.js";
-import { PaviaUniversity } from "@/events/pipes/pavia-university.js";
-import { PoitiersUniversity } from "@/events/pipes/poitiers-university.js";
-import { SalamancaUniversity } from "@/events/pipes/salamanca-university.js";
-import { TurkuUniversity } from "@/events/pipes/turku-university.js";
-import { UmeaUniversity } from "@/events/pipes/umea-university.js";
-import { execute } from "@/index.core.js";
+import { CoimbraUniversity } from "@ec2u/data-loader/events/pipes/coimbra-university.js";
+import { IasiUniversity360 } from "@ec2u/data-loader/events/pipes/iasi-university-360.js";
+import { JenaUniversity } from "@ec2u/data-loader/events/pipes/jena-university.js";
+import { LinzUniversity } from "@ec2u/data-loader/events/pipes/linz-university.js";
+import { PaviaUniversity } from "@ec2u/data-loader/events/pipes/pavia-university.js";
+import { PoitiersUniversity } from "@ec2u/data-loader/events/pipes/poitiers-university.js";
+import { SalamancaUniversity } from "@ec2u/data-loader/events/pipes/salamanca-university.js";
+import { TurkuUniversity } from "@ec2u/data-loader/events/pipes/turku-university.js";
+import { UmeaUniversity } from "@ec2u/data-loader/events/pipes/umea-university.js";
+import { execute } from "@ec2u/data-loader/index.core.js";
 import { Router } from "express";
 
 

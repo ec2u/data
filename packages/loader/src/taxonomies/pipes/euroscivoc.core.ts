@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { taxonomies } from "@/taxonomies/index.core.js";
-import { Topic } from "@/taxonomies/index.js";
+import { taxonomies } from "@ec2u/data-loader/taxonomies/index.core.js";
+import { Topic } from "@ec2u/data-loader/taxonomies/index.js";
 import { resource } from "@metreeca/blue/resource";
 import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";

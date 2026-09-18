@@ -15,9 +15,9 @@
  */
 
 
-import { units } from "@/units/index.js";
-import { _units } from "@/units/store.js";
-import { expand } from "@/units/tasks/expand/expand.js";
+import { units } from "@ec2u/data-loader/units/index.js";
+import { _units } from "@ec2u/data-loader/units/store.js";
+import { expand } from "@ec2u/data-loader/units/tasks/expand/expand.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each, toArray } from "@metreeca/flow/sinks";
