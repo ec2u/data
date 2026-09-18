@@ -32,7 +32,7 @@ import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { flat, map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
-import type { Reference } from "@metreeca/qest/resource";
+import type { Reference } from "@metreeca/qest/state";
 import { log } from "@metreeca/tape";
 
 

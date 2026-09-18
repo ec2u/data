@@ -59,7 +59,7 @@ import { eager, isString, type Lazy, opt, type Optional, type Value } from "@met
 import { createThrottle, type Throttle } from "@metreeca/core/async";
 import { markdown } from "@metreeca/core/strings";
 import { BadRequest, TooManyRequests } from "@metreeca/http";
-import type { Dictionary } from "@metreeca/qest/resource";
+import type { Dictionary } from "@metreeca/qest/state";
 import { log, Logger, report } from "@metreeca/tape";
 
 

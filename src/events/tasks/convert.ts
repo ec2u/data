@@ -30,7 +30,7 @@ import { immutable } from "@metreeca/core/values";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, map } from "@metreeca/flow/tasks";
-import type { Reference } from "@metreeca/qest/resource";
+import type { Reference } from "@metreeca/qest/state";
 
 export function convert(publisher: {
 
