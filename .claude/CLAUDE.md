@@ -25,7 +25,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Data Source Integration Notes
 
 Each pipe carries a standalone integration-notes Markdown file alongside it (for example,
-`src/events/pipes/turku-university.md` next to `turku-university.ts`). The file is the authoritative, non-technical
+`packages/loader/src/events/pipes/turku-university.md` next to `turku-university.ts`). The file is the authoritative, non-technical
 status record for that source and must read as a brief standalone document.
 
 ## Structure
@@ -94,7 +94,7 @@ the Confluence **Knowledge Hub - Status** page in the same change before committ
 
 ## Probing the Store
 
-To check what a pipe actually committed, write a throwaway script under `src/` named `~probe.ts` (the `~*` pattern is
+To check what a pipe actually committed, write a throwaway script under `packages/loader/src/` named `~probe.ts` (the `~*` pattern is
 gitignored) and run it with `npx tsx`, then delete it. Pipe logs are not evidence: writes are buffered and flushed as a
 single update when the transaction commits, so an `inserted resource` line only records that the delta was queued.
 
@@ -104,7 +104,7 @@ Two levels of probe are available, and they answer different questions.
 through `store.lookup()`:
 
 ```ts
-import { createStore } from "@/_/gear-store/index.js";
+import { createStore } from "@metreeca/work/tide-store/index.js";
 import { execute } from "@/index.core.js";
 import { Taxonomy } from "@/taxonomies/index.js";
 import { service } from "@metreeca/gear";
@@ -131,7 +131,7 @@ did not resolve it, not that the data is missing: confirm at the triple level be
 **Triple level** - what the repository holds. Open the RDF4J repository directly, taking credentials from the vault:
 
 ```ts
-import { createGCPVault } from "@/_/gear-gcp/secrets.js";
+import { createGCPVault } from "@metreeca/work/gear-gcp/secrets.js";
 import { createFetch } from "@metreeca/http";
 import { basic } from "@metreeca/http/basic";
 import { createRDF4JRepository } from "@metreeca/wire-sparql-rdf4j";

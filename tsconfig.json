@@ -1,13 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
-    "rootDir": "src",
-    "outDir": "lib",
-    "paths": {
-      "@/*": [
-        "*"
-      ]
-    },
     "strict": true,
     "target": "ES2022",
     "lib": [
@@ -21,13 +13,10 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "incremental": true,
-    "tsBuildInfoFile": "lib/.main.tsbuildinfo"
-  },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "**/*.*.ts"
-  ]
+    "paths": {
+      "@/*": [
+        "${configDir}/src/*"
+      ]
+    }
+  }
 }

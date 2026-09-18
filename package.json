@@ -1,13 +1,18 @@
 {
+  "name": "@ec2u/data",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "clean": "rm -rf lib node_modules",
+    "clean": "rm -rf packages/*/lib node_modules",
     "prime": "npm ci && sh package.sh --gcp",
     "setup": "npm ci && sh package.sh --gcp --link",
-    "build": "rm -rf lib && tsc --build && cpy 'src/**/*.sys.md' lib",
+    "build": "rm -rf packages/*/lib && tsc --build tsconfig.build.json && cpy 'src/**/*.sys.md' lib --cwd=packages/loader",
     "check": "npx vitest run",
-    "serve": "npx tsx --watch src/index.ts"
+    "serve": "npx tsx --conditions=@ec2u/source --tsconfig packages/loader/tsconfig.json --watch packages/loader/src/index.ts"
   },
   "dependencies": {
     "@google-cloud/datastore": "^10.1.1",

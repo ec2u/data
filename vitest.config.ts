@@ -14,31 +14,18 @@
  * limitations under the License.
  */
 
-import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
 
-	resolve: {
-
-		alias: { // the runtime resolves the `@/` prefix from the tsconfig paths, which the test runner doesn't read
-
-			"@/": `${fileURLToPath(new URL("src", import.meta.url))}/`
-
-		}
-
-	},
-
 	test: {
 
-		typecheck: {
+		projects: [ // each package states its own aliases and typecheck config
 
-			enabled: true,
-			ignoreSourceErrors: true,
+			"packages/_",
+			"packages/loader"
 
-			tsconfig: "tsconfig.test.json" // the build config leaves test modules out, so type tests go unchecked under it
-
-		}
+		]
 
 	}
 
