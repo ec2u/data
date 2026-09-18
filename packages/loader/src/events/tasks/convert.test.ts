@@ -15,7 +15,7 @@
  */
 
 import { convert } from "@ec2u/data-loader/events/tasks/convert.js";
-import { universities } from "@ec2u/data-loader/universities/index.js";
+import { universities } from "@ec2u/data-shared/universities/index.js";
 import type { Object } from "@metreeca/core";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";

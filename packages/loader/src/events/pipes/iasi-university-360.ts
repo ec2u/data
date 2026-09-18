@@ -16,8 +16,8 @@
 
 import { sync } from "@ec2u/data-loader/events/sinks/sync.js";
 import { execute } from "@ec2u/data-loader/index.core.js";
-import { organizations } from "@ec2u/data-loader/organizations/index.js";
-import { iasi } from "@ec2u/data-loader/universities/index.core.js";
+import { organizations } from "@ec2u/data-shared/organizations/index.js";
+import { iasi } from "@ec2u/data-shared/universities/index.core.js";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";

@@ -1,0 +1,69 @@
+/*
+ * Copyright © 2025-2026 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { Organization } from "@ec2u/data-shared/organizations/index.js";
+import { EuroSciVocTopic } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
+import { dcat } from "@ec2u/data-shared/vocabularies/dcat.js";
+import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
+import { base, EC2U, ec2u } from "@ec2u/data-shared";
+import { OrgOrganizationalUnit } from "@ec2u/data-shared/vocabularies/org.js";
+import { reference } from "@metreeca/blue/reference";
+import { multiple, nonempty, resource } from "@metreeca/blue/resource";
+import { text } from "@metreeca/blue/string";
+import { immutable } from "@metreeca/core/values";
+
+
+export const units = immutable({
+
+	id: `${base}/units`,
+
+	isDefinedBy: `${base}/datasets/units`,
+	dataset: datasets.id,
+
+	label: "EC2U Units",
+
+	title: "EC2U Research Units and Facilities",
+	alternative: "EC2U Units",
+	description: "Information about research units and supporting structures at EC2U partner universities.",
+
+	publisher: EC2U,
+
+	rights: Copyright,
+	license: [CCBYNCND40],
+
+	issued: "2022-01-01"
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Unit() {
+	return resource(Organization, OrgOrganizationalUnit, {
+
+		space: ec2u,
+		class: ec2u.Unit
+
+	}, {
+
+		unitOf: nonempty(reference(Organization)),
+
+		subject: multiple(reference(EuroSciVocTopic), { forward: dct }),
+		keyword: multiple(text, { forward: dcat })
+
+	});
+}

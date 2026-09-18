@@ -15,7 +15,7 @@
  */
 
 
-import { units } from "@ec2u/data-loader/units/index.js";
+import { units } from "@ec2u/data-shared/units/index.js";
 import { _units } from "@ec2u/data-loader/units/store.js";
 import { expand } from "@ec2u/data-loader/units/tasks/expand/expand.js";
 import { pipe } from "@metreeca/flow";

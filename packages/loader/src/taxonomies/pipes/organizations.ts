@@ -15,7 +15,7 @@
  */
 
 import { execute } from "@ec2u/data-loader/index.core.js";
-import { organizations } from "@ec2u/data-loader/taxonomies/pipes/organizations.core.js";
+import { organizations } from "@ec2u/data-shared/taxonomies/organizations.js";
 import { sync } from "@ec2u/data-loader/taxonomies/sinks/sync.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";

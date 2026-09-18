@@ -19,7 +19,7 @@ import { createStore } from "@metreeca/work/tide-store/index.js";
 import { delta, type Delta, persist, type Tally } from "@metreeca/work/tide-store/persist.js";
 import { retire } from "@metreeca/work/tide-store/retire.js";
 import { validate } from "@metreeca/work/tide-store/validate.js";
-import { getTopicId, Taxonomy, Topic } from "@ec2u/data-loader/taxonomies/index.js";
+import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { convert, getPath } from "@ec2u/data-loader/taxonomies/tasks/convert.js";
 import type { Instance } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/values";

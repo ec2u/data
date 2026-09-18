@@ -20,7 +20,7 @@ import { digest } from "@metreeca/work/tide-store/_digest.js";
 import { validate } from "@metreeca/work/tide-store/validate.js";
 import { file } from "@metreeca/work/gear/files.js";
 import { createGoogleAI, json, schema } from "@metreeca/work/muse-google/index.js";
-import { isStaleEvent } from "@ec2u/data-loader/events/index.js";
+import { isStaleEvent } from "@ec2u/data-shared/events/index.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { optional, required, resource } from "@metreeca/blue/resource";
 import { date, string, tag, time, url } from "@metreeca/blue/string";

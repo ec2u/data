@@ -15,7 +15,7 @@
  */
 
 import { execute } from "@ec2u/data-loader/index.core.js";
-import { isced2011 } from "@ec2u/data-loader/taxonomies/pipes/isced-2011.core.js";
+import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { sync } from "@ec2u/data-loader/taxonomies/sinks/sync.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";

@@ -14,6 +14,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Shape definitions, vocabularies and dataset metadata moved from `@ec2u/data-loader` to `@ec2u/data-shared`, so that
+  endpoints and clients state a resource without pulling in the ingestion machinery; the topic retrieval and embedding
+  operations stay with the loader
 - Workspace packages declare the dependencies they import, in place of a single dependency set on the workspace root
 - Test projects are discovered from `packages/*`, each package stating its own resolution conditions and typecheck
   configuration

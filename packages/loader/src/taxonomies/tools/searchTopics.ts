@@ -40,7 +40,8 @@
  * @module
  */
 
-import { getTopicMatches, type Taxonomy } from "@ec2u/data-loader/taxonomies/index.js";
+import { getTopicMatches } from "@ec2u/data-loader/taxonomies/index.js";
+import type { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import { clip, dedent } from "@metreeca/core/strings";
 import { log, report } from "@metreeca/tape";

@@ -14,5 +14,11 @@
       "@ec2u/source": "./src/*.ts",
       "default": "./lib/*.js"
     }
+  },
+  "dependencies": {
+    "@metreeca/blue": "^0.10.0",
+    "@metreeca/core": "^0.10.0",
+    "@metreeca/qest": "^0.10.0",
+    "uuid": "^14.0.1"
   }
 }

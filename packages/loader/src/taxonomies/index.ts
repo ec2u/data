@@ -18,15 +18,9 @@ import { memoize } from "@metreeca/work/core/memoize.js";
 import { createStore } from "@metreeca/work/tide-store/index.js";
 import { createGoogleAI, embedding } from "@metreeca/work/muse-google/index.js";
 import { cosine, decompress, type Distance, type Vector } from "@metreeca/work/muse/index.js";
-import { Dataset, Resource } from "@ec2u/data-loader/datasets/index.js";
-import { ec2u } from "@ec2u/data-loader/vocabularies/ec2u.js";
-import { SKOSConcept, SKOSConceptScheme } from "@ec2u/data-loader/vocabularies/skos.js";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { string } from "@metreeca/blue/string";
-import type { Instance } from "@metreeca/blue/value";
+import { Taxonomy, type TopicEntry, type TopicReference } from "@ec2u/data-shared/taxonomies/index.js";
 import { by } from "@metreeca/core/order";
-import type { Markdown, Text } from "@metreeca/core/strings";
+import type { Text } from "@metreeca/core/strings";
 import { service } from "@metreeca/gear";
 import type { Reference } from "@metreeca/qest/state";
 import { log, report, time } from "@metreeca/tape";
@@ -94,108 +88,14 @@ const taxonomies = memoize(async (id: Reference) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type Taxonomy = Instance<typeof Taxonomy>;
-export type Topic = Instance<typeof Topic>;
-
-
 export type TopicMatch = TopicEntry & {
 
 	readonly distance: Distance
 
 }
 
-export type TopicEntry = {
-
-	readonly id: Reference
-
-	readonly prefLabel: Text
-	readonly altLabel: readonly Text[]
-	readonly definition?: Markdown
-
-	readonly broader: readonly TopicReference[]
-	readonly narrower: readonly TopicReference[]
-	readonly related: readonly TopicReference[]
-
-}
-
-export type TopicReference = {
-
-	readonly id: Reference
-	readonly prefLabel?: Text
-
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function Taxonomy() {
-	return resource(Dataset, SKOSConceptScheme, {
-
-		space: ec2u,
-		class: ec2u.Taxonomy
-
-	}, {
-
-		resources: multiple(reference(Topic)),
-
-		hasConcept: multiple(reference(Topic)),
-		hasTopConcept: multiple(reference(Topic))
-
-	});
-}
-
-export function Topic() {
-	return resource(Resource, SKOSConcept, {
-
-		space: ec2u,
-		class: ec2u.Topic
-
-	}, {
-
-		inScheme: required(reference(Taxonomy)),
-		topConceptOf: optional(reference(Taxonomy)),
-
-		dataset: required(reference(Taxonomy)),
-
-		broader: multiple(reference(Topic)),
-		broaderTransitive: multiple(reference(Topic)),
-		narrower: multiple(reference(Topic)),
-		related: multiple(reference(Topic)),
-		exactMatch: multiple(reference(Topic)),
-
-		digest: required(string, {
-
-			hidden: true,
-
-			name: "Source Digest",
-			description: "A unique identification of the content the source entry carried when it was read."
-
-		}),
-
-		embedding: required(string, {
-
-			hidden: true,
-
-			name: "Semantic Embedding",
-			description: `
-				The position of the meaning of the topic in a semantic space, encoded in compact textual form, to be
-				decoded back to a vector before it is compared to another embedding.
-			`
-
-		})
-
-	});
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function getTopicId(taxonomy: Taxonomy, path: readonly string[]): Reference {
-
-	return `${taxonomy.id}/${path.map(encodeURIComponent).join("/")}`;
-
-}
-
 
 export async function getTopicEmbedding(text: Text): Promise<Vector> {
 

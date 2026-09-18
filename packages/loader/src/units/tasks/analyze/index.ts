@@ -19,7 +19,7 @@ import { _units } from "@ec2u/data-loader/units/store.js";
 import { analyze } from "@ec2u/data-loader/units/tasks/analyze/analyze.js";
 import { annotate } from "@ec2u/data-loader/units/tasks/analyze/annotate.js";
 import { classify } from "@ec2u/data-loader/units/tasks/analyze/classify.js";
-import { pavia } from "@ec2u/data-loader/universities/index.core.js";
+import { pavia } from "@ec2u/data-shared/universities/index.core.js";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";

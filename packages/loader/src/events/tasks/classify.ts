@@ -20,7 +20,7 @@ import { file } from "@metreeca/work/gear/files.js";
 import { createGoogleAI, json, schema } from "@metreeca/work/muse-google/index.js";
 import { Extracted } from "@ec2u/data-loader/events/tasks/extract.js";
 import { getTopicEntries } from "@ec2u/data-loader/taxonomies/index.js";
-import { events } from "@ec2u/data-loader/taxonomies/pipes/events.core.js";
+import { events } from "@ec2u/data-shared/taxonomies/events.js";
 import { browseTopics } from "@ec2u/data-loader/taxonomies/tools/browseTopics.js";
 import { searchTopics } from "@ec2u/data-loader/taxonomies/tools/searchTopics.js";
 import { multiple, resource } from "@metreeca/blue/resource";

@@ -15,7 +15,7 @@
  */
 
 import { execute } from "@ec2u/data-loader/index.core.js";
-import { stakeholders } from "@ec2u/data-loader/taxonomies/pipes/stakeholders.core.js";
+import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { sync } from "@ec2u/data-loader/taxonomies/sinks/sync.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
