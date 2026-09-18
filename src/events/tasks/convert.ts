@@ -23,6 +23,7 @@ import { SchemaEventAttendanceModeEnumeration } from "@/vocabularies/schema/even
 import { SchemaLocation } from "@/vocabularies/schema/location.js";
 import type { Instance } from "@metreeca/blue/value";
 import { opt, type Optional } from "@metreeca/core";
+import type { Awaitable } from "@metreeca/core/async";
 import { multiple, nonempty, optional } from "@metreeca/core/arrays";
 import { clip, tidy } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/structures";
@@ -36,14 +37,14 @@ export function convert(publisher: {
 	readonly id: Reference
 	readonly university: Reference
 
-}): Task<Instance<typeof Classified>, Instance<typeof Event>> {
+}, city?: Awaitable<Optional<string>>): Task<Instance<typeof Classified>, Instance<typeof Event>> {
 
 	const university = getUniversity(publisher.university);
 
 	return payloads => pipe(
 		(items(payloads))
 		(filter(payload => payload.event))
-		(map(payload => {
+		(map(async payload => {
 
 			const url = payload.url;
 			
@@ -56,7 +57,13 @@ export function convert(publisher: {
 			const attendanceURL = payload.attendanceURL;
 			const venueName = line(payload.venueName);
 			const venueAddress = line(payload.venueAddress);
+			const venuePostalCode = line(payload.venuePostalCode);
 			const venueCity = line(payload.venueCity);
+
+			// an address is told apart by its locality, so a document naming a venue but no city places it in the city
+			// of the university publishing it; a document naming no venue at all is left with no location to place
+
+			const addressLocality = venueCity ?? await opt(venueName ?? venueAddress, () => city);
 
 			return immutable({
 
@@ -97,11 +104,14 @@ export function convert(publisher: {
 
 				location: optional<Instance<typeof SchemaLocation>>(
 					opt(attendanceURL, url => ({ url: [url] }))
-					?? opt(venueAddress, streetAddress => ({
-						name: venueName, streetAddress, addressLocality: venueCity
+					?? opt(addressLocality, addressLocality => ({
+						name: venueName,
+						streetAddress: venueAddress,
+						postalCode: venuePostalCode,
+						addressLocality
 					}))
 					?? venueName
-					?? venueCity
+					?? venueAddress
 				)
 
 			});

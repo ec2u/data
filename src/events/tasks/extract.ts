@@ -158,6 +158,11 @@ export function Reported() {
 			description: "The street address of the venue, as the document states it"
 		}),
 
+		venuePostalCode: optional(string, {
+			name: "Postal Code",
+			description: "The postal code of the venue, as the document states it"
+		}),
+
 		venueCity: optional(string, {
 			name: "City",
 			description: "The city the venue is in, as the document states it"

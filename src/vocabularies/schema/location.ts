@@ -53,12 +53,16 @@ export function SchemaPostalAddress() {
 
 	}, {
 
-		streetAddress: required(text),
+		// ;( the locality is what an address is told apart by: a venue is named in a city far more often than in a
+		// street, and a street the union could be entered through would leave a city-level address unstatable
+
+		addressLocality: required(text),
+
+		streetAddress: optional(text),
 		postalCode: optional(text),
 
 		addressCountry: optional(text),
 		addressRegion: optional(text),
-		addressLocality: optional(text),
 
 		email: optional(email),
 		telephone: optional(phone)

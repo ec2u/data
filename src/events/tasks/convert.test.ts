@@ -29,7 +29,7 @@ const coimbra = { id: "https://example.org/coimbra", university: `${universities
 const pavia = { id: "https://example.org/pavia", university: `${universities.id}/pavia` }; // UTC+2 / UTC+1
 
 
-function reading(dates: Object): Object {
+function reading(payload: Object): Object {
 	return {
 
 		event: true,
@@ -39,15 +39,15 @@ function reading(dates: Object): Object {
 		description: "Test description",
 		language: "en",
 
-		...dates
+		...payload
 
 	};
 }
 
-async function converted(dates: Object, publisher = coimbra): Promise<Object> {
+async function converted(payload: Object, publisher = coimbra, city?: string): Promise<Object> {
 	return (await pipe(
-		(items([reading(dates)]))
-		(convert(publisher))
+		(items([reading(payload)]))
+		(convert(publisher, city))
 		(toArray())
 	))[0] as unknown as Object;
 }
@@ -182,6 +182,125 @@ describe("convert", () => {
 
 			expect(await converted({ startDate: "2026-02-30", startTime: "13:00:00" }))
 				.toMatchObject({ startDate: "2026-02-30T13:00:00+00:00" }); // read as 2026-03-02, still winter
+
+		});
+
+	});
+
+	describe("venues", () => {
+
+		const opening = { startDate: "2026-07-02" };
+
+		const venue = {
+			venueName: "Casa das Caldeiras",
+			venueAddress: "Rua Antero de Quental 195",
+			venuePostalCode: "3000-033",
+			venueCity: "Coimbra"
+		};
+
+		it("states a venue the document names a city for as a postal address", async () => {
+
+			expect(await converted({ ...opening, ...venue }))
+				.toMatchObject({
+					location: {
+						name: "Casa das Caldeiras",
+						streetAddress: "Rua Antero de Quental 195",
+						postalCode: "3000-033",
+						addressLocality: "Coimbra"
+					}
+				});
+
+		});
+
+		it("states a venue the document gives no street for as an address in its city", async () => {
+
+			expect(await converted({ ...opening, venueName: "Casa das Caldeiras", venueCity: "Coimbra" }))
+				.toMatchObject({
+					location: {
+						name: "Casa das Caldeiras",
+						streetAddress: undefined,
+						addressLocality: "Coimbra"
+					}
+				});
+
+		});
+
+		it("leaves the postal code out where the document states none", async () => {
+
+			expect(await converted({ ...opening, ...venue, venuePostalCode: undefined }))
+				.toMatchObject({
+					location: {
+						streetAddress: "Rua Antero de Quental 195",
+						postalCode: undefined
+					}
+				});
+
+		});
+
+		it("states the address an event attended online is attended at, unnamed", async () => {
+
+			expect((await converted({ ...opening, ...venue, attendanceURL: "https://example.org/stream" })).location)
+				.toEqual({ url: ["https://example.org/stream"] });
+
+		});
+
+		it("places a venue the document names no city for in the city of the university", async () => {
+
+			expect(await converted({ ...opening, ...venue, venueCity: undefined }, coimbra, "Coimbra"))
+				.toMatchObject({
+					location: {
+						name: "Casa das Caldeiras",
+						streetAddress: "Rua Antero de Quental 195",
+						addressLocality: "Coimbra"
+					}
+				});
+
+		});
+
+		it("places a street the document names no city for in the city of the university", async () => {
+
+			expect(await converted({ ...opening, venueAddress: "Rua Antero de Quental 195" }, coimbra, "Coimbra"))
+				.toMatchObject({
+					location: {
+						streetAddress: "Rua Antero de Quental 195",
+						addressLocality: "Coimbra"
+					}
+				});
+
+		});
+
+		it("leaves an event the document places nowhere in no city of its own", async () => {
+
+			expect(await converted(opening, coimbra, "Coimbra"))
+				.toMatchObject({ location: undefined });
+
+		});
+
+		it("states the venue alone where neither the document nor the university names a city", async () => {
+
+			expect(await converted({ ...opening, ...venue, venueCity: undefined }))
+				.toMatchObject({ location: "Casa das Caldeiras" });
+
+		});
+
+		it("states the street alone where neither the document nor the university names a city", async () => {
+
+			expect(await converted({ ...opening, venueAddress: "Rua Antero de Quental 195" }))
+				.toMatchObject({ location: "Rua Antero de Quental 195" });
+
+		});
+
+		it("states a city the document names no venue in as an address of its own", async () => {
+
+			expect(await converted({ ...opening, venueCity: "Coimbra" }))
+				.toMatchObject({ location: { addressLocality: "Coimbra", name: undefined } });
+
+		});
+
+		it("states no location where the document describes none", async () => {
+
+			expect(await converted(opening))
+				.toMatchObject({ location: undefined });
 
 		});
 
