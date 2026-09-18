@@ -1,9 +1,9 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-| Reference                             | Purpose                                                                |
-|---------------------------------------|------------------------------------------------------------------------|
-| @docs/guidelines/modelling.md         | Standards for documenting and structuring data models                  |
-| @docs/guidelines/deploying.md         | Procedures for Google App Engine deployment                            |
+| Skill       | Purpose                                                |
+|-------------|--------------------------------------------------------|
+| `modelling` | Standards for documenting and structuring data models  |
+| `deploying` | Procedures for Google App Engine deployment            |
 
 ---
 
@@ -172,8 +172,3 @@ Branch issue work off `next` (the integration branch), not `main`. Issue branche
 - **Start dev server**: `npm start` - Starts Vite dev server with hot reload (proxies API calls to localhost:8080)
 - **Build**: `npm run build` - Builds optimized frontend assets
 - **Install dependencies**: `npm install`
-
-## Deployment Commands
-
-- **Deploy**: `mvn appengine:deploy` - Deploys to Google App Engine
-- **Deploy with staging**: `mvn compile appengine:deploy -Dgae.version=staging -Dgae.promote=false`

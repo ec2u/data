@@ -21,6 +21,15 @@ from program pages.
 | [portale.unipv.it/it/…/laureati-medici][spec-medici]                       | medics schools [it]     | specialisation schools (LLM)               |
 | [portale.unipv.it/it/…/laureati-non-medici][spec-non-medici]               | non-medics schools [it] | specialisation schools (LLM)               |
 
+- **2026-07-22** – switched doctorate crawling to incremental page keeping: pages are queued only when never fetched
+  or older than 30 days, then processed in checkpointed batches within a per-run time budget, so a run resumes where
+  the previous one stopped; pages dropped from the doctoral school index or unavailable after three consecutive
+  attempts are retired together with the programs they generated
+- **2026-07-21** – map the UGov `MOD_VER_APPR` text section to the examination requirements
+  (`schema:competencyRequired`) and append `METODI_DID` and `TESTI_RIF` to the course contents (`schema:teaches`)
+- **2026-07-21** – extract goals, structure and contents for `schema:teaches` and graduation requirements for
+  `schema:competencyRequired` from the doctorate and specialisation-school pages
+- **2026-07-17** – map academic year (`ec2u:year`) and term (`ec2u:term`) from the UGov `aaOffId` and `tipoCicloCod`
 - **2024-11-07** – doctorate and specialisation schools integration
 - **2024-10-31** – UGov integration
 - **2024-10-30** – migration to ESSE3; initial integration

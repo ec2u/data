@@ -26,7 +26,8 @@ import eu.ec2u.work.PageKeeper;
 
 import java.net.URI;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.async;
@@ -61,7 +62,10 @@ public final class UnitsUmea implements Runnable {
 
     @Override
     public void run() {
-        time(() -> Stream
+
+        final int batch=10;
+
+        final List<URI> uris=Stream
 
                 .of(
 
@@ -115,15 +119,23 @@ public final class UnitsUmea implements Runnable {
                 .collect(joining())
                 .flatMap(Collection::stream)
                 .flatMap(optional(lenient(URIs::uri)))
+                .distinct()
+                .sorted()
+                .toList();
+
+        IntStream.range(0, Math.ceilDivExact(uris.size(), batch)).forEach(n -> time(() -> uris.stream()
+
+                .skip((long)n*batch)
+                .limit(batch)
 
                 .collect(collectingAndThen(toSet(), new PageKeeper<UnitFrame>(PIPELINE)
-                        .insert(page -> new Units.Scanner().apply(page, new UnitFrame().university(UMEA)))
-                        .remove(page -> Optional.of(new UnitFrame(true).id(page.resource())))
+                                .insert(page -> new Units.Scanner().apply(page, new UnitFrame().university(UMEA)))
+                        // .remove(page -> Optional.of(new UnitFrame(true).id(page.resource())))
                 ))
 
         ).apply((elapsed, resources) -> logger.info(this, format(
                 "synced <%,d> resources in <%,d> ms", resources, elapsed
-        )));
+        ))));
     }
 
 }

@@ -57,10 +57,15 @@ public interface Page {
     Instant created();
 
     /**
-     * Retrieves the last modification timestamp as advertised by HTTP headers.
+     * Retrieves the last modification timestamp as advertised by the source.
      *
      * <p>Represents when the page was last modified according to server metadata,
-     * typically from the {@code Last-Modified} HTTP header or equivalent.</p>
+     * either from the {@code Last-Modified} HTTP header or from a publication stamp reported by the source listing
+     * that enumerates the page.</p>
+     *
+     * <p>Used to prioritise pages reported as republished when the processing budget
+     * is not sufficient to refresh the whole set; never used to skip a fetch, as sources are not required to advertise
+     * every editorial change.</p>
      *
      * @return the page modification timestamp, or {@code null} if not provided
      */
@@ -69,11 +74,22 @@ public interface Page {
     /**
      * Retrieves the timestamp when this page was last fetched from its source URL.
      *
-     * <p>Updated on every fetch attempt, regardless of whether content changed.</p>
+     * <p>Updated on every fetch attempt, whether the content changed, was unchanged or
+     * the fetch failed, so that it can be used as a resume cursor across incremental processing runs.</p>
      *
      * @return the last fetch timestamp, or {@code null} if never fetched
      */
     Instant fetched();
+
+    /**
+     * Retrieves the number of consecutive failed fetch attempts.
+     *
+     * <p>Reset to {@code 0} whenever the page is fetched successfully and incremented
+     * on every failure, so that persistently unavailable pages can be retired rather than retried forever.</p>
+     *
+     * @return the number of consecutive failed fetch attempts
+     */
+    int attempts();
 
 
     /**

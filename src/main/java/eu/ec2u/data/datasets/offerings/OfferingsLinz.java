@@ -33,6 +33,7 @@ import eu.ec2u.data.datasets.taxonomies.TopicFrame;
 
 import java.net.URI;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -43,6 +44,7 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -55,6 +57,7 @@ import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.courses.Courses.COURSES;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
+import static eu.ec2u.data.datasets.taxonomies.TopicsEC2UStakeholders.EC2U_STAKEHOLDERS;
 import static eu.ec2u.data.datasets.universities.University.LINZ;
 import static eu.ec2u.data.datasets.universities.University.uuid;
 import static java.lang.String.format;
@@ -64,6 +67,14 @@ public final class OfferingsLinz implements Runnable {
 
     private static final String PROGRAMS_URL="programs-linz-url";
     private static final String COURSES_URL="courses-linz-url";
+
+    private static final URI PIPELINE=URIs.uri("java:%s".formatted(OfferingsLinz.class.getName()));
+
+    private static final Map<String, TopicFrame> AUDIENCES=map(entry(
+            "Lifelong Learning", new TopicFrame(true).id(
+                    EC2U_STAKEHOLDERS.id().resolve("teaching/students/continuing-education")
+            )
+    ));
 
 
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +104,7 @@ public final class OfferingsLinz implements Runnable {
                                 ),
 
                                 value(query(new ProgramFrame(true))
-                                        .where("university", criterion().any(LINZ))
+                                        .where("pipeline", criterion().any(uri(PIPELINE)))
                                 )
 
                         )),
@@ -105,7 +116,7 @@ public final class OfferingsLinz implements Runnable {
                                 ),
 
                                 value(query(new CourseFrame(true))
-                                        .where("university", criterion().any(LINZ))
+                                        .where("pipeline", criterion().any(uri(PIPELINE)))
                                 )
 
                         ))
@@ -139,6 +150,8 @@ public final class OfferingsLinz implements Runnable {
     private Optional<ProgramFrame> program(final Value json) {
         return json.get("identifier").strings().findFirst().flatMap(code -> review(new ProgramFrame()
 
+                .pipeline(PIPELINE)
+
                 .id(PROGRAMS.id().resolve(uuid(LINZ, code)))
                 .university(LINZ)
 
@@ -149,7 +162,7 @@ public final class OfferingsLinz implements Runnable {
                 .description(map(text(json.get("description"))))
 
                 .numberOfCredits(numberOfCredits(json).orElse(null))
-                .educationalLevel(educationalLevel(json).orElse(null))
+                .educationalLevel(set(educationalLevel(json).stream()))
 
         ));
     }
@@ -175,6 +188,8 @@ public final class OfferingsLinz implements Runnable {
     private Optional<CourseFrame> course(final Value json) {
         return json.get("courseCode").string().map(code -> new CourseFrame()
 
+                .pipeline(PIPELINE)
+
                 .id(COURSES.id().resolve(uuid(LINZ, code)))
                 .university(LINZ)
 
@@ -185,7 +200,8 @@ public final class OfferingsLinz implements Runnable {
                 .description(map(text(json.get("description"))))
 
                 .numberOfCredits(numberOfCredits(json).orElse(null))
-                .educationalLevel(educationalLevel(json).orElse(null))
+                .educationalLevel(set(educationalLevel(json).stream()))
+                .audience(set(audience(json)))
 
                 .inProgram(set(json.select("inProgram.*.identifier").strings().map(v ->
                         new ProgramFrame(true).id(PROGRAMS.id().resolve(uuid(LINZ, v)))
@@ -210,6 +226,11 @@ public final class OfferingsLinz implements Runnable {
 
     private Optional<Double> numberOfCredits(final Value json) {
         return json.get("numberOfCredits").floating();
+    }
+
+    private Stream<TopicFrame> audience(final Value json) {
+        return json.get("audience").strings()
+                .flatMap(v -> Optional.ofNullable(AUDIENCES.get(v)).stream());
     }
 
     private Optional<TopicFrame> educationalLevel(final Value json) {

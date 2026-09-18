@@ -2,13 +2,11 @@
 /.idea/
 /.vscode/
 
-/@/
 /data/
 /target/
 /node_modules/
-/link.config.json
 
-/data.*
+@*
 
 *~
 ~*

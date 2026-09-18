@@ -34,6 +34,7 @@ import eu.ec2u.data.datasets.courses.CourseFrame;
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
+import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredentialFrame;
 
 import java.net.URI;
 import java.time.*;
@@ -51,6 +52,7 @@ import static com.metreeca.flow.json.formats.JSON.store;
 import static com.metreeca.flow.services.Logger.logger;
 import static com.metreeca.flow.services.Vault.vault;
 import static com.metreeca.mesh.Value.array;
+import static com.metreeca.mesh.Value.uri;
 import static com.metreeca.mesh.Value.value;
 import static com.metreeca.mesh.queries.Criterion.criterion;
 import static com.metreeca.mesh.queries.Query.query;
@@ -63,10 +65,12 @@ import static com.metreeca.shim.Streams.optional;
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.courses.Course.review;
 import static eu.ec2u.data.datasets.courses.Courses.COURSES;
+import static eu.ec2u.data.datasets.offerings.Offering.review;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.datasets.universities.University.COIMBRA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
+import static eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredential.CredentialCategory.Degree;
 import static java.lang.String.format;
 import static java.util.Locale.ROOT;
 import static java.util.function.Predicate.not;
@@ -76,6 +80,8 @@ public final class OfferingsCoimbra implements Runnable {
     private static final String API_URL="offerings-coimbra-url";
     private static final String API_ID="offerings-coimbra-id";
     private static final String API_TOKEN="offerings-coimbra-token";
+
+    private static final URI PIPELINE=URIs.uri("java:%s".formatted(OfferingsCoimbra.class.getName()));
 
 
     private static final Pattern NOT_LETTERS_PATTERN=Pattern.compile("[^\\p{L}]+");
@@ -157,7 +163,7 @@ public final class OfferingsCoimbra implements Runnable {
                                 ),
 
                                 value(query(new ProgramFrame(true))
-                                        .where("university", criterion().any(COIMBRA))
+                                        .where("pipeline", criterion().any(uri(PIPELINE)))
                                 )
 
                         )),
@@ -176,7 +182,7 @@ public final class OfferingsCoimbra implements Runnable {
                                 ),
 
                                 value(query(new CourseFrame(true))
-                                        .where("university", criterion().any(COIMBRA))
+                                        .where("pipeline", criterion().any(uri(PIPELINE)))
                                 )
 
                         ))
@@ -199,15 +205,25 @@ public final class OfferingsCoimbra implements Runnable {
     }
 
 
+    private static Year academicYear() {
+        return LocalDate.now().getMonth().compareTo(Month.JULY) >= 0
+                ? Year.now()
+                : Year.now().minusYears(1);
+    }
+
+    private static String year() {
+        final Year year=academicYear();
+        return format("%s/%s", year, year.plusYears(1));
+    }
+
+
     private Stream<Value> offerings() {
 
         final String url=vault.get(API_URL);
         final String id=vault.get(API_ID);
         final String token=service(vault()).get(API_TOKEN);
 
-        final Year year=LocalDate.now().getMonth().compareTo(Month.JULY) >= 0
-                ? Year.now()
-                : Year.now().minusYears(1);
+        final Year year=academicYear();
 
         return Stream.of(url+"/obtemCursosBloco")
 
@@ -252,6 +268,8 @@ public final class OfferingsCoimbra implements Runnable {
     private Optional<ProgramFrame> program(final Value json) {
         return json.get("cursoId").integral().flatMap(id -> review(new ProgramFrame()
 
+                .pipeline(PIPELINE)
+
                 .id(PROGRAMS.id().resolve(uuid(COIMBRA, String.valueOf(id))))
                 .university(COIMBRA)
 
@@ -260,11 +278,15 @@ public final class OfferingsCoimbra implements Runnable {
 
                 .name(map(name(json)))
 
-                .educationalLevel(educationalLevel(json).orElse(null))
+                .educationalLevel(set(educationalLevel(json).stream()))
                 .numberOfCredits(numberOfCredits(json).orElse(null))
                 .timeToComplete(period(json).orElse(null))
 
-                .educationalCredentialAwarded(map(educationalCredentialAwarded(json)))
+                .educationalCredentialAwarded(review(COIMBRA.locale(), new SchemaEducationalOccupationalCredentialFrame()
+                        .credentialCategory(Degree)
+                        .name(map(educationalCredentialAwarded(json)))
+                ).orElse(null))
+
                 .teaches(map(teaches(json)))
                 .assesses(map(assesses(json)))
                 .programPrerequisites(map(prerequisites(json)))
@@ -276,22 +298,30 @@ public final class OfferingsCoimbra implements Runnable {
     private Optional<CourseFrame> course(final Value json) {
         return json.get("cursoId").integral().flatMap(id -> review(new CourseFrame()
 
+                .pipeline(PIPELINE)
 
                 .id(COURSES.id().resolve(uuid(COIMBRA, String.valueOf(id))))
                 .university(COIMBRA)
 
                 .courseCode(String.valueOf(id))
+
+                .year(year())
+
                 .url(set(url(json)))
 
                 .name(map(name(json)))
 
-                .educationalLevel(educationalLevel(json).orElse(null))
+                .educationalLevel(set(educationalLevel(json).stream()))
                 .numberOfCredits(numberOfCredits(json).orElse(null))
                 .timeRequired(duration(json).orElse(null))
 
                 .inLanguage(set(inLanguage(json)))
 
-                .educationalCredentialAwarded(map(educationalCredentialAwarded(json)))
+                .educationalCredentialAwarded(review(COIMBRA.locale(), new SchemaEducationalOccupationalCredentialFrame()
+                        .credentialCategory(Degree)
+                        .name(map(educationalCredentialAwarded(json)))
+                ).orElse(null))
+
                 .teaches(map(teaches(json)))
                 .assesses(map(assesses(json)))
                 .coursePrerequisites(map(prerequisites(json)))

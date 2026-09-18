@@ -31,6 +31,7 @@ import eu.ec2u.data.datasets.organizations.Organizations;
 import eu.ec2u.work.Page;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
@@ -133,7 +134,7 @@ public interface Programs extends Dataset {
                                   },
                                   "duration": {
                                     "type": "string",
-                                    "pattern": "^P(\\\\d+Y)?(\\\\d+M)?(\\\\d+D)?$"
+                                    "pattern": "^P(\\\\d+Y(\\\\d+M)?(\\\\d+D)?|\\\\d+M(\\\\d+D)?|\\\\d+D)$"
                                   },
                                   "requirements": {
                                     "type": "string"
@@ -162,7 +163,10 @@ public interface Programs extends Dataset {
 
                                 .id(PROGRAMS.id().resolve(uuid(program.university(), page.id().toString())))
 
-                                .timeToComplete(json.get("duration").period().orElse(null))
+                                .timeToComplete(json.get("duration").period()
+                                        .filter(not(Period::isZero)) // ;( empty periods are stored as <P>
+                                        .orElse(null)
+                                )
 
                                 .programPrerequisites(map(json.get("requirements").string().stream()
                                         .filter(not(String::isEmpty))
@@ -177,6 +181,7 @@ public interface Programs extends Dataset {
                                 .url(set(page.id()))
 
                                 .name(offering.name())
+                                .description(offering.description())
                                 .disambiguatingDescription(offering.disambiguatingDescription())
 
                                 .numberOfCredits(offering.numberOfCredits())

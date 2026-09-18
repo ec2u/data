@@ -28,6 +28,7 @@ import com.metreeca.mesh.pipe.Store;
 
 import eu.ec2u.data.datasets.programs.ProgramFrame;
 import eu.ec2u.data.datasets.taxonomies.Topic;
+import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredentialFrame;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -63,11 +64,13 @@ import static com.metreeca.shim.URIs.uri;
 
 import static eu.ec2u.data.Data.exec;
 import static eu.ec2u.data.datasets.Localized.DE;
+import static eu.ec2u.data.datasets.offerings.Offering.review;
 import static eu.ec2u.data.datasets.programs.Program.review;
 import static eu.ec2u.data.datasets.programs.Programs.PROGRAMS;
 import static eu.ec2u.data.datasets.taxonomies.TopicsISCED2011.*;
 import static eu.ec2u.data.datasets.universities.University.JENA;
 import static eu.ec2u.data.datasets.universities.University.uuid;
+import static eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredential.CredentialCategory.Degree;
 import static java.lang.String.format;
 import static java.util.Comparator.comparingInt;
 
@@ -223,8 +226,14 @@ public final class OfferingsJenaPrograms implements Runnable {
                     .name(name(rover, degree).orElse(null))
                     .description(description(rover).orElse(null))
 
-                    .educationalLevel(key.map(DEGREE_LEVELS::get).orElse(null))
-                    .educationalCredentialAwarded(degree.map(value -> map(entry(DE, value))).orElse(null))
+                    .educationalLevel(set(key.map(DEGREE_LEVELS::get).stream()))
+                    .educationalCredentialAwarded(degree
+                            .flatMap(value -> review(DE, new SchemaEducationalOccupationalCredentialFrame()
+                                    .credentialCategory(Degree)
+                                    .name(map(entry(DE, value)))
+                            ))
+                            .orElse(null)
+                    )
 
             );
         });

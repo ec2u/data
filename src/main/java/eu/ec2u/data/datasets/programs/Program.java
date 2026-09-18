@@ -80,20 +80,19 @@ public interface Program extends Offering, SchemaEducationalOccupationalProgram 
                 .teaches(translator.texts(program.teaches(), source, EN))
                 .assesses(translator.texts(program.assesses(), source, EN))
                 .competencyRequired(translator.texts(program.competencyRequired(), source, EN))
-                .educationalCredentialAwarded(translator.texts(program.educationalCredentialAwarded(), source, EN))
-                .occupationalCredentialAwarded(translator.texts(program.occupationalCredentialAwarded(), source, EN))
                 .programPrerequisites(translator.texts(program.programPrerequisites(), source, EN));
     }
 
 
     static ProgramFrame educationalLevel(final ProgramFrame offering) {
         return offering.educationalLevel(Optional.ofNullable(offering.educationalLevel())
+                .filter(not(Set::isEmpty))
                 // ;( ISCED-2011 AI classification disabled (botched, e.g. ISCED 0); keep source value only
                 // ;( see https://github.com/ec2u/data/issues/59
-                // .or(() -> Optional.of(embeddable(offering)).stream()
+                // .orElseGet(() -> set(Stream.of(embeddable(offering))
                 //         .flatMap(isced2011())
-                //         .findFirst()
-                // )
+                //         .limit(1)
+                // ))
                 .orElse(null)
         );
     }
@@ -125,7 +124,7 @@ public interface Program extends Offering, SchemaEducationalOccupationalProgram 
     Organization provider();
 
     @Pattern("^"+TopicsISCED2011.PATH+".*$") // !!! @Prefix
-    Topic educationalLevel();
+    Set<Topic> educationalLevel();
 
     @Pattern("^"+TopicsISCEDF2013.PATH+".*$") // !!! @Prefix
     Set<Topic> about();

@@ -20,9 +20,11 @@ import com.metreeca.mesh.meta.jsonld.Frame;
 import com.metreeca.shim.Locales;
 
 import eu.ec2u.data.datasets.taxonomies.TopicsISCED2011;
+import eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredentialFrame;
 import eu.ec2u.work.Page;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -30,6 +32,8 @@ import static com.metreeca.flow.Locator.service;
 import static com.metreeca.shim.Collections.*;
 import static com.metreeca.shim.Lambdas.lenient;
 
+import static eu.ec2u.data.datasets.offerings.Offering.review;
+import static eu.ec2u.data.vocabularies.schema.SchemaEducationalOccupationalCredential.CredentialCategory.Degree;
 import static eu.ec2u.work.ai.Analyzer.analyzer;
 import static java.util.function.Predicate.not;
 
@@ -47,13 +51,14 @@ public interface Offerings {
                             
                             - document language as guessed from its content as a 2-letter ISO tag
                             - name
-                            - plain text summary of about 500 characters
-                            
+                            - full description of the offering from the point of view of a prospective student
+                            - plain text summary of that description of about 500 characters
+
                             - the number of ECTS credits awarded
                             - the name of the educational credential awarded
                             - the name of the occupational credential awarded
-                            
-                            - full description of general objectives
+
+                            - full description of goals, structure and contents
                             - full description of acquired competencies or intended learning outcomes
                             - full description of graduation or completion requirements
                             
@@ -76,6 +81,9 @@ public interface Offerings {
                                     "pattern": "^[a-zA-Z]{2}$"
                                   },
                                   "name": {
+                                    "type": "string"
+                                  },
+                                  "description": {
                                     "type": "string"
                                   },
                                   "summary": {
@@ -135,6 +143,11 @@ public interface Offerings {
                                         .orElse(null)
                                 )
 
+                                .description(json.get("description").string()
+                                        .map(description -> map(entry(locale, description)))
+                                        .orElse(null)
+                                )
+
                                 .disambiguatingDescription(json.get("summary").string()
                                         .map(summary -> map(entry(locale, summary)))
                                         .orElse(null)
@@ -147,12 +160,18 @@ public interface Offerings {
                                 )
 
                                 .educationalCredentialAwarded(json.get("educationalCredential").string()
-                                        .map(name -> map(entry(locale, name)))
+                                        .flatMap(name -> review(locale, new SchemaEducationalOccupationalCredentialFrame()
+                                                .credentialCategory(Degree)
+                                                .name(named(locale, name))
+                                        ))
                                         .orElse(null)
                                 )
 
                                 .occupationalCredentialAwarded(json.get("occupationalCredential").string()
-                                        .map(name -> map(entry(locale, name)))
+                                        .flatMap(name -> review(locale, new SchemaEducationalOccupationalCredentialFrame()
+                                                .credentialCategory(Degree)
+                                                .name(named(locale, name))
+                                        ))
                                         .orElse(null)
                                 )
 
@@ -171,14 +190,26 @@ public interface Offerings {
                                         .map(v -> entry(locale, v))
                                 ))
 
-                                .educationalLevel(json.get("level").number()
+                                .educationalLevel(set(json.get("level").number()
                                         .map(Number::intValue)
                                         .map(v -> Math.max(1, Math.min(9, v)))
                                         .map(TopicsISCED2011::level)
-                                        .orElse(null)
-                                );
+                                        .stream()
+                                ));
 
                     });
+        }
+
+
+        /**
+         * Localises a name, ignoring blank values: credentials may legitimately be nameless, but an empty name would
+         * be stored as an empty literal.
+         */
+        private Map<Locale, String> named(final Locale locale, final String name) {
+            return map(Optional.of(name)
+                    .filter(not(String::isBlank))
+                    .map(v -> entry(locale, v))
+            );
         }
 
     }

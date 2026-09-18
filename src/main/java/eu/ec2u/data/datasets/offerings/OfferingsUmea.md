@@ -17,6 +17,12 @@ LLM from linked pages.
 |-------------------------------------------------------------------|---------------------------|
 | https://www.umu.se/utbildning/valj-utbildning/program-och-kurser/ | programs and courses [sv] |
 
+- **2026-07-22** – switched to incremental crawling: pages are queued only when never fetched, reported as republished
+  by the API `publishDate`, or older than 30 days, then processed in checkpointed batches within a per-run time budget,
+  so a run resumes where the previous one stopped; pages dropped from the listing or unavailable after three
+  consecutive attempts are retired together with the resources they generated
+- **2026-07-21** – extract a prospective-student description (`schema:description`) alongside the summary, and focus
+  `schema:teaches` on goals, structure and contents
 - **2025-11-05** – migrated from paginated HTML scraping to REST/JSON API (website now uses Vue.js SPA with dynamic
   content)
 	- initial implementation used sitemap-based discovery, then migrated to direct API access

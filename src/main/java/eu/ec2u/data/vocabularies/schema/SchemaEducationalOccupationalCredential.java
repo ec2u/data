@@ -16,29 +16,22 @@
 
 package eu.ec2u.data.vocabularies.schema;
 
+import com.metreeca.mesh.meta.jsonld.Class;
 import com.metreeca.mesh.meta.jsonld.Frame;
-
-import eu.ec2u.data.vocabularies.foaf.FOAFPerson;
-import eu.ec2u.data.vocabularies.schema.SchemaEvent.EventAttendanceModeEnumeration;
-import eu.ec2u.data.vocabularies.skos.SKOSConcept;
-
-import java.time.Duration;
-import java.util.Set;
+import com.metreeca.mesh.meta.shacl.Required;
 
 @Frame
-public interface SchemaCourseInstance extends SchemaThing {
+@Class("schema:EducationalOccupationalCredential")
+public interface SchemaEducationalOccupationalCredential extends SchemaThing {
 
-    boolean isAccessibleForFree();
+    enum CredentialCategory {
+        Degree,
+        Certificate,
+        Badge
+    }
 
-    Duration courseWorkload();
 
-    EventAttendanceModeEnumeration courseMode();
-
-
-    Set<? extends FOAFPerson> instructor();
-
-    Set<? extends SKOSConcept> about();
-
-    Set<? extends SKOSConcept> audience();
+    @Required
+    CredentialCategory credentialCategory();
 
 }

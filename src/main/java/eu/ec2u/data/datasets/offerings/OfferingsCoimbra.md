@@ -15,6 +15,7 @@ Data extracted from a dedicated REST/JSON API.
 |-----------------------------|------------------|
 | https://apps.uc.pt/courses/ | courses API [pt] |
 
+- **2026-07-17** – map academic year (`ec2u:year`) from the request filter, stamping the current academic year on all courses (the API exposes no per-course year or term)
 - **2024-05-03** – ingest offerings identifiers
 - **2023-03-07** – classify entries as programs/courses according to the `cicloTipo` field:
 	- `PRIMEIRO`/`SEGUNDO`/`TERCEIRO` ›› degree programs
