@@ -22,7 +22,7 @@ import { FOAFPerson } from "@/vocabularies/foaf.js";
 import { org } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 
 
 export const persons = immutable({

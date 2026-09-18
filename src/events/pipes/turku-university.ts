@@ -18,7 +18,7 @@ import { sync } from "@/events/sinks/sync.js";
 import { execute } from "@/index.core.js";
 import { organizations } from "@/organizations/index.js";
 import { turku } from "@/universities/index.core.js";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { fork, map } from "@metreeca/flow/tasks";

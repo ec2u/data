@@ -18,7 +18,7 @@ import { taxonomies } from "@/taxonomies/index.core.js";
 import { Topic } from "@/taxonomies/index.js";
 import { resource } from "@metreeca/blue/resource";
 import { dedent } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 
 
 export const euroscivoc = immutable({ // !!! sync from the EU vocabularies RDF distribution

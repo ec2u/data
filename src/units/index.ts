@@ -24,7 +24,7 @@ import { OrgOrganizationalUnit } from "@/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 
 
 export const units = immutable({

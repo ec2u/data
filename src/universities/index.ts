@@ -23,7 +23,7 @@ import { int } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { nonempty, required, resource } from "@metreeca/blue/resource";
 import { iri, year } from "@metreeca/blue/string";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 
 
 export const universities = immutable({

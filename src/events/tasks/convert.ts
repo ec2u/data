@@ -26,7 +26,7 @@ import { opt, type Optional } from "@metreeca/core";
 import type { Awaitable } from "@metreeca/core/async";
 import { multiple, nonempty, optional } from "@metreeca/core/arrays";
 import { clip, tidy } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, map } from "@metreeca/flow/tasks";

@@ -21,7 +21,7 @@ import { CommentLength } from "@/vocabularies/ec2u.js";
 import type { Instance } from "@metreeca/blue/value";
 import { multiple, optional, required } from "@metreeca/core/arrays";
 import { clip } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 import type { Task } from "@metreeca/flow";
 import { map } from "@metreeca/flow/tasks";
 import type { Record } from "@metreeca/gear-csv";

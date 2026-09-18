@@ -24,7 +24,7 @@
  * @see {@link https://cloud.google.com/docs Google Cloud Documentation}
  */
 
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 
 
 /**

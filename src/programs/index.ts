@@ -19,7 +19,7 @@ import { Offering } from "@/offerings/index.js";
 import { EC2U, base, ec2u } from "@/vocabularies/ec2u.js";
 import { SchemaEducationalOccupationalProgram } from "@/vocabularies/schema/learning.js";
 import { resource } from "@metreeca/blue/resource";
-import { immutable } from "@metreeca/core/structures";
+import { immutable } from "@metreeca/core/values";
 
 
 export const programs = immutable({
