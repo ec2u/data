@@ -99,13 +99,14 @@ single update when the transaction commits, so an `inserted resource` line only 
 
 Two levels of probe are available, and they answer different questions.
 
-**Shape level** - what the application sees. Bind the services through `execute()` from `@/index.core.js` and read
+**Shape level** - what the application sees. Bind the services through `execute()` from
+`@ec2u/data-loader/index.core.js` and read
 through `store.lookup()`:
 
 ```ts
 import { createStore } from "@metreeca/work/tide-store/index.js";
-import { execute } from "@/index.core.js";
-import { Taxonomy } from "@/taxonomies/index.js";
+import { execute } from "@ec2u/data-loader/index.core.js";
+import { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
 import { service } from "@metreeca/gear";
 
 await execute(async () => {
