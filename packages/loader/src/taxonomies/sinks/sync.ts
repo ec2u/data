@@ -22,6 +22,7 @@ import { validate } from "@metreeca/work/tide-store/validate.js";
 import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { convert, getPath } from "@ec2u/data-loader/taxonomies/tasks/convert.js";
 import type { Instance } from "@metreeca/blue/value";
+import type { URLLike } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -29,7 +30,7 @@ import { toSet } from "@metreeca/flow/sinks";
 import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { csv, type Record } from "@metreeca/gear-csv";
-import { fetch, type URLLike } from "@metreeca/gear-url";
+import { fetch } from "@metreeca/gear-url";
 
 
 const survival = 0.75; // the smallest fraction of the stored topics a document must account for // !!! as option

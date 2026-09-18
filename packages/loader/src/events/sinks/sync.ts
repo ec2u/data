@@ -29,6 +29,7 @@ import { University } from "@ec2u/data-shared/universities/index.js";
 import { base, Page } from "@ec2u/data-shared";
 import { reference } from "@metreeca/blue/reference";
 import { id, multiple, resource } from "@metreeca/blue/resource";
+import type { URLLike } from "@metreeca/core";
 import type { Markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
@@ -36,7 +37,7 @@ import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
 import { filter, flat, fork, map, mix, tee } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
-import { fetch, type URLLike } from "@metreeca/gear-url";
+import { fetch } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 
 
