@@ -1,12 +1,33 @@
 {
   "name": "@metreeca/work",
   "version": "0.0.0",
+  "description": "General-purpose components incubated here before extraction into the Metreeca packages",
   "private": true,
   "type": "module",
+  "sideEffects": false,
   "exports": {
     "./*.js": {
       "@ec2u/source": "./src/*.ts",
       "default": "./lib/*.js"
     }
+  },
+  "dependencies": {
+    "@google-cloud/datastore": "^10.1.1",
+    "@google-cloud/secret-manager": "^6.3.0",
+    "@google/genai": "^1.52.0",
+    "@metreeca/blue": "^0.10.0",
+    "@metreeca/core": "^0.10.0",
+    "@metreeca/flow": "^0.10.0",
+    "@metreeca/gear": "^0.2.0",
+    "@metreeca/http": "^0.2.0",
+    "@metreeca/keep": "^0.10.0",
+    "@metreeca/qest": "^0.10.0",
+    "@metreeca/tape": "^0.10.1",
+    "express": "^5.2.1",
+    "google-auth-library": "^10.5.0",
+    "openai": "^7.10.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6"
   }
 }

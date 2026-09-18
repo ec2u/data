@@ -1,11 +1,20 @@
 {
   "name": "@ec2u/data",
   "version": "0.0.0",
+  "description": "AI-based data ingestion pipelines for the EC2U Knowledge Hub",
+  "homepage": "https://github.com/ec2u/pipe",
+  "bugs": "https://github.com/ec2u/pipe/issues",
+  "license": "Apache-2.0",
+  "author": "EC2U Alliance",
+  "repository": "github:ec2u/pipe",
   "private": true,
   "type": "module",
   "workspaces": [
     "packages/*"
   ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "clean": "rm -rf packages/*/lib node_modules",
     "prime": "npm ci && sh package.sh --gcp",
@@ -14,35 +23,7 @@
     "check": "npx vitest run",
     "serve": "npx tsx --conditions=@ec2u/source --tsconfig packages/server/tsconfig.json --watch packages/server/src/index.ts"
   },
-  "dependencies": {
-    "@google-cloud/datastore": "^10.1.1",
-    "@google-cloud/secret-manager": "^6.3.0",
-    "@google/genai": "^1.52.0",
-    "@metreeca/blue": "^0.10.0",
-    "@metreeca/core": "^0.10.0",
-    "@metreeca/flow": "^0.10.0",
-    "@metreeca/gear": "^0.2.0",
-    "@metreeca/gear-csv": "^0.2.0",
-    "@metreeca/gear-json": "^0.2.0",
-    "@metreeca/gear-url": "^0.2.0",
-    "@metreeca/gear-xml": "^0.2.0",
-    "@metreeca/http": "^0.2.0",
-    "@metreeca/keep": "^0.10.0",
-    "@metreeca/keep-sparql": "^0.10.0",
-    "@metreeca/qest": "^0.10.0",
-    "@metreeca/tape": "^0.10.1",
-    "@metreeca/trio": "^0.1.1",
-    "@metreeca/wire-sparql": "^0.10.0",
-    "@metreeca/wire-sparql-http": "^0.10.0",
-    "@metreeca/wire-sparql-rdf4j": "^0.10.0",
-    "domhandler": "^6.0.1",
-    "domutils": "^4.0.2",
-    "express": "^5.2.1",
-    "openai": "^7.10.0",
-    "uuid": "^14.0.1"
-  },
   "devDependencies": {
-    "@types/express": "^5.0.6",
     "cpy-cli": "^7.0.0",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",

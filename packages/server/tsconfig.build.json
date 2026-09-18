@@ -19,9 +19,6 @@
     },
     {
       "path": "../loader/tsconfig.build.json"
-    },
-    {
-      "path": "../shared/tsconfig.build.json"
     }
   ]
 }

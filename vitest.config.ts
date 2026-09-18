@@ -20,10 +20,9 @@ export default defineConfig({
 
 	test: {
 
-		projects: [ // each package states its own aliases and typecheck config
+		projects: [ // each package states its own resolution conditions and typecheck config
 
-			"packages/_",
-			"packages/loader"
+			"packages/*"
 
 		]
 

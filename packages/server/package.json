@@ -1,9 +1,10 @@
 {
   "name": "@ec2u/data-server",
   "version": "0.0.0",
+  "description": "HTTP endpoints exposing the ingested Knowledge Hub datasets",
   "private": true,
   "type": "module",
-  "main": "./lib/index.js",
+  "sideEffects": false,
   "exports": {
     ".": {
       "@ec2u/source": "./src/index.ts",
@@ -16,7 +17,12 @@
   },
   "dependencies": {
     "@ec2u/data-loader": "*",
-    "@ec2u/data-shared": "*",
-    "@metreeca/work": "*"
+    "@metreeca/http": "^0.2.0",
+    "@metreeca/tape": "^0.10.1",
+    "@metreeca/work": "*",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6"
   }
 }

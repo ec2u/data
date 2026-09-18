@@ -1,8 +1,10 @@
 {
   "name": "@ec2u/data-loader",
   "version": "0.0.0",
+  "description": "Ingestion pipelines gathering, cleansing and cross-linking Knowledge Hub content",
   "private": true,
   "type": "module",
+  "sideEffects": false,
   "exports": {
     "./*.js": {
       "@ec2u/source": "./src/*.ts",
@@ -10,6 +12,24 @@
     }
   },
   "dependencies": {
-    "@metreeca/work": "*"
+    "@google-cloud/datastore": "^10.1.1",
+    "@google/genai": "^1.52.0",
+    "@metreeca/blue": "^0.10.0",
+    "@metreeca/core": "^0.10.0",
+    "@metreeca/flow": "^0.10.0",
+    "@metreeca/gear": "^0.2.0",
+    "@metreeca/gear-csv": "^0.2.0",
+    "@metreeca/gear-json": "^0.2.0",
+    "@metreeca/gear-url": "^0.2.0",
+    "@metreeca/gear-xml": "^0.2.0",
+    "@metreeca/http": "^0.2.0",
+    "@metreeca/keep-sparql": "^0.10.0",
+    "@metreeca/qest": "^0.10.0",
+    "@metreeca/tape": "^0.10.1",
+    "@metreeca/wire-sparql-rdf4j": "^0.10.0",
+    "@metreeca/work": "*",
+    "domhandler": "^6.0.1",
+    "domutils": "^4.0.2",
+    "uuid": "^14.0.1"
   }
 }

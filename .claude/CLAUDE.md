@@ -4,7 +4,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Utilities
 
-- [Dedent](https://github.com/dmnd/dedent) - ES6 string tag that strips indentation from multi-line strings
 - [@metreeca/flow](https://github.com/metreeca/flow) - TypeScript library for processing async iterables with
   composable, type-safe pipelines
 

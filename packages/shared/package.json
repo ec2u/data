@@ -1,9 +1,10 @@
 {
   "name": "@ec2u/data-shared",
   "version": "0.0.0",
+  "description": "Data model shared between the endpoints and their clients",
   "private": true,
   "type": "module",
-  "main": "./lib/index.js",
+  "sideEffects": false,
   "exports": {
     ".": {
       "@ec2u/source": "./src/index.ts",

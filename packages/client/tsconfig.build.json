@@ -12,10 +12,5 @@
   "exclude": [
     "**/*.test.ts",
     "**/*.test-d.ts"
-  ],
-  "references": [
-    {
-      "path": "../shared/tsconfig.build.json"
-    }
   ]
 }
