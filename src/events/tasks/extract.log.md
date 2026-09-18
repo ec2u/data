@@ -28,6 +28,9 @@ material and record what varies by source rather than restating the Coimbra read
   at 16h00 comes back with a start time of 16:00, the talk's, which the prompt forbids by name
 - Addresses the document states going unreported: a page naming "Pátio da Inquisição" as the venue's whereabouts comes
   back with no address, three of the ten pages carrying one
+- Postal code never measured: the property was declared and asked for alongside the street address and the city, and no
+  run has been read against a page carrying one; measure its coverage and read the values against their pages before
+  quoting either, the address bullet above being the standing reason to expect misses rather than fabrications
 - Recurring events keeping their session times: a concert series running across some forty dates still comes back with
   the hour its sessions are held at, where a workshop series on the same feed correctly comes back with none; the rule
   is stated plainly, so this is the model applying it unevenly rather than a gap in the wording

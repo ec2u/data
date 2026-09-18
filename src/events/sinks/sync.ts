@@ -25,6 +25,7 @@ import { Event, events, getEventId, isStaleEvent, Publisher } from "@/events/ind
 import { classify } from "@/events/tasks/classify.js";
 import { convert } from "@/events/tasks/convert.js";
 import { extract } from "@/events/tasks/extract.js";
+import { University } from "@/universities/index.js";
 import { base, Page } from "@/vocabularies/ec2u.js";
 import { reference } from "@metreeca/blue/reference";
 import { id, multiple, resource } from "@metreeca/blue/resource";
@@ -50,6 +51,20 @@ const survival = 0.75; // the smallest fraction of the stored events a single ru
 export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> {
 
 	const store = service(createStore);
+
+	// the city the university publishing the events is in, standing in as the locality of a venue a document names
+	// no city for; a lookup answering nothing leaves the address to what the document itself states
+
+	const city = store.lookup({ // !!! replace with select()
+
+		entry: publisher.university,
+		shape: University,
+
+		model: { city: { label: "" } }
+
+	})
+		.then(university => university?.city?.label)
+		.catch(() => undefined);
 
 
 	return urls => pipe(
@@ -127,7 +142,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 								publishable => pipe(
 									(items(publishable))
 									(classify())
-									(convert(publisher))
+									(convert(publisher, city))
 									(map(event =>
 										delta(event.id, Event, event)
 									))
