@@ -13,14 +13,13 @@ first; superseded versions are kept below for the record.
 Data loaded from the REST/JSON API provided by the RNSR national catalog. Source pointers provided by UniPoitiers on
 2024-04-09.
 
-| Source                                                                  | Description                          | Notes                                        |
-|-------------------------------------------------------------------------|--------------------------------------|----------------------------------------------|
-| [data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/…][rnsr-all]   | RNSR records, all structures [fr]    | harvested; Université de Poitiers as tutelle |
-| [data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/…][rnsr-labs]  | RNSR records, laboratories only [fr] |                                              |
-| [data.enseignementsup-recherche.gouv.fr/explore/…][rnsr-table]          | RNSR table view [fr]                 |                                              |
-| https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/console | RNSR Explore console [fr]            | API docs                                     |
-| [aurehal.archives-ouvertes.fr/structure/browse/…][aurehal-table]        | auréHal table view [fr]              |                                              |
-| [api.archives-ouvertes.fr/ref/structure/…][aurehal-json]                | auréHal JSON [fr]                    |                                              |
+| Source                                                                   | Description                           | Notes                                        |
+|--------------------------------------------------------------------------|---------------------------------------|----------------------------------------------|
+| [data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/…][rnsr-export] | RNSR bulk export, all structures [fr] | harvested; Université de Poitiers as tutelle |
+| [data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/…][rnsr-all]    | RNSR records, all structures [fr]     | paged variant of the harvested query         |
+| [data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/…][rnsr-labs]   | RNSR records, laboratories only [fr]  |                                              |
+| [data.enseignementsup-recherche.gouv.fr/explore/…][rnsr-table]           | RNSR table view [fr]                  |                                              |
+| https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/console  | RNSR Explore console [fr]             | API docs                                     |
 
 - **2024-04-24** – initial integration
 
@@ -28,7 +27,20 @@ Data loaded from the REST/JSON API provided by the RNSR national catalog. Source
 
 Data loaded from a manually curated Google Sheet.
 
+| Source | Notes |
+|--------|-------|
+| none   |       |
+
 - **2022-12-10** – initial integration
+
+## Notes
+
+Alternative source pointed out by UniPoitiers on 2024-04-09 and never integrated:
+
+- ~~[aurehal.archives-ouvertes.fr/structure/browse/…][aurehal-table]~~ – auréHal table view [fr]
+- ~~[api.archives-ouvertes.fr/ref/structure/…][aurehal-json]~~ – auréHal JSON [fr]
+
+[rnsr-export]: https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/exports/json?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles
 
 [rnsr-all]: https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr-esr-structures-recherche-publiques-actives/records?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles
 
