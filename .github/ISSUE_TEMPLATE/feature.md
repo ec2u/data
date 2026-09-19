@@ -1,0 +1,22 @@
+---
+name: "Feature Request"
+about: "Suggest an idea for this project"
+title: "What's missing from the EC2U Knowledge Hub ingestion pipelines?"
+type: "Feature"
+---
+
+**challenge / use case**
+
+*What is the challenge you are facing or the use case you are proposing?*
+
+**proposal**
+
+*What features would you like to see implemented?*
+
+**alternatives**
+
+*Have you considered any alternative solutions or approaches?*
+
+**notes**
+
+*Would you share any consideration or additional context about the request?*
