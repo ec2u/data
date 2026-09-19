@@ -4,13 +4,6 @@
   "description": "Knowledge Hub data ingestion pipelines",
   "private": true,
   "type": "module",
-  "sideEffects": false,
-  "exports": {
-    "./*.js": {
-      "@ec2u/source": "./src/*.ts",
-      "default": "./lib/*.js"
-    }
-  },
   "scripts": {
     "build": "cpy 'src/**/*.sys.md' lib"
   },
@@ -34,9 +27,11 @@
     "@metreeca/work": "*",
     "domhandler": "^6.0.1",
     "domutils": "^4.0.2",
+    "express": "^5.2.1",
     "uuid": "^14.0.1"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "cpy-cli": "^7.0.0"
   }
 }

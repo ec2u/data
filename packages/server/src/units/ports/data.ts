@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { _units } from "@ec2u/data-loader/units/store.js";
-import { NotFound } from "@metreeca/http";
 import { Router } from "express";
 
 
@@ -25,50 +23,13 @@ export function data(): Router {
 
 		.get("/", async (request, response) => {
 
-			const {
-
-				updated,
-				university,
-				offset,
-				limit
-
-			}: {
-
-				updated?: string;
-				university?: string;
-				offset?: string;
-				limit?: string;
-
-			} = request.query;
-
-			response.json(await _units.select({
-				updated: updated ? parseInt(updated, 10) : 1, // return only current processed units
-				university,
-				offset: offset ? parseInt(offset, 10) : undefined,
-				limit: limit ? parseInt(limit, 10) : undefined
-			}));
+			throw new Error(";( to be implemented"); // !!!
 
 		})
 
 		.get("/:code", async (request, response) => {
 
-			const {
-
-				code
-
-			}: {
-
-				code: string
-
-			} = request.params;
-
-			const unit = await _units.lookup(code);
-
-			if ( unit ) {
-				response.json(unit);
-			} else {
-				response.status(NotFound).json({ error: "unit not found" });
-			}
+			throw new Error(";( to be implemented"); // !!!
 
 		});
 

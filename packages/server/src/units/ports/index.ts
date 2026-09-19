@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-import { cron } from "@ec2u/data-server/units/ports/cron.js";
-import { data } from "@ec2u/data-server/units/ports/data.js";
+import { data } from "./data.js";
 import { Router } from "express";
 
 
 export function units(): Router {
 
 	return Router()
-		.use("/units", data())
-		.use("/units~", cron());
+		.use("/units", data());
 
 }

@@ -17,7 +17,7 @@
 import { Router } from "express";
 
 
-export function cron(): Router {
+export function taxonomies(): Router {
 
 	return Router();
 

@@ -15,20 +15,20 @@
  */
 
 import { job } from "@metreeca/work/gear-gcp/scheduler.js";
-import { CoimbraUniversity } from "@ec2u/data-loader/events/pipes/coimbra-university.js";
-import { IasiUniversity360 } from "@ec2u/data-loader/events/pipes/iasi-university-360.js";
-import { JenaUniversity } from "@ec2u/data-loader/events/pipes/jena-university.js";
-import { LinzUniversity } from "@ec2u/data-loader/events/pipes/linz-university.js";
-import { PaviaUniversity } from "@ec2u/data-loader/events/pipes/pavia-university.js";
-import { PoitiersUniversity } from "@ec2u/data-loader/events/pipes/poitiers-university.js";
-import { SalamancaUniversity } from "@ec2u/data-loader/events/pipes/salamanca-university.js";
-import { TurkuUniversity } from "@ec2u/data-loader/events/pipes/turku-university.js";
-import { UmeaUniversity } from "@ec2u/data-loader/events/pipes/umea-university.js";
-import { execute } from "@ec2u/data-loader/index.core.js";
 import { Router } from "express";
+import { execute } from "../index.core.js";
+import { CoimbraUniversity } from "./pipes/coimbra-university.js";
+import { IasiUniversity360 } from "./pipes/iasi-university-360.js";
+import { JenaUniversity } from "./pipes/jena-university.js";
+import { LinzUniversity } from "./pipes/linz-university.js";
+import { PaviaUniversity } from "./pipes/pavia-university.js";
+import { PoitiersUniversity } from "./pipes/poitiers-university.js";
+import { SalamancaUniversity } from "./pipes/salamanca-university.js";
+import { TurkuUniversity } from "./pipes/turku-university.js";
+import { UmeaUniversity } from "./pipes/umea-university.js";
 
 
-export function cron(): Router {
+export function events(): Router {
 
 	return Router()
 

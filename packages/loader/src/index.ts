@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-import { job } from "@metreeca/work/gear-gcp/scheduler.js";
+import { serve } from "@metreeca/work/http/server.js";
 import { Router } from "express";
+import { events } from "./events/index.js";
+import { taxonomies } from "./taxonomies/index.js";
+import { units } from "./units/index.js";
+import { universities } from "./universities/index.js";
 
 
-export function cron(): Router {
+serve([
 
-	return Router()
+	Router()
 
-		.use("/wikidata", job(() => Promise.resolve("tbi"))); // !!!
+		.use("/universities", universities())
+		.use("/taxonomies", taxonomies())
+		.use("/units", units())
+		.use("/events", events())
 
-}
+]);
