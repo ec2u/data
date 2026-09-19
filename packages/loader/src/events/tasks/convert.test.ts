@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { convert } from "@ec2u/data-loader/events/tasks/convert.js";
+import { convert } from "./convert.js";
 import { universities } from "@ec2u/data-shared/universities/index.js";
 import type { Object } from "@metreeca/core";
 import { pipe } from "@metreeca/flow";

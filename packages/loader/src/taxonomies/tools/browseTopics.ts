@@ -41,9 +41,9 @@
  * @module
  */
 
-import { getTopicEntries } from "@ec2u/data-loader/taxonomies/index.js";
+import { getTopicEntries } from "../index.core.js";
 import type { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
-import type { searchTopics } from "@ec2u/data-loader/taxonomies/tools/searchTopics.js";
+import type { searchTopics } from "./searchTopics.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import { dedent } from "@metreeca/core/strings";
 import { log, report } from "@metreeca/tape";

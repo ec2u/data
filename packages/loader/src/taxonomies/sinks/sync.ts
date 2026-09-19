@@ -20,7 +20,7 @@ import { delta, type Delta, persist, type Tally } from "@metreeca/work/tide-stor
 import { retire } from "@metreeca/work/tide-store/retire.js";
 import { validate } from "@metreeca/work/tide-store/validate.js";
 import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
-import { convert, getPath } from "@ec2u/data-loader/taxonomies/tasks/convert.js";
+import { convert, getPath } from "../tasks/convert.js";
 import type { Instance } from "@metreeca/blue/value";
 import type { URLLike } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";

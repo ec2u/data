@@ -35,7 +35,7 @@
  * @module
  */
 
-import { retrieve, type Retriever } from "@ec2u/data-loader/units/_pages/index.js";
+import { retrieve, type Retriever } from "../index.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import { dedent } from "@metreeca/core/strings";
 import { log, report } from "@metreeca/tape";

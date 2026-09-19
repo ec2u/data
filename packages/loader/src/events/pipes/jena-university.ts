@@ -15,8 +15,8 @@
  */
 
 import { Publisher } from "@ec2u/data-shared/events/index.js";
-import { sync } from "@ec2u/data-loader/events/sinks/sync.js";
-import { execute } from "@ec2u/data-loader/index.core.js";
+import { sync } from "../sinks/sync.js";
+import { execute } from "../../index.core.js";
 import { organizations } from "@ec2u/data-shared/organizations/index.js";
 import { jena } from "@ec2u/data-shared/universities/index.core.js";
 import { immutable } from "@metreeca/core/values";

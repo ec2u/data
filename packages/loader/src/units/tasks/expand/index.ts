@@ -16,8 +16,8 @@
 
 
 import { units } from "@ec2u/data-shared/units/index.js";
-import { _units } from "@ec2u/data-loader/units/store.js";
-import { expand } from "@ec2u/data-loader/units/tasks/expand/expand.js";
+import { _units } from "../../store.js";
+import { expand } from "./expand.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each, toArray } from "@metreeca/flow/sinks";

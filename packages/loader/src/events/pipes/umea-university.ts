@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { sync } from "@ec2u/data-loader/events/sinks/sync.js";
-import { execute } from "@ec2u/data-loader/index.core.js";
+import { sync } from "../sinks/sync.js";
+import { execute } from "../../index.core.js";
 import { organizations } from "@ec2u/data-shared/organizations/index.js";
 import { umea } from "@ec2u/data-shared/universities/index.core.js";
 import { immutable } from "@metreeca/core/values";

@@ -16,7 +16,7 @@
 
 import { validate } from "@metreeca/work/tide-store/validate.js";
 import { Event, getEventId, events } from "@ec2u/data-shared/events/index.js";
-import type { Classified } from "@ec2u/data-loader/events/tasks/classify.js";
+import type { Classified } from "./classify.js";
 import { getUniversity } from "@ec2u/data-shared/universities/index.core.js";
 import { LabelLength } from "@ec2u/data-shared";
 import { SchemaEventAttendanceModeEnumeration } from "@ec2u/data-shared/vocabularies/schema/event.js";

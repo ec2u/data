@@ -16,12 +16,12 @@
 
 import { file } from "@metreeca/work/gear/files.js";
 import { createGoogleAI, json } from "@metreeca/work/muse-google/index.js";
-import { retrieve } from "@ec2u/data-loader/units/_pages/index.js";
-import { pages } from "@ec2u/data-loader/units/_pages/store.js";
-import { fetchPage } from "@ec2u/data-loader/units/_pages/tools/fetchPage.js";
-import { matches, merge, Unit } from "@ec2u/data-loader/units/_index.js";
+import { retrieve } from "../_pages/index.js";
+import { pages } from "../_pages/store.js";
+import { fetchPage } from "../_pages/tools/fetchPage.js";
+import { matches, merge, Unit } from "../_index.js";
 import { units } from "@ec2u/data-shared/units/index.js";
-import { _units } from "@ec2u/data-loader/units/store.js";
+import { _units } from "../store.js";
 import { pavia } from "@ec2u/data-shared/universities/index.core.js";
 import { Type } from "@google/genai";
 import { pipe } from "@metreeca/flow";
