@@ -18,13 +18,29 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
 
-	test: {
+	resolve: {
 
-		projects: [ // each package states its own resolution conditions and typecheck config
+		conditions: [ // resolve packages to their sources, so a test run doesn't depend on a prior build
 
-			"packages/*"
+			"@ec2u/source",
+			"node",
+			"module",
+			"development"
 
 		]
+
+	},
+
+	test: {
+
+		typecheck: {
+
+			enabled: true,
+			ignoreSourceErrors: true,
+
+			tsconfig: "tsconfig.json" // the build configs leave test modules out, so type tests go unchecked under them
+
+		}
 
 	}
 

@@ -1,7 +1,7 @@
 {
   "name": "@ec2u/data-shared",
   "version": "0.0.0",
-  "description": "Data model shared between the endpoints and their clients",
+  "description": "Knowledge Hub shared data models",
   "private": true,
   "type": "module",
   "sideEffects": false,

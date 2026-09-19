@@ -15,9 +15,14 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "customConditions": [
+      "@ec2u/source"
+    ],
+    "noEmit": true
   },
   "include": [
-    "*.ts"
+    "*.ts",
+    "packages/*/src"
   ]
 }

@@ -1,19 +1,18 @@
 {
   "name": "@ec2u/data-server",
   "version": "0.0.0",
-  "description": "HTTP endpoints exposing the ingested Knowledge Hub datasets",
+  "description": "Knowledge Hub data server",
   "private": true,
   "type": "module",
   "sideEffects": false,
   "exports": {
-    ".": {
-      "@ec2u/source": "./src/index.ts",
-      "default": "./lib/index.js"
-    },
     "./*.js": {
       "@ec2u/source": "./src/*.ts",
       "default": "./lib/*.js"
     }
+  },
+  "scripts": {
+    "serve": "tsx --conditions=@ec2u/source --tsconfig ../../tsconfig.json --watch src/index.ts"
   },
   "dependencies": {
     "@ec2u/data-loader": "*",

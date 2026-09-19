@@ -1,5 +1,5 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "customConditions": [],
     "noEmit": false,
@@ -9,6 +9,9 @@
     "incremental": true,
     "tsBuildInfoFile": "lib/.tsbuildinfo"
   },
+  "include": [
+    "src"
+  ],
   "exclude": [
     "**/*.test.ts",
     "**/*.test-d.ts"

@@ -1,7 +1,7 @@
 {
   "name": "@ec2u/data-loader",
   "version": "0.0.0",
-  "description": "Ingestion pipelines gathering, cleansing and cross-linking Knowledge Hub content",
+  "description": "Knowledge Hub data ingestion pipelines",
   "private": true,
   "type": "module",
   "sideEffects": false,
@@ -10,6 +10,9 @@
       "@ec2u/source": "./src/*.ts",
       "default": "./lib/*.js"
     }
+  },
+  "scripts": {
+    "build": "cpy 'src/**/*.sys.md' lib"
   },
   "dependencies": {
     "@ec2u/data-shared": "*",
@@ -32,5 +35,8 @@
     "domhandler": "^6.0.1",
     "domutils": "^4.0.2",
     "uuid": "^14.0.1"
+  },
+  "devDependencies": {
+    "cpy-cli": "^7.0.0"
   }
 }

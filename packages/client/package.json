@@ -1,7 +1,7 @@
 {
   "name": "@ec2u/data-client",
   "version": "0.0.0",
-  "description": "Typed client for the Knowledge Hub data endpoints",
+  "description": "Knowledge Hub web UI",
   "private": true,
   "type": "module",
   "sideEffects": false,
@@ -14,5 +14,8 @@
       "@ec2u/source": "./src/*.ts",
       "default": "./lib/*.js"
     }
+  },
+  "scripts": {
+    "serve": "tsx --conditions=@ec2u/source --tsconfig ../../tsconfig.json --watch src/index.ts"
   }
 }

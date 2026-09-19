@@ -13,27 +13,29 @@
     "packages/*"
   ],
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.22.0"
   },
   "scripts": {
-    "clean": "rm -rf packages/*/lib node_modules",
+    "clean": "rm -rf packages/*/lib packages/*/node_modules node_modules",
     "prime": "npm ci && sh package.sh --gcp",
     "setup": "npm ci && sh package.sh --gcp --link",
-    "build": "rm -rf packages/*/lib && tsc --build tsconfig.build.json && cpy 'src/**/*.sys.md' lib --cwd=packages/loader",
+    "build": "rm -rf packages/*/lib && tsc --build tsconfig.build.json && npm run build --workspaces --if-present",
     "check": "npx vitest run",
-    "serve": "npx tsx --conditions=@ec2u/source --tsconfig packages/server/tsconfig.json --watch packages/server/src/index.ts"
+    "serve": "concurrently --names server,client npm:serve:server npm:serve:client",
+    "serve:server": "npm run serve --workspace=@ec2u/data-server",
+    "serve:client": "wait-on tcp:8080 && npm run serve --workspace=@ec2u/data-client"
   },
   "devDependencies": {
-    "cpy-cli": "^7.0.0",
+    "concurrently": "^10.0.5",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "wait-on": "^9.1.0"
   },
   "allowScripts": {
     "@google/genai@1.52.0": true,
-    "@scarf/scarf@1.4.0": true,
     "esbuild@0.28.2": true,
     "fsevents@2.3.3": true,
-    "protobufjs@7.6.5": true
+    "protobufjs@7.6.6": true
   }
 }
