@@ -82,7 +82,7 @@ export function job(handler: () => Promise<unknown>): Router {
 
 	return Router()
 
-		.use(async (request, response, next) => {
+		.post("/", async (request, response, next) => { // scoped to the root, so deeper paths are reported as unknown rather than unauthorised
 
 			const token = /^Bearer (.+)$/i.exec(request.headers.authorization ?? "")?.[1];
 
