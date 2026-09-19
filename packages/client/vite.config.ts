@@ -14,4 +14,33 @@
  * limitations under the License.
  */
 
-export {};
+import preact from "@preact/preset-vite";
+import { defaultClientConditions, defineConfig } from "vite";
+
+
+export default defineConfig({ // https://vite.dev/config/
+
+	root: "src",
+
+	plugins: [preact()],
+
+	resolve: {
+		conditions: ["@ec2u/source", ...defaultClientConditions] // bundle workspace packages from their sources
+	},
+
+	build: {
+		outDir: "../lib",
+		assetsDir: ".",
+		emptyOutDir: true
+	},
+
+	server: {
+		proxy: {
+			"^(/[-a-zA-Z0-9]+)+/?(\\?.*)?$": { // data routes, with optional query
+				target: "http://localhost:8080/",
+				xfwd: true
+			}
+		}
+	}
+
+});

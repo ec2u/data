@@ -5,9 +5,6 @@
       "path": "packages/_/tsconfig.build.json"
     },
     {
-      "path": "packages/client/tsconfig.build.json"
-    },
-    {
       "path": "packages/loader/tsconfig.build.json"
     },
     {

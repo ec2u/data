@@ -5,6 +5,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "serve": "tsx --conditions=@ec2u/source --watch src/index.ts"
+    "build": "tsc --noEmit && vite build",
+    "serve": "vite --open --host"
+  },
+  "dependencies": {
+    "@ec2u/data-shared": "*",
+    "preact": "^10.29.8"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "vite": "^8.3.0"
   }
 }
