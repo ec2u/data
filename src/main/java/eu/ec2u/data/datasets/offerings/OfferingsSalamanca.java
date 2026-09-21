@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.async;
@@ -71,6 +72,8 @@ public final class OfferingsSalamanca implements Runnable {
     private static final String PROGRAMS_COURSES_URL="offerings-salamanca-programs-courses-url";
 
     private static final URI PIPELINE=uri("java:%s".formatted(OfferingsSalamanca.class.getName()));
+
+    private static final Pattern QUOTES_PATTERN=Pattern.compile("^(['\"]+)(.*?)\\1$");
 
 
     private static final Map<String, Duration> DURATIONS=map(
@@ -164,7 +167,7 @@ public final class OfferingsSalamanca implements Runnable {
     }
 
     private Optional<ProgramFrame> program(final Value json) {
-        return json.get("programCode").string().flatMap(code -> review(new ProgramFrame()
+        return text(json, "programCode").flatMap(code -> review(new ProgramFrame()
 
                 .pipeline(PIPELINE)
 
@@ -185,11 +188,11 @@ public final class OfferingsSalamanca implements Runnable {
     }
 
     private Optional<URI> programUrl(final Value json) {
-        return json.get("programUrl").string().map(URIs::uri);
+        return text(json, "programUrl").map(URIs::uri);
     }
 
     private Optional<Map<Locale, String>> programName(final Value json) {
-        return json.get("programName").string().map(v -> map(entry(SALAMANCA.locale(), v)));
+        return text(json, "programName").map(v -> map(entry(SALAMANCA.locale(), v)));
     }
 
 
@@ -209,7 +212,7 @@ public final class OfferingsSalamanca implements Runnable {
     }
 
     private Optional<CourseFrame> course(final Value json) {
-        return json.get("code").string().map(code -> new CourseFrame()
+        return text(json, "code").map(code -> new CourseFrame()
 
                 .pipeline(PIPELINE)
 
@@ -233,18 +236,18 @@ public final class OfferingsSalamanca implements Runnable {
     }
 
     private Optional<URI> courseUrl(final Value json) {
-        return json.get("url").string().map(URIs::uri);
+        return text(json, "url").map(URIs::uri);
     }
 
     private Stream<Entry<Locale, String>> courseName(final Value json) {
         return Stream.concat(
 
-                json.get("nameInEnglish").string()
+                text(json, "nameInEnglish")
                         .filter(not(String::isBlank))
                         .map(v -> entry(EN, v))
                         .stream(),
 
-                json.get("nameInSpanish").string()
+                text(json, "nameInSpanish")
                         .filter(not(String::isBlank))
                         .map(v -> entry(SALAMANCA.locale(), v))
                         .stream()
@@ -253,12 +256,12 @@ public final class OfferingsSalamanca implements Runnable {
     }
 
     private Optional<Double> courseNumberOfCredits(final Value json) {
-        return json.get("ects").string()
+        return text(json, "ects")
                 .flatMap(lenient(Double::parseDouble));
     }
 
     private Optional<Duration> courseTimeRequired(final Value json) {
-        return json.get("field_guias_asig_tdu_value").string()
+        return text(json, "field_guias_asig_tdu_value")
                 .map(DURATIONS::get);
     }
 
@@ -299,8 +302,8 @@ public final class OfferingsSalamanca implements Runnable {
 
                 .flatMap(Value::values)
 
-                .map(json -> async(() -> json.get("code").string().flatMap(course ->
-                        json.get("programCode").string().flatMap(program -> {
+                .map(json -> async(() -> text(json, "code").flatMap(course ->
+                        text(json, "programCode").flatMap(program -> {
 
                             final URI courseId=courseId(course);
                             final URI programId=programID(program);
@@ -336,6 +339,27 @@ public final class OfferingsSalamanca implements Runnable {
 
                 .collect(joining())
                 .flatMap(Optional::stream);
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Reads a textual field, removing the stray quoting some values carry.
+     *
+     * <p>A number of values in the source feeds reach the JSON payload still wrapped in quotes. Unless removed, the
+     * quoting surfaces verbatim in published labels.</p>
+     *
+     * @param json  the JSON object to read the field from
+     * @param field the name of the field to be read
+     *
+     * @return the value of {@code field}, stripped of a matching pair of leading and trailing quotes, or an empty
+     *         optional if {@code field} is undefined or not a string
+     */
+    private static Optional<String> text(final Value json, final String field) {
+        return json.get(field).string().map(value ->
+                QUOTES_PATTERN.matcher(value).replaceAll("$2")
+        );
     }
 
 }
