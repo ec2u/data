@@ -15,6 +15,7 @@ Data extracted from a set of dedicated REST/JSON APIs.
 |------------------------|-----------------|
 | https://guias.usal.es/ | guías USAL [es] |
 
+- **2026-09-21** – strip matching leading/trailing quotes from source values
 - **2023-03-29** – remove patches for clashing offer names
 - **2023-03-02** – integrate programs and programs-courses APIs
 - **2023-01-17** – integrate `schema:timeRequired`
