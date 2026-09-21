@@ -18,7 +18,6 @@ package eu.ec2u.work.ai.open;
 
 import com.metreeca.flow.services.Logger;
 import com.metreeca.flow.text.services.Translator;
-import com.metreeca.shim.Locales;
 
 import com.openai.models.ResponseFormatText;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
@@ -42,6 +41,9 @@ import static java.util.Locale.ENGLISH;
  *
  * <p>Translates text using models provided by the OpenAI platform.</p>
  *
+ * <p>Translations contain the translated text only: text that is already in the target language or that carries no
+ * translatable content is returned unchanged, rather than accompanied by model commentary.</p>
+ *
  * @see OpenAI
  */
 public final class OpenTranslator implements Translator {
@@ -49,6 +51,10 @@ public final class OpenTranslator implements Translator {
     private static final String PROMPT="""
             - translate the provided %s text to %s
             - make absolutely sure to retain all textual content, without abridging it
+            - reply with the translated text only
+            - NEVER add comments, explanations, notes, preambles or quotation marks of your own
+            - if the text is already in the target language or carries no translatable content, reply with it verbatim
+            - NEVER ask for clarification: replying with the unchanged text is always the expected fallback
             """;
 
     private static final ResponseFormat FORMAT=ResponseFormat.ofText(ResponseFormatText.builder().build());
@@ -103,7 +109,7 @@ public final class OpenTranslator implements Translator {
                         .map(t -> builder
                                 .responseFormat(FORMAT)
                                 .addSystemMessage(format(PROMPT,
-                                        source.equals(Locales.ANY) ? "" : target.getDisplayLanguage(ENGLISH),
+                                        source.getDisplayLanguage(ENGLISH), // empty for Locales.ANY, ie auto-detected
                                         target.getDisplayLanguage(ENGLISH)
                                 ))
                                 .addUserMessage(t)
