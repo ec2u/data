@@ -33,6 +33,7 @@ import com.metreeca.mesh.pipe.Store;
 import com.metreeca.shim.Locales;
 import com.metreeca.shim.URIs;
 
+import eu.ec2u.data.datasets.Reference;
 import eu.ec2u.data.datasets.courses.Course;
 import eu.ec2u.data.datasets.courses.CourseFrame;
 import eu.ec2u.data.datasets.organizations.OrganizationFrame;
@@ -55,10 +56,12 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.metreeca.flow.Locator.async;
 import static com.metreeca.flow.Locator.service;
+import static com.metreeca.flow.http.Request.HEAD;
 import static com.metreeca.flow.http.Request.POST;
 import static com.metreeca.flow.http.Request.basic;
 import static com.metreeca.flow.json.formats.JSON.store;
@@ -90,6 +93,7 @@ import static java.util.function.Predicate.not;
 public final class OfferingsPavia implements Runnable {
 
     private static final String ESSE3_URL="https://studentionline.unipv.it/e3rest/api/offerta-service-v1/offerte/";
+    private static final String CATALOGUE_URL="https://unipv.coursecatalogue.cineca.it";
 
     private static final String API_URL="offerings-pavia-url";
     private static final String API_USR="offerings-pavia-usr";
@@ -101,6 +105,13 @@ public final class OfferingsPavia implements Runnable {
     //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static final int ESSE3_PAGE_SIZE=100;
+
+    private static final int COHORT_DEPTH=4; // enrolment years to try when locating a program page
+    private static final String COMMON_TRACK="00"; // study track marking activities common to the whole program
+
+    private static final Set<String> DEGREE_TYPES=set( // program types published by the course catalogue
+            "L2", "LC5", "LC6", "LM", "LM5", "LM6"
+    );
 
     // https://ec2u.atlassian.net/wiki/spaces/infrastructure/pages/345407519/Knowledge+Hub+-+Offerings+-+Degree+Programs#Pavia
 
@@ -167,17 +178,25 @@ public final class OfferingsPavia implements Runnable {
                     .flatMap(this::programs)
             );
 
+            final List<ProgramFrame> degrees=qualify(list(programs.stream()
+                    .map(program -> async(() -> program(program)))
+                    .collect(joining())
+                    .flatMap(Optional::stream)
+            ));
+
+            final List<CourseFrame> courses=qualify(list(programs.stream()
+                    .map(program -> async(() -> courses(program).toList()))
+                    .collect(joining())
+                    .flatMap(Collection::stream)
+            ), degrees); // ;( qualified, so that a course inherits an unambiguous program name
+
             return Stream
 
                     .of(
 
                             async(() -> store.modify(
 
-                                    array(programs.stream()
-                                            .map(program -> async(() -> program(program)))
-                                            .collect(joining())
-                                            .flatMap(Optional::stream)
-                                    ),
+                                    array(degrees.stream()),
 
                                     value(query(new ProgramFrame(true))
                                             .where("pipeline", criterion().any(uri(PIPELINE)))
@@ -186,11 +205,7 @@ public final class OfferingsPavia implements Runnable {
 
                             async(() -> store.modify(
 
-                                    array(programs.stream()
-                                            .map(program -> async(() -> courses(program).toList()))
-                                            .collect(joining())
-                                            .flatMap(Collection::stream)
-                                    ),
+                                    array(courses.stream()),
 
                                     value(query(new CourseFrame(true))
                                             .where("pipeline", criterion().any(uri(PIPELINE)))
@@ -238,26 +253,38 @@ public final class OfferingsPavia implements Runnable {
                 );
     }
 
-    private Optional<ProgramFrame> program(final Value json) {
-        return json.get("cdsCod").string().flatMap(code -> review(new ProgramFrame()
+    private Optional<Degree> program(final Value json) {
+        return json.get("cdsCod").string().flatMap(code -> {
 
-                .pipeline(PIPELINE)
+            final Optional<Integer> cohort=cohort(json, code);
 
-                // !!! "logisticaExistsFlg": 1,
-                // !!! "offertaExistsFlg": 1,
-                // !!! "statoAttCod": { "value": "A" },
+            return review(new ProgramFrame()
 
-                .id(PROGRAMS.id().resolve(uuid(PAVIA, code)))
-                .university(PAVIA)
+                    .pipeline(PIPELINE)
 
-                .identifier(code)
+                    // !!! "logisticaExistsFlg": 1,
+                    // !!! "offertaExistsFlg": 1,
+                    // !!! "statoAttCod": { "value": "A" },
 
-                .name(map(name(json)))
+                    .id(PROGRAMS.id().resolve(uuid(PAVIA, code)))
+                    .university(PAVIA)
 
-                .educationalLevel(set(json.get("tipoCorsoCod").string().map(CODE_TO_LEVEL::get).stream()))
+                    .identifier(code)
 
-                .provider(provider(json).orElse(null))
-        ));
+                    .url(set(cohort
+                            .map(year -> URIs.uri(format("%s/corsi-code/%d/%s", CATALOGUE_URL, year, code)))
+                            .stream()
+                    ))
+
+                    .name(map(name(json)))
+
+                    .educationalLevel(set(json.get("tipoCorsoCod").string().map(CODE_TO_LEVEL::get).stream()))
+
+                    .provider(provider(json).orElse(null))
+
+            ).map(program -> new Degree(program, cohort.orElse(null)));
+
+        });
     }
 
 
@@ -265,6 +292,24 @@ public final class OfferingsPavia implements Runnable {
         return json.get("cdsDes").string()
                 .map(v -> entry(PAVIA.locale(), v))
                 .stream();
+    }
+
+    private Optional<Integer> cohort(final Value json, final String code) {
+        return json.get("tipoCorsoCod").string()
+                .filter(DEGREE_TYPES::contains) // other program types have no page on the catalogue
+                .flatMap(type -> json.get("aaOffId").integral())
+                .flatMap(offer -> IntStream.range(0, COHORT_DEPTH)
+
+                        // ;( pages are served under the enrolment year of the latest cohort still taught
+
+                        .map(offset -> offer.intValue()-offset)
+                        .filter(cohort -> resolves(format("%s/api/v1/corso-code?anno=%d&cdsCod=%s",
+                                CATALOGUE_URL, cohort, code
+                        )))
+
+                        .boxed()
+                        .findFirst()
+                );
     }
 
     private Optional<OrganizationFrame> provider(final Value json) {
@@ -325,13 +370,24 @@ public final class OfferingsPavia implements Runnable {
                             new IllegalArgumentException("missing cdsCod")
                     );
 
-                    final String year=cds.string("ns2:aaOffId")
-                            .map(Integer::valueOf)
+                    final Optional<Integer> offer=cds.string("ns2:aaOffId").map(Integer::valueOf);
+
+                    final String year=offer
                             .map(y -> "%d/%d".formatted(y, y+1))
                             .orElse(null);
 
-                    return cds.paths("ns2:regdid/ns2:pds/ns2:af")
-                            .map(af -> async(() -> course(af, year, program)));
+                    return activities(cds)
+
+                            // ;( a program may run several regulations, each listing the same activity
+
+                            .collect(Collectors.groupingBy(Activity::course))
+                            .values().stream()
+                            .flatMap(variants -> variants.stream().max(BY_REGULATION).stream())
+
+                            .map(activity -> async(() -> course(
+                                    activity.af(), year, program,
+                                    offer.orElse(null), activity.ordinamento(), activity.track()
+                            )));
 
                 }))
 
@@ -396,7 +452,10 @@ public final class OfferingsPavia implements Runnable {
     }
 
 
-    private Optional<CourseFrame> course(final XPath af, final String year, final String program) {
+    private Optional<CourseFrame> course(
+            final XPath af, final String year, final String program,
+            final Integer offer, final String ordinamento, final String track
+    ) {
         return af.strings("ns2:afGenCod")
 
                 .map(course -> new CourseFrame()
@@ -406,10 +465,14 @@ public final class OfferingsPavia implements Runnable {
                         // !!! <ns2:inRegdidFlg>true</ns2:inRegdidFlg>
                         // !!! <ns2:nonErogabileFlg>false</ns2:nonErogabileFlg>
 
-                        .id(COURSES.id().resolve(uuid(PAVIA, course)))
+                        // ;( the catalogue publishes one page per program, with its own credits and teachers
+
+                        .id(COURSES.id().resolve(uuid(PAVIA, "%s/%s".formatted(program, course))))
                         .university(PAVIA)
 
                         .courseCode(course)
+
+                        .url(set(url(offer, course, ordinamento, track, program).stream()))
 
                         .year(year)
                         .term(set(term(af)))
@@ -447,6 +510,29 @@ public final class OfferingsPavia implements Runnable {
                 af.string("ns2:afGenDesEng").map(v -> entry(EN, v)).stream(),
                 af.string("ns2:afGenDes").map(v -> entry(PAVIA.locale(), v)).stream()
         );
+    }
+
+    private Optional<URI> url(
+            final Integer offer, final String course,
+            final String ordinamento, final String track, final String program
+    ) {
+        return Optional.ofNullable(offer)
+
+                .flatMap(year -> Optional.ofNullable(ordinamento).map(regulation -> entry(
+
+                        format("%s/api/v1/insegnamento-code"
+                                        +"?aa_offerta=%d&cod_af=%s&aa_ordinamento=%s&af_percorso=%s&cod_corso=%s",
+                                CATALOGUE_URL, year, course, regulation, track, program
+                        ),
+
+                        format("%s/insegnamenti-code/%d/%s/%s/%s/%s",
+                                CATALOGUE_URL, year, course, regulation, track, program
+                        )
+
+                )))
+
+                .filter(urls -> resolves(urls.getKey()))
+                .map(urls -> URIs.uri(urls.getValue()));
     }
 
     private Optional<Duration> timeRequired(final XPath af) {
@@ -513,6 +599,146 @@ public final class OfferingsPavia implements Runnable {
 
                 })
                 .flatMap(Stream::ofNullable);
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private record Activity(
+            String course, String ordinamento, String regulation, String track, XPath af
+    ) { }
+
+    private static final Comparator<Activity> BY_REGULATION=Comparator
+            .comparing((Activity activity) -> Optional.ofNullable(activity.ordinamento()).orElse(""))
+            .thenComparing(activity -> Optional.ofNullable(activity.regulation()).orElse(""));
+
+
+    private static Stream<Activity> activities(final XPath cds) {
+        return cds.paths("ns2:regdid").flatMap(regdid -> {
+
+            final String ordinamento=regdid.string("ns2:cdsordCod")
+                    .flatMap(OfferingsPavia::ordinamento)
+                    .orElse(null);
+
+            final String regulation=regdid.string("ns2:aaRegdidId").orElse(null);
+
+            final List<XPath> paths=regdid.paths("ns2:pds").toList();
+
+            final Set<String> tracks=set(paths.stream()
+                    .flatMap(pds -> pds.string("ns2:pdsCod").stream())
+            );
+
+            return paths.stream().flatMap(pds -> pds.string("ns2:pdsCod").stream()
+                    .flatMap(pdsCod -> pds.paths("ns2:af")
+                            .flatMap(af -> af.string("ns2:afGenCod").stream().map(course -> new Activity(
+                                    course, ordinamento, regulation, track(pdsCod, tracks), af
+                            )))
+                    )
+            );
+
+        });
+    }
+
+    private static Optional<String> ordinamento(final String cdsordCod) {
+
+        // ;( the catalogue keys pages on the ordinamento year, not on the regulation year (ns2:aaRegdidId)
+
+        return Optional.of(cdsordCod)
+                .map(code -> code.substring(code.lastIndexOf('-')+1))
+                .filter(suffix -> suffix.matches("\\d{2}"))
+                .map("20%s"::formatted);
+    }
+
+    private static String track(final String pdsCod, final Collection<String> tracks) {
+        return COMMON_TRACK.equals(pdsCod)
+
+                // ;( activities common to the whole program are published under each of its actual tracks
+
+                ? tracks.stream().filter(not(COMMON_TRACK::equals)).sorted().findFirst().orElse(pdsCod)
+                : pdsCod;
+    }
+
+    private boolean resolves(final String url) {
+        return Xtream.of(url)
+                .optMap(new Query(request -> request.method(HEAD)))
+                .optMap(new Fetch())
+                .findFirst()
+                .isPresent();
+    }
+
+
+    //̸/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private record Degree(ProgramFrame program, Integer cohort) { }
+
+
+    private List<ProgramFrame> qualify(final Collection<Degree> degrees) {
+
+        final Map<Entry<Locale, String>, Long> names=degrees.stream()
+                .flatMap(degree -> degree.program().name().entrySet().stream())
+                .collect(Collectors.groupingBy(name -> name, Collectors.counting()));
+
+        return list(degrees.stream().map(degree -> degree.program().name().entrySet().stream()
+                .anyMatch(name -> names.getOrDefault(name, 0L) > 1)
+                ? qualified(degree)
+                : degree.program()
+        ));
+    }
+
+    private ProgramFrame qualified(final Degree degree) {
+        return Optional.ofNullable(degree.cohort())
+
+                // ;( a program superseded by a new ordinamento keeps its name: the cohort tells them apart
+
+                .map(cohort -> map(degree.program().name().entrySet().stream().map(name -> entry(
+                        name.getKey(),
+                        "%s (%d/%d)".formatted(name.getValue(), cohort, cohort+1)
+                ))))
+
+                .map(names -> degree.program().name(names).label(Reference.label(names)))
+                .orElseGet(degree::program);
+    }
+
+
+    private List<CourseFrame> qualify(final Collection<CourseFrame> courses, final Collection<ProgramFrame> programs) {
+
+        final Map<URI, ProgramFrame> index=programs.stream()
+                .collect(Collectors.toMap(ProgramFrame::id, program -> program, (x, y) -> x));
+
+        final Map<Entry<Locale, String>, Long> names=courses.stream()
+                .flatMap(course -> course.name().entrySet().stream())
+                .collect(Collectors.groupingBy(name -> name, Collectors.counting()));
+
+        return list(courses.stream().map(course -> course.name().entrySet().stream()
+                .anyMatch(name -> names.getOrDefault(name, 0L) > 1)
+                ? qualified(course, index)
+                : course
+        ));
+    }
+
+    private CourseFrame qualified(final CourseFrame course, final Map<URI, ProgramFrame> index) {
+        return course.inProgram().stream()
+
+                .flatMap(program -> Optional.ofNullable(index.get(program.id())).stream())
+                .findFirst()
+
+                .map(program -> map(course.name().entrySet().stream().map(name -> entry(
+
+                        name.getKey(),
+
+                        qualifier(program, name.getKey())
+                                .map(label -> "%s (%s)".formatted(name.getValue(), label))
+                                .orElseGet(name::getValue)
+
+                ))))
+
+                .map(names -> course.name(names).label(Reference.label(names)))
+                .orElse(course);
+    }
+
+    private Optional<String> qualifier(final ProgramFrame program, final Locale locale) {
+        return Optional.ofNullable(program.name().get(locale))
+                .or(() -> Optional.ofNullable(program.name().get(PAVIA.locale())));
     }
 
 

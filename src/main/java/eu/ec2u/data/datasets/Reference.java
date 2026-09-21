@@ -38,7 +38,7 @@ import static java.util.stream.Collectors.reducing;
 @Namespace(prefix="rdfs", value="http://www.w3.org/2000/01/rdf-schema#")
 public interface Reference {
 
-    int LABEL_LENGTH=100;
+    int LABEL_LENGTH=250;
     int COMMENT_LENGTH=500;
 
     String EMAIL_PATTERN="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
