@@ -14,46 +14,11 @@
  * limitations under the License.
  */
 
-:root {
 
-	--ec2u--color-accent-lite: #BFA635;
-	--ec2u--color-accent-dark: #1C275D;
+import { Page } from "../index.core.js";
 
-	--ec2u--font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+export function Datasets() {
 
-}
-
-html, body {
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0;
-}
-
-body {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: var(--ec2u--color-accent-dark);
-	font-family: var(--ec2u--font-family);
-	line-height: 1.5;
-}
-
-main {
-
-	max-width: 40rem;
-	padding: 2rem;
-	text-align: center;
-
-	& > h1 {
-		margin: 0;
-		font-size: 2.5rem;
-		font-weight: 600;
-	}
-
-	& > p {
-		margin: 1rem 0 0;
-		color: var(--ec2u--color-accent-lite);
-	}
+	return <Page head={"European Campus of City-Universities"}/>
 
 }

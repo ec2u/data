@@ -67,6 +67,10 @@ if [ -n "${link}" ] && [ -d "${packages}" ]; then
 		${packages}/Keep/packages/connectors/keep-sparql \
 		${packages}/Qest \
 		${packages}/Tape \
+		${packages}/Tile/packages/tile \
+		${packages}/Tile/packages/tile-cell \
+		${packages}/Tile/packages/tile-data \
+		${packages}/Tile/packages/tile-hive \
 		${packages}/Trio \
 		${packages}/Wire/packages/sparql/wire-sparql \
 		${packages}/Wire/packages/sparql/wire-sparql-http \

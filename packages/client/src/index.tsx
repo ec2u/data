@@ -14,24 +14,30 @@
  * limitations under the License.
  */
 
-import { datasets } from "@ec2u/data-shared/datasets/index.core.js";
-import { render, type VNode } from "preact";
-import "./index.css";
+import "@metreeca/tile/index.css";
+import { Router, Routes } from "@metreeca/tile-data/router";
+import { host } from "@metreeca/tile-hive";
+import { render } from "preact";
+import { Datasets } from "./datasets/index.js";
+import { Page, Root } from "./index.core.js";
 
 
-render(<Landing/>, document.body);
+render(<Hub/>, host("ec2u-hub"));
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function Landing(): VNode {
+function Hub() {
 
-	return <main>
+	return <Router>
 
-		<h1>EC2U Knowledge Hub</h1>
+		<Routes>{{
 
-		<p>{datasets.description}</p>
+			[Root]: <Datasets/>
 
-	</main>;
+		}}</Routes>
+
+	</Router>;
 
 }
+

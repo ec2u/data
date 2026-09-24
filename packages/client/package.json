@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@ec2u/data-shared": "*",
+    "@metreeca/tile": "^0.2.0",
+    "@metreeca/tile-cell": "^0.2.0",
+    "@metreeca/tile-data": "^0.2.0",
+    "@metreeca/tile-hive": "^0.2.0",
     "preact": "^10.29.8"
   },
   "devDependencies": {
