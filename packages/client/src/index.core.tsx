@@ -19,6 +19,7 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { Logo } from "@metreeca/tile-cell/logo";
 import { app } from "@metreeca/tile-data";
+import { Inline } from "@metreeca/tile-hive/inline";
 import { Shell } from "@metreeca/tile-hive/shell";
 import { Style } from "@metreeca/tile-hive/style";
 import { type ComponentChildren, h } from "preact";
@@ -60,11 +61,12 @@ export function Page({
 
 		menu={<Button look={"subtle"} icon={<Icon.Help/>} title={"Help"}></Button>}
 
-		copy={<>
+		copy={<Inline grow alignInline={"spread"}>
 
 			<small>{app.copy}</small>
 			<Link href={"https://github.com/ec2u/data"} title={"GitHub Repository"}><Icon.GitHub/></Link>
-		</>}
+
+		</Inline>}
 
 	/>;
 
