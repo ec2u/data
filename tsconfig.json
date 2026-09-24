@@ -17,7 +17,8 @@
     "sourceMap": true,
     "skipLibCheck": true,
     "customConditions": [
-      "@ec2u/source"
+      "@ec2u/source",
+      "@metreeca/source"
     ],
     "noEmit": true
   },

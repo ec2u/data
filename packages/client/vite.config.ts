@@ -26,7 +26,7 @@ export default defineConfig({ // https://vite.dev/config/
 
 	resolve: {
 		dedupe: ["preact"], // share one preact instance with linked @metreeca packages
-		conditions: ["@ec2u/source", ...defaultClientConditions] // bundle workspace packages from their sources
+		conditions: ["@ec2u/source", "@metreeca/source", ...defaultClientConditions] // bundle local pkgs from sources
 	},
 
 	build: {
