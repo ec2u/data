@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --noEmit && vite build",
-    "serve": "vite --open --host"
+    "watch": "vite --open --host"
   },
   "dependencies": {
     "@ec2u/data-shared": "*",
