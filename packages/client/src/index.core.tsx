@@ -60,7 +60,11 @@ export function Page({
 
 		menu={<Button look={"subtle"} icon={<Icon.Help/>} title={"Help"}></Button>}
 
-		copy={<small>{app.copy}</small>}
+		copy={<>
+
+			<small>{app.copy}</small>
+			<Link href={"https://github.com/ec2u/data"} title={"GitHub Repository"}><Icon.GitHub/></Link>
+		</>}
 
 	/>;
 
