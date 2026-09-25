@@ -15,11 +15,11 @@
  */
 
 import { validate as validator } from "@metreeca/blue";
-import { getShapeId, type ResourceShape } from "@metreeca/blue/resource";
+import { type ResourceShape } from "@metreeca/blue/resource";
 import type { Instance } from "@metreeca/blue/value";
-import { isObject, type Lazy } from "@metreeca/core";
+import { type Lazy } from "@metreeca/core";
 import { Task } from "@metreeca/flow";
-import { filter } from "@metreeca/flow/tasks";
+import { flat, map, trim } from "@metreeca/flow/tasks";
 import { log } from "@metreeca/tape";
 
 
@@ -43,20 +43,20 @@ const logger = log(import.meta.url);
  *
  * @throws {@link !RangeError RangeError} While the feed is consumed, if `shape` is malformed
  */
-export function validate<S extends Lazy<ResourceShape>>(shape: S): Task<Instance<S>> {
+export function validate<S extends Lazy<ResourceShape>>(shape: S): Task<unknown, Instance<S>> {
 
-	return filter(value => validator(value, { shape })({
+	return trim(map(value => validator(value, { shape })({
 
-		value: true,
+		value: value => value,
 
 		trace: trace => {
 
 			logger.warn`invalid value (${JSON.stringify(trace)})`;
 
-			return false;
+			return undefined;
 
 		}
 
-	}));
+	})));
 
 }

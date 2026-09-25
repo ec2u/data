@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { wgs, WGSPoint } from "@metreeca/work/open/wgs.js";
 import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { iri, markdown, string, text } from "@metreeca/blue/string";
+import { iri, markdown, text } from "@metreeca/blue/string";
+import type { Instance } from "@metreeca/blue/value";
 import { createNamespace } from "@metreeca/core/resource";
+import { wgs, WGSPoint } from "@metreeca/work/open/wgs.js";
 
 
 export const EC2U = "https://ec2u.eu/"; // the EC2U Alliance organization
@@ -83,6 +84,12 @@ export const CommentLength = 500;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export type Entity=Instance<typeof Entity>
+export type Place=Instance<typeof Place>
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export function Entity() {
 	return resource({
 
@@ -112,31 +119,4 @@ export function Place() {
 		space: wgs
 
 	}, {});
-}
-
-export function Page() {
-	return resource({
-
-		space: ec2u,
-		class: ec2u.Page
-
-	}, {
-
-		id: id(),
-
-		source: required(iri, {
-
-			name: "Page Source",
-			description: "The data source whose crawl reached the page."
-
-		}),
-
-		digest: required(string, {
-
-			name: "Page Digest",
-			description: "A unique identification of the content the page carried when it was read."
-
-		})
-
-	});
 }

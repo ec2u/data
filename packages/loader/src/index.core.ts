@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { minute } from "@metreeca/work/core/temporal.js";
-import { gcp } from "@metreeca/work/gear-gcp/index.js";
-import { createGCPVault } from "@metreeca/work/gear-gcp/secrets.js";
-import { createStore } from "@metreeca/work/tide-store/index.js";
-import { createGoogleAI } from "@metreeca/work/muse-google/index.js";
+import { ec2u } from "@ec2u/data-shared";
+import { id, required, resource } from "@metreeca/blue/resource";
+import { iri, string } from "@metreeca/blue/string";
+import type { Instance } from "@metreeca/blue/value";
 import { bind, executor, service } from "@metreeca/gear";
 import { createCache, createFileCache } from "@metreeca/gear/cache";
 import { getPackage, getPath } from "@metreeca/gear/space";
@@ -28,6 +27,12 @@ import { basic } from "@metreeca/http/basic";
 import { cache } from "@metreeca/http/cache";
 import { createSPARQLStore } from "@metreeca/keep-sparql";
 import { createRDF4JRepository } from "@metreeca/wire-sparql-rdf4j";
+import { minute } from "@metreeca/work/core/temporal.js";
+import { gcp } from "@metreeca/work/gear-gcp/index.js";
+import { createGCPVault } from "@metreeca/work/gear-gcp/secrets.js";
+import { createGoogleAI } from "@metreeca/work/muse-google/index.js";
+import { createStore } from "@metreeca/work/tide-store/index.js";
+
 
 
 export const execute = executor(
@@ -44,7 +49,7 @@ export const execute = executor(
 		store: service(createCache),
 		skip: "https://docs.google.com/**"
 	}))),
-	bind(createStore, async () => createSPARQLStore(createRDF4JRepository({
+	bind(createStore, async () => createSPARQLStore(createRDF4JRepository({ // !!! factor with server
 		server: "https://graphdb.ec2u.net",
 		repository: "data-work",
 		fetch: createFetch(basic(
@@ -56,3 +61,38 @@ export const execute = executor(
 		apiKey: await service(createVault)("googleai-key")
 	}))
 );
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Page = Instance<typeof Page>
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Page() {
+	return resource({
+
+		space: ec2u,
+		class: ec2u.Page
+
+	}, {
+
+		id: id(),
+
+		source: required(iri, {
+
+			name: "Page Source",
+			description: "The data source whose crawl reached the page."
+
+		}),
+
+		digest: required(string, {
+
+			name: "Page Digest",
+			description: "A unique identification of the content the page carried when it was read."
+
+		})
+
+	});
+}

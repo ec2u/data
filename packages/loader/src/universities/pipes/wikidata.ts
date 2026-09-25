@@ -17,29 +17,33 @@
 import type { Place } from "@ec2u/data-shared";
 import { universities, University } from "@ec2u/data-shared/universities/index.js";
 import seeds from "@ec2u/data-shared/universities/index.json" with { type: "json" };
-import { WGSPoint } from "@metreeca/work/open/wgs.js";
-import type { Instance } from "@metreeca/blue/value";
-import { isDefined, type Optional } from "@metreeca/core";
-import { pipe, type Task } from "@metreeca/flow";
+import { opt, type Optional } from "@metreeca/core";
+import { fill } from "@metreeca/core/strings";
+import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { batch, flat, map } from "@metreeca/flow/tasks";
+import { flat, map } from "@metreeca/flow/tasks";
 import { createFetch } from "@metreeca/http";
 import { headers } from "@metreeca/http/headers";
 import { lexical } from "@metreeca/trio";
-import type { Tuple } from "@metreeca/wire-sparql";
+import { type Tuple, variable } from "@metreeca/wire-sparql";
 import { createHTTPRepository } from "@metreeca/wire-sparql-http";
+import { reference } from "@metreeca/wire-sparql/builder";
 import { file } from "@metreeca/work/gear/files.js";
+import { WGSPoint } from "@metreeca/work/open/wgs.js";
 import { delta, persist } from "@metreeca/work/tide-store/persist.js";
 import { validate } from "@metreeca/work/tide-store/validate.js";
 import { execute } from "../../index.core.js";
 
 
+if ( import.meta.main ) {
+	await execute(Wikidata);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WikidataEndpoint = "https://query.wikidata.org/sparql";
 const WikidataAgent = "EC2U Knowledge Hub (https://data.ec2u.eu/)";
-
-
-type Partner = typeof seeds[keyof typeof seeds];
-
 
 const wikidata = createHTTPRepository({
 	query: WikidataEndpoint,
@@ -49,18 +53,45 @@ const wikidata = createHTTPRepository({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if ( import.meta.main ) {
-	await execute(Wikidata);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export async function Wikidata() {
 
 	return pipe(
-		(items(Object.values(seeds)))
-		(enrich())
+		(items(file(".ql", import.meta.url)))
+		(map(query => fill(query, {
+
+			universities: Object.entries(seeds)
+				.flatMap(([id, { seeAlso }]) => seeAlso.map(entity => `(${reference(id)} ${reference(entity)})`))
+				.join("\n")
+
+		})))
+		(flat(map(query => wikidata.select(query))))
+		(map(tuple => {
+
+				const id = lexical(tuple[variable("id")]);
+				const seed = seeds[id as keyof typeof seeds];
+
+				return {
+
+					label: seed.prefLabel,
+
+					dataset: universities.id,
+
+					inception: year(tuple),
+					students: number(tuple),
+
+					...point(tuple, "coordinates"),
+
+					city: place(tuple, "city"),
+					country: place(tuple, "country"),
+
+					...seed,
+
+					id
+
+				};
+
+			}
+		))
 		(validate(University))
 		(map(university => delta(university.id, University, university)))
 		(persist({ atomic: true }))
@@ -69,97 +100,28 @@ export async function Wikidata() {
 }
 
 
-/**
- * Completes each partner university with the inception year, student count, coordinates, city and country stated by
- * its Wikidata entity.
- *
- * Facts are retrieved by the SPARQL select in the sibling `wikidata.ql` file, ported from the `Universities.qlt` query
- * of the legacy data project, with city and country names in English only. Its `{universities}` placeholder is filled
- * with the IRIs of the Wikidata entities, one `<…>` per line. A property stating several values yields a solution per
- * value, so solutions are grouped by `?university` before merging, keeping the earliest inception year, the largest
- * student count and the first city and country. A partner whose entity lacks any of these facts is dropped.
- */
-function enrich(): Task<Partner, University> {
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	return partners => pipe(
-		(partners)
-		(batch())
-		(map(async partners => items(await retrieve(partners))))
-		(flat())
-	);
-
+function year(tuple: Tuple): Optional<string> {
+	return value(tuple, "inception")?.slice(0, 4);
 }
 
-async function retrieve(partners: readonly Partner[]): Promise<readonly University[]> {
-
-	const query = (await file(".ql", import.meta.url)).replace("{universities}", partners
-		.map(partner => `<${entity(partner)}>`)
-		.join("\n")
-	);
-
-	const tuples = await wikidata.select(query);
-
-	return partners.flatMap(partner => merge(partner, tuples.filter(tuple =>
-		values([tuple], "university").includes(entity(partner))
-	)) ?? []);
-
+function number(tuple: Tuple): Optional<number> {
+	return opt(value(tuple, "students"), Number);
 }
 
-function merge(partner: Partner, tuples: readonly Tuple[]): undefined | University {
-
-	const years = values(tuples, "inception").map(inception => inception.slice(0, 4));
-	const counts = values(tuples, "students").map(Number);
-
-	const inception = years.length > 0 ? years.reduce((x, y) => x < y ? x : y) : undefined;
-	const students = counts.length > 0 ? Math.max(...counts) : undefined;
-	const coordinates = values(tuples, "coordinates").map(WGSPoint.from)[0];
-	const city = feature(tuples, "city");
-	const country = feature(tuples, "country");
-
-	const [depiction, ...depictions] = partner.depiction;
-	const [homepage, ...homepages] = partner.homepage;
-
-	return depiction && homepage && inception && students !== undefined && coordinates && city && country ? {
-
-		...partner,
-		...coordinates,
-
-		label: partner.prefLabel,
-		dataset: universities.id,
-
-		depiction: [depiction, ...depictions],
-		homepage: [homepage, ...homepages],
-
-		inception,
-		students,
-
-		city,
-		country
-
-	} : undefined;
-
+function place(tuple: Tuple, name: string): Optional<Partial<Place>> {
+	return opt(value(tuple, name), id => ({
+		id,
+		label: value(tuple, `${name}Name`),
+		...point(tuple, `${name}Coordinates`)
+	}));
 }
 
-
-function entity(partner: Partner): string {
-	return partner.seeAlso[0] ?? "";
+function point(tuple: Tuple, variable: string): Optional<WGSPoint> {
+	return opt(value(tuple, variable), WGSPoint.from);
 }
 
-function values(tuples: readonly Tuple[], variable: string): readonly string[] {
-	return [...new Set(tuples
-		.map(tuple => tuple[`?${variable}`])
-		.filter(term => isDefined(term))
-		.map(lexical)
-	)];
-}
-
-
-function feature(tuples: readonly Tuple[], variable: string): Optional<Instance<typeof Place>> {
-
-	const [id] = values(tuples, variable);
-	const [label] = values(tuples, `${variable}Name`);
-	const coordinates = values(tuples, `${variable}Coordinates`).map(WGSPoint.from)[0];
-
-	return id && label && coordinates ? { id, label, ...coordinates } : undefined;
-
+function value(tuple: Tuple, name: string): Optional<string> {
+	return opt(tuple[variable(name)], lexical);
 }

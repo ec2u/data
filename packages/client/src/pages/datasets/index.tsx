@@ -29,8 +29,6 @@ export function Datasets() {
 
 	return <Page
 
-		tray={<Link look={"subtle"} href={"/404"}>Zot!</Link>}
-
 		head={"European Campus of City-Universities"}
 		menu={<Button look={"subtle"} icon={<Icon.Help/>} title={"Help"}></Button>}
 

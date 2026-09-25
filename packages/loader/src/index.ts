@@ -25,7 +25,9 @@ import { universities } from "./universities/index.js";
 serve(Router()
 
 	.use("/universities", universities())
-	.use("/taxonomies", taxonomies())
 	.use("/units", units())
 	.use("/events", events())
+
+	.use("/taxonomies", taxonomies())
+
 );
