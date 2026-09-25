@@ -17,7 +17,7 @@
 import { client } from "@metreeca/work/http/client.js";
 import { serve } from "@metreeca/work/http/server.js";
 import { Router } from "express";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import { events } from "./events/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
@@ -25,7 +25,7 @@ import { universities } from "./universities/index.js";
 
 serve(Router()
 
-	.use(client(fileURLToPath(new URL("static/", import.meta.url))))
+	.use(client(resolve(import.meta.dirname, "static")))
 
 	.use("/universities", universities())
 	.use("/events", events())
