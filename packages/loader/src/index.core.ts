@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-import { ec2u } from "@ec2u/data-shared";
-import { id, required, resource } from "@metreeca/blue/resource";
-import { iri, string } from "@metreeca/blue/string";
-import type { Instance } from "@metreeca/blue/value";
 import { bind, executor, service } from "@metreeca/gear";
 import { createCache, createFileCache } from "@metreeca/gear/cache";
 import { getPackage, getPath } from "@metreeca/gear/space";
@@ -62,37 +58,3 @@ export const execute = executor(
 	}))
 );
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type Page = Instance<typeof Page>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function Page() {
-	return resource({
-
-		space: ec2u,
-		class: ec2u.Page
-
-	}, {
-
-		id: id(),
-
-		source: required(iri, {
-
-			name: "Page Source",
-			description: "The data source whose crawl reached the page."
-
-		}),
-
-		digest: required(string, {
-
-			name: "Page Digest",
-			description: "A unique identification of the content the page carried when it was read."
-
-		})
-
-	});
-}
