@@ -30,7 +30,6 @@ import { createGoogleAI } from "@metreeca/work/muse-google/index.js";
 import { createStore } from "@metreeca/work/tide-store/index.js";
 
 
-
 export const execute = executor(
 	bind(getPath, () => gcp.production
 		? getPath()
@@ -57,4 +56,3 @@ export const execute = executor(
 		apiKey: await service(createVault)("googleai-key")
 	}))
 );
-
