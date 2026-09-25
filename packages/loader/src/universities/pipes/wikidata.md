@@ -18,5 +18,6 @@ Planned: background and statistical data drawn from the Wikidata entity each uni
 
 - **2026-09-25** – retrieval from https://query.wikidata.org/sparql: earliest inception year, most recent best-rank
   student count, headquarters city (falling back to the administrative territory) and country; partners lacking any of
-  these facts are skipped
+  these facts are skipped; cities and countries are stored as places of their own, with their English label and
+  coordinates, and linked from each partner by their Wikidata IRI
 - **2025-09-26** – placeholder pipe added, retrieval outstanding

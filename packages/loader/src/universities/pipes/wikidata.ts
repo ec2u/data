@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import type { Place } from "@ec2u/data-shared";
+import { Place } from "@ec2u/data-shared";
 import { universities, University } from "@ec2u/data-shared/universities/index.js";
 import seeds from "@ec2u/data-shared/universities/index.json" with { type: "json" };
 import { opt, type Optional } from "@metreeca/core";
 import { fill } from "@metreeca/core/strings";
-import { pipe } from "@metreeca/flow";
+import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { flat, map } from "@metreeca/flow/tasks";
+import { distinct, flat, map, tee, trim } from "@metreeca/flow/tasks";
 import { createFetch } from "@metreeca/http";
 import { headers } from "@metreeca/http/headers";
 import { lexical } from "@metreeca/trio";
@@ -30,7 +30,7 @@ import { createHTTPRepository } from "@metreeca/wire-sparql-http";
 import { reference } from "@metreeca/wire-sparql/builder";
 import { file } from "@metreeca/work/gear/files.js";
 import { WGSPoint } from "@metreeca/work/open/wgs.js";
-import { delta, persist } from "@metreeca/work/tide-store/persist.js";
+import { delta, type Delta, persist } from "@metreeca/work/tide-store/persist.js";
 import { validate } from "@metreeca/work/tide-store/validate.js";
 import { execute } from "../../index.core.js";
 
@@ -57,9 +57,10 @@ export async function Wikidata() {
 		(items(file(".ql", import.meta.url)))
 		(map(bind))
 		(flat(map(query => wikidata.select(query))))
-		(map(enrich))
-		(validate(University))
-		(map(university => delta(university.id, University, university)))
+		(tee(
+			partners(),
+			places()
+		))
 		(persist({ atomic: true }))
 	);
 
@@ -74,31 +75,53 @@ export async function Wikidata() {
 		});
 	}
 
-	function enrich(tuple: Tuple): unknown {
+	function partners(): Task<Tuple, Delta> {
+		return tuples => pipe(
+			(items(tuples))
+			(map(function (tuple: Tuple): unknown {
 
-		const id = lexical(tuple[variable("id")]);
-		const seed = seeds[id as keyof typeof seeds]; // ;(ids are bound from the seed keys)
+				const id = lexical(tuple[variable("id")]);
+				const seed = seeds[id as keyof typeof seeds]; // ;(ids are bound from the seed keys)
 
-		return {
+				return {
 
-			label: seed.prefLabel,
+					label: seed.prefLabel,
 
-			dataset: universities.id,
+					dataset: universities.id,
 
-			inception: year(tuple),
-			students: number(tuple),
+					inception: year(tuple),
+					students: number(tuple),
 
-			...point(tuple, "coordinates"),
+					...point(tuple, "coordinates"),
 
-			city: place(tuple, "city"),
-			country: place(tuple, "country"),
+					city: value(tuple, "city"),
+					country: value(tuple, "country"),
 
-			...seed,
+					...seed,
 
-			id
+					id
 
-		};
+				};
 
+			}))
+			(validate(University))
+			(map(university => delta(university.id, University, university)))
+		);
+	}
+
+	function places(): Task<Tuple, Delta> {
+		return tuples => pipe(
+			(items(tuples))
+			(trim(flat(map(tuple => [
+				place(tuple, "city"),
+				place(tuple, "country")
+			]))))
+			(distinct(place => place.id))
+			(validate(Place))
+			(map(place =>
+				delta(place.id, Place, place)
+			))
+		);
 	}
 
 }

@@ -73,8 +73,8 @@ export function University() {
 		inception: required(year),
 		students: required(int),
 
-		city: required(Place), // !!! reference?
-		country: required(Place) // !!! reference?
+		city: required(reference(Place)),
+		country: required(reference(Place))
 
 	});
 }
