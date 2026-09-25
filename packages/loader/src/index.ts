@@ -22,7 +22,7 @@ import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
-serve(Router()
+await serve(Router()
 
 	.use("/universities", universities())
 	.use("/units", units())

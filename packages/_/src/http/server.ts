@@ -35,27 +35,48 @@ const logger = log(import.meta.url);
  * `8080` and the matching local address.
  *
  * @param router - The router handling incoming requests
+ *
+ * The server closes on `SIGINT` or `SIGTERM`, completing the requests in flight before it stops.
+ *
+ * @returns A promise resolving when the server closes, or rejecting if it fails to listen; awaiting it inside an
+ *          execution keeps the services the router relies on available for as long as the server runs
  */
-export function serve(router: Router): void {
+export function serve(router: Router): Promise<void> {
 
 	const host = process.env.HOST || "0.0.0.0";
 	const port = parseInt(process.env.PORT || "8080", 10);
 	const url = process.env.URL || `http://${host === "0.0.0.0" ? "localhost" : host}:${port}`;
 
-	express()
+	return new Promise((resolve, reject) => {
 
-		.use(express.json())
+		const server = express()
 
-		.use(request())
+			.use(express.json())
 
-		.use(router)
+			.use(request())
 
-		.use(error())
-		.use(sanitise())
+			.use(router)
 
-		.listen(port, host, () =>
-			logger.info`server listening on ${url}`
-		);
+			.use(error())
+			.use(sanitise())
+
+			.listen(port, host, () =>
+				logger.info`server listening on ${url}`
+			)
+
+			.on("close", () => {
+				logger.info`server closed`;
+				resolve();
+			})
+
+			.on("error", reject);
+
+		const close = () => server.close();
+
+		process.once("SIGINT", close);
+		process.once("SIGTERM", close);
+
+	});
 
 }
 
