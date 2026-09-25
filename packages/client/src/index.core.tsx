@@ -21,11 +21,8 @@ import { Logo } from "@metreeca/tile-cell/logo";
 import { app } from "@metreeca/tile-data";
 import { Shell } from "@metreeca/tile-hive/shell";
 import { Strip } from "@metreeca/tile-hive/strip";
-import { Style } from "@metreeca/tile-hive/style";
 import { type ComponentChildren, h } from "preact";
-
-
-const FontSize = "scaling150";
+import "./index.css";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,17 +44,9 @@ export function Page({
 
 	return <Shell
 
-		logo={<Style css={{ fontSize: FontSize }}>
+		logo={<Link look="strong" href={Root}><Logo/><span>{app.name}</span></Link>}
 
-			<Link look="strong" href={Root}><Logo/><span>{app.name}</span></Link>
-
-		</Style>}
-
-		head={<Style css={{ fontSize: FontSize }}>
-
-			{head}
-
-		</Style>}
+		head={head}
 
 		menu={<Button look={"subtle"} icon={<Icon.Help/>} title={"Help"}></Button>}
 
