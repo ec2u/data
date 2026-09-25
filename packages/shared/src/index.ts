@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { wgs, WGSPoint } from "@ec2u/data-shared/vocabularies/wgs.js";
+import { wgs, WGSPoint } from "@metreeca/work/open/wgs.js";
 import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { iri, markdown, string, text } from "@metreeca/blue/string";
 import { createNamespace } from "@metreeca/core/resource";
@@ -106,7 +106,7 @@ export function Entity() {
 	});
 }
 
-export function Feature() {
+export function Place() {
 	return resource(Entity, WGSPoint, {
 
 		space: wgs

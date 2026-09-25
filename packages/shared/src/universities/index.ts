@@ -17,12 +17,13 @@
 import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
-import { base, EC2U, ec2u, Feature } from "@ec2u/data-shared";
+import { base, EC2U, ec2u, Place } from "@ec2u/data-shared";
 import { OrgFormalOrganization } from "@ec2u/data-shared/vocabularies/org.js";
 import { int } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { nonempty, required, resource } from "@metreeca/blue/resource";
 import { iri, year } from "@metreeca/blue/string";
+import type { Instance } from "@metreeca/blue/value";
 import { immutable } from "@metreeca/core/values";
 
 
@@ -51,8 +52,13 @@ export const universities = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export type University = Instance<typeof University>;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export function University() {
-	return resource(Organization, Feature, OrgFormalOrganization, {
+	return resource(Organization, Place, OrgFormalOrganization, {
 
 		space: ec2u,
 		class: ec2u.University
@@ -67,8 +73,8 @@ export function University() {
 		inception: required(year),
 		students: required(int),
 
-		city: required(Feature), // !!! reference?
-		country: required(Feature) // !!! reference?
+		city: required(Place), // !!! reference?
+		country: required(Place) // !!! reference?
 
 	});
 }
