@@ -77,7 +77,7 @@ function request(): RequestHandler {
 
 		response.locals.trace = trace;
 
-		response.on("close", () => (response.statusCode >= BadRequest ? logger.warning : logger.debug)(
+		response.on("close", () => logger[response.statusCode >= BadRequest ? "warning" : "debug"](
 			"{method} {url} {statusCode}", {
 				trace,
 				method: request.method,
