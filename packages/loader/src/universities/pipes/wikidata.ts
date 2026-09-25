@@ -35,13 +35,6 @@ import { validate } from "@metreeca/work/tide-store/validate.js";
 import { execute } from "../../index.core.js";
 
 
-if ( import.meta.main ) {
-	await execute(Wikidata);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 const WikidataEndpoint = "https://query.wikidata.org/sparql";
 const WikidataAgent = "EC2U Knowledge Hub (https://data.ec2u.eu/)";
 
@@ -49,6 +42,11 @@ const wikidata = createHTTPRepository({
 	query: WikidataEndpoint,
 	fetch: createFetch(headers({ "User-Agent": WikidataAgent })) // required by the Wikidata usage policy
 });
+
+
+if ( import.meta.main ) {
+	await execute(Wikidata);
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
