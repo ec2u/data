@@ -22,7 +22,7 @@ import { retire } from "@metreeca/work/tide-store/retire.js";
 import { validate } from "@metreeca/work/tide-store/validate.js";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Event, events, getEventId, isStaleEvent, Publisher } from "@ec2u/data-shared/events/index.js";
-import type { Page } from "../../index.core.js";
+import { Page } from "../../index.core.js";
 import { classify } from "../tasks/classify.js";
 import { convert } from "../tasks/convert.js";
 import { extract } from "../tasks/extract.js";
