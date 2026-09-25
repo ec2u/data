@@ -25,7 +25,7 @@ import { distinct, flat, map, tee, trim } from "@metreeca/flow/tasks";
 import { createFetch } from "@metreeca/http";
 import { headers } from "@metreeca/http/headers";
 import { lexical } from "@metreeca/trio";
-import { type SPARQL, type Tuple, variable } from "@metreeca/wire-sparql";
+import { type Repository, type SPARQL, type Tuple, variable } from "@metreeca/wire-sparql";
 import { createHTTPRepository } from "@metreeca/wire-sparql-http";
 import { reference } from "@metreeca/wire-sparql/builder";
 import { file } from "@metreeca/work/gear/files.js";
@@ -33,6 +33,7 @@ import { WGSPoint } from "@metreeca/work/open/wgs.js";
 import { delta, type Delta, persist } from "@metreeca/work/tide-store/persist.js";
 import { validate } from "@metreeca/work/tide-store/validate.js";
 import { execute } from "../../index.core.js";
+import { select } from "@metreeca/work/tide-repository/select.js";
 
 
 const WikidataEndpoint = "https://query.wikidata.org/sparql";
@@ -55,8 +56,8 @@ export async function Wikidata() {
 
 	return pipe(
 		(items(file(".ql", import.meta.url)))
-		(map(bind))
-		(flat(map(query => wikidata.select(query))))
+		(bind())
+		(select(wikidata))
 		(tee(
 			partners(),
 			places()
@@ -65,14 +66,14 @@ export async function Wikidata() {
 	);
 
 
-	function bind(query: SPARQL): SPARQL {
-		return fill(query, {
+	function bind() : Task<SPARQL>{
+		return map(query => fill(query, {
 
 			universities: Object.entries(seeds)
 				.flatMap(([id, { seeAlso }]) => seeAlso.map(entity => `(${reference(id)} ${reference(entity)})`))
 				.join("\n")
 
-		});
+		}));
 	}
 
 	function partners(): Task<Tuple, Delta> {
@@ -105,7 +106,9 @@ export async function Wikidata() {
 
 			}))
 			(validate(University))
-			(map(university => delta(university.id, University, university)))
+			(map(university =>
+				delta(university.id, University, university)
+			))
 		);
 	}
 
