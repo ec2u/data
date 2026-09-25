@@ -22,13 +22,10 @@ import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
-serve([
+serve(Router()
 
-	Router()
-
-		.use("/universities", universities())
-		.use("/taxonomies", taxonomies())
-		.use("/units", units())
-		.use("/events", events())
-
-]);
+	.use("/universities", universities())
+	.use("/taxonomies", taxonomies())
+	.use("/units", units())
+	.use("/events", events())
+);

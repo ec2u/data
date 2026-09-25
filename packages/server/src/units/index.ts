@@ -21,13 +21,13 @@ export function units(): Router {
 
 	return Router({ strict: true })
 
-		.get("/units/",async (request, response) => {
+		.get("/",async (request, response) => {
 
 			throw new Error(";( to be implemented"); // !!!
 
 		})
 
-		.get("/units/:code", async (request, response) => {
+		.get("/:code", async (request, response) => {
 
 			throw new Error(";( to be implemented"); // !!!
 

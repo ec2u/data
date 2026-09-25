@@ -21,13 +21,13 @@ export function universities(): Router {
 
 	return Router({ strict: true })
 
-		.get("/universities/",async (request, response) => {
+		.get("/",async (request, response) => {
 
 			throw new Error(";( to be implemented"); // !!!
 
 		})
 
-		.get("/universities/:code", async (request, response) => {
+		.get("/:code", async (request, response) => {
 
 			throw new Error(";( to be implemented"); // !!!
 

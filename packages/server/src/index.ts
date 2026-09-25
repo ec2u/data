@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
+import { client } from "@metreeca/work/http/client.js";
 import { serve } from "@metreeca/work/http/server.js";
+import { Router } from "express";
 import { fileURLToPath } from "node:url";
 import { events } from "./events/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
-serve([
+serve(Router()
 
-	universities(),
-	events(),
-	units()
+	.use(client(fileURLToPath(new URL("static/", import.meta.url))))
 
-], {
+	.use("/universities", universities())
+	.use("/events", events())
+	.use("/units", units())
 
-	client: fileURLToPath(new URL("static/", import.meta.url))
-
-});
+);

@@ -21,13 +21,13 @@ export function events(): Router {
 
 	return Router({ strict: true })
 
-		.get("/events/",async (request, response) => {
+		.get("/",async (request, response) => {
 
 			throw new Error(";( to be implemented"); // !!!
 
 		})
 
-		.get("/events/:code", async (request, response) => {
+		.get("/:code", async (request, response) => {
 
 			throw new Error(";( to be implemented"); // !!!
 
