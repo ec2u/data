@@ -18,8 +18,8 @@ import "@metreeca/tile/index.css";
 import { Router, Routes } from "@metreeca/tile-data/router";
 import { host } from "@metreeca/tile-hive";
 import { render } from "preact";
-import { Datasets } from "./datasets/index.js";
-import { Page, Root } from "./index.core.js";
+import { Datasets, DatasetsPath } from "./pages/datasets/index.js";
+import { Unknown, UnknownPath } from "./pages/index.js";
 
 
 render(<Hub/>, host("ec2u-hub"));
@@ -33,11 +33,12 @@ function Hub() {
 
 		<Routes>{{
 
-			[Root]: <Datasets/>
+			[DatasetsPath]: <Datasets/>,
+
+			[UnknownPath]: <Unknown/>
 
 		}}</Routes>
 
 	</Router>;
 
 }
-

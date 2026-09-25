@@ -22,33 +22,39 @@ import { app } from "@metreeca/tile-data";
 import { Shell } from "@metreeca/tile-hive/shell";
 import { Strip } from "@metreeca/tile-hive/strip";
 import { type ComponentChildren, h } from "preact";
-import "./index.css";
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const Root = "/";
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+import "./page.css";
 
 export function Page({
 
-	head
+	tray,
+	info,
+
+	head,
+	menu,
+
+	children
 
 }: {
 
+	tray?: ComponentChildren
+	info?: ComponentChildren
+
 	head?: ComponentChildren
+	menu?: ComponentChildren
+
+	children?: ComponentChildren
 
 }) {
 
 	return <Shell
 
-		logo={<Link look="strong" href={Root}><Logo/><span>{app.name}</span></Link>}
+		logo={<Link look="subtle" href={"/"}><Logo/><span>{app.name}</span></Link>}
+
+		tray={tray}
+		info={info}
 
 		head={head}
-
-		menu={<Button look={"subtle"} icon={<Icon.Help/>} title={"Help"}></Button>}
+		menu={menu}
 
 		copy={<Strip grow place={"head"}>
 
@@ -57,6 +63,6 @@ export function Page({
 
 		</Strip>}
 
-	/>;
+	>{children}</Shell>;
 
 }

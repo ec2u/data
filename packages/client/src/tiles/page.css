@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+:root {
+    --tile--look: subtle;
+}
 
-import { Page } from "../index.core.js";
+tile-shell {
 
-export function Datasets() {
-
-	return <Page head={"European Campus of City-Universities"}/>
+    --tile-shell-head-font-size: var(--tile--scaling-150);
 
 }

@@ -14,8 +14,26 @@
  * limitations under the License.
  */
 
-tile-shell {
+import { Button } from "@metreeca/tile-cell/button";
+import { Link } from "@metreeca/tile-cell/link";
+import { Page } from "../../tiles/page.js";
+import { Icon } from "@metreeca/tile-cell/icon";
 
-    --tile-shell-head-font-size: var(--tile--scaling-150);
+
+export const DatasetsPath = "/";
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Datasets() {
+
+	return <Page
+
+		tray={<Link look={"subtle"} href={"/404"}>Zot!</Link>}
+
+		head={"European Campus of City-Universities"}
+		menu={<Button look={"subtle"} icon={<Icon.Help/>} title={"Help"}></Button>}
+
+	/>;
 
 }

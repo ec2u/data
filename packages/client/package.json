@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ec2u/data-shared": "*",
+    "@metreeca/http": "^0.3.0",
     "@metreeca/tile": "^0.2.0",
     "@metreeca/tile-cell": "^0.2.0",
     "@metreeca/tile-data": "^0.2.0",
