@@ -20,10 +20,15 @@ import { Router } from "express";
 import { resolve } from "node:path";
 import { events } from "./events/index.js";
 import { units } from "./units/index.js";
+import { execute } from "./index.core.js";
 import { universities } from "./universities/index.js";
 
 
-serve(Router()
+// services live as long as the server: shared by all requests, released on SIGINT or SIGTERM
+
+// !!! every execute() call constructs its own service instances: executing per request would reconnect each time
+
+await execute(() => serve(Router()
 
 	.use(client(resolve(import.meta.dirname, "static")))
 
@@ -31,4 +36,4 @@ serve(Router()
 	.use("/events", events())
 	.use("/units", units())
 
-);
+));

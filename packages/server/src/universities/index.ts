@@ -14,22 +14,54 @@
  * limitations under the License.
  */
 
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { universities as dataset, University } from "@ec2u/data-shared/universities/index.js";
+import { opt } from "@metreeca/core";
+import { service } from "@metreeca/gear";
+import { createStore } from "@metreeca/work/tide-store/index.js";
 import { Router } from "express";
 
 
 export function universities(): Router {
 
+	const store = service(createStore);
+
 	return Router({ strict: true })
 
-		.get("/",async (request, response) => {
+		.get("/", async (request, response) => {
 
-			throw new Error(";( to be implemented"); // !!!
+			response.json(await store.lookup({
+				entry: dataset.id,
+				shape: Dataset,
+				model: {
+					resources: {
+						id: {},
+						label: {}
+					}
+				}
+			}));
 
 		})
 
 		.get("/:code", async (request, response) => {
 
-			throw new Error(";( to be implemented"); // !!!
+			opt(await store.lookup({
+					entry: `${dataset.id}/${request.params.code}`,
+					shape: University,
+					model: {
+						id: {},
+						label: {},
+						homepage: {},
+						depiction: {},
+						inception: {},
+						students: {},
+						city: { id: {}, label: {} },
+						country: { id: {}, label: {} }
+					}
+				}),
+				university => response.json(university),
+				() => response.sendStatus(404)
+			);
 
 		});
 
