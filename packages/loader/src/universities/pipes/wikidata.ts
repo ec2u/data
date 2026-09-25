@@ -25,7 +25,7 @@ import { flat, map } from "@metreeca/flow/tasks";
 import { createFetch } from "@metreeca/http";
 import { headers } from "@metreeca/http/headers";
 import { lexical } from "@metreeca/trio";
-import { type Tuple, variable } from "@metreeca/wire-sparql";
+import { type SPARQL, type Tuple, variable } from "@metreeca/wire-sparql";
 import { createHTTPRepository } from "@metreeca/wire-sparql-http";
 import { reference } from "@metreeca/wire-sparql/builder";
 import { file } from "@metreeca/work/gear/files.js";
@@ -57,45 +57,51 @@ export async function Wikidata() {
 
 	return pipe(
 		(items(file(".ql", import.meta.url)))
-		(map(query => fill(query, {
+		(map(bind))
+		(flat(map(query => wikidata.select(query))))
+		(map(enrich))
+		(validate(University))
+		(map(university => delta(university.id, University, university)))
+		(persist({ atomic: true }))
+	);
+
+
+	function bind(query: SPARQL): SPARQL {
+		return fill(query, {
 
 			universities: Object.entries(seeds)
 				.flatMap(([id, { seeAlso }]) => seeAlso.map(entity => `(${reference(id)} ${reference(entity)})`))
 				.join("\n")
 
-		})))
-		(flat(map(query => wikidata.select(query))))
-		(map(tuple => {
+		});
+	}
 
-				const id = lexical(tuple[variable("id")]);
-				const seed = seeds[id as keyof typeof seeds];
+	function enrich(tuple: Tuple): unknown {
 
-				return {
+		const id = lexical(tuple[variable("id")]);
+		const seed = seeds[id as keyof typeof seeds]; // ;(ids are bound from the seed keys)
 
-					label: seed.prefLabel,
+		return {
 
-					dataset: universities.id,
+			label: seed.prefLabel,
 
-					inception: year(tuple),
-					students: number(tuple),
+			dataset: universities.id,
 
-					...point(tuple, "coordinates"),
+			inception: year(tuple),
+			students: number(tuple),
 
-					city: place(tuple, "city"),
-					country: place(tuple, "country"),
+			...point(tuple, "coordinates"),
 
-					...seed,
+			city: place(tuple, "city"),
+			country: place(tuple, "country"),
 
-					id
+			...seed,
 
-				};
+			id
 
-			}
-		))
-		(validate(University))
-		(map(university => delta(university.id, University, university)))
-		(persist({ atomic: true }))
-	);
+		};
+
+	}
 
 }
 

@@ -1,4 +1,8 @@
+prefix wikibase: <http://wikiba.se/ontology#>
 prefix wdt: <http://www.wikidata.org/prop/direct/>
+prefix p: <http://www.wikidata.org/prop/>
+prefix ps: <http://www.wikidata.org/prop/statement/>
+prefix pq: <http://www.wikidata.org/prop/qualifier/>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 select
@@ -21,8 +25,10 @@ where {
 
 			?id ?university
 			(min(?_inception) as ?inception)
-			(max(?_students) as ?students)
+			(strafter(max(concat(coalesce(str(?_date), ""), "|", str(?_students))), "|") as ?students)
 			(sample(?_coordinates) as ?coordinates)
+			(min(?_country) as ?country)
+			(min(coalesce(?_headquarters, ?_territory)) as ?city)
 
 		where {
 
@@ -30,9 +36,16 @@ where {
 				{universities}
 			}
 
+			?university wdt:P17 ?_country; wdt:P131 ?_territory
+
+			optional { ?university wdt:P159 ?_headquarters }
 			optional { ?university wdt:P571 ?_inception }
-			optional { ?university wdt:P2196 ?_students }
 			optional { ?university wdt:P625 ?_coordinates }
+
+			optional {
+				?university p:P2196 ?_count. ?_count a wikibase:BestRank; ps:P2196 ?_students
+				optional { ?_count pq:P585 ?_date }
+			}
 
 		}
 
@@ -40,59 +53,11 @@ where {
 
 	}
 
-	optional {
+	optional { ?country rdfs:label ?_countryName filter (lang(?_countryName) = "en") }
+	optional { ?country wdt:P625 ?_countryCoordinates }
 
-		{
-
-			select ?university (min(?_country) as ?country) where {
-
-				values (?id ?university) {
-					{universities}
-				}
-
-				?university wdt:P17 ?_country
-
-			}
-
-			group by ?university
-
-		}
-
-		optional {
-			?country rdfs:label ?_countryName
-			filter (lang(?_countryName) = "en")
-		}
-
-		optional { ?country wdt:P625 ?_countryCoordinates }
-
-	}
-
-	optional {
-
-		{
-
-			select ?university (min(?_city) as ?city) where {
-
-				values (?id ?university) {
-					{universities}
-				}
-
-				?university wdt:P131 ?_city
-
-			}
-
-			group by ?university
-
-		}
-
-		optional {
-			?city rdfs:label ?_cityName
-			filter (lang(?_cityName) = "en")
-		}
-
-		optional { ?city wdt:P625 ?_cityCoordinates }
-
-	}
+	optional { ?city rdfs:label ?_cityName filter (lang(?_cityName) = "en") }
+	optional { ?city wdt:P625 ?_cityCoordinates }
 
 }
 
