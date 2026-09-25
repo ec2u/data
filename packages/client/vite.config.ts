@@ -30,7 +30,7 @@ export default defineConfig({ // https://vite.dev/config/
 	},
 
 	build: {
-		outDir: "../lib",
+		outDir: "../../server/lib/static", // deployed with the server
 		assetsDir: ".",
 		emptyOutDir: true
 	},
@@ -39,7 +39,10 @@ export default defineConfig({ // https://vite.dev/config/
 		proxy: {
 			"^(/[-a-zA-Z0-9]+)+/?(\\?.*)?$": { // data routes, with optional query
 				target: "http://localhost:8080/",
-				xfwd: true
+				xfwd: true,
+				bypass: request => request.headers.accept?.includes("text/html")
+					? "/index.html"
+					: undefined
 			}
 		}
 	}

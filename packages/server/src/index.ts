@@ -15,6 +15,7 @@
  */
 
 import { serve } from "@metreeca/work/http/server.js";
+import { fileURLToPath } from "node:url";
 import { events } from "./events/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
@@ -26,4 +27,8 @@ serve([
 	events(),
 	units()
 
-]);
+], {
+
+	client: fileURLToPath(new URL("static/", import.meta.url))
+
+});
