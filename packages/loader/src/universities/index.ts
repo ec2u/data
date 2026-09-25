@@ -16,12 +16,14 @@
 
 import { job } from "@metreeca/work/gear-gcp/scheduler.js";
 import { Router } from "express";
+import { execute } from "../index.core.js";
+import { Wikidata } from "./pipes/wikidata.js";
 
 
 export function universities(): Router {
 
 	return Router()
 
-		.use("/wikidata", job(() => Promise.resolve("tbi"))); // !!!
+		.use("/wikidata", job(() => execute(Wikidata)));
 
 }

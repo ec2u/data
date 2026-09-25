@@ -12,6 +12,7 @@
     "moduleResolution": "NodeNext",
     "isolatedModules": true,
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,

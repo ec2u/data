@@ -5,6 +5,9 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
+  "scripts": {
+    "build": "cpy 'src/**/*.json' lib"
+  },
   "exports": {
     ".": {
       "@ec2u/source": "./src/index.ts",
@@ -13,6 +16,10 @@
     "./*.js": {
       "@ec2u/source": "./src/*.ts",
       "default": "./lib/*.js"
+    },
+    "./*.json": {
+      "@ec2u/source": "./src/*.json",
+      "default": "./lib/*.json"
     }
   },
   "dependencies": {
@@ -20,5 +27,8 @@
     "@metreeca/core": "^0.10.0",
     "@metreeca/qest": "^0.10.0",
     "uuid": "^14.0.1"
+  },
+  "devDependencies": {
+    "cpy-cli": "^7.0.0"
   }
 }

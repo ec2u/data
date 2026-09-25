@@ -16,4 +16,6 @@ Planned: background and statistical data drawn from the Wikidata entity each uni
 |---------------------------|------------------------|------------------------------------------------------------------------------------|
 | https://www.wikidata.org/ | Wikidata entities [en] | One entity per partner university, named by `seeAlso` in `universities/index.json` |
 
+- **2026-09-25** – retrieval from https://query.wikidata.org/sparql: earliest inception year, largest student count,
+  first city and country; partners lacking any of these facts are skipped
 - **2025-09-26** – placeholder pipe added, retrieval outstanding
