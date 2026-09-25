@@ -15,9 +15,9 @@
  */
 
 import { serve } from "@metreeca/work/http/server.js";
-import { events } from "./events/ports/index.js";
-import { units } from "./units/ports/index.js";
-import { universities } from "./universities/ports/index.js";
+import { events } from "./events/index.js";
+import { units } from "./units/index.js";
+import { universities } from "./universities/index.js";
 
 
 serve([

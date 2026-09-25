@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-import { data } from "./data.js";
 import { Router } from "express";
 
 
-export function units(): Router {
+export function events(): Router {
 
-	return Router()
-		.use("/units", data());
+	return Router({ strict: true })
+
+		.get("/events/",async (request, response) => {
+
+			throw new Error(";( to be implemented"); // !!!
+
+		})
+
+		.get("/events/:code", async (request, response) => {
+
+			throw new Error(";( to be implemented"); // !!!
+
+		});
 
 }
