@@ -22,9 +22,9 @@ import { immutable } from "@metreeca/core/values";
 
 export const taxonomies = immutable({
 
-	id: resolve(base, "taxonomies"),
+	id: resolve(base, "/taxonomies/"),
 
-	isDefinedBy: resolve(base, "datasets/taxonomies"),
+	isDefinedBy: resolve(base, "/datasets/taxonomies"),
 	dataset: datasets.id,
 
 	label: "EC2U Taxonomies",

@@ -18,6 +18,7 @@
 import { units } from "@ec2u/data-shared/units/index.js";
 import { _units } from "../../store.js";
 import { expand } from "./expand.js";
+import { resolve } from "@metreeca/core/resource";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each, toArray } from "@metreeca/flow/sinks";
@@ -68,7 +69,7 @@ export async function expandAll(): Promise<number> {
 
 				for (const item of items) {
 					if ( !await _units.lookup(item) ) { // check and update atomically
-						await _units.insert({ ...item, id: `${units.id}/${uuid.v4()}` });
+						await _units.insert({ ...item, id: resolve(units.id, uuid.v4()) });
 					}
 				}
 

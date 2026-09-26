@@ -34,55 +34,55 @@ export type University = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const coimbra = immutable({
-	id: resolve(base, "universities/coimbra"),
+	id: resolve(base, "/universities/coimbra"),
 	locale: "pt",
 	zone: "Europe/Lisbon"
 });
 
 export const iasi = immutable({
-	id: resolve(base, "universities/iasi"),
+	id: resolve(base, "/universities/iasi"),
 	locale: "ro",
 	zone: "Europe/Bucharest"
 });
 
 export const jena = immutable({
-	id: resolve(base, "universities/jena"),
+	id: resolve(base, "/universities/jena"),
 	locale: "de",
 	zone: "Europe/Berlin"
 });
 
 export const linz = immutable({
-	id: resolve(base, "universities/linz"),
+	id: resolve(base, "/universities/linz"),
 	locale: "de",
 	zone: "Europe/Vienna"
 });
 
 export const pavia = immutable({
-	id: resolve(base, "universities/pavia"),
+	id: resolve(base, "/universities/pavia"),
 	locale: "it",
 	zone: "Europe/Rome"
 });
 
 export const poitiers = immutable({
-	id: resolve(base, "universities/poitiers"),
+	id: resolve(base, "/universities/poitiers"),
 	locale: "fr",
 	zone: "Europe/Paris"
 });
 
 export const salamanca = immutable({
-	id: resolve(base, "universities/salamanca"),
+	id: resolve(base, "/universities/salamanca"),
 	locale: "es",
 	zone: "Europe/Madrid"
 });
 
 export const turku = immutable({
-	id: resolve(base, "universities/turku"),
+	id: resolve(base, "/universities/turku"),
 	locale: "fi",
 	zone: "Europe/Helsinki"
 });
 
 export const umea = immutable({
-	id: resolve(base, "universities/umea"),
+	id: resolve(base, "/universities/umea"),
 	locale: "sv",
 	zone: "Europe/Stockholm"
 });

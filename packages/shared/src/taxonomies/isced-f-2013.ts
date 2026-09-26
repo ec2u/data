@@ -17,13 +17,14 @@
 import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { resource } from "@metreeca/blue/resource";
+import { resolve } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 
 
 export const iscedf2013 = immutable({ // !!! sync from the EU vocabularies SKOS distribution
 
-	id: `${taxonomies.id}/isced-f-2013`,
+	id: resolve(taxonomies.id, "isced-f-2013"),
 
 	dataset: taxonomies.id,
 

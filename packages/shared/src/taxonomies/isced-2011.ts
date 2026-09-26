@@ -17,13 +17,14 @@
 import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { resource } from "@metreeca/blue/resource";
+import { resolve } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 
 
 export const isced2011 = immutable({ // !!! persist
 
-	id: `${taxonomies.id}/isced-2011`,
+	id: resolve(taxonomies.id, "isced-2011"),
 
 	dataset: taxonomies.id,
 

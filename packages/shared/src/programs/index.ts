@@ -25,9 +25,9 @@ import { immutable } from "@metreeca/core/values";
 
 export const programs = immutable({
 
-	id: resolve(base, "programs"),
+	id: resolve(base, "/programs/"),
 
-	isDefinedBy: resolve(base, "datasets/programs"),
+	isDefinedBy: resolve(base, "/datasets/programs"),
 	dataset: datasets.id,
 
 	label: "EC2U Programs",

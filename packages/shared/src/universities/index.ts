@@ -30,9 +30,9 @@ import { immutable } from "@metreeca/core/values";
 
 export const universities = immutable({
 
-	id: resolve(base, "universities"),
+	id: resolve(base, "/universities/"),
 
-	isDefinedBy: resolve(base, "datasets/universities"),
+	isDefinedBy: resolve(base, "/datasets/universities"),
 	dataset: datasets.id,
 
 	label: "EC2U Universities",

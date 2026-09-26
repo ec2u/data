@@ -17,6 +17,7 @@
 import { convert } from "./convert.js";
 import { universities } from "@ec2u/data-shared/universities/index.js";
 import type { Object } from "@metreeca/core";
+import { resolve } from "@metreeca/core/resource";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
@@ -25,8 +26,8 @@ import { describe, expect, it } from "vitest";
 
 // a publisher names the university its events are attributed to, and the zone is recovered from that
 
-const coimbra = { id: "https://example.org/coimbra", university: `${universities.id}/coimbra` }; // UTC+1 / UTC+0
-const pavia = { id: "https://example.org/pavia", university: `${universities.id}/pavia` }; // UTC+2 / UTC+1
+const coimbra = { id: "https://example.org/coimbra", university: resolve(universities.id, "coimbra") }; // UTC+1 / UTC+0
+const pavia = { id: "https://example.org/pavia", university: resolve(universities.id, "pavia") }; // UTC+2 / UTC+1
 
 
 function reading(payload: Object): Object {
@@ -77,7 +78,7 @@ describe("convert", () => {
 
 			await expect(converted({ startDate: "2026-07-02" }, {
 				id: "https://example.org/events",
-				university: `${universities.id}/atlantis`
+				university: resolve(universities.id, "atlantis")
 			})).rejects.toThrow(/unknown university/);
 
 		});

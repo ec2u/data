@@ -34,9 +34,9 @@ import * as uuid from "uuid";
 
 export const events = immutable({
 
-	id: resolve(base, "events"),
+	id: resolve(base, "/events/"),
 
-	isDefinedBy: resolve(base, "datasets/events"),
+	isDefinedBy: resolve(base, "/datasets/events"),
 	dataset: datasets.id,
 
 	label: "EC2U Events",

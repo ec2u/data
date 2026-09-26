@@ -34,9 +34,9 @@ const YearPattern = "^\\d{4}/\\d{4}$";
 
 export const courses = immutable({
 
-	id: resolve(base, "courses"),
+	id: resolve(base, "/courses/"),
 
-	isDefinedBy: resolve(base, "datasets/courses"),
+	isDefinedBy: resolve(base, "/datasets/courses"),
 	dataset: datasets.id,
 
 	label: "EC2U Courses",

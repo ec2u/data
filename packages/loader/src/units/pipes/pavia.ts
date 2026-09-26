@@ -24,6 +24,7 @@ import { units } from "@ec2u/data-shared/units/index.js";
 import { _units } from "../store.js";
 import { pavia } from "@ec2u/data-shared/universities/index.core.js";
 import { Type } from "@google/genai";
+import { resolve } from "@metreeca/core/resource";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { each } from "@metreeca/flow/sinks";
@@ -138,7 +139,7 @@ export async function bootstrap(url?: string): Promise<unknown> {
 
 				const current = await _units.lookup(item);
 
-				await _units.insert(!current ? { ...item, id: `${units.id}/${uuid.v4()}` }
+				await _units.insert(!current ? { ...item, id: resolve(units.id, uuid.v4()) }
 					: !matches(current, item) ? merge(current, { ...item, analyzed: undefined, expanded: undefined })
 						: current
 				);

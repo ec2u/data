@@ -19,12 +19,13 @@ import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { EC2U } from "@ec2u/data-shared";
 import { resource } from "@metreeca/blue/resource";
+import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
 export const organizations = immutable({ // !!! sync from `taxonomies-ec2u-organizations`
 
-	id: `${taxonomies.id}/organizations`,
+	id: resolve(taxonomies.id, "organizations"),
 
 	dataset: taxonomies.id,
 

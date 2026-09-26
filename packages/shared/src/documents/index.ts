@@ -33,9 +33,9 @@ import { immutable } from "@metreeca/core/values";
 
 export const documents = immutable({
 
-	id: resolve(base, "documents"),
+	id: resolve(base, "/documents/"),
 
-	isDefinedBy: resolve(base, "datasets/documents"),
+	isDefinedBy: resolve(base, "/datasets/documents"),
 	dataset: datasets.id,
 
 	label: "EC2U Documents",
