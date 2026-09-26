@@ -24,14 +24,15 @@ import { reference } from "@metreeca/blue/reference";
 import { nonempty, required, resource } from "@metreeca/blue/resource";
 import { iri, year } from "@metreeca/blue/string";
 import type { Instance } from "@metreeca/blue/value";
+import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
 export const universities = immutable({
 
-	id: `${base}/universities`,
+	id: resolve(base, "universities"),
 
-	isDefinedBy: `${base}/datasets/universities`,
+	isDefinedBy: resolve(base, "datasets/universities"),
 	dataset: datasets.id,
 
 	label: "EC2U Universities",

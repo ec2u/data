@@ -42,7 +42,7 @@ export function universities(): Router {
 						}
 					}
 				}),
-				universities => response.type("json").send(encodeResource(universities, { base: `${base}/` })),
+				universities => response.type("json").send(encodeResource(universities, { base })),
 				() => response.sendStatus(404)
 			);
 
@@ -64,7 +64,7 @@ export function universities(): Router {
 						country: { id: {}, label: {} }
 					}
 				}),
-				university => response.type("json").send(encodeResource(university, { base: `${base}/` })),
+				university => response.type("json").send(encodeResource(university, { base })),
 				() => response.sendStatus(404)
 			);
 

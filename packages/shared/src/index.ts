@@ -17,14 +17,14 @@
 import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { iri, markdown, text } from "@metreeca/blue/string";
 import type { Instance } from "@metreeca/blue/value";
-import { createNamespace } from "@metreeca/core/resource";
+import { createNamespace, resolve } from "@metreeca/core/resource";
 import { wgs, WGSPoint } from "@metreeca/work/open/wgs.js";
 
 
 export const EC2U = "https://ec2u.eu/"; // the EC2U Alliance organization
-export const base = "https://data.ec2u.eu"; // the EC2U Knowledge Hub id space
+export const base = "https://data.ec2u.eu/"; // the EC2U Knowledge Hub id space
 
-export const ec2u = createNamespace(`${base}/terms#`, [
+export const ec2u = createNamespace(resolve(base, "terms#"), [
 
 	"Page",
 	"Resource",

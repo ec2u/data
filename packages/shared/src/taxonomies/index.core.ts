@@ -16,14 +16,15 @@
 
 import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
 import { base, EC2U } from "@ec2u/data-shared";
+import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
 export const taxonomies = immutable({
 
-	id: `${base}/taxonomies`,
+	id: resolve(base, "taxonomies"),
 
-	isDefinedBy: `${base}/datasets/taxonomies`,
+	isDefinedBy: resolve(base, "datasets/taxonomies"),
 	dataset: datasets.id,
 
 	label: "EC2U Taxonomies",

@@ -25,6 +25,7 @@ import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
 import type { Instance } from "@metreeca/blue/value";
+import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import type { URLLike } from "@metreeca/core";
 import type { Reference } from "@metreeca/qest/state";
@@ -33,9 +34,9 @@ import * as uuid from "uuid";
 
 export const events = immutable({
 
-	id: `${base}/events`,
+	id: resolve(base, "events"),
 
-	isDefinedBy: `${base}/datasets/events`,
+	isDefinedBy: resolve(base, "datasets/events"),
 	dataset: datasets.id,
 
 	label: "EC2U Events",

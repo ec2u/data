@@ -43,7 +43,7 @@ export function datasets(): Router {
 						}
 					}
 				}),
-				datasets => response.type("json").send(encodeResource(datasets, { base: `${base}/` })), // !!! get rid of /
+				datasets => response.type("json").send(encodeResource(datasets, { base })),
 				() => response.sendStatus(NotFound)
 			);
 

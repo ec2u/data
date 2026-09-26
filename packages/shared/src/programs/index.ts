@@ -19,14 +19,15 @@ import { Offering } from "@ec2u/data-shared/offerings/index.js";
 import { EC2U, base, ec2u } from "@ec2u/data-shared";
 import { SchemaEducationalOccupationalProgram } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { resource } from "@metreeca/blue/resource";
+import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
 export const programs = immutable({
 
-	id: `${base}/programs`,
+	id: resolve(base, "programs"),
 
-	isDefinedBy: `${base}/datasets/programs`,
+	isDefinedBy: resolve(base, "datasets/programs"),
 	dataset: datasets.id,
 
 	label: "EC2U Programs",

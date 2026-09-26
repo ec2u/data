@@ -25,6 +25,7 @@ import { SchemaCourse, SchemaCourseInstance } from "@ec2u/data-shared/vocabulari
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
+import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
@@ -33,9 +34,9 @@ const YearPattern = "^\\d{4}/\\d{4}$";
 
 export const courses = immutable({
 
-	id: `${base}/courses`,
+	id: resolve(base, "courses"),
 
-	isDefinedBy: `${base}/datasets/courses`,
+	isDefinedBy: resolve(base, "datasets/courses"),
 	dataset: datasets.id,
 
 	label: "EC2U Courses",

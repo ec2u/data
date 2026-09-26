@@ -24,14 +24,15 @@ import { OrgOrganizationalUnit } from "@ec2u/data-shared/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
+import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
 export const units = immutable({
 
-	id: `${base}/units`,
+	id: resolve(base, "units"),
 
-	isDefinedBy: `${base}/datasets/units`,
+	isDefinedBy: resolve(base, "datasets/units"),
 	dataset: datasets.id,
 
 	label: "EC2U Units",

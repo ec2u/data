@@ -24,14 +24,15 @@ import { OrgOrganization } from "@ec2u/data-shared/vocabularies/org.js";
 import { SchemaOrganization } from "@ec2u/data-shared/vocabularies/schema/organization.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
+import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
 export const organizations = immutable({
 
-	id: `${base}/organizations`,
+	id: resolve(base, "organizations"),
 
-	isDefinedBy: `${base}/datasets/organizations`,
+	isDefinedBy: resolve(base, "datasets/organizations"),
 	dataset: datasets.id,
 
 	label: "EC2U Organizations",

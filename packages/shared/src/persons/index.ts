@@ -22,14 +22,15 @@ import { FOAFPerson } from "@ec2u/data-shared/vocabularies/foaf.js";
 import { org } from "@ec2u/data-shared/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
+import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
 export const persons = immutable({
 
-	id: `${base}/persons`,
+	id: resolve(base, "persons"),
 
-	isDefinedBy: `${base}/datasets/persons`,
+	isDefinedBy: resolve(base, "datasets/persons"),
 	dataset: datasets.id,
 
 	label: "EC2U People",

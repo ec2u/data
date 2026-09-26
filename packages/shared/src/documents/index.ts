@@ -27,14 +27,15 @@ import { schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { date, iri, tag, text } from "@metreeca/blue/string";
+import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
 export const documents = immutable({
 
-	id: `${base}/documents`,
+	id: resolve(base, "documents"),
 
-	isDefinedBy: `${base}/datasets/documents`,
+	isDefinedBy: resolve(base, "datasets/documents"),
 	dataset: datasets.id,
 
 	label: "EC2U Documents",

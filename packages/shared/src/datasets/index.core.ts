@@ -15,6 +15,7 @@
  */
 
 import { EC2U, base } from "@ec2u/data-shared";
+import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
@@ -26,14 +27,12 @@ export const CCBYNCND40 = "https://creativecommons.org/licenses/by-nc-nd/4.0/";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const Catalogue = `${base}/`;
-
 export const datasets = immutable({
 
-	id: Catalogue,
+	id: base,
 
-	isDefinedBy: `${base}/datasets/`,
-	dataset: Catalogue, // the catalogue lists itself among the datasets it publishes
+	isDefinedBy: resolve(base, "datasets/"),
+	dataset: base, // the catalogue lists itself among the datasets it publishes
 
 
 	label: "EC2U Datasets",
