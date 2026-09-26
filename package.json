@@ -21,9 +21,7 @@
     "setup": "npm ci && sh package.sh --gcp --link",
     "build": "rm -rf packages/*/lib && tsc --build tsconfig.build.json && npm run build --workspaces --if-present",
     "check": "npx vitest run",
-    "start": "concurrently --names server,client npm:serve npm:watch",
-    "serve": "npm run serve --workspace=@ec2u/data-server",
-    "watch": "wait-on tcp:8080 && npm run watch --workspace=@ec2u/data-client"
+    "start": "concurrently 'npm run serve -w packages/server' 'wait-on tcp:8080 && npm run watch -w packages/client'"
   },
   "devDependencies": {
     "concurrently": "^10.0.5",

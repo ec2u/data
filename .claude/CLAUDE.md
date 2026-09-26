@@ -86,8 +86,6 @@ the Confluence **Knowledge Hub - Status** page in the same change before committ
 - **`npm run build`** - Compile sources and copy `*.sys.md` prompts alongside their modules
 - **`npm run check`** - Run the test suite
 - **`npm run start`** - Serve the endpoints and the web UI in parallel, in watch mode
-- **`npm run serve`** - Serve the endpoints in watch mode
-- **`npm run watch`** - Serve the web UI in watch mode, once the endpoints are listening
 
 ## Testing
 
