@@ -15,18 +15,16 @@
  */
 
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Fault } from "@metreeca/tile-cell/fault";
+import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute } from "@metreeca/tile-data/router";
 import { useCollection } from "@metreeca/tile-data/store";
-import { type ComponentChildren } from "preact";
 import { Page } from "../../tiles/page.js";
-import { immutable } from "@metreeca/core/values";
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const datasets = immutable({
 
@@ -60,11 +58,12 @@ export function _Datasets() {
 		head={datasets.label}
 		menu={<Button look={"subtle"} icon={<Icon.Help/>} title={"Help"}></Button>}
 
-	>{collection<ComponentChildren>({
+	>{collection({
 
-		blank: () => null, // !!! placeholder
 		ready: ({ state }) => items(state),
 		stale: ({ state }) => items(state),
+
+		blank: () => <Hint>{datasets.glyph}</Hint>,
 		error: ({ state }) => <Fault {...state}/>
 
 	})}</Page>;
