@@ -47,7 +47,7 @@ export function _Datasets() {
 	const route = useRoute();
 
 	const collection = useCollection({
-		entry: route,
+		entry: "/~error/", // !!! forced error state: restore `route`
 		shape: Dataset,
 		field: "resources",
 		model: datasets.model
@@ -56,23 +56,21 @@ export function _Datasets() {
 	return <Page
 
 		head={datasets.label}
-		menu={<Button look={"subtle"} icon={<Icon.Help/>} title={"Help"}></Button>}
+		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+
+		back={collection({ error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/> })}
 
 	>{collection({
 
-		ready: ({ state }) => items(state),
-		stale: ({ state }) => items(state),
-
 		blank: () => <Hint>{datasets.glyph}</Hint>,
-		error: ({ state }) => <Fault {...state}/>
+		error: ({ state }) => <Fault {...state}/>,
+
+		ready: ({ state }) => <ul>{state.map(({ id, label }) =>
+			<li key={id}><Link href={id}>{label}</Link></li>
+		)}</ul>
+
 
 	})}</Page>;
 
-
-	function items(state: readonly (string | { readonly id: string, readonly label: string })[]) {
-		return <ul>{state.filter(item => typeof item !== "string").map(({ id, label }) =>
-			<li key={id}><Link href={id}>{label}</Link></li>
-		)}</ul>;
-	}
 
 }

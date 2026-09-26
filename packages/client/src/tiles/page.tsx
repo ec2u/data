@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Button } from "@metreeca/tile-cell/button";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { Logo } from "@metreeca/tile-cell/logo";
@@ -31,6 +30,8 @@ export function Page({
 
 	head,
 	menu,
+	done,
+	back,
 
 	children
 
@@ -41,6 +42,9 @@ export function Page({
 
 	head?: ComponentChildren
 	menu?: ComponentChildren
+
+	done?: ComponentChildren
+	back?: ComponentChildren
 
 	children?: ComponentChildren
 
@@ -55,6 +59,9 @@ export function Page({
 
 		head={head}
 		menu={menu}
+
+		done={done}
+		back={back}
 
 		copy={<Strip grow place={"head"}>
 
