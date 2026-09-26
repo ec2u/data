@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-import { createCachingStore } from "@metreeca/keep/caching";
 import { createRESTStore } from "@metreeca/keep-rest";
 import "@metreeca/tile/index.css";
+import { createCachingStore } from "@metreeca/keep/caching";
 import { Router, Routes } from "@metreeca/tile-data/router";
 import { Store } from "@metreeca/tile-data/store";
 import { host } from "@metreeca/tile-hive";
 import { render } from "preact";
-import { _Datasets, datasets } from "./pages/datasets/index.js";
+import { datasets, DatasetsPage } from "./pages/datasets/index.js";
 import { Unknown, unknown } from "./pages/index.js";
 import { _Universities, universities } from "./pages/universities/index.js";
+import { Fetch } from "@metreeca/tile-data/fetch";
 
 
 render(<Hub/>, host("ec2u-hub"));
@@ -33,23 +34,27 @@ render(<Hub/>, host("ec2u-hub"));
 
 function Hub() {
 
-	return <Store factory={fetch =>
-		createCachingStore(createRESTStore({ trusted: true, fetch }))
-	}>
+	return <Fetch>
 
-		<Router>
+		<Store factory={fetch =>
+			createCachingStore(createRESTStore({ trusted: true, fetch }))
+		}>
 
-			<Routes>{{
+			<Router>
 
-				[datasets.route]: <_Datasets/>,
-				[universities.route]: <_Universities/>,
+				<Routes>{{
 
-				[unknown.route]: <Unknown/>
+					[datasets.route]: <DatasetsPage/>,
+					[universities.route]: <_Universities/>,
 
-			}}</Routes>
+					[unknown.route]: <Unknown/>
 
-		</Router>
+				}}</Routes>
 
-	</Store>;
+			</Router>
+
+		</Store>
+
+	</Fetch>;
 
 }

@@ -42,12 +42,12 @@ export const datasets = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function _Datasets() {
+export function DatasetsPage() {
 
 	const route = useRoute();
 
 	const collection = useCollection({
-		entry: "/~error/", // !!! forced error state: restore `route`
+		entry: route,
 		shape: Dataset,
 		field: "resources",
 		model: datasets.model
@@ -68,7 +68,6 @@ export function _Datasets() {
 		ready: ({ state }) => <ul>{state.map(({ id, label }) =>
 			<li key={id}><Link href={id}>{label}</Link></li>
 		)}</ul>
-
 
 	})}</Page>;
 
