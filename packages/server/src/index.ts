@@ -18,6 +18,7 @@ import { client } from "@metreeca/work/http/client.js";
 import { serve } from "@metreeca/work/http/server.js";
 import { Router } from "express";
 import { resolve } from "node:path";
+import { datasets } from "./datasets/index.js";
 import { events } from "./events/index.js";
 import { units } from "./units/index.js";
 import { execute } from "./index.core.js";
@@ -32,6 +33,7 @@ await execute(() => serve(Router()
 
 	.use(client(resolve(import.meta.dirname, "static")))
 
+	.use("/datasets", datasets())
 	.use("/universities", universities())
 	.use("/events", events())
 	.use("/units", units())
