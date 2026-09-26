@@ -58,7 +58,11 @@ export function DatasetsPage() {
 		head={datasets.label}
 		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
 
-		back={collection({ error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/> })}
+		back={collection({
+
+			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
+
+		})}
 
 	>{collection({
 
