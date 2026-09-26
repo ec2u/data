@@ -14,61 +14,16 @@
  * limitations under the License.
  */
 
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
-import { universities as dataset, University } from "@ec2u/data-shared/universities/index.js";
-import { base } from "@ec2u/data-shared";
-import { opt } from "@metreeca/core";
-import { resolve } from "@metreeca/core/resource";
-import { service } from "@metreeca/gear";
-import { encodeResource } from "@metreeca/qest/state";
-import { createStore } from "@metreeca/work/tide-store/index.js";
 import { Router } from "express";
+import { UniversitiesPort } from "./universities.js";
+import { UniversityPort } from "./university.js";
 
 
 export function universities(): Router {
 
-	const store = service(createStore);
+	return Router()
 
-	return Router({ strict: true })
-
-		.get("/", async (request, response) => {
-
-			opt(await store.lookup({
-					entry: dataset.id,
-					shape: Dataset,
-					model: {
-						resources: {
-							id: {},
-							label: {}
-						}
-					}
-				}),
-				universities => response.type("json").send(encodeResource(universities, { base })),
-				() => response.sendStatus(404)
-			);
-
-		})
-
-		.get("/:code", async (request, response) => {
-
-			opt(await store.lookup({
-					entry: resolve(dataset.id, request.params.code),
-					shape: University,
-					model: {
-						id: {},
-						label: {},
-						homepage: {},
-						depiction: {},
-						inception: {},
-						students: {},
-						city: { id: {}, label: {} },
-						country: { id: {}, label: {} }
-					}
-				}),
-				university => response.type("json").send(encodeResource(university, { base })),
-				() => response.sendStatus(404)
-			);
-
-		});
+		.use(UniversitiesPort())
+		.use(UniversityPort());
 
 }
