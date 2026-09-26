@@ -35,7 +35,13 @@ const Model = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const DatasetsPath = "/";
+export const datasets = {
+
+	route: "/",
+	label: "European Campus of City-Universities",
+	glyph: <Icon.Package/>
+
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +59,7 @@ export function _Datasets() {
 
 	return <Page
 
-		head={"European Campus of City-Universities"}
+		head={datasets.label}
 		menu={<Button look={"subtle"} icon={<Icon.Help/>} title={"Help"}></Button>}
 
 	>{collection<ComponentChildren>({

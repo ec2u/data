@@ -21,8 +21,8 @@ import { Router, Routes } from "@metreeca/tile-data/router";
 import { Store } from "@metreeca/tile-data/store";
 import { host } from "@metreeca/tile-hive";
 import { render } from "preact";
-import { _Datasets, DatasetsPath } from "./pages/datasets/index.js";
-import { Unknown, UnknownPath } from "./pages/index.js";
+import { _Datasets, datasets } from "./pages/datasets/index.js";
+import { Unknown, unknown } from "./pages/index.js";
 
 
 render(<Hub/>, host("ec2u-hub"));
@@ -32,15 +32,17 @@ render(<Hub/>, host("ec2u-hub"));
 
 function Hub() {
 
-	return <Store factory={fetch => createCachingStore(createRESTStore({ trusted: true, fetch }))}>
+	return <Store factory={fetch =>
+		createCachingStore(createRESTStore({ trusted: true, fetch }))
+	}>
 
 		<Router>
 
 			<Routes>{{
 
-				[DatasetsPath]: <_Datasets/>,
+				[datasets.route]: <_Datasets/>,
 
-				[UnknownPath]: <Unknown/>
+				[unknown.route]: <Unknown/>
 
 			}}</Routes>
 

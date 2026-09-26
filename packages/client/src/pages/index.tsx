@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { NotFound } from "@metreeca/http";
 import { Button } from "@metreeca/tile-cell/button";
 import { Fault } from "@metreeca/tile-cell/fault";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { useRouter } from "@metreeca/tile-data/router";
 import { Page } from "../tiles/page.js";
-import { DatasetsPath } from "./datasets/index.js";
+import { datasets } from "./datasets/index.js";
 
 
-export const UnknownPath = "/*";
+export const unknown = {
+
+	route: "*",
+	label: "404 | Not Found",
+	glyph: <Icon.NotFound/>
+
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,13 +40,13 @@ export function Unknown() {
 
 
 	function dismiss() {
-		return router({ route: DatasetsPath, replace: true });
+		return router({ route: datasets.route, replace: true });
 	}
 
 
 	return <Page
 
-		head={"404 | Not Found"}
+		head={unknown.label}
 		menu={<Button icon={<Icon.Close/>} title={"Dismiss"} onClick={dismiss}/>}
 
 	>
