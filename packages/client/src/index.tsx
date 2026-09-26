@@ -23,6 +23,7 @@ import { host } from "@metreeca/tile-hive";
 import { render } from "preact";
 import { _Datasets, datasets } from "./pages/datasets/index.js";
 import { Unknown, unknown } from "./pages/index.js";
+import { _Universities, universities } from "./pages/universities/index.js";
 
 
 render(<Hub/>, host("ec2u-hub"));
@@ -41,6 +42,7 @@ function Hub() {
 			<Routes>{{
 
 				[datasets.route]: <_Datasets/>,
+				[universities.route]: <_Universities/>,
 
 				[unknown.route]: <Unknown/>
 
