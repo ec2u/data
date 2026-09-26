@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { createCachingStore } from "@metreeca/keep/caching";
 import { createRESTStore } from "@metreeca/keep-rest";
 import "@metreeca/tile/index.css";
 import { Router, Routes } from "@metreeca/tile-data/router";
@@ -31,7 +32,7 @@ render(<Hub/>, host("ec2u-hub"));
 
 function Hub() {
 
-	return <Store factory={fetch => createRESTStore(fetch, { trusted: true })}>
+	return <Store factory={fetch => createCachingStore(createRESTStore({ trusted: true, fetch }))}>
 
 		<Router>
 
