@@ -21,15 +21,16 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { useRouter } from "@metreeca/tile-data/router";
 import { Page } from "../tiles/page.js";
 import { datasets } from "./datasets/index.js";
+import { immutable } from "@metreeca/core/values";
 
 
-export const unknown = {
+export const unknown = immutable({
 
 	route: "*",
 	label: "404 | Not Found",
 	glyph: <Icon.NotFound/>
 
-};
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

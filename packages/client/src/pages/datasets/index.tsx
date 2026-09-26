@@ -23,25 +23,23 @@ import { useRoute } from "@metreeca/tile-data/router";
 import { useCollection } from "@metreeca/tile-data/store";
 import { type ComponentChildren } from "preact";
 import { Page } from "../../tiles/page.js";
-
-
-const Model = {
-
-	id: {},
-	label: {}
-
-};
+import { immutable } from "@metreeca/core/values";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const datasets = {
+export const datasets = immutable({
 
 	route: "/",
 	label: "European Campus of City-Universities",
-	glyph: <Icon.Package/>
+	glyph: <Icon.Package/>,
 
-};
+	model: {
+		id: {},
+		label: {}
+	}
+
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +52,7 @@ export function _Datasets() {
 		entry: route,
 		shape: Dataset,
 		field: "resources",
-		model: Model
+		model: datasets.model
 	});
 
 	return <Page
