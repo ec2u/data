@@ -24,6 +24,7 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../tiles/page.js";
+import { universities } from "./universities.js";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +59,9 @@ export function UniversityPage() {
 	});
 
 	const title = resource({
+
+		blank: universities.label, // !!! factor
+		error: universities.label, // !!! factor
 
 		ready: ({ state }) => state.label
 
