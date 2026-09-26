@@ -33,7 +33,7 @@ await execute(() => serve(Router()
 
 	.use(client(resolve(import.meta.dirname, "static")))
 
-	.use("/datasets", datasets())
+	.use("/", datasets())
 	.use("/universities", universities())
 	.use("/events", events())
 	.use("/units", units())

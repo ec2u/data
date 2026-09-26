@@ -16,7 +16,11 @@
 
 import { datasets as dataset } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { base } from "@ec2u/data-shared";
+import { opt } from "@metreeca/core";
 import { service } from "@metreeca/gear";
+import { NotFound } from "@metreeca/http";
+import { encodeResource } from "@metreeca/qest/state";
 import { createStore } from "@metreeca/work/tide-store/index.js";
 import { Router } from "express";
 
@@ -29,16 +33,19 @@ export function datasets(): Router {
 
 		.get("/", async (request, response) => {
 
-			response.json(await store.lookup({
-				entry: dataset.id,
-				shape: Dataset,
-				model: {
-					resources: {
-						id: {},
-						label: {}
+			opt(await store.lookup({
+					entry: dataset.id,
+					shape: Dataset,
+					model: {
+						resources: {
+							id: {},
+							label: {}
+						}
 					}
-				}
-			}));
+				}),
+				datasets => response.type("json").send(encodeResource(datasets, { base: `${base}/` })), // !!! get rid of /
+				() => response.sendStatus(NotFound)
+			);
 
 		});
 

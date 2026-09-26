@@ -16,8 +16,10 @@
 
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { universities as dataset, University } from "@ec2u/data-shared/universities/index.js";
+import { base } from "@ec2u/data-shared";
 import { opt } from "@metreeca/core";
 import { service } from "@metreeca/gear";
+import { encodeResource } from "@metreeca/qest/state";
 import { createStore } from "@metreeca/work/tide-store/index.js";
 import { Router } from "express";
 
@@ -30,16 +32,19 @@ export function universities(): Router {
 
 		.get("/", async (request, response) => {
 
-			response.json(await store.lookup({
-				entry: dataset.id,
-				shape: Dataset,
-				model: {
-					resources: {
-						id: {},
-						label: {}
+			opt(await store.lookup({
+					entry: dataset.id,
+					shape: Dataset,
+					model: {
+						resources: {
+							id: {},
+							label: {}
+						}
 					}
-				}
-			}));
+				}),
+				universities => response.type("json").send(encodeResource(universities, { base: `${base}/` })),
+				() => response.sendStatus(404)
+			);
 
 		})
 
@@ -59,7 +64,7 @@ export function universities(): Router {
 						country: { id: {}, label: {} }
 					}
 				}),
-				university => response.json(university),
+				university => response.type("json").send(encodeResource(university, { base: `${base}/` })),
 				() => response.sendStatus(404)
 			);
 
