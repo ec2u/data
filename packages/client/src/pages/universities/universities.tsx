@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-import { University } from "@ec2u/data-shared/universities/index.js";
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Fault } from "@metreeca/tile-cell/fault";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
-import { useRoute } from "@metreeca/tile-data/router";
-import { useResource } from "@metreeca/tile-data/store";
+import { Link } from "@metreeca/tile-cell/link";
+import { useRoute, useRouter } from "@metreeca/tile-data/router";
+import { useCollection } from "@metreeca/tile-data/store";
+import { useEffect } from "preact/hooks";
 import { Page } from "../../tiles/page.js";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const university = immutable({
+export const universities = immutable({
 
-	route: "/universities/:university",
-	label: "University",
+	route: "/universities/",
+	label: "Universities",
 	glyph: <Icon.Landmark/>,
 
 	model: {
 		id: {},
-		label: {},
-		inception: {},
-		students: {}
+		label: {}
 	}
 
 });
@@ -45,46 +45,40 @@ export const university = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function UniversityPage() {
+export function UniversitiesPage() {
 
 	const route = useRoute();
+	const router = useRouter();
 
-	const resource = useResource({
+	const collection = useCollection({
 		entry: route,
-		shape: University,
-		model: university.model
+		shape: Dataset,
+		field: "resources",
+		model: universities.model
 	});
+
+	useEffect(() => router({ title: universities.label }), []);
+
 
 	return <Page
 
-		head={resource({
-
-			ready: ({ state }) => state.label
-
-		}, university.label)}
-
+		head={universities.label}
 		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
 
-		back={resource({
+		back={collection({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
 		})}
 
-	>{resource({
+	>{collection({
 
-		blank: () => <Hint>{university.glyph}</Hint>,
+		blank: () => <Hint>{universities.glyph}</Hint>,
 		error: ({ state }) => <Fault {...state}/>,
 
-		ready: ({ state: { inception, students } }) => <dl>
-
-			<dt>Inception</dt>
-			<dd>{inception}</dd>
-
-			<dt>Students</dt>
-			<dd>{students}</dd>
-
-		</dl>
+		ready: ({ state }) => <ul>{state.map(({ id, label }) =>
+			<li key={id}><Link href={id}>{label}</Link></li>
+		)}</ul>
 
 	})}</Page>;
 

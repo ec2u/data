@@ -23,8 +23,7 @@ import { host } from "@metreeca/tile-hive";
 import { render } from "preact";
 import { datasets, DatasetsPage } from "./pages/datasets/index.js";
 import { Unknown, unknown } from "./pages/index.js";
-import { UniversitiesPage, universities } from "./pages/universities/index.js";
-import { university, UniversityPage } from "./pages/universities/entry.js";
+import { Universities, universities } from "./pages/universities/index.js";
 import { Fetch } from "@metreeca/tile-data/fetch";
 
 
@@ -46,9 +45,7 @@ function Hub() {
 				<Routes>{{
 
 					[datasets.route]: <DatasetsPage/>,
-
-					[university.route]: <UniversityPage/>,
-					[universities.route]: <UniversitiesPage/>,
+					[universities.route]: <Universities/>,
 
 					[unknown.route]: <Unknown/>
 

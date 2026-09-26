@@ -14,67 +14,22 @@
  * limitations under the License.
  */
 
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
-import { immutable } from "@metreeca/core/values";
-import { Button } from "@metreeca/tile-cell/button";
-import { Fault } from "@metreeca/tile-cell/fault";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { useRoute } from "@metreeca/tile-data/router";
-import { useCollection } from "@metreeca/tile-data/store";
-import { Page } from "../../tiles/page.js";
+import { Routes } from "@metreeca/tile-data/router";
+import { UniversitiesPage } from "./universities.js";
+import { UniversityPage } from "./university.js";
+
+export { universities } from "./universities.js";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const universities = immutable({
+export function Universities() {
 
-	route: "/universities/",
-	label: "Universities",
-	glyph: <Icon.Landmark/>,
+	return <Routes>{{
 
-	model: {
-		id: {},
-		label: {}
-	}
+		"/": <UniversitiesPage/>,
+		"/:name": <UniversityPage/>
 
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function UniversitiesPage() {
-
-	const route = useRoute();
-
-	const collection = useCollection({
-		entry: route,
-		shape: Dataset,
-		field: "resources",
-		model: universities.model
-	});
-
-	return <Page
-
-		head={universities.label}
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
-
-		back={collection({
-
-			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
-
-		})}
-
-	>{collection({
-
-		blank: () => <Hint>{universities.glyph}</Hint>,
-		error: ({ state }) => <Fault {...state}/>,
-
-		ready: ({ state }) => <ul>{state.map(({ id, label }) =>
-			<li key={id}><Link href={id}>{label}</Link></li>
-		)}</ul>
-
-	})}</Page>;
+	}}</Routes>;
 
 }

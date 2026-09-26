@@ -21,8 +21,9 @@ import { Fault } from "@metreeca/tile-cell/fault";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
-import { useRoute } from "@metreeca/tile-data/router";
+import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection } from "@metreeca/tile-data/store";
+import { useEffect } from "preact/hooks";
 import { Page } from "../../tiles/page.js";
 
 
@@ -45,6 +46,7 @@ export const datasets = immutable({
 export function DatasetsPage() {
 
 	const route = useRoute();
+	const router = useRouter();
 
 	const collection = useCollection({
 		entry: route,
@@ -52,6 +54,9 @@ export function DatasetsPage() {
 		field: "resources",
 		model: datasets.model
 	});
+
+	useEffect(() => router({ title: "" }), []);
+
 
 	return <Page
 
