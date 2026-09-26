@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { immutable } from "@metreeca/core/values";
-import { Icon } from "@metreeca/tile-cell/icon";
+import { Button } from "@metreeca/tile-cell/button";
+import { Fault } from "@metreeca/tile-cell/fault";
 import { Hint } from "@metreeca/tile-cell/hint";
+import { Icon } from "@metreeca/tile-cell/icon";
+import { Link } from "@metreeca/tile-cell/link";
+import { useRoute } from "@metreeca/tile-data/router";
+import { useCollection } from "@metreeca/tile-data/store";
 import { Page } from "../../tiles/page.js";
 
 
@@ -26,23 +32,49 @@ export const universities = immutable({
 
 	route: "/universities/",
 	label: "Universities",
-	glyph: <Icon.Landmark/>
+	glyph: <Icon.Landmark/>,
+
+	model: {
+		id: {},
+		label: {}
+	}
 
 });
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function _Universities() {
+export function UniversitiesPage() {
+
+	const route = useRoute();
+
+	const collection = useCollection({
+		entry: route,
+		shape: Dataset,
+		field: "resources",
+		model: universities.model
+	});
 
 	return <Page
 
 		head={universities.label}
+		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
 
-	>
+		back={collection({
 
-		<Hint>{universities.glyph}</Hint>
+			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-	</Page>;
+		})}
+
+	>{collection({
+
+		blank: () => <Hint>{universities.glyph}</Hint>,
+		error: ({ state }) => <Fault {...state}/>,
+
+		ready: ({ state }) => <ul>{state.map(({ id, label }) =>
+			<li key={id}><Link href={id}>{label}</Link></li>
+		)}</ul>
+
+	})}</Page>;
 
 }

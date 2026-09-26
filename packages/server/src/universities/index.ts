@@ -18,6 +18,7 @@ import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { universities as dataset, University } from "@ec2u/data-shared/universities/index.js";
 import { base } from "@ec2u/data-shared";
 import { opt } from "@metreeca/core";
+import { resolve } from "@metreeca/core/resource";
 import { service } from "@metreeca/gear";
 import { encodeResource } from "@metreeca/qest/state";
 import { createStore } from "@metreeca/work/tide-store/index.js";
@@ -51,7 +52,7 @@ export function universities(): Router {
 		.get("/:code", async (request, response) => {
 
 			opt(await store.lookup({
-					entry: `${dataset.id}/${request.params.code}`,
+					entry: resolve(dataset.id, request.params.code),
 					shape: University,
 					model: {
 						id: {},
