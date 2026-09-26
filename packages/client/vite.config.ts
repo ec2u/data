@@ -37,7 +37,7 @@ export default defineConfig({ // https://vite.dev/config/
 
 	server: {
 		proxy: {
-			"^(/[-a-zA-Z0-9]+)+/?(\\?.*)?$": { // data routes, with optional query
+			"^(/[-a-zA-Z0-9]+)*/?(\\?.*)?$": { // data routes, with optional query
 				target: "http://localhost:8080/",
 				xfwd: true,
 				bypass: request => request.headers.accept?.includes("text/html")

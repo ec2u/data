@@ -14,24 +14,62 @@
  * limitations under the License.
  */
 
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Button } from "@metreeca/tile-cell/button";
-import { Link } from "@metreeca/tile-cell/link";
-import { Page } from "../../tiles/page.js";
+import { Fault } from "@metreeca/tile-cell/fault";
 import { Icon } from "@metreeca/tile-cell/icon";
+import { Link } from "@metreeca/tile-cell/link";
+import { useRoute } from "@metreeca/tile-data/router";
+import { useCollection } from "@metreeca/tile-data/store";
+import { type ComponentChildren } from "preact";
+import { Page } from "../../tiles/page.js";
 
+
+const Model = {
+
+	id: {},
+	label: {}
+
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const DatasetsPath = "/";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function Datasets() {
+export function _Datasets() {
+
+	const route = useRoute();
+
+	const collection = useCollection({
+		entry: route,
+		shape: Dataset,
+		field: "resources",
+		model: Model
+	});
 
 	return <Page
 
 		head={"European Campus of City-Universities"}
 		menu={<Button look={"subtle"} icon={<Icon.Help/>} title={"Help"}></Button>}
 
-	/>;
+	>{collection<() => ComponentChildren>({ // thunks, as the relay freezes what it returns and preact mutates vnodes
+
+		blank: () => () => null, // !!! placeholder
+		ready: ({ state }) => () => items(state), // !!! ;(preact breaks on immutable returns) no thunks
+		stale: ({ state }) => () => items(state),
+		error: ({ state }) => () => <Fault {...state}/>
+
+	})()}</Page>;
+
+
+	function items(state: readonly (string | { readonly id: string, readonly label: string })[]) {
+		return <ul>{state.filter(item => typeof item !== "string").map(({ id, label }) =>
+			<li key={id}><Link href={id}>{label}</Link></li>
+		)}</ul>;
+	}
 
 }

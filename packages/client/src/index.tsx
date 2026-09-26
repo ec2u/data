@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+import { createRESTStore } from "@metreeca/keep-rest";
 import "@metreeca/tile/index.css";
 import { Router, Routes } from "@metreeca/tile-data/router";
+import { Store } from "@metreeca/tile-data/store";
 import { host } from "@metreeca/tile-hive";
+import * as trace_events from "node:trace_events";
 import { render } from "preact";
-import { Datasets, DatasetsPath } from "./pages/datasets/index.js";
+import { _Datasets, DatasetsPath } from "./pages/datasets/index.js";
 import { Unknown, UnknownPath } from "./pages/index.js";
 
 
@@ -29,16 +32,20 @@ render(<Hub/>, host("ec2u-hub"));
 
 function Hub() {
 
-	return <Router>
+	return <Store factory={fetch => createRESTStore(fetch, { trusted: true })}>
 
-		<Routes>{{
+		<Router>
 
-			[DatasetsPath]: <Datasets/>,
+			<Routes>{{
 
-			[UnknownPath]: <Unknown/>
+				[DatasetsPath]: <_Datasets/>,
 
-		}}</Routes>
+				[UnknownPath]: <Unknown/>
 
-	</Router>;
+			}}</Routes>
+
+		</Router>
+
+	</Store>;
 
 }
