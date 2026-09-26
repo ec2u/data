@@ -56,14 +56,14 @@ export function _Datasets() {
 		head={"European Campus of City-Universities"}
 		menu={<Button look={"subtle"} icon={<Icon.Help/>} title={"Help"}></Button>}
 
-	>{collection<() => ComponentChildren>({ // thunks, as the relay freezes what it returns and preact mutates vnodes
+	>{collection<ComponentChildren>({
 
-		blank: () => () => null, // !!! placeholder
-		ready: ({ state }) => () => items(state), // !!! ;(preact breaks on immutable returns) no thunks
-		stale: ({ state }) => () => items(state),
-		error: ({ state }) => () => <Fault {...state}/>
+		blank: () => null, // !!! placeholder
+		ready: ({ state }) => items(state),
+		stale: ({ state }) => items(state),
+		error: ({ state }) => <Fault {...state}/>
 
-	})()}</Page>;
+	})}</Page>;
 
 
 	function items(state: readonly (string | { readonly id: string, readonly label: string })[]) {
