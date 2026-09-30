@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { base } from "@ec2u/data-shared";
 import { datasets as dataset } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
-import { base } from "@ec2u/data-shared";
 import { opt } from "@metreeca/core";
 import { service } from "@metreeca/gear";
 import { NotFound } from "@metreeca/http";
@@ -28,7 +28,6 @@ import { Router } from "express";
 export function datasets(): Router {
 
 	const store = service(createStore);
-
 	return Router({ strict: true })
 
 		.get("/", async (request, response) => {

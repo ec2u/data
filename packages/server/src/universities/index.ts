@@ -23,7 +23,7 @@ export function universities(): Router {
 
 	return Router()
 
-		.use(UniversitiesPort())
-		.use(UniversityPort());
+		.use("/", UniversitiesPort())
+		.use("/:code", UniversityPort());
 
 }

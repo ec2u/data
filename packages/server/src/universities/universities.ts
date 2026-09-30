@@ -27,23 +27,24 @@ import { Router } from "express";
 export function UniversitiesPort(): Router {
 
 	const store = service(createStore);
+	return Router({ strict: true })
 
-	return Router({ strict: true }).get("/", async (request, response) => {
+		.get("/", async (request, response) => {
 
-		opt(await store.lookup({
-				entry: dataset.id,
-				shape: Dataset,
-				model: {
-					resources: {
-						id: {},
-						label: {}
+			opt(await store.lookup({
+					entry: dataset.id,
+					shape: Dataset,
+					model: {
+						resources: {
+							id: {},
+							label: {}
+						}
 					}
-				}
-			}),
-			universities => response.type("json").send(encodeResource(universities, { base })),
-			() => response.sendStatus(404)
-		);
+				}),
+				universities => response.type("json").send(encodeResource(universities, { base })),
+				() => response.sendStatus(404)
+			);
 
-	});
+		});
 
 }
