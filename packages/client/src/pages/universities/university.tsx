@@ -27,8 +27,6 @@ import { Page } from "../../tiles/page.js";
 import { universities } from "./universities.js";
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export const university = immutable({
 
 	route: "/:name",

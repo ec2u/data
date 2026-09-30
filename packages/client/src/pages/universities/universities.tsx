@@ -27,8 +27,6 @@ import { useEffect } from "preact/hooks";
 import { Page } from "../../tiles/page.js";
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export const universities = immutable({
 
 	route: "/universities/",
@@ -36,8 +34,12 @@ export const universities = immutable({
 	glyph: <Icon.Landmark/>,
 
 	model: {
-		id: {},
-		label: {}
+
+		resources: {
+			id: {},
+			label: {}
+		}
+
 	}
 
 });
@@ -53,7 +55,6 @@ export function UniversitiesPage() {
 	const collection = useCollection({
 		entry: route,
 		shape: Dataset,
-		field: "resources",
 		model: universities.model
 	});
 

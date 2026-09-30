@@ -34,8 +34,10 @@ export const datasets = immutable({
 	glyph: <Icon.Package/>,
 
 	model: {
-		id: {},
-		label: {}
+		resources: {
+			id: {},
+			label: {}
+		}
 	}
 
 });
@@ -51,7 +53,6 @@ export function DatasetsPage() {
 	const collection = useCollection({
 		entry: route,
 		shape: Dataset,
-		field: "resources",
 		model: datasets.model
 	});
 
