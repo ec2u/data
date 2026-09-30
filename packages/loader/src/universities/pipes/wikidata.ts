@@ -30,9 +30,9 @@ import { createHTTPRepository } from "@metreeca/wire-sparql-http";
 import { reference } from "@metreeca/wire-sparql/builder";
 import { file } from "@metreeca/work/gear/files.js";
 import { WGSPoint } from "@metreeca/work/open/wgs.js";
-import { select } from "@metreeca/work/tide-repository/select.js";
-import { delta, type Delta, persist } from "@metreeca/work/tide-store/persist.js";
-import { validate } from "@metreeca/work/tide-store/validate.js";
+import { select } from "@metreeca/work/pipe-repository/select.js";
+import { delta, type Delta, persist } from "@metreeca/work/pipe-store/persist.js";
+import { validate } from "@metreeca/work/pipe-store/validate.js";
 import { execute } from "../../index.core.js";
 
 

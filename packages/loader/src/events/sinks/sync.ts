@@ -15,11 +15,11 @@
  */
 
 import { when } from "@metreeca/work/flow/when.js";
-import { digest } from "@metreeca/work/tide-store/_digest.js";
-import { createStore } from "@metreeca/work/tide-store/index.js";
-import { delta, type Delta, persist, type Tally } from "@metreeca/work/tide-store/persist.js";
-import { retire } from "@metreeca/work/tide-store/retire.js";
-import { validate } from "@metreeca/work/tide-store/validate.js";
+import { digest } from "@metreeca/work/pipe-store/_digest.js";
+import { createStore } from "@metreeca/work/pipe-store/index.js";
+import { delta, type Delta, persist, type Tally } from "@metreeca/work/pipe-store/persist.js";
+import { retire } from "@metreeca/work/pipe-store/retire.js";
+import { validate } from "@metreeca/work/pipe-store/validate.js";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Event, events, getEventId, isStaleEvent, Publisher } from "@ec2u/data-shared/events/index.js";
 import { Page } from "../../pages/pages.js";

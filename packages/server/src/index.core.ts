@@ -21,7 +21,7 @@ import { basic } from "@metreeca/http/basic";
 import { createSPARQLStore } from "@metreeca/keep-sparql";
 import { createRDF4JRepository } from "@metreeca/wire-sparql-rdf4j";
 import { createGCPVault } from "@metreeca/work/gear-gcp/secrets.js";
-import { createStore } from "@metreeca/work/tide-store/index.js";
+import { createStore } from "@metreeca/work/pipe-store/index.js";
 
 
 export const execute = executor(

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { validate } from "@metreeca/work/tide-store/validate.js";
+import { validate } from "@metreeca/work/pipe-store/validate.js";
 import { Event, getEventId, events } from "@ec2u/data-shared/events/index.js";
 import type { Classified } from "./classify.js";
 import { getUniversity } from "@ec2u/data-shared/universities/index.core.js";

@@ -19,8 +19,8 @@ import { universities } from "@ec2u/data-shared/universities/index.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { map } from "@metreeca/flow/tasks";
-import { delta, persist } from "@metreeca/work/tide-store/persist.js";
-import { validate } from "@metreeca/work/tide-store/validate.js";
+import { delta, persist } from "@metreeca/work/pipe-store/persist.js";
+import { validate } from "@metreeca/work/pipe-store/validate.js";
 import { execute } from "../../index.core.js";
 
 

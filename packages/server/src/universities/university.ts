@@ -20,7 +20,7 @@ import { opt } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { service } from "@metreeca/gear";
 import { encodeResource } from "@metreeca/qest/state";
-import { createStore } from "@metreeca/work/tide-store/index.js";
+import { createStore } from "@metreeca/work/pipe-store/index.js";
 import { Request, Router } from "express";
 
 

@@ -21,7 +21,7 @@ import { opt } from "@metreeca/core";
 import { service } from "@metreeca/gear";
 import { NotFound } from "@metreeca/http";
 import { encodeResource } from "@metreeca/qest/state";
-import { createStore } from "@metreeca/work/tide-store/index.js";
+import { createStore } from "@metreeca/work/pipe-store/index.js";
 import { Router } from "express";
 
 

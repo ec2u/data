@@ -15,7 +15,7 @@
  */
 
 import { memoize } from "@metreeca/work/core/memoize.js";
-import { createStore } from "@metreeca/work/tide-store/index.js";
+import { createStore } from "@metreeca/work/pipe-store/index.js";
 import { createGoogleAI, embedding } from "@metreeca/work/muse-google/index.js";
 import { cosine, decompress, type Distance, type Vector } from "@metreeca/work/muse/index.js";
 import { Taxonomy, type TopicEntry, type TopicReference } from "@ec2u/data-shared/taxonomies/index.js";

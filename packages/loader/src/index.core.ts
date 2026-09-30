@@ -27,7 +27,7 @@ import { minute } from "@metreeca/work/core/temporal.js";
 import { gcp } from "@metreeca/work/gear-gcp/index.js";
 import { createGCPVault } from "@metreeca/work/gear-gcp/secrets.js";
 import { createGoogleAI } from "@metreeca/work/muse-google/index.js";
-import { createStore } from "@metreeca/work/tide-store/index.js";
+import { createStore } from "@metreeca/work/pipe-store/index.js";
 
 
 export const execute = executor(
