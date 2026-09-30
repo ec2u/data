@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import type { Classified } from "./classify.js";
 import { convert } from "./convert.js";
+import type { Event } from "@ec2u/data-shared/events/index.js";
 import { universities } from "@ec2u/data-shared/universities/index.js";
-import type { Object } from "@metreeca/core";
+import type { Instance } from "@metreeca/blue/value";
 import { resolve } from "@metreeca/core/resource";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -30,10 +32,16 @@ const coimbra = { id: "https://example.org/coimbra", university: resolve(univers
 const pavia = { id: "https://example.org/pavia", university: resolve(universities.id, "pavia") }; // UTC+2 / UTC+1
 
 
-function reading(payload: Object): Object {
+type Reading = Instance<typeof Classified>;
+type Payload = Partial<Reading> & Pick<Reading, "startDate">;
+
+
+function reading(payload: Payload): Reading {
 	return {
 
 		event: true,
+		publishable: true,
+		digest: "test-digest",
 
 		url: "https://example.org/event",
 		title: "Test Event",
@@ -45,12 +53,12 @@ function reading(payload: Object): Object {
 	};
 }
 
-async function converted(payload: Object, publisher = coimbra, city?: string): Promise<Object> {
+async function converted(payload: Payload, publisher = coimbra, city?: string): Promise<Instance<typeof Event>> {
 	return (await pipe(
 		(items([reading(payload)]))
 		(convert(publisher, city))
 		(toArray())
-	))[0] as unknown as Object;
+	))[0];
 }
 
 

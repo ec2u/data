@@ -133,7 +133,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					(tee(
 						payloads => pipe( // every page states its digest, so the crawl won't offer it again
 							(items(payloads))
-							(map(({ url, digest }) =>
+							(map(({ url, digest }): Delta =>
 								delta(url, Page, immutable({ id: url, source: publisher.id, digest }))
 							))
 						),

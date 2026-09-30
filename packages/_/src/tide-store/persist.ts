@@ -22,7 +22,8 @@ import type { Sink } from "@metreeca/flow";
 import { reduce } from "@metreeca/flow/sinks";
 import { service } from "@metreeca/gear";
 import type { StoreClient } from "@metreeca/keep";
-import type { Reference, Resource } from "@metreeca/qest/state";
+import type { Draft } from "@metreeca/keep/_blue/value";
+import type { Reference } from "@metreeca/qest/state";
 import { log, report, time } from "@metreeca/tape";
 
 
@@ -37,12 +38,12 @@ const logger = log(import.meta.url);
  * A workflow settles on one of these for every resource it looks at, naming the state to store or, with `null`, the
  * removal. Every delta names the shape it is stated under, so one feed carries resources of as many kinds as a
  * workflow states and they all reach the store together. Whether it gathers resources or retires them the statement
- * is the same, so all workflows close on the same sink. `T` carries a workflow's own state type through to the store,
- * so a state is not widened on the way.
+ * is the same, so all workflows close on the same sink. `S` ties the state to the shape it is stated under, so a state
+ * is checked against its own shape rather than widened on the way.
  *
- * @typeParam T The type of the states to be stored
+ * @typeParam S The shape the resource is stated under
  */
-export type Delta<T extends Resource = Resource> = readonly [
+export type Delta<S extends Lazy<ResourceShape> = Lazy<ResourceShape>> = readonly [
 
 	/**
 	 * The resource concerned.
@@ -52,12 +53,12 @@ export type Delta<T extends Resource = Resource> = readonly [
 	/**
 	 * The shape the resource is stated under.
 	 */
-	shape: Lazy<ResourceShape>,
+	shape: S,
 
 	/**
 	 * The state the resource is to be stored with, or `null` for a resource to be removed.
 	 */
-	state: null | T
+	state: null | Draft<S>
 
 ]
 
@@ -205,7 +206,7 @@ export function persist({
  * A `null` state states the removal of the resource, so a workflow that gathers resources and one that retires them
  * both close on the same call.
  *
- * @typeParam T The type of the state to be stored
+ * @typeParam S The shape the resource is stated under
  *
  * @param entry The resource concerned
  * @param shape The shape the resource is stated under
@@ -213,7 +214,7 @@ export function persist({
  *
  * @returns An immutable {@link Delta} pairing `entry` and `shape` with `state`
  */
-export function delta<T extends Resource>(entry: Reference, shape: Lazy<ResourceShape>, state: null | T): Delta<T> {
+export function delta<S extends Lazy<ResourceShape>>(entry: Reference, shape: S, state: null | Draft<S>): Delta<S> {
 
 	return Object.freeze([entry, shape, state]);
 
