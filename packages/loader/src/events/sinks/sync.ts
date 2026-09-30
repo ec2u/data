@@ -100,18 +100,16 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		return urls => {
 
 			const digests = force ? new Set<string>() : pipe(
-				(items(store.select({
+				(flat(trim(items(store.select({
 
 					entry: base, // a virtual collection is gathered by class, so the entry is a placeholder
 					shape: Pages,
 
 					model: { pages: { digest: {}, "?source": [publisher.id] } }
 
-				})))
-				(trim())
-				(flat())
-					(map(page => page.digest))
-					(toSet())
+				})))))
+				(map(page => page.digest))
+				(toSet())
 			);
 
 
@@ -172,7 +170,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		// so the crawl never offers it again and the sweep reads the dataset rather than the source
 
 		return pipe(
-			(items(store.select({
+			(flat(trim(items(store.select({
 
 				entry: events.id,
 				shape: Events,
@@ -186,13 +184,11 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					}
 				}
 
-			})))
-			(trim())
-			(flat())
-				(filter(isStaleEvent))
-				(map(event =>
-					delta(event.id, Event, null)
-				))
+			})))))
+			(filter(isStaleEvent))
+			(map(event =>
+				delta(event.id, Event, null)
+			))
 		);
 
 	}
@@ -202,17 +198,15 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		return urls => {
 
 			const existing = pipe(
-				(items(store.select({
+				(flat(trim(items(store.select({
 
 					entry: base, // a virtual collection is gathered by class, so the entry is a placeholder
 					shape: Pages,
 
 					model: { pages: { id: {}, "?source": [publisher.id] } }
 
-				})))
-				(trim())
-				(flat())
-					(map(page => page.id))
+				})))))
+				(map(page => page.id))
 			);
 
 			return pipe(

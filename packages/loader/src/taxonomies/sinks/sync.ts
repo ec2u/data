@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import { digest } from "@metreeca/work/tide-store/_digest.js";
-import { createStore } from "@metreeca/work/tide-store/index.js";
-import { delta, type Delta, persist, type Tally } from "@metreeca/work/tide-store/persist.js";
-import { retire } from "@metreeca/work/tide-store/retire.js";
-import { validate } from "@metreeca/work/tide-store/validate.js";
 import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
-import { convert, getPath } from "../tasks/convert.js";
 import type { Instance } from "@metreeca/blue/value";
 import type { URLLike } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
@@ -31,6 +25,12 @@ import { filter, flat, fork, map, tee, trim } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { csv, type Record } from "@metreeca/gear-csv";
 import { fetch } from "@metreeca/gear-url";
+import { digest } from "@metreeca/work/tide-store/_digest.js";
+import { createStore } from "@metreeca/work/tide-store/index.js";
+import { delta, type Delta, persist, type Tally } from "@metreeca/work/tide-store/persist.js";
+import { retire } from "@metreeca/work/tide-store/retire.js";
+import { validate } from "@metreeca/work/tide-store/validate.js";
+import { convert, getPath } from "../tasks/convert.js";
 
 
 const survival = 0.75; // the smallest fraction of the stored topics a document must account for // !!! as option
@@ -115,16 +115,14 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 		return records => {
 
 			const digests = force ? new Set<string>() : pipe(
-				(items(store.select({
+				(flat(trim(items(store.select({
 
 					entry: taxonomy.id,
 					shape: Taxonomy,
 
 					model: { resources: { digest: {} } }
 
-				})))
-				(trim())
-				(flat())
+				})))))
 				(map(topic => topic.digest))
 				(toSet())
 			);
@@ -145,18 +143,14 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 
 		return records => {
 
-			const existing = pipe(
-				(items(store.select({
+			const existing = flat(trim(items(store.select({
 
-					entry: taxonomy.id,
-					shape: Taxonomy,
+				entry: taxonomy.id,
+				shape: Taxonomy,
 
-					model: { resources: {} }
+				model: { resources: {} }
 
-				})))
-				(trim())
-				(flat())
-			);
+			}))));
 
 			return pipe(
 				(items(records))
