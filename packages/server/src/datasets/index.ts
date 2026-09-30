@@ -32,7 +32,7 @@ export function datasets(): Router {
 
 		.get("/", async (request, response) => {
 
-			opt(await store.lookup({
+			opt(await store.detail({
 					entry: dataset.id,
 					shape: Dataset,
 					model: {

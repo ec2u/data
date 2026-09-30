@@ -33,7 +33,7 @@ const taxonomies = memoize(async (id: Reference) => {
 
 	const store = service(createStore);
 
-	const topics = await store.lookup({ // !!! replace with select
+	const topics = await store.select({
 
 		entry: id,
 		shape: Taxonomy,
@@ -55,7 +55,7 @@ const taxonomies = memoize(async (id: Reference) => {
 
 	});
 
-	const stated = topics?.resources ?? [];
+	const stated = topics ?? [];
 
 	// linked topics are named alongside their labels, so that a consumer weighs a topic against the neighbourhood it
 	// stands in without looking every reference up

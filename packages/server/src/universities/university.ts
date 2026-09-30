@@ -32,7 +32,7 @@ export function UniversityPort(): Router {
 
 		.get("/", async (request: Request<{ code: string }>, response) => {
 
-			opt(await store.lookup({
+			opt(await store.detail({
 					entry: resolve(dataset.id, request.params.code),
 					shape: University,
 					model: {

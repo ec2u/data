@@ -27,7 +27,7 @@ import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, tee, trim } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { csv, type Record } from "@metreeca/gear-csv";
 import { fetch } from "@metreeca/gear-url";
@@ -115,7 +115,7 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 		return records => {
 
 			const digests = force ? new Set<string>() : pipe(
-				(items(store.lookup({ // !!! replace with select()
+				(items(store.select({
 
 					entry: taxonomy.id,
 					shape: Taxonomy,
@@ -123,7 +123,8 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 					model: { resources: { digest: {} } }
 
 				})))
-				(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
+				(trim())
+				(flat())
 				(map(topic => topic.digest))
 				(toSet())
 			);
@@ -144,8 +145,8 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 
 		return records => {
 
-			const existing = pipe( // !!! replace with select()
-				(items(store.lookup({
+			const existing = pipe(
+				(items(store.select({
 
 					entry: taxonomy.id,
 					shape: Taxonomy,
@@ -153,7 +154,8 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 					model: { resources: {} }
 
 				})))
-				(flat(map(stated => items(stated?.resources ?? [])))) // !!! remove
+				(trim())
+				(flat())
 			);
 
 			return pipe(

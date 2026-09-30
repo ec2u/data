@@ -36,7 +36,7 @@ import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, mix, tee } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, mix, tee, trim } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { fetch } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
@@ -57,12 +57,12 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 	// the city the university publishing the events is in, standing in as the locality of a venue a document names
 	// no city for; a lookup answering nothing leaves the address to what the document itself states
 
-	const city = store.lookup({ // !!! replace with select()
+	const city = store.detail({
 
 		entry: publisher.university,
 		shape: University,
 
-		model: { city: { label: "" } }
+		model: { city: { label: {} } }
 
 	})
 		.then(university => university?.city?.label)
@@ -100,7 +100,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		return urls => {
 
 			const digests = force ? new Set<string>() : pipe(
-				(items(store.lookup({ // !!! replace with select()
+				(items(store.select({
 
 					entry: base, // a virtual collection is gathered by class, so the entry is a placeholder
 					shape: Pages,
@@ -108,7 +108,8 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					model: { pages: { digest: {}, "?source": [publisher.id] } }
 
 				})))
-				(flat(map(stated => items(stated?.pages ?? [])))) // !!! remove
+				(trim())
+				(flat())
 					(map(page => page.digest))
 					(toSet())
 			);
@@ -171,7 +172,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		// so the crawl never offers it again and the sweep reads the dataset rather than the source
 
 		return pipe(
-			(items(store.lookup({ // !!! replace with select()
+			(items(store.select({
 
 				entry: events.id,
 				shape: Events,
@@ -186,7 +187,8 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 				}
 
 			})))
-			(flat(map(events => items(events?.resources ?? [])))) // !!! remove
+			(trim())
+			(flat())
 				(filter(isStaleEvent))
 				(map(event =>
 					delta(event.id, Event, null)
@@ -200,7 +202,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		return urls => {
 
 			const existing = pipe(
-				(items(store.lookup({ // !!! replace with select()
+				(items(store.select({
 
 					entry: base, // a virtual collection is gathered by class, so the entry is a placeholder
 					shape: Pages,
@@ -208,7 +210,8 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					model: { pages: { id: {}, "?source": [publisher.id] } }
 
 				})))
-				(flat(map(pages => items(pages?.pages ?? [])))) // !!! remove
+				(trim())
+				(flat())
 					(map(page => page.id))
 			);
 
