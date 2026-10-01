@@ -16,19 +16,18 @@
 
 import { Event, Events, events, getEventId, isStaleEvent, Publisher } from "@ec2u/data-shared/events/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
-import { opt, type URLLike } from "@metreeca/core";
+import { type URLLike } from "@metreeca/core";
 import type { Markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { toSet } from "@metreeca/flow/sinks";
+import { find, toSet } from "@metreeca/flow/sinks";
 import { filter, flat, fork, map, mix, tee } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
 import { fetch } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
 import { when } from "@metreeca/work/flow/when.js";
 import { digest } from "@metreeca/work/pipe-store/_digest.js";
-import { createStore } from "@metreeca/work/pipe-store/index.js";
+import { detail } from "@metreeca/work/pipe-store/detail.js";
 import { delta, type Delta, persist, type Tally } from "@metreeca/work/pipe-store/persist.js";
 import { retire } from "@metreeca/work/pipe-store/retire.js";
 import { select } from "@metreeca/work/pipe-store/select.js";
@@ -49,20 +48,17 @@ const survival = 0.75; // the smallest fraction of the stored events a single ru
 
 export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> {
 
-	const store = service(createStore);
+	const city = pipe(
+		(detail({
 
-	// the city of the publishing university, offered to the conversion as a fallback locality;
-	// a university or city the store doesn't hold offers none, while a failing lookup fails the run
+			entry: publisher.university,
+			shape: University,
 
-	const city = store.lookup({
+			model: { city: { label: {} } }
 
-		entry: publisher.university,
-		shape: University,
-
-		model: { city: { label: {} } }
-
-	}).then(university =>
-		opt(university, university => university.city?.label)
+		}))
+		(map(university => university.city.label))
+		(find())
 	);
 
 	return urls => pipe(
@@ -130,7 +126,12 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 						payloads => pipe( // every page states its digest, so the crawl won't offer it again
 							(items(payloads))
 							(map(({ url, digest }): Delta =>
-								delta(url, Page, immutable({ id: url, dataset: directory.id, source: publisher.id, digest }))
+								delta(url, Page, immutable({
+									id: url,
+									dataset: directory.id,
+									source: publisher.id,
+									digest
+								}))
 							))
 						),
 						payloads => pipe(
