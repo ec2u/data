@@ -48,19 +48,6 @@ const survival = 0.75; // the smallest fraction of the stored events a single ru
 
 export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> {
 
-	const city = pipe(
-		(detail({
-
-			entry: publisher.university,
-			shape: University,
-
-			model: { city: { label: {} } }
-
-		}))
-		(map(university => university.city.label))
-		(find())
-	);
-
 	return urls => pipe(
 		(items(urls))
 		(tee(
@@ -88,6 +75,19 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 	}
 
 	function insert(): Task<URLLike, Delta> {
+
+		const city = pipe(
+			(detail({
+
+				entry: publisher.university,
+				shape: University,
+
+				model: { city: { label: {} } }
+
+			}))
+			(map(university => university.city.label))
+			(find())
+		);
 
 		return urls => {
 
