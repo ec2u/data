@@ -20,9 +20,9 @@
     }
   },
   "dependencies": {
-    "@metreeca/blue": "^0.10.0",
-    "@metreeca/core": "^0.10.0",
-    "@metreeca/qest": "^0.10.0",
+    "@metreeca/blue": "^0.12.0",
+    "@metreeca/core": "^0.12.0",
+    "@metreeca/qest": "^0.12.0",
     "uuid": "^14.0.1"
   }
 }
