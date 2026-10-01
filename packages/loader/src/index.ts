@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { serve } from "@metreeca/work/http/server.js";
+import { serve } from "@metreeca/work/gate/server.js";
 import { Router } from "express";
 import { events } from "./events/index.js";
 import { taxonomies } from "./taxonomies/index.js";

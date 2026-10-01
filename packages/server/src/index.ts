@@ -15,7 +15,7 @@
  */
 
 import { client } from "@metreeca/work/http/client.js";
-import { serve } from "@metreeca/work/http/server.js";
+import { serve } from "@metreeca/work/gate/server.js";
 import { Router } from "express";
 import { resolve } from "node:path";
 import { datasets } from "./datasets/index.js";
