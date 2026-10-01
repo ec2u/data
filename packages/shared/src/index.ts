@@ -16,7 +16,7 @@
 
 import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { iri, markdown, text } from "@metreeca/blue/string";
-import type { Instance } from "@metreeca/blue/value";
+import type { State } from "@metreeca/blue/value";
 import { createNamespace, resolve } from "@metreeca/core/resource";
 import { wgs, WGSPoint } from "@metreeca/work/open/wgs.js";
 
@@ -84,8 +84,8 @@ export const CommentLength = 500;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type Entity=Instance<typeof Entity>
-export type Place=Instance<typeof Place>
+export type Entity=State<typeof Entity>
+export type Place=State<typeof Place>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

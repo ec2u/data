@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
+import { service } from "@metreeca/gear";
 import { memoize } from "@metreeca/work/core/memoize.js";
-import { createStore } from "@metreeca/work/pipe-store/index.js";
+import { select } from "@metreeca/work/pipe-store/select.js";
 import { createGoogleAI, embedding } from "@metreeca/work/muse-google/index.js";
 import { cosine, decompress, type Distance, type Vector } from "@metreeca/work/muse/index.js";
 import { Taxonomy, type TopicEntry, type TopicReference } from "@ec2u/data-shared/taxonomies/index.js";
 import { by } from "@metreeca/core/order";
 import type { Text } from "@metreeca/core/strings";
-import { service } from "@metreeca/gear";
+import { pipe } from "@metreeca/flow";
+import { toArray } from "@metreeca/flow/sinks";
 import type { Reference } from "@metreeca/qest/state";
 import { log, report, time } from "@metreeca/tape";
 
@@ -31,9 +33,8 @@ const logger = log(import.meta.url);
 
 const taxonomies = memoize(async (id: Reference) => {
 
-	const store = service(createStore);
-
-	const topics = await store.select({
+	const topics = await pipe(
+		(select({
 
 		entry: id,
 		shape: Taxonomy,
@@ -53,16 +54,16 @@ const taxonomies = memoize(async (id: Reference) => {
 
 		}
 
-	});
-
-	const stated = topics ?? [];
+		}))
+		(toArray())
+	);
 
 	// linked topics are named alongside their labels, so that a consumer weighs a topic against the neighbourhood it
 	// stands in without looking every reference up
 
-	const labels = new Map(stated.map(({ id, prefLabel }) => [id, prefLabel]));
+	const labels = new Map(topics.map(({ id, prefLabel }) => [id, prefLabel]));
 
-	return stated.map(({ altLabel, broader, narrower, related, embedding, ...topic }) => ({
+	return topics.map(({ altLabel, broader, narrower, related, embedding, ...topic }) => ({
 
 		...topic,
 

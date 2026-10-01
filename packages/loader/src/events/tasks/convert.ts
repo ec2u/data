@@ -21,7 +21,7 @@ import { getUniversity } from "@ec2u/data-shared/universities/index.core.js";
 import { LabelLength } from "@ec2u/data-shared";
 import { SchemaEventAttendanceModeEnumeration } from "@ec2u/data-shared/vocabularies/schema/event.js";
 import { SchemaLocation } from "@ec2u/data-shared/vocabularies/schema/location.js";
-import type { Instance } from "@metreeca/blue/value";
+import type { State } from "@metreeca/blue/value";
 import { opt, type Optional } from "@metreeca/core";
 import type { Awaitable } from "@metreeca/core/async";
 import { multiple, nonempty, optional } from "@metreeca/core/arrays";
@@ -37,7 +37,7 @@ export function convert(publisher: {
 	readonly id: Reference
 	readonly university: Reference
 
-}, city?: Awaitable<Optional<string>>): Task<Instance<typeof Classified>, Instance<typeof Event>> {
+}, city?: Awaitable<Optional<string>>): Task<State<typeof Classified>, State<typeof Event>> {
 
 	const university = getUniversity(publisher.university);
 
@@ -102,7 +102,7 @@ export function convert(publisher: {
 					copyrightNotice: line(payload.imageCredits)
 				})),
 
-				location: optional<Instance<typeof SchemaLocation>>(
+				location: optional<State<typeof SchemaLocation>>(
 					opt(attendanceURL, url => ({ url: [url] }))
 					?? opt(addressLocality, addressLocality => ({
 						name: venueName,
@@ -186,7 +186,7 @@ function millis(offset: string): number {
 }
 
 
-function attendance(mode: string): Optional<Instance<typeof SchemaEventAttendanceModeEnumeration>> { // !!! type
+function attendance(mode: string): Optional<State<typeof SchemaEventAttendanceModeEnumeration>> { // !!! type
 	return mode === "offline" ? "OfflineEventAttendanceMode"
 		: mode === "online" ? "OnlineEventAttendanceMode"
 			: mode === "mixed" ? "MixedEventAttendanceMode"

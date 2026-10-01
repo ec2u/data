@@ -63,7 +63,7 @@
 
 import { decimal } from "@metreeca/blue/number";
 import { optional, required, resource } from "@metreeca/blue/resource";
-import type { Instance } from "@metreeca/blue/value";
+import type { State } from "@metreeca/blue/value";
 import type { Optional } from "@metreeca/core";
 import { createNamespace } from "@metreeca/core/resource";
 
@@ -140,7 +140,7 @@ export const wgs = createNamespace("http://www.w3.org/2003/01/geo/wgs84_pos#", [
  * Holds a longitude and a latitude in decimal degrees within the WGS84 limits, and an optional altitude in metres
  * above the reference ellipsoid.
  */
-export type WGSPoint = Instance<typeof WGSPoint>;
+export type WGSPoint = State<typeof WGSPoint>;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

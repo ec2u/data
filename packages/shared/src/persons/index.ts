@@ -15,7 +15,7 @@
  */
 
 import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
-import { Resource } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { EC2U, base, ec2u } from "@ec2u/data-shared";
 import { FOAFPerson } from "@ec2u/data-shared/vocabularies/foaf.js";
@@ -48,6 +48,14 @@ export const persons = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Persons() {
+	return resource(Dataset, {
+
+		resources: multiple(reference(Person))
+
+	});
+}
 
 export function Person() {
 	return resource(Resource, FOAFPerson, {

@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
+import { base, CommentLength, EC2U, ec2u, LabelLength } from "@ec2u/data-shared";
 import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
-import { Resource } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { EventTopic } from "@ec2u/data-shared/taxonomies/events.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
-import { base, CommentLength, EC2U, ec2u, LabelLength } from "@ec2u/data-shared";
 import { SchemaEvent } from "@ec2u/data-shared/vocabularies/schema/event.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
-import type { Instance } from "@metreeca/blue/value";
+import type { State } from "@metreeca/blue/value";
+import type { URLLike } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
-import type { URLLike } from "@metreeca/core";
 import type { Reference } from "@metreeca/qest/state";
 import * as uuid from "uuid";
 
@@ -58,11 +58,19 @@ export const events = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type Event = Instance<typeof Event>;
-export type Publisher = Instance<typeof Publisher>;
+export type Event = State<typeof Event>;
+export type Publisher = State<typeof Publisher>;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Events() {
+	return resource(Dataset, {
+
+		resources: multiple(reference(Event))
+
+	});
+}
 
 export function Event() {
 	return resource(Resource, SchemaEvent, {

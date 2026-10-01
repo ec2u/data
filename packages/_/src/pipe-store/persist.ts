@@ -22,7 +22,7 @@ import type { Sink } from "@metreeca/flow";
 import { reduce } from "@metreeca/flow/sinks";
 import { service } from "@metreeca/gear";
 import type { StoreClient } from "@metreeca/keep";
-import type { Draft } from "@metreeca/keep/_blue/value";
+import type { Draft } from "@metreeca/blue/value";
 import type { Reference } from "@metreeca/qest/state";
 import { log, report, time } from "@metreeca/tape";
 

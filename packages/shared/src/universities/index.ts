@@ -21,9 +21,9 @@ import { base, EC2U, ec2u, Place } from "@ec2u/data-shared";
 import { OrgFormalOrganization } from "@ec2u/data-shared/vocabularies/org.js";
 import { int } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
-import { nonempty, required, resource } from "@metreeca/blue/resource";
+import { multiple, nonempty, required, resource } from "@metreeca/blue/resource";
 import { iri, year } from "@metreeca/blue/string";
-import type { Instance } from "@metreeca/blue/value";
+import type { State } from "@metreeca/blue/value";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
@@ -53,10 +53,18 @@ export const universities = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type University = Instance<typeof University>;
+export type University = State<typeof University>;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Universities() {
+	return resource(Dataset, {
+
+		resources: multiple(reference(University))
+
+	});
+}
 
 export function University() {
 	return resource(Organization, Place, OrgFormalOrganization, {

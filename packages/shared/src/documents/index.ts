@@ -15,7 +15,7 @@
  */
 
 import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
-import { Resource } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Person } from "@ec2u/data-shared/persons/index.js";
 import { DocumentTopic } from "@ec2u/data-shared/taxonomies/documents.js";
@@ -55,6 +55,14 @@ export const documents = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Documents() {
+	return resource(Dataset, {
+
+		resources: multiple(reference(Document))
+
+	});
+}
 
 export function Document() {
 	return resource(Resource, {

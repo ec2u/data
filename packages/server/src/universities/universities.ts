@@ -15,8 +15,7 @@
  */
 
 import { base } from "@ec2u/data-shared";
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
-import { universities } from "@ec2u/data-shared/universities/index.js";
+import { universities, Universities } from "@ec2u/data-shared/universities/index.js";
 import { opt } from "@metreeca/core";
 import { service } from "@metreeca/gear";
 import { encodeResource } from "@metreeca/qest/state";
@@ -31,9 +30,9 @@ export function UniversitiesPort(): Router {
 
 		.get("/", async (request, response) => {
 
-			opt(await store.detail({
+			opt(await store.lookup({
 					entry: universities.id,
-					shape: Dataset,
+					shape: Universities,
 					model: {
 						resources: {
 							id: {},

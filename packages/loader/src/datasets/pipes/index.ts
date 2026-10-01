@@ -15,7 +15,7 @@
  */
 
 import { datasets } from "@ec2u/data-shared/datasets/index.core.js";
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { Datasets } from "@ec2u/data-shared/datasets/index.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { map } from "@metreeca/flow/tasks";
@@ -35,8 +35,8 @@ export async function Metadata() {
 
 	return pipe(
 		(items([datasets]))
-		(validate(Dataset))
-		(map(dataset => delta(datasets.id, Dataset, dataset)))
+		(validate(Datasets))
+		(map(dataset => delta(datasets.id, Datasets, dataset)))
 		(persist({ atomic: true }))
 	);
 

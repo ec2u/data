@@ -15,7 +15,7 @@
  */
 
 import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
-import { Resource } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
 import { Person } from "@ec2u/data-shared/persons/index.js";
 import { OrganizationTopic } from "@ec2u/data-shared/taxonomies/organizations.js";
 import { Unit } from "@ec2u/data-shared/units/index.js";
@@ -50,6 +50,14 @@ export const organizations = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Organizations() {
+	return resource(Dataset, {
+
+		resources: multiple(reference(Organization))
+
+	});
+}
 
 export function Organization() {
 	return resource(Resource, OrgOrganization, SchemaOrganization, {

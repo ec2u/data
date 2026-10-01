@@ -14,10 +14,42 @@
  * limitations under the License.
  */
 
-import { ec2u } from "@ec2u/data-shared";
-import { id, required, resource } from "@metreeca/blue/resource";
+import { base, ec2u } from "@ec2u/data-shared";
+import { reference } from "@metreeca/blue/reference";
+import { id, multiple, required, resource } from "@metreeca/blue/resource";
 import { iri, string } from "@metreeca/blue/string";
+import { resolve } from "@metreeca/core/resource";
+import { immutable } from "@metreeca/core/values";
 
+
+export const pages = immutable({
+
+	id: resolve(base, "/pages/")
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Pages() {
+	return resource({
+
+		space: ec2u
+
+	}, {
+
+		id: id(),
+
+		pages: multiple(reference(Page), {
+
+			foreign: true,
+
+			reverse: ec2u.dataset // !!!
+
+		})
+
+	});
+}
 
 export function Page() {
 	return resource({
@@ -28,6 +60,8 @@ export function Page() {
 	}, {
 
 		id: id(),
+
+		dataset: required(reference(Pages)),
 
 		source: required(iri, {
 

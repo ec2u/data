@@ -25,6 +25,14 @@ import { multiple, optional, required, resource } from "@metreeca/blue/resource"
 import { date, markdown, text } from "@metreeca/blue/string";
 
 
+export function Datasets() {
+	return resource(Dataset, {
+
+		resources: multiple(reference(Dataset))
+
+	});
+}
+
 export function Dataset() {
 	return resource(Resource, {
 

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
-import { universities } from "@ec2u/data-shared/universities/index.js";
+import { universities, Universities } from "@ec2u/data-shared/universities/index.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { map } from "@metreeca/flow/tasks";
@@ -35,8 +34,8 @@ export async function Metadata() {
 
 	return pipe(
 		(items([universities]))
-		(validate(Dataset))
-		(map(dataset => delta(universities.id, Dataset, dataset)))
+		(validate(Universities))
+		(map(dataset => delta(universities.id, Universities, dataset)))
 		(persist({ atomic: true }))
 	);
 

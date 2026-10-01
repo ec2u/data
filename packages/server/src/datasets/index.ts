@@ -16,7 +16,7 @@
 
 import { base } from "@ec2u/data-shared";
 import { datasets as dataset } from "@ec2u/data-shared/datasets/index.core.js";
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { Datasets } from "@ec2u/data-shared/datasets/index.js";
 import { opt } from "@metreeca/core";
 import { service } from "@metreeca/gear";
 import { NotFound } from "@metreeca/http";
@@ -32,9 +32,9 @@ export function datasets(): Router {
 
 		.get("/", async (request, response) => {
 
-			opt(await store.detail({
+			opt(await store.lookup({
 					entry: dataset.id,
-					shape: Dataset,
+					shape: Datasets,
 					model: {
 						resources: {
 							id: {},

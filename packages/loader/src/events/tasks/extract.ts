@@ -24,7 +24,7 @@ import { isStaleEvent } from "@ec2u/data-shared/events/index.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { optional, required, resource } from "@metreeca/blue/resource";
 import { date, string, tag, time, url } from "@metreeca/blue/string";
-import type { Instance } from "@metreeca/blue/value";
+import type { State } from "@metreeca/blue/value";
 import { markdown, type Text } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -192,7 +192,7 @@ export function Reported() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function extract(): Task<Text, Instance<typeof Extracted>> {
+export function extract(): Task<Text, State<typeof Extracted>> {
 
 	const ai = service(createGoogleAI);
 
@@ -201,7 +201,7 @@ export function extract(): Task<Text, Instance<typeof Extracted>> {
 		(flat(map(async document => pipe(
 			(items([
 
-				json<Instance<typeof Reported>>(await ai.models.generateContent({
+				json<State<typeof Reported>>(await ai.models.generateContent({
 
 					model: "gemini-3.5-flash-lite",
 

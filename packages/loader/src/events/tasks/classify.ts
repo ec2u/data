@@ -25,7 +25,7 @@ import { browseTopics } from "../../taxonomies/tools/browseTopics.js";
 import { searchTopics } from "../../taxonomies/tools/searchTopics.js";
 import { multiple, resource } from "@metreeca/blue/resource";
 import { iri } from "@metreeca/blue/string";
-import type { Instance } from "@metreeca/blue/value";
+import type { State } from "@metreeca/blue/value";
 import { isString } from "@metreeca/core";
 import { markdown } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
@@ -85,7 +85,7 @@ export function Reported() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function classify(): Task<Instance<typeof Extracted>, Instance<typeof Classified>> {
+export function classify(): Task<State<typeof Extracted>, State<typeof Classified>> {
 
 	const ai = service(createGoogleAI);
 
@@ -96,7 +96,7 @@ export function classify(): Task<Instance<typeof Extracted>, Instance<typeof Cla
 		(when(extracted => extracted.event, flat(map(async extracted => pipe(
 				(items([
 
-					json<Instance<typeof Reported>>(await ai.models.generateContent({
+					json<State<typeof Reported>>(await ai.models.generateContent({
 
 						model: "gemini-3.6-flash",
 

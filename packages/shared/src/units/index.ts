@@ -15,6 +15,7 @@
  */
 
 import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { EuroSciVocTopic } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
 import { dcat } from "@ec2u/data-shared/vocabularies/dcat.js";
@@ -52,6 +53,14 @@ export const units = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Units() {
+	return resource(Dataset, {
+
+		resources: multiple(reference(Unit))
+
+	});
+}
 
 export function Unit() {
 	return resource(Organization, OrgOrganizationalUnit, {

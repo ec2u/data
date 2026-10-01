@@ -15,7 +15,6 @@
  */
 
 import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
-import type { Instance } from "@metreeca/blue/value";
 import type { URLLike } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
@@ -31,6 +30,7 @@ import { delta, type Delta, persist, type Tally } from "@metreeca/work/pipe-stor
 import { retire } from "@metreeca/work/pipe-store/retire.js";
 import { validate } from "@metreeca/work/pipe-store/validate.js";
 import { convert, getPath } from "../tasks/convert.js";
+import { select } from "@metreeca/work/pipe-store/select.js";
 
 
 const survival = 0.75; // the smallest fraction of the stored topics a document must account for // !!! as option
@@ -82,10 +82,7 @@ const CSVFormat = immutable({
  *
  * @throws {@link !Error Error} While the feed is consumed, if any write fails, with nothing committed
  */
-export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<URLLike, Tally> {
-
-	const store = service(createStore);
-
+export function sync(taxonomy: Taxonomy, force = false): Sink<URLLike, Tally> {
 
 	return urls => pipe(
 		(items(urls))
@@ -115,14 +112,13 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 		return records => {
 
 			const digests = force ? new Set<string>() : pipe(
-				(flat(trim(items(store.select({
+				(select({
 
 					entry: taxonomy.id,
 					shape: Taxonomy,
-
 					model: { resources: { digest: {} } }
 
-				})))))
+				}))
 				(map(topic => topic.digest))
 				(toSet())
 			);
@@ -143,14 +139,13 @@ export function sync(taxonomy: Instance<typeof Taxonomy>, force = false): Sink<U
 
 		return records => {
 
-			const existing = flat(trim(items(store.select({
+			const existing = select({
 
 				entry: taxonomy.id,
 				shape: Taxonomy,
-
 				model: { resources: {} }
 
-			}))));
+			});
 
 			return pipe(
 				(items(records))

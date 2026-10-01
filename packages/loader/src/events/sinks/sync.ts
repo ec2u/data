@@ -14,32 +14,29 @@
  * limitations under the License.
  */
 
-import { when } from "@metreeca/work/flow/when.js";
-import { digest } from "@metreeca/work/pipe-store/_digest.js";
-import { createStore } from "@metreeca/work/pipe-store/index.js";
-import { delta, type Delta, persist, type Tally } from "@metreeca/work/pipe-store/persist.js";
-import { retire } from "@metreeca/work/pipe-store/retire.js";
-import { validate } from "@metreeca/work/pipe-store/validate.js";
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
-import { Event, events, getEventId, isStaleEvent, Publisher } from "@ec2u/data-shared/events/index.js";
-import { Page } from "../../pages/pages.js";
-import { classify } from "../tasks/classify.js";
-import { convert } from "../tasks/convert.js";
-import { extract } from "../tasks/extract.js";
+import { Event, Events, events, getEventId, isStaleEvent, Publisher } from "@ec2u/data-shared/events/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
-import { base } from "@ec2u/data-shared";
-import { reference } from "@metreeca/blue/reference";
-import { id, multiple, resource } from "@metreeca/blue/resource";
-import type { URLLike } from "@metreeca/core";
+import { opt, type URLLike } from "@metreeca/core";
 import type { Markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, mix, tee, trim } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, mix, tee } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { fetch } from "@metreeca/gear-url";
 import { focus, html, untag } from "@metreeca/gear-xml";
+import { when } from "@metreeca/work/flow/when.js";
+import { digest } from "@metreeca/work/pipe-store/_digest.js";
+import { createStore } from "@metreeca/work/pipe-store/index.js";
+import { delta, type Delta, persist, type Tally } from "@metreeca/work/pipe-store/persist.js";
+import { retire } from "@metreeca/work/pipe-store/retire.js";
+import { select } from "@metreeca/work/pipe-store/select.js";
+import { validate } from "@metreeca/work/pipe-store/validate.js";
+import { Page, pages as directory, Pages } from "../../pages/index.js";
+import { classify } from "../tasks/classify.js";
+import { convert } from "../tasks/convert.js";
+import { extract } from "../tasks/extract.js";
 
 
 const retrieval = 10; // the number of pages fetched at the same time from the source site // !!! as option
@@ -54,20 +51,19 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 	const store = service(createStore);
 
-	// the city the university publishing the events is in, standing in as the locality of a venue a document names
-	// no city for; a lookup answering nothing leaves the address to what the document itself states
+	// the city of the publishing university, offered to the conversion as a fallback locality;
+	// a university or city the store doesn't hold offers none, while a failing lookup fails the run
 
-	const city = store.detail({
+	const city = store.lookup({
 
 		entry: publisher.university,
 		shape: University,
 
 		model: { city: { label: {} } }
 
-	})
-		.then(university => university?.city?.label)
-		.catch(() => undefined);
-
+	}).then(university =>
+		opt(university, university => university.city?.label)
+	);
 
 	return urls => pipe(
 		(items(urls))
@@ -100,14 +96,14 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		return urls => {
 
 			const digests = force ? new Set<string>() : pipe(
-				(flat(trim(items(store.select({
+				(select({
 
-					entry: base, // a virtual collection is gathered by class, so the entry is a placeholder
+					entry: directory.id,
 					shape: Pages,
 
 					model: { pages: { digest: {}, "?source": [publisher.id] } }
 
-				})))))
+				}))
 				(map(page => page.digest))
 				(toSet())
 			);
@@ -134,7 +130,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 						payloads => pipe( // every page states its digest, so the crawl won't offer it again
 							(items(payloads))
 							(map(({ url, digest }): Delta =>
-								delta(url, Page, immutable({ id: url, source: publisher.id, digest }))
+								delta(url, Page, immutable({ id: url, dataset: directory.id, source: publisher.id, digest }))
 							))
 						),
 						payloads => pipe(
@@ -170,7 +166,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		// so the crawl never offers it again and the sweep reads the dataset rather than the source
 
 		return pipe(
-			(flat(trim(items(store.select({
+			(select({
 
 				entry: events.id,
 				shape: Events,
@@ -184,7 +180,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					}
 				}
 
-			})))))
+			}))
 			(filter(isStaleEvent))
 			(map(event =>
 				delta(event.id, Event, null)
@@ -198,14 +194,14 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		return urls => {
 
 			const existing = pipe(
-				(flat(trim(items(store.select({
+				(select({
 
-					entry: base, // a virtual collection is gathered by class, so the entry is a placeholder
+					entry: directory.id,
 					shape: Pages,
 
 					model: { pages: { id: {}, "?source": [publisher.id] } }
 
-				})))))
+				}))
 				(map(page => page.id))
 			);
 
@@ -223,29 +219,4 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 
 	}
 
-}
-
-
-//// !!! Remove after switching to select() ////////////////////////////////////////////////////////////////////////////
-
-function Events() {
-	return resource(Dataset, {
-
-		resources: multiple(reference(Event))
-
-	});
-}
-
-function Pages() {
-	return resource({
-
-		virtual: true // the pages are gathered by their own class, standing in no collection of their own
-
-	}, {
-
-		id: id(),
-
-		pages: multiple(reference(Page))
-
-	});
 }

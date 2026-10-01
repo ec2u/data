@@ -18,7 +18,7 @@ import type { Classified } from "./classify.js";
 import { convert } from "./convert.js";
 import type { Event } from "@ec2u/data-shared/events/index.js";
 import { universities } from "@ec2u/data-shared/universities/index.js";
-import type { Instance } from "@metreeca/blue/value";
+import type { State } from "@metreeca/blue/value";
 import { resolve } from "@metreeca/core/resource";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -32,7 +32,7 @@ const coimbra = { id: "https://example.org/coimbra", university: resolve(univers
 const pavia = { id: "https://example.org/pavia", university: resolve(universities.id, "pavia") }; // UTC+2 / UTC+1
 
 
-type Reading = Instance<typeof Classified>;
+type Reading = State<typeof Classified>;
 type Payload = Partial<Reading> & Pick<Reading, "startDate">;
 
 
@@ -53,7 +53,7 @@ function reading(payload: Payload): Reading {
 	};
 }
 
-async function converted(payload: Payload, publisher = coimbra, city?: string): Promise<Instance<typeof Event>> {
+async function converted(payload: Payload, publisher = coimbra, city?: string): Promise<State<typeof Event>> {
 	return (await pipe(
 		(items([reading(payload)]))
 		(convert(publisher, city))

@@ -15,10 +15,12 @@
  */
 
 import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Offering } from "@ec2u/data-shared/offerings/index.js";
 import { EC2U, base, ec2u } from "@ec2u/data-shared";
 import { SchemaEducationalOccupationalProgram } from "@ec2u/data-shared/vocabularies/schema/learning.js";
-import { resource } from "@metreeca/blue/resource";
+import { reference } from "@metreeca/blue/reference";
+import { multiple, resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
@@ -47,6 +49,14 @@ export const programs = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Programs() {
+	return resource(Dataset, {
+
+		resources: multiple(reference(Program))
+
+	});
+}
 
 export function Program() {
 	return resource(Offering, SchemaEducationalOccupationalProgram, {

@@ -19,7 +19,7 @@ import { compress, synopsis } from "@metreeca/work/muse/index.js";
 import { getTopicEmbedding } from "../index.core.js";
 import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { CommentLength } from "@ec2u/data-shared";
-import type { Instance } from "@metreeca/blue/value";
+import type { State } from "@metreeca/blue/value";
 import { multiple, optional, required } from "@metreeca/core/arrays";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
@@ -35,7 +35,7 @@ const LabelSeparator = ";";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function convert(taxonomy: Instance<typeof Taxonomy>): Task<Record, Instance<typeof Topic>> {
+export function convert(taxonomy: State<typeof Taxonomy>): Task<Record, State<typeof Topic>> {
 
 	return map(async record => {
 
@@ -113,7 +113,7 @@ function labels(record: Record, column: string): readonly string[] {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function getLineage(taxonomy: Instance<typeof Taxonomy>, path: readonly string[]): readonly Reference[] {
+function getLineage(taxonomy: State<typeof Taxonomy>, path: readonly string[]): readonly Reference[] {
 
 	return path
 		.slice(0, -1)

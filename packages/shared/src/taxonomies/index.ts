@@ -20,13 +20,13 @@ import { SKOSConcept, SKOSConceptScheme } from "@ec2u/data-shared/vocabularies/s
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
-import type { Instance } from "@metreeca/blue/value";
 import type { Markdown, Text } from "@metreeca/core/strings";
 import type { Reference } from "@metreeca/qest/state";
+import type { State } from "@metreeca/blue/value";
 
 
-export type Taxonomy = Instance<typeof Taxonomy>;
-export type Topic = Instance<typeof Topic>;
+export type Taxonomy = State<typeof Taxonomy>;
+export type Topic = State<typeof Topic>;
 
 
 export type TopicEntry = {
@@ -52,6 +52,14 @@ export type TopicReference = {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Taxonomies() {
+	return resource(Dataset, {
+
+		resources: multiple(reference(Taxonomy))
+
+	});
+}
 
 export function Taxonomy() {
 	return resource(Dataset, SKOSConceptScheme, {

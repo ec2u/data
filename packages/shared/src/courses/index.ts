@@ -15,6 +15,7 @@
  */
 
 import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Offering } from "@ec2u/data-shared/offerings/index.js";
 import { Person } from "@ec2u/data-shared/persons/index.js";
 import { Program } from "@ec2u/data-shared/programs/index.js";
@@ -56,6 +57,14 @@ export const courses = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function Courses() {
+	return resource(Dataset, {
+
+		resources: multiple(reference(Course))
+
+	});
+}
 
 export function Course() {
 	return resource(Offering, SchemaCourse, SchemaCourseInstance, {
