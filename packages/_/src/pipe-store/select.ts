@@ -15,7 +15,7 @@
  */
 
 import type { ResourceShape } from "@metreeca/blue/resource";
-import { type Frame, slice, type Slice } from "@metreeca/blue/value";
+import { type Frame, items as frames, type Slice } from "@metreeca/blue/value";
 import type { Lazy } from "@metreeca/core";
 import { type Feed, pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -53,7 +53,7 @@ export function select<
 
 	return pipe(
 		(trim(items(store.lookup(request))))
-		(flat(map(match => slice(match, request.model))))
+		(flat(map(match => frames(match, request.model))))
 	);
 
 }
