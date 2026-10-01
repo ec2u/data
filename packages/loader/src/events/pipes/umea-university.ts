@@ -22,8 +22,8 @@ import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { flat, map } from "@metreeca/flow/tasks";
-import { fetch } from "@metreeca/gear-url";
-import { html, link, xpath } from "@metreeca/gear-xml";
+import { fetch } from "@metreeca/pipe-url";
+import { html, link, xpath } from "@metreeca/mime-xml";
 
 
 const Publisher = immutable({

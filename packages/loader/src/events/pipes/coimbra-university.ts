@@ -22,8 +22,8 @@ import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
 import { flat, fork, map } from "@metreeca/flow/tasks";
-import { jpath, json, number, string } from "@metreeca/gear-json";
-import { crawl, fetch } from "@metreeca/gear-url";
+import { jpath, json, number, string } from "@metreeca/mime-json";
+import { crawl, fetch } from "@metreeca/pipe-url";
 
 
 const Search = "https://content.fw.uc.pt/v1/agenda/events/search";

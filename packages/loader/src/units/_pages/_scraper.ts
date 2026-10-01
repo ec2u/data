@@ -29,7 +29,7 @@ import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
-import { focus, html, untag } from "@metreeca/gear-xml";
+import { focus, html, untag } from "@metreeca/mime-xml";
 import type { AnyNode, Document, Element } from "domhandler";
 import { isTag } from "domhandler";
 import { findAll, findOne, getAttributeValue, textContent } from "domutils";

@@ -58,14 +58,14 @@ if [ -n "${link}" ] && [ -d "${packages}" ]; then
 		${packages}/Core \
 		${packages}/Flow \
 		${packages}/Gear/packages/gear \
-		${packages}/Gear/packages/gear-csv \
-		${packages}/Gear/packages/gear-json \
-		${packages}/Gear/packages/gear-url \
-		${packages}/Gear/packages/gear-xml \
 		${packages}/HTTP \
 		${packages}/Keep/packages/components/keep \
 		${packages}/Keep/packages/connectors/keep-rest \
 		${packages}/Keep/packages/connectors/keep-sparql \
+		${packages}/MIME/packages/mime-csv \
+		${packages}/MIME/packages/mime-json \
+		${packages}/MIME/packages/mime-xml \
+		${packages}/Pipe/packages/pipe-url \
 		${packages}/Qest \
 		${packages}/Tape \
 		${packages}/Tile/packages/tile \
