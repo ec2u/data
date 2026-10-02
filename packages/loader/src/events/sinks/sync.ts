@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+import { LabelLength } from "@ec2u/data-shared";
 import { Event, Events, events, getEventId, isStaleEvent, Publisher } from "@ec2u/data-shared/events/index.js";
 import { Page, pages as directory, Pages } from "@ec2u/data-shared/pages/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { type URLLike } from "@metreeca/core";
-import type { Markdown } from "@metreeca/core/strings";
+import { clip, type Markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -128,7 +129,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 							(map(({ url, digest }): Delta =>
 								delta(url, Page, immutable({
 									id: url,
-									label: url,
+									label: clip(url, LabelLength),
 									dataset: directory.id,
 									source: publisher.id,
 									digest
