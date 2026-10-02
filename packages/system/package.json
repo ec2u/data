@@ -1,0 +1,25 @@
+{
+  "name": "@ec2u/data-system",
+  "version": "0.0.0",
+  "description": "Knowledge Hub shared execution environment",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "@ec2u/source": "./src/index.ts",
+      "default": "./lib/index.js"
+    },
+    "./*.js": {
+      "@ec2u/source": "./src/*.ts",
+      "default": "./lib/*.js"
+    }
+  },
+  "dependencies": {
+    "@metreeca/gear": "^0.3.0",
+    "@metreeca/http": "^0.4.0",
+    "@metreeca/keep-sparql": "^0.11.0",
+    "@metreeca/wire-sparql-rdf4j": "^0.11.1",
+    "@metreeca/work": "*"
+  }
+}

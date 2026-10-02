@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { persons, Persons } from "@ec2u/data-shared/persons/index.js";
+import { documents, Documents } from "@ec2u/data-shared/documents/index.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { map } from "@metreeca/flow/tasks";
 import { delta, persist } from "@metreeca/work/pipe-store/persist.js";
 import { validate } from "@metreeca/work/pipe-store/validate.js";
-import { execute } from "../../index.core.js";
+import { execute } from "@ec2u/data-system";
 
 
 if ( import.meta.main ) {
@@ -33,9 +33,9 @@ if ( import.meta.main ) {
 export async function Metadata() {
 
 	return pipe(
-		(items([persons]))
-		(validate(Persons))
-		(map(catalogue => delta(persons.id, Persons, catalogue)))
+		(items([documents]))
+		(validate(Documents))
+		(map(catalogue => delta(documents.id, Documents, catalogue)))
 		(persist({ atomic: true }))
 	);
 

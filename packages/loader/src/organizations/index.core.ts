@@ -20,7 +20,7 @@ import { items } from "@metreeca/flow/feeds";
 import { map } from "@metreeca/flow/tasks";
 import { delta, persist } from "@metreeca/work/pipe-store/persist.js";
 import { validate } from "@metreeca/work/pipe-store/validate.js";
-import { execute } from "../../index.core.js";
+import { execute } from "@ec2u/data-system";
 
 
 if ( import.meta.main ) {

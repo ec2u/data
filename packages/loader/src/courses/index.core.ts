@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { pages, Pages } from "@ec2u/data-shared/pages/index.js";
+import { courses, Courses } from "@ec2u/data-shared/courses/index.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { map } from "@metreeca/flow/tasks";
 import { delta, persist } from "@metreeca/work/pipe-store/persist.js";
 import { validate } from "@metreeca/work/pipe-store/validate.js";
-import { execute } from "../../index.core.js";
+import { execute } from "@ec2u/data-system";
 
 
 if ( import.meta.main ) {
@@ -33,9 +33,9 @@ if ( import.meta.main ) {
 export async function Metadata() {
 
 	return pipe(
-		(items([pages]))
-		(validate(Pages))
-		(map(catalogue => delta(pages.id, Pages, catalogue)))
+		(items([courses]))
+		(validate(Courses))
+		(map(catalogue => delta(courses.id, Courses, catalogue)))
 		(persist({ atomic: true }))
 	);
 

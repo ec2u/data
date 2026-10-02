@@ -12,6 +12,9 @@
     },
     {
       "path": "packages/shared/tsconfig.build.json"
+    },
+    {
+      "path": "packages/system/tsconfig.build.json"
     }
   ]
 }

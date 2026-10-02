@@ -16,7 +16,7 @@
 
 import { job } from "@metreeca/work/gear-gcp/scheduler.js";
 import { Router } from "express";
-import { execute } from "../index.core.js";
+import { execute } from "@ec2u/data-system";
 import { CoimbraUniversity } from "./pipes/coimbra-university.js";
 import { IasiUniversity360 } from "./pipes/iasi-university-360.js";
 import { JenaUniversity } from "./pipes/jena-university.js";

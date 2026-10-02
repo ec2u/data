@@ -21,7 +21,7 @@ import { resolve } from "node:path";
 import { datasets } from "./datasets/index.js";
 import { events } from "./events/index.js";
 import { units } from "./units/index.js";
-import { execute } from "./index.core.js";
+import { execute } from "@ec2u/data-system";
 import { universities } from "./universities/index.js";
 
 
