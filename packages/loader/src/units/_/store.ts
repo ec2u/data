@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { datastore } from "@metreeca/work/gear-gcp/datastore.js";
+import { datastore } from "@metreeca/work/gear-gcp/_datastore.js";
 import { compress, decompress } from "@metreeca/work/muse/index.js";
 import { Topic } from "./index.js";
 import { PropertyFilter } from "@google-cloud/datastore";

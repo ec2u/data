@@ -28,7 +28,7 @@
  */
 
 import { memoize } from "@metreeca/work/core/memoize.js";
-import { datastore } from "@metreeca/work/gear-gcp/datastore.js";
+import { datastore } from "@metreeca/work/gear-gcp/_datastore.js";
 import type { Page, Retriever } from "./index.js";
 import { log, report, time } from "@metreeca/tape";
 import * as uuid from "uuid";

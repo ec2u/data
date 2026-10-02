@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { job } from "@metreeca/work/gear-gcp/scheduler.js";
+import { job } from "@metreeca/work/gear-gcp/_scheduler.js";
 import { Router } from "express";
 import { execute } from "@ec2u/data-system";
 import { CoimbraUniversity } from "./pipes/coimbra-university.js";

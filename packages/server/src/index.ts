@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { client } from "@metreeca/work/http/client.js";
+import { client } from "@metreeca/work/gate/client.js";
 import { serve } from "@metreeca/work/gate/server.js";
 import { Router } from "express";
 import { resolve } from "node:path";

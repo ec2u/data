@@ -80,6 +80,9 @@ const serviceUrl = process.env.URL;
  */
 export function job(handler: () => Promise<unknown>): Router {
 
+	// !!! why two .post()?
+	// !!! can we decouple from express?
+
 	return Router()
 
 		.post("/", async (request, response, next) => { // scoped to the root, so deeper paths are reported as unknown rather than unauthorised
