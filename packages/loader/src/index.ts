@@ -24,10 +24,10 @@ import { universities } from "./universities/index.js";
 
 await serve(Router()
 
-	.use("/universities", universities())
-	.use("/units", units())
-	.use("/events", events())
+	.use("/universities/", universities())
+	.use("/units/", units())
+	.use("/events/", events())
 
-	.use("/taxonomies", taxonomies())
+	.use("/taxonomies/", taxonomies())
 
 );
