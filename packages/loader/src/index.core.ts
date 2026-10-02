@@ -28,6 +28,17 @@ import { gcp } from "@metreeca/work/gear-gcp/index.js";
 import { createGCPVault } from "@metreeca/work/gear-gcp/secrets.js";
 import { createGoogleAI } from "@metreeca/work/muse-google/index.js";
 import { createStore } from "@metreeca/work/pipe-store/index.js";
+import { Metadata as courses } from "./courses/pipes/index.js";
+import { Metadata as datasets } from "./datasets/pipes/index.js";
+import { Metadata as documents } from "./documents/pipes/index.js";
+import { Metadata as events } from "./events/pipes/index.js";
+import { Metadata as organizations } from "./organizations/pipes/index.js";
+import { Metadata as pages } from "./pages/pipes/index.js";
+import { Metadata as persons } from "./persons/pipes/index.js";
+import { Metadata as programs } from "./programs/pipes/index.js";
+import { Metadata as taxonomies } from "./taxonomies/pipes/index.js";
+import { Metadata as units } from "./units/pipes/index.js";
+import { Metadata as universities } from "./universities/pipes/index.js";
 
 
 export const execute = executor(
@@ -56,3 +67,21 @@ export const execute = executor(
 		apiKey: await service(createVault)("googleai-key")
 	}))
 );
+
+
+
+if ( import.meta.main ) {
+	await execute(() => Promise.all([
+		datasets(),
+		universities(),
+		organizations(),
+		units(),
+		persons(),
+		programs(),
+		courses(),
+		documents(),
+		events(),
+		taxonomies(),
+		pages()
+	]));
+}
