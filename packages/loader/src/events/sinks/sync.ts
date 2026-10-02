@@ -97,7 +97,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					entry: directory.id,
 					shape: Pages,
 
-					model: { resources: { digest: {}, "?source": [publisher.id] } }
+					model: { resources: { digest: {}, "?source": [publisher.id] } } // !!! DSL
 
 				}))
 				(map(page => page.digest))
@@ -178,7 +178,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 						id: {},
 						startDate: {},
 						endDate: {},
-						"?university": [publisher.university] // !!! publisher
+						"?university": [publisher.university] // !!! filter on publisher // !!! DSL
 					}
 				}
 
