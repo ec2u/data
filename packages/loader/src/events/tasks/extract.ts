@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { error, opt, type Optional } from "@metreeca/core";
 import { getDate } from "@metreeca/work/core/temporal.js";
 import { when } from "@metreeca/work/flow/when.js";
 import { digest } from "@metreeca/work/pipe-store/_digest.js";
@@ -25,7 +26,7 @@ import { boolean } from "@metreeca/blue/boolean";
 import { optional, required, resource } from "@metreeca/blue/resource";
 import { date, string, tag, time, url } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
-import { markdown, type Text } from "@metreeca/core/strings";
+import { type Markdown, markdown, type Text, unescape } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { flat, map } from "@metreeca/flow/tasks";
@@ -43,6 +44,11 @@ export function Extracted() {
 		publishable: required(boolean, {
 			name: "Fit for Publication",
 			description: "Whether the event is to be carried downstream, being an event and not yet past"
+		}),
+
+		url: required(url, {
+			name: "Source Address",
+			description: "The address the source document was retrieved from"
 		}),
 
 		digest: required(string, {
@@ -71,14 +77,6 @@ export function Reported() {
 				Whether the document describes a single event; false for an index or listing, a page carrying no event
 				content, and a page mentioning events only in passing. An event happening more than once is still a
 				single event.
-			`
-		}),
-
-		url: required(url, {
-			name: "Source Address",
-			description: `
-				The address the document was retrieved from, copied verbatim from the \`url\` field of the frontmatter,
-				query component included; never a link found in the body, a canonical link or a shortened form.
 			`
 		}),
 
@@ -233,12 +231,24 @@ export function extract(): Task<Text, State<typeof Extracted>> {
 
 				publishable: extracted.event && !isStaleEvent(extracted),
 
+				url: getDocumentURL(document) ?? error<string>("undefined document url"),
 				digest: digest(document),
 
 				...extracted
 
 			})))
 		))))
+	);
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function getDocumentURL(document: Markdown): Optional<string> {
+
+	return opt(document.match(/^---\n(?:.*\n)*?url: "((?:[^"\\]|\\.)*)"\n(?:.*\n)*?---(?:\n|$)/)?.[1], url =>
+		unescape(url)
 	);
 
 }

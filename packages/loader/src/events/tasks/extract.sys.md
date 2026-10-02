@@ -16,8 +16,6 @@ You will be provided with:
 Extract the following properties from the provided document:
 
 - event: whether the document describes a single event (see Error Handling)
-- url, copied verbatim from the `url` field of the frontmatter, query component included; NEVER state a link found in
-  the body of the document, a canonical link, a shortened form, or an address you complete or tidy up in any way
 - title of the event alone, stripped of the page furniture the document builds its heading out of: a site name, a
   publication or section name, a tagline and a breadcrumb trail are NEVER carried over, however the document joins them
   to the title (`… | unipv.news | The University of Pavia Magazine`, `… - Agenda de Coimbra`, `Events :: Faculty of

@@ -46,7 +46,7 @@ material and record what varies by source rather than restating the Coimbra read
 ## Traceability To The Document
 
 Every payload of the test set was read against the page it was drawn from. The properties standing on what the page
-literally carries hold: the URL, the venue name, the city, the address where one is reported, the image URL, and the
+literally carries hold: the venue name, the city, the address where one is reported, the image URL, and the
 start and end dates all trace to the document, the venue name keeping the document's own misspellings.
 
 The properties resting on judgment are where the model invents: entry fees, audience, and a start time taken from an
@@ -83,20 +83,6 @@ the error handling states that recurrence never makes a document `false`.
 CRITICAL: this was found while measuring something else. A rule about one property was read as a rule about the whole
 record, and the damage showed in properties nobody was looking at. After changing any instruction, read a full payload
 and the `event` flag, not only the field the change was aimed at.
-
-## Source URL
-
-The URL is copied verbatim from the `url` field of the frontmatter, query component included, and comes back on every
-page of the test set, identical across runs.
-
-The property is required, and while the retrieval URL was reaching the model on a fresh fetch but not on a cache hit,
-the model answered with an address it made up rather than leaving the property out: plausible, well formed, stable
-across runs, and pointing nowhere. The URL seeds the event identity, so this minted wrong identities silently. The cause
-was in the fetch cache, which has been fixed to restate the retrieval URL on a replayed response.
-
-CRITICAL: a required property the input may not carry is a fabrication generator, and a fabrication is as stable as
-anything else the model states. When this property looks wrong, read the frontmatter the model was given before reading
-the prompt.
 
 ## Reproducibility
 
