@@ -61,6 +61,11 @@ export type University = State<typeof University>;
 export function Universities() {
 	return resource(Dataset, {
 
+		name: "Universities",
+		description: "Background, historical context and statistical data about EC2U partner universities."
+
+	}, {
+
 		resources: multiple(reference(University))
 
 	});
@@ -70,7 +75,10 @@ export function University() {
 	return resource(Organization, Place, OrgFormalOrganization, {
 
 		space: ec2u,
-		class: ec2u.University
+		class: ec2u.University,
+
+		name: "University",
+		description: "An EC2U partner university."
 
 	}, {
 

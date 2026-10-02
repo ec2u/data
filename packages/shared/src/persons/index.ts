@@ -52,6 +52,11 @@ export const persons = immutable({
 export function Persons() {
 	return resource(Dataset, {
 
+		name: "People",
+		description: "Staff involved in teaching and research activities at EC2U partner universities."
+
+	}, {
+
 		resources: multiple(reference(Person))
 
 	});
@@ -61,7 +66,10 @@ export function Person() {
 	return resource(Resource, FOAFPerson, {
 
 		space: ec2u,
-		class: ec2u.Person
+		class: ec2u.Person,
+
+		name: "Person",
+		description: "A staff member involved in teaching and research activities at an EC2U partner university."
 
 	}, {
 

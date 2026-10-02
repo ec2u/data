@@ -57,6 +57,11 @@ export const units = immutable({
 export function Units() {
 	return resource(Dataset, {
 
+		name: "Units",
+		description: "Information about research units and supporting structures at EC2U partner universities."
+
+	}, {
+
 		resources: multiple(reference(Unit))
 
 	});
@@ -66,7 +71,10 @@ export function Unit() {
 	return resource(Organization, OrgOrganizationalUnit, {
 
 		space: ec2u,
-		class: ec2u.Unit
+		class: ec2u.Unit,
+
+		name: "Unit",
+		description: "A research unit or supporting structure at an EC2U partner university."
 
 	}, {
 

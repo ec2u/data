@@ -67,6 +67,11 @@ export type Publisher = State<typeof Publisher>;
 export function Events() {
 	return resource(Dataset, {
 
+		name: "Events",
+		description: "Information about events at EC2U partner universities and associated local organisations."
+
+	}, {
+
 		resources: multiple(reference(Event))
 
 	});
@@ -76,7 +81,10 @@ export function Event() {
 	return resource(Resource, SchemaEvent, {
 
 		space: ec2u,
-		class: ec2u.Event
+		class: ec2u.Event,
+
+		name: "Event",
+		description: "An event at an EC2U partner university or an associated local organisation."
 
 	}, {
 
@@ -92,6 +100,11 @@ export function Event() {
 
 export function Publisher() {
 	return resource(Organization, {
+
+		name: "Publisher",
+		description: "An organisation's event calendar for an EC2U partner university."
+
+	}, {
 
 		university: required(reference(University))
 

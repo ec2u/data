@@ -28,6 +28,11 @@ import { date, markdown, text } from "@metreeca/blue/string";
 export function Datasets() {
 	return resource(Dataset, {
 
+		name: "Datasets",
+		description: "Datasets published on the EC2U Knowledge Hub."
+
+	}, {
+
 		resources: multiple(reference(Dataset))
 
 	});
@@ -37,7 +42,10 @@ export function Dataset() {
 	return resource(Resource, {
 
 		space: dct,
-		class: ec2u.Dataset
+		class: ec2u.Dataset,
+
+		name: "Dataset",
+		description: "A dataset published on the EC2U Knowledge Hub."
 
 	}, {
 
@@ -74,7 +82,10 @@ export function Resource() {
 	return resource(Entity, {
 
 		space: ec2u,
-		class: ec2u.Resource
+		class: ec2u.Resource,
+
+		name: "Resource",
+		description: "A resource published in a dataset on the EC2U Knowledge Hub."
 
 	}, {
 

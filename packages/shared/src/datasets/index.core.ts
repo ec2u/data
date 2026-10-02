@@ -19,8 +19,6 @@ import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
-// standalone from the shape module, so that a dataset defined alongside a shape doesn't have to import it back
-
 export const Copyright = "Copyright © 2022-2025 EC2U Alliance";
 export const CCBYNCND40 = "https://creativecommons.org/licenses/by-nc-nd/4.0/";
 

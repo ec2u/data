@@ -61,6 +61,11 @@ export const courses = immutable({
 export function Courses() {
 	return resource(Dataset, {
 
+		name: "Courses",
+		description: "Degree, vocational and personal development courses offered by EC2U partner universities."
+
+	}, {
+
 		resources: multiple(reference(Course))
 
 	});
@@ -70,7 +75,10 @@ export function Course() {
 	return resource(Offering, SchemaCourse, SchemaCourseInstance, {
 
 		space: ec2u,
-		class: ec2u.Course
+		class: ec2u.Course,
+
+		name: "Course",
+		description: "A degree, vocational or personal development course offered by an EC2U partner university."
 
 	}, {
 

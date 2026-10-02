@@ -59,6 +59,11 @@ export const documents = immutable({
 export function Documents() {
 	return resource(Dataset, {
 
+		name: "Documents",
+		description: "Regulations, policies and other governance documents shared by EC2U partner universities."
+
+	}, {
+
 		resources: multiple(reference(Document))
 
 	});
@@ -68,7 +73,10 @@ export function Document() {
 	return resource(Resource, {
 
 		space: dct,
-		class: ec2u.Document
+		class: ec2u.Document,
+
+		name: "Document",
+		description: "A regulation, policy or other governance document shared by an EC2U partner university."
 
 	}, {
 

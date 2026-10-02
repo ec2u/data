@@ -56,6 +56,11 @@ export type TopicReference = {
 export function Taxonomies() {
 	return resource(Dataset, {
 
+		name: "Taxonomies",
+		description: "Standardised topic taxonomies and other concept schemes for classifying resources."
+
+	}, {
+
 		resources: multiple(reference(Taxonomy))
 
 	});
@@ -65,7 +70,10 @@ export function Taxonomy() {
 	return resource(Dataset, SKOSConceptScheme, {
 
 		space: ec2u,
-		class: ec2u.Taxonomy
+		class: ec2u.Taxonomy,
+
+		name: "Taxonomy",
+		description: "A standardised topic taxonomy or other concept scheme for classifying resources."
 
 	}, {
 
@@ -81,7 +89,10 @@ export function Topic() {
 	return resource(Resource, SKOSConcept, {
 
 		space: ec2u,
-		class: ec2u.Topic
+		class: ec2u.Topic,
+
+		name: "Topic",
+		description: "A topic for classifying resources, as defined by a taxonomy."
 
 	}, {
 

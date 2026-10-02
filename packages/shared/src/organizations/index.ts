@@ -54,6 +54,11 @@ export const organizations = immutable({
 export function Organizations() {
 	return resource(Dataset, {
 
+		name: "Organizations",
+		description: "Organisations related to EC2U partner universities."
+
+	}, {
+
 		resources: multiple(reference(Organization))
 
 	});
@@ -63,7 +68,10 @@ export function Organization() {
 	return resource(Resource, OrgOrganization, SchemaOrganization, {
 
 		space: ec2u,
-		class: ec2u.Organization
+		class: ec2u.Organization,
+
+		name: "Organization",
+		description: "An organisation related to EC2U partner universities."
 
 	}, {
 

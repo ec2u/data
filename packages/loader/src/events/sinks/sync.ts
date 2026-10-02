@@ -15,6 +15,7 @@
  */
 
 import { Event, Events, events, getEventId, isStaleEvent, Publisher } from "@ec2u/data-shared/events/index.js";
+import { Page, pages as directory, Pages } from "@ec2u/data-shared/pages/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { type URLLike } from "@metreeca/core";
 import type { Markdown } from "@metreeca/core/strings";
@@ -32,7 +33,6 @@ import { delta, type Delta, persist, type Tally } from "@metreeca/work/pipe-stor
 import { retire } from "@metreeca/work/pipe-store/retire.js";
 import { select } from "@metreeca/work/pipe-store/select.js";
 import { validate } from "@metreeca/work/pipe-store/validate.js";
-import { Page, pages as directory, Pages } from "../../pages/index.js";
 import { classify } from "../tasks/classify.js";
 import { convert } from "../tasks/convert.js";
 import { extract } from "../tasks/extract.js";
@@ -97,7 +97,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					entry: directory.id,
 					shape: Pages,
 
-					model: { pages: { digest: {}, "?source": [publisher.id] } }
+					model: { resources: { digest: {}, "?source": [publisher.id] } }
 
 				}))
 				(map(page => page.digest))
@@ -128,6 +128,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 							(map(({ url, digest }): Delta =>
 								delta(url, Page, immutable({
 									id: url,
+									label: url,
 									dataset: directory.id,
 									source: publisher.id,
 									digest
@@ -200,7 +201,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 					entry: directory.id,
 					shape: Pages,
 
-					model: { pages: { id: {}, "?source": [publisher.id] } }
+					model: { resources: { id: {}, "?source": [publisher.id] } }
 
 				}))
 				(map(page => page.id))

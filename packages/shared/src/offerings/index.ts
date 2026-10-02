@@ -28,7 +28,10 @@ export function Offering() {
 	return resource(Resource, SchemaLearningResource, {
 
 		space: ec2u,
-		class: ec2u.Offering
+		class: ec2u.Offering,
+
+		name: "Offering",
+		description: "An educational offering of an EC2U partner university."
 
 	}, {
 

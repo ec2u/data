@@ -53,6 +53,11 @@ export const programs = immutable({
 export function Programs() {
 	return resource(Dataset, {
 
+		name: "Programs",
+		description: "Formal degree and vocational qualification programs offered by EC2U partner universities."
+
+	}, {
+
 		resources: multiple(reference(Program))
 
 	});
@@ -62,7 +67,10 @@ export function Program() {
 	return resource(Offering, SchemaEducationalOccupationalProgram, {
 
 		space: ec2u,
-		class: ec2u.Program
+		class: ec2u.Program,
+
+		name: "Program",
+		description: "A formal degree or vocational qualification program offered by an EC2U partner university."
 
 	}, {});
 }
