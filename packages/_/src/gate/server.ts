@@ -1,23 +1,17 @@
 /*
- * Copyright © 2020-2026 EC2U Alliance
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright © 2026 Metreeca srl. All rights reserved.
  */
 
-import { BadRequest, InternalServerError } from "@metreeca/http";
+/**
+ * HTTP server hosting an Express router behind a proxy, as on Cloud Run.
+ *
+ * @module gate
+ */
+
+import { isError, isNumber } from "@metreeca/core";
+import { BadRequest, InternalServerError, NotFound } from "@metreeca/http";
 import { log } from "@metreeca/tape";
-import type { ErrorRequestHandler, RequestHandler, Router } from "express";
-import express from "express";
+import express, { type ErrorRequestHandler, type RequestHandler, type Router } from "express";
 
 
 const logger = log(import.meta.url);
@@ -26,47 +20,71 @@ const logger = log(import.meta.url);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Serves a router over HTTP.
+ * Serves a router created for the public base URL of the server over HTTP.
  *
- * Every request is traced, and errors are logged and reported to the client without leaking internal details; request
- * body decoding is left to the router.
+ * Behaves as the overload serving a ready router, for routers whose handlers depend on the address clients reach the
+ * server at, for example to verify the audience of the tokens they accept.
  *
- * The listening address is taken from the `HOST`, `PORT` and `URL` environment variables, defaulting to `0.0.0.0`,
- * `8080` and the matching local address.
+ * @param factory A function creating the router given the public base URL of the server; the function may throw to
+ *                reject its own settings, and the server is then not started
  *
- * @param router - The router handling incoming requests
+ * @returns A promise resolving when the server closes, and rejecting if `URL` is malformed, the router cannot be
+ *     created or the server fails to listen
+ */
+export function serve(factory: (url: string) => Router): Promise<void>;
+
+/**
+ * Serves a router over HTTP, with the listening address read from the environment:
+ *
+ * - `PORT`: the listening port; defaults to `8080`
+ * - `HOST`: the listening address; defaults to `0.0.0.0`
+ * - `URL`: the public base URL clients reach the server at; defaults to `http://<HOST>:<PORT>`, with `localhost`
+ *   standing for `0.0.0.0`
+ *
+ * Every request is traced in the log with its outcome and duration. Requests no route matches are answered with a
+ * bodiless `404`; errors no route handles are logged and answered with a bodiless response, carrying their own client
+ * error status if any and `500` otherwise, so that no internal detail reaches the client. The server trusts the first
+ * proxy hop, as required behind a front end such as Cloud Run's, so that the router sees the caller address rather than
+ * the proxy's.
  *
  * The server closes on `SIGINT` or `SIGTERM`, completing the requests in flight before it stops.
  *
- * @returns A promise resolving when the server closes, or rejecting if it fails to listen; awaiting it inside an
- *          execution keeps the services the router relies on available for as long as the server runs
+ * @param router The router serving the application
+ *
+ * @returns A promise resolving when the server closes, and rejecting if `URL` is malformed or the server fails to
+ *     listen
  */
-export function serve(router: Router): Promise<void> {
+export function serve(router: Router): Promise<void>;
+
+export async function serve(router: Router | ((url: string) => Router)): Promise<void> {
 
 	const host = process.env.HOST || "0.0.0.0";
 	const port = parseInt(process.env.PORT || "8080", 10);
 	const url = process.env.URL || `http://${host === "0.0.0.0" ? "localhost" : host}:${port}`;
 
-	return new Promise((resolve, reject) => {
+	const authority = new URL(url).host;
+
+	return new Promise<void>((resolve, reject) => {
 
 		const server = express()
 
 			.set("trust proxy", 1)
 			.disable("x-powered-by")
 
-			.use(request())
+			.use(tracing())
 
-			.use(router)
+			.use(isRouter(router) ? router : router(url))
 
-			.use(error())
-			.use(sanitise())
+			.use(unmatched())
+			.use(unhandled())
 
-			.listen(port, host, () =>
-				logger.info`server listening on ${url}`
+			.listen(port, host, () => authority === `${host}:${port}`
+				? logger.info`serving ${url}`
+				: logger.info`serving ${url} from ${host}:${port}`
 			)
 
 			.on("close", () => {
-				logger.info`server closed`;
+				logger.info`shutting down`;
 				resolve();
 			})
 
@@ -79,12 +97,17 @@ export function serve(router: Router): Promise<void> {
 
 	});
 
+
+	function isRouter(value: unknown): value is Router {
+		return value instanceof express.Router;
+	}
+
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function request(): RequestHandler {
+function tracing(): RequestHandler {
 
 	return (request, response, next) => {
 
@@ -117,9 +140,23 @@ function request(): RequestHandler {
 
 }
 
-function error(): ErrorRequestHandler {
+function unmatched(): RequestHandler {
+
+	return (_, response) => {
+
+		response.status(NotFound).end();
+
+	};
+
+}
+
+function unhandled(): ErrorRequestHandler {
 
 	return (error, request, response, next) => {
+
+		const code = isStatusError(error) && error.status >= BadRequest && error.status < InternalServerError
+			? error.status
+			: InternalServerError;
 
 		logger.error("{method} {url} error: {error.name} - {error.message}", {
 			trace: response.locals.trace,
@@ -130,23 +167,20 @@ function error(): ErrorRequestHandler {
 			},
 			method: request.method,
 			url: request.url,
-			statusCode: response.statusCode || InternalServerError
+			statusCode: code
 		});
 
-		next(error);
-
-	};
-
-}
-
-function sanitise(): ErrorRequestHandler {
-
-	return (error, request, response, next) => {
-
-		if ( !response.headersSent ) {
-			response.status(InternalServerError).json({ error: "internal error" });
+		if ( response.headersSent ) {
+			next(error);
+		} else {
+			response.status(code).end();
 		}
 
 	};
+
+
+	function isStatusError(value: unknown): value is Error & { status: number } {
+		return isError(value) && "status" in value && isNumber(value.status);
+	}
 
 }

@@ -24,8 +24,8 @@
  *
  * @remarks
  *
- * Authentication is configured through the `URL` and `SCHEDULER_SERVICE_ACCOUNT` environment variables, as documented
- * under {@link job}.
+ * Authentication is configured through the public service URL passed to {@link job} and the optional
+ * `SCHEDULER_SERVICE_ACCOUNT` environment variable, as documented under {@link job}.
  */
 
 import { Forbidden, OK, Unauthorized } from "@metreeca/http";
@@ -40,7 +40,6 @@ const logger = log(import.meta.url);
 const oauth2Client = new OAuth2Client();
 
 const schedulerEmail = process.env.SCHEDULER_SERVICE_ACCOUNT;
-const serviceUrl = process.env.URL;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,9 +48,12 @@ const serviceUrl = process.env.URL;
  * Creates an Express router executing a pipeline action on authenticated Cloud Scheduler requests.
  *
  * The router answers `POST` on its own root, accepting only requests carrying an OIDC bearer token issued by Google
- * for the configured service URL audience, and optionally restricted to a single service account. Mount it with
- * `use()`, which strips the mount prefix and leaves the router matching the bare mount path.
+ * for the service URL audience, and optionally restricted to a single service account. Mount it with `use()`, which
+ * strips the mount prefix and leaves the router matching the bare mount path.
  *
+ * @param url The public base URL of the service, as Cloud Scheduler names it in the OIDC token audience; pass the URL
+ *            the gate `serve()` hands to a router factory, so that tokens are checked against the address the server
+ *            answers at
  * @param handler The pipeline action awaited on each authorised request; its result is not reported to the caller
  *
  * @returns An Express {@link Router} handling `POST` on its own root; requests with a different method or a deeper
@@ -71,14 +73,13 @@ const serviceUrl = process.env.URL;
  * - `401 Unauthorized`: Missing, malformed, or invalid OIDC token
  * - `403 Forbidden`: Valid token, but from an unexpected service account
  *
- * Uses the following environment variables:
+ * Uses the following environment variable:
  *
- * - `URL`: Service URL for OIDC audience verification (required)
  * - `SCHEDULER_SERVICE_ACCOUNT`: Service account email to restrict access (optional)
  *
  * @see {@link https://cloud.google.com/scheduler/docs/http-target-auth Cloud Scheduler HTTP target authentication}
  */
-export function job(handler: () => Promise<unknown>): Router {
+export function job(url: string, handler: () => Promise<unknown>): Router {
 
 	// !!! why two .post()?
 	// !!! can we decouple from express?
@@ -105,7 +106,7 @@ export function job(handler: () => Promise<unknown>): Router {
 
 					const ticket = await oauth2Client.verifyIdToken({
 						idToken: token,
-						audience: serviceUrl
+						audience: url
 					});
 
 					const payload = ticket.getPayload();

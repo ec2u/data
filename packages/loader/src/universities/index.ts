@@ -20,10 +20,10 @@ import { execute } from "@ec2u/data-system";
 import { Wikidata } from "./pipes/wikidata.js";
 
 
-export function universities(): Router {
+export function universities(url: string): Router {
 
 	return Router()
 
-		.use("/wikidata", job(() => execute(Wikidata)));
+		.use("/wikidata", job(url, () => execute(Wikidata)));
 
 }

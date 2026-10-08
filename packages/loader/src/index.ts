@@ -22,13 +22,13 @@ import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
-await serve(Router()
+await serve(url => Router()
 
 	.use(express.json())
 
-	.use("/universities/", universities())
+	.use("/universities/", universities(url))
 	.use("/units/", units())
-	.use("/events/", events())
+	.use("/events/", events(url))
 
 	.use("/taxonomies/", taxonomies())
 
