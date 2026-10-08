@@ -31,7 +31,7 @@ import { createStore } from "@metreeca/work/pipe-store/index.js";
 
 
 export const execute = executor(
-	bind(getPath, () => gcp.production
+	bind(getPath, () => gcp.cloud
 		? getPath()
 		: getPackage(import.meta.dirname)
 	),

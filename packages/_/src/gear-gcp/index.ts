@@ -30,35 +30,20 @@ import { immutable } from "@metreeca/core/values";
 /**
  * The Google Cloud Platform execution environment.
  *
- * Reports the ambient settings shared by the Google Cloud integrations, that is the kind of runtime the process is
- * deployed to. Values are resolved once at module initialisation and exposed as a deeply immutable object.
+ * Exposes the ambient settings shared by the Google Cloud integrations, that is whether the process is deployed to a
+ * Google Cloud runtime. Values are resolved once at module initialisation and exposed as a deeply immutable object.
  *
  * @see {@link https://cloud.google.com/docs/authentication Google Cloud Authentication}
  */
 export const gcp = immutable({
 
 	/**
-	 * Whether the current process is running in the production environment.
+	 * Whether the current process is running on a managed Google Cloud runtime.
 	 *
-	 * true if the process is running as a deployed workload, that is a Cloud Run service, a Cloud Run job, a cloud
-	 * function or an App Engine instance; false if it is running outside one, for instance under a local development
-	 * server or a test runner.
-	 *
-	 * @remarks
-	 *
-	 * > [!NOTE]
-	 * >
-	 * > Managed Google Cloud runtimes name the workload they serve through an environment variable of their own:
-	 * > `K_SERVICE` for Cloud Run services and cloud functions, `CLOUD_RUN_JOB` for Cloud Run jobs and `GAE_ENV` for
-	 * > App Engine; a process defining none of them is running outside a deployed workload.
-	 *
-	 * > [!IMPORTANT]
-	 * >
-	 * > Every deployed workload reports as production, whatever the project it is deployed to, as no runtime signal
-	 * > tells a staging deployment from a production one: tell them apart by the project they are authenticated
-	 * > against, or by a deployment variable of their own.
+	 * The flag is set for a process deployed to a Google Cloud runtime; it is cleared for a process running locally,
+	 * such as a development server or a test runner.
 	 */
-	production: process.env.K_SERVICE !== undefined
+	cloud: process.env.K_SERVICE !== undefined
 		|| process.env.CLOUD_RUN_JOB !== undefined
 		|| process.env.GAE_ENV !== undefined
 
