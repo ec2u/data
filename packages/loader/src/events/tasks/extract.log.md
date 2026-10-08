@@ -28,9 +28,6 @@ material and record what varies by source rather than restating the Coimbra read
   at 16h00 comes back with a start time of 16:00, the talk's, which the prompt forbids by name
 - Addresses the document states going unreported: a page naming "Pátio da Inquisição" as the venue's whereabouts comes
   back with no address, three of the ten pages carrying one
-- Postal code never measured: the property was declared and asked for alongside the street address and the city, and no
-  run has been read against a page carrying one; measure its coverage and read the values against their pages before
-  quoting either, the address bullet above being the standing reason to expect misses rather than fabrications
 - Recurring events keeping their session times: a concert series running across some forty dates still comes back with
   the hour its sessions are held at, where a workshop series on the same feed correctly comes back with none; the rule
   is stated plainly, so this is the model applying it unevenly rather than a gap in the wording
@@ -163,7 +160,21 @@ At `maxOutputTokens` 4096 the reply was cut mid-string on a page carrying a long
 as JSON. The budget was raised to 8192.
 
 CRITICAL: a truncated reply surfaces as malformed JSON, not as a quota diagnostic. Read a parse failure on a long page
-as an exhausted output budget before suspecting the prompt.
+as an exhausted output budget before suspecting the prompt. A reply that did not finish with `STOP` (withheld as
+`RECITATION`, cut short as `MAX_TOKENS`) is logged as an incomplete generation naming its finish reason, and the page is
+skipped without a digest, so it is offered again on the next run.
+
+## Postal Code
+
+No postal code is asked for.
+
+The venue postal code was once declared alongside the street address and the city. On Coimbra pages stating none, the
+model invented one from the city's `3000-` range and never closed the string (`3000-0000…`, `3000-090 € Coimbra €
+Portugal € …`), running a 625-character page out to the 16,384-token budget. A `maxLength` on the property did not
+bound it: one page still answered some 6,000 zeros.
+
+CRITICAL: a short, formatted property the document usually omits invites fabrication, and the response schema cannot
+bound its length. Measure coverage on pages that omit it before declaring one.
 
 ## Description Scope
 

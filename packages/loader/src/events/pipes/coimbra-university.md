@@ -16,5 +16,8 @@ Event catalogue extracted by scanning the site event search service; event info 
 | https://agenda.coimbra.pt/ | agenda Coimbra [pt] | harvested                                                                                                                                 |
 | https://content.fw.uc.pt   | content API [pt]    | alternate REST/JSON API; homepage `/v1/agenda/events/homepage`, search `/v1/agenda/events/search`, detail `/v1/agenda/events/{event_key}` |
 
+- **2026-10-05** – event pages the model declines to read (`RECITATION`) or answers in a runaway loop (`MAX_TOKENS`) are
+  skipped and retried on the next run, instead of aborting it; venue postal codes are no longer extracted, as the model
+  invented them for pages stating none
 - **2025-05-08** – migrated from https://agenda.uc.pt/ to https://agenda.coimbra.pt/
 - **2022-02-26** – initial integration

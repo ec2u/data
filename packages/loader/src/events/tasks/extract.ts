@@ -29,8 +29,13 @@ import type { State } from "@metreeca/blue/value";
 import { type Markdown, markdown, type Text, unescape } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { flat, map } from "@metreeca/flow/tasks";
+import { filter, flat, map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
+import { log } from "@metreeca/tape";
+import { FinishReason, type GenerateContentResponse } from "@google/genai";
+
+
+const logger = log(import.meta.url);
 
 
 export function Extracted() {
@@ -156,11 +161,6 @@ export function Reported() {
 			description: "The street address of the venue, as the document states it"
 		}),
 
-		venuePostalCode: optional(string, {
-			name: "Postal Code",
-			description: "The postal code of the venue, as the document states it"
-		}),
-
 		venueCity: optional(string, {
 			name: "City",
 			description: "The city the venue is in, as the document states it"
@@ -199,7 +199,7 @@ export function extract(): Task<Text, State<typeof Extracted>> {
 		(flat(map(async document => pipe(
 			(items([
 
-				json<State<typeof Reported>>(await ai.models.generateContent({
+				await ai.models.generateContent({
 
 					model: "gemini-3.5-flash-lite",
 
@@ -223,9 +223,11 @@ export function extract(): Task<Text, State<typeof Extracted>> {
 
 					}
 
-				}))
+				})
 
 			]))
+			(filter(response => isGenerated(document, response)))
+			(map(response => json<State<typeof Reported>>(response)))
 			(when(extracted => extracted.event, validate(Reported)))
 			(map(extracted => ({
 
@@ -244,6 +246,24 @@ export function extract(): Task<Text, State<typeof Extracted>> {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function isGenerated(document: Markdown, response: GenerateContentResponse): boolean {
+
+	const reason = response.candidates?.[0]?.finishReason;
+
+	if ( reason === FinishReason.STOP && response.text ) {
+
+		return true;
+
+	} else {
+
+		logger.warning`incomplete generation <${reason}> for <${getDocumentURL(document)}>`;
+
+		return false;
+
+	}
+
+}
 
 function getDocumentURL(document: Markdown): Optional<string> {
 

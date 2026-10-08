@@ -57,7 +57,6 @@ export function convert(publisher: {
 			const attendanceURL = payload.attendanceURL;
 			const venueName = line(payload.venueName);
 			const venueAddress = line(payload.venueAddress);
-			const venuePostalCode = line(payload.venuePostalCode);
 			const venueCity = line(payload.venueCity);
 
 			// an address is told apart by its locality, so a document naming a venue but no city places it in the city
@@ -107,7 +106,6 @@ export function convert(publisher: {
 					?? opt(addressLocality, addressLocality => ({
 						name: venueName,
 						streetAddress: venueAddress,
-						postalCode: venuePostalCode,
 						addressLocality
 					}))
 					?? venueName

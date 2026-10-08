@@ -203,7 +203,6 @@ describe("convert", () => {
 		const venue = {
 			venueName: "Casa das Caldeiras",
 			venueAddress: "Rua Antero de Quental 195",
-			venuePostalCode: "3000-033",
 			venueCity: "Coimbra"
 		};
 
@@ -214,7 +213,6 @@ describe("convert", () => {
 					location: {
 						name: "Casa das Caldeiras",
 						streetAddress: "Rua Antero de Quental 195",
-						postalCode: "3000-033",
 						addressLocality: "Coimbra"
 					}
 				});
@@ -229,18 +227,6 @@ describe("convert", () => {
 						name: "Casa das Caldeiras",
 						streetAddress: undefined,
 						addressLocality: "Coimbra"
-					}
-				});
-
-		});
-
-		it("leaves the postal code out where the document states none", async () => {
-
-			expect(await converted({ ...opening, ...venue, venuePostalCode: undefined }))
-				.toMatchObject({
-					location: {
-						streetAddress: "Rua Antero de Quental 195",
-						postalCode: undefined
 					}
 				});
 

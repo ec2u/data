@@ -40,14 +40,13 @@ Extract the following properties from the provided document:
 - attendance URL (make absolutely sure to include it only if attendance is online or mixed)
 - venue name
 - venue street address
-- venue postal code
 - venue city name
 - image URL (may include a query component), only if reasonably sure
 - image credits or copyright
 - language of the document, as a 2-letter ISO tag
 
 **CRITICAL: state the title, the summary and the description in English, translating them where
-the document is written in another language.** Translate the prose alone: a venue name, a street address, a postal code,
+the document is written in another language.** Translate the prose alone: a venue name, a street address,
 a city name and an image credit are stated as the document has them, and a proper name carried by a title keeps its
 original form.
 The `language` property states the language the document is written in, NEVER the English the properties are stated in.
