@@ -15,7 +15,7 @@
  */
 
 import { serve } from "@metreeca/work/gate/server.js";
-import { Router } from "express";
+import express, { Router } from "express";
 import { events } from "./events/index.js";
 import { taxonomies } from "./taxonomies/index.js";
 import { units } from "./units/index.js";
@@ -23,6 +23,8 @@ import { universities } from "./universities/index.js";
 
 
 await serve(Router()
+
+	.use(express.json())
 
 	.use("/universities/", universities())
 	.use("/units/", units())

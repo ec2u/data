@@ -16,7 +16,7 @@
 
 import { client } from "@metreeca/work/gate/client.js";
 import { serve } from "@metreeca/work/gate/server.js";
-import { Router } from "express";
+import express, { Router } from "express";
 import { resolve } from "node:path";
 import { datasets } from "./datasets/index.js";
 import { events } from "./events/index.js";
@@ -30,6 +30,8 @@ import { universities } from "./universities/index.js";
 // !!! every execute() call constructs its own service instances: executing per request would reconnect each time
 
 await execute(() => serve(Router()
+
+	.use(express.json())
 
 	.use(client(resolve(import.meta.dirname, "static")))
 

@@ -28,8 +28,8 @@ const logger = log(import.meta.url);
 /**
  * Serves a router over HTTP.
  *
- * Every request is traced, JSON request bodies are decoded, and errors are logged and reported to the client without
- * leaking internal details.
+ * Every request is traced, and errors are logged and reported to the client without leaking internal details; request
+ * body decoding is left to the router.
  *
  * The listening address is taken from the `HOST`, `PORT` and `URL` environment variables, defaulting to `0.0.0.0`,
  * `8080` and the matching local address.
@@ -51,7 +51,8 @@ export function serve(router: Router): Promise<void> {
 
 		const server = express()
 
-			.use(express.json())
+			.set("trust proxy", 1)
+			.disable("x-powered-by")
 
 			.use(request())
 
