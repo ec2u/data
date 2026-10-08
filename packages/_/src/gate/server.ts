@@ -5,6 +5,21 @@
 /**
  * HTTP server hosting an Express router behind a proxy, as on Cloud Run.
  *
+ * The server address is read from the environment:
+ *
+ * - `PORT`: the listening port; defaults to `8080`
+ * - `HOST`: the listening address; defaults to `0.0.0.0`
+ * - `URL`: the public base URL clients reach the server at; defaults to `http://<HOST>:<PORT>`, with `localhost`
+ *   standing for `0.0.0.0`
+ *
+ * Every request is traced in the log with its outcome and duration. Requests that match no route get a bodiless
+ * `404`. Errors that no route handles are logged, and the client gets a bodiless response with no internal detail: the
+ * error status if it is a client error, `500` otherwise.
+ *
+ * The server trusts the first proxy hop, as a front end such as Cloud Run's requires: the router sees the address of
+ * the caller rather than that of the proxy. The server closes on `SIGINT` or `SIGTERM`, after completing the requests
+ * in flight.
+ *
  * @module gate
  */
 
@@ -20,34 +35,20 @@ const logger = log(import.meta.url);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Serves a router created for the public base URL of the server over HTTP.
+ * Serves over HTTP a router created for the public base URL of the server.
  *
- * Behaves as the overload serving a ready router, for routers whose handlers depend on the address clients reach the
- * server at, for example to verify the audience of the tokens they accept.
+ * Suits routers whose handlers depend on the address clients reach the server at, for example to verify the audience
+ * of the tokens they accept.
  *
- * @param factory A function creating the router given the public base URL of the server; the function may throw to
- *                reject its own settings, and the server is then not started
+ * @param factory A function creating the router given the public base URL of the server
  *
- * @returns A promise resolving when the server closes, and rejecting if `URL` is malformed, the router cannot be
- *     created or the server fails to listen
+ * @returns A promise resolving when the server closes, and rejecting if `URL` is malformed, `factory` throws or the
+ *     server fails to listen
  */
 export function serve(factory: (url: string) => Router): Promise<void>;
 
 /**
- * Serves a router over HTTP, with the listening address read from the environment:
- *
- * - `PORT`: the listening port; defaults to `8080`
- * - `HOST`: the listening address; defaults to `0.0.0.0`
- * - `URL`: the public base URL clients reach the server at; defaults to `http://<HOST>:<PORT>`, with `localhost`
- *   standing for `0.0.0.0`
- *
- * Every request is traced in the log with its outcome and duration. Requests no route matches are answered with a
- * bodiless `404`; errors no route handles are logged and answered with a bodiless response, carrying their own client
- * error status if any and `500` otherwise, so that no internal detail reaches the client. The server trusts the first
- * proxy hop, as required behind a front end such as Cloud Run's, so that the router sees the caller address rather than
- * the proxy's.
- *
- * The server closes on `SIGINT` or `SIGTERM`, completing the requests in flight before it stops.
+ * Serves a router over HTTP.
  *
  * @param router The router serving the application
  *
@@ -56,6 +57,14 @@ export function serve(factory: (url: string) => Router): Promise<void>;
  */
 export function serve(router: Router): Promise<void>;
 
+/**
+ * Serves a router over HTTP, either ready or created for the public base URL of the server.
+ *
+ * @param router The router serving the application, or a function creating it given the public base URL of the server
+ *
+ * @returns A promise resolving when the server closes, and rejecting if `URL` is malformed, the router cannot be
+ *     created or the server fails to listen
+ */
 export async function serve(router: Router | ((url: string) => Router)): Promise<void> {
 
 	const host = process.env.HOST || "0.0.0.0";
