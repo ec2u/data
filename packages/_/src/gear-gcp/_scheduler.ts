@@ -68,7 +68,7 @@ const schedulerEmail = process.env.SCHEDULER_SERVICE_ACCOUNT;
  * Actions must complete within the attempt deadline configured on the triggering job, 3 minutes by default and 30
  * minutes at most: Cloud Scheduler cancels a longer attempt and marks it failed, no matter how the action ends.
  *
- * Unauthorised requests are rejected with:
+ * Unauthorised requests are rejected with a bodiless response:
  *
  * - `401 Unauthorized`: Missing, malformed, or invalid OIDC token
  * - `403 Forbidden`: Valid token, but from an unexpected service account
@@ -98,7 +98,7 @@ export function job(url: string, handler: () => Promise<unknown>): Router {
 					ip: request.ip
 				});
 
-				response.status(Unauthorized).json({ error: "unauthorized" });
+				response.status(Unauthorized).end();
 
 			} else {
 
@@ -120,7 +120,7 @@ export function job(url: string, handler: () => Promise<unknown>): Router {
 							url: request.url
 						});
 
-						response.status(Forbidden).json({ error: "forbidden" });
+						response.status(Forbidden).end();
 
 					} else {
 
@@ -136,7 +136,7 @@ export function job(url: string, handler: () => Promise<unknown>): Router {
 						url: request.url
 					});
 
-					response.status(Unauthorized).json({ error: "invalid token" });
+					response.status(Unauthorized).end();
 
 				}
 
