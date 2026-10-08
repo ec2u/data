@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { schema } from "./index.js";
-import { Type } from "@google/genai";
+import { json, schema, text as output } from "./index.js";
+import { FinishReason, GenerateContentResponse, type Part, Type } from "@google/genai";
 import { boolean } from "@metreeca/blue/boolean";
 import { dictionary } from "@metreeca/blue/dictionary";
 import { integer } from "@metreeca/blue/number";
@@ -371,3 +371,66 @@ describe("schema", () => {
 	});
 
 });
+
+describe("text", () => {
+
+	it("joins the output text of the parts generated for the caller", () => {
+
+		expect(output(generated({ parts: [{ text: " one " }, { text: "skipped", thought: true }, { text: "two" }] })))
+			.toBe("one \n\ntwo");
+
+	});
+
+	it("reports a generation carrying no output text, naming the reason it was withheld", () => {
+
+		expect(() => output(generated({ finishReason: FinishReason.RECITATION })))
+			.toThrow("empty generation <RECITATION>");
+
+	});
+
+	it("reports a response carrying no candidate", () => {
+
+		expect(() => output(Object.assign(new GenerateContentResponse(), { candidates: [] })))
+			.toThrow("empty generation <undefined>");
+
+	});
+
+});
+
+describe("json", () => {
+
+	it("parses the output text as a JSON payload", () => {
+
+		expect(json(generated({ parts: [{ text: `{ "label": "x" }` }] }))).toEqual({ label: "x" });
+
+	});
+
+	it("reports a generation carrying no output text as empty rather than malformed", () => {
+
+		expect(() => json(generated({ finishReason: FinishReason.RECITATION })))
+			.toThrow("empty generation <RECITATION>");
+
+	});
+
+	it("reports output text that is not well-formed JSON", () => {
+
+		expect(() => json(generated({ parts: [{ text: `{ "label": ` }] })))
+			.toThrow(/^malformed model response/);
+
+	});
+
+});
+
+
+function generated({ parts, finishReason = FinishReason.STOP }: {
+
+	readonly parts?: readonly Part[]
+	readonly finishReason?: FinishReason
+
+}): GenerateContentResponse {
+
+	return Object.assign(new GenerateContentResponse(), {
+		candidates: [{ finishReason, content: parts ? { role: "model", parts: [...parts] } : {} }]
+	});
+
+}

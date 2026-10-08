@@ -55,7 +55,7 @@ import {
 import type { ResourceShape } from "@metreeca/blue/resource";
 import { date, email, instant, iri, time, timestamp, url } from "@metreeca/blue/string";
 import type { Shape } from "@metreeca/blue/value";
-import { eager, isString, type Lazy, opt, type Optional, type Value } from "@metreeca/core";
+import { eager, error, isString, type Lazy, opt, type Optional, type Value } from "@metreeca/core";
 import { createThrottle, type Throttle } from "@metreeca/core/async";
 import { markdown } from "@metreeca/core/strings";
 import { BadRequest, TooManyRequests } from "@metreeca/http";
@@ -689,29 +689,25 @@ export function schema(shape: Lazy<ResourceShape>): Schema {
 /**
  * Extracts the output text of a Gemini API response.
  *
- * Thinking parts and function calls are skipped, so only the text generated for the caller is returned. Responses that
- * completed a function calling session without producing output text are rejected as incomplete generations.
+ * Thinking parts and function calls are skipped, so only the text generated for the caller is returned. A response
+ * without output text is rejected as an empty generation, with an error naming its finish reason. A generation the
+ * model withheld, for instance as `RECITATION`, is thus told apart from a malformed payload.
  *
  * @param response The response of a `generateContent` request
  *
  * @returns The trimmed output text of `response`, joining the text of multiple parts with blank lines
  *
- * @throws {@link !Error Error} If `response` completed function calls without producing output text
+ * @throws {@link !Error Error} If `response` carries no output text, naming the finish reason of the response
  */
 export function text(response: GenerateContentResponse): string {
 
-	const afc = response.automaticFunctionCallingHistory;
-	const parts = response.candidates?.[0]?.content?.parts ?? [];
+	const candidate = response.candidates?.[0];
+	const parts = (candidate?.content?.parts ?? []).filter(part => part.text && !part.thought);
 
-	if ( afc?.length && !parts.some(part => part.text && !part.thought) ) {
-		throw new Error(`incomplete generation with no output text`);
-	}
-
-	return parts
-		.filter(part => part.text && !part.thought)
+	return parts.length > 0 ? parts
 		.map(part => part.text)
 		.join("\n\n")
-		.trim();
+		.trim() : error(`empty generation <${candidate?.finishReason}>`);
 }
 
 /**
@@ -726,16 +722,18 @@ export function text(response: GenerateContentResponse): string {
  *
  * @returns The JSON payload parsed from the output text of `response`
  *
- * @throws {@link !Error Error} If `response` carries no output text (see {@link text}) or its text is not well-formed
- * JSON
+ * @throws {@link !Error Error} If `response` carries no output text (see {@link text}), or if its text is not
+ * well-formed JSON, for instance because the reply was cut short by an exhausted output budget
  *
  * @see {@link schema}
  */
 export function json<T extends Value = Value>(response: GenerateContentResponse): T {
 
+	const output = text(response);
+
 	try {
 
-		return JSON.parse(text(response));
+		return JSON.parse(output);
 
 	} catch ( e ) {
 
