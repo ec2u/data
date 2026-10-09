@@ -162,9 +162,9 @@ export function server(): Server & Express {
 
 					server.off("error", reject); // failures after listening are no longer startup failures
 
-					const address = server.address(); // the actual port, if assigned by the operating system
+					const actual: number = Object(server.address()).port ?? port; // if assigned by the operating system
 
-					logger.info`listening on ${host || "every interface"} at port ${isObject(address) ? address.port : port}`;
+					logger.info`listening on ${host || "every interface"} at port ${actual}`;
 
 					process.once("SIGINT", close);
 					process.once("SIGTERM", close);
