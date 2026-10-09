@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { serve } from "@metreeca/work/gate/server.js";
+import { second } from "@metreeca/work/core/temporal.js";
+import { serve } from "@metreeca/work/gate/index.js";
 import { Router } from "express";
 import { events } from "./events/index.js";
 import { taxonomies } from "./taxonomies/index.js";
@@ -28,6 +29,10 @@ await serve(Router()
 	.use("/units/", units())
 	.use("/events/", events())
 
-	.use("/taxonomies/", taxonomies())
+	.use("/taxonomies/", taxonomies()), {
 
-);
+	port: Number(process.env.PORT ?? 8080),
+	proxies: 1, // job endpoints rebuild their URL from the headers forwarded by the Cloud Run front end
+	timeout: 8*second // below the 10s Cloud Run grace period before SIGKILL
+
+});

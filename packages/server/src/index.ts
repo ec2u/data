@@ -15,7 +15,9 @@
  */
 
 import { client } from "@metreeca/work/gate/client.js";
-import { serve } from "@metreeca/work/gate/server.js";
+import { second } from "@metreeca/work/core/temporal.js";
+import { serve } from "@metreeca/work/gate/index.js";
+import { gcp } from "@metreeca/work/gear-gcp/index.js";
 import express, { Router } from "express";
 import { resolve } from "node:path";
 import { datasets } from "./datasets/index.js";
@@ -24,10 +26,6 @@ import { units } from "./units/index.js";
 import { execute } from "@ec2u/data-system";
 import { universities } from "./universities/index.js";
 
-
-// services live as long as the server: shared by all requests, released on SIGINT or SIGTERM
-
-// !!! every execute() call constructs its own service instances: executing per request would reconnect each time
 
 await execute(() => serve(Router()
 
@@ -38,6 +36,10 @@ await execute(() => serve(Router()
 	.use("/", datasets())
 	.use("/universities/", universities())
 	.use("/events/", events())
-	.use("/units/", units())
+	.use("/units/", units()), {
 
-));
+	port: Number(process.env.PORT ?? 8080),
+	proxies: gcp.cloud ? 1 : 0, // trust the Cloud Run front end
+	timeout: 8*second // below the 10s Cloud Run grace period before SIGKILL
+
+}));
