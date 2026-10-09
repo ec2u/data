@@ -23,6 +23,43 @@ const logger = log(import.meta.url);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * HTTP serving extension for Express applications.
+ */
+export type Server = {
+
+	/**
+	 * Serves the application over HTTP.
+	 *
+	 * Every request is traced in the log with its outcome and duration. Requests that match no route get a bodiless
+	 * `404`. Errors that no route handles are logged, and the client gets a bodiless response: the error status for
+	 * client errors, `500` otherwise.
+	 *
+	 * Once listening, the server runs until it is closed, either on demand by aborting the `signal` or by `SIGINT` or
+	 * `SIGTERM`.
+	 *
+	 * Closing refuses new connections at once, while the requests in flight are completed within the `timeout`.
+	 * Repeating the process signal that started the close terminates the process.
+	 *
+	 * Calls in the native Express form, with no argument, a port, a path or a callback, return the underlying
+	 * `http.Server`. Their requests are still traced in the log, but unmatched routes and unhandled errors get the
+	 * standard Express responses.
+	 *
+	 * @param options The server options; every option may be omitted, and `{}` applies the defaults
+	 *
+	 * @returns A promise resolving once the server is closed, and rejecting if an option is malformed or the server
+	 *     fails to listen
+	 */
+	listen(options: ServerOpts): Promise<void>;
+
+};
+
+/**
+ * HTTP server options.
+ *
+ * Configures where {@link Server.listen} accepts connections, which forwarded caller addresses it trusts and how it
+ * shuts down; every option may be omitted, and the defaults suit a server exposed directly on a free port.
+ */
 export type ServerOpts = {
 
 	/**
@@ -67,36 +104,6 @@ export type ServerOpts = {
 
 };
 
-/**
- * HTTP serving extension for Express applications.
- */
-export type Server = {
-
-	/**
-	 * Serves the application over HTTP.
-	 *
-	 * Every request is traced in the log with its outcome and duration. Requests that match no route get a bodiless
-	 * `404`. Errors that no route handles are logged, and the client gets a bodiless response: the error status for
-	 * client errors, `500` otherwise.
-	 *
-	 * Once listening, the server runs until it is closed, either on demand by aborting the `signal` or by `SIGINT` or
-	 * `SIGTERM`.
-	 *
-	 * Closing refuses new connections at once, while the requests in flight are completed within the `timeout`.
-	 * Repeating the process signal that started the close terminates the process.
-	 *
-	 * Calls in the native Express form, with a port, a path or a callback, keep their standard behaviour and return the
-	 * underlying `http.Server`.
-	 *
-	 * @param options The server options; every option may be omitted
-	 *
-	 * @returns A promise resolving once the server is closed, and rejecting if an option is malformed or the server
-	 *     fails to listen
-	 */
-	listen(options?: ServerOpts): Promise<void>;
-
-};
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -107,23 +114,32 @@ export type Server = {
  */
 export function server(): Server & Express {
 
-	return Object.assign(express(), { listen });
+	const server = express()
+
+		.disable("x-powered-by")
+
+		.use(tracing());
 
 
-	function listen(this: Express, options?: ServerOpts): Promise<void>;
+	return Object.assign(server, { listen });
+
+
+	function listen(this: Express, options: ServerOpts): Promise<void>;
 	function listen(this: Express, ...args: unknown[]): Promise<void> | HTTPServer {
 
-		if ( isArray<ServerOpts>(args, value => isObject(value)) ) {
+		if ( isArray<ServerOpts>(args, [value => isObject(value)]) ) {
 
 			const [{
 
 				host = "",
 				port = 0,
+
 				proxies = 0,
 				timeout = 0,
+
 				signal
 
-			} = {}] = args;
+			}] = args;
 
 			return new Promise<void>((resolve, reject) => {
 
@@ -132,38 +148,34 @@ export function server(): Server & Express {
 				assert(proxies, isCount, `malformed proxies <${proxies}>`);
 				assert(timeout, isTimeout, `malformed timeout <${timeout}>`);
 
-				const server = express()
+				const server: HTTPServer = Reflect.apply(express.application.listen, this
 
 					.set("trust proxy", proxies)
-					.disable("x-powered-by")
-
-					.use(tracing())
-
-					.use(this)
 
 					.use(unmatched())
-					.use(unhandled())
-
-					.listen({ port, host }, () => {
-
-						server.off("error", reject); // failures after listening are no longer startup failures
-
-						const address = server.address(); // the actual port, if assigned by the operating system
-
-						logger.info`listening on ${host || "every interface"} at port ${isObject(address) ? address.port : port}`;
-
-						process.once("SIGINT", close);
-						process.once("SIGTERM", close);
-
-						if ( signal?.aborted ) {
-							close();
-						} else {
-							signal?.addEventListener("abort", close, { once: true });
-						}
-
-					});
+					.use(unhandled()), [{ port, host }]
+				);
 
 				server.once("error", reject);
+
+				server.once("listening", () => { // not a listen() callback, which Express 5 also invokes on failure
+
+					server.off("error", reject); // failures after listening are no longer startup failures
+
+					const address = server.address(); // the actual port, if assigned by the operating system
+
+					logger.info`listening on ${host || "every interface"} at port ${isObject(address) ? address.port : port}`;
+
+					process.once("SIGINT", close);
+					process.once("SIGTERM", close);
+
+					if ( signal?.aborted ) {
+						close();
+					} else {
+						signal?.addEventListener("abort", close, { once: true });
+					}
+
+				});
 
 				server.once("close", () => {
 
