@@ -18,12 +18,14 @@
 
 gcp=
 link=
+deploy=
 
 case "$*" in
 
 	"--gcp") gcp=1 ;;
 	"--link") link=1 ;;
 	"--gcp --link" | "--link --gcp") gcp=1; link=1 ;;
+	"--deploy") deploy=1 ;;
 
 	"") echo "package.sh is a project task and is not meant to be run on its own" >&2; exit 1 ;;
 
@@ -76,5 +78,70 @@ if [ -n "${link}" ] && [ -d "${packages}" ]; then
 		${packages}/Wire/packages/sparql/wire-sparql \
 		${packages}/Wire/packages/sparql/wire-sparql-http \
 		${packages}/Wire/packages/sparql/wire-sparql-rdf4j
+
+fi
+
+
+# Deploy the loader to Cloud Run and schedule its jobs
+#
+# The service is closed to the public: Cloud Run checks the OIDC token of each request and admits only callers
+# granted the invoker role. Jobs mint tokens as a dedicated service account, the only one granted that role, with the
+# default audience (the job URL), which the job endpoints verify again against the URL they are reached at.
+#
+# !!! requires a container build for packages/loader (Dockerfile or buildpacks entry point) before the first run
+
+region=europe-west3
+service=loader
+account=scheduler@${project}.iam.gserviceaccount.com
+schedule="0 3 * * *"
+
+jobs="
+	universities/wikidata
+	events/coimbra-university
+	events/iasi-university-360
+	events/jena-university
+	events/linz-university
+	events/pavia-university
+	events/poitiers-university
+	events/salamanca-university
+	events/turku-university
+	events/umea-university
+"
+
+if [ -n "${deploy}" ]; then
+
+	gcloud iam service-accounts describe ${account} >/dev/null 2>&1 \
+		|| gcloud iam service-accounts create scheduler --display-name="Cloud Scheduler"
+
+	gcloud run deploy ${service} \
+		--region=${region} \
+		--source=. \
+		--no-allow-unauthenticated
+
+	gcloud run services add-iam-policy-binding ${service} \
+		--region=${region} \
+		--member="serviceAccount:${account}" \
+		--role="roles/run.invoker"
+
+	url=$(gcloud run services describe ${service} --region=${region} --format="value(status.url)")
+
+	for job in ${jobs}; do
+
+		name=$(echo ${job} | tr "/" "-")
+
+		gcloud scheduler jobs describe ${name} --location=${region} >/dev/null 2>&1 \
+			&& action=update \
+			|| action=create
+
+		gcloud scheduler jobs ${action} http ${name} \
+			--location=${region} \
+			--schedule="${schedule}" \
+			--time-zone="Europe/Rome" \
+			--uri="${url}/${job}" \
+			--http-method=POST \
+			--attempt-deadline=30m \
+			--oidc-service-account-email=${account}
+
+	done
 
 fi

@@ -21,7 +21,8 @@
     "setup": "npm ci && sh package.sh --gcp --link",
     "build": "rm -rf packages/*/lib && tsc --build tsconfig.build.json && npm run build --workspaces --if-present",
     "check": "npx vitest run",
-    "start": "concurrently 'npm run serve -w packages/server' 'wait-on tcp:8080 && npm run watch -w packages/client'"
+    "start": "concurrently 'npm run serve -w packages/server' 'wait-on tcp:8080 && npm run watch -w packages/client'",
+    "deploy": "sh package.sh --deploy"
   },
   "devDependencies": {
     "concurrently": "^10.0.5",
