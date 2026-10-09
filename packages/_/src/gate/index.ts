@@ -3,7 +3,7 @@
  */
 
 /**
- * HTTP server for Express routers.
+ * HTTP server for Express applications.
  *
  * The server takes care of the concerns every HTTP service shares, such as request logging, error responses and
  * graceful shutdown, letting applications focus on their routes.
@@ -11,11 +11,11 @@
  * @module index
  */
 
-import { assert, isError, isNumber, isObject } from "@metreeca/core";
+import { assert, isArray, isError, isNumber, isObject } from "@metreeca/core";
 import { BadRequest, InternalServerError, NotFound } from "@metreeca/http";
 import { log } from "@metreeca/tape";
-import express, { type ErrorRequestHandler, type RequestHandler, type Router } from "express";
-import { once } from "node:events";
+import express, { type ErrorRequestHandler, type Express, type RequestHandler } from "express";
+import type { Server as HTTPServer } from "node:http";
 
 
 const logger = log(import.meta.url);
@@ -23,34 +23,7 @@ const logger = log(import.meta.url);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Serves a router over HTTP.
- *
- * Every request is traced in the log with its outcome and duration. Requests that match no route get a bodiless `404`.
- * Errors that no route handles are logged, and the client gets a bodiless response: the error status for client
- * errors, `500` otherwise.
- *
- * Once listening, the server runs until it is closed, either on demand by aborting the `signal` or by `SIGINT` or
- * `SIGTERM`.
- *
- * Closing refuses new connections at once, while the requests in flight are completed within the `timeout`. Repeating
- * the process signal that started the close terminates the process.
- *
- * @param router The router serving the application
- * @param options The server options; every option may be omitted
- *
- * @returns A promise resolving once the server is closed, and rejecting if an option is malformed or the server fails
- *     to listen
- */
-export async function serve(router: Router, {
-
-	host = "",
-	port = 0,
-	proxies = 0,
-	timeout = 0,
-	signal
-
-}: {
+export type ServerOpts = {
 
 	/**
 	 * The address the server listens on; if omitted or empty, the server listens on every interface, over IPv4 and
@@ -92,89 +65,161 @@ export async function serve(router: Router, {
 	 */
 	readonly signal?: AbortSignal;
 
-} = {}): Promise<void> {
+};
 
-	assert(host, isHost, `malformed host <${host}>`);
-	assert(port, isPort, `malformed port <${port}>`);
-	assert(proxies, isCount, `malformed proxies <${proxies}>`);
-	assert(timeout, isTimeout, `malformed timeout <${timeout}>`);
+/**
+ * HTTP serving extension for Express applications.
+ */
+export type Server = {
 
-	const server = express()
+	/**
+	 * Serves the application over HTTP.
+	 *
+	 * Every request is traced in the log with its outcome and duration. Requests that match no route get a bodiless
+	 * `404`. Errors that no route handles are logged, and the client gets a bodiless response: the error status for
+	 * client errors, `500` otherwise.
+	 *
+	 * Once listening, the server runs until it is closed, either on demand by aborting the `signal` or by `SIGINT` or
+	 * `SIGTERM`.
+	 *
+	 * Closing refuses new connections at once, while the requests in flight are completed within the `timeout`.
+	 * Repeating the process signal that started the close terminates the process.
+	 *
+	 * Calls in the native Express form, with a port, a path or a callback, keep their standard behaviour and return the
+	 * underlying `http.Server`.
+	 *
+	 * @param options The server options; every option may be omitted
+	 *
+	 * @returns A promise resolving once the server is closed, and rejecting if an option is malformed or the server
+	 *     fails to listen
+	 */
+	listen(options?: ServerOpts): Promise<void>;
 
-		.set("trust proxy", proxies)
-		.disable("x-powered-by")
+};
 
-		.use(tracing())
 
-		.use(router)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		.use(unmatched())
-		.use(unhandled())
+/**
+ * Creates an Express application served over HTTP.
+ *
+ * @returns A new Express application, whose `listen()` serves it as described by {@link Server.listen}
+ */
+export function server(): Server & Express {
 
-		.listen({ port, host });
+	return Object.assign(express(), { listen });
 
-	await once(server, "listening");
 
-	const address = server.address(); // the actual port, if assigned by the operating system
+	function listen(this: Express, options?: ServerOpts): Promise<void>;
+	function listen(this: Express, ...args: unknown[]): Promise<void> | HTTPServer {
 
-	logger.info`listening on ${host || "every interface"} at port ${isObject(address) ? address.port : port}`;
+		if ( isArray<ServerOpts>(args, value => isObject(value)) ) {
 
-	return new Promise<void>(resolve => {
+			const [{
 
-		server.once("close", () => {
+				host = "",
+				port = 0,
+				proxies = 0,
+				timeout = 0,
+				signal
 
-			process.off("SIGINT", close);
-			process.off("SIGTERM", close);
+			} = {}] = args;
 
-			signal?.removeEventListener("abort", close);
+			return new Promise<void>((resolve, reject) => {
 
-			resolve();
+				assert(host, isHost, `malformed host <${host}>`);
+				assert(port, isPort, `malformed port <${port}>`);
+				assert(proxies, isCount, `malformed proxies <${proxies}>`);
+				assert(timeout, isTimeout, `malformed timeout <${timeout}>`);
 
-		});
+				const server = express()
 
-		process.once("SIGINT", close);
-		process.once("SIGTERM", close);
+					.set("trust proxy", proxies)
+					.disable("x-powered-by")
 
-		if ( signal?.aborted ) {
-			close();
+					.use(tracing())
+
+					.use(this)
+
+					.use(unmatched())
+					.use(unhandled())
+
+					.listen({ port, host }, () => {
+
+						server.off("error", reject); // failures after listening are no longer startup failures
+
+						const address = server.address(); // the actual port, if assigned by the operating system
+
+						logger.info`listening on ${host || "every interface"} at port ${isObject(address) ? address.port : port}`;
+
+						process.once("SIGINT", close);
+						process.once("SIGTERM", close);
+
+						if ( signal?.aborted ) {
+							close();
+						} else {
+							signal?.addEventListener("abort", close, { once: true });
+						}
+
+					});
+
+				server.once("error", reject);
+
+				server.once("close", () => {
+
+					process.off("SIGINT", close);
+					process.off("SIGTERM", close);
+
+					signal?.removeEventListener("abort", close);
+
+					resolve();
+
+				});
+
+
+				function close(): void {
+
+					if ( server.listening ) { // not closing yet
+
+						logger.info`shutting down`;
+
+						const timer = timeout > 0 ? setTimeout(() => server.closeAllConnections(), timeout) : undefined;
+
+						server.close(() => clearTimeout(timer));
+
+					}
+
+				}
+
+			});
+
 		} else {
-			signal?.addEventListener("abort", close, { once: true });
-		}
 
-
-		function close(): void {
-
-			if ( server.listening ) { // not closing yet
-
-				logger.info`shutting down`;
-
-				const timer = timeout > 0 ? setTimeout(() => server.closeAllConnections(), timeout) : undefined;
-
-				server.close(() => clearTimeout(timer));
-
-			}
+			return Reflect.apply(express.application.listen, this, args);
 
 		}
 
-	});
-
-
-	function isHost(value: string): boolean {
-		return /^\S*$/u.test(value);
 	}
 
-	function isPort(value: number): boolean {
-		return Number.isInteger(value) && value >= 0 && value <= 65535;
-	}
+}
 
-	function isCount(value: number): boolean {
-		return Number.isInteger(value) && value >= 0;
-	}
 
-	function isTimeout(value: number): boolean {
-		return Number.isInteger(value) && value >= 0;
-	}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function isHost(value: string): boolean {
+	return /^\S*$/u.test(value);
+}
+
+function isPort(value: number): boolean {
+	return Number.isInteger(value) && value >= 0 && value <= 65535;
+}
+
+function isCount(value: number): boolean {
+	return Number.isInteger(value) && value >= 0;
+}
+
+function isTimeout(value: number): boolean {
+	return Number.isInteger(value) && value >= 0;
 }
 
 

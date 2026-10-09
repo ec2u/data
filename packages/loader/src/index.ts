@@ -15,24 +15,26 @@
  */
 
 import { second } from "@metreeca/work/core/temporal.js";
-import { serve } from "@metreeca/work/gate/index.js";
-import { Router } from "express";
+import { server } from "@metreeca/work/gate/index.js";
 import { events } from "./events/index.js";
 import { taxonomies } from "./taxonomies/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
-await serve(Router()
+await server()
 
 	.use("/universities/", universities())
 	.use("/units/", units())
 	.use("/events/", events())
 
-	.use("/taxonomies/", taxonomies()), {
+	.use("/taxonomies/", taxonomies())
 
-	port: Number(process.env.PORT ?? 8080),
-	proxies: 1, // job endpoints rebuild their URL from the headers forwarded by the Cloud Run front end
-	timeout: 8*second // below the 10s Cloud Run grace period before SIGKILL
+	.listen({
 
-});
+		port: Number(process.env.PORT ?? 8080),
+
+		proxies: 1, // job endpoints rebuild their URL from the headers forwarded by the Cloud Run front end
+		timeout: 8*second // below the 10s Cloud Run grace period before SIGKILL
+
+	});
