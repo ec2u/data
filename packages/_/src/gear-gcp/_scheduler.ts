@@ -21,11 +21,6 @@
  * Google Cloud Scheduler jobs.
  *
  * @module
- *
- * @remarks
- *
- * Authentication is configured through the public service URL passed to {@link job} and the optional
- * `SCHEDULER_SERVICE_ACCOUNT` environment variable, as documented under {@link job}.
  */
 
 import { Forbidden, OK, Unauthorized } from "@metreeca/http";
@@ -48,18 +43,19 @@ const schedulerEmail = process.env.SCHEDULER_SERVICE_ACCOUNT;
  * Creates an Express router executing a pipeline action on authenticated Cloud Scheduler requests.
  *
  * The router answers `POST` on its own root, accepting only requests carrying an OIDC bearer token issued by Google
- * for the service URL audience, and optionally restricted to a single service account. Mount it with `use()`, which
- * strips the mount prefix and leaves the router matching the bare mount path.
+ * for the URL of the request itself, the default audience of a Cloud Scheduler job, and optionally restricted to a
+ * single service account. Mount it with `use()`, which strips the mount prefix and leaves the router matching the bare
+ * mount path.
  *
- * @param url The public base URL of the service, as Cloud Scheduler names it in the OIDC token audience; pass the URL
- *            the gate `serve()` hands to a router factory, so that tokens are checked against the address the server
- *            answers at
  * @param handler The pipeline action awaited on each authorised request; its result is not reported to the caller
  *
  * @returns An Express {@link Router} handling `POST` on its own root; requests with a different method or a deeper
  *          path fall through to the surrounding stack
  *
  * @remarks
+ *
+ * The request URL is rebuilt from the forwarded protocol and host, so the surrounding server must trust its proxy as
+ * the gate server does on Cloud Run.
  *
  * A completed action is reported with an empty `200 OK`, as Cloud Scheduler judges an attempt by its status code
  * alone. A rejected action is left to propagate to the error middleware of the surrounding stack, which reports it
@@ -79,21 +75,24 @@ const schedulerEmail = process.env.SCHEDULER_SERVICE_ACCOUNT;
  *
  * @see {@link https://cloud.google.com/scheduler/docs/http-target-auth Cloud Scheduler HTTP target authentication}
  */
-export function job(url: string, handler: () => Promise<unknown>): Router {
+export function job(handler: () => Promise<unknown>): Router {
 
 	// !!! can we decouple from express?
+
+	// !!! redundant once the Cloud Run IAM policy is in place (package.sh --deploy): the service admits only callers
+	// !!! granted the invoker role, and Cloud Run verifies the OIDC token before the request reaches the router
 
 	return Router()
 
 		.post("/", async (request, response) => { // scoped to the root, so deeper paths are reported as unknown rather than unauthorised
 
-			const status = await authorize(url, request);
+			const status = await authorize(request);
 
 			if ( status === OK ) {
 
 				await handler(); // outside authorize(), so that rejections reach the error middleware
 
-				response.status(OK).send();
+				response.status(OK).end();
 
 			} else {
 
@@ -106,7 +105,7 @@ export function job(url: string, handler: () => Promise<unknown>): Router {
 }
 
 
-async function authorize(url: string, request: Request): Promise<number> {
+async function authorize(request: Request): Promise<number> {
 
 	const token = /^Bearer (.+)$/i.exec(request.headers.authorization ?? "")?.[1];
 
@@ -126,16 +125,16 @@ async function authorize(url: string, request: Request): Promise<number> {
 
 			const ticket = await oauth2Client.verifyIdToken({
 				idToken: token,
-				audience: url
+				audience: `${request.protocol}://${request.host}${request.originalUrl}`
 			});
 
-			const payload = ticket.getPayload();
+			const email = ticket.getPayload()?.email;
 
-			if ( schedulerEmail && payload?.email !== schedulerEmail ) {
+			if ( schedulerEmail && email !== schedulerEmail ) {
 
 				logger.warning("token from unexpected service account", {
 					expected: schedulerEmail,
-					actual: payload?.email,
+					actual: email,
 					method: request.method,
 					url: request.url
 				});

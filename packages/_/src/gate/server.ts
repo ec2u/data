@@ -35,19 +35,6 @@ const logger = log(import.meta.url);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Serves over HTTP a router created for the public base URL of the server.
- *
- * Suits routers whose handlers depend on the address clients reach the server at, for example to verify the audience
- * of the tokens they accept.
- *
- * @param factory A function creating the router given the public base URL of the server
- *
- * @returns A promise resolving when the server closes, and rejecting if `URL` is malformed, `factory` throws or the
- *     server fails to listen
- */
-export function serve(factory: (url: string) => Router): Promise<void>;
-
-/**
  * Serves a router over HTTP.
  *
  * @param router The router serving the application
@@ -55,17 +42,7 @@ export function serve(factory: (url: string) => Router): Promise<void>;
  * @returns A promise resolving when the server closes, and rejecting if `URL` is malformed or the server fails to
  *     listen
  */
-export function serve(router: Router): Promise<void>;
-
-/**
- * Serves a router over HTTP, either ready or created for the public base URL of the server.
- *
- * @param router The router serving the application, or a function creating it given the public base URL of the server
- *
- * @returns A promise resolving when the server closes, and rejecting if `URL` is malformed, the router cannot be
- *     created or the server fails to listen
- */
-export async function serve(router: Router | ((url: string) => Router)): Promise<void> {
+export async function serve(router: Router): Promise<void> {
 
 	const host = process.env.HOST || "0.0.0.0";
 	const port = parseInt(process.env.PORT || "8080", 10);
@@ -82,7 +59,7 @@ export async function serve(router: Router | ((url: string) => Router)): Promise
 
 			.use(tracing())
 
-			.use(isRouter(router) ? router : router(url))
+			.use(router)
 
 			.use(unmatched())
 			.use(unhandled())
@@ -105,11 +82,6 @@ export async function serve(router: Router | ((url: string) => Router)): Promise
 		process.once("SIGTERM", close);
 
 	});
-
-
-	function isRouter(value: unknown): value is Router {
-		return value instanceof express.Router;
-	}
 
 }
 

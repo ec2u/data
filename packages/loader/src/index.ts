@@ -22,11 +22,11 @@ import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
-await serve(url => Router()
+await serve(Router()
 
-	.use("/universities/", universities(url))
+	.use("/universities/", universities())
 	.use("/units/", units())
-	.use("/events/", events(url))
+	.use("/events/", events())
 
 	.use("/taxonomies/", taxonomies())
 

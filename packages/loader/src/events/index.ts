@@ -28,18 +28,18 @@ import { TurkuUniversity } from "./pipes/turku-university.js";
 import { UmeaUniversity } from "./pipes/umea-university.js";
 
 
-export function events(url: string): Router {
+export function events(): Router {
 
 	return Router()
 
-		.use("/coimbra-university", job(url, () => execute(CoimbraUniversity)))
-		.use("/iasi-university-360", job(url, () => execute(IasiUniversity360)))
-		.use("/jena-university", job(url, () => execute(JenaUniversity)))
-		.use("/linz-university", job(url, () => execute(LinzUniversity)))
-		.use("/pavia-university", job(url, () => execute(PaviaUniversity)))
-		.use("/poitiers-university", job(url, () => execute(PoitiersUniversity)))
-		.use("/salamanca-university", job(url, () => execute(SalamancaUniversity)))
-		.use("/turku-university", job(url, () => execute(TurkuUniversity)))
-		.use("/umea-university", job(url, () => execute(UmeaUniversity)));
+		.use("/coimbra-university", job(() => execute(CoimbraUniversity)))
+		.use("/iasi-university-360", job(() => execute(IasiUniversity360)))
+		.use("/jena-university", job(() => execute(JenaUniversity)))
+		.use("/linz-university", job(() => execute(LinzUniversity)))
+		.use("/pavia-university", job(() => execute(PaviaUniversity)))
+		.use("/poitiers-university", job(() => execute(PoitiersUniversity)))
+		.use("/salamanca-university", job(() => execute(SalamancaUniversity)))
+		.use("/turku-university", job(() => execute(TurkuUniversity)))
+		.use("/umea-university", job(() => execute(UmeaUniversity)));
 
 }
