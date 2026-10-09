@@ -30,7 +30,7 @@
 
 import { Forbidden, OK, Unauthorized } from "@metreeca/http";
 import { log } from "@metreeca/tape";
-import { Router } from "express";
+import { type Request, Router } from "express";
 import { OAuth2Client } from "google-auth-library";
 
 
@@ -81,75 +81,85 @@ const schedulerEmail = process.env.SCHEDULER_SERVICE_ACCOUNT;
  */
 export function job(url: string, handler: () => Promise<unknown>): Router {
 
-	// !!! why two .post()?
 	// !!! can we decouple from express?
 
 	return Router()
 
-		.post("/", async (request, response, next) => { // scoped to the root, so deeper paths are reported as unknown rather than unauthorised
+		.post("/", async (request, response) => { // scoped to the root, so deeper paths are reported as unknown rather than unauthorised
 
-			const token = /^Bearer (.+)$/i.exec(request.headers.authorization ?? "")?.[1];
+			const status = await authorize(url, request);
 
-			if ( token === undefined ) {
+			if ( status === OK ) {
 
-				logger.warning("missing or invalid authorization header", {
-					method: request.method,
-					url: request.url,
-					ip: request.ip
-				});
+				await handler(); // outside authorize(), so that rejections reach the error middleware
 
-				response.status(Unauthorized).end();
+				response.status(OK).send();
 
 			} else {
 
-				try {
-
-					const ticket = await oauth2Client.verifyIdToken({
-						idToken: token,
-						audience: url
-					});
-
-					const payload = ticket.getPayload();
-
-					if ( schedulerEmail && payload?.email !== schedulerEmail ) {
-
-						logger.warning("token from unexpected service account", {
-							expected: schedulerEmail,
-							actual: payload?.email,
-							method: request.method,
-							url: request.url
-						});
-
-						response.status(Forbidden).end();
-
-					} else {
-
-						next();
-
-					}
-
-				} catch ( error ) {
-
-					logger.error("token verification failed", {
-						error: error instanceof Error ? error.message : String(error),
-						method: request.method,
-						url: request.url
-					});
-
-					response.status(Unauthorized).end();
-
-				}
+				response.status(status).end();
 
 			}
 
-		})
-
-		.post("/", async (_request, response) => {
-
-			await handler();
-
-			response.status(OK).send();
-
 		});
+
+}
+
+
+async function authorize(url: string, request: Request): Promise<number> {
+
+	const token = /^Bearer (.+)$/i.exec(request.headers.authorization ?? "")?.[1];
+
+	if ( token === undefined ) {
+
+		logger.warning("missing or invalid authorization header", {
+			method: request.method,
+			url: request.url,
+			ip: request.ip
+		});
+
+		return Unauthorized;
+
+	} else {
+
+		try {
+
+			const ticket = await oauth2Client.verifyIdToken({
+				idToken: token,
+				audience: url
+			});
+
+			const payload = ticket.getPayload();
+
+			if ( schedulerEmail && payload?.email !== schedulerEmail ) {
+
+				logger.warning("token from unexpected service account", {
+					expected: schedulerEmail,
+					actual: payload?.email,
+					method: request.method,
+					url: request.url
+				});
+
+				return Forbidden;
+
+			} else {
+
+				return OK;
+
+			}
+
+		} catch ( error ) {
+
+			logger.error("token verification failed", {
+				error: error instanceof Error ? error.message : String(error),
+				method: request.method,
+				url: request.url
+			});
+
+			return Unauthorized;
+
+		}
+
+	}
 
 }
