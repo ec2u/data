@@ -38,7 +38,7 @@ export type Server = {
 	 * Once listening, the server runs until it is closed, either on demand by aborting the `signal` or by `SIGINT` or
 	 * `SIGTERM`.
 	 *
-	 * Closing refuses new connections at once, while the requests in flight are completed within the `timeout`.
+	 * Closing refuses new connections at once, and gives the requests in flight the `grace` period to complete.
 	 * Repeating the process signal that started the close terminates the process.
 	 *
 	 * Calls in the native Express form, with no argument, a port, a path or a callback, return the underlying
@@ -76,6 +76,7 @@ export type ServerOpts = {
 	 */
 	readonly port?: number;
 
+
 	/**
 	 * The number of proxy hops in front of the server whose forwarded caller address is trusted; defaults to `0`.
 	 *
@@ -88,13 +89,15 @@ export type ServerOpts = {
 	readonly proxies?: number;
 
 	/**
-	 * The milliseconds a close waits for the requests in flight before closing their connections; `0`, the default,
-	 * waits for them indefinitely, leaving the limit to the hosting platform.
+	 * The time in milliseconds granted to the requests in flight to complete when the server closes; `0`, the default,
+	 * sets no limit and leaves it to the hosting platform.
 	 *
-	 * Set it below the grace period the hosting platform allows between the termination signal and a forced kill, so
-	 * that the server closes lingering connections and exits cleanly before being killed.
+	 * Requests still running at the end of the period have their connections closed. Set it below the period the
+	 * hosting platform allows between the termination signal and a forced kill, so that the server exits cleanly before
+	 * being killed.
 	 */
-	readonly timeout?: number;
+	readonly grace?: number;
+
 
 	/**
 	 * A signal closing the server when aborted, as `SIGINT` or `SIGTERM` would; a signal that is already aborted closes
@@ -135,7 +138,7 @@ export function server(): Server & Express {
 				port = 0,
 
 				proxies = 0,
-				timeout = 0,
+				grace = 0,
 
 				signal
 
@@ -146,7 +149,7 @@ export function server(): Server & Express {
 				assert(host, isHost, `malformed host <${host}>`);
 				assert(port, isPort, `malformed port <${port}>`);
 				assert(proxies, isCount, `malformed proxies <${proxies}>`);
-				assert(timeout, isTimeout, `malformed timeout <${timeout}>`);
+				assert(grace, isTimeout, `malformed grace <${grace}>`);
 
 				const server: HTTPServer = Reflect.apply(express.application.listen, this
 
@@ -195,7 +198,7 @@ export function server(): Server & Express {
 
 						logger.info`shutting down`;
 
-						const timer = timeout > 0 ? setTimeout(() => server.closeAllConnections(), timeout) : undefined;
+						const timer = grace > 0 ? setTimeout(() => server.closeAllConnections(), grace) : undefined;
 
 						server.close(() => clearTimeout(timer));
 

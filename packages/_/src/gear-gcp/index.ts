@@ -30,8 +30,9 @@ import { immutable } from "@metreeca/core/values";
 /**
  * The Google Cloud Platform execution environment.
  *
- * Exposes the ambient settings shared by the Google Cloud integrations, that is whether the process is deployed to a
- * Google Cloud runtime. Values are resolved once at module initialisation and exposed as a deeply immutable object.
+ * Exposes the ambient settings shared by the Google Cloud integrations, such as whether the process is deployed to a
+ * Google Cloud runtime and which port its HTTP service listens on. Values are resolved once at module initialisation
+ * and exposed as a deeply immutable object.
  *
  * @see {@link https://cloud.google.com/docs/authentication Google Cloud Authentication}
  */
@@ -45,6 +46,14 @@ export const gcp = immutable({
 	 */
 	cloud: process.env.K_SERVICE !== undefined
 		|| process.env.CLOUD_RUN_JOB !== undefined
-		|| process.env.GAE_ENV !== undefined
+		|| process.env.GAE_ENV !== undefined,
+
+	/**
+	 * The port an HTTP service is expected to listen on.
+	 *
+	 * The port is read from the `PORT` environment variable, which managed Google Cloud runtimes set to the port they
+	 * route requests to; it defaults to `8080` if the variable is unset or empty.
+	 */
+	port: Number(process.env.PORT || 8080)
 
 });

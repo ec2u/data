@@ -16,6 +16,7 @@
 
 import { second } from "@metreeca/work/core/temporal.js";
 import { server } from "@metreeca/work/gate/index.js";
+import { gcp } from "@metreeca/work/gear-gcp/index.js";
 import { events } from "./events/index.js";
 import { taxonomies } from "./taxonomies/index.js";
 import { units } from "./units/index.js";
@@ -32,9 +33,9 @@ await server()
 
 	.listen({
 
-		port: Number(process.env.PORT ?? 8080),
+		port: gcp.port,
 
-		proxies: 1, // job endpoints rebuild their URL from the headers forwarded by the Cloud Run front end
-		timeout: 8*second // below the 10s Cloud Run grace period before SIGKILL
+		proxies: gcp.cloud ? 1 : 0, // trust the Cloud Run front end
+		grace: 8*second // below the 10s Cloud Run grace period before SIGKILL
 
 	});

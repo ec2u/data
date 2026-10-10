@@ -40,10 +40,10 @@ await execute(() => server()
 
 	.listen({
 
-		port: Number(process.env.PORT ?? 8080),
+		port: gcp.port,
 
 		proxies: gcp.cloud ? 1 : 0, // trust the Cloud Run front end
-		timeout: 8*second // below the 10s Cloud Run grace period before SIGKILL
+		grace: 8*second // below the 10s Cloud Run grace period before SIGKILL
 
 	})
 );
