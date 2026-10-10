@@ -39,7 +39,6 @@ import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
 import { error } from "@metreeca/core";
 import { Vault } from "@metreeca/gear/vault";
 
-const client = new SecretManagerServiceClient();
 
 /**
  * The gRPC status code reporting a secret or a secret version that doesn't exist.
@@ -47,6 +46,11 @@ const client = new SecretManagerServiceClient();
  * @see {@link https://grpc.io/docs/guides/status-codes/ gRPC status codes}
  */
 const NOT_FOUND = 5;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const client = new SecretManagerServiceClient();
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
