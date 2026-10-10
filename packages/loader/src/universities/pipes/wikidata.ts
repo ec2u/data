@@ -32,7 +32,7 @@ import { file } from "@metreeca/work/gear/files.js";
 import { WGSPoint } from "@metreeca/work/open/wgs.js";
 import { select } from "@metreeca/work/pipe-repository/select.js";
 import { delta, type Delta, persist } from "@metreeca/work/pipe-store/persist.js";
-import { validate } from "@metreeca/work/pipe-store/validate.js";
+import { validate } from "@metreeca/work/mine-jsonld/validate.js";
 import { execute } from "@ec2u/data-system";
 
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { validate } from "@metreeca/work/pipe-store/validate.js";
+import { validate } from "@metreeca/work/mine-jsonld/validate.js";
 import { Event, getEventId, events } from "@ec2u/data-shared/events/index.js";
 import type { Classified } from "./classify.js";
 import { getUniversity } from "@ec2u/data-shared/universities/index.core.js";
@@ -47,7 +47,7 @@ export function convert(publisher: {
 		(map(async payload => {
 
 			const url = payload.url;
-			
+
 			const title = clip(tidy(payload.title), LabelLength);
 
 			const startDate = payload.startDate;

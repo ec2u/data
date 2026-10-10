@@ -22,8 +22,8 @@ import { createHash } from "node:crypto";
 /**
  * Digest of a JSON value.
  *
- * Identifies the content a value carries rather than the value itself, so that a workflow may tell by comparison
- * whether something it already processed has since changed.
+ * A digest identifies the content of a value rather than the value itself. Comparing digests tells a workflow whether
+ * something it already processed has changed since.
  */
 export type Digest =
 	string
@@ -34,12 +34,12 @@ export type Digest =
 /**
  * Digests a JSON value.
  *
- * Values equal in content are assigned the same {@link Digest}, whatever the order their object entries were defined
- * in, so a workflow may skip whatever it already processed under a known digest. Arrays, in contrast, are ordered:
- * reordering their items yields a different digest.
+ * Values with equal content get the same {@link Digest}, regardless of the order of their object entries. A workflow
+ * can therefore skip any value whose digest it has already processed. Arrays are ordered: reordering their items
+ * produces a different digest.
  *
- * Only the distinctions JSON records are taken into account, so values differing solely in a respect it leaves out
- * share a digest: non-finite numbers are digested as `null` and `-0` as `0`.
+ * The digest covers only what JSON serialisation preserves. Values that differ only in what it drops share a digest:
+ * non-finite numbers are digested as `null`, and `-0` as `0`.
  *
  * @param value The JSON value to be digested
  *

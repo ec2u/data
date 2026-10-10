@@ -18,7 +18,7 @@ import { validate as validator } from "@metreeca/blue";
 import { type ResourceShape } from "@metreeca/blue/resource";
 import type { State } from "@metreeca/blue/value";
 import { type Lazy } from "@metreeca/core";
-import { Task } from "@metreeca/flow";
+import type { Task } from "@metreeca/flow";
 import { flat, map, trim } from "@metreeca/flow/tasks";
 import { log } from "@metreeca/tape";
 
@@ -29,17 +29,17 @@ const logger = log(import.meta.url);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Creates a task admitting only the values a shape accepts.
+ * Creates a task admitting only the JSON-LD resource descriptions a shape accepts.
  *
- * A value the shape rejects is logged with the violations found and dropped, so a single malformed value costs itself
- * rather than the run and later stages see only values the shape vouches for. Feeds that must not lose a value are
- * better validated at the sink, where a rejection fails the run.
+ * A description the shape rejects is logged with its violations and dropped. A single malformed resource costs only
+ * itself, not the run, and later stages see only descriptions that conform to the shape. Feeds that must not lose a
+ * resource are better validated at the sink, where a rejection fails the run.
  *
- * @typeParam S The type of the shape the values are validated against
+ * @typeParam S The type of the resource shape the descriptions are validated against
  *
- * @param shape The shape the values are validated against
+ * @param shape The resource shape the descriptions are validated against
  *
- * @returns A task forwarding the values `shape` accepts and dropping the others
+ * @returns A task forwarding the JSON-LD descriptions `shape` accepts and dropping the others
  *
  * @throws {@link !RangeError RangeError} While the feed is consumed, if `shape` is malformed
  */

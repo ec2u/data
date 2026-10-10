@@ -24,11 +24,11 @@ import { filter, flat, fork, map, tee, trim } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { csv, type Record } from "@metreeca/mime-csv";
 import { fetch } from "@metreeca/pipe-url";
-import { digest } from "@metreeca/work/pipe-store/_digest.js";
+import { digest } from "@metreeca/work/mime-json/digest.js";
 import { createStore } from "@metreeca/work/pipe-store/index.js";
 import { delta, type Delta, persist, type Tally } from "@metreeca/work/pipe-store/persist.js";
 import { retire } from "@metreeca/work/pipe-store/retire.js";
-import { validate } from "@metreeca/work/pipe-store/validate.js";
+import { validate } from "@metreeca/work/mine-jsonld/validate.js";
 import { convert, getPath } from "../tasks/convert.js";
 import { select } from "@metreeca/work/pipe-store/select.js";
 

@@ -17,8 +17,8 @@
 import { error, opt, type Optional } from "@metreeca/core";
 import { getDate } from "@metreeca/work/core/temporal.js";
 import { when } from "@metreeca/work/flow/when.js";
-import { digest } from "@metreeca/work/pipe-store/_digest.js";
-import { validate } from "@metreeca/work/pipe-store/validate.js";
+import { digest } from "@metreeca/work/mime-json/digest.js";
+import { validate } from "@metreeca/work/mine-jsonld/validate.js";
 import { file } from "@metreeca/work/gear/files.js";
 import { createGoogleAI, json, schema } from "@metreeca/work/muse-google/index.js";
 import { isStaleEvent } from "@ec2u/data-shared/events/index.js";

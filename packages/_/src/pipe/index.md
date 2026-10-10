@@ -1,5 +1,5 @@
 ---
-title: Events › Pipes
+title: Pipes
 summary: Requirements for source ingestion
 description: Requirements for source ingestion, one pipe per source, committed entry by entry or whole as the class asks
 status: draft
