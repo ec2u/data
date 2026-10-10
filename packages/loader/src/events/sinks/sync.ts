@@ -33,7 +33,7 @@ import { detail } from "@metreeca/work/pipe-store/detail.js";
 import { delta, type Delta, persist, type Tally } from "@metreeca/work/pipe-store/persist.js";
 import { retire } from "@metreeca/work/pipe-store/retire.js";
 import { select } from "@metreeca/work/pipe-store/select.js";
-import { validate } from "@metreeca/work/mime-jsonld/validate.js";
+import { validate } from "@metreeca/work/mime-jsonld/index.js";
 import { classify } from "../tasks/classify.js";
 import { convert } from "../tasks/convert.js";
 import { extract } from "../tasks/extract.js";

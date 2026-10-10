@@ -28,7 +28,7 @@ import { digest } from "@metreeca/work/mime-json/digest.js";
 import { createStore } from "@metreeca/work/pipe-store/index.js";
 import { delta, type Delta, persist, type Tally } from "@metreeca/work/pipe-store/persist.js";
 import { retire } from "@metreeca/work/pipe-store/retire.js";
-import { validate } from "@metreeca/work/mime-jsonld/validate.js";
+import { validate } from "@metreeca/work/mime-jsonld/index.js";
 import { convert, getPath } from "../tasks/convert.js";
 import { select } from "@metreeca/work/pipe-store/select.js";
 

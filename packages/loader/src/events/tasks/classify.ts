@@ -15,7 +15,7 @@
  */
 
 import { when } from "@metreeca/work/flow/when.js";
-import { validate } from "@metreeca/work/mime-jsonld/validate.js";
+import { validate } from "@metreeca/work/mime-jsonld/index.js";
 import { file } from "@metreeca/work/gear/files.js";
 import { createGoogleAI, json, schema } from "@metreeca/work/muse-google/index.js";
 import { Extracted } from "./extract.js";
