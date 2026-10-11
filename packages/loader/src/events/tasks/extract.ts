@@ -20,7 +20,8 @@ import { when } from "@metreeca/work/flow/when.js";
 import { digest } from "@metreeca/work/mime-json/digest.js";
 import { validate } from "@metreeca/work/mime-jsonld/index.js";
 import { file } from "@metreeca/work/gear/files.js";
-import { createGoogleAI, json, schema } from "@metreeca/work/muse-google/index.js";
+import { schema } from "@metreeca/work/blue/schema.js";
+import { createGoogleAI, json } from "@metreeca/work/muse-google/index.js";
 import { isStaleEvent } from "@ec2u/data-shared/events/index.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { optional, required, resource } from "@metreeca/blue/resource";
@@ -219,7 +220,7 @@ export function extract(): Task<Text, State<typeof Extracted>> {
 						systemInstruction: await file(".sys.md", import.meta.url),
 
 						responseMimeType: "application/json",
-						responseSchema: schema(Reported)
+						responseJsonSchema: schema(Reported)
 
 					}
 

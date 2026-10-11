@@ -14,359 +14,147 @@
  * limitations under the License.
  */
 
-import { json, schema, text as output } from "./index.js";
-import { FinishReason, GenerateContentResponse, type Part, Type } from "@google/genai";
-import { boolean } from "@metreeca/blue/boolean";
-import { dictionary } from "@metreeca/blue/dictionary";
-import { integer } from "@metreeca/blue/number";
-import { reference } from "@metreeca/blue/reference";
-import { id, multiple, nonempty, optional, required, resource, type } from "@metreeca/blue/resource";
-import { date, string, text, time, url } from "@metreeca/blue/string";
-import { union } from "@metreeca/blue/union";
-import { xsd } from "@metreeca/core/datatype";
-import { describe, expect, it } from "vitest";
+import { createGoogleAI, json, text as output } from "./index.js";
+import {
+	FinishReason,
+	type GenerateContentConfig,
+	type GenerateContentParameters,
+	GenerateContentResponse,
+	type Part,
+	Type
+} from "@google/genai";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+
+/**
+ * Stands in for the request the SDK would submit to the Gemini API.
+ */
+const generate = vi.hoisted(() => vi.fn<(params: GenerateContentParameters) => Promise<GenerateContentResponse>>());
+
+vi.mock("@google/genai", async importOriginal => {
+
+	const actual = await importOriginal<typeof import("@google/genai")>();
+
+	return {
+		...actual, GoogleGenAI: class extends actual.GoogleGenAI {
+
+			constructor(options: ConstructorParameters<typeof actual.GoogleGenAI>[0]) {
+				super(options);
+				Object.assign(this.models, { generateContent: generate });
+			}
+
+		}
+	};
+
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-describe("schema", () => {
+describe("createGoogleAI", () => {
 
-	it("states a resource as an object carrying one property per member", () => {
+	describe("structured output with tools", () => {
 
-		expect(schema(resource({
+		const converter = "gemini-2.5-flash-lite";
 
-			flag: required(boolean),
-			label: required(text)
+		const tools = [{ functionDeclarations: [] }];
+		const responseJsonSchema = { type: "object", properties: { label: { type: "string" } } };
 
-		}))).toMatchObject({
+		/**
+		 * Replaces the SDK request with a stub answering the converter model with JSON and any other model with prose,
+		 * and returns the configs of the requests submitted to each model.
+		 */
+		function stub() {
 
-			type: Type.OBJECT,
+			generate.mockImplementation(async ({ model }) =>
+				generated({ parts: [{ text: model === converter ? `{ "label": "converted" }` : "prose" }] })
+			);
 
-			properties: {
-				flag: { type: Type.BOOLEAN },
-				label: { type: Type.STRING }
-			}
+			return (model: string): readonly (GenerateContentConfig | undefined)[] => generate.mock.calls
+				.map(([params]) => params)
+				.filter(params => params.model === model)
+				.map(({ config }) => config);
+
+		}
+
+		afterEach(() => {
+			generate.mockReset();
+		});
+
+		it("submits a JSON Schema to models accepting it alongside tools", async () => {
+
+			const requests = stub();
+
+			const response = await createGoogleAI({ apiKey: "test" }).models.generateContent({
+				model: "gemini-3-flash",
+				contents: "query",
+				config: { tools, responseMimeType: "application/json", responseJsonSchema }
+			});
+
+			expect(requests("gemini-3-flash")).toEqual([expect.objectContaining({
+				responseMimeType: "application/json",
+				responseJsonSchema
+			})]);
+
+			expect(requests(converter)).toEqual([]);
+			expect(output(response)).toBe("prose");
 
 		});
 
-	});
+		it("converts the prose of models rejecting a JSON Schema alongside tools", async () => {
 
-	it("requires the members admitting at least one value", () => {
+			const requests = stub();
 
-		expect(schema(resource({
+			const response = await createGoogleAI({ apiKey: "test" }).models.generateContent({
+				model: "gemini-2.5-flash",
+				contents: "query",
+				config: { tools, responseMimeType: "application/json", responseJsonSchema }
+			});
 
-			stated: required(text),
-			optional: optional(text),
-			repeated: nonempty(text),
-			free: multiple(text)
+			expect(requests("gemini-2.5-flash")).toEqual([expect.not.objectContaining({
+				responseJsonSchema: expect.anything()
+			})]);
 
-		}))).toMatchObject({
+			expect(requests(converter)).toEqual([expect.objectContaining({
+				responseMimeType: "application/json",
+				responseJsonSchema
+			})]);
 
-			required: ["stated", "repeated"]
-
-		});
-
-	});
-
-	it("states a member admitting more than one value as an array of its range", () => {
-
-		expect(schema(resource({
-
-			labels: multiple(text)
-
-		}))).toMatchObject({
-
-			properties: {
-				labels: { type: Type.ARRAY, items: { type: Type.STRING } }
-			}
+			expect(json(response)).toEqual({ label: "converted" });
 
 		});
 
-	});
+		it("converts the prose of models rejecting a legacy schema alongside tools", async () => {
 
-	it("leaves out the members naming a resource", () => {
+			const requests = stub();
 
-		const converted = schema(resource({
+			const responseSchema = { type: Type.OBJECT, properties: { label: { type: Type.STRING } } };
 
-			id: id(),
-			type: type(),
-			label: required(text)
+			const response = await createGoogleAI({ apiKey: "test" }).models.generateContent({
+				model: "gemini-2.5-flash",
+				contents: "query",
+				config: { tools, responseMimeType: "application/json", responseSchema }
+			});
 
-		}));
-
-		expect(Object.keys(converted.properties ?? {})).toEqual(["label"]);
-
-	});
-
-	it("states the lexical form a pattern is drawn from", () => {
-
-		const converted = schema(resource({
-
-			link: required(url)
-
-		}));
-
-		expect(converted).toMatchObject({
-
-			properties: {
-				link: { type: Type.STRING, format: "uri" }
-			}
+			expect(requests(converter)).toEqual([expect.objectContaining({ responseSchema })]);
+			expect(json(response)).toEqual({ label: "converted" });
 
 		});
 
-		expect(converted.properties?.link).not.toHaveProperty("pattern");
+		it("hands over the response as it stands if no schema is requested", async () => {
 
-	});
+			const requests = stub();
 
-	it("states a date and a time as the form they carry no zone in", () => {
+			const response = await createGoogleAI({ apiKey: "test" }).models.generateContent({
+				model: "gemini-2.5-flash",
+				contents: "query",
+				config: { tools }
+			});
 
-		const converted = schema(resource({
-
-			day: required(date),
-			clock: required(time)
-
-		}));
-
-		expect(converted).toMatchObject({
-
-			properties: {
-				day: { type: Type.STRING, pattern: "^\\d{4}-\\d{2}-\\d{2}$" },
-				clock: { type: Type.STRING, pattern: "^\\d{2}:\\d{2}:\\d{2}$" }
-			}
+			expect(requests(converter)).toEqual([]);
+			expect(output(response)).toBe("prose");
 
 		});
-
-		expect(converted.properties?.day).not.toHaveProperty("format");
-		expect(converted.properties?.clock).not.toHaveProperty("format");
-
-	});
-
-	it("carries the pattern of a shape drawn from no known form", () => {
-
-		expect(schema(resource({
-
-			clock: required(string({ datatype: xsd.time, pattern: /^\d{2}:\d{2}$/ })),
-			code: required(string({ pattern: /^[a-z]+$/, minLength: 2, maxLength: 3 }))
-
-		}))).toMatchObject({
-
-			properties: {
-				clock: { type: Type.STRING, pattern: "^\\d{2}:\\d{2}$" },
-				code: { type: Type.STRING, pattern: "^[a-z]+$", minLength: "2", maxLength: "3" }
-			}
-
-		});
-
-	});
-
-	it("states the values a string restricts itself to", () => {
-
-		expect(schema(resource({
-
-			state: required(string({ in: ["draft", "final"] }))
-
-		}))).toMatchObject({
-
-			properties: {
-				state: { type: Type.STRING, format: "enum", enum: ["draft", "final"] }
-			}
-
-		});
-
-	});
-
-	it("carries the bounds of a number", () => {
-
-		expect(schema(resource({
-
-			count: required(integer({ minInclusive: 0, maxInclusive: 10 }))
-
-		}))).toMatchObject({
-
-			properties: {
-				count: { type: Type.INTEGER, minimum: 0, maximum: 10 }
-			}
-
-		});
-
-	});
-
-	it("states a reference as the identifier it carries", () => {
-
-		expect(schema(resource({
-
-			about: required(reference(() => resource({ id: id() })))
-
-		}))).toMatchObject({
-
-			properties: {
-				about: { type: Type.STRING, format: "uri" }
-			}
-
-		});
-
-	});
-
-	it("states a nested resource as a nested object", () => {
-
-		expect(schema(resource({
-
-			venue: required(() => resource({ label: required(text) }))
-
-		}))).toMatchObject({
-
-			properties: {
-				venue: {
-					type: Type.OBJECT,
-					properties: { label: { type: Type.STRING } }
-				}
-			}
-
-		});
-
-	});
-
-	it("resolves a deferred shape", () => {
-
-		expect(schema(() => resource({ label: required(text) }))).toMatchObject({
-
-			type: Type.OBJECT,
-			properties: { label: { type: Type.STRING } }
-
-		});
-
-	});
-
-	it("states a union as the alternatives it admits", () => {
-
-		expect(schema(resource({
-
-			entry: required(union(boolean, text))
-
-		}))).toMatchObject({
-
-			properties: {
-				entry: { anyOf: [{ type: Type.BOOLEAN }, { type: Type.STRING }] }
-			}
-
-		});
-
-	});
-
-	it("states the name and the description a resource carries", () => {
-
-		expect(schema(resource({
-
-			name: "Event",
-			description: "The event as the source states it"
-
-		}, {
-
-			label: required(text)
-
-		}))).toMatchObject({
-
-			title: "Event",
-			description: "The event as the source states it"
-
-		});
-
-	});
-
-	it("states the name and the description a member carries", () => {
-
-		const converted = schema(resource({
-
-			label: required(text, { name: "Title", description: "The name of the event" }),
-			keywords: multiple(text, { name: "Topics", description: "The topics the event is tagged with" })
-
-		}));
-
-		expect(converted).toMatchObject({
-
-			properties: {
-
-				label: {
-					type: Type.STRING,
-					title: "Title",
-					description: "The name of the event"
-				},
-
-				keywords: {
-					type: Type.ARRAY,
-					title: "Topics",
-					description: "The topics the event is tagged with"
-				}
-
-			}
-
-		});
-
-		expect(converted.properties?.keywords?.items).not.toHaveProperty("title");
-		expect(converted.properties?.keywords?.items).not.toHaveProperty("description");
-
-	});
-
-	it("states the English entry of a localised name and description", () => {
-
-		expect(schema(resource({
-
-			name: { en: "Event", it: "Evento" },
-			description: { en: "The event", it: "L'evento" }
-
-		}, {
-
-			label: required(text, { name: { en: "Title", it: "Titolo" }, description: { en: "The name", it: "Il nome" } })
-
-		}))).toMatchObject({
-
-			title: "Event",
-			description: "The event",
-
-			properties: {
-				label: { title: "Title", description: "The name" }
-			}
-
-		});
-
-	});
-
-	it("leaves out the name and the description of a shape carrying neither", () => {
-
-		const converted = schema(resource({ label: required(text) }));
-
-		expect(converted).not.toHaveProperty("title");
-		expect(converted).not.toHaveProperty("description");
-
-		expect(converted.properties?.label).not.toHaveProperty("title");
-		expect(converted.properties?.label).not.toHaveProperty("description");
-
-	});
-
-	it("leaves out a name and a description stated in no English", () => {
-
-		const converted = schema(resource({
-
-			name: { it: "Evento" },
-			description: { it: "L'evento" }
-
-		}, {
-
-			label: required(text, { name: { it: "Titolo" }, description: { it: "Il nome" } })
-
-		}));
-
-		expect(converted).not.toHaveProperty("title");
-		expect(converted).not.toHaveProperty("description");
-
-		expect(converted.properties?.label).not.toHaveProperty("title");
-		expect(converted.properties?.label).not.toHaveProperty("description");
-
-	});
-
-	it("reports a range with no counterpart in a response schema", () => {
-
-		expect(() => schema(resource({ label: required(dictionary) }))).toThrow(RangeError);
 
 	});
 

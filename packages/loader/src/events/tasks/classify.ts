@@ -17,7 +17,8 @@
 import { when } from "@metreeca/work/flow/when.js";
 import { validate } from "@metreeca/work/mime-jsonld/index.js";
 import { file } from "@metreeca/work/gear/files.js";
-import { createGoogleAI, json, schema } from "@metreeca/work/muse-google/index.js";
+import { schema } from "@metreeca/work/blue/schema.js";
+import { createGoogleAI, json } from "@metreeca/work/muse-google/index.js";
 import { Extracted } from "./extract.js";
 import { getTopicEntries } from "../../taxonomies/index.core.js";
 import { events } from "@ec2u/data-shared/taxonomies/events.js";
@@ -119,7 +120,7 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 							},
 
 							responseMimeType: "application/json",
-							responseSchema: schema(Reported)
+							responseJsonSchema: schema(Reported)
 
 						}
 

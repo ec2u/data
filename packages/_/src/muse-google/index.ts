@@ -18,9 +18,8 @@
  * Gemini API access.
  *
  * Provides a Gemini API client for content generation, function calling and embedding, together with the conversions
- * stating a request payload as a response schema and turning a model response into the text, JSON payload or embedding
- * it was requested for, so that a consumer draws on the Gemini models without pacing requests, restating payloads or
- * unpacking responses of its own.
+ * turning a model response into the text, JSON payload or embedding it was requested for, so that a consumer draws on
+ * the Gemini models without pacing requests or unpacking responses of its own.
  *
  * @module index
  *
@@ -29,9 +28,11 @@
  * Clients are configured by the consumer binding them, so that credentials and endpoint are settled once for a whole
  * execution rather than by each job. Two limitations of the API are taken over on the consumer's behalf: requests are
  * paced against the published rate quotas and resumed after the delay the API advertises, and a requested response
- * schema is honoured on every model, including the ones rejecting it alongside tools. An expected payload is declared
- * by the shape already describing it rather than by a schema restating it by hand, and a response is unpacked only if
+ * schema is honoured on every model, including the ones rejecting it alongside tools. A response is unpacked only if
  * complete and well-formed, an incomplete or malformed generation being rejected rather than handed over in part.
+ *
+ * An expected payload is best declared by the shape already describing it. The `schema()` function of the
+ * `blue/schema` module converts the shape into a JSON Schema, which a request passes as `responseJsonSchema`.
  *
  * @see {@link https://ai.google.dev/gemini-api/docs Gemini API}
  * @see {@link https://googleapis.github.io/js-genai/release_docs/index.html Google GenAI SDK}
@@ -48,18 +49,12 @@ import {
 	GenerateContentResponse,
 	GoogleGenAI,
 	GoogleGenAIOptions,
-	Part,
-	type Schema,
-	Type
+	Part
 } from "@google/genai";
-import type { ResourceShape } from "@metreeca/blue/resource";
-import { date, email, instant, iri, time, timestamp, url } from "@metreeca/blue/string";
-import type { Shape } from "@metreeca/blue/value";
-import { eager, error, isString, type Lazy, opt, type Optional, type Value } from "@metreeca/core";
+import { error, isString, type Value } from "@metreeca/core";
 import { createThrottle, type Throttle } from "@metreeca/core/async";
 import { markdown } from "@metreeca/core/strings";
 import { BadRequest, TooManyRequests } from "@metreeca/http";
-import type { Dictionary } from "@metreeca/qest/state";
 import { log, Logger, report } from "@metreeca/tape";
 
 
@@ -68,40 +63,6 @@ import { log, Logger, report } from "@metreeca/tape";
  * over to the throttle (see {@link createGoogleAI}).
  */
 const attempts = 5;
-
-/**
- * The response schema constraint each well-known lexical pattern stands for.
- *
- * Tells apart the textual shapes an XSD datatype leaves undistinguished, a URL and a language tag alike being stated as
- * strings: the pattern a shape factory fixes stands for the lexical form its values are drawn from, so a shape stating
- * that pattern is described by that form rather than by the pattern spelling it out. A shape stating a pattern of its
- * own is described by that pattern instead, whatever datatype it is filed under, as the pattern is then the only form
- * its values are actually held to.
- */
-const lexicons = new Map<Optional<string>, Schema>([
-
-	[url().pattern, { format: "uri" }],
-	[iri().pattern, { format: "uri" }],
-	[email().pattern, { format: "email" }],
-
-	// stated as a zoneless pattern rather than as the format they are drawn from: a model offered the RFC 3339
-	// reading closes every answer with a designator, at times a lowercase one the datatype then rejects
-
-	[date().pattern, { pattern: "^\\d{4}-\\d{2}-\\d{2}$" }],
-	[time().pattern, { pattern: "^\\d{2}:\\d{2}:\\d{2}$" }],
-
-	[instant().pattern, { format: "date-time" }],
-	[timestamp().pattern, { format: "date-time" }]
-
-]);
-
-/**
- * The response schema converted for a shape, retained for the lifetime of the module (see {@link memoize}).
- */
-const schemas: (shape: Lazy<ResourceShape>) => Schema  = memoize(shape =>
-	compile(eager(shape))
-);
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,9 +97,10 @@ const schemas: (shape: Lazy<ResourceShape>) => Schema  = memoize(shape =>
  *   its function calls left to the caller.
  *
  * - **Structured output**: a requested response schema is honoured on every model, though the API accepts
- *   `responseMimeType`/`responseSchema` alongside `tools` only from the Gemini 3 generation onwards: a model that
- *   doesn't take the schema replies in prose, which a further lightweight request converts into schema-conformant
- *   JSON, at the cost of one extra generation. Capability is tracked per model and corrected on rejection.
+ *   `responseMimeType` with `responseSchema` or `responseJsonSchema` alongside `tools` only from the Gemini 3
+ *   generation onwards. A model that doesn't take the schema replies in prose, and a further lightweight request
+ *   converts the reply into schema-conformant JSON, at the cost of one extra generation. Capability is tracked per
+ *   model and corrected on rejection.
  *
  * @see {@link https://ai.google.dev/gemini-api/docs/function-calling Function calling}
  * @see {@link https://ai.google.dev/gemini-api/docs/structured-output Structured output}
@@ -269,6 +231,7 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 							} = {},
 
 							responseSchema,
+							responseJsonSchema,
 							responseMimeType,
 
 							...configWithoutSchema
@@ -391,7 +354,7 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 									// submit the response schema only to models accepting it alongside tools,
 									// leaving the conversion to `structure` on the others
 
-									...(channel.structured ? { responseMimeType, responseSchema } : {})
+									...(channel.structured ? { responseMimeType, responseSchema, responseJsonSchema } : {})
 
 								}
 
@@ -454,13 +417,13 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 					 */
 					async function structure(response: GenerateContentResponse) {
 
-						const responseSchema = config?.responseSchema;
+						const { responseSchema, responseJsonSchema } = config ?? {};
 
 						const hasFunctionCalls = response.candidates?.[0]?.content?.parts?.some(
 							part => part.functionCall
 						);
 
-						if ( channel.structured || !responseSchema || hasFunctionCalls ) {
+						if ( channel.structured || !(responseSchema || responseJsonSchema) || hasFunctionCalls ) {
 
 							return response;
 
@@ -523,7 +486,8 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 										
 									`,
 									responseMimeType: "application/json",
-									responseSchema
+									responseSchema,
+									responseJsonSchema
 								}
 							}));
 
@@ -650,43 +614,6 @@ export function createGoogleAI(options: GoogleGenAIOptions = {}) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Converts a resource shape into a Gemini response schema.
- *
- * States as a response schema the payload a shape already describes, so that a request declares what it expects once
- * rather than as a schema restating it by hand.
- *
- * A resource is stated as an object carrying one property per member: the members admitting at least one value are
- * listed as required, a member admitting more than one is stated as an array of its range, and the identifier and
- * class members naming a resource are left out, as a model states neither. A reference is stated as the identifier it
- * carries, a nested resource as a nested object, and a union as the alternatives it admits.
- *
- * The constraints a model can be held to are carried through: the lexical form a string is drawn from, the values it
- * restricts itself to, its length bounds, the bounds of a number and whether it admits integers alone. A string is
- * stated by the format its lexical pattern is drawn from, and by the pattern itself where it is drawn from none.
- *
- * The guidance a shape states for a reader is carried through as well, so that a request briefs the model from the
- * shape rather than from a prompt restating it: a resource is titled and described by the name and the description it
- * carries, and so is each member, a member admitting more than one value annotating the array rather than its items. A
- * localised name or description is carried as its English reading, and one stated in no English is left out.
- *
- * The schema converted for a shape is handed back on every later request for the same shape, so a request declaring
- * the shape it expects converts it once, however often it runs.
- *
- * @param shape The shape describing the expected payload, possibly deferred
- *
- * @returns The response schema describing the values `shape` admits
- *
- * @throws {@link !RangeError RangeError} If `shape` admits at any depth a range with no counterpart in a response
- * schema, as a localised value keyed by the language tags it happens to carry has none
- *
- * @see {@link https://ai.google.dev/gemini-api/docs/structured-output Structured output}
- */
-export function schema(shape: Lazy<ResourceShape>): Schema {
-	return schemas(shape);
-}
-
-
-/**
  * Extracts the output text of a Gemini API response.
  *
  * Thinking parts and function calls are skipped, so only the text generated for the caller is returned. A response
@@ -753,138 +680,5 @@ export function json<T extends Value = Value>(response: GenerateContentResponse)
 export function embedding(response: EmbedContentResponse): Vector {
 
 	return response.embeddings?.[0]?.values ?? [];
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Describes the values a shape admits.
- *
- * @param shape The shape to describe
- *
- * @returns The response schema describing the values `shape` admits
- *
- * @throws {@link !RangeError RangeError} If `shape`, or a shape reached from it, has no counterpart in a response
- * schema
- */
-function compile(shape: Shape): Schema {
-
-	switch ( shape.kind ) {
-
-		case "boolean":
-
-			return { type: Type.BOOLEAN };
-
-		case "number":
-
-			return {
-
-				type: shape.integral ? Type.INTEGER : Type.NUMBER,
-
-				...(shape.minInclusive !== undefined ? { minimum: shape.minInclusive } : {}),
-				...(shape.maxInclusive !== undefined ? { maximum: shape.maxInclusive } : {})
-
-			};
-
-		case "dictionary": // keyed by the language tags a value happens to carry, which a schema has no way to name
-
-			throw new RangeError(`unsupported localised <${shape.kind}> range in response schema`);
-
-		case "string":
-
-			return {
-
-				type: Type.STRING,
-
-				...(opt(shape.in, values => ({ format: "enum", enum: [...values] }))
-					?? lexicons.get(shape.pattern)
-					?? opt(shape.pattern, pattern => ({ pattern }))
-					?? {}),
-
-				...(shape.minLength !== undefined ? { minLength: `${shape.minLength}` } : {}),
-				...(shape.maxLength !== undefined ? { maxLength: `${shape.maxLength}` } : {})
-
-			};
-
-		case "reference":
-
-			return { type: Type.STRING, format: "uri" };
-
-		case "resource":
-
-			const members = Object.entries(shape.members).flatMap(([name, member]) =>
-				member.kind === "property" ? [{ name, member, range: member.range }] : []
-			);
-
-			const required = members
-				.filter(({ range }) => (range.minCount ?? 0) > 0)
-				.map(({ name }) => name);
-
-			return {
-
-				type: Type.OBJECT,
-
-				...annotate(shape),
-
-				properties: Object.fromEntries(members.map(({ name, member, range }) => [name, {
-
-					...(range.maxCount === 1
-						? compile(eager(range.shape))
-						: { type: Type.ARRAY, items: compile(eager(range.shape)) }),
-
-					...annotate(member)
-
-				}])),
-
-				...(required.length > 0 ? { required } : {})
-
-			};
-
-		case "union":
-
-			return { anyOf: shape.branches.map(branch => compile(eager(branch))) };
-
-	}
-
-}
-
-/**
- * States the guidance a shape carries as schema annotations.
- *
- * @param constraints The name and the description to state, possibly localised, as a shape or one of its members
- *                    carries them
- *
- * @returns An object carrying the English reading of the stated name as a title and of the stated description as a
- *          description, each left out if undefined or stated in no English
- */
-function annotate({ name, description }: {
-
-	readonly name?: string | Dictionary
-	readonly description?: string | Dictionary
-
-}): { readonly title?: string, readonly description?: string } {
-
-	return {
-		...opt(english(name), title => ({ title })),
-		...opt(english(description), text => ({ description: text }))
-	};
-
-}
-
-/**
- * Reads a localised text in English.
- *
- * @param text The text to read, either a plain string or localised by language tag
- *
- * @returns The English reading of `text`, with the entries of a multi-valued one run together as paragraphs; undefined
- *          if `text` is undefined or states no English entry
- */
-function english(text: Optional<string | Dictionary>): Optional<string> {
-
-	return text === undefined ? undefined
-		: isString(text) ? text
-			: opt(text.en, entry => isString(entry) ? entry : entry.join("\n\n"));
 
 }
