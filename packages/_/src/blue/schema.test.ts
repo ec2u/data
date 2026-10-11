@@ -33,7 +33,27 @@ describe("schema", () => {
 					label: { type: "string" }
 				},
 
-				required: ["flag", "label"]
+				required: ["flag", "label"],
+
+				additionalProperties: false
+
+			});
+
+		});
+
+		it("rejects undeclared members, as resource shapes are closed", async () => {
+
+			expect(schema(resource({
+
+				venue: required(() => resource({ label: required(text) }))
+
+			}))).toMatchObject({
+
+				additionalProperties: false,
+
+				properties: {
+					venue: { additionalProperties: false }
+				}
 
 			});
 
@@ -366,6 +386,141 @@ describe("schema", () => {
 
 			expect(converted.properties?.label).not.toHaveProperty("title");
 			expect(converted.properties?.label).not.toHaveProperty("description");
+
+		});
+
+	});
+
+	describe("strict", () => {
+
+		it("requires every member", async () => {
+
+			expect(schema(resource({
+
+				stated: required(text),
+				optional: optional(text),
+				free: multiple(text)
+
+			}), { strict: true })).toMatchObject({
+
+				required: ["stated", "optional", "free"]
+
+			});
+
+		});
+
+		it("admits null in place of an absent single value", async () => {
+
+			expect(schema(resource({
+
+				label: optional(text, { name: "Label", description: "The label" }),
+				venue: optional(() => resource({ label: required(text) }))
+
+			}), { strict: true })).toMatchObject({
+
+				properties: {
+
+					label: {
+						anyOf: [{ type: "string" }, { type: "null" }],
+						title: "Label",
+						description: "The label"
+					},
+
+					venue: {
+						anyOf: [{ type: "object", additionalProperties: false }, { type: "null" }]
+					}
+
+				}
+
+			});
+
+		});
+
+		it("states absent multiple values as an empty array rather than null", async () => {
+
+			const labels = schema(resource({
+
+				labels: multiple(text)
+
+			}), { strict: true }).properties?.labels;
+
+			expect(labels).toMatchObject({ type: "array", items: { type: "string" } });
+			expect(labels).not.toHaveProperty("anyOf");
+
+		});
+
+		it("leaves single values required by the shape non-nullable", async () => {
+
+			const label = schema(resource({
+
+				label: required(text)
+
+			}), { strict: true }).properties?.label;
+
+			expect(label).toMatchObject({ type: "string" });
+			expect(label).not.toHaveProperty("anyOf");
+
+		});
+
+		it("converts nested resources strictly", async () => {
+
+			expect(schema(resource({
+
+				venue: required(() => resource({ label: optional(text) }))
+
+			}), { strict: true })).toMatchObject({
+
+				properties: {
+					venue: {
+						required: ["label"],
+						properties: { label: { anyOf: [{ type: "string" }, { type: "null" }] } }
+					}
+				}
+
+			});
+
+		});
+
+		it("leaves out the iri formats, keeping patterns", async () => {
+
+			const converted = schema(resource({
+
+				link: required(url),
+				name: required(iri),
+				about: required(reference(() => resource({ id: id() }))),
+				mail: required(email)
+
+			}), { strict: true });
+
+			expect(converted.properties).toEqual({
+				link: { type: "string", pattern: String(url().pattern) },
+				name: { type: "string", pattern: String(iri().pattern) },
+				about: { type: "string" },
+				mail: { type: "string", format: "email", pattern: String(email().pattern) }
+			});
+
+		});
+
+		it("keeps the pattern and length bounds of strings", async () => {
+
+			expect(schema(resource({
+
+				code: required(string({ pattern: /^[a-z]+$/, minLength: 2, maxLength: 3 }))
+
+			}), { strict: true }).properties?.code).toEqual({
+
+				type: "string", pattern: "^[a-z]+$", minLength: 2, maxLength: 3
+
+			});
+
+		});
+
+		it("caches strict and plain conversions apart", async () => {
+
+			const shape = resource({ label: optional(text) });
+
+			expect(schema(shape, { strict: true })).toBe(schema(shape, { strict: true }));
+			expect(schema(shape, { strict: true })).not.toEqual(schema(shape));
 
 		});
 

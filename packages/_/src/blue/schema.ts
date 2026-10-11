@@ -8,6 +8,7 @@
  * Describes the payloads a {@link resource!ResourceShape | resource shape} admits as a JSON Schema (draft 2020-12), so
  * that schema-driven consumers, such as API descriptions, language model tool interfaces and structured output
  * formats, are declared from the shape already describing the data rather than from a schema restating it by hand.
+ * A strict variant targets structured output generators accepting only a subset of JSON Schema.
  *
  * **Converting a shape**
  *
@@ -32,7 +33,8 @@
  * //     name: { type: "string" },
  * //     tags: { type: "array", items: { type: "string" } }
  * //   },
- * //   required: ["name"]
+ * //   required: ["name"],
+ * //   additionalProperties: false
  * // }
  * ```
  *
@@ -54,7 +56,7 @@ import { memoize } from "../core/memoize.js";
 /**
  * The JSON Schema format each well-known lexical pattern stands for.
  */
-const formats = new Map<Optional<string>, string>([
+const Formats = new Map<Optional<string>, string>([
 
 	[url().pattern, "uri"],
 	[iri().pattern, "iri-reference"],
@@ -69,11 +71,22 @@ const formats = new Map<Optional<string>, string>([
 ]);
 
 /**
- * The JSON Schema converted for a shape, retained for the lifetime of the module (see {@link memoize}).
+ * The JSON Schema formats left out of strict schemas.
  */
-const schemas: (shape: Lazy<ResourceShape>) => JSONSchema.Interface = memoize(shape =>
-	compile(eager(shape))
-);
+const Unsupported = new Set([
+	"uri",
+	"iri-reference"
+]);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * The JSON Schema converted for a shape in each mode, retained for the lifetime of the module (see {@link memoize}).
+ */
+const schemas = memoize((strict: boolean) => memoize((shape: Lazy<ResourceShape>) =>
+	compile(eager(shape), strict)
+));
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,11 +94,12 @@ const schemas: (shape: Lazy<ResourceShape>) => JSONSchema.Interface = memoize(sh
 /**
  * Converts a resource shape into a JSON Schema.
  *
- * A resource is described as an object with one property per member. Members admitting at least one value are
- * required, and a member admitting more than one value is described as an array of its range. Identifier and class
- * members are left out, as they name the resource rather than describe it. A {@link reference!reference | reference}
- * is described as the IRI it carries, an embedded resource as a nested object, and a {@link union!union | union} as
- * the alternatives it admits.
+ * A resource is described as an object with one property per member. Like the shape, the object is closed and admits
+ * no other property. Members admitting at least one value are required, and a member admitting more than one value is
+ * described as an array of its range. Identifier and class members are left out, as they name the resource rather than
+ * describe it, so a payload stating them is rejected. A {@link reference!reference | reference} is described as the
+ * IRI it carries, an embedded resource as a nested object, and a {@link union!union | union} as the alternatives it
+ * admits.
  *
  * Value constraints are carried through: the bounds of a number and whether it is an integer, and the values, length
  * bounds and lexical pattern of a string. A string drawn from a well-known lexical form also carries the matching
@@ -103,9 +117,17 @@ const schemas: (shape: Lazy<ResourceShape>) => JSONSchema.Interface = memoize(sh
  * admitting more than one value annotates the array rather than its items. Localised names and descriptions are
  * carried in English, and left out if stated in no English.
  *
- * Conversions are cached, so converting the same shape again returns the same schema at no cost.
+ * A strict schema keeps to the subset of JSON Schema accepted by strict structured output generators. Every member is
+ * required. An optional member admitting at most one value also admits `null`, standing for an absent value. A member
+ * admitting more than one value is stated as an empty array if absent. A payload generated under a strict schema
+ * therefore conforms to the shape only once its `null` members are dropped. IRIs carry no `uri` or `iri-reference`
+ * format and are held to their pattern alone.
+ *
+ * Conversions are cached, so converting the same shape again with the same options returns the same schema at no cost.
  *
  * @param shape The resource shape to convert, possibly deferred
+ * @param options The conversion options
+ * @param options.strict Whether to produce a strict schema for structured output generators; defaults to `false`
  *
  * @returns The JSON Schema describing the values `shape` admits
  *
@@ -114,9 +136,17 @@ const schemas: (shape: Lazy<ResourceShape>) => JSONSchema.Interface = memoize(sh
  *
  * @see {@link https://json-schema.org/draft/2020-12/json-schema-validation#section-7.3 JSON Schema § 7.3 Defined Formats}
  */
-export function schema(shape: Lazy<ResourceShape>): JSONSchema.Interface {
+export function schema(shape: Lazy<ResourceShape>, {
 
-	return schemas(shape);
+	strict = false
+
+}: {
+
+	readonly strict?: boolean
+
+} = {}): JSONSchema.Interface {
+
+	return schemas(strict)(shape);
 
 }
 
@@ -127,12 +157,13 @@ export function schema(shape: Lazy<ResourceShape>): JSONSchema.Interface {
  * Converts a shape into a JSON Schema.
  *
  * @param shape The shape to describe
+ * @param strict Whether to restrict the schema to the strict subset (see {@link schema})
  *
  * @returns The JSON Schema describing the values `shape` admits
  *
  * @throws {@link !RangeError RangeError} If `shape`, or a shape reached from it, admits a localised value range
  */
-function compile(shape: Shape): JSONSchema.Interface {
+function compile(shape: Shape, strict: boolean): JSONSchema.Interface {
 
 	switch ( shape.kind ) {
 
@@ -158,7 +189,7 @@ function compile(shape: Shape): JSONSchema.Interface {
 				type: "string",
 
 				...opt(shape.in, values => ({ enum: [...values] })),
-				...opt(formats.get(shape.pattern), format => ({ format })),
+				...opt(Formats.get(shape.pattern), format => strict && Unsupported.has(format) ? {} : { format }),
 				...opt(shape.pattern, pattern => ({ pattern })),
 
 				...opt(shape.minLength, minLength => ({ minLength })),
@@ -168,7 +199,7 @@ function compile(shape: Shape): JSONSchema.Interface {
 
 		case "reference":
 
-			return { type: "string", format: "iri-reference" };
+			return strict ? { type: "string" } : { type: "string", format: "iri-reference" };
 
 		case "resource":
 
@@ -177,7 +208,7 @@ function compile(shape: Shape): JSONSchema.Interface {
 			);
 
 			const required = properties
-				.filter(({ member: { range } }) => (range.minCount ?? 0) > 0)
+				.filter(({ member: { range } }) => strict || (range.minCount ?? 0) > 0)
 				.map(({ name }) => name);
 
 			return {
@@ -186,15 +217,17 @@ function compile(shape: Shape): JSONSchema.Interface {
 
 				...annotate(shape),
 
-				properties: Object.fromEntries(properties.map(({ name, member }) => [name, property(member)])),
+				properties: Object.fromEntries(properties.map(({ name, member }) => [name, property(member, strict)])),
 
-				...(required.length > 0 ? { required } : {})
+				...(required.length > 0 ? { required } : {}),
+
+				additionalProperties: false
 
 			};
 
 		case "union":
 
-			return { anyOf: shape.branches.map(branch => compile(eager(branch))) };
+			return { anyOf: shape.branches.map(branch => compile(eager(branch), strict)) };
 
 		case "dictionary": // keyed by the language tags a value happens to carry, which a schema has no way to name
 
@@ -208,19 +241,25 @@ function compile(shape: Shape): JSONSchema.Interface {
  * Converts a property member into the JSON Schema of the object property describing it.
  *
  * @param member The property member to describe
+ * @param strict Whether to restrict the schema to the strict subset (see {@link schema})
  *
  * @returns The JSON Schema describing the values `member` admits: the schema of its range, or an array of it where
- *          more than one value is admitted, annotated with the name and description of `member`
+ *          more than one value is admitted, annotated with the name and description of `member`; in strict mode, a
+ *          member admitting at most one value and possibly none also admits `null`
  *
  * @throws {@link !RangeError RangeError} If the range of `member`, or a shape reached from it, admits a localised
  *     value range
  */
-function property(member: Property): JSONSchema.Interface {
+function property(member: Property, strict: boolean): JSONSchema.Interface {
 
-	const items = compile(eager(member.range.shape));
+	const { shape, minCount = 0, maxCount } = member.range;
+
+	const items = compile(eager(shape), strict);
 
 	return {
-		...(member.range.maxCount === 1 ? items : { type: "array", items }),
+		...(maxCount !== 1 ? { type: "array", items }
+			: strict && minCount === 0 ? { anyOf: [items, { type: "null" }] }
+				: items),
 		...annotate(member)
 	};
 

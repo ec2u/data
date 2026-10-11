@@ -31,9 +31,6 @@
  * schema is honoured on every model, including the ones rejecting it alongside tools. A response is unpacked only if
  * complete and well-formed, an incomplete or malformed generation being rejected rather than handed over in part.
  *
- * An expected payload is best declared by the shape already describing it. The `schema()` function of the
- * `blue/schema` module converts the shape into a JSON Schema, which a request passes as `responseJsonSchema`.
- *
  * @see {@link https://ai.google.dev/gemini-api/docs Gemini API}
  * @see {@link https://googleapis.github.io/js-genai/release_docs/index.html Google GenAI SDK}
  */
@@ -651,8 +648,6 @@ export function text(response: GenerateContentResponse): string {
  *
  * @throws {@link !Error Error} If `response` carries no output text (see {@link text}), or if its text is not
  * well-formed JSON, for instance because the reply was cut short by an exhausted output budget
- *
- * @see {@link schema}
  */
 export function json<T extends Value = Value>(response: GenerateContentResponse): T {
 

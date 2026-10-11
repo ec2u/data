@@ -294,6 +294,10 @@ export function text(completion: OpenAI.ChatCompletion): string {
  * The payload is parsed from the output text of the completion, as produced under the requested response format, and
  * cast to `T` without further validation: callers needing guarantees must validate it themselves.
  *
+ * A strict response format states an absent member as `null` instead of leaving it out. Object members stated as
+ * `null` are therefore dropped, so that a payload generated under a strict schema conforms to the shape the schema was
+ * converted from. `null` array items are kept.
+ *
  * @typeParam T The expected shape of the JSON payload
  *
  * @param completion The completion of a `chat.completions.create` request carrying a JSON response format
@@ -307,7 +311,9 @@ export function json<T extends Value = Value>(completion: OpenAI.ChatCompletion)
 
 	try {
 
-		return JSON.parse(text(completion));
+		return JSON.parse(text(completion), function (this: unknown, _key, value) {
+			return value === null && !Array.isArray(this) ? undefined : value; // drop null members, keeping array items
+		});
 
 	} catch ( e ) {
 
