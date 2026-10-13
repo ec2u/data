@@ -30,6 +30,9 @@ import { createGoogleAI } from "@metreeca/work/muse-google/index.js";
 import { createStore } from "@metreeca/work/pipe-store/index.js";
 
 
+export const environment = process.env.PIPE_ENVIRONMENT || "yard"; // !!! align default to branch
+
+
 export const execute = executor(
 	bind(getPath, () => gcp.cloud
 		? getPath()
@@ -46,13 +49,13 @@ export const execute = executor(
 	}))),
 	bind(createStore, async () => createSPARQLStore(createRDF4JRepository({
 		server: "https://graphdb.ec2u.net",
-		repository: "data-work",
+		repository: `data-${environment}`,
 		fetch: createFetch(basic(
-			await service(createVault)("gdb-server-usr"),
-			await service(createVault)("gdb-server-pwd")
+			await service(createVault)(`${environment}-gdb-server-usr`),
+			await service(createVault)(`${environment}-gdb-server-pwd`)
 		))
 	}))),
 	bind(createGoogleAI, async () => createGoogleAI({
-		apiKey: await service(createVault)("googleai-key")
+		apiKey: await service(createVault)(`${environment}-googleai-key`)
 	}))
 );

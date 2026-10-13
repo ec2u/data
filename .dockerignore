@@ -1,0 +1,11 @@
+*
+
+!package.json
+!package-lock.json
+!tsconfig.json
+!tsconfig.build.json
+!packages/
+
+packages/*/lib/
+packages/*/cache/
+packages/*/node_modules/
