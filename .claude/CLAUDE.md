@@ -87,6 +87,12 @@ the Confluence **Knowledge Hub - Status** page in the same change before committ
 - **`npm run check`** - Run the test suite
 - **`npm run start`** - Serve the endpoints and the web UI in parallel, in watch mode
 
+## Deployment
+
+The Google Cloud and GraphDB resources each environment runs on, their access grants and their current state are
+described in `.claude/deployment.md`. Read it before creating, changing or reasoning about any of them, and keep it in
+sync with every change.
+
 ## Testing
 
 - **Run a single test file**: `npm run check -- path/to/test.ts`

@@ -79,7 +79,7 @@ export function job(handler: () => Promise<unknown>): Router {
 
 	// !!! can we decouple from express?
 
-	// !!! redundant once the Cloud Run IAM policy is in place (deploy/provision.sh): the service admits only callers
+	// !!! redundant once the Cloud Run IAM policy is in place (.claude/deployment.md): the service admits only callers
 	// !!! granted the invoker role, and Cloud Run verifies the OIDC token before the request reaches the router
 
 	return Router()
