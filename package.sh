@@ -14,31 +14,9 @@
 # limitations under the License.
 #
 
-# Select actions: the caller names the actions it needs, so an empty command line is a direct execution
-
-gcp=
-link=
-deploy=
-
-case "$*" in
-
-	"--gcp") gcp=1 ;;
-	"--link") link=1 ;;
-	"--gcp --link" | "--link --gcp") gcp=1; link=1 ;;
-	"--deploy") deploy=1 ;;
-
-	"") echo "package.sh is a project task and is not meant to be run on its own" >&2; exit 1 ;;
-
-	*) echo "unsupported options <$*>" >&2; exit 1 ;;
-
-esac
-
-
-# Configure GCP project for local testing
-
 project=ec2u-data
 
-if [ -n "${gcp}" ]; then
+gcp() { # Configure GCP project for local testing
 
 	gcloud auth print-access-token >/dev/null 2>&1 || gcloud auth login --update-adc
 	gcloud auth application-default print-access-token >/dev/null 2>&1 || gcloud auth application-default login
@@ -46,69 +24,67 @@ if [ -n "${gcp}" ]; then
 	gcloud auth application-default set-quota-project ${project}
 	gcloud config set project ${project}
 
-fi
+}
 
+link() { # Link local @metreeca packages, if checked out
 
-# Link local @metreeca packages, if checked out
+	packages=${HOME}/Metreeca/Packages
 
-packages=${HOME}/Metreeca/Packages
+	if [ -d "${packages}" ]; then
 
-if [ -n "${link}" ] && [ -d "${packages}" ]; then
+		npx link \
+			${packages}/Blue \
+			${packages}/Core \
+			${packages}/Flow \
+			${packages}/Gear/packages/gear \
+			${packages}/HTTP \
+			${packages}/Keep/packages/components/keep \
+			${packages}/Keep/packages/connectors/keep-rest \
+			${packages}/Keep/packages/connectors/keep-sparql \
+			${packages}/MIME/packages/mime-csv \
+			${packages}/MIME/packages/mime-json \
+			${packages}/MIME/packages/mime-xml \
+			${packages}/Pipe/packages/pipe-url \
+			${packages}/Qest \
+			${packages}/Tape \
+			${packages}/Tile/packages/tile \
+			${packages}/Tile/packages/tile-cell \
+			${packages}/Tile/packages/tile-data \
+			${packages}/Tile/packages/tile-hive \
+			${packages}/Trio \
+			${packages}/Wire/packages/sparql/wire-sparql \
+			${packages}/Wire/packages/sparql/wire-sparql-http \
+			${packages}/Wire/packages/sparql/wire-sparql-rdf4j
 
-	npx link \
-		${packages}/Blue \
-		${packages}/Core \
-		${packages}/Flow \
-		${packages}/Gear/packages/gear \
-		${packages}/HTTP \
-		${packages}/Keep/packages/components/keep \
-		${packages}/Keep/packages/connectors/keep-rest \
-		${packages}/Keep/packages/connectors/keep-sparql \
-		${packages}/MIME/packages/mime-csv \
-		${packages}/MIME/packages/mime-json \
-		${packages}/MIME/packages/mime-xml \
-		${packages}/Pipe/packages/pipe-url \
-		${packages}/Qest \
-		${packages}/Tape \
-		${packages}/Tile/packages/tile \
-		${packages}/Tile/packages/tile-cell \
-		${packages}/Tile/packages/tile-data \
-		${packages}/Tile/packages/tile-hive \
-		${packages}/Trio \
-		${packages}/Wire/packages/sparql/wire-sparql \
-		${packages}/Wire/packages/sparql/wire-sparql-http \
-		${packages}/Wire/packages/sparql/wire-sparql-rdf4j
+	fi
 
-fi
+}
 
+deploy() { # Deploy the loader to Cloud Run and schedule its jobs
 
-# Deploy the loader to Cloud Run and schedule its jobs
-#
-# The service is closed to the public: Cloud Run checks the OIDC token of each request and admits only callers
-# granted the invoker role. Jobs mint tokens as a dedicated service account, the only one granted that role, with the
-# default audience (the job URL), which the job endpoints verify again against the URL they are reached at.
-#
-# !!! requires a container build for packages/loader (Dockerfile or buildpacks entry point) before the first run
+	# The service is closed to the public: Cloud Run checks the OIDC token of each request and admits only callers
+	# granted the invoker role. Jobs mint tokens as a dedicated service account, the only one granted that role, with
+	# the default audience (the job URL), which the job endpoints verify again against the URL they are reached at.
+	#
+	# !!! requires a container build for packages/loader (Dockerfile or buildpacks entry point) before the first run
 
-region=europe-west3
-service=loader
-account=scheduler@${project}.iam.gserviceaccount.com
-schedule="0 3 * * *"
+	region=europe-west3
+	service=loader
+	account=scheduler@${project}.iam.gserviceaccount.com
+	schedule="0 3 * * *"
 
-jobs="
-	universities/wikidata
-	events/coimbra-university
-	events/iasi-university-360
-	events/jena-university
-	events/linz-university
-	events/pavia-university
-	events/poitiers-university
-	events/salamanca-university
-	events/turku-university
-	events/umea-university
-"
-
-if [ -n "${deploy}" ]; then
+	jobs="
+		universities/wikidata
+		events/coimbra-university
+		events/iasi-university-360
+		events/jena-university
+		events/linz-university
+		events/pavia-university
+		events/poitiers-university
+		events/salamanca-university
+		events/turku-university
+		events/umea-university
+	"
 
 	gcloud iam service-accounts describe ${account} >/dev/null 2>&1 \
 		|| gcloud iam service-accounts create scheduler --display-name="Cloud Scheduler"
@@ -144,4 +120,19 @@ if [ -n "${deploy}" ]; then
 
 	done
 
-fi
+}
+
+
+########################################################################################################################
+
+case "$*" in
+
+	"") ;;
+
+	"gcp") gcp ;;
+	"link") link ;;
+	"deploy") deploy ;;
+
+	*) echo "unsupported options <$*>" >&2; exit 1 ;;
+
+esac
