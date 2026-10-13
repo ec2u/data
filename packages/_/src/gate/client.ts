@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { GET } from "@metreeca/http";
 import express, { type RequestHandler } from "express";
 import { resolve } from "node:path";
 
@@ -30,10 +31,14 @@ import { resolve } from "node:path";
  */
 export function client(path: string): RequestHandler {
 
+
+	// !!! Responses from the same URL differ by Accept, so send Vary: Accept. Without it,
+	//  a cache could serve JSON to a browser navigation or the shell to an API call.
+
 	const index = resolve(path, "index.html");
 	const assets = express.static(path, { index: false });
 
-	return (request, response, next) => request.method === "GET" && request.get("Accept")?.includes("text/html")
+	return (request, response, next) => request.method === GET && request.get("Accept")?.includes("text/html")
 		? response.sendFile(index)
 		: assets(request, response, next);
 
