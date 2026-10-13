@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
+import { bind, executor, service } from "@metreeca/gear";
+import { createCache, createFileCache } from "@metreeca/gear/cache";
+import { getPackage, getPath } from "@metreeca/gear/space";
+import { createVault } from "@metreeca/gear/vault";
+import { createFetch } from "@metreeca/http";
+import { basic } from "@metreeca/http/basic";
+import { cache } from "@metreeca/http/cache";
+import { createSPARQLStore } from "@metreeca/keep-sparql";
+import { createRDF4JRepository } from "@metreeca/wire-sparql-rdf4j";
+import { minute } from "@metreeca/work/core/temporal.js";
+import { gcp } from "@metreeca/work/gear-gcp/index.js";
+import { createGCPVault } from "@metreeca/work/gear-gcp/secrets.js";
+import { createGoogleAI } from "@metreeca/work/muse-google/index.js";
+import { createStore } from "@metreeca/work/pipe-store/index.js";
 import { Metadata as courses } from "./courses/index.core.js";
 import { Metadata as datasets } from "./datasets/index.core.js";
 import { Metadata as documents } from "./documents/index.core.js";
 import { Metadata as events } from "./events/index.core.js";
-import { execute } from "@ec2u/data-system";
 import { Metadata as organizations } from "./organizations/index.core.js";
 import { Metadata as pages } from "./pages/index.core.js";
 import { Metadata as persons } from "./persons/index.core.js";
@@ -27,6 +40,39 @@ import { Metadata as taxonomies } from "./taxonomies/index.meta.js";
 import { Metadata as units } from "./units/index.core.js";
 import { Metadata as universities } from "./universities/index.core.js";
 
+
+const environment = process.env.PIPE_ENVIRONMENT || "yard"; // !!! align default to branch
+
+
+export const execute = executor(
+	bind(getPath, () => gcp.cloud
+		? getPath()
+		: getPackage(import.meta.dirname)
+	),
+	bind(createVault, createGCPVault),
+	bind(createCache, () => createFileCache({
+		bytes: 1024**3
+	})),
+	bind(createFetch, () => createFetch(cache({
+		ttl: 60*minute,
+		store: service(createCache),
+		skip: "https://docs.google.com/**"
+	}))),
+	bind(createStore, async () => createSPARQLStore(createRDF4JRepository({
+		server: "https://graphdb.ec2u.net",
+		repository: `data-${environment}`,
+		fetch: createFetch(basic(
+			await service(createVault)(`${environment}-gdb-loader-usr`),
+			await service(createVault)(`${environment}-gdb-loader-pwd`)
+		))
+	}))),
+	bind(createGoogleAI, async () => createGoogleAI({
+		apiKey: await service(createVault)(`${environment}-googleai-key`)
+	}))
+);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if ( import.meta.main ) {
 	await execute(() => Promise.all([

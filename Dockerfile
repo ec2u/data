@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 #
 # Copyright © 2020-2026 EC2U Alliance
 #
@@ -14,19 +15,14 @@
 # limitations under the License.
 #
 
-# One image per service, selected with --target server|loader
+# One image per service, selected with --target server|loader|oracle
 
 FROM node:24-alpine AS build
 
 WORKDIR /pipe
 
 COPY package.json package-lock.json ./
-COPY packages/_/package.json ./packages/_/
-COPY packages/client/package.json ./packages/client/
-COPY packages/loader/package.json ./packages/loader/
-COPY packages/server/package.json ./packages/server/
-COPY packages/shared/package.json ./packages/shared/
-COPY packages/system/package.json ./packages/system/
+COPY --parents packages/*/package.json ./
 
 RUN npm ci
 
@@ -43,16 +39,10 @@ ENV NODE_ENV=production
 WORKDIR /pipe
 
 COPY --from=build /pipe/package.json /pipe/package-lock.json ./
-COPY --from=build /pipe/packages/_/package.json ./packages/_/
-COPY --from=build /pipe/packages/client/package.json ./packages/client/
-COPY --from=build /pipe/packages/loader/package.json ./packages/loader/
-COPY --from=build /pipe/packages/server/package.json ./packages/server/
-COPY --from=build /pipe/packages/shared/package.json ./packages/shared/
-COPY --from=build /pipe/packages/system/package.json ./packages/system/
+COPY --from=build --parents /pipe/./packages/*/package.json ./
 
 COPY --from=build /pipe/packages/_/lib ./packages/_/lib
 COPY --from=build /pipe/packages/shared/lib ./packages/shared/lib
-COPY --from=build /pipe/packages/system/lib ./packages/system/lib
 
 
 FROM runtime AS server
@@ -77,3 +67,14 @@ RUN chown node:node . # the file cache of fetched pages is created under the wor
 USER node
 
 CMD ["node", "packages/loader/lib/index.js"]
+
+
+FROM runtime AS oracle
+
+RUN npm ci --omit=dev --workspace=@ec2u/data-oracle && npm cache clean --force
+
+COPY --from=build /pipe/packages/oracle/lib ./packages/oracle/lib
+
+USER node
+
+CMD ["node", "packages/oracle/lib/index.js"]

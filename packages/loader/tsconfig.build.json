@@ -22,9 +22,6 @@
     },
     {
       "path": "../shared/tsconfig.build.json"
-    },
-    {
-      "path": "../system/tsconfig.build.json"
     }
   ]
 }

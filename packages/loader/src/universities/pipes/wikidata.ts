@@ -33,7 +33,7 @@ import { WGSPoint } from "@metreeca/work/open/wgs.js";
 import { select } from "@metreeca/work/pipe-repository/select.js";
 import { delta, type Delta, persist } from "@metreeca/work/pipe-store/persist.js";
 import { validate } from "@metreeca/work/mime-jsonld/index.js";
-import { execute } from "@ec2u/data-system";
+import { execute } from "../../index.core.js";
 
 
 const WikidataEndpoint = "https://query.wikidata.org/sparql";

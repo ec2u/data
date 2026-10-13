@@ -8,13 +8,13 @@
       "path": "packages/loader/tsconfig.build.json"
     },
     {
+      "path": "packages/oracle/tsconfig.build.json"
+    },
+    {
       "path": "packages/server/tsconfig.build.json"
     },
     {
       "path": "packages/shared/tsconfig.build.json"
-    },
-    {
-      "path": "packages/system/tsconfig.build.json"
     }
   ]
 }

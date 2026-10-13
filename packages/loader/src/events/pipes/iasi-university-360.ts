@@ -15,7 +15,7 @@
  */
 
 import { sync } from "../sinks/sync.js";
-import { execute } from "@ec2u/data-system";
+import { execute } from "../../index.core.js";
 import { organizations } from "@ec2u/data-shared/organizations/index.js";
 import { iasi } from "@ec2u/data-shared/universities/index.core.js";
 import { immutable } from "@metreeca/core/values";

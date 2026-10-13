@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { execute } from "@ec2u/data-system";
 import { second } from "@metreeca/work/core/temporal.js";
 import { client } from "@metreeca/work/gate/client.js";
 import { server } from "@metreeca/work/gate/index.js";
@@ -23,6 +22,7 @@ import express from "express";
 import { resolve } from "node:path";
 import { datasets } from "./datasets/index.js";
 import { events } from "./events/index.js";
+import { execute } from "./index.core.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 

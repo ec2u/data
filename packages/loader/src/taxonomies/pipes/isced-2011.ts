@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { execute } from "@ec2u/data-system";
+import { execute } from "../../index.core.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { sync } from "../sinks/sync.js";
 import { pipe } from "@metreeca/flow";

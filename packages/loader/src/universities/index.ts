@@ -16,7 +16,7 @@
 
 import { job } from "@metreeca/work/gear-gcp/_scheduler.js";
 import { Router } from "express";
-import { execute } from "@ec2u/data-system";
+import { execute } from "../index.core.js";
 import { Wikidata } from "./pipes/wikidata.js";
 
 

@@ -9,12 +9,11 @@
   },
   "dependencies": {
     "@ec2u/data-shared": "*",
-    "@ec2u/data-system": "*",
     "@metreeca/core": "^0.12.0",
     "@metreeca/gear": "^0.3.0",
     "@metreeca/http": "^0.4.0",
     "@metreeca/keep-sparql": "^0.11.0",
-    "@metreeca/wire-sparql-rdf4j": "^0.11.1",
+    "@metreeca/wire-sparql-http": "^0.11.1",
     "@metreeca/work": "*",
     "express": "^5.2.1"
   },

@@ -6,30 +6,36 @@ description: Reference for the deployment architecture, naming every resource, i
 
 # Overview
 
-The pipe runs as two **Cloud Run** services per environment in the Google Cloud project `ec2u-data` (number
-`891057038566`), region `europe-west1`. GitHub Actions deploys both in a single workflow run on every push to the
+The pipe runs as three **Cloud Run** services per environment in the Google Cloud project `ec2u-data` (number
+`891057038566`), region `europe-west1`. GitHub Actions deploys all of them in a single workflow run on every push to the
 branch of the environment (`.github/workflows/deploy.yml`).
 
-| Environment | Branch | Server        | Loader        | GraphDB repository | GraphDB user |
-|-------------|--------|---------------|---------------|--------------------|--------------|
-| production  | `main` | `server-main` | `loader-main` | `data-main`        | `data-main`  |
-| staging     | `next` | `server-next` | `loader-next` | `data-next`        | `data-next`  |
-| development | `yard` | `server-yard` | `loader-yard` | `data-yard`        | `data-yard`  |
+| Environment | Branch | Server        | Loader        | Oracle        | GraphDB repository | GraphDB users              |
+|-------------|--------|---------------|---------------|---------------|--------------------|----------------------------|
+| production  | `main` | `server-main` | `loader-main` | `oracle-main` | `data-main`        | `data-main-{service}`      |
+| staging     | `next` | `server-next` | `loader-next` | `oracle-next` | `data-next`        | `data-next-{service}`      |
+| development | `yard` | `server-yard` | `loader-yard` | `oracle-yard` | `data-yard`        | `data-yard-{service}`      |
 
 - **Server**: serves the data endpoints and the web UI, open to the public
 - **Loader**: runs the ingestion pipes, closed to every caller except Cloud Scheduler jobs signed as `scheduler`
+- **Oracle**: answers natural language queries over the graph, closed to every caller except those granted access
 
 Each environment is isolated: its services run under their own service accounts, read only the secrets of their
-environment, and write only to their own GraphDB repository through their own GraphDB user.
+environment, and reach only their own GraphDB repository. Within an environment, each service has its own GraphDB
+user and its own credentials, and only the loader can write.
 
 # Environment
 
-The workflow names the environment in the `PIPE_ENVIRONMENT` variable of both services. The services derive every
-environment-specific resource from it:
+The workflow names the environment in the `PIPE_ENVIRONMENT` variable of every service. Each service derives its
+resources from it, binding them in its own `src/index.core.ts`:
 
 - GraphDB repository `data-{environment}` on `https://graphdb.ec2u.net`
-- Secret Manager secrets `{environment}-gdb-server-usr`, `{environment}-gdb-server-pwd` and
-  `{environment}-googleai-key`
+- Secret Manager secrets `{environment}-gdb-{service}-usr` and `{environment}-gdb-{service}-pwd`, holding the
+  credentials of the GraphDB user `data-{environment}-{service}`
+- Secret Manager secret `{environment}-googleai-key`, for the loader and the oracle
+
+The server and the oracle read the repository without opening transactions, since GraphDB grants transactions only to
+users with write access.
 
 Local runs default to `yard` and reach the same resources through the `gcloud` credentials of the developer (see
 `npm run prime`). Set `PIPE_ENVIRONMENT` to run against another environment.
@@ -40,13 +46,13 @@ Local runs default to `yard` and reach the same resources through the `gcloud` c
 
 | Resource                 | Name                                                         | Role                                                  |
 |--------------------------|--------------------------------------------------------------|-------------------------------------------------------|
-| Cloud Run services       | `server-{branch}`, `loader-{branch}`                         | Created and updated by the workflow                   |
+| Cloud Run services       | `server-{branch}`, `loader-{branch}`, `oracle-{branch}`      | Created and updated by the workflow                   |
 | Artifact Registry        | `pipe`, Docker format, one image per service and environment | Holds the images; keeps the last two of each          |
-| Runtime service accounts | `server-{branch}`, `loader-{branch}`                         | Identities the services run as                        |
+| Runtime service accounts | `server-{branch}`, `loader-{branch}`, `oracle-{branch}`      | Identities the services run as                        |
 | Scheduler service account | `scheduler`                                                 | Identity Cloud Scheduler jobs sign their calls with   |
 | Deployer service account | `pipe-deployer`                                              | Identity the workflow deploys as                      |
 | Workload Identity pool   | `github`, OIDC provider `ec2u`, restricted to owner `ec2u`   | Lets the workflow sign in without a service account key |
-| Secrets                  | `{branch}-gdb-server-usr`, `{branch}-gdb-server-pwd`, `{branch}-googleai-key` | Credentials of each environment       |
+| Secrets                  | `{branch}-gdb-{service}-usr`, `{branch}-gdb-{service}-pwd`, `{branch}-googleai-key` | Credentials of each environment and service |
 
 Enabled APIs: Cloud Run, Artifact Registry, Secret Manager, Cloud Scheduler, IAM, IAM Credentials, Security Token
 Service, Cloud Resource Manager.
@@ -58,8 +64,9 @@ also deletes every Cloud Run revision except the one serving traffic.
 
 | Principal                      | Role                                 | On                                                       |
 |--------------------------------|--------------------------------------|----------------------------------------------------------|
-| `server-{branch}`, `loader-{branch}` | `roles/secretmanager.secretAccessor` | the project, conditioned on secret names starting with `{branch}-` |
+| `{service}-{branch}`           | `roles/secretmanager.secretAccessor` | the project, conditioned on secret names starting with `{branch}-gdb-{service}-` or equal to `{branch}-googleai-key` |
 | `scheduler`                    | `roles/run.invoker`                  | `loader-{branch}`, granted once the first deployment has created it |
+| oracle callers (to be defined) | `roles/run.invoker`                  | `oracle-{branch}`, granted once the first deployment has created it |
 | `pipe-deployer`                | `roles/run.admin`                    | the project                                              |
 | `pipe-deployer`                | `roles/artifactregistry.writer`      | the `pipe` registry                                      |
 | `pipe-deployer`                | `roles/iam.serviceAccountUser`       | each runtime service account                             |
@@ -67,8 +74,15 @@ also deletes every Cloud Run revision except the one serving traffic.
 
 ## GraphDB
 
-Each environment has a repository `data-{branch}`, configured as `data-work`, and a user `data-{branch}` granted read
-and write access to that repository alone. The admin password is held in the `gdb-admin-pwd` secret.
+Each environment has a repository `data-{branch}`, configured as `data-work`, and one user per service, granted access
+to that repository alone:
+
+- `data-{branch}-loader`: read and write
+- `data-{branch}-server`: read only
+- `data-{branch}-oracle`: read only
+
+Passwords follow the macOS generated format (`xxxxxx-xxxxxx-xxxxxx`). The admin password is held in the
+`gdb-admin-pwd` secret.
 
 ## Scheduled Jobs
 
@@ -80,9 +94,9 @@ attempt deadline of at most 30 minutes, matching the request timeout of the load
 
 | Resource                                   | `main`                 | `next`                 | `yard`  |
 |--------------------------------------------|------------------------|------------------------|---------|
-| Secrets                                    | missing                | missing                | created |
+| Secrets                                    | missing                | missing                | created, one pair per service |
 | GraphDB repository                         | exists                 | exists                 | created, copied from `data-work` |
-| GraphDB user                               | shared `data-server`   | shared `data-server`   | created |
+| GraphDB users                              | shared `data-server`   | shared `data-server`   | created, one per service |
 | Service accounts, registry, Workload Identity | missing             | missing                | missing |
 | Cloud Run services, scheduled jobs         | missing                | missing                | missing |
 

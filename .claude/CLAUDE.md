@@ -106,12 +106,12 @@ was queued.
 
 Two levels of probe are available, and they answer different questions.
 
-**Shape level** - what the application sees. Bind the services through `execute()` from
-`@ec2u/data-system` and read through `store.lookup()`:
+**Shape level** - what the application sees. Bind the services through the loader's `execute()` and read through
+`store.lookup()`:
 
 ```ts
 import { createStore } from "@metreeca/work/pipe-store/index.js";
-import { execute } from "@ec2u/data-system";
+import { execute } from "./index.core.js";
 import { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
 import { service } from "@metreeca/gear";
 
