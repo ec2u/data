@@ -17,9 +17,11 @@
 import { createRESTStore } from "@metreeca/keep-rest";
 import "@metreeca/tile/index.css";
 import { createCachingStore } from "@metreeca/keep/caching";
+import { Board } from "@metreeca/tile-data/board";
 import { Router, Routes } from "@metreeca/tile-data/router";
 import { Store } from "@metreeca/tile-data/store";
 import { host } from "@metreeca/tile-hive";
+import { Toast } from "@metreeca/tile-hive/toast";
 import { render } from "preact";
 import { datasets, DatasetsPage } from "./pages/datasets/index.js";
 import { Unknown, unknown } from "./pages/index.js";
@@ -35,27 +37,33 @@ render(<Hub/>, host("ec2u-hub"));
 
 function Hub() {
 
-	return <Fetch>
+	return <Board>
 
-		<Store factory={fetch =>
-			createCachingStore(createRESTStore({ trusted: true, fetch }))
-		}>
+		<Fetch>
 
-			<Router>
+			<Store factory={fetch =>
+				createCachingStore(createRESTStore({ trusted: true, fetch }))
+			}>
 
-				<Routes>{{
+				<Router>
 
-					[datasets.route]: <DatasetsPage/>,
-					[universities.route]: <Universities/>,
+					<Toast/>
 
-					[unknown.route]: <Unknown/>
+					<Routes>{{
 
-				}}</Routes>
+						[datasets.route]: <DatasetsPage/>,
+						[universities.route]: <Universities/>,
 
-			</Router>
+						[unknown.route]: <Unknown/>
 
-		</Store>
+					}}</Routes>
 
-	</Fetch>;
+				</Router>
+
+			</Store>
+
+		</Fetch>
+
+	</Board>;
 
 }

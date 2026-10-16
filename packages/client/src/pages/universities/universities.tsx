@@ -17,13 +17,13 @@
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
-import { Fault } from "@metreeca/tile-cell/fault";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection } from "@metreeca/tile-data/store";
 import { useEffect } from "preact/hooks";
+import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 
 
@@ -75,7 +75,7 @@ export function UniversitiesPage() {
 	>{collection({
 
 		blank: () => <Hint>{universities.glyph}</Hint>,
-		error: ({ state }) => <Fault {...state}/>,
+		error: ({ state }) => <Failure problem={state}><Hint>{universities.glyph}</Hint></Failure>,
 
 		ready: ({ state }) => <ul>{state.map(({ id, label }) =>
 			<li key={id}><Link href={id}>{label}</Link></li>

@@ -17,12 +17,12 @@
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
-import { Fault } from "@metreeca/tile-cell/fault";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { useEffect } from "preact/hooks";
+import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { universities } from "./universities.js";
 
@@ -87,7 +87,7 @@ export function UniversityPage() {
 	>{resource({
 
 		blank: () => <Hint>{university.glyph}</Hint>,
-		error: ({ state }) => <Fault {...state}/>,
+		error: ({ state }) => <Failure problem={state}><Hint>{university.glyph}</Hint></Failure>,
 
 		ready: ({ state: { inception, students } }) => <dl>
 

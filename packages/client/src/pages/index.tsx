@@ -16,9 +16,10 @@
 
 import { NotFound } from "@metreeca/http";
 import { Button } from "@metreeca/tile-cell/button";
-import { Fault } from "@metreeca/tile-cell/fault";
+import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { useRouter } from "@metreeca/tile-data/router";
+import { Failure } from "../tiles/failure.js";
 import { Page } from "../tiles/page.js";
 import { datasets } from "./datasets/index.js";
 import { immutable } from "@metreeca/core/values";
@@ -28,7 +29,13 @@ export const unknown = immutable({
 
 	route: "*",
 	label: "404 | Not Found",
-	glyph: <Icon.NotFound/>
+	glyph: <Icon.NotFound/>,
+
+	problem: {
+		status: NotFound,
+		title: "Not Found",
+		detail: "The requested page doesn't exist"
+	}
 
 });
 
@@ -52,7 +59,7 @@ export function Unknown() {
 
 	>
 
-		<Fault status={NotFound}/>
+		<Failure problem={unknown.problem}><Hint>{unknown.glyph}</Hint></Failure>
 
 	</Page>;
 

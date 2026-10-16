@@ -13,10 +13,10 @@
     "@metreeca/http": "^0.4.0",
     "@metreeca/keep": "^0.11.0",
     "@metreeca/keep-rest": "^0.11.0",
-    "@metreeca/tile": "^0.3.0",
-    "@metreeca/tile-cell": "^0.3.0",
-    "@metreeca/tile-data": "^0.3.0",
-    "@metreeca/tile-hive": "^0.3.0",
+    "@metreeca/tile": "^0.5.1",
+    "@metreeca/tile-cell": "^0.5.1",
+    "@metreeca/tile-data": "^0.5.1",
+    "@metreeca/tile-hive": "^0.5.1",
     "preact": "^10.29.8"
   },
   "devDependencies": {
