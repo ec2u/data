@@ -26,6 +26,8 @@
 
 import { immutable } from "@metreeca/core/values";
 import { gcpMetadata, GoogleAuth } from "google-auth-library";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 
 
 /**
@@ -83,15 +85,31 @@ export const gcp = immutable({
 	},
 
 	/**
-	 * The ID of the Google Cloud region the process is deployed to, for instance `europe-west1`.
+	 * The ID of the Google Cloud region the process runs in, for instance `europe-west1`.
 	 *
-	 * Only defined on a Google Cloud runtime (see {@link gcp.cloud}): a local process runs in no region, and the
-	 * promise resolves to `undefined`.
+	 * On a Google Cloud runtime the region is the one the process is deployed to; locally it is the one named by the
+	 * `GOOGLE_CLOUD_LOCATION` environment variable or, failing that, by the `ai/region` property of the `gcloud`
+	 * configuration, so that region-sensitive services such as Vertex AI are reached where the deployment reaches them.
+	 * The promise resolves to `undefined` if no region is configured for a local process.
 	 */
 	get region(): Promise<undefined | string> {
-		return cache.region ??= !this.cloud ? Promise.resolve(undefined) : gcpMetadata
-			.instance<string>("region") // projects/{number}/regions/{region}
-			.then(path => path.replace(/^.*\//, ""));
+		return cache.region ??= this.cloud ? deployedRegion() : configuredRegion();
 	}
 
 });
+
+
+function deployedRegion(): Promise<string> {
+	return gcpMetadata
+		.instance<string>("region") // projects/{number}/regions/{region}
+		.then(path => path.replace(/^.*\//, ""));
+}
+
+function configuredRegion(): Promise<undefined | string> {
+
+	const location = process.env.GOOGLE_CLOUD_LOCATION;
+
+	return location ? Promise.resolve(location) : promisify(execFile)("gcloud", ["config", "get", "ai/region"])
+		.then(({ stdout }) => stdout.trim() || undefined, () => undefined); // gcloud missing or failing: no region
+
+}

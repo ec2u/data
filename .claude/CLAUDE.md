@@ -81,11 +81,15 @@ the Confluence **Knowledge Hub - Status** page in the same change before committ
 ## NPM Scripts
 
 - **`npm run clean`** - Remove dependencies and build artefacts
-- **`npm run prime`** - Install dependencies from the lockfile and configure the GCP project
-- **`npm run setup`** - Configure for local development
+- **`npm run prime`** - Install dependencies from the lockfile
+- **`npm run setup`** - Install dependencies and link local `@metreeca/*` checkouts
 - **`npm run build`** - Compile sources and copy `*.sys.md` prompts alongside their modules
 - **`npm run check`** - Run the test suite
 - **`npm run start`** - Serve the endpoints and the web UI in parallel, in watch mode
+
+Run `sh package.sh` by hand once per workstation, and again whenever `gcloud` points elsewhere: it signs in to `gcloud`
+and selects the `ec2u-data` project and the `europe-west1` region, where local runs reach Vertex AI as the deployed
+services do. Setting `GOOGLE_CLOUD_LOCATION` overrides that region for a single run.
 
 ## Deployment
 

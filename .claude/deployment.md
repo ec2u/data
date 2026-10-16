@@ -37,8 +37,8 @@ resources from it, binding them in its own `src/index.core.ts`:
 The server and the oracle read the repository without opening transactions, since GraphDB grants transactions only to
 users with write access.
 
-Local runs default to `yard` and reach the same resources through the `gcloud` credentials of the developer (see
-`npm run prime`). Set `PIPE_ENVIRONMENT` to run against another environment.
+Local runs default to `yard` and reach the same resources through the `gcloud` credentials the developer sets up with
+`sh package.sh`. Set `PIPE_ENVIRONMENT` to run against another environment, picking the resources they read and write.
 
 # Resources
 
