@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
+import { symlinks } from "@metreeca/rack/vite";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
 
-	resolve: {
-
-		conditions: [ // resolve packages to their sources, so a test run doesn't depend on a prior build
-
-			"@ec2u/source",
-			"node",
-			"module",
-			"development"
-
-		]
-
-	},
+	plugins: [ // linked packages from their sources, so tests need no prior build
+		symlinks({ conditions: ["@ec2u/source", "@metreeca/source"] })
+	],
 
 	test: {
 

@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "cpy 'src/**/*.sys.md' 'src/**/*.ql' lib"
+    "build": "cp lib 'src/**/*.sys.md' 'src/**/*.ql'"
   },
   "dependencies": {
     "@ec2u/data-shared": "*",
@@ -34,7 +34,6 @@
     "uuid": "^14.0.1"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
-    "cpy-cli": "^7.0.0"
+    "@types/express": "^5.0.6"
   }
 }

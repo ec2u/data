@@ -24,5 +24,6 @@
     "@metreeca/core": "^0.12.0",
     "@metreeca/qest": "^0.12.0",
     "uuid": "^14.0.1"
-  }
+  },
+  "scripts": {}
 }

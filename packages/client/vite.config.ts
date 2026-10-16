@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
+import { symlinks } from "@metreeca/rack/vite";
 import preact from "@preact/preset-vite";
-import { defaultClientConditions, defineConfig } from "vite";
+import { defineConfig } from "vite";
 
 
 export default defineConfig({ // https://vite.dev/config/
 
 	root: "src",
 
-	plugins: [preact()],
-
-	resolve: {
-		dedupe: ["preact"], // share one preact instance with linked @metreeca packages
-		conditions: ["@ec2u/source", "@metreeca/source", ...defaultClientConditions] // bundle local pkgs from sources
-	},
+	plugins: [
+		symlinks({ conditions: ["@ec2u/source", "@metreeca/source"] }), // bundle linked packages from their sources
+		preact()
+	],
 
 	build: {
 		outDir: "../../server/lib/static", // deployed with the server
