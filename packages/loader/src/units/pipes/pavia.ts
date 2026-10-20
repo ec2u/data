@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { file } from "@metreeca/work/gear/files.js";
-import { createGoogleAI, json } from "@metreeca/work/muse-google/index.js";
+import { getResource } from "@metreeca/gear/space";
+import { createGoogleAI, json } from "@metreeca/llms-google";
 import { retrieve } from "../_pages/index.js";
 import { pages } from "../_pages/store.js";
 import { fetchPage } from "../_pages/tools/fetchPage.js";
@@ -78,7 +78,7 @@ export async function bootstrap(url?: string): Promise<unknown> {
 			config: {
 				seed: 0,
 				temperature: 0,
-				systemInstruction: await file(".sys.md", import.meta.url),
+				systemInstruction: await getResource(".sys.md", import.meta.url),
 				tools,
 				responseMimeType: "application/json",
 				responseSchema: {

@@ -15,11 +15,11 @@
  */
 
 import { service } from "@metreeca/gear";
-import { memoize } from "@metreeca/work/core/memoize.js";
-import { select } from "@metreeca/work/pipe-store/select.js";
-import { createGoogleAI, embedding } from "@metreeca/work/muse-google/index.js";
-import { cosine, decompress, type Distance, type Vector } from "@metreeca/work/muse/index.js";
+import { lookup } from "@metreeca/pipe-store";
+import { createGoogleAI, embedding } from "@metreeca/llms-google";
+import { cosine, decompress, type Distance, type Vector } from "@metreeca/llms";
 import { Taxonomy, type TopicEntry, type TopicReference } from "@ec2u/data-shared/taxonomies/index.js";
+import { memo } from "@metreeca/core";
 import { by } from "@metreeca/core/order";
 import type { Text } from "@metreeca/core/strings";
 import { pipe } from "@metreeca/flow";
@@ -31,10 +31,10 @@ import { log, report, time } from "@metreeca/tape";
 const logger = log(import.meta.url);
 
 
-const taxonomies = memoize(async (id: Reference) => {
+const taxonomies = memo(async (id: Reference) => {
 
 	const topics = await pipe(
-		(select({
+		(lookup({
 
 		entry: id,
 		shape: Taxonomy,

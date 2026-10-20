@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { job } from "@metreeca/work/gear-gcp/_scheduler.js";
+import { worker } from "@metreeca/gate/worker";
 import { Router } from "express";
 import { execute } from "../index.core.js";
 import { Wikidata } from "./pipes/wikidata.js";
@@ -24,6 +24,6 @@ export function universities(): Router {
 
 	return Router()
 
-		.use("/wikidata", job(() => execute(Wikidata)));
+		.post("/wikidata", worker(() => execute(Wikidata)));
 
 }

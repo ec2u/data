@@ -34,7 +34,7 @@ jobs:
             vars: ""
             flags: --allow-unauthenticated
           - service: loader # invoked only by Cloud Scheduler, with the attempt deadline of its jobs (see .claude/deployment.md)
-            vars: SCHEDULER_SERVICE_ACCOUNT=scheduler@ec2u-data.iam.gserviceaccount.com
+            vars: ""
             flags: --no-allow-unauthenticated --timeout=30m
           - service: oracle # invoked only by the callers granted access (see .claude/deployment.md)
             vars: ""

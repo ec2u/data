@@ -64,7 +64,7 @@ Two consequences for this pipe:
 
 ## The error message names the wrong cause
 
-`text()` (`src/_/muse-google/index.ts:695`) rejects an empty generation only where
+`text()` (`src/_/llms-google/index.ts:695`) rejects an empty generation only where
 `automaticFunctionCallingHistory` is set. With no function calling in play it returns `""`, which `json()` then hands to
 `JSON.parse`, and the resulting `SyntaxError` is reported as `malformed model response`.
 

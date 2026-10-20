@@ -16,12 +16,11 @@
 
 import { error, opt, type Optional } from "@metreeca/core";
 import { getDate } from "@metreeca/work/core/temporal.js";
-import { when } from "@metreeca/work/flow/when.js";
-import { digest } from "@metreeca/work/mime-json/digest.js";
-import { validate } from "@metreeca/work/mime-jsonld/index.js";
-import { file } from "@metreeca/work/gear/files.js";
-import { schema } from "@metreeca/work/blue/schema.js";
-import { createGoogleAI, json } from "@metreeca/work/muse-google/index.js";
+import { digest } from "@metreeca/work/core/digest.js";
+import { validate } from "@metreeca/mime-jsonld";
+import { getResource } from "@metreeca/gear/space";
+import { schema } from "@metreeca/blue";
+import { createGoogleAI, json } from "@metreeca/llms-google";
 import { isStaleEvent } from "@ec2u/data-shared/events/index.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { optional, required, resource } from "@metreeca/blue/resource";
@@ -30,7 +29,7 @@ import type { State } from "@metreeca/blue/value";
 import { type Markdown, markdown, type Text, unescape } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { filter, flat, map } from "@metreeca/flow/tasks";
+import { filter, flat, map, when } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { log } from "@metreeca/tape";
 import { FinishReason, type GenerateContentResponse } from "@google/genai";
@@ -217,7 +216,7 @@ export function extract(): Task<Text, State<typeof Extracted>> {
 						temperature: 0,
 						maxOutputTokens: 16384,
 
-						systemInstruction: await file(".sys.md", import.meta.url),
+						systemInstruction: await getResource(".sys.md", import.meta.url),
 
 						responseMimeType: "application/json",
 						responseJsonSchema: schema(Reported)
@@ -229,7 +228,7 @@ export function extract(): Task<Text, State<typeof Extracted>> {
 			]))
 			(filter(response => isGenerated(document, response)))
 			(map(response => json<State<typeof Reported>>(response)))
-			(when(extracted => extracted.event, validate(Reported)))
+			(when(extracted => extracted.event, validate(Reported), feed => feed))
 			(map(extracted => ({
 
 				publishable: extracted.event && !isStaleEvent(extracted),

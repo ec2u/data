@@ -68,41 +68,6 @@ import type { Optional } from "@metreeca/core";
 import { createNamespace } from "@metreeca/core/resource";
 
 
-const WKTNumber = String.raw`[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?`;
-
-const WKTPoint = new RegExp([
-	String.raw`^\s*`,
-	String.raw`(?:<([^<>\s]*)>\s*)?`, // reference system IRI
-	String.raw`point\s*(zm|z|m)?\s*`, // keyword and dimension tag
-	String.raw`\(\s*(${WKTNumber}(?:\s+${WKTNumber})*)\s*\)`, // coordinates
-	String.raw`\s*$`
-].join(""), "i");
-
-const WKTAxes: ReadonlyMap<string, { // reference system IRI → horizontal coordinate positions
-
-	readonly longitude: number
-	readonly latitude: number
-
-}> = new Map([
-	["", { longitude: 0, latitude: 1 }],
-	["http://www.opengis.net/def/crs/OGC/1.3/CRS84", { longitude: 0, latitude: 1 }],
-	["http://www.opengis.net/def/crs/OGC/0/CRS84h", { longitude: 0, latitude: 1 }],
-	["http://www.opengis.net/def/crs/EPSG/0/4326", { longitude: 1, latitude: 0 }]
-]);
-
-const WKTDimensions: ReadonlyMap<string, { // dimension tag → coordinate count and altitude position
-
-	readonly size: number
-	readonly altitude?: number
-
-}> = new Map([
-	["", { size: 2 }],
-	["z", { size: 3, altitude: 2 }],
-	["m", { size: 3 }],
-	["zm", { size: 4, altitude: 2 }]
-]);
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -193,6 +158,41 @@ export function WGSPoint() {
  */
 export namespace WGSPoint {
 
+	const WKTNumber = String.raw`[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?`;
+
+	const WKTPoint = new RegExp([
+		String.raw`^\s*`,
+		String.raw`(?:<([^<>\s]*)>\s*)?`, // reference system IRI
+		String.raw`point\s*(zm|z|m)?\s*`, // keyword and dimension tag
+		String.raw`\(\s*(${WKTNumber}(?:\s+${WKTNumber})*)\s*\)`, // coordinates
+		String.raw`\s*$`
+	].join(""), "i");
+
+	const WKTAxes: ReadonlyMap<string, { // reference system IRI → horizontal coordinate positions
+
+		readonly longitude: number
+		readonly latitude: number
+
+	}> = new Map([
+		["", { longitude: 0, latitude: 1 }],
+		["http://www.opengis.net/def/crs/OGC/1.3/CRS84", { longitude: 0, latitude: 1 }],
+		["http://www.opengis.net/def/crs/OGC/0/CRS84h", { longitude: 0, latitude: 1 }],
+		["http://www.opengis.net/def/crs/EPSG/0/4326", { longitude: 1, latitude: 0 }]
+	]);
+
+	const WKTDimensions: ReadonlyMap<string, { // dimension tag → coordinate count and altitude position
+
+		readonly size: number
+		readonly altitude?: number
+
+	}> = new Map([
+		["", { size: 2 }],
+		["z", { size: 3, altitude: 2 }],
+		["m", { size: 3 }],
+		["zm", { size: 4, altitude: 2 }]
+	]);
+
+
 	/**
 	 * Creates a point from its Well-Known Text representation.
 	 *
@@ -227,7 +227,7 @@ export namespace WGSPoint {
 		const dimensions = WKTDimensions.get(tag.toLowerCase());
 		const coordinates = text ? text.split(/\s+/).map(Number) : [];
 
-		if ( axes === undefined || dimensions?.size !== coordinates.length ) {
+		if ( axes === undefined || dimensions === undefined || dimensions.size !== coordinates.length ) {
 
 			return undefined;
 

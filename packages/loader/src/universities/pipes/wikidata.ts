@@ -22,26 +22,24 @@ import { fill } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { distinct, flat, map, tee, trim } from "@metreeca/flow/tasks";
+import { getResource } from "@metreeca/gear/space";
 import { createFetch } from "@metreeca/http";
 import { headers } from "@metreeca/http/headers";
 import { lexical } from "@metreeca/trio";
 import { type SPARQL, type Tuple, variable } from "@metreeca/wire-sparql";
 import { createHTTPRepository } from "@metreeca/wire-sparql-http";
 import { reference } from "@metreeca/wire-sparql/builder";
-import { file } from "@metreeca/work/gear/files.js";
+import { validate } from "@metreeca/mime-jsonld";
 import { WGSPoint } from "@metreeca/work/open/wgs.js";
-import { select } from "@metreeca/work/pipe-repository/select.js";
-import { delta, type Delta, persist } from "@metreeca/work/pipe-store/persist.js";
-import { validate } from "@metreeca/work/mime-jsonld/index.js";
+import { Wikidata as WikidataVocabulary } from "@metreeca/work/open/wikidata.js";
+import { select } from "@metreeca/pipe-sparql";
+import { delta, type Delta, settle } from "@metreeca/pipe-store";
 import { execute } from "../../index.core.js";
 
 
-const WikidataEndpoint = "https://query.wikidata.org/sparql";
-const WikidataAgent = "EC2U Knowledge Hub (https://data.ec2u.eu/)";
-
 const wikidata = createHTTPRepository({
-	query: WikidataEndpoint,
-	fetch: createFetch(headers({ "User-Agent": WikidataAgent })) // required by the Wikidata usage policy
+	query: WikidataVocabulary.Endpoint,
+	fetch: createFetch(headers({ "User-Agent": "EC2U Knowledge Hub (https://data.ec2u.eu/)" })) // required by Wikidata
 });
 
 
@@ -55,14 +53,14 @@ if ( import.meta.main ) {
 export async function Wikidata() {
 
 	return pipe(
-		(items(file(".ql", import.meta.url)))
+		(items(getResource(".ql", import.meta.url)))
 		(bind())
 		(select(wikidata))
 		(tee(
 			partners(),
 			places()
 		))
-		(persist({ atomic: true }))
+		(settle({ atomic: true }))
 	);
 
 

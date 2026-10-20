@@ -12,26 +12,9 @@
     }
   },
   "dependencies": {
-    "@google-cloud/datastore": "^10.1.1",
-    "@google-cloud/secret-manager": "^6.3.0",
-    "@google/genai": "^1.52.0",
-    "@metreeca/blue": "^0.12.0",
-    "@metreeca/core": "^0.12.0",
-    "@metreeca/flow": "^0.11.0",
-    "@metreeca/gear": "^0.3.0",
-    "@metreeca/http": "^0.4.0",
-    "@metreeca/keep": "^0.11.0",
-    "@metreeca/qest": "^0.12.0",
-    "@metreeca/tape": "^0.11.0",
-    "express": "^5.2.1",
-    "google-auth-library": "^10.5.0",
-    "openai": "^7.10.0"
-  },
-  "peerDependencies": {
-    "json-schema-typed": "^8.0.2"
-  },
-  "devDependencies": {
-    "@types/express": "^5.0.6"
+    "@metreeca/blue": "^0.13.0",
+    "@metreeca/core": "^0.13.0",
+    "@metreeca/trio": "^0.2.0"
   },
   "scripts": {}
 }

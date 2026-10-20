@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { file } from "@metreeca/work/gear/files.js";
-import { createGoogleAI, json } from "@metreeca/work/muse-google/index.js";
+import { getResource } from "@metreeca/gear/space";
+import { createGoogleAI, json } from "@metreeca/llms-google";
 import { topics } from "../../_/store.js";
 import { searchTopics } from "../../../taxonomies/tools/searchTopics.js";
 import { organizations } from "@ec2u/data-shared/taxonomies/organizations.js";
@@ -59,7 +59,7 @@ export async function classify(unit: Partial<Unit>): Promise<Partial<Unit>> {
 			config: {
 				seed: 0,
 				temperature: 0,
-				systemInstruction: await file(".sys.md", import.meta.url),
+				systemInstruction: await getResource(".sys.md", import.meta.url),
 				tools,
 				automaticFunctionCalling: {
 					maximumRemoteCalls: 10

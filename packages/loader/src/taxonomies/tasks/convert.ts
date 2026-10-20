@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { digest } from "@metreeca/work/mime-json/digest.js";
-import { compress, synopsis } from "@metreeca/work/muse/index.js";
+import { digest } from "@metreeca/work/core/digest.js";
+import { compress, synopsis } from "@metreeca/llms";
 import { getTopicEmbedding } from "../index.core.js";
 import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { CommentLength } from "@ec2u/data-shared";

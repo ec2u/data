@@ -27,14 +27,15 @@
  * @see {@link https://cloud.google.com/nodejs/docs/reference/datastore/latest Google Cloud Datastore}
  */
 
-import { memoize } from "@metreeca/work/core/memoize.js";
-import { datastore } from "@metreeca/work/gear-gcp/_datastore.js";
+import { memo } from "@metreeca/core";
+import { Datastore } from "@google-cloud/datastore";
 import type { Page, Retriever } from "./index.js";
 import { log, report, time } from "@metreeca/tape";
 import * as uuid from "uuid";
 
 
 const logger = log(import.meta.url);
+const datastore = new Datastore();
 
 const kind = "Page";
 const namespace = "99cac6cb-0413-48e5-9882-1a928460cf44";
@@ -82,7 +83,7 @@ export const pages = Object.freeze({
  */
 function lookup(fetcher: Retriever): Retriever {
 
-	return memoize(url => new Promise<Page>(async (resolve, reject) => {
+	return memo(url => new Promise<Page>(async (resolve, reject) => {
 
 		try {
 

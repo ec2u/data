@@ -17,11 +17,9 @@
 # Configure GCP project for local testing
 
 project=ec2u-data
-region=europe-west1
 
 gcloud auth print-access-token >/dev/null 2>&1 || gcloud auth login --update-adc
 gcloud auth application-default print-access-token >/dev/null 2>&1 || gcloud auth application-default login
 
 gcloud auth application-default set-quota-project ${project}
 gcloud config set project ${project}
-gcloud config set ai/region ${region}

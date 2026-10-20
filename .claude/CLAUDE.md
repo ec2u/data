@@ -88,8 +88,7 @@ the Confluence **Knowledge Hub - Status** page in the same change before committ
 - **`npm run start`** - Serve the endpoints and the web UI in parallel, in watch mode
 
 Run `sh package.sh` by hand once per workstation, and again whenever `gcloud` points elsewhere: it signs in to `gcloud`
-and selects the `ec2u-data` project and the `europe-west1` region, where local runs reach Vertex AI as the deployed
-services do. Setting `GOOGLE_CLOUD_LOCATION` overrides that region for a single run.
+and selects the `ec2u-data` project, whose resources local runs reach with the developer's own credentials.
 
 ## Deployment
 

@@ -18,8 +18,8 @@ import { universities, Universities } from "@ec2u/data-shared/universities/index
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { map } from "@metreeca/flow/tasks";
-import { delta, persist } from "@metreeca/work/pipe-store/persist.js";
-import { validate } from "@metreeca/work/mime-jsonld/index.js";
+import { delta, settle } from "@metreeca/pipe-store";
+import { validate } from "@metreeca/mime-jsonld";
 import { execute } from "../index.core.js";
 
 
@@ -36,7 +36,7 @@ export async function Metadata() {
 		(items([universities]))
 		(validate(Universities))
 		(map(dataset => delta(universities.id, Universities, dataset)))
-		(persist({ atomic: true }))
+		(settle({ atomic: true }))
 	);
 
 }

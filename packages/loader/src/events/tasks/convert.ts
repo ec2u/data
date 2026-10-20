@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { validate } from "@metreeca/work/mime-jsonld/index.js";
+import { validate } from "@metreeca/mime-jsonld";
 import { Event, getEventId, events } from "@ec2u/data-shared/events/index.js";
 import type { Classified } from "./classify.js";
 import { getUniversity } from "@ec2u/data-shared/universities/index.core.js";

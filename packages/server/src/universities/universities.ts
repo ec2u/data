@@ -19,7 +19,7 @@ import { universities, Universities } from "@ec2u/data-shared/universities/index
 import { opt } from "@metreeca/core";
 import { service } from "@metreeca/gear";
 import { encodeResource } from "@metreeca/qest/state";
-import { createStore } from "@metreeca/work/pipe-store/index.js";
+import { createStore } from "@metreeca/pipe-store";
 import { Router } from "express";
 
 

@@ -20,9 +20,9 @@ import { createFetch } from "@metreeca/http";
 import { basic } from "@metreeca/http/basic";
 import { createSPARQLStore } from "@metreeca/keep-sparql";
 import { createHTTPRepository } from "@metreeca/wire-sparql-http";
-import { createGCPVault } from "@metreeca/work/gear-gcp/secrets.js";
-import { createGoogleAI } from "@metreeca/work/muse-google/index.js";
-import { createStore } from "@metreeca/work/pipe-store/index.js";
+import { createGCPVault } from "@metreeca/gear-gcp/secrets";
+import { createGoogleAI } from "@metreeca/llms-google";
+import { createStore } from "@metreeca/pipe-store";
 
 
 const environment = process.env.PIPE_ENVIRONMENT || "yard"; // !!! align default to branch

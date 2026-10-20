@@ -24,16 +24,12 @@ import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { find, toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, mix, tee } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, mix, tee, when } from "@metreeca/flow/tasks";
 import { fetch } from "@metreeca/pipe-url";
 import { focus, html, untag } from "@metreeca/mime-xml";
-import { when } from "@metreeca/work/flow/when.js";
-import { digest } from "@metreeca/work/mime-json/digest.js";
-import { detail } from "@metreeca/work/pipe-store/detail.js";
-import { delta, type Delta, persist, type Tally } from "@metreeca/work/pipe-store/persist.js";
-import { retire } from "@metreeca/work/pipe-store/retire.js";
-import { select } from "@metreeca/work/pipe-store/select.js";
-import { validate } from "@metreeca/work/mime-jsonld/index.js";
+import { digest } from "@metreeca/work/core/digest.js";
+import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
+import { validate } from "@metreeca/mime-jsonld";
 import { classify } from "../tasks/classify.js";
 import { convert } from "../tasks/convert.js";
 import { extract } from "../tasks/extract.js";
@@ -59,7 +55,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 			define(),
 			expire()
 		))
-		(persist())
+		(settle())
 	);
 
 
@@ -78,7 +74,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 	function insert(): Task<URLLike, Delta> {
 
 		const city = pipe(
-			(detail({
+			(lookup({
 
 				entry: publisher.university,
 				shape: University,
@@ -93,7 +89,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		return urls => {
 
 			const digests = force ? new Set<string>() : pipe(
-				(select({
+				(lookup({
 
 					entry: directory.id,
 					shape: Pages,
@@ -169,7 +165,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		// so the crawl never offers it again and the sweep reads the dataset rather than the source
 
 		return pipe(
-			(select({
+			(lookup({
 
 				entry: events.id,
 				shape: Events,
@@ -197,7 +193,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 		return urls => {
 
 			const existing = pipe(
-				(select({
+				(lookup({
 
 					entry: directory.id,
 					shape: Pages,

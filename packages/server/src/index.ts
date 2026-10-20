@@ -15,9 +15,9 @@
  */
 
 import { second } from "@metreeca/work/core/temporal.js";
-import { client } from "@metreeca/work/gate/client.js";
-import { server } from "@metreeca/work/gate/index.js";
-import { gcp } from "@metreeca/work/gear-gcp/index.js";
+import { server } from "@metreeca/gate";
+import { client } from "@metreeca/gate/client";
+import { gcp } from "@metreeca/gear-gcp";
 import express from "express";
 import { resolve } from "node:path";
 import { datasets } from "./datasets/index.js";

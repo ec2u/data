@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { datastore } from "@metreeca/work/gear-gcp/_datastore.js";
 import { Unit } from "./_index.js";
-import { Entity, PropertyFilter } from "@google-cloud/datastore";
+import { Datastore, Entity, PropertyFilter } from "@google-cloud/datastore";
 import { isString } from "@metreeca/core";
 import { log, report, time } from "@metreeca/tape";
 import * as uuid from "uuid";
@@ -38,6 +37,7 @@ const FuzzyMatchThreshold = 0.95;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const logger = log(import.meta.url);
+const datastore = new Datastore();
 
 
 const kind = "Unit";

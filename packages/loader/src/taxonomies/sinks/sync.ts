@@ -24,13 +24,10 @@ import { filter, flat, fork, map, tee, trim } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { csv, type Record } from "@metreeca/mime-csv";
 import { fetch } from "@metreeca/pipe-url";
-import { digest } from "@metreeca/work/mime-json/digest.js";
-import { createStore } from "@metreeca/work/pipe-store/index.js";
-import { delta, type Delta, persist, type Tally } from "@metreeca/work/pipe-store/persist.js";
-import { retire } from "@metreeca/work/pipe-store/retire.js";
-import { validate } from "@metreeca/work/mime-jsonld/index.js";
+import { digest } from "@metreeca/work/core/digest.js";
+import { createStore, delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
+import { validate } from "@metreeca/mime-jsonld";
 import { convert, getPath } from "../tasks/convert.js";
-import { select } from "@metreeca/work/pipe-store/select.js";
 
 
 const survival = 0.75; // the smallest fraction of the stored topics a document must account for // !!! as option
@@ -93,7 +90,7 @@ export function sync(taxonomy: Taxonomy, force = false): Sink<URLLike, Tally> {
 			insert(),
 			remove()
 		))
-		(persist({ atomic: true }))
+		(settle({ atomic: true }))
 	);
 
 
@@ -112,7 +109,7 @@ export function sync(taxonomy: Taxonomy, force = false): Sink<URLLike, Tally> {
 		return records => {
 
 			const digests = force ? new Set<string>() : pipe(
-				(select({
+				(lookup({
 
 					entry: taxonomy.id,
 					shape: Taxonomy,
@@ -139,7 +136,7 @@ export function sync(taxonomy: Taxonomy, force = false): Sink<URLLike, Tally> {
 
 		return records => {
 
-			const existing = select({
+			const existing = lookup({
 
 				entry: taxonomy.id,
 				shape: Taxonomy,

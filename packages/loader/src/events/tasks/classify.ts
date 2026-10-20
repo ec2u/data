@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { when } from "@metreeca/work/flow/when.js";
-import { validate } from "@metreeca/work/mime-jsonld/index.js";
-import { file } from "@metreeca/work/gear/files.js";
-import { schema } from "@metreeca/work/blue/schema.js";
-import { createGoogleAI, json } from "@metreeca/work/muse-google/index.js";
+import { validate } from "@metreeca/mime-jsonld";
+import { getResource } from "@metreeca/gear/space";
+import { schema } from "@metreeca/blue";
+import { createGoogleAI, json } from "@metreeca/llms-google";
 import { Extracted } from "./extract.js";
 import { getTopicEntries } from "../../taxonomies/index.core.js";
 import { events } from "@ec2u/data-shared/taxonomies/events.js";
@@ -31,7 +30,7 @@ import { isString } from "@metreeca/core";
 import { markdown } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { flat, map } from "@metreeca/flow/tasks";
+import { filter, flat, map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import type { Reference } from "@metreeca/qest/state";
 import { log } from "@metreeca/tape";
@@ -90,11 +89,12 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 
 	const ai = service(createGoogleAI);
 
-	// an extracted payload stating no event is dropped downstream, so it is passed through unclassified
+	// an extracted payload stating no event has nothing to classify, so it is dropped
 
 	return extracteds => pipe(
 		(items(extracteds))
-		(when(extracted => extracted.event, flat(map(async extracted => pipe(
+		(filter(extracted => extracted.event))
+		(flat(map(async extracted => pipe(
 				(items([
 
 					json<State<typeof Reported>>(await ai.models.generateContent({
@@ -111,7 +111,7 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 							seed: 0,
 							temperature: 0,
 
-							systemInstruction: await file(".sys.md", import.meta.url),
+							systemInstruction: await getResource(".sys.md", import.meta.url),
 
 							tools,
 
@@ -136,7 +136,7 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 
 				})))
 			)))
-		))
+		)
 	);
 
 

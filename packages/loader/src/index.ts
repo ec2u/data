@@ -15,8 +15,8 @@
  */
 
 import { second } from "@metreeca/work/core/temporal.js";
-import { server } from "@metreeca/work/gate/index.js";
-import { gcp } from "@metreeca/work/gear-gcp/index.js";
+import { server } from "@metreeca/gate";
+import { gcp } from "@metreeca/gear-gcp";
 import { events } from "./events/index.js";
 import { taxonomies } from "./taxonomies/index.js";
 import { units } from "./units/index.js";

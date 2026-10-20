@@ -90,6 +90,10 @@ The loader exposes one endpoint per pipe, answering `POST` only. Each Cloud Sche
 OIDC token minted as `scheduler@ec2u-data.iam.gserviceaccount.com`, with the default audience (the endpoint URL) and an
 attempt deadline of at most 30 minutes, matching the request timeout of the loader.
 
+The endpoints perform no authentication of their own: Cloud Run admits only callers holding the invoker role on the
+loader and verifies their OIDC token before a request reaches the service. Keep the loader deployed with
+`--no-allow-unauthenticated` and `scheduler` as its only explicit invoker, or every endpoint opens to the public.
+
 # Current State
 
 | Resource                                   | `main`                 | `next`                 | `yard`  |

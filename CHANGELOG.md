@@ -20,3 +20,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Workspace packages declare the dependencies they import, in place of a single dependency set on the workspace root
 - Test projects are discovered from `packages/*`, each package stating its own resolution conditions and typecheck
   configuration
+- SPARQL queries and store steps come from the released `@metreeca/pipe-sparql` and `@metreeca/pipe-store` packages,
+  replacing the copies incubated in `@metreeca/work`, which no longer carries them or their dependencies
+- Upgrade `@metreeca/pipe-url` to `^0.11.1`

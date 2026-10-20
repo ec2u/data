@@ -32,7 +32,7 @@
     "wait-on": "^9.1.0"
   },
   "allowScripts": {
-    "@google/genai@1.52.0": true,
+    "@google/genai@2.30.0": true,
     "esbuild@0.28.2": true,
     "fsevents@2.3.3": true,
     "protobufjs@7.6.6": true

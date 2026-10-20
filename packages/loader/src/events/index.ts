@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { job } from "@metreeca/work/gear-gcp/_scheduler.js";
+import { worker } from "@metreeca/gate/worker";
 import { Router } from "express";
 import { execute } from "../index.core.js";
 import { CoimbraUniversity } from "./pipes/coimbra-university.js";
@@ -32,14 +32,14 @@ export function events(): Router {
 
 	return Router()
 
-		.use("/coimbra-university", job(() => execute(CoimbraUniversity)))
-		.use("/iasi-university-360", job(() => execute(IasiUniversity360)))
-		.use("/jena-university", job(() => execute(JenaUniversity)))
-		.use("/linz-university", job(() => execute(LinzUniversity)))
-		.use("/pavia-university", job(() => execute(PaviaUniversity)))
-		.use("/poitiers-university", job(() => execute(PoitiersUniversity)))
-		.use("/salamanca-university", job(() => execute(SalamancaUniversity)))
-		.use("/turku-university", job(() => execute(TurkuUniversity)))
-		.use("/umea-university", job(() => execute(UmeaUniversity)));
+		.post("/coimbra-university", worker(() => execute(CoimbraUniversity)))
+		.post("/iasi-university-360", worker(() => execute(IasiUniversity360)))
+		.post("/jena-university", worker(() => execute(JenaUniversity)))
+		.post("/linz-university", worker(() => execute(LinzUniversity)))
+		.post("/pavia-university", worker(() => execute(PaviaUniversity)))
+		.post("/poitiers-university", worker(() => execute(PoitiersUniversity)))
+		.post("/salamanca-university", worker(() => execute(SalamancaUniversity)))
+		.post("/turku-university", worker(() => execute(TurkuUniversity)))
+		.post("/umea-university", worker(() => execute(UmeaUniversity)));
 
 }
