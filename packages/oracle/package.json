@@ -8,11 +8,11 @@
     "serve": "tsx --conditions=@ec2u/source --conditions=@metreeca/source --watch src/index.ts"
   },
   "dependencies": {
-    "@metreeca/gate": "^0.11.0",
+    "@metreeca/gate": "^0.12.0",
     "@metreeca/gear": "^0.4.0",
     "@metreeca/gear-gcp": "^0.4.0",
     "@metreeca/http": "^0.5.0",
-    "@metreeca/keep-sparql": "^0.12.1",
+    "@metreeca/keep-sparql": "^0.12.2",
     "@metreeca/llms-google": "^0.3.0",
     "@metreeca/pipe-store": "^0.11.1",
     "@metreeca/wire-sparql-http": "^0.12.0",

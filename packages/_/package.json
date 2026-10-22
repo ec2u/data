@@ -12,7 +12,7 @@
     }
   },
   "dependencies": {
-    "@metreeca/blue": "^0.13.0",
+    "@metreeca/blue": "^0.13.1",
     "@metreeca/core": "^0.13.0",
     "@metreeca/trio": "^0.2.0"
   },
