@@ -15,7 +15,7 @@
  */
 
 import { Datasets } from "@ec2u/data-shared/datasets/index.js";
-import { isNumber, isString } from "@metreeca/core";
+import { isNumber, isObject, isString } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -38,21 +38,16 @@ export const datasets = immutable({
 	model: {
 
 		resources: {
-			id: {},
-			title: {},
-			alternative: {},
-			description: {}
-		}
 
-	},
+			"dataset=": {
+				id: {},
+				title: {},
+				alternative: {},
+				description: {}
+			},
 
-	// projection bindings can't be mixed with template fields: member counts are retrieved separately
+			"size=count:resources": {}
 
-	counts: {
-
-		resources: {
-			"id=": {},
-			"count=count:resources": {}
 		}
 
 	}
@@ -73,20 +68,6 @@ export function DatasetsPage() {
 		model: datasets.model
 	});
 
-	const counts = useCollection({
-		entry: route,
-		shape: Datasets,
-		model: datasets.counts
-	});
-
-	const tally: Readonly<Record<string, number>> = counts({
-
-		ready: ({ state }) => Object.fromEntries(state.flatMap(({ id, count }) =>
-			isString(id) && isNumber(count) ? [[id, count]] : []
-		))
-
-	}, {});
-
 	useEffect(() => router({ title: "" }), []);
 
 
@@ -106,8 +87,12 @@ export function DatasetsPage() {
 		blank: () => <Hint>{datasets.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{datasets.glyph}</Hint></Failure>,
 
-		ready: ({ state }) => <ul>{state.map(({ id, title }) =>
-			<li key={id}><Link href={id}>{ec2u(title)}</Link> {tally[id]}</li>
+		// !!! projected rows are untyped: skip rows lacking a dataset cell until a typed DSL (metreeca/keep#15)
+
+		ready: ({ state }) => <ul>{state.flatMap(({ dataset, size }) =>
+			isObject(dataset) && isString(dataset.id) && isString(dataset.title) ? [
+				<li key={dataset.id}><Link href={dataset.id}>{ec2u(dataset.title)}</Link> {isNumber(size) && size}</li>
+			] : []
 		)}</ul>
 
 	})}</Page>;
