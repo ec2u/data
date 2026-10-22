@@ -22,6 +22,7 @@ import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
+import { Card } from "@metreeca/tile-hive/card";
 import { useCollection } from "@metreeca/tile-data/store";
 import { useEffect } from "preact/hooks";
 import { ec2u } from "../../index.core.js";
@@ -110,7 +111,7 @@ export function DatasetsPage() {
 
 		// !!! projected rows are untyped: skip rows lacking a dataset cell until a typed DSL (metreeca/keep#15)
 
-		ready: ({ state }) => <ul>{state
+		ready: ({ state }) => <>{state
 
 			.flatMap(({ dataset, size }) => isObject(dataset) && isString(dataset.id) && isString(dataset.title)
 				? [{
@@ -125,14 +126,19 @@ export function DatasetsPage() {
 
 			.sort((x, y) => rank(x.id)-rank(y.id)) // fresh array from flatMap
 
-			.map(({ id, title, alternative, description, size }) => <li key={id}>
-				{isString(alternative) && <strong>{ec2u(alternative)}</strong>} {isNumber(size) && size}
-				<br/>
-				<Link href={id}>{ec2u(title)}</Link>
-				{isString(description) && <p>{ec2u(description)}</p>}
-			</li>)
+			.map(({ id, title, alternative, description, size }) => <Card key={id}
 
-		}</ul>
+				title={<Link href={id}>{ec2u(title)}</Link>}
+				tags={isNumber(size) && size.toLocaleString()}
+				image={isString(alternative) && <>{ec2u(alternative)}</>} // a string would be taken as a picture URL
+
+			>{
+
+				isString(description) && ec2u(description)
+
+			}</Card>)
+
+		}</>
 
 	})}</Page>;
 
