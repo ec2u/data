@@ -24,7 +24,7 @@ import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection } from "@metreeca/tile-data/store";
 import { useEffect } from "preact/hooks";
-import { ec2u } from "../../_/ec2u.js";
+import { ec2u } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 
@@ -53,6 +53,27 @@ export const datasets = immutable({
 	}
 
 });
+
+
+/**
+ * Dataset paths in display order; datasets not listed follow in store order.
+ */
+const order = [
+	"/universities/",
+	"/units/",
+	"/programs/",
+	"/courses/",
+	"/documents/",
+	"/events/"
+];
+
+function rank(id: string): number {
+
+	const index = order.indexOf(new URL(id).pathname);
+
+	return index < 0 ? order.length : index;
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,11 +110,21 @@ export function DatasetsPage() {
 
 		// !!! projected rows are untyped: skip rows lacking a dataset cell until a typed DSL (metreeca/keep#15)
 
-		ready: ({ state }) => <ul>{state.flatMap(({ dataset, size }) =>
-			isObject(dataset) && isString(dataset.id) && isString(dataset.title) ? [
-				<li key={dataset.id}><Link href={dataset.id}>{ec2u(dataset.title)}</Link> {isNumber(size) && size}</li>
-			] : []
-		)}</ul>
+		ready: ({ state }) => <ul>{state
+
+			.flatMap(({ dataset, size }) => isObject(dataset) && isString(dataset.id) && isString(dataset.title)
+				? [{ id: dataset.id, title: dataset.title, description: dataset.description, size }]
+				: []
+			)
+
+			.sort((x, y) => rank(x.id)-rank(y.id)) // fresh array from flatMap
+
+			.map(({ id, title, description, size }) => <li key={id}>
+				<Link href={id}>{ec2u(title)}</Link> {isNumber(size) && size}
+				{isString(description) && <p>{ec2u(description)}</p>}
+			</li>)
+
+		}</ul>
 
 	})}</Page>;
 
