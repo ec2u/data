@@ -87,7 +87,7 @@ export function UniversitiesPage() {
 
 			.sort(by(({ city }) => city.label, locale())) // copy, as state is shared
 
-			.map(({ id, label, definition, depiction, country }) => <Card key={id} side={"end"}
+			.map(({ id, label, definition, depiction, country }) => <Card key={id}
 
 				title={<Link look={"strong"} href={id}>{label}</Link>}
 				tags={country.label}
