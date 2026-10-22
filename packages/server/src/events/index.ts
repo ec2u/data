@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
+import { Event, Events } from "@ec2u/data-shared/events/index.js";
+import { driver } from "@metreeca/gate/driver";
 import { Router } from "express";
 
 
 export function events(): Router {
 
-	return Router({ strict: true })
-
-		.get("/",async (request, response) => {
-
-			throw new Error(";( to be implemented"); // !!!
-
-		})
-
-		.get("/:code", async (request, response) => {
-
-			throw new Error(";( to be implemented"); // !!!
-
-		});
+	return Router()
+		.use("/", driver(Events).lookup())
+		.use("/:code", driver(Event).lookup());
 
 }

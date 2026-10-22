@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import { second } from "@metreeca/work/core/temporal.js";
+import * as ec2u from "@ec2u/data-shared";
 import { server } from "@metreeca/gate";
 import { client } from "@metreeca/gate/client";
+import { service } from "@metreeca/gear";
 import { gcp } from "@metreeca/gear-gcp";
-import express from "express";
+import { createStore } from "@metreeca/pipe-store";
+import { second } from "@metreeca/work/core/temporal.js";
 import { resolve } from "node:path";
 import { datasets } from "./datasets/index.js";
 import { events } from "./events/index.js";
@@ -27,9 +29,7 @@ import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
-await execute(() => server()
-
-	.use(express.json())
+await execute(() => server(service(createStore))
 
 	.use(client(resolve(import.meta.dirname, "static")))
 
@@ -40,6 +40,7 @@ await execute(() => server()
 
 	.listen({
 
+		base: ec2u.base,
 		port: gcp.port,
 
 		proxies: gcp.cloud ? 1 : 0, // trust the Cloud Run front end

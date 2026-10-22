@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
+import { Unit, Units } from "@ec2u/data-shared/units/index.js";
+import { driver } from "@metreeca/gate/driver";
 import { Router } from "express";
 
 
 export function units(): Router {
 
-	return Router({ strict: true })
-
-		.get("/",async (request, response) => {
-
-			throw new Error(";( to be implemented"); // !!!
-
-		})
-
-		.get("/:code", async (request, response) => {
-
-			throw new Error(";( to be implemented"); // !!!
-
-		});
+	return Router()
+		.use("/", driver(Units).lookup())
+		.use("/:code", driver(Unit).lookup());
 
 }

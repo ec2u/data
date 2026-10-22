@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { Universities } from "@ec2u/data-shared/universities/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -54,7 +54,7 @@ export function UniversitiesPage() {
 
 	const collection = useCollection({
 		entry: route,
-		shape: Dataset,
+		shape: Universities,
 		model: universities.model
 	});
 

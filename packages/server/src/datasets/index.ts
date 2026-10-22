@@ -14,38 +14,12 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
-import { datasets as dataset } from "@ec2u/data-shared/datasets/index.core.js";
 import { Datasets } from "@ec2u/data-shared/datasets/index.js";
-import { opt } from "@metreeca/core";
-import { service } from "@metreeca/gear";
-import { NotFound } from "@metreeca/http";
-import { encodeResource } from "@metreeca/qest/state";
-import { createStore } from "@metreeca/pipe-store";
-import { Router } from "express";
+import { type Driver, driver } from "@metreeca/gate/driver";
 
 
-export function datasets(): Router {
+export function datasets(): Driver {
 
-	const store = service(createStore);
-	return Router({ strict: true })
-
-		.get("/", async (request, response) => {
-
-			opt(await store.lookup({
-					entry: dataset.id,
-					shape: Datasets,
-					model: {
-						resources: {
-							id: {},
-							label: {}
-						}
-					}
-				}),
-				datasets => response.type("json").send(encodeResource(datasets, { base })),
-				() => response.sendStatus(NotFound)
-			);
-
-		});
+	return driver(Datasets).lookup();
 
 }
