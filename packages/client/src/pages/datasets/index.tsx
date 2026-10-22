@@ -69,7 +69,7 @@ const order = [
 
 function rank(id: string): number {
 
-	const index = order.indexOf(new URL(id).pathname);
+	const index = order.indexOf(new URL(id, location.href).pathname);
 
 	return index < 0 ? order.length : index;
 
