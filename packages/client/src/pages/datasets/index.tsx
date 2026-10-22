@@ -34,10 +34,12 @@ export const datasets = immutable({
 	glyph: <Icon.Package/>,
 
 	model: {
+
 		resources: {
 			id: {},
 			label: {}
 		}
+
 	}
 
 });

@@ -19,8 +19,11 @@ import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
+import { Link } from "@metreeca/tile-cell/link";
+import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
+import { Info } from "@metreeca/tile-hive/info";
 import { useEffect } from "preact/hooks";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
@@ -34,10 +37,22 @@ export const university = immutable({
 	glyph: <Icon.Landmark/>,
 
 	model: {
+
 		id: {},
 		label: {},
+
+		depiction: {},
+		homepage: {},
+
+		prefLabel: {},
+		definition: {},
+
 		inception: {},
-		students: {}
+		students: {},
+
+		country: { id: {}, label: {} },
+		city: { id: {}, label: {} }
+
 	}
 
 });
@@ -70,11 +85,17 @@ export function UniversityPage() {
 
 	return <Page
 
-		head={resource({
+		head={<Path>
 
-			ready: ({ state }) => state.label
+			<Link look={"subtle"} href={universities.route}>{universities.label}</Link>
 
-		}, university.label)}
+			{resource({
+
+				ready: ({ state }) => state.label
+
+			}, university.label)}
+
+		</Path>}
 
 		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
 
@@ -84,20 +105,61 @@ export function UniversityPage() {
 
 		})}
 
+		info={resource({
+
+			ready: ({ state: { homepage, country, city, inception, students } }) => <>
+
+				<Info place={"spread"}>{{
+
+					Home: homepage.length === 1
+						? <Link href={homepage[0]}>{homepage[0]}</Link>
+						: <ul>{homepage.map(url => <li key={url}><Link href={url}>{url}</Link></li>)}</ul>
+
+				}}</Info>
+
+				<Info place={"spread"}>{{
+
+					Country: <Link href={country.id}>{country.label}</Link>,
+					City: <Link href={city.id}>{city.label}</Link>
+
+				}}</Info>
+
+				<Info place={"spread"}>{{
+
+					Inception: inception,
+					Students: students.toLocaleString()
+
+				}}</Info>
+
+				{/* !!! dataset links: per-dataset resource counts need a grouped count over /resources/ not yet available
+
+				<Info place={"spread"}>{stats.map(({ dataset, resources }) => ({
+
+					label: <Link href={`${dataset.id}?university=${encodeURIComponent(id)}`}>{dataset.alternative}</Link>,
+					value: resources.toLocaleString()
+
+				}))}</Info>
+
+				*/}
+
+			</>
+
+		})}
+
 	>{resource({
 
 		blank: () => <Hint>{university.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{university.glyph}</Hint></Failure>,
 
-		ready: ({ state: { inception, students } }) => <dl>
+		ready: ({ state: { label, depiction, prefLabel, definition } }) => <>
 
-			<dt>Inception</dt>
-			<dd>{inception}</dd>
+			<img src={depiction[0]} alt={`Image of ${label}`}/>
 
-			<dt>Students</dt>
-			<dd>{students}</dd>
+			<dfn>{prefLabel}</dfn>
 
-		</dl>
+			<p>{definition}</p>
+
+		</>
 
 	})}</Page>;
 
