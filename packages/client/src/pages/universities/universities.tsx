@@ -15,6 +15,7 @@
  */
 
 import { Universities } from "@ec2u/data-shared/universities/index.js";
+import { by, locale } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -22,6 +23,7 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection } from "@metreeca/tile-data/store";
+import { Card } from "@metreeca/tile-hive/card";
 import { useEffect } from "preact/hooks";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
@@ -37,7 +39,11 @@ export const universities = immutable({
 
 		resources: {
 			id: {},
-			label: {}
+			label: {},
+			definition: {},
+			depiction: {},
+			country: { id: {}, label: {} },
+			city: { id: {}, label: {} }
 		}
 
 	}
@@ -77,9 +83,19 @@ export function UniversitiesPage() {
 		blank: () => <Hint>{universities.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{universities.glyph}</Hint></Failure>,
 
-		ready: ({ state }) => <ul>{state.map(({ id, label }) =>
-			<li key={id}><Link href={id}>{label}</Link></li>
-		)}</ul>
+		ready: ({ state }) => <>{[...state]
+
+			.sort(by(({ city }) => city.label, locale())) // copy, as state is shared
+
+			.map(({ id, label, definition, depiction, country }) => <Card key={id} side={"end"}
+
+				title={<Link look={"strong"} href={id}>{label}</Link>}
+				tags={country.label}
+				image={depiction[0]}
+
+			>{definition}</Card>)
+
+		}</>
 
 	})}</Page>;
 
