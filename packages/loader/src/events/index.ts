@@ -16,7 +16,6 @@
 
 import { worker } from "@metreeca/gate/worker";
 import { Router } from "express";
-import { execute } from "../index.core.js";
 import { CoimbraUniversity } from "./pipes/coimbra-university.js";
 import { IasiUniversity360 } from "./pipes/iasi-university-360.js";
 import { JenaUniversity } from "./pipes/jena-university.js";
@@ -32,14 +31,14 @@ export function events(): Router {
 
 	return Router()
 
-		.post("/coimbra-university", worker(() => execute(CoimbraUniversity)))
-		.post("/iasi-university-360", worker(() => execute(IasiUniversity360)))
-		.post("/jena-university", worker(() => execute(JenaUniversity)))
-		.post("/linz-university", worker(() => execute(LinzUniversity)))
-		.post("/pavia-university", worker(() => execute(PaviaUniversity)))
-		.post("/poitiers-university", worker(() => execute(PoitiersUniversity)))
-		.post("/salamanca-university", worker(() => execute(SalamancaUniversity)))
-		.post("/turku-university", worker(() => execute(TurkuUniversity)))
-		.post("/umea-university", worker(() => execute(UmeaUniversity)));
+		.post("/coimbra-university", worker(CoimbraUniversity))
+		.post("/iasi-university-360", worker(IasiUniversity360))
+		.post("/jena-university", worker(JenaUniversity))
+		.post("/linz-university", worker(LinzUniversity))
+		.post("/pavia-university", worker(PaviaUniversity))
+		.post("/poitiers-university", worker(PoitiersUniversity))
+		.post("/salamanca-university", worker(SalamancaUniversity))
+		.post("/turku-university", worker(TurkuUniversity))
+		.post("/umea-university", worker(UmeaUniversity));
 
 }

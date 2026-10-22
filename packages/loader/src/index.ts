@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
+import * as ec2u from "@ec2u/data-shared";
 import { second } from "@metreeca/work/core/temporal.js";
 import { server } from "@metreeca/gate";
 import { gcp } from "@metreeca/gear-gcp";
+import { service } from "@metreeca/gear";
+import { createStore } from "@metreeca/pipe-store";
 import { events } from "./events/index.js";
+import { execute } from "./index.core.js";
 import { taxonomies } from "./taxonomies/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
-await server()
+await execute(() => server(service(createStore))
 
 	.use("/universities/", universities())
 	.use("/units/", units())
@@ -33,9 +37,11 @@ await server()
 
 	.listen({
 
+		base: ec2u.base,
 		port: gcp.port,
 
 		proxies: gcp.cloud ? 1 : 0, // trust the Cloud Run front end
 		grace: 8*second // below the 10s Cloud Run grace period before SIGKILL
 
-	});
+	})
+);
