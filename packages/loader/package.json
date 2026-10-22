@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@ec2u/data-shared": "*",
-    "@google-cloud/datastore": "^10.1.1",
+    "@google-cloud/datastore": "^11.3.0",
     "@google/genai": "^2.28.0",
     "@metreeca/blue": "^0.13.0",
     "@metreeca/core": "^0.13.0",
