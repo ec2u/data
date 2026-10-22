@@ -24,3 +24,20 @@
 export function ec2u(label: string): string {
 	return label.replace(/^EC2U\s+/, "");
 }
+
+/**
+ * Shortens a web address to a compact label.
+ *
+ * @param url The absolute URL to be shortened
+ *
+ * @returns The host of `url`, followed by the bracketed language tag its path or query names, if any (`www.uc.pt (en)`)
+ */
+export function site(url: string): string {
+
+	const { host, pathname, search } = new URL(url);
+
+	const lang = (pathname.match(/\b[a-z]{2}\b(?!-)/i) ?? search.match(/\b[a-z]{2}\b(?!-)/i))?.[0];
+
+	return lang ? `${host} (${lang.toLowerCase()})` : host;
+
+}

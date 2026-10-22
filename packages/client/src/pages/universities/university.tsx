@@ -23,8 +23,10 @@ import { Link } from "@metreeca/tile-cell/link";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
+import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { useEffect } from "preact/hooks";
+import { site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { universities } from "./universities.js";
@@ -105,16 +107,14 @@ export function UniversityPage() {
 
 				<Info place={"spread"}>{{
 
-					Home: homepage.length === 1
-						? <Link href={homepage[0]}>{homepage[0]}</Link>
-						: <ul>{homepage.map(url => <li key={url}><Link href={url}>{url}</Link></li>)}</ul>
+					Home: <ul>{homepage.map(url => <li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>)}</ul>
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
-					Country: <Link href={country.id}>{country.label}</Link>,
-					City: <Link href={city.id}>{city.label}</Link>
+					Country: <Link look={"strong"} href={country.id}>{country.label}</Link>,
+					City: <Link look={"strong"} href={city.id}>{city.label}</Link>
 
 				}}</Info>
 
@@ -145,15 +145,12 @@ export function UniversityPage() {
 		blank: () => <Hint>{university.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{university.glyph}</Hint></Failure>,
 
-		ready: ({ state: { label, depiction, prefLabel, definition } }) => <>
+		ready: ({ state: { depiction, prefLabel, definition } }) => <Card
 
-			<img src={depiction[0]} alt={`Image of ${label}`}/>
+			title={prefLabel}
+			image={depiction[0]}
 
-			<dfn>{prefLabel}</dfn>
-
-			<p>{definition}</p>
-
-		</>
+		>{definition}</Card>
 
 	})}</Page>;
 
