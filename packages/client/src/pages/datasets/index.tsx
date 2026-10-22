@@ -113,14 +113,22 @@ export function DatasetsPage() {
 		ready: ({ state }) => <ul>{state
 
 			.flatMap(({ dataset, size }) => isObject(dataset) && isString(dataset.id) && isString(dataset.title)
-				? [{ id: dataset.id, title: dataset.title, description: dataset.description, size }]
+				? [{
+					id: dataset.id,
+					title: dataset.title,
+					alternative: dataset.alternative,
+					description: dataset.description,
+					size
+				}]
 				: []
 			)
 
 			.sort((x, y) => rank(x.id)-rank(y.id)) // fresh array from flatMap
 
-			.map(({ id, title, description, size }) => <li key={id}>
-				<Link href={id}>{ec2u(title)}</Link> {isNumber(size) && size}
+			.map(({ id, title, alternative, description, size }) => <li key={id}>
+				{isString(alternative) && <strong>{ec2u(alternative)}</strong>} {isNumber(size) && size}
+				<br/>
+				<Link href={id}>{ec2u(title)}</Link>
 				{isString(description) && <p>{ec2u(description)}</p>}
 			</li>)
 
