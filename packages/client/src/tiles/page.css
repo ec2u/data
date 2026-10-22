@@ -16,10 +16,17 @@
 
 :root {
     --tile--look: subtle;
+    --page-head-nudge: 0.05em;
 }
 
 tile-shell {
 
     --tile-shell-head-font-size: var(--tile--scaling-150);
+
+    /* the page name reads a tad higher than the app name in the tray header, though their baselines match */
+
+    & > main > header > span:first-child {
+        translate: 0 var(--page-head-nudge);
+    }
 
 }

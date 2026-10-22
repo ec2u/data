@@ -89,12 +89,6 @@ export function UniversityPage() {
 
 			<Link look={"subtle"} href={universities.route}>{universities.label}</Link>
 
-			{resource({
-
-				ready: ({ state }) => state.label
-
-			}, university.label)}
-
 		</Path>}
 
 		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
@@ -105,7 +99,7 @@ export function UniversityPage() {
 
 		})}
 
-		info={resource({
+		tray={resource({
 
 			ready: ({ state: { homepage, country, city, inception, students } }) => <>
 
