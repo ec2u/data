@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { Datasets } from "@ec2u/data-shared/datasets/index.js";
+import { isNumber, isString } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -23,6 +24,7 @@ import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection } from "@metreeca/tile-data/store";
 import { useEffect } from "preact/hooks";
+import { ec2u } from "../../_/ec2u.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 
@@ -37,7 +39,20 @@ export const datasets = immutable({
 
 		resources: {
 			id: {},
-			label: {}
+			title: {},
+			alternative: {},
+			description: {}
+		}
+
+	},
+
+	// projection bindings can't be mixed with template fields: member counts are retrieved separately
+
+	counts: {
+
+		resources: {
+			"id=": {},
+			"count=count:resources": {}
 		}
 
 	}
@@ -54,9 +69,23 @@ export function DatasetsPage() {
 
 	const collection = useCollection({
 		entry: route,
-		shape: Dataset,
+		shape: Datasets,
 		model: datasets.model
 	});
+
+	const counts = useCollection({
+		entry: route,
+		shape: Datasets,
+		model: datasets.counts
+	});
+
+	const tally: Readonly<Record<string, number>> = counts({
+
+		ready: ({ state }) => Object.fromEntries(state.flatMap(({ id, count }) =>
+			isString(id) && isNumber(count) ? [[id, count]] : []
+		))
+
+	}, {});
 
 	useEffect(() => router({ title: "" }), []);
 
@@ -77,8 +106,8 @@ export function DatasetsPage() {
 		blank: () => <Hint>{datasets.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{datasets.glyph}</Hint></Failure>,
 
-		ready: ({ state }) => <ul>{state.map(({ id, label }) =>
-			<li key={id}><Link href={id}>{label}</Link></li>
+		ready: ({ state }) => <ul>{state.map(({ id, title }) =>
+			<li key={id}><Link href={id}>{ec2u(title)}</Link> {tally[id]}</li>
 		)}</ul>
 
 	})}</Page>;
