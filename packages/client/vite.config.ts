@@ -22,6 +22,7 @@ import { defineConfig } from "vite";
 export default defineConfig({ // https://vite.dev/config/
 
 	root: "src",
+	publicDir: "assets", // static files copied as-is, relative to root
 
 	plugins: [
 		symlinks({ conditions: ["@ec2u/source", "@metreeca/source"] }), // bundle linked packages from their sources
