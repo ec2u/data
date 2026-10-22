@@ -16,19 +16,42 @@
 
 import { Datasets } from "@ec2u/data-shared/datasets/index.js";
 import { isNumber, isObject, isString } from "@metreeca/core";
+import { by } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { Card } from "@metreeca/tile-hive/card";
 import { useCollection } from "@metreeca/tile-data/store";
+import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
 import { ec2u } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
+import { courses } from "../courses/courses.js";
+import { documents } from "../documents/documents.js";
+import { events } from "../events/events.js";
+import { programs } from "../programs/programs.js";
+import { units } from "../units/units.js";
+import { universities } from "../universities/universities.js";
+import "./index.css";
 
+
+/**
+ * Dataset paths in display order; datasets not listed follow in store order.
+ */
+const order = [
+	universities.route,
+	units.route,
+	programs.route,
+	courses.route,
+	documents.route,
+	events.route
+];
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const datasets = immutable({
 
@@ -55,26 +78,6 @@ export const datasets = immutable({
 
 });
 
-
-/**
- * Dataset paths in display order; datasets not listed follow in store order.
- */
-const order = [
-	"/universities/",
-	"/units/",
-	"/programs/",
-	"/courses/",
-	"/documents/",
-	"/events/"
-];
-
-function rank(id: string): number {
-
-	const index = order.indexOf(new URL(id, location.href).pathname);
-
-	return index < 0 ? order.length : index;
-
-}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +114,7 @@ export function DatasetsPage() {
 
 		// !!! projected rows are untyped: skip rows lacking a dataset cell until a typed DSL (metreeca/keep#15)
 
-		ready: ({ state }) => <>{state
+		ready: ({ state }) => createElement("datasets-grid", {}, state
 
 			.flatMap(({ dataset, size }) => isObject(dataset) && isString(dataset.id) && isString(dataset.title)
 				? [{
@@ -124,21 +127,21 @@ export function DatasetsPage() {
 				: []
 			)
 
-			.sort((x, y) => rank(x.id)-rank(y.id)) // fresh array from flatMap
+			.sort(by(({ id }) => new URL(id).pathname, by(path =>
+				order.includes(path) ? order.indexOf(path) : order.length
+			)))
 
-			.map(({ id, title, alternative, description, size }) => <Card key={id}
+			.map(({ id, title, alternative, description, size }) => <Fragment key={id}>
 
-				title={<Link href={id}>{ec2u(title)}</Link>}
-				tags={isNumber(size) && size.toLocaleString()}
-				image={isString(alternative) && <>{ec2u(alternative)}</>} // a string would be taken as a picture URL
+				<span class="size">{isNumber(size) && size.toLocaleString()}</span>
+				<span class="title"><Link look="strong" href={id}>{ec2u(title)}</Link></span>
 
-			>{
+				<span class="alternative">{isString(alternative) && ec2u(alternative)}</span>
+				<span class="description">{isString(description) && ec2u(description)}</span>
 
-				isString(description) && ec2u(description)
+			</Fragment>)
 
-			}</Card>)
-
-		}</>
+		)
 
 	})}</Page>;
 
