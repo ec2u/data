@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "cp lib 'src/**/*.sys.md' 'src/**/*.ql'"
+    "build": "ush cp lib 'src/**/*.sys.md' 'src/**/*.ql'"
   },
   "dependencies": {
     "@ec2u/data-shared": "*",

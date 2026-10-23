@@ -16,10 +16,10 @@
     "node": ">=22.22.0"
   },
   "scripts": {
-    "clean": "rm 'packages/*/lib' 'packages/*/node_modules' node_modules",
+    "clean": "ush rm 'packages/*/lib' 'packages/*/node_modules' node_modules",
     "prime": "npm ci",
-    "setup": "npm ci && ln ~/Metreeca/Packages",
-    "build": "rm 'packages/*/lib' && tsc --build tsconfig.build.json && npm run build --workspaces --if-present",
+    "setup": "npm ci && ush ln ~/Metreeca/Packages",
+    "build": "ush rm 'packages/*/lib' && tsc --build tsconfig.build.json && npm run build --workspaces --if-present",
     "check": "npx vitest run",
     "start": "concurrently 'npm run serve -w packages/server' 'wait-on tcp:8080 && npm run watch -w packages/client'"
   },
