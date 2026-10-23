@@ -134,7 +134,7 @@ export function DatasetsPage() {
 			.map(({ id, title, alternative, description, size }) => <Fragment key={id}>
 
 				<span class="size">{isNumber(size) && size.toLocaleString()}</span>
-				<span class="title"><Link look="strong" href={id}>{ec2u(title)}</Link></span>
+				<span class="title"><Link href={id}>{ec2u(title)}</Link></span>
 
 				<span class="alternative">{isString(alternative) && ec2u(alternative)}</span>
 				<span class="description">{isString(description) && ec2u(description)}</span>
