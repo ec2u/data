@@ -24,7 +24,7 @@
     "start": "concurrently 'npm run serve -w packages/server' 'wait-on tcp:8080 && npm run watch -w packages/client'"
   },
   "devDependencies": {
-    "@metreeca/rack": "^0.5.0",
+    "@metreeca/rack": "^0.6.0",
     "concurrently": "^10.0.5",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
