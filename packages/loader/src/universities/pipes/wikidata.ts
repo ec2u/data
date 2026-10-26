@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Place } from "@ec2u/data-shared";
+import { LabelLength, Place } from "@ec2u/data-shared";
 import { universities, University } from "@ec2u/data-shared/universities/index.js";
 import seeds from "@ec2u/data-shared/universities/index.json" with { type: "json" };
 import { opt, type Optional } from "@metreeca/core";
-import { fill } from "@metreeca/core/strings";
+import { clip, fill } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { distinct, flat, map, tee, trim } from "@metreeca/flow/tasks";
@@ -158,7 +158,10 @@ function names(tuple: Tuple, name: string): Optional<{ readonly [tag: string]: s
 	const languages = ["en", ...(value(tuple, "languages")?.split(" ") ?? [])];
 
 	const entries = (value(tuple, `${name}Names`)?.split("\t") ?? [])
-		.map((entry): [string, string] => [entry.slice(0, entry.indexOf("=")), entry.slice(entry.indexOf("=")+1)])
+		.map((entry): [string, string] => [
+			entry.slice(0, entry.indexOf("=")),
+			clip(entry.slice(entry.indexOf("=")+1), LabelLength)
+		])
 		.filter(([tag]) => languages.includes(tag));
 
 	return entries.length === 0 ? undefined : Object.fromEntries(entries);

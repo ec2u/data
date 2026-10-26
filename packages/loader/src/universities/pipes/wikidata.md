@@ -16,6 +16,7 @@ Planned: background and statistical data drawn from the Wikidata entity each uni
 |---------------------------|------------------------|------------------------------------------------------------------------------------|
 | https://www.wikidata.org/ | Wikidata entities [en] | One entity per partner university, named by `seeAlso` in `universities/index.json` |
 
+- **2026-10-26** – city and country names clipped to the entity label length, one language at a time
 - **2026-10-23** – names localised: university, city and country names are stated in English and in the official
   languages of the country (`P37`, by their `P218` code), so Turku also reads `Turun yliopisto` and `Åbo universitet`;
   the English university name stays the one in `universities/index.json`, and labels are drawn in the nine alliance
