@@ -14,6 +14,28 @@
  * limitations under the License.
  */
 
+import { isObject, isString } from "@metreeca/core";
+
+
+/**
+ * A human-readable text, either plain or mapping language tags to localised versions.
+ */
+export type Text = string | { readonly [tag: string]: string };
+
+
+/**
+ * Checks if a value is a human-readable text.
+ *
+ * Projected rows come back from the store untyped, so cells holding text are told apart from other values here.
+ *
+ * @param value The value to be checked
+ *
+ * @returns `true` if `value` is a plain string or an object mapping language tags to strings; `false` otherwise
+ */
+export function isText(value: unknown): value is Text {
+	return isString(value) || isObject<{ readonly [tag: string]: string }>(value, isString);
+}
+
 /**
  * Removes the leading alliance name from a label.
  *

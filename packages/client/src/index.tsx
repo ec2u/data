@@ -25,6 +25,8 @@ import { Toast } from "@metreeca/tile-hive/toast";
 import { render } from "preact";
 import { datasets, DatasetsPage } from "./pages/datasets/index.js";
 import { Unknown, unknown } from "./pages/index.js";
+import { Taxonomies } from "./pages/taxonomies/index.js";
+import { taxonomies } from "./pages/taxonomies/taxonomies.js";
 import { Universities } from "./pages/universities/index.js";
 import { universities } from "./pages/universities/universities.js";
 import { Fetch } from "@metreeca/tile-data/fetch";
@@ -53,6 +55,7 @@ function Hub() {
 
 						[datasets.route]: <DatasetsPage/>,
 						[universities.route]: <Universities/>,
+						[taxonomies.route]: <Taxonomies/>,
 
 						[unknown.route]: <Unknown/>
 

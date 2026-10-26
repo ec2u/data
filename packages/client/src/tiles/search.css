@@ -1,0 +1,62 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* the glyph and the clear control sit over the ends of the field, which spans the whole row beneath them */
+
+ec2u-search {
+
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    align-items: center;
+
+    & > svg,
+    & > input,
+    & > tile-button > button { /* the button wrapper stands aside, leaving the control a grid item of its own */
+        grid-row: 1;
+        z-index: 1;
+    }
+
+    & > svg {
+        grid-column: 1;
+        margin-left: var(--tile--spacing-050);
+        color: var(--tile--color-placeholder);
+        pointer-events: none;
+    }
+
+    & > input {
+
+        grid-column: 1 / 4;
+        z-index: 0;
+
+        padding-block: var(--tile--spacing-025);
+        padding-inline: var(--tile--scaling-150);
+
+        border-radius: var(--tile--border-radius-100);
+
+        /* the platform cancel button is replaced by the clear control */
+
+        &::-webkit-search-cancel-button {
+            display: none;
+        }
+
+    }
+
+    & > tile-button > button {
+        grid-column: 3;
+        margin-right: var(--tile--spacing-025);
+    }
+
+}

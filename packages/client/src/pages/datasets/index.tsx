@@ -16,7 +16,7 @@
 
 import { english } from "@ec2u/data-shared";
 import { Datasets } from "@ec2u/data-shared/datasets/index.js";
-import { isNumber, isObject, isString } from "@metreeca/core";
+import { opt } from "@metreeca/core";
 import { by } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -36,6 +36,7 @@ import { events } from "../events/events.js";
 import { programs } from "../programs/programs.js";
 import { units } from "../units/units.js";
 import { universities } from "../universities/universities.js";
+import { isDatasetRow } from "./index.core.js";
 import "./index.css";
 
 
@@ -113,32 +114,21 @@ export function DatasetsPage() {
 		blank: () => <Hint>{datasets.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{datasets.glyph}</Hint></Failure>,
 
-		// !!! projected rows are untyped: skip rows lacking a dataset cell until a typed DSL (metreeca/keep#15)
-
 		ready: ({ state }) => createElement("datasets-grid", {}, state
 
-			.flatMap(({ dataset, size }) => isObject(dataset) && isString(dataset.id) && isText(dataset.title)
-				? [{
-					id: dataset.id,
-					title: english(dataset.title),
-					alternative: isText(dataset.alternative) ? english(dataset.alternative) : undefined,
-					description: isText(dataset.description) ? english(dataset.description) : undefined,
-					size
-				}]
-				: []
-			)
+			.filter(isDatasetRow)
 
-			.sort(by(({ id }) => new URL(id).pathname, by(path =>
+			.sort(by(({ dataset }) => new URL(dataset.id).pathname, by(path =>
 				order.includes(path) ? order.indexOf(path) : order.length
 			)))
 
-			.map(({ id, title, alternative, description, size }) => <Fragment key={id}>
+			.map(({ dataset: { id, title, alternative, description }, size }) => <Fragment key={id}>
 
-				<span class="size">{isNumber(size) && size.toLocaleString()}</span>
-				<span class="title"><Link href={id}>{ec2u(title)}</Link></span>
+				<span class="size">{size.toLocaleString()}</span>
+				<span class="title"><Link href={id}>{ec2u(english(title))}</Link></span>
 
-				<span class="alternative">{isString(alternative) && ec2u(alternative)}</span>
-				<span class="description">{isString(description) && ec2u(description)}</span>
+				<span class="alternative">{opt(alternative, alternative => ec2u(english(alternative)))}</span>
+				<span class="description">{opt(description, description => ec2u(english(description)))}</span>
 
 			</Fragment>)
 
@@ -147,11 +137,4 @@ export function DatasetsPage() {
 	})}</Page>;
 
 
-}
-
-
-// projected cells are untyped, so a localisable text is told apart from its plain or language-mapped form
-
-function isText(value: unknown): value is string | { readonly [tag: string]: string } {
-	return isString(value) || isObject<{ readonly [tag: string]: string }>(value, isString);
 }
