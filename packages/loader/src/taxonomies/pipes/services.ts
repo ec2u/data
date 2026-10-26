@@ -45,7 +45,10 @@ export async function Services() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv())
-		(sync(services, { publisher: alliance, licenses: [licenses.CCBYNCND40] }))
+		(sync(services, {
+			publisher: alliance,
+			licenses: licenses.CCBYNCND40
+		}))
 	);
 
 }

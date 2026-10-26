@@ -45,7 +45,10 @@ export async function Stakeholders() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv())
-		(sync(stakeholders, { publisher: alliance, licenses: [licenses.CCBYNCND40] }))
+		(sync(stakeholders, {
+			publisher: alliance,
+			licenses: licenses.CCBYNCND40
+		}))
 	);
 
 }

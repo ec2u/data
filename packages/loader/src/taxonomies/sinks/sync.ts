@@ -19,6 +19,7 @@ import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import type { State } from "@metreeca/blue/value";
 import { opt } from "@metreeca/core";
+import { multiple, type Some } from "@metreeca/core/arrays";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
@@ -80,11 +81,10 @@ export type Draft = Omit<Topic,
  * @param taxonomy The taxonomy the topics are attributed to
  * @param taxonomy.id The identifier of the concept scheme the topics belong to
  *
- * @param credits The resources the taxonomy references for its provenance
- * @param credits.publisher The organisation `taxonomy.publisher` refers to; none if omitted
- * @param credits.licenses The licenses `taxonomy.license` refers to; none if omitted
- *
- * @param force Whether every draft is stated afresh, ignoring the digests recorded with the stored topics
+ * @param options The options governing how drafts are stated and the provenance resources the taxonomy references
+ * @param options.force Whether every draft is stated afresh, ignoring the digests of stored topics; defaults to `false`
+ * @param options.publisher The organisation `taxonomy.publisher` refers to; none if omitted
+ * @param options.licenses The licenses `taxonomy.license` refers to; none if omitted
  *
  * @returns A sink drawing a feed of topic drafts and resolving to a tally of what it did
  *
@@ -95,15 +95,19 @@ export type Draft = Omit<Topic,
  */
 export function sync(taxonomy: Taxonomy, {
 
+	force = false,
+
 	publisher,
-	licenses = []
+	licenses
 
 }: {
 
-	readonly publisher?: State<typeof Organization>
-	readonly licenses?: readonly Entity[]
+	readonly force?: boolean
 
-} = {}, force = false): Sink<Draft, Tally> {
+	readonly publisher?: State<typeof Organization>
+	readonly licenses?: Some<Entity>
+
+} = {}): Sink<Draft, Tally> {
 
 	return drafts => pipe(
 		(items(drafts))
@@ -141,7 +145,7 @@ export function sync(taxonomy: Taxonomy, {
 	function license(): Task<Draft, Delta> {
 
 		return () => pipe(
-			(items(licenses))
+			(items(multiple(licenses)))
 			(validate(Entity))
 			(map(license => delta(license.id, Entity, license)))
 		);
