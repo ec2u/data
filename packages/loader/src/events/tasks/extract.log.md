@@ -159,7 +159,7 @@ every widening of the wording so far has cost more than it recovered.
 Long pages are answered in full.
 
 At `maxOutputTokens` 4096 the reply was cut mid-string on a page carrying a long body, and the payload failed to parse
-as JSON. The budget was raised to 8192.
+as JSON. The budget was raised to 16384.
 
 CRITICAL: a truncated reply surfaces as malformed JSON, not as a quota diagnostic. Read a parse failure on a long page
 as an exhausted output budget before suspecting the prompt. A reply that did not finish with `STOP` (withheld as
