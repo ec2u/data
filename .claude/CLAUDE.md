@@ -76,6 +76,18 @@ non-technical status record for that source and must read as a brief standalone 
 **Commit checklist**: when a commit changes how a source is harvested, update that source's integration-notes `.md` and
 the Confluence **Knowledge Hub - Status** page in the same change before committing.
 
+# Internationalisation
+
+Localised text is stored and handled as language maps (qest `Dictionary`); no language is privileged by default.
+
+- **Server side** (loader, server): keep localised values whole as language maps. English has no privileged role, except
+  as the target or source language of an explicit translation step. Never pick one language out of a map with a
+  fallback to whatever else is stated (the retired `english()` helper did this).
+- **Client side**: let language negotiation select the text. Ask for a localised property with the atomic placeholder
+  `{}` to get its coalesced label, resolved under the request's negotiated language priority (`Accept-Language`, set
+  from the store `locale` scope). Ask for a `Locale` map (`{ "*": {} }`, `{ en: {}, fr: {} }`) only where the view
+  really needs several languages side by side. See `@metreeca/qest/model` §Localised Properties for the definitions.
+
 # Task Workflows
 
 ## NPM Scripts

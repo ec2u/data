@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { english } from "@ec2u/data-shared";
 import { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
 import { opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
@@ -104,7 +103,7 @@ export function TaxonomyPage() {
 		blank: taxonomies.label,
 		error: taxonomies.label,
 
-		ready: ({ state: { title, alternative } }) => english(alternative ?? title)
+		ready: ({ state: { title, alternative } }) => alternative ?? title
 
 	});
 
@@ -119,7 +118,7 @@ export function TaxonomyPage() {
 
 			{resource({
 
-				ready: ({ state: { title, alternative } }) => english(alternative ?? title)
+				ready: ({ state: { title, alternative } }) => alternative ?? title
 
 			})}
 
@@ -177,17 +176,17 @@ export function TaxonomyPage() {
 			}
 		}) => <>
 
-			<Card title={english(title)}>{english(description)}</Card>
+			<Card title={title}>{description}</Card>
 
 			<Info>{{
 
-				Publisher: opt(publisher, ({ id, label }) => <Link href={id}>{english(label)}</Link>),
+				Publisher: opt(publisher, ({ id, label }) => <Link href={id}>{label}</Link>),
 				Copyright: rights,
 				License: opt(license, license => license.length > 0 ? <ul>{license.map(({ id, label }) =>
-					<li key={id}><Link href={id}>{english(label)}</Link></li>
+					<li key={id}><Link href={id}>{label}</Link></li>
 				)}</ul> : undefined), // a boolean would read as its name
 				Source: opt(source, ({ id }) => <Link href={id}>{site(id)}</Link>),
-				Access: opt(accessRights, english)
+				Access: accessRights
 
 			}}</Info>
 

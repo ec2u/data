@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { english } from "@ec2u/data-shared";
 import { Taxonomies } from "@ec2u/data-shared/taxonomies/index.js";
 import { by, locale } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
@@ -156,18 +155,18 @@ export function TaxonomiesPage() {
 
 			.filter(isTaxonomyRow)
 
-			.sort(by(({ taxonomy }) => english(taxonomy.label), locale()))
+			.sort(by(({ taxonomy }) => taxonomy.label, locale()))
 
 			.map(({ taxonomy: { id, title, alternative, description }, size }) => <Card key={id}
 
 				title={<Link look={"strong"} href={id}>{alternative
-					? `${english(alternative)} / ${english(title)}`
-					: english(title)
+					? `${alternative} / ${title}`
+					: title
 				}</Link>}
 
 				tags={`${size.toLocaleString()} concepts`}
 
-			>{english(description)}</Card>)
+			>{description}</Card>)
 
 		}</>
 

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { english, LabelLength } from "@ec2u/data-shared";
+import { LabelLength } from "@ec2u/data-shared";
 import { Event, Events, events, getEventId, isStaleEvent, Publisher } from "@ec2u/data-shared/events/index.js";
 import { Page, pages as directory, Pages } from "@ec2u/data-shared/pages/index.js";
+import { getUniversity } from "@ec2u/data-shared/universities/index.core.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
-import { type URLLike } from "@metreeca/core";
+import { isString, type URLLike } from "@metreeca/core";
 import { clip, type Markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
@@ -85,16 +86,20 @@ export function sync({
 
 	function insert(): Task<URLLike, Delta> {
 
+		// a city is named as it is known locally, the way documents name the cities they place venues in
+
+		const { locale } = getUniversity(publisher.university);
+
 		const city = pipe(
 			(lookup({
 
 				entry: publisher.university,
 				shape: University,
 
-				model: { city: { label: {} } }
+				model: { city: { label: { [locale]: {} } } }
 
 			}))
-			(map(university => english(university.city.label)))
+			(map(({ city: { label } }) => isString(label) ? label : label[locale]))
 			(find())
 		);
 

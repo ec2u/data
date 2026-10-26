@@ -20,8 +20,7 @@ import { createGoogleAI, embedding } from "@metreeca/llms-google";
 import { cosine, decompress, type Distance, type Vector } from "@metreeca/llms";
 import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
 import { Taxonomies, Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
-import { english } from "@ec2u/data-shared";
-import { memo, opt } from "@metreeca/core";
+import { memo } from "@metreeca/core";
 import { by } from "@metreeca/core/order";
 import type { Markdown, Text } from "@metreeca/core/strings";
 import { pipe } from "@metreeca/flow";
@@ -48,9 +47,9 @@ const topics = memo(async (id: Reference) => {
 
 			resources: {
 				id: {},
-				prefLabel: {},
-				altLabel: {},
-				definition: {},
+				prefLabel: { en: {} },
+				altLabel: { en: {} },
+				definition: { en: {} },
 				broader: {},
 				narrower: {},
 				related: {},
@@ -66,20 +65,20 @@ const topics = memo(async (id: Reference) => {
 	// linked topics are named alongside their labels, so that a consumer weighs a topic against the neighbourhood it
 	// stands in without looking every reference up
 
-	const labels = new Map(stored.map(({ id, prefLabel }) => [id, english(prefLabel)]));
+	const labels = new Map(stored.map(({ id, prefLabel }) => [id, prefLabel.en]));
 
 	return stored.map(({ prefLabel, altLabel, definition, broader, narrower, related, embedding, ...topic }) => ({
 
 		...topic,
 
-		// topics are weighed in English, the language every taxonomy is stated in
+		// topics are weighed in English, the pivot language every event is translated into for classification
 
-		prefLabel: english(prefLabel),
+		prefLabel: prefLabel.en,
 
 		// a property the topic states nothing for is left out of the model, rather than stated as an empty array
 
 		altLabel: altLabel?.en ?? [],
-		definition: opt(definition, english),
+		definition: definition?.en,
 
 		broader: refs(broader),
 		narrower: refs(narrower),

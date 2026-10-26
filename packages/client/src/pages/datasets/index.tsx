@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { english } from "@ec2u/data-shared";
 import { Datasets } from "@ec2u/data-shared/datasets/index.js";
 import { opt } from "@metreeca/core";
 import { by } from "@metreeca/core/order";
@@ -125,10 +124,10 @@ export function DatasetsPage() {
 			.map(({ dataset: { id, title, alternative, description }, size }) => <Fragment key={id}>
 
 				<span class="size">{size.toLocaleString()}</span>
-				<span class="title"><Link href={id}>{ec2u(english(title))}</Link></span>
+				<span class="title"><Link href={id}>{ec2u(title)}</Link></span>
 
-				<span class="alternative">{opt(alternative, alternative => ec2u(english(alternative)))}</span>
-				<span class="description">{opt(description, description => ec2u(english(description)))}</span>
+				<span class="alternative">{opt(alternative, ec2u)}</span>
+				<span class="description">{opt(description, ec2u)}</span>
 
 			</Fragment>)
 

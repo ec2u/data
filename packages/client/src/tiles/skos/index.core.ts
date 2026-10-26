@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { english } from "@ec2u/data-shared";
 import { opt } from "@metreeca/core";
 import { by, compound, locale } from "@metreeca/core/order";
 
@@ -27,7 +26,7 @@ export type SKOSEntry = {
 	readonly id: string
 
 	readonly notation?: string
-	readonly prefLabel: string | { readonly [tag: string]: string }
+	readonly prefLabel: string
 
 }
 
@@ -37,14 +36,10 @@ export type SKOSEntry = {
  *
  * @param concept The concept to be labelled
  *
- * @returns The English preferred label of `concept`, led by its notation if it has one (`011 - Education science`)
+ * @returns The preferred label of `concept`, led by its notation if it has one (`011 - Education science`)
  */
 export function getSKOSLabel({ notation, prefLabel }: SKOSEntry): string {
-
-	const label = english(prefLabel);
-
-	return notation === undefined ? label : `${notation} - ${label}`;
-
+	return notation === undefined ? prefLabel : `${notation} - ${prefLabel}`;
 }
 
 /**

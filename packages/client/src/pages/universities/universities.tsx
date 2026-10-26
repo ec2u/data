@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import { english } from "@ec2u/data-shared";
 import { Universities } from "@ec2u/data-shared/universities/index.js";
-import { opt } from "@metreeca/core";
 import { by, locale } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -87,15 +85,15 @@ export function UniversitiesPage() {
 
 		ready: ({ state }) => <>{[...state]
 
-			.sort(by(({ city }) => english(city.label), locale())) // copy, as state is shared
+			.sort(by(({ city }) => city.label, locale())) // copy, as state is shared
 
 			.map(({ id, label, definition, depiction, country }) => <Card key={id}
 
-				title={<Link look={"strong"} href={id}>{english(label)}</Link>}
-				tags={english(country.label)}
+				title={<Link look={"strong"} href={id}>{label}</Link>}
+				tags={country.label}
 				image={depiction[0]}
 
-			>{opt(definition, english)}</Card>)
+			>{definition}</Card>)
 
 		}</>
 

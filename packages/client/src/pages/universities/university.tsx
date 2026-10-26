@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import { english } from "@ec2u/data-shared";
 import { University } from "@ec2u/data-shared/universities/index.js";
-import { opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -80,7 +78,7 @@ export function UniversityPage() {
 		blank: universities.label, // !!! factor
 		error: universities.label, // !!! factor
 
-		ready: ({ state }) => english(state.label)
+		ready: ({ state }) => state.label
 
 	});
 
@@ -115,8 +113,8 @@ export function UniversityPage() {
 
 				<Info place={"spread"}>{{
 
-					Country: <Link look={"strong"} href={country.id}>{english(country.label)}</Link>,
-					City: <Link look={"strong"} href={city.id}>{english(city.label)}</Link>
+					Country: <Link look={"strong"} href={country.id}>{country.label}</Link>,
+					City: <Link look={"strong"} href={city.id}>{city.label}</Link>
 
 				}}</Info>
 
@@ -149,10 +147,10 @@ export function UniversityPage() {
 
 		ready: ({ state: { depiction, prefLabel, definition } }) => <Card
 
-			title={english(prefLabel)}
+			title={prefLabel}
 			image={depiction[0]}
 
-		>{opt(definition, english)}</Card>
+		>{definition}</Card>
 
 	})}</Page>;
 

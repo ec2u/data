@@ -15,7 +15,6 @@
  */
 
 import { isNumber, isObject, isOptional, isString } from "@metreeca/core";
-import { isText, type Text } from "../../index.core.js";
 
 
 /**
@@ -25,9 +24,9 @@ export type DatasetRow = {
 
 	readonly dataset: {
 		readonly id: string
-		readonly title: Text
-		readonly alternative?: Text
-		readonly description?: Text
+		readonly title: string
+		readonly alternative?: string
+		readonly description?: string
 	}
 
 	readonly size: number
@@ -50,9 +49,9 @@ export function isDatasetRow(value: unknown): value is DatasetRow {
 
 		dataset: dataset => isObject(dataset, {
 			id: isString,
-			title: isText,
-			alternative: alternative => isOptional(alternative, isText),
-			description: description => isOptional(description, isText)
+			title: isString,
+			alternative: alternative => isOptional(alternative, isString),
+			description: description => isOptional(description, isString)
 		}),
 
 		size: isNumber

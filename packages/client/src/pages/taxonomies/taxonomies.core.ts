@@ -16,7 +16,6 @@
 
 import { isNumber, isObject, isOptional, isString } from "@metreeca/core";
 import { by, compound, descending, locale } from "@metreeca/core/order";
-import { isText, type Text } from "../../index.core.js";
 
 
 /**
@@ -48,10 +47,10 @@ export type TaxonomyRow = {
 
 	readonly taxonomy: {
 		readonly id: string
-		readonly label: Text
-		readonly title: Text
-		readonly alternative?: Text
-		readonly description: Text
+		readonly label: string
+		readonly title: string
+		readonly alternative?: string
+		readonly description: string
 	}
 
 	readonly size: number
@@ -167,10 +166,10 @@ export function isTaxonomyRow(value: unknown): value is TaxonomyRow {
 
 		taxonomy: taxonomy => isObject(taxonomy, {
 			id: isString,
-			label: isText,
-			title: isText,
-			alternative: alternative => isOptional(alternative, isText),
-			description: isText
+			label: isString,
+			title: isString,
+			alternative: alternative => isOptional(alternative, isString),
+			description: isString
 		}),
 
 		size: isNumber

@@ -19,7 +19,6 @@ import { id, multiple, optional, required, resource } from "@metreeca/blue/resou
 import { iri, text } from "@metreeca/blue/string";
 import { union } from "@metreeca/blue/union";
 import type { State } from "@metreeca/blue/value";
-import { isString } from "@metreeca/core";
 import { createNamespace, resolve } from "@metreeca/core/resource";
 import { wgs, WGSPoint } from "@metreeca/work/open/wgs.js";
 
@@ -130,19 +129,4 @@ export function Place() {
 		space: wgs
 
 	});
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Selects the English text of a localisable value.
- *
- * @param text A plain string or a language map carrying a single string per tag
- *
- * @returns `text` itself where it is a plain string; otherwise its English string, falling back to the string of
- *     another language where `text` states none in English, or an empty string where it states none at all
- */
-export function english(text: string | { readonly [tag: string]: string }): string {
-	return isString(text) ? text
-		: text.en ?? Object.values(text)[0] ?? "";
 }

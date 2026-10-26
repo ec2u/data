@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CommentLength, english, Entity } from "@ec2u/data-shared";
+import { CommentLength, Entity, LabelLength } from "@ec2u/data-shared";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import type { State } from "@metreeca/blue/value";
@@ -162,7 +162,7 @@ export function sync(taxonomy: Taxonomy, {
 				(items(drafts))
 				(map(draft => ({ draft, hash: digest(draft) })))
 				(filter(async ({ hash }) => !(await digests).has(hash)))
-				(fork(0, map(({ draft, hash }) => complete(draft, hash))))
+				(fork(0, map(({ draft, hash }) => complete(hash, draft))))
 				(validate(Topic))
 				(map(topic => delta(topic.id, Topic, topic)))
 			);
@@ -170,7 +170,7 @@ export function sync(taxonomy: Taxonomy, {
 		};
 
 
-		async function complete({
+		async function complete(hash: string, {
 
 			id,
 
@@ -187,7 +187,7 @@ export function sync(taxonomy: Taxonomy, {
 
 			...draft
 
-		}: Draft, hash: string) {
+		}: Draft) {
 
 			return immutable({
 
@@ -197,8 +197,13 @@ export function sync(taxonomy: Taxonomy, {
 
 				dataset: taxonomy.id,
 
-				label: notation === undefined ? english(prefLabel) : `${notation} - ${english(prefLabel)}`,
-				comment: opt(definition, definition => ({ en: clip(english(definition), CommentLength) })),
+				label: Object.fromEntries(Object.entries(prefLabel).map(([tag, label]) =>
+					[tag, clip(notation === undefined ? label : `${notation} - ${label}`, LabelLength)]
+				)),
+
+				comment: opt(definition, definition => Object.fromEntries(Object.entries(definition).map(([tag, text]) =>
+					[tag, clip(text, CommentLength)]
+				))),
 
 				notation,
 
@@ -214,11 +219,15 @@ export function sync(taxonomy: Taxonomy, {
 				broaderTransitive: broaderTransitive.map(path => getTopicId(taxonomy, path)),
 
 				digest: hash,
+
+				// topics are embedded from their English text, as the search queries they are matched against are
+				// written in English by classifiers working from the English translation of the item they classify
+
 				embedding: compress(await getTopicEmbedding(synopsis(
-					english(prefLabel),
+					prefLabel.en,
 					altLabel?.en ?? [],
 					hiddenLabel?.en ?? [],
-					opt(definition, english)
+					definition?.en
 				)))
 
 			});

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { english } from "@ec2u/data-shared";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { opt } from "@metreeca/core";
 import { by, locale } from "@metreeca/core/order";
@@ -29,7 +28,6 @@ import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { useEffect } from "preact/hooks";
-import { type Text } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
@@ -84,7 +82,7 @@ export function TopicPage() {
 		blank: taxonomies.label,
 		error: taxonomies.label,
 
-		ready: ({ state }) => english(state.prefLabel)
+		ready: ({ state }) => state.prefLabel
 
 	});
 
@@ -100,7 +98,7 @@ export function TopicPage() {
 			{resource({
 
 				ready: ({ state: { inScheme } }) =>
-					<Link look={"subtle"} href={inScheme.id}>{english(inScheme.label)}</Link>
+					<Link look={"subtle"} href={inScheme.id}>{inScheme.label}</Link>
 
 			})}
 
@@ -141,7 +139,7 @@ export function TopicPage() {
 			}
 		}) => <>
 
-			<Card title={english(prefLabel)}>{opt(definition, english)}</Card>
+			<Card title={prefLabel}>{definition}</Card>
 
 			<Info>{{
 
@@ -172,13 +170,13 @@ export function TopicPage() {
  *
  * @returns The list, or `undefined` if no concept is linked, so the property panel leaves the entry out
  */
-function links(concepts: readonly { readonly id: string, readonly label: Text }[] = []) {
+function links(concepts: readonly { readonly id: string, readonly label: string }[] = []) {
 
 	return concepts.length > 0 ? <ul>{[...concepts] // copy, as state is shared
 
-		.sort(by(({ label }) => english(label), locale()))
+		.sort(by(({ label }) => label, locale()))
 
-		.map(({ id, label }) => <li key={id}><Link href={id}>{english(label)}</Link></li>)
+		.map(({ id, label }) => <li key={id}><Link href={id}>{label}</Link></li>)
 
 	}</ul> : undefined;
 
