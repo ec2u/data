@@ -28,6 +28,7 @@ import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
 import { execute } from "./index.core.js";
 import { programs } from "./programs/index.js";
+import { resources } from "./resources/index.js";
 import { taxonomies } from "./taxonomies/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
@@ -45,6 +46,7 @@ await execute(() => server(service(createStore), { depth: 3, limit: 100 })
 	.use("/documents/", documents())
 	.use("/events/", events())
 
+	.use("/resources/", resources())
 	.use("/taxonomies/", taxonomies())
 
 	.listen({
