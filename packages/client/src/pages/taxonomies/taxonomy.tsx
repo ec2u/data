@@ -71,7 +71,7 @@ export const taxonomy = immutable({
 
 	stats: {
 
-		resources: { "count=count:": {} }
+		hasConcept: { "count=count:": {} }
 
 	}
 
@@ -226,7 +226,7 @@ function TaxonomySearch({
 		entry: route,
 		shape: Taxonomy,
 		model: useMemo(() => ({
-			resources: { id: {}, notation: {}, prefLabel: {}, narrower: {}, "~label": keywords }
+			hasConcept: { id: {}, notation: {}, prefLabel: {}, narrower: {}, "~label": keywords }
 		}), [keywords])
 	});
 
