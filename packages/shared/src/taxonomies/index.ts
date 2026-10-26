@@ -77,6 +77,13 @@ export function Taxonomy() {
 
 	}, {
 
+		version: optional(string, {
+
+			name: "Version",
+			description: "Release of the taxonomy, as identified by its publisher."
+
+		}),
+
 		resources: multiple(reference(Topic)),
 
 		hasConcept: multiple(reference(Topic)),
