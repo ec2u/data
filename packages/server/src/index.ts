@@ -30,7 +30,7 @@ import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
-await execute(() => server(service(createStore))
+await execute(() => server(service(createStore), { depth: 3, limit: 100 })
 
 	.use(client(resolve(import.meta.dirname, "static")))
 
