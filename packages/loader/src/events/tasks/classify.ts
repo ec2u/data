@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 
-import { validate } from "@metreeca/mime-jsonld";
-import { getResource } from "@metreeca/gear/space";
-import { schema } from "@metreeca/blue";
-import { createGoogleAI, json } from "@metreeca/llms-google";
-import { Extracted } from "./extract.js";
-import { getTopicEntries } from "../../taxonomies/index.core.js";
 import { events } from "@ec2u/data-shared/taxonomies/events.js";
-import { browseTopics } from "../../taxonomies/tools/browseTopics.js";
-import { searchTopics } from "../../taxonomies/tools/searchTopics.js";
+import { schema } from "@metreeca/blue";
 import { multiple, resource } from "@metreeca/blue/resource";
 import { iri } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
@@ -32,16 +25,23 @@ import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, flat, map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
+import { getResource } from "@metreeca/gear/space";
+import { createGoogleAI, json } from "@metreeca/llms-google";
+import { validate } from "@metreeca/mime-jsonld";
 import type { Reference } from "@metreeca/qest/state";
 import { log } from "@metreeca/tape";
+import { getTopicEntries } from "../../taxonomies/index.core.js";
+import { browseTopics } from "../../taxonomies/tools/browseTopics.js";
+import { searchTopics } from "../../taxonomies/tools/searchTopics.js";
+import { Extracted } from "./extract.js";
 
+
+const logger = log(import.meta.url);
 
 const tools = [
 	searchTopics(events),
 	browseTopics(events)
 ];
-
-const logger = log(import.meta.url);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,48 +95,47 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 		(items(extracteds))
 		(filter(extracted => extracted.event))
 		(flat(map(async extracted => pipe(
-				(items([
+			(items([
 
-					json<State<typeof Reported>>(await ai.models.generateContent({
+				json<State<typeof Reported>>(await ai.models.generateContent({
 
-						model: "gemini-3.6-flash",
+					model: "gemini-3.6-flash",
 
-						contents: markdown`
+					contents: markdown`
 						title: ${extracted.title ?? ""}
 						description: ${extracted.description ?? ""}
 					`,
 
-						config: {
+					config: {
 
-							seed: 0,
-							temperature: 0,
+						seed: 0,
+						temperature: 0,
 
-							systemInstruction: await getResource(".sys.md", import.meta.url),
+						systemInstruction: await getResource(".sys.md", import.meta.url),
 
-							tools,
+						tools,
 
-							automaticFunctionCalling: {
-								maximumRemoteCalls: 50
-							},
+						automaticFunctionCalling: {
+							maximumRemoteCalls: 50
+						},
 
-							responseMimeType: "application/json",
-							responseJsonSchema: schema(Reported)
+						responseMimeType: "application/json",
+						responseJsonSchema: schema(Reported)
 
-						}
+					}
 
-					}))
+				}))
 
-				]))
-				(validate(Reported))
-				(map(async ({ keywords }) => ({
+			]))
+			(validate(Reported))
+			(map(async ({ keywords }) => ({
 
-					keywords: await known(keywords),
+				keywords: await known(keywords),
 
-					...extracted
+				...extracted
 
-				})))
-			)))
-		)
+			})))
+		))))
 	);
 
 

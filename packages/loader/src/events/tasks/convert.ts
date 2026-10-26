@@ -14,30 +14,27 @@
  * limitations under the License.
  */
 
-import { validate } from "@metreeca/mime-jsonld";
-import { Event, getEventId, events } from "@ec2u/data-shared/events/index.js";
-import type { Classified } from "./classify.js";
-import { getUniversity } from "@ec2u/data-shared/universities/index.core.js";
 import { LabelLength } from "@ec2u/data-shared";
+import { Event, events, getEventId, type Publisher } from "@ec2u/data-shared/events/index.js";
+import { getUniversity } from "@ec2u/data-shared/universities/index.core.js";
 import { SchemaEventAttendanceModeEnumeration } from "@ec2u/data-shared/vocabularies/schema/event.js";
 import { SchemaLocation } from "@ec2u/data-shared/vocabularies/schema/location.js";
 import type { State } from "@metreeca/blue/value";
 import { opt, type Optional } from "@metreeca/core";
-import type { Awaitable } from "@metreeca/core/async";
 import { multiple, nonempty, optional } from "@metreeca/core/arrays";
+import type { Awaitable } from "@metreeca/core/async";
 import { clip, tidy } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, map } from "@metreeca/flow/tasks";
-import type { Reference } from "@metreeca/qest/state";
+import { validate } from "@metreeca/mime-jsonld";
+import type { Classified } from "./classify.js";
 
-export function convert(publisher: {
-
-	readonly id: Reference
-	readonly university: Reference
-
-}, city?: Awaitable<Optional<string>>): Task<State<typeof Classified>, State<typeof Event>> {
+export function convert(
+	publisher: Pick<Publisher, "id" | "university">,
+	city?: Awaitable<Optional<string>>
+): Task<State<typeof Classified>, State<typeof Event>> {
 
 	const university = getUniversity(publisher.university);
 
