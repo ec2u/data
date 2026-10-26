@@ -137,10 +137,11 @@ The model is still validated against the shape, so a property the shape does not
 `TraceError [RangeError]: invalid model` naming the offending path. A property that comes back absent means the shape
 did not resolve it, not that the data is missing: confirm at the triple level before concluding anything.
 
-**Triple level** - what the repository holds. Open the RDF4J repository directly, taking credentials from the vault:
+**Triple level** - what the repository holds. Open the RDF4J repository of the environment directly, taking the
+read-only server credentials from the vault (`yard` below; see `.claude/deployment.md` for the others):
 
 ```ts
-import { createGCPVault } from "@metreeca/work/gear-gcp/secrets.js";
+import { createGCPVault } from "@metreeca/gear-gcp/secrets";
 import { createFetch } from "@metreeca/http";
 import { basic } from "@metreeca/http/basic";
 import { createRDF4JRepository } from "@metreeca/wire-sparql-rdf4j";
@@ -149,20 +150,19 @@ const vault = createGCPVault();
 
 const repository = createRDF4JRepository({
 	server: "https://graphdb.ec2u.net",
-	repository: "data-work",
-	fetch: createFetch(basic(await vault("gdb-server-usr"), await vault("gdb-server-pwd")))
+	repository: "data-yard",
+	fetch: createFetch(basic(await vault("yard-gdb-server-usr"), await vault("yard-gdb-server-pwd")))
 });
 
-await repository.execute(async client => {
-	for (const tuple of await client.select(`select ?p (count(*) as ?n) where { <…> ?p ?o } group by ?p`)) {
-		console.log(JSON.stringify(tuple));
-	}
-});
+for (const tuple of await repository.select(`select ?p (count(*) as ?n) where { <…> ?p ?o } group by ?p`)) {
+	console.log(JSON.stringify(tuple));
+}
 ```
 
-`client.select()` resolves to an array of tuples, not an async iterable, and the companion `ask()`, `construct()` and
-`update()` take the same form. Counting predicates forward from a resource and reverse into it is enough to settle
-whether a run committed and which links it left behind.
+Query the repository directly, never inside `repository.execute()`: `execute()` opens a transaction, which GraphDB
+refuses to read-only users with a `403 Forbidden`. `select()` resolves to an array of tuples, not an async iterable,
+and the companion `ask()` and `construct()` take the same form. Counting predicates forward from a resource and reverse
+into it is enough to settle whether a run committed and which links it left behind.
 
 ## Diagnosing a Stalled Pipe
 
