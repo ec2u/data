@@ -25,7 +25,7 @@ import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, fork, map, tee } from "@metreeca/flow/tasks";
+import { filter, fork, map, mix, tee } from "@metreeca/flow/tasks";
 import { compress, synopsis } from "@metreeca/llms";
 import { validate } from "@metreeca/mime-jsonld";
 import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
@@ -113,8 +113,6 @@ export function sync(taxonomy: Taxonomy, {
 		(items(drafts))
 		(tee(
 			define(),
-			credit(),
-			license(),
 			insert(),
 			remove()
 		))
@@ -128,26 +126,18 @@ export function sync(taxonomy: Taxonomy, {
 			(items([taxonomy]))
 			(validate(Taxonomy))
 			(map(taxonomy => delta(taxonomy.id, Taxonomy, taxonomy)))
-		);
-
-	}
-
-	function credit(): Task<Draft, Delta> {
-
-		return () => pipe(
-			(items(publisher === undefined ? [] : [publisher]))
-			(validate(Organization))
-			(map(publisher => delta(publisher.id, Organization, publisher)))
-		);
-
-	}
-
-	function license(): Task<Draft, Delta> {
-
-		return () => pipe(
-			(items(multiple(licenses)))
-			(validate(Entity))
-			(map(license => delta(license.id, Entity, license)))
+			(mix<Delta, Delta>(
+				pipe(
+					(items(multiple(publisher)))
+					(validate(Organization))
+					(map(publisher => delta(publisher.id, Organization, publisher)))
+				),
+				pipe(
+					(items(multiple(licenses)))
+					(validate(Entity))
+					(map(license => delta(license.id, Entity, license)))
+				)
+			))
 		);
 
 	}
@@ -183,11 +173,15 @@ export function sync(taxonomy: Taxonomy, {
 		async function complete({
 
 			id,
+
 			notation,
+
 			prefLabel,
 			altLabel,
 			hiddenLabel,
+
 			definition,
+
 			broader = [],
 			broaderTransitive = [],
 
