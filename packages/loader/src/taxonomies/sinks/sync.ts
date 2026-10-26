@@ -83,7 +83,7 @@ export type Draft = Omit<Topic,
  *
  * @param options The options governing how drafts are stated and the provenance resources the taxonomy references
  * @param options.force Whether every draft is stated afresh, ignoring the digests of stored topics; defaults to `false`
- * @param options.publisher The organisation `taxonomy.publisher` refers to; none if omitted
+ * @param options.publisher The organisation `taxonomy.publisher` refers to
  * @param options.licenses The licenses `taxonomy.license` refers to; none if omitted
  *
  * @returns A sink drawing a feed of topic drafts and resolving to a tally of what it did
@@ -104,10 +104,10 @@ export function sync(taxonomy: Taxonomy, {
 
 	readonly force?: boolean
 
-	readonly publisher?: State<typeof Organization>
+	readonly publisher: State<typeof Organization>
 	readonly licenses?: Some<Entity>
 
-} = {}): Sink<Draft, Tally> {
+}): Sink<Draft, Tally> {
 
 	return drafts => pipe(
 		(items(drafts))
@@ -128,7 +128,7 @@ export function sync(taxonomy: Taxonomy, {
 			(map(taxonomy => delta(taxonomy.id, Taxonomy, taxonomy)))
 			(mix<Delta, Delta>(
 				pipe(
-					(items(multiple(publisher)))
+					(items([publisher]))
 					(validate(Organization))
 					(map(publisher => delta(publisher.id, Organization, publisher)))
 				),
