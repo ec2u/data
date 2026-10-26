@@ -31,9 +31,9 @@ export const documents = immutable({ // !!! sync from `taxonomies-ec2u-documents
 
 	label: "EC2U Documents",
 
-	title: "EC2U Document Types",
-	alternative: "EC2U Documents",
-	description: "Standardized terminology for categorizing institutional documents shared within the EC2U Alliance.",
+	title: { en: "EC2U Document Types" },
+	alternative: { en: "EC2U Documents" },
+	description: { en: "Standardized terminology for categorizing institutional documents shared within the EC2U Alliance." },
 
 	publisher: EC2U,
 

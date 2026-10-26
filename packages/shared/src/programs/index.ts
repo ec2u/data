@@ -34,9 +34,9 @@ export const programs = immutable({
 
 	label: "EC2U Programs",
 
-	title: "EC2U Degree and Occupational Programs",
-	alternative: "EC2U Programs",
-	description: "Formal degree and vocational qualification programs offered by EC2U partner universities.",
+	title: { en: "EC2U Degree and Occupational Programs" },
+	alternative: { en: "EC2U Programs" },
+	description: { en: "Formal degree and vocational qualification programs offered by EC2U partner universities." },
 
 	publisher: EC2U,
 

@@ -25,6 +25,7 @@ import { resolve } from "node:path";
 import { datasets } from "./datasets/index.js";
 import { events } from "./events/index.js";
 import { execute } from "./index.core.js";
+import { taxonomies } from "./taxonomies/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
@@ -35,8 +36,10 @@ await execute(() => server(service(createStore))
 
 	.use("/", datasets())
 	.use("/universities/", universities())
-	.use("/events/", events())
 	.use("/units/", units())
+	.use("/events/", events())
+
+	.use("/taxonomies/", taxonomies())
 
 	.listen({
 

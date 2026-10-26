@@ -20,6 +20,7 @@ import { getTopicEmbedding } from "../index.core.js";
 import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { CommentLength } from "@ec2u/data-shared";
 import type { State } from "@metreeca/blue/value";
+import { opt } from "@metreeca/core";
 import { multiple, optional, required } from "@metreeca/core/arrays";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
@@ -67,14 +68,14 @@ export function convert(taxonomy: State<typeof Taxonomy>): Task<Record, State<ty
 			dataset: required(taxonomy.id),
 
 			label: required(notation === undefined ? preferredLabel : `${notation} - ${preferredLabel}`),
-			comment: optional(definition === undefined ? undefined : clip(definition, CommentLength)),
+			comment: opt(definition, definition => ({ en: clip(definition, CommentLength) })),
 
 			notation: optional(notation),
 
-			prefLabel: required(preferredLabel),
-			altLabel: multiple(alternativeLabels),
-			hiddenLabel: multiple(hiddenLabels),
-			definition: optional(definition),
+			prefLabel: { en: preferredLabel },
+			altLabel: alternativeLabels.length === 0 ? undefined : { en: alternativeLabels },
+			hiddenLabel: hiddenLabels.length === 0 ? undefined : { en: hiddenLabels },
+			definition: opt(definition, definition => ({ en: definition })),
 
 			inScheme: required(taxonomy.id),
 			topConceptOf: optional(broader.length === 0 ? taxonomy.id : undefined),

@@ -20,6 +20,10 @@ import { type Driver, driver } from "@metreeca/gate/driver";
 
 export function datasets(): Driver {
 
-	return driver(Datasets).lookup();
+	return driver(Datasets).lookup({
+
+		model: { resources: { ">=issued": "0001-01-01" } } // !!! "!issued": [null] (metreeca/qest#26)
+
+	});
 
 }

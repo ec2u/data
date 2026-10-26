@@ -99,7 +99,7 @@ loader and verifies their OIDC token before a request reaches the service. Keep 
 | Resource                                   | `main`                 | `next`                 | `yard`  |
 |--------------------------------------------|------------------------|------------------------|---------|
 | Secrets                                    | missing                | missing                | created, one pair per service |
-| GraphDB repository                         | exists                 | exists                 | created, copied from `data-work` |
+| GraphDB repository                         | exists                 | exists                 | created |
 | GraphDB users                              | shared `data-server`   | shared `data-server`   | created, one per service |
 | Service accounts, registry, Workload Identity | missing             | missing                | missing |
 | Cloud Run services, scheduled jobs         | missing                | missing                | missing |

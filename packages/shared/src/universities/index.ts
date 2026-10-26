@@ -37,9 +37,9 @@ export const universities = immutable({
 
 	label: "EC2U Universities",
 
-	title: "EC2U Partner Universities",
-	alternative: "EC2U Universities",
-	description: "Background, historical context and statistical data about EC2U partner universities.",
+	title: { en: "EC2U Partner Universities" },
+	alternative: { en: "EC2U Universities" },
+	description: { en: "Background, historical context and statistical data about EC2U partner universities." },
 
 	publisher: EC2U,
 

@@ -49,6 +49,7 @@ export function convert(publisher: {
 			const url = payload.url;
 
 			const title = clip(tidy(payload.title), LabelLength);
+			const localTitle = opt(payload.localTitle, localTitle => clip(tidy(localTitle), LabelLength));
 
 			const startDate = payload.startDate;
 			const endDate = payload.endDate;
@@ -80,9 +81,11 @@ export function convert(publisher: {
 
 				keywords: multiple(payload.keywords),
 
-				name: title,
-				description: payload.description,
-				disambiguatingDescription: payload.summary,
+				name: texts(payload.language, title, localTitle),
+				description: texts(payload.language, payload.description, payload.localDescription),
+				disambiguatingDescription: opt(payload.summary, summary =>
+					texts(payload.language, summary, payload.localSummary)
+				),
 
 				startDate: stamp(startDate, payload.startTime, university.zone),
 
@@ -132,6 +135,15 @@ function line(value: Optional<string>): Optional<string> {
 
 	return folded === undefined || folded.length === 0 ? undefined : folded;
 
+}
+
+
+// every text is stated in English, and also in the document's own language where that differs and was extracted
+
+function texts(language: string, english: string, local: Optional<string>): { readonly [tag: string]: string } {
+	return language === "en" || local === undefined
+		? { en: english }
+		: { en: english, [language]: local };
 }
 
 

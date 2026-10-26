@@ -30,13 +30,13 @@ export const euroscivoc = immutable({ // !!! sync from the EU vocabularies RDF d
 
 	label: "EuroSciVoc",
 
-	title: "European Science Vocabulary",
-	alternative: "EuroSciVoc",
-	description: dedent`
+	title: { en: "European Science Vocabulary" },
+	alternative: { en: "EuroSciVoc" },
+	description: { en: dedent`
 		European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's 2015 Frascati
 		Manual taxonomy. It was extended with fields of science categories extracted from CORDIS content through a
 		semi-automatic process developed with Natural Language Processing (NLP) techniques.
-	`,
+	` },
 
 	publisher: "https://op.europa.eu/", // the Publications Office of the European Union
 	rights: "Copyright © 2023 Publications Office of the European Union",

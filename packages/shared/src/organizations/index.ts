@@ -37,9 +37,9 @@ export const organizations = immutable({
 
 	label: "EC2U Organizations",
 
-	title: "EC2U Related Organizations",
-	alternative: "EC2U Organizations",
-	description: "Organisations related to EC2U partner universities.",
+	title: { en: "EC2U Related Organizations" },
+	alternative: { en: "EC2U Organizations" },
+	description: { en: "Organisations related to EC2U partner universities." },
 
 	publisher: EC2U,
 

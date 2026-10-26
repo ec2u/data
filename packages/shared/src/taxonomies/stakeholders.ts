@@ -31,9 +31,9 @@ export const stakeholders = immutable({ // !!! sync from `taxonomies-ec2u-stakeh
 
 	label: "EC2U Stakeholders",
 
-	title: "EC2U Stakeholder Types",
-	alternative: "EC2U Stakeholders",
-	description: "Standardized terminology for categorizing people and organizations roles within the EC2U Alliance.",
+	title: { en: "EC2U Stakeholder Types" },
+	alternative: { en: "EC2U Stakeholders" },
+	description: { en: "Standardized terminology for categorizing people and organizations roles within the EC2U Alliance." },
 
 	publisher: EC2U,
 

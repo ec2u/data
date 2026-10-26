@@ -107,6 +107,30 @@ export function Reported() {
 			`
 		}),
 
+		localTitle: optional(string, {
+			name: "Original Title",
+			description: `
+				The title of the event alone in the language the document is written in, stripped of the same page
+				furniture as the English title; left out where the document is written in English.
+			`
+		}),
+
+		localSummary: optional(string, {
+			name: "Original Summary",
+			description: `
+				A plain text summary in the language the document is written in, of less than 500 characters, with no
+				markdown formatting; left out where the document is written in English.
+			`
+		}),
+
+		localDescription: optional(string, {
+			name: "Original Description",
+			description: `
+				The complete descriptive text in the language the document is written in, in markdown format, covering
+				the same text as the English description; left out where the document is written in English.
+			`
+		}),
+
 		startDate: required(date, {
 			name: "First Day",
 			description: "The date the event starts on, resolving relative dates against the current date"

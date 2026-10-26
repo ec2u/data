@@ -44,6 +44,8 @@ Extract the following properties from the provided document:
 - image URL (may include a query component), only if reasonably sure
 - image credits or copyright
 - language of the document, as a 2-letter ISO tag
+- original title, summary and description (`localTitle`, `localSummary`, `localDescription`), only where the document
+  is written in a language other than English
 
 **CRITICAL: state the title, the summary and the description in English, translating them where
 the document is written in another language.** Translate the prose alone: a venue name, a street address,
@@ -60,6 +62,12 @@ it.
 Completeness bears on the translating, NEVER on the choosing: it is no licence to widen the description to matter the
 prompt keeps out of it, such as navigation, a calendar of sessions or a listing of other events. Choose the descriptive
 text first, on the rules above, then translate all of what you chose. The summary alone is short, being asked for short.
+
+**Where the document is written in another language, ALSO state the title, the summary and the description in that
+language as `localTitle`, `localSummary` and `localDescription`.** These are the originals the English properties
+translate: the same title stripped of the same furniture, a summary saying what the English one says, and the same
+descriptive text the English description covers, carried over as the document words it rather than translated back.
+Where the document is written in English, NEVER state them: the English properties already carry its text.
 
 A recurring event has no start or end time of its own: a series meeting week after week is reported with none, however
 plainly the document names the hour its sessions are held at. The hours a venue keeps, and the time of a talk given

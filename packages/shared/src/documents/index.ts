@@ -24,6 +24,7 @@ import { StakeholderTopic } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
 import { EC2U, base, ec2u, Entity } from "@ec2u/data-shared";
 import { schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
+import { dictionary } from "@metreeca/blue/dictionary";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { date, iri, tag, text } from "@metreeca/blue/string";
@@ -40,9 +41,9 @@ export const documents = immutable({
 
 	label: "EC2U Documents",
 
-	title: "EC2U Institutional Documents",
-	alternative: "EC2U Documents",
-	description: "Regulations, policies and other governance documents shared by EC2U partner universities.",
+	title: { en: "EC2U Institutional Documents" },
+	alternative: { en: "EC2U Documents" },
+	description: { en: "Regulations, policies and other governance documents shared by EC2U partner universities." },
 
 	publisher: EC2U,
 
@@ -89,8 +90,8 @@ export function Document() {
 		identifier: optional(text),
 		language: multiple(tag),
 
-		title: required(text),
-		description: optional(text),
+		title: required(dictionary({ uniqueLang: true })),
+		description: optional(dictionary({ uniqueLang: true })),
 
 		creator: optional(Person),
 		contributor: multiple(Person),
@@ -103,7 +104,7 @@ export function Document() {
 		valid: optional(text),
 
 		rights: optional(text),
-		accessRights: optional(text),
+		accessRights: optional(dictionary({ uniqueLang: true })),
 		license: optional(reference(Entity)),
 
 		type: multiple(reference(DocumentTopic), {

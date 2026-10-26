@@ -21,9 +21,9 @@ import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { EventTopic } from "@ec2u/data-shared/taxonomies/events.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { SchemaEvent } from "@ec2u/data-shared/vocabularies/schema/event.js";
+import { dictionary } from "@metreeca/blue/dictionary";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
 import type { URLLike } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
@@ -41,9 +41,9 @@ export const events = immutable({
 
 	label: "EC2U Events",
 
-	title: "EC2U Academic and Local Events",
-	alternative: "EC2U Events",
-	description: "Information about events at EC2U partner universities and associated local organizations.",
+	title: { en: "EC2U Academic and Local Events" },
+	alternative: { en: "EC2U Events" },
+	description: { en: "Information about events at EC2U partner universities and associated local organizations." },
 
 	publisher: EC2U,
 
@@ -88,8 +88,8 @@ export function Event() {
 
 	}, {
 
-		name: optional(text({ maxLength: LabelLength })),
-		disambiguatingDescription: optional(text({ maxLength: CommentLength })),
+		name: optional(dictionary({ uniqueLang: true, maxLength: LabelLength })),
+		disambiguatingDescription: optional(dictionary({ uniqueLang: true, maxLength: CommentLength })),
 
 		publisher: optional(reference(Organization)),
 

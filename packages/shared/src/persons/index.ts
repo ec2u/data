@@ -35,9 +35,9 @@ export const persons = immutable({
 
 	label: "EC2U People",
 
-	title: "EC2U Faculty, Researchers and Staff",
-	alternative: "EC2U People",
-	description: "Staff involved in teaching and research activities at EC2U partner universities.",
+	title: { en: "EC2U Faculty, Researchers and Staff" },
+	alternative: { en: "EC2U People" },
+	description: { en: "Staff involved in teaching and research activities at EC2U partner universities." },
 
 	publisher: EC2U,
 

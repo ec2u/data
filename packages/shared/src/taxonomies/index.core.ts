@@ -29,9 +29,9 @@ export const taxonomies = immutable({
 
 	label: "EC2U Taxonomies",
 
-	title: "EC2U Classification Taxonomies",
-	alternative: "EC2U Taxonomies",
-	description: "Standardised topic taxonomies and other concept schemes for classifying resources.",
+	title: { en: "EC2U Classification Taxonomies" },
+	alternative: { en: "EC2U Taxonomies" },
+	description: { en: "Standardised topic taxonomies and other concept schemes for classifying resources." },
 
 	publisher: EC2U,
 

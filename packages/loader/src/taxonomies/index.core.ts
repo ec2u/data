@@ -19,7 +19,8 @@ import { lookup } from "@metreeca/pipe-store";
 import { createGoogleAI, embedding } from "@metreeca/llms-google";
 import { cosine, decompress, type Distance, type Vector } from "@metreeca/llms";
 import { Taxonomy, type TopicEntry, type TopicReference } from "@ec2u/data-shared/taxonomies/index.js";
-import { memo } from "@metreeca/core";
+import { english } from "@ec2u/data-shared";
+import { memo, opt } from "@metreeca/core";
 import { by } from "@metreeca/core/order";
 import type { Text } from "@metreeca/core/strings";
 import { pipe } from "@metreeca/flow";
@@ -61,15 +62,20 @@ const taxonomies = memo(async (id: Reference) => {
 	// linked topics are named alongside their labels, so that a consumer weighs a topic against the neighbourhood it
 	// stands in without looking every reference up
 
-	const labels = new Map(topics.map(({ id, prefLabel }) => [id, prefLabel]));
+	const labels = new Map(topics.map(({ id, prefLabel }) => [id, english(prefLabel)]));
 
-	return topics.map(({ altLabel, broader, narrower, related, embedding, ...topic }) => ({
+	return topics.map(({ prefLabel, altLabel, definition, broader, narrower, related, embedding, ...topic }) => ({
 
 		...topic,
 
+		// topics are weighed in English, the language every taxonomy is stated in
+
+		prefLabel: english(prefLabel),
+
 		// a property the topic states nothing for is left out of the model, rather than stated as an empty array
 
-		altLabel: altLabel ?? [],
+		altLabel: altLabel?.en ?? [],
+		definition: opt(definition, english),
 
 		broader: refs(broader),
 		narrower: refs(narrower),

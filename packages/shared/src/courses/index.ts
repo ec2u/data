@@ -42,9 +42,9 @@ export const courses = immutable({
 
 	label: "EC2U Courses",
 
-	title: "EC2U Academic and Occupational Courses",
-	alternative: "EC2U Courses",
-	description: "Degree, vocational and personal development courses offered by EC2U partner universities.",
+	title: { en: "EC2U Academic and Occupational Courses" },
+	alternative: { en: "EC2U Courses" },
+	description: { en: "Degree, vocational and personal development courses offered by EC2U partner universities." },
 
 	publisher: EC2U,
 

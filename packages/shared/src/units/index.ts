@@ -38,9 +38,9 @@ export const units = immutable({
 
 	label: "EC2U Units",
 
-	title: "EC2U Research Units and Facilities",
-	alternative: "EC2U Units",
-	description: "Information about research units and supporting structures at EC2U partner universities.",
+	title: { en: "EC2U Research Units and Facilities" },
+	alternative: { en: "EC2U Units" },
+	description: { en: "Information about research units and supporting structures at EC2U partner universities." },
 
 	publisher: EC2U,
 

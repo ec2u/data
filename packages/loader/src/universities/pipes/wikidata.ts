@@ -98,6 +98,10 @@ export async function Wikidata() {
 
 					...seed,
 
+					// the seed English name stays authoritative, alongside the names Wikidata states in local languages
+
+					prefLabel: { ...names(tuple, "university"), en: seed.prefLabel },
+
 					id
 
 				};
@@ -141,9 +145,24 @@ function number(tuple: Tuple): Optional<number> {
 function place(tuple: Tuple, name: string): Optional<Partial<Place>> {
 	return opt(value(tuple, name), id => ({
 		id,
-		label: value(tuple, `${name}Name`),
+		label: names(tuple, name),
 		...point(tuple, `${name}Coordinates`)
 	}));
+}
+
+// names come back as tab-separated `tag=name` entries in every language of the alliance, and are narrowed to English
+// and the official languages of the country the university stands in
+
+function names(tuple: Tuple, name: string): Optional<{ readonly [tag: string]: string }> {
+
+	const languages = ["en", ...(value(tuple, "languages")?.split(" ") ?? [])];
+
+	const entries = (value(tuple, `${name}Names`)?.split("\t") ?? [])
+		.map((entry): [string, string] => [entry.slice(0, entry.indexOf("=")), entry.slice(entry.indexOf("=")+1)])
+		.filter(([tag]) => languages.includes(tag));
+
+	return entries.length === 0 ? undefined : Object.fromEntries(entries);
+
 }
 
 function point(tuple: Tuple, variable: string): Optional<WGSPoint> {

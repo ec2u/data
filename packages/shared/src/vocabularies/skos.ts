@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+import { dictionary } from "@metreeca/blue/dictionary";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { markdown, string, text } from "@metreeca/blue/string";
+import { string } from "@metreeca/blue/string";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -85,10 +86,10 @@ export function SKOSConcept() {
 
 		notation: optional(string), // ;( should be typed as per SKOS best practices
 
-		prefLabel: required(text),
-		altLabel: multiple(text),
-		hiddenLabel: multiple(text),
-		definition: optional(markdown),
+		prefLabel: required(dictionary({ uniqueLang: true })),
+		altLabel: optional(dictionary()),
+		hiddenLabel: optional(dictionary()),
+		definition: optional(dictionary({ uniqueLang: true })),
 
 		inScheme: required(reference(SKOSConceptScheme)),
 

@@ -9,12 +9,15 @@ select
 
 	?id ?university ?inception ?students ?coordinates
 
+	(group_concat(distinct ?_language; separator=" ") as ?languages)
+	(group_concat(distinct concat(lang(?_universityName), "=", str(?_universityName)); separator="\t") as ?universityNames)
+
 	?country
-	(sample(?_countryName) as ?countryName)
+	(group_concat(distinct concat(lang(?_countryName), "=", str(?_countryName)); separator="\t") as ?countryNames)
 	(sample(?_countryCoordinates) as ?countryCoordinates)
 
 	?city
-	(sample(?_cityName) as ?cityName)
+	(group_concat(distinct concat(lang(?_cityName), "=", str(?_cityName)); separator="\t") as ?cityNames)
 	(sample(?_cityCoordinates) as ?cityCoordinates)
 
 where {
@@ -53,10 +56,17 @@ where {
 
 	}
 
-	optional { ?country rdfs:label ?_countryName filter (lang(?_countryName) = "en") }
+	# names are drawn in the languages of the alliance and narrowed to English and the official languages of the
+	# country by the pipe: a filter on the country languages inside these optionals is evaluated unbound and times out
+
+	optional { ?country wdt:P37/wdt:P218 ?_language }
+
+	optional { ?university rdfs:label ?_universityName filter (lang(?_universityName) in ("en", "de", "es", "fi", "fr", "it", "pt", "ro", "sv")) }
+
+	optional { ?country rdfs:label ?_countryName filter (lang(?_countryName) in ("en", "de", "es", "fi", "fr", "it", "pt", "ro", "sv")) }
 	optional { ?country wdt:P625 ?_countryCoordinates }
 
-	optional { ?city rdfs:label ?_cityName filter (lang(?_cityName) = "en") }
+	optional { ?city rdfs:label ?_cityName filter (lang(?_cityName) in ("en", "de", "es", "fi", "fr", "it", "pt", "ro", "sv")) }
 	optional { ?city wdt:P625 ?_cityCoordinates }
 
 }

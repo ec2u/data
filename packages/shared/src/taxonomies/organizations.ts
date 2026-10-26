@@ -31,9 +31,9 @@ export const organizations = immutable({ // !!! sync from `taxonomies-ec2u-organ
 
 	label: "EC2U Organizations",
 
-	title: "EC2U Organization Types",
-	alternative: "EC2U Organizations",
-	description: "Standardized terminology for categorizing organizations and their units within the EC2U Alliance.",
+	title: { en: "EC2U Organization Types" },
+	alternative: { en: "EC2U Organizations" },
+	description: { en: "Standardized terminology for categorizing organizations and their units within the EC2U Alliance." },
 
 	publisher: EC2U,
 

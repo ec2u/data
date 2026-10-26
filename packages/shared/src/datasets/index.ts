@@ -20,9 +20,10 @@ import { University } from "@ec2u/data-shared/universities/index.js";
 import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
 import { ec2u, Entity, rdfs } from "@ec2u/data-shared";
 import { boolean } from "@metreeca/blue/boolean";
+import { dictionary } from "@metreeca/blue/dictionary";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { date, markdown, text } from "@metreeca/blue/string";
+import { date, text } from "@metreeca/blue/string";
 
 
 export function Datasets() {
@@ -49,9 +50,9 @@ export function Dataset() {
 
 	}, {
 
-		title: required(text),
-		alternative: optional(text),
-		description: required(markdown),
+		title: required(dictionary({ uniqueLang: true })),
+		alternative: optional(dictionary({ uniqueLang: true })),
+		description: required(dictionary({ uniqueLang: true })),
 
 		created: optional(date),
 		issued: optional(date),
@@ -63,7 +64,7 @@ export function Dataset() {
 
 		rights: optional(text),
 		license: multiple(reference(Entity)),
-		accessRights: optional(text),
+		accessRights: optional(dictionary({ uniqueLang: true })),
 
 		subject: multiple(reference(EuroSciVocTopic)),
 

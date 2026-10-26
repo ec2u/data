@@ -15,8 +15,10 @@
  */
 
 import { SchemaEvent } from "@ec2u/data-shared/vocabularies/schema/event.js";
+import { dictionary } from "@metreeca/blue/dictionary";
 import { multiple, nonempty, optional, resource } from "@metreeca/blue/resource";
-import { iri, markdown, string, text } from "@metreeca/blue/string";
+import { iri, string, text } from "@metreeca/blue/string";
+import { union } from "@metreeca/blue/union";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -110,9 +112,9 @@ export function SchemaBase() {
 
 		identifier: optional(string), // ;( single plain string: the standard range is Text | URL | PropertyValue
 
-		name: optional(text),
-		description: optional(markdown),
-		disambiguatingDescription: optional(markdown)
+		name: optional(union(text, dictionary({ uniqueLang: true }))),
+		description: optional(dictionary({ uniqueLang: true })),
+		disambiguatingDescription: optional(dictionary({ uniqueLang: true }))
 
 	});
 }
@@ -134,7 +136,7 @@ export function SchemaImageObject() {
 
 		url: nonempty(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
 
-		caption: optional(text),
+		caption: optional(dictionary({ uniqueLang: true })),
 		author: optional(text),
 		copyrightNotice: optional(text)
 

@@ -33,9 +33,9 @@ export const pages = immutable({
 
 	label: "EC2U Pages",
 
-	title: "EC2U Source Pages",
-	alternative: "EC2U Pages",
-	description: "Web pages from which EC2U Knowledge Hub content is derived.",
+	title: { en: "EC2U Source Pages" },
+	alternative: { en: "EC2U Pages" },
+	description: { en: "Web pages from which EC2U Knowledge Hub content is derived." },
 
 	publisher: EC2U,
 

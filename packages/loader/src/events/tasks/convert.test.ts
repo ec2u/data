@@ -93,6 +93,65 @@ describe("convert", () => {
 
 	});
 
+	describe("texts", () => {
+
+		const opening = { startDate: "2026-07-02" };
+
+		const original = {
+			language: "it",
+			localTitle: "Evento di prova",
+			localSummary: "Sommario di prova",
+			localDescription: "Descrizione di prova"
+		};
+
+		it("states the texts of an English document in English alone", async () => {
+
+			expect(await converted({ ...opening, summary: "Test summary" }))
+				.toMatchObject({
+					name: { en: "Test Event" },
+					description: { en: "Test description" },
+					disambiguatingDescription: { en: "Test summary" }
+				});
+
+		});
+
+		it("states the texts of a document in another language in English and in that language", async () => {
+
+			expect(await converted({ ...opening, ...original, summary: "Test summary" }))
+				.toMatchObject({
+					name: { en: "Test Event", it: "Evento di prova" },
+					description: { en: "Test description", it: "Descrizione di prova" },
+					disambiguatingDescription: { en: "Test summary", it: "Sommario di prova" }
+				});
+
+		});
+
+		it("states in English alone the texts a document in another language leaves untranslated", async () => {
+
+			expect(await converted({ ...opening, language: "it" }))
+				.toMatchObject({
+					name: { en: "Test Event" },
+					description: { en: "Test description" }
+				});
+
+		});
+
+		it("states no original text for a document claiming English", async () => {
+
+			expect((await converted({ ...opening, ...original, language: "en" })).name)
+				.toEqual({ en: "Test Event" });
+
+		});
+
+		it("labels the event with its English title", async () => {
+
+			expect(await converted({ ...opening, ...original }))
+				.toMatchObject({ label: "Test Event" });
+
+		});
+
+	});
+
 	describe("dates", () => {
 
 		it("anchors a wall time to the zone of the university", async () => {

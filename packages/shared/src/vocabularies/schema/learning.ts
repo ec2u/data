@@ -21,6 +21,7 @@ import { SchemaThing, schema } from "@ec2u/data-shared/vocabularies/schema/index
 import { SchemaOrganization } from "@ec2u/data-shared/vocabularies/schema/organization.js";
 import { SKOSConcept } from "@ec2u/data-shared/vocabularies/skos.js";
 import { boolean } from "@metreeca/blue/boolean";
+import { dictionary } from "@metreeca/blue/dictionary";
 import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
@@ -45,9 +46,9 @@ export function SchemaLearningResource() {
 
 		numberOfCredits: optional(decimal({ minInclusive: 0 })),
 
-		teaches: optional(text),
-		assesses: optional(text),
-		competencyRequired: optional(text),
+		teaches: optional(dictionary({ uniqueLang: true })),
+		assesses: optional(dictionary({ uniqueLang: true })),
+		competencyRequired: optional(dictionary({ uniqueLang: true })),
 
 		educationalCredentialAwarded: optional(SchemaEducationalOccupationalCredential),
 		occupationalCredentialAwarded: optional(SchemaEducationalOccupationalCredential),
@@ -65,7 +66,7 @@ export function SchemaEducationalOccupationalProgram() {
 
 		timeToComplete: optional(duration),
 
-		programPrerequisites: optional(text),
+		programPrerequisites: optional(dictionary({ uniqueLang: true })),
 
 		hasCourse: multiple(reference(Course), {
 
@@ -84,7 +85,7 @@ export function SchemaCourse() {
 		inLanguage: multiple(tag),
 		timeRequired: optional(duration),
 
-		coursePrerequisites: optional(text)
+		coursePrerequisites: optional(dictionary({ uniqueLang: true }))
 
 	});
 }

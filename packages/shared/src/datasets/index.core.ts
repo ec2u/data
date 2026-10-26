@@ -35,9 +35,9 @@ export const datasets = immutable({
 
 	label: "EC2U Datasets",
 
-	title: "EC2U Dataset Catalog",
-	alternative: "EC2U Datasets",
-	description: "Datasets published on the EC2U Knowledge Hub.",
+	title: { en: "EC2U Dataset Catalog" },
+	alternative: { en: "EC2U Datasets" },
+	description: { en: "Datasets published on the EC2U Knowledge Hub." },
 
 	publisher: EC2U,
 

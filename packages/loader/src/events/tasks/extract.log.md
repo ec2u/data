@@ -37,6 +37,8 @@ material and record what varies by source rather than restating the Coimbra read
 - Season programmes as description: a concert series answers with its whole programme, a paragraph per date and some
   29,500 characters, which the rules admit as the event's own descriptive text rather than a listing of others; decide
   whether a programme belongs in the description or is carried some other way
+- Original texts on long pages: the run behind the Original Texts case read pages under 1,500 characters of
+  description; measure a long non-English page, such as a season programme, against the output budget
 
 # Test Cases
 
@@ -222,6 +224,20 @@ than against how plausible it looks.
 CRITICAL: any instruction pointing the title at a particular piece of the page competes with the English rule, which
 sits further down the prompt and does not win by itself. After touching this bullet, read the titles of a non-English
 source, not only their trimming.
+
+## Original Texts
+
+A page written in a language other than English yields its title, summary and description twice: in English as
+`title`, `summary` and `description`, and as the page words them as `localTitle`, `localSummary` and
+`localDescription`. A page written in English yields no original texts.
+
+Read on five pages (two Coimbra in Portuguese, Turku in Finnish, Poitiers in French, Umeå in English): the four
+non-English pages return all three originals, every sentence of each original description found verbatim in the page
+rather than translated back, and English descriptions within a tenth of the length of the originals; the Umeå page
+returns none. A band name (`Os Quatro e Meia`) stays as written in both titles.
+
+CRITICAL: the originals double the length of the longest property, so a page answered within the output budget before
+may now run out of it; read an incomplete generation on a long non-English page as budget first.
 
 ## Property Set
 

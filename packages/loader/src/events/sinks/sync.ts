@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { LabelLength } from "@ec2u/data-shared";
+import { english, LabelLength } from "@ec2u/data-shared";
 import { Event, Events, events, getEventId, isStaleEvent, Publisher } from "@ec2u/data-shared/events/index.js";
 import { Page, pages as directory, Pages } from "@ec2u/data-shared/pages/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
@@ -82,7 +82,7 @@ export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> 
 				model: { city: { label: {} } }
 
 			}))
-			(map(university => university.city.label))
+			(map(university => english(university.city.label)))
 			(find())
 		);
 

@@ -16,9 +16,11 @@
 
 import { FOAFOrganization, FOAFPerson } from "@ec2u/data-shared/vocabularies/foaf.js";
 import { SKOSConcept, skos } from "@ec2u/data-shared/vocabularies/skos.js";
+import { dictionary } from "@metreeca/blue/dictionary";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, optional, required, resource } from "@metreeca/blue/resource";
 import { text } from "@metreeca/blue/string";
+import { union } from "@metreeca/blue/union";
 import { createNamespace } from "@metreeca/core/resource";
 
 
@@ -75,7 +77,7 @@ export function OrgOrganization() {
 
 		// ;( `identifier` omitted: it would clash with `schema:identifier`, the term EC2U `Organization` publishes
 
-		prefLabel: required(text, {
+		prefLabel: required(union(text, dictionary({ uniqueLang: true })), {
 
 			forward: skos
 
@@ -87,7 +89,7 @@ export function OrgOrganization() {
 
 		}),
 
-		definition: optional(text, {
+		definition: optional(dictionary({ uniqueLang: true }), {
 
 			forward: skos
 

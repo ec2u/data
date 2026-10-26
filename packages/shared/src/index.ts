@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+import { dictionary } from "@metreeca/blue/dictionary";
 import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { iri, markdown, text } from "@metreeca/blue/string";
+import { iri, text } from "@metreeca/blue/string";
+import { union } from "@metreeca/blue/union";
 import type { State } from "@metreeca/blue/value";
+import { isString } from "@metreeca/core";
 import { createNamespace, resolve } from "@metreeca/core/resource";
 import { wgs, WGSPoint } from "@metreeca/work/open/wgs.js";
 
@@ -84,8 +87,24 @@ export const CommentLength = 500;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type Entity=State<typeof Entity>
-export type Place=State<typeof Place>
+export type Entity = State<typeof Entity>
+export type Place = State<typeof Place>
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Selects the English text of a localisable value.
+ *
+ * @param text A plain string or a language map carrying a single string per tag
+ *
+ * @returns `text` itself where it is a plain string; otherwise its English string, falling back to the string of another
+ *     language where `text` states none in English, or an empty string where it states none at all
+ */
+export function english(text: string | { readonly [tag: string]: string }): string {
+	return isString(text) ? text
+		: text.en ?? Object.values(text)[0] ?? "";
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,11 +118,18 @@ export function Entity() {
 
 		id: id(),
 
-		label: required(text({
-			maxLength: LabelLength
-		})),
+		label: required(union(
+			text({
+				maxLength: LabelLength
+			}),
+			dictionary({
+				uniqueLang: true,
+				maxLength: LabelLength
+			})
+		)),
 
-		comment: optional(markdown({
+		comment: optional(dictionary({
+			uniqueLang: true,
 			maxLength: CommentLength
 		})),
 
@@ -118,5 +144,5 @@ export function Place() {
 
 		space: wgs
 
-	}, {});
+	});
 }

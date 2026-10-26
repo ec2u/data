@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { english } from "@ec2u/data-shared";
 import { Datasets } from "@ec2u/data-shared/datasets/index.js";
 import { isNumber, isObject, isString } from "@metreeca/core";
 import { by } from "@metreeca/core/order";
@@ -116,12 +117,12 @@ export function DatasetsPage() {
 
 		ready: ({ state }) => createElement("datasets-grid", {}, state
 
-			.flatMap(({ dataset, size }) => isObject(dataset) && isString(dataset.id) && isString(dataset.title)
+			.flatMap(({ dataset, size }) => isObject(dataset) && isString(dataset.id) && isText(dataset.title)
 				? [{
 					id: dataset.id,
-					title: dataset.title,
-					alternative: dataset.alternative,
-					description: dataset.description,
+					title: english(dataset.title),
+					alternative: isText(dataset.alternative) ? english(dataset.alternative) : undefined,
+					description: isText(dataset.description) ? english(dataset.description) : undefined,
 					size
 				}]
 				: []
@@ -146,4 +147,11 @@ export function DatasetsPage() {
 	})}</Page>;
 
 
+}
+
+
+// projected cells are untyped, so a localisable text is told apart from its plain or language-mapped form
+
+function isText(value: unknown): value is string | { readonly [tag: string]: string } {
+	return isString(value) || isObject<{ readonly [tag: string]: string }>(value, isString);
 }
