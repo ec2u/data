@@ -20,35 +20,12 @@ import { SKOSConcept, SKOSConceptScheme } from "@ec2u/data-shared/vocabularies/s
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
-import type { Markdown, Text } from "@metreeca/core/strings";
 import type { Reference } from "@metreeca/qest/state";
 import type { State } from "@metreeca/blue/value";
 
 
 export type Taxonomy = State<typeof Taxonomy>;
 export type Topic = State<typeof Topic>;
-
-
-export type TopicEntry = {
-
-	readonly id: Reference
-
-	readonly prefLabel: Text
-	readonly altLabel: readonly Text[]
-	readonly definition?: Markdown
-
-	readonly broader: readonly TopicReference[]
-	readonly narrower: readonly TopicReference[]
-	readonly related: readonly TopicReference[]
-
-}
-
-export type TopicReference = {
-
-	readonly id: Reference
-	readonly prefLabel?: Text
-
-}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,8 +118,8 @@ export function Topic() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function getTopicId(taxonomy: Taxonomy, path: readonly string[]): Reference {
+export function getTopicId(taxonomy: Taxonomy, path: string): Reference {
 
-	return `${taxonomy.id}/${path.map(encodeURIComponent).join("/")}`;
+	return `${(taxonomy.id)}/${path.split("/").map(encodeURIComponent).join("/")}`;
 
 }

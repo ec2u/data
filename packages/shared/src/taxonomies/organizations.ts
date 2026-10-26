@@ -20,6 +20,7 @@ import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { EC2U } from "@ec2u/data-shared";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
+import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 
 
@@ -29,11 +30,13 @@ export const organizations = immutable({ // !!! sync from `taxonomies-ec2u-organ
 
 	dataset: taxonomies.id,
 
-	label: "EC2U Organizations",
+	label: "EC2U Organisations",
 
-	title: { en: "EC2U Organization Types" },
-	alternative: { en: "EC2U Organizations" },
-	description: { en: "Standardized terminology for categorizing organizations and their units within the EC2U Alliance." },
+	title: { en: "EC2U Organisation Types" },
+	alternative: { en: "EC2U Organisations" },
+	description: { en: dedent`
+		Standardised terminology for categorising organisations and their units within the EC2U Alliance.
+	` },
 
 	publisher: EC2U,
 
@@ -48,5 +51,5 @@ export const organizations = immutable({ // !!! sync from `taxonomies-ec2u-organ
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function OrganizationTopic() {
-	return resource(Topic, { pattern: `${organizations.id}/*` }, {});
+	return resource(Topic, { pattern: `${organizations.id}/*` });
 }

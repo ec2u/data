@@ -53,5 +53,5 @@ export const euroscivoc = immutable({ // !!! sync from the EU vocabularies RDF d
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function EuroSciVocTopic() {
-	return resource(Topic, { pattern: `${euroscivoc.id}/*` }, {});
+	return resource(Topic, { pattern: `${euroscivoc.id}/*` });
 }

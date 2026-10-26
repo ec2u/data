@@ -14,30 +14,36 @@
  * limitations under the License.
  */
 
-import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
-import { Taxonomies } from "@ec2u/data-shared/taxonomies/index.js";
+import { execute } from "../../index.core.js";
+import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
+import { sync } from "../sinks/sync.js";
+import { csv } from "../tasks/csv.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { map } from "@metreeca/flow/tasks";
-import { delta, settle } from "@metreeca/pipe-store";
-import { validate } from "@metreeca/mime-jsonld";
-import { execute } from "../index.core.js";
+import { service } from "@metreeca/gear";
+import { createVault } from "@metreeca/gear/vault";
 
+
+const DataURL = "taxonomies-ec2u-sdgs";
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if ( import.meta.main ) {
-	await execute(Metadata);
+	await execute(SDGs);
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function Metadata() {
+export async function SDGs() {
+
+	const vault = service(createVault);
 
 	return pipe(
-		(items([taxonomies]))
-		(validate(Taxonomies))
-		(map(catalogue => delta(taxonomies.id, Taxonomies, catalogue)))
-		(settle({ atomic: true }))
+		(items(await vault(DataURL)))
+		(csv())
+		(sync(sdgs))
 	);
 
 }

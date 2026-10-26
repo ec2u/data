@@ -17,6 +17,7 @@
 import { execute } from "../../index.core.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { sync } from "../sinks/sync.js";
+import { csv } from "../tasks/csv.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { service } from "@metreeca/gear";
@@ -25,6 +26,8 @@ import { createVault } from "@metreeca/gear/vault";
 
 const DataURL = "taxonomies-ec2u-isced-2011";
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if ( import.meta.main ) {
 	await execute(ISCED2011);
@@ -39,6 +42,7 @@ export async function ISCED2011() {
 
 	return pipe(
 		(items(await vault(DataURL)))
+		(csv())
 		(sync(isced2011))
 	);
 

@@ -35,10 +35,10 @@ export const organizations = immutable({
 	isDefinedBy: resolve(base, "/datasets/organizations"),
 	dataset: datasets.id,
 
-	label: "EC2U Organizations",
+	label: "EC2U Organisations",
 
-	title: { en: "EC2U Related Organizations" },
-	alternative: { en: "EC2U Organizations" },
+	title: { en: "EC2U Related Organisations" },
+	alternative: { en: "EC2U Organisations" },
 	description: { en: "Organisations related to EC2U partner universities." },
 
 	publisher: EC2U,
@@ -54,7 +54,7 @@ export const organizations = immutable({
 export function Organizations() {
 	return resource(Dataset, {
 
-		name: "Organizations",
+		name: "Organisations",
 		description: "Organisations related to EC2U partner universities."
 
 	}, {
@@ -70,7 +70,7 @@ export function Organization() {
 		space: ec2u,
 		class: ec2u.Organization,
 
-		name: "Organization",
+		name: "Organisation",
 		description: "An organisation related to EC2U partner universities."
 
 	}, {

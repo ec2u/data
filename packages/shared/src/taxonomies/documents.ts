@@ -20,6 +20,7 @@ import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { EC2U } from "@ec2u/data-shared";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
+import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 
 
@@ -33,7 +34,9 @@ export const documents = immutable({ // !!! sync from `taxonomies-ec2u-documents
 
 	title: { en: "EC2U Document Types" },
 	alternative: { en: "EC2U Documents" },
-	description: { en: "Standardized terminology for categorizing institutional documents shared within the EC2U Alliance." },
+	description: { en: dedent`
+		Standardised terminology for categorising institutional documents shared within the EC2U Alliance.
+	` },
 
 	publisher: EC2U,
 
@@ -48,5 +51,5 @@ export const documents = immutable({ // !!! sync from `taxonomies-ec2u-documents
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function DocumentTopic() {
-	return resource(Topic, { pattern: `${documents.id}/*` }, {});
+	return resource(Topic, { pattern: `${documents.id}/*` });
 }

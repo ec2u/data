@@ -20,6 +20,7 @@ import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { EC2U } from "@ec2u/data-shared";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
+import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 
 
@@ -33,7 +34,9 @@ export const stakeholders = immutable({ // !!! sync from `taxonomies-ec2u-stakeh
 
 	title: { en: "EC2U Stakeholder Types" },
 	alternative: { en: "EC2U Stakeholders" },
-	description: { en: "Standardized terminology for categorizing people and organizations roles within the EC2U Alliance." },
+	description: { en: dedent`
+		Standardised terminology for categorising people and organisations roles within the EC2U Alliance.
+	` },
 
 	publisher: EC2U,
 
@@ -48,5 +51,5 @@ export const stakeholders = immutable({ // !!! sync from `taxonomies-ec2u-stakeh
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function StakeholderTopic() {
-	return resource(Topic, { pattern: `${stakeholders.id}/*` }, {});
+	return resource(Topic, { pattern: `${stakeholders.id}/*` });
 }

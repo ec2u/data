@@ -62,7 +62,7 @@ export function FOAFOrganization() {
 
 		class: foaf.Organization
 
-	}, {});
+	});
 }
 
 export function FOAFPerson() {

@@ -72,5 +72,5 @@ export function Program() {
 		name: "Program",
 		description: "A formal degree or vocational qualification program offered by an EC2U partner university."
 
-	}, {});
+	});
 }

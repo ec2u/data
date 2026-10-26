@@ -133,7 +133,7 @@ export function OrgFormalOrganization() {
 
 		class: org.FormalOrganization
 
-	}, {});
+	});
 }
 
 export function OrgOrganizationalCollaboration() {
@@ -141,5 +141,5 @@ export function OrgOrganizationalCollaboration() {
 
 		class: org.OrganizationalCollaboration
 
-	}, {});
+	});
 }

@@ -54,5 +54,5 @@ export const iscedf2013 = immutable({ // !!! sync from the EU vocabularies SKOS 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function ISCEDF2013Topic() {
-	return resource(Topic, { pattern: `${iscedf2013.id}/*` }, {});
+	return resource(Topic, { pattern: `${iscedf2013.id}/*` });
 }

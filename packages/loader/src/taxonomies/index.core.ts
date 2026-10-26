@@ -15,26 +15,30 @@
  */
 
 import { service } from "@metreeca/gear";
-import { lookup } from "@metreeca/pipe-store";
+import { delta, lookup, settle } from "@metreeca/pipe-store";
 import { createGoogleAI, embedding } from "@metreeca/llms-google";
 import { cosine, decompress, type Distance, type Vector } from "@metreeca/llms";
-import { Taxonomy, type TopicEntry, type TopicReference } from "@ec2u/data-shared/taxonomies/index.js";
+import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
+import { Taxonomies, Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
 import { english } from "@ec2u/data-shared";
 import { memo, opt } from "@metreeca/core";
 import { by } from "@metreeca/core/order";
-import type { Text } from "@metreeca/core/strings";
+import type { Markdown, Text } from "@metreeca/core/strings";
 import { pipe } from "@metreeca/flow";
+import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
+import { map } from "@metreeca/flow/tasks";
+import { validate } from "@metreeca/mime-jsonld";
 import type { Reference } from "@metreeca/qest/state";
 import { log, report, time } from "@metreeca/tape";
+import { execute } from "../index.core.js";
 
 
 const logger = log(import.meta.url);
 
+const topics = memo(async (id: Reference) => {
 
-const taxonomies = memo(async (id: Reference) => {
-
-	const topics = await pipe(
+	const stored = await pipe(
 		(lookup({
 
 		entry: id,
@@ -62,9 +66,9 @@ const taxonomies = memo(async (id: Reference) => {
 	// linked topics are named alongside their labels, so that a consumer weighs a topic against the neighbourhood it
 	// stands in without looking every reference up
 
-	const labels = new Map(topics.map(({ id, prefLabel }) => [id, english(prefLabel)]));
+	const labels = new Map(stored.map(({ id, prefLabel }) => [id, english(prefLabel)]));
 
-	return topics.map(({ prefLabel, altLabel, definition, broader, narrower, related, embedding, ...topic }) => ({
+	return stored.map(({ prefLabel, altLabel, definition, broader, narrower, related, embedding, ...topic }) => ({
 
 		...topic,
 
@@ -93,6 +97,11 @@ const taxonomies = memo(async (id: Reference) => {
 });
 
 
+if ( import.meta.main ) {
+	await execute(Metadata);
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type TopicMatch = TopicEntry & {
@@ -101,8 +110,41 @@ export type TopicMatch = TopicEntry & {
 
 }
 
+export type TopicEntry = {
+
+	readonly id: Reference
+
+	readonly prefLabel: Text
+	readonly altLabel: readonly Text[]
+	readonly definition?: Markdown
+
+	readonly broader: readonly TopicReference[]
+	readonly narrower: readonly TopicReference[]
+	readonly related: readonly TopicReference[]
+
+}
+
+export type TopicReference = {
+
+	readonly id: Reference
+	readonly prefLabel?: Text
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export async function Metadata() {
+
+	return pipe(
+		(items([taxonomies]))
+		(validate(Taxonomies))
+		(map(catalogue => delta(taxonomies.id, Taxonomies, catalogue)))
+		(settle({ atomic: true }))
+	);
+
+}
+
 
 export async function getTopicEmbedding(text: Text): Promise<Vector> {
 
@@ -134,14 +176,14 @@ export async function getTopicEmbedding(text: Text): Promise<Vector> {
 
 export async function getTopicMatches(taxonomy: Taxonomy, query: Text): Promise<readonly TopicMatch[]> {
 
-	const [vector, topics] = await Promise.all([
+	const [vector, entries] = await Promise.all([
 
 		getTopicEmbedding(query),
-		taxonomies(taxonomy.id)
+		topics(taxonomy.id)
 
 	]);
 
-	return topics
+	return entries
 
 		.map(({ embedding, ...topic }) => ({
 
@@ -155,14 +197,14 @@ export async function getTopicMatches(taxonomy: Taxonomy, query: Text): Promise<
 
 }
 
-export async function getTopicEntries(taxonomy: Taxonomy, topics?: readonly Reference[]): Promise<readonly TopicEntry[]> {
+export async function getTopicEntries(taxonomy: Taxonomy, selection?: readonly Reference[]): Promise<readonly TopicEntry[]> {
 
-	return (await taxonomies(taxonomy.id))
+	return (await topics(taxonomy.id))
 
 		.filter(({ id, broader }) =>
-			topics === undefined || topics.length === 0
+			selection === undefined || selection.length === 0
 				? broader.length === 0
-				: topics.includes(id)
+				: selection.includes(id)
 		)
 
 		.sort(by(({ id }) => id))

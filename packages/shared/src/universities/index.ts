@@ -82,7 +82,7 @@ export function University() {
 
 	}, {
 
-		dataset: required(reference(resource(Dataset, { hasValue: [ universities.id ] }, {}))),
+		dataset: required(reference(resource(Dataset, { hasValue: [ universities.id ] }))),
 
 		depiction: nonempty(iri),
 		homepage: nonempty(iri),

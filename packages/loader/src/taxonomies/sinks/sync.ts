@@ -14,31 +14,40 @@
  * limitations under the License.
  */
 
+import { CommentLength, english } from "@ec2u/data-shared";
 import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
-import type { URLLike } from "@metreeca/core";
+import { opt } from "@metreeca/core";
+import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { filter, flat, fork, map, tee, trim } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { csv, type Record } from "@metreeca/mime-csv";
-import { fetch } from "@metreeca/pipe-url";
-import { digest } from "@metreeca/work/core/digest.js";
-import { createStore, delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
+import { filter, fork, map, tee } from "@metreeca/flow/tasks";
+import { compress, synopsis } from "@metreeca/llms";
 import { validate } from "@metreeca/mime-jsonld";
-import { convert, getPath } from "../tasks/convert.js";
+import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
+import { digest } from "@metreeca/work/core/digest.js";
+import { getTopicEmbedding } from "../index.core.js";
 
 
 const survival = 0.75; // the smallest fraction of the stored topics a document must account for // !!! as option
 
-const CSVFormat = immutable({
 
-	header: true,
-	skip: true,
-	trim: true
-
-});
+/**
+ * A topic as read from a source, independent of the taxonomy it is stated in.
+ *
+ * The identifier and the broader topics are slash-separated paths relative to the taxonomy; the sink resolves them and
+ * derives the label, the comment, the taxonomy links, the digest and the embedding.
+ */
+export type Draft = Omit<Topic,
+	| "label"
+	| "comment"
+	| "dataset"
+	| "inScheme"
+	| "topConceptOf"
+	| "digest"
+	| "embedding"
+>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,45 +55,41 @@ const CSVFormat = immutable({
 /**
  * Creates a sink replacing a taxonomy as a whole.
  *
- * The document is retrieved and its topics committed under a single store transaction, so the taxonomy is never half
+ * The feed of drafts is drawn and its topics committed under a single store transaction, so the taxonomy is never half
  * published: a failing write, a refused retraction or a parse dying part way leaves the store exactly as it was and
- * the next run simply starts over. An entry whose digest matches the one recorded with the topic the store already
- * holds is dropped before it is converted, so an unchanged document costs a retrieval and a comparison per entry;
- * under `force` every entry is converted and stated afresh, whatever the store holds, so a topic whose conversion
- * changed without its entry changing is brought back in line.
+ * the next run simply starts over. A draft whose digest matches the one recorded with the topic the store already
+ * holds is dropped before it is completed, so an unchanged source costs a retrieval and a comparison per draft;
+ * under `force` every draft is completed and stated afresh, whatever the store holds, so a topic whose completion
+ * changed without its draft changing is brought back in line with the completion rules currently in force.
  *
- * Conversions run concurrently, one for every entry left to convert, so a document costs about as long as its slowest
- * entry rather than the sum of them all. The embedding each conversion requests is paced by the quota throttle the
- * Gemini client carries, so the run keeps within the published rate however many entries it opens at once.
+ * Completions run concurrently, one for every draft left to complete, so a source costs about as long as its slowest
+ * draft rather than the sum of them all. The embedding each completion requests is paced by the quota throttle the
+ * Gemini client carries, so the run keeps within the published rate however many drafts it opens at once.
  *
  * The taxonomy is stated as it is handed over, alongside the topics and under the same transaction, so a scheme is
  * described wherever its topics are held.
  *
- * Topics are named after the entries the document lists and stated as they are drawn. The ones the store holds for
- * the taxonomy and the document never named are retracted once it has been read whole, so nothing is retired on the
- * strength of a partial reading. A document listing fewer than three quarters of the stored topics states nothing and
- * fails, so a truncated or unreachable document costs a run rather than the taxonomy, while one that renames its
- * topics wholesale is published as it stands.
+ * Topics are stated as they are drawn. The ones the store holds for the taxonomy and the feed never named are
+ * retracted once it has been drawn whole, so nothing is retired on the strength of a partial reading. A feed listing
+ * fewer than three quarters of the stored topics states nothing and fails, so a truncated or unreachable source costs
+ * a run rather than the taxonomy, while one that renames its topics wholesale is published as it stands.
  *
  * @param taxonomy The taxonomy the topics are attributed to
  * @param taxonomy.id The identifier of the concept scheme the topics belong to
  *
- * @param force Whether every entry is stated afresh, ignoring the digests recorded with the stored topics; defaults
- * to `false`
+ * @param force Whether every draft is stated afresh, ignoring the digests recorded with the stored topics
  *
- * @returns A sink retrieving a feed of CSV documents and resolving to a tally of what it did
+ * @returns A sink drawing a feed of topic drafts and resolving to a tally of what it did
  *
  * @throws {@link !RangeError RangeError} While the feed is consumed, if the run would leave in place less than three
  * quarters of the stored topics, or if the store rejects a topic as invalid, with nothing committed
  *
  * @throws {@link !Error Error} While the feed is consumed, if any write fails, with nothing committed
  */
-export function sync(taxonomy: Taxonomy, force = false): Sink<URLLike, Tally> {
+export function sync(taxonomy: Taxonomy, force = false): Sink<Draft, Tally> {
 
-	return urls => pipe(
-		(items(urls))
-		(fetch())
-		(csv(CSVFormat))
+	return drafts => pipe(
+		(items(drafts))
 		(tee(
 			define(),
 			insert(),
@@ -94,7 +99,7 @@ export function sync(taxonomy: Taxonomy, force = false): Sink<URLLike, Tally> {
 	);
 
 
-	function define(): Task<Record, Delta> {
+	function define(): Task<Draft, Delta> {
 
 		return () => pipe(
 			(items([taxonomy]))
@@ -104,9 +109,9 @@ export function sync(taxonomy: Taxonomy, force = false): Sink<URLLike, Tally> {
 
 	}
 
-	function insert(): Task<Record, Delta> {
+	function insert(): Task<Draft, Delta> {
 
-		return records => {
+		return drafts => {
 
 			const digests = force ? new Set<string>() : pipe(
 				(lookup({
@@ -121,20 +126,73 @@ export function sync(taxonomy: Taxonomy, force = false): Sink<URLLike, Tally> {
 			);
 
 			return pipe(
-				(items(records))
-				(filter(async record => !(await digests).has(digest(record))))
-				(fork(0, convert(taxonomy)))
+				(items(drafts))
+				(map(draft => ({ draft, hash: digest(draft) })))
+				(filter(async ({ hash }) => !(await digests).has(hash)))
+				(fork(0, map(({ draft, hash }) => complete(draft, hash))))
 				(validate(Topic))
 				(map(topic => delta(topic.id, Topic, topic)))
 			);
 
 		};
 
+
+		async function complete({
+
+			id,
+			notation,
+			prefLabel,
+			altLabel,
+			hiddenLabel,
+			definition,
+			broader = [],
+			broaderTransitive = [],
+
+			...draft
+
+		}: Draft, hash: string) {
+
+			return immutable({
+
+				...draft,
+
+				id: getTopicId(taxonomy, id),
+
+				dataset: taxonomy.id,
+
+				label: notation === undefined ? english(prefLabel) : `${notation} - ${english(prefLabel)}`,
+				comment: opt(definition, definition => ({ en: clip(english(definition), CommentLength) })),
+
+				notation,
+
+				prefLabel,
+				altLabel,
+				hiddenLabel,
+				definition,
+
+				inScheme: taxonomy.id,
+				topConceptOf: broader.length === 0 ? taxonomy.id : undefined,
+
+				broader: broader.map(path => getTopicId(taxonomy, path)),
+				broaderTransitive: broaderTransitive.map(path => getTopicId(taxonomy, path)),
+
+				digest: hash,
+				embedding: compress(await getTopicEmbedding(synopsis(
+					english(prefLabel),
+					altLabel?.en ?? [],
+					hiddenLabel?.en ?? [],
+					opt(definition, english)
+				)))
+
+			});
+
+		}
+
 	}
 
-	function remove(): Task<Record, Delta> {
+	function remove(): Task<Draft, Delta> {
 
-		return records => {
+		return drafts => {
 
 			const existing = lookup({
 
@@ -145,8 +203,8 @@ export function sync(taxonomy: Taxonomy, force = false): Sink<URLLike, Tally> {
 			});
 
 			return pipe(
-				(items(records))
-				(map(record => getTopicId(taxonomy, getPath(record))))
+				(items(drafts))
+				(map(({ id }) => getTopicId(taxonomy, id)))
 				(retire({ atomic: true, survival, existing }))
 				(map(id => delta(id, Topic, null)))
 			);

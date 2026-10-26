@@ -36,7 +36,7 @@ import { Metadata as organizations } from "./organizations/index.core.js";
 import { Metadata as pages } from "./pages/index.core.js";
 import { Metadata as persons } from "./persons/index.core.js";
 import { Metadata as programs } from "./programs/index.core.js";
-import { Metadata as taxonomies } from "./taxonomies/index.meta.js";
+import { Metadata as taxonomies } from "./taxonomies/index.core.js";
 import { Metadata as units } from "./units/index.core.js";
 import { Metadata as universities } from "./universities/index.core.js";
 
