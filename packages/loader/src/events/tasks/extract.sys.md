@@ -29,11 +29,11 @@ Extract the following properties from the provided document:
 - start date in ISO format (yyyy-mm-dd), resolving relative dates against the current date
 - start time in ISO format (hh:mm:ss), the local time a clock at the venue reads, converting whatever notation the
   document states it in (18h30, 18.30, 6.30pm) into that form; NEVER leave the time out because the document states it
-  in another notation
+  in another notation, and NEVER append a zone designator (`z`, `Z`, `+01:00`): `18:30:00` is the whole value
 - end date in ISO format (yyyy-mm-dd), resolving relative dates against the current date
 - end time in ISO format (hh:mm:ss), the local time a clock at the venue reads, converting whatever notation the
   document states it in (18h30, 18.30, 6.30pm) into that form; NEVER leave the time out because the document states it
-  in another notation
+  in another notation, and NEVER append a zone designator (`z`, `Z`, `+01:00`): `18:30:00` is the whole value
 - entry fees (free, paid); include only if absolutely confident; make sure not to mix up registration required with paid
   entry fees
 - attendance mode (offline, online, mixed)
@@ -52,6 +52,11 @@ the document is written in another language.** Translate the prose alone: a venu
 a city name and an image credit are stated as the document has them, and a proper name carried by a title keeps its
 original form.
 The `language` property states the language the document is written in, NEVER the English the properties are stated in.
+
+**A `description` that reads in the document's own language is a failure, not a partial answer.** Where the document
+is written in another language, `description` and `localDescription` MUST differ: the first is the English translation,
+the second the text as written. Before stating `description`, check that it reads as English from its first sentence to
+its last; a description copied from the document and left untranslated, however complete, is wrong.
 
 **A translation is complete and faithful. STRICTLY FORBIDDEN: abridging, summarising, condensing, paraphrasing, or
 leaving out any part of the text you are translating.** Every sentence of it is carried over, in the order it is written

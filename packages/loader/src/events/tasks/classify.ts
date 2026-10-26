@@ -22,13 +22,13 @@ import type { State } from "@metreeca/blue/value";
 import { markdown } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { filter, flat, map } from "@metreeca/flow/tasks";
+import { flat, map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { getResource } from "@metreeca/gear/space";
 import { createGoogleAI, json } from "@metreeca/llms-google";
 import { validate } from "@metreeca/mime-jsonld";
 import type { Reference } from "@metreeca/qest/state";
-import { log } from "@metreeca/tape";
+import { log, report } from "@metreeca/tape";
 import { getTopicEntries } from "../../taxonomies/index.core.js";
 import { browseTopics } from "../../taxonomies/tools/browseTopics.js";
 import { searchTopics } from "../../taxonomies/tools/searchTopics.js";
@@ -88,27 +88,50 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 
 	const ai = service(createGoogleAI);
 
-	// an extracted payload stating no event has nothing to classify, so it is dropped
+	// a payload not fit for publication carries nothing to classify and passes through untagged; a publishable one
+	// the model fails on is dropped rather than published untagged, so its page is read again on the next run
 
 	return extracteds => pipe(
 		(items(extracteds))
-		(filter(extracted => extracted.event))
-		(flat(map(async extracted => pipe(
-			(items([await tag(extracted)]))
-			(validate(Reported))
-			(map(async ({ keywords }) => ({
+		(flat(map(async extracted => extracted.publishable
+			? pipe(
+				(items(await tag(extracted)))
+				(validate(Reported))
+				(map(async ({ keywords }) => ({
 
-				keywords: await known(keywords),
+					keywords: await known(keywords),
+
+					...extracted
+
+				})))
+			)
+			: items([{
+
+				keywords: [],
 
 				...extracted
 
-			})))
-		))))
+			}])
+		)))
 	);
 
 
-	async function tag({ title, description }: State<typeof Extracted>): Promise<State<typeof Reported>> {
-		return json<State<typeof Reported>>(await ai.models.generateContent({
+	async function tag({ url, title, description }: State<typeof Extracted>): Promise<readonly State<typeof Reported>[]> {
+		try {
+
+			return [await generate()];
+
+		} catch ( error ) {
+
+			logger.error`failed to classify <${url}>: ${report(error)}`;
+
+			return [];
+
+		}
+
+
+		async function generate(): Promise<State<typeof Reported>> {
+			return json<State<typeof Reported>>(await ai.models.generateContent({
 
 			model: "gemini-3.6-flash",
 
@@ -135,14 +158,17 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 
 			}
 
-		}));
+			}));
+		}
+
 	}
 
-	async function known(ids: readonly Reference[] = []): Promise<readonly Reference[]> { // !!! review
+	async function known(ids: readonly Reference[] = []): Promise<readonly Reference[]> {
 
 		const topics = new Set((await getTopicEntries(events, ids)).map(({ id }) => id));
+		const tops = new Set((await getTopicEntries(events)).map(({ id }) => id));
 
-		return ids.filter(id => {
+		const stated = ids.filter(id => {
 
 			if ( topics.has(id) ) {
 
@@ -157,6 +183,12 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 			}
 
 		});
+
+		// a top concept says nothing about an event on its own, and a topic standing above another stated topic adds
+		// nothing a filter on the narrower one wouldn't find, so each chain is cut to its most specific member; topic
+		// identifiers are slash-separated paths along the hierarchy, so standing above is a prefix test
+
+		return stated.filter(id => !tops.has(id) && !stated.some(other => other.startsWith(`${id}/`)));
 
 	}
 

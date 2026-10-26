@@ -29,7 +29,11 @@ complex and brittle.
 
 Event links are listed as `//ol/li/article/a/@href` and are stated as absolute addresses; pages are reached through the
 form buttons of the `pagination` block, which state the page as a value and disable the current and out-of-range ones.
+Every page declares the site root as its base URL, so an event is named from the listed address and never from what the
+page states about itself. A page listed by both the German and the English calendar yields one event per calendar.
 
+- **2026-10-26** – events named from the listed address: read from the page base URL, every Jena event had been keyed
+  to the site root
 - **2025-05-08** – migrated to AI extraction
 
 # 2022-03-05 – schema.org scraping

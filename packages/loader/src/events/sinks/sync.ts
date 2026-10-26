@@ -20,20 +20,19 @@ import { Page, pages as directory, Pages } from "@ec2u/data-shared/pages/index.j
 import { getUniversity } from "@ec2u/data-shared/universities/index.core.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { isString, type URLLike } from "@metreeca/core";
-import { clip, type Markdown } from "@metreeca/core/strings";
+import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { find, toSet } from "@metreeca/flow/sinks";
 import { filter, flat, fork, map, mix, tee, when } from "@metreeca/flow/tasks";
-import { fetch } from "@metreeca/pipe-url";
-import { focus, html, untag } from "@metreeca/mime-xml";
 import { digest } from "@metreeca/work/core/digest.js";
 import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
 import { validate } from "@metreeca/mime-jsonld";
 import { classify } from "../tasks/classify.js";
 import { convert } from "../tasks/convert.js";
-import { extract } from "../tasks/extract.js";
+import { extract, type Retrieved } from "../tasks/extract.js";
+import { read } from "../tasks/read.js";
 
 
 const retrieval = 10; // the number of pages fetched at the same time from the source site // !!! as option
@@ -119,23 +118,28 @@ export function sync({
 			);
 
 
-			async function modified(page: Markdown) {
-				return !(await digests).has(digest(page));
+			async function modified({ document }: Retrieved) {
+				return !(await digests).has(digest(document));
 			}
 
 
+			// a page travels with the address the scan listed it under, which names the event it states: what the
+			// page says about its own address is data, not identity, and the two branches must agree on the name
+
 			return pipe(urls
-				(fork(retrieval, pages => pipe(
-					(items(pages))
-					(fetch())
-					(html())
-					(focus())
-					(untag())
+				(fork(retrieval, urls => pipe(
+					(items(urls))
+					(flat(map(url => pipe(
+						(items([url]))
+						(read())
+						(map((document): Retrieved => ({ url: String(url), document })))
+					))))
 					(filter(modified))
 				)))
-				(fork(analysis, pages => pipe(
-					(items(pages))
+				(fork(analysis, retrieved => pipe(
+					(items(retrieved))
 					(extract())
+					(classify()) // a payload the classifier drops records no digest, so its page is read again
 					(tee(
 						payloads => pipe( // every page states its digest, so the crawl won't offer it again
 							(items(payloads))
@@ -154,7 +158,6 @@ export function sync({
 							(when(payload => payload.publishable,
 								publishable => pipe(
 									(items(publishable))
-									(classify())
 									(convert(publisher, city))
 									(map(event =>
 										delta(event.id, Event, event)

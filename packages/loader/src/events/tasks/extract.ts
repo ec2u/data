@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { error, opt, type Optional } from "@metreeca/core";
 import { getDate } from "@metreeca/work/core/temporal.js";
 import { digest } from "@metreeca/work/core/digest.js";
 import { validate } from "@metreeca/mime-jsonld";
@@ -26,7 +25,7 @@ import { boolean } from "@metreeca/blue/boolean";
 import { optional, required, resource } from "@metreeca/blue/resource";
 import { date, string, tag, time, url } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
-import { type Markdown, markdown, type Text, unescape } from "@metreeca/core/strings";
+import { type Markdown, markdown } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, flat, map, when } from "@metreeca/flow/tasks";
@@ -36,6 +35,21 @@ import { FinishReason, type GenerateContentResponse } from "@google/genai";
 
 
 const logger = log(import.meta.url);
+
+
+/**
+ * A source document together with the address the scan listed it under.
+ *
+ * The address names the event the document states, so it travels with the document rather than being read back from
+ * it: what a page says about its own address (a `base` element, a canonical link) is data, not identity.
+ */
+export type Retrieved = {
+
+	readonly url: string
+
+	readonly document: Markdown
+
+}
 
 
 export function Extracted() {
@@ -85,27 +99,9 @@ export function Reported() {
 			`
 		}),
 
-		title: required(string, {
-			name: "Event Title",
-			description: `
-				The title of the event alone in English, stripped of the page furniture the document builds its heading
-				out of: a site name, a publication or section name, a tagline and a breadcrumb trail.
-			`
-		}),
-
-		summary: optional(string, {
-			name: "Short Summary",
-			description: "A plain text summary in English of less than 500 characters, with no markdown formatting"
-		}),
-
-		description: required(string, {
-			name: "Full Description",
-			description: `
-				The complete descriptive text in English as the document includes it, in markdown format, carrying over
-				neither the H1 heading stating the title nor navigation, listings of other events or the page as a
-				whole.
-			`
-		}),
+		// the original-language properties precede the English ones, so that the text is stated as written before it is
+		// translated: generated in the other order, a description was left in the document's language on a third of
+		// the foreign pages of the sample
 
 		localTitle: optional(string, {
 			name: "Original Title",
@@ -128,6 +124,28 @@ export function Reported() {
 			description: `
 				The complete descriptive text in the language the document is written in, in markdown format, covering
 				the same text as the English description; left out where the document is written in English.
+			`
+		}),
+
+		title: required(string, {
+			name: "Event Title",
+			description: `
+				The title of the event alone in English, stripped of the page furniture the document builds its heading
+				out of: a site name, a publication or section name, a tagline and a breadcrumb trail.
+			`
+		}),
+
+		summary: optional(string, {
+			name: "Short Summary",
+			description: "A plain text summary in English of less than 500 characters, with no markdown formatting"
+		}),
+
+		description: required(string, {
+			name: "Full Description",
+			description: `
+				The complete descriptive text in English as the document includes it, in markdown format, carrying over
+				neither the H1 heading stating the title nor navigation, listings of other events or the page as a
+				whole.
 			`
 		}),
 
@@ -214,13 +232,13 @@ export function Reported() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function extract(): Task<Text, State<typeof Extracted>> {
+export function extract(): Task<Retrieved, State<typeof Extracted>> {
 
 	const ai = service(createGoogleAI);
 
-	return documents => pipe(
-		(items(documents))
-		(flat(map(async document => pipe(
+	return retrieved => pipe(
+		(items(retrieved))
+		(flat(map(async ({ url, document }) => pipe(
 			(items([
 
 				await ai.models.generateContent({
@@ -250,14 +268,22 @@ export function extract(): Task<Text, State<typeof Extracted>> {
 				})
 
 			]))
-			(filter(response => isGenerated(document, response)))
+			(filter(response => isGenerated(url, response)))
 			(map(response => json<State<typeof Reported>>(response)))
+			(map(reported => ({
+
+				...reported,
+
+				startTime: local(reported.startTime),
+				endTime: local(reported.endTime)
+
+			})))
 			(when(extracted => extracted.event, validate(Reported), feed => feed))
 			(map(extracted => ({
 
 				publishable: extracted.event && !isStaleEvent(extracted),
 
-				url: getDocumentURL(document) ?? error<string>("undefined document url"),
+				url,
 				digest: digest(document),
 
 				...extracted
@@ -271,7 +297,18 @@ export function extract(): Task<Text, State<typeof Extracted>> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function isGenerated(document: Markdown, response: GenerateContentResponse): boolean {
+/**
+ * Strips the zone designator the model appends to a local time.
+ *
+ * The times are asked for as the local time a clock at the venue reads, with no zone, yet the model closes one page in
+ * twenty with a lowercase `z`, which the time shape rejects and which would mean UTC if it were well-formed; the
+ * designator is dropped rather than the page.
+ */
+function local(time: undefined | string): undefined | string {
+	return time?.replace(/z$/i, "");
+}
+
+function isGenerated(url: string, response: GenerateContentResponse): boolean {
 
 	const reason = response.candidates?.[0]?.finishReason;
 
@@ -281,18 +318,10 @@ function isGenerated(document: Markdown, response: GenerateContentResponse): boo
 
 	} else {
 
-		logger.warning`incomplete generation <${reason}> for <${getDocumentURL(document)}>`;
+		logger.warning`incomplete generation <${reason}> for <${url}>`;
 
 		return false;
 
 	}
-
-}
-
-function getDocumentURL(document: Markdown): Optional<string> {
-
-	return opt(document.match(/^---\n(?:.*\n)*?url: "((?:[^"\\]|\\.)*)"\n(?:.*\n)*?---(?:\n|$)/)?.[1], url =>
-		unescape(url)
-	);
 
 }

@@ -46,23 +46,37 @@ read off its `broader` chain, up to the top concept it descends from.
   other branches are covered.
 - NEVER state an `audience` topic the text does not support. An event that names no audience is for nobody in
   particular: leave the audience branch unstated rather than tagging the closest one.
-- NEVER state a top concept where one of its narrower concepts fits: `subject`, `format` and `audience` are dividers,
-  never answers.
+- You MUST state the most specific topic that applies: where a topic and one of its narrower topics both fit, state
+  the narrower one alone. A topic standing directly under a top concept (`subject/arts`, `format/talks`,
+  `audience/students`) is stated only where the event spans two or more of its narrower topics alike and none of them
+  names it on its own. `subject`, `format` and `audience` themselves are dividers, never answers.
 
 # Guidelines
 
 - Where every candidate of a search stands at much the same distance, the branch says nothing about this event: search
   again with different wording, and state nothing if that search reads the same way.
-- Where several specific topics of a branch fit poorly, browse to the topic they stand under and state that instead,
-  provided it is not the branch's own top concept.
+- Where no specific topic of a branch fits well, ask whether the branch applies at all before reaching for a broader
+  topic: a mid-level topic states that the event spans its narrower topics, it is not a refuge from choosing between
+  them.
 - Where an event carries distinct facets within one branch, search once per facet rather than once for the event as a
   whole.
 - State more than one topic of a branch only where the event is genuinely each of them: a lecture series on climate
-  policy is one format, not two.
-- A phrase naming who may attend (`open to all`, `for students of the department`, `by invitation`) is audience
-  evidence; a phrase naming a room or a fee is not.
+  policy is one format, not two, and a seminar on the history of desertion is one subject, however many disciplines
+  the hosting department is named after. A discipline named by the organiser's department, by the venue, by a partner
+  or by the materials used is not a subject of the event, and neither is a neighbouring discipline the text touches in
+  passing.
+- Every event the text describes as taking place has a format, however unusual the word for it (`forum`, `staff
+  week`, `buildathon`, `hack day`): search by what people do there (listen, discuss, build, meet, watch) rather than by
+  the word, and state the closest specific topic.
+- A phrase naming who is invited or who may attend (`open to all interested`, `for students of the department`, `by
+  invitation`, `employees, students and the public are welcome`, `a public event`, `public: yes`) is audience
+  evidence. A price (`free admission`, `admission is free`, `tickets`), a room, opening hours, a registration link, and
+  a venue being `open to the public` or receiving `visitors` are not: they say how to get in, not who is asked to
+  come. Before stating an audience topic, locate the phrase of the text that invites that audience; where there is
+  none, state no audience topic.
 - The title and the description reach you in English, translated upstream where the source page was written in another
-  language. Classify on meaning, not wording: a translated phrase may read oddly and still name its topic plainly.
+  language, though a passage may reach you untranslated. Classify on meaning, not wording, in whichever language the
+  text is in: a translated phrase may read oddly and still name its topic plainly.
 
 # Output
 

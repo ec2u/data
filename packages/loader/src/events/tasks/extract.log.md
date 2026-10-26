@@ -1,5 +1,5 @@
 ---
-title: Prompt Testing Log for @extract-google.sys.md
+title: Prompt Testing Log for extract.sys.md
 description: |
   Memory for LLM assistants working with the Gemini event extraction prompt.
   Documents behavioral requirements, known issues, and validation procedures.
@@ -39,6 +39,27 @@ material and record what varies by source rather than restating the Coimbra read
   whether a programme belongs in the description or is carried some other way
 - Original texts on long pages: the run behind the Original Texts case read pages under 1,500 characters of
   description; measure a long non-English page, such as a season programme, against the output budget
+- Language of bilingual sites: two Turku pages served under `/fi/` but written in English come back `language: fi`
+  with no originals, and one English page under the same path comes back with a Finnish `localDescription` the page
+  does carry in a second column; decide whether `language` means the page's language or the site's
+
+# Measurements
+
+Runs over the 75 source pages of the classification sample (`classify.json`, every source but Salamanca, whose pages
+need a reader of their own), `gemini-3.5-flash-lite`, `seed: 0`, `temperature: 0`, concurrency 10, on 2026-10-26.
+A description counts as untranslated where fewer than one word in twenty-five of it is an English function word; the
+check was validated by hand against the flagged pages. Each revision was run twice and came back identical.
+
+| Revision                                                   | Extracted | Foreign pages | Untranslated | Dropped as invalid |
+|------------------------------------------------------------|----------:|--------------:|-------------:|-------------------:|
+| baseline                                                   |     73/75 |            50 |           15 |   2 (`z` on times) |
+| 1: an untranslated `description` named as a failure        |     74/75 |            52 |            6 |                  1 |
+| 2: original-language properties declared before the English |    70/75 |            47 |            0 |   5 (`z` on times) |
+| 3: zone designator forbidden by name                        |    72/75 |            50 |            0 |                  3 |
+| 4: trailing `z` stripped by the task before validation      |    75/75 |            52 |            0 |                  0 |
+
+Revisions accumulate: 4 is what ships. The untranslated pages of the baseline were Italian (Pavia) and German (Jena,
+Linz) throughout, never Portuguese, Finnish or French; revision 1 settled the Italian ones and revision 2 the German.
 
 # Test Cases
 
@@ -132,8 +153,14 @@ The prompt cannot carry this. Three wordings were tried against the formats — 
 stating the standard positively, counting the characters of the answer — and the output was byte-identical each time.
 The prompt now simply names the form the schema states, so the two agree.
 
+The lowercase `z` came back on the 75-page sample: two pages under the baseline, five once the original-language
+properties were declared ahead of the English ones, three with the designator forbidden by name in the prompt. The
+task now strips a trailing `z` or `Z` from the two times before validation (`local()` in `extract.ts`), and every page
+of the sample validates. The value is meant as local time, so the designator carries nothing worth keeping.
+
 CRITICAL: what the schema declares decides what the model answers. A prompt pulling against it does not win, it only
-makes the answer malformed at the edges. Never restore the `date` and `time` formats in the response schema.
+makes the answer malformed at the edges. Never restore the `date` and `time` formats in the response schema, and never
+drop the stripping in the task: the prompt alone leaves one page in twenty-five rejected.
 
 ## Times An Event Holds As Its Own
 
@@ -239,10 +266,33 @@ returns none. A band name (`Os Quatro e Meia`) stays as written in both titles.
 CRITICAL: the originals double the length of the longest property, so a page answered within the output budget before
 may now run out of it; read an incomplete generation on a long non-English page as budget first.
 
+On the 75-page sample, 15 of 50 non-English pages came back with `description` in the page's own language, copied
+rather than translated, `localDescription` repeating it: every Italian page of Pavia and most German pages of Jena and
+Linz, never a Portuguese, Finnish or French one. Naming an untranslated description as a failure in the prompt settled
+the Italian pages (6 left); declaring `localTitle`, `localSummary` and `localDescription` in the response schema ahead
+of `title`, `summary` and `description`, so that the model states the text as written before it translates it, settled
+the rest (0 left, on two runs).
+
+CRITICAL: the order of the properties in the response schema is load-bearing. The originals MUST stay declared ahead of
+the English properties in `Reported()`; moving them back restores the German copies, whatever the prompt says.
+
+## Document Address
+
+The address a payload carries is the one the scan listed the page under, handed to the extractor alongside the document
+as `Retrieved`, never read back from the document.
+
+The task once read the address from the `url` line of the frontmatter the page renderer writes, which is the page's
+base URL: on Jena, where every page declares the site root as its base, every event of every calendar was keyed to
+`https://www.uni-jena.de/`, one event standing for all and the whole sync retracting and re-creating it under a new
+name on each run.
+
+CRITICAL: what a page says about its own address is data, not identity. The scan names the entry, and both branches of
+the sync must agree on the name without conferring; never derive `url` from the document again.
+
 ## Property Set
 
 The prompt asked for a venue city for a while that the response schema did not declare, so the property never came back.
 It is now declared, and comes back on every page of the test set.
 
-CRITICAL: the schema in `extract-google.ts` governs what is returned. A property named in the prompt alone is
+CRITICAL: the schema in `extract.ts` governs what is returned. A property named in the prompt alone is
 unreachable, so read the two together on every edit.
