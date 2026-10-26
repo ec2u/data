@@ -22,9 +22,12 @@ import { gcp } from "@metreeca/gear-gcp";
 import { createStore } from "@metreeca/pipe-store";
 import { second } from "@metreeca/work/core/temporal.js";
 import { resolve } from "node:path";
+import { courses } from "./courses/index.js";
 import { datasets } from "./datasets/index.js";
+import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
 import { execute } from "./index.core.js";
+import { programs } from "./programs/index.js";
 import { taxonomies } from "./taxonomies/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
@@ -37,6 +40,9 @@ await execute(() => server(service(createStore), { depth: 3, limit: 100 })
 	.use("/", datasets())
 	.use("/universities/", universities())
 	.use("/units/", units())
+	.use("/programs/", programs())
+	.use("/courses/", courses())
+	.use("/documents/", documents())
 	.use("/events/", events())
 
 	.use("/taxonomies/", taxonomies())
