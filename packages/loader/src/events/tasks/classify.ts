@@ -19,7 +19,6 @@ import { schema } from "@metreeca/blue";
 import { multiple, resource } from "@metreeca/blue/resource";
 import { iri } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
-import { isString } from "@metreeca/core";
 import { markdown } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -62,7 +61,7 @@ export function Classified() {
 	});
 }
 
-export function Reported() {
+function Reported() {
 	return resource({
 
 		name: "Event Topics",
@@ -95,38 +94,7 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 		(items(extracteds))
 		(filter(extracted => extracted.event))
 		(flat(map(async extracted => pipe(
-			(items([
-
-				json<State<typeof Reported>>(await ai.models.generateContent({
-
-					model: "gemini-3.6-flash",
-
-					contents: markdown`
-						title: ${extracted.title ?? ""}
-						description: ${extracted.description ?? ""}
-					`,
-
-					config: {
-
-						seed: 0,
-						temperature: 0,
-
-						systemInstruction: await getResource(".sys.md", import.meta.url),
-
-						tools,
-
-						automaticFunctionCalling: {
-							maximumRemoteCalls: 50
-						},
-
-						responseMimeType: "application/json",
-						responseJsonSchema: schema(Reported)
-
-					}
-
-				}))
-
-			]))
+			(items([await tag(extracted)]))
 			(validate(Reported))
 			(map(async ({ keywords }) => ({
 
@@ -139,25 +107,56 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 	);
 
 
+	async function tag({ title, description }: State<typeof Extracted>): Promise<State<typeof Reported>> {
+		return json<State<typeof Reported>>(await ai.models.generateContent({
+
+			model: "gemini-3.6-flash",
+
+			contents: markdown`
+				title: ${title ?? ""}
+				description: ${description ?? ""}
+			`,
+
+			config: {
+
+				seed: 0,
+				temperature: 0,
+
+				systemInstruction: await getResource(".sys.md", import.meta.url),
+
+				tools,
+
+				automaticFunctionCalling: {
+					maximumRemoteCalls: 50
+				},
+
+				responseMimeType: "application/json",
+				responseJsonSchema: schema(Reported)
+
+			}
+
+		}));
+	}
+
 	async function known(ids: readonly Reference[] = []): Promise<readonly Reference[]> { // !!! review
 
-		const topics = await Promise.all(ids.map(async id => {
+		const topics = new Set((await getTopicEntries(events, ids)).map(({ id }) => id));
 
-			if ( (await getTopicEntries(events, [id])).length > 0 ) {
+		return ids.filter(id => {
 
-				return id;
+			if ( topics.has(id) ) {
+
+				return true;
 
 			} else {
 
 				logger.warning`unknown topic <${id}> for taxonomy <${events.id}>`;
 
-				return undefined;
+				return false;
 
 			}
 
-		}));
-
-		return topics.filter(isString);
+		});
 
 	}
 
