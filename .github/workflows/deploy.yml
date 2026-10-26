@@ -38,6 +38,9 @@ jobs:
           - service: loader # invoked only by Cloud Scheduler, with the attempt deadline of its jobs (see .claude/skills/deployment-manager/SKILL.md)
             vars: ""
             flags: --no-allow-unauthenticated --timeout=30m
+          - service: oracle # invoked only by the callers granted access (see .claude/deployment.md)
+            vars: ""
+            flags: --no-allow-unauthenticated
 
     env:
       IMAGE: europe-west1-docker.pkg.dev/ec2u-data/pipe/${{ matrix.service }}-${{ github.ref_name }}

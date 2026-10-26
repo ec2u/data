@@ -21,18 +21,19 @@ only the project-specific layout.
 
 # Environments
 
-The pipe runs as two **Cloud Run** services per environment in the Google Cloud project `ec2u-data` (number
-`891057038566`), region `europe-west1`. GitHub Actions deploys both of them in a single workflow run on every push to
-the branch of the environment (`.github/workflows/deploy.yml`).
+The pipe runs as three **Cloud Run** services per environment in the Google Cloud project `ec2u-data` (number
+`891057038566`), region `europe-west1`. GitHub Actions deploys all of them in a single workflow run on every push to the
+branch of the environment (`.github/workflows/deploy.yml`).
 
-| Environment | Branch | Server        | Loader        | GraphDB repository | GraphDB users         |
-|-------------|--------|---------------|---------------|--------------------|-----------------------|
-| production  | `main` | `server-main` | `loader-main` | `data-main`        | `data-main-{service}` |
-| staging     | `next` | `server-next` | `loader-next` | `data-next`        | `data-next-{service}` |
-| development | `edge` | `server-edge` | `loader-edge` | `data-edge`        | `data-edge-{service}` |
+| Environment | Branch | Server        | Loader        | Oracle        | GraphDB repository | GraphDB users         |
+|-------------|--------|---------------|---------------|---------------|--------------------|-----------------------|
+| production  | `main` | `server-main` | `loader-main` | `oracle-main` | `data-main`        | `data-main-{service}` |
+| staging     | `next` | `server-next` | `loader-next` | `oracle-next` | `data-next`        | `data-next-{service}` |
+| development | `edge` | `server-edge` | `loader-edge` | `oracle-edge` | `data-edge`        | `data-edge-{service}` |
 
 - **Server**: serves the data endpoints and the web UI, open to the public
 - **Loader**: runs the ingestion pipes, closed to every caller except Cloud Scheduler jobs signed as `scheduler`
+- **Oracle**: answers natural language queries over the graph, closed to every caller except those granted access
 
 Each environment is isolated: its services run under their own service accounts, read only the secrets of their
 environment, and reach only their own GraphDB repository. Within an environment, each service has its own GraphDB
@@ -46,10 +47,10 @@ resources from it, binding them in its own `src/index.core.ts`:
 - GraphDB repository `data-{environment}` on `https://graphdb.ec2u.net`
 - Secret Manager secrets `{environment}-gdb-{service}-usr` and `{environment}-gdb-{service}-pwd`, holding the
   credentials of the GraphDB user `data-{environment}-{service}`
-- Secret Manager secret `{environment}-googleai-key`, for the loader
+- Secret Manager secret `{environment}-googleai-key`, for the loader and the oracle
 
-The server reads the repository without opening transactions, since GraphDB grants transactions only to users with
-write access.
+The server and the oracle read the repository without opening transactions, since GraphDB grants transactions only to
+users with write access.
 
 Local runs default to `edge` and reach the same resources through the `gcloud` credentials the developer sets up with
 `sh package.sh`. Set `PIPE_ENVIRONMENT` to run against another environment, picking the resources they read and write.
@@ -60,9 +61,9 @@ Local runs default to `edge` and reach the same resources through the `gcloud` c
 
 | Resource                  | Name                                                                                | Role                                                    |
 |---------------------------|-------------------------------------------------------------------------------------|---------------------------------------------------------|
-| Cloud Run services        | `server-{branch}`, `loader-{branch}`                                                | Created and updated by the workflow                     |
+| Cloud Run services        | `server-{branch}`, `loader-{branch}`, `oracle-{branch}`                             | Created and updated by the workflow                     |
 | Artifact Registry         | `pipe`, Docker format, one image per service and environment                        | Holds the images; keeps the last two of each            |
-| Runtime service accounts  | `server-{branch}`, `loader-{branch}`                                                | Identities the services run as                          |
+| Runtime service accounts  | `server-{branch}`, `loader-{branch}`, `oracle-{branch}`                             | Identities the services run as                          |
 | Scheduler service account | `scheduler`                                                                         | Identity Cloud Scheduler jobs sign their calls with     |
 | Deployer service account  | `pipe-deployer`                                                                     | Identity the workflow deploys as                        |
 | Workload Identity pool    | `github`, OIDC provider `ec2u`, restricted to owner `ec2u`                          | Lets the workflow sign in without a service account key |
@@ -80,6 +81,7 @@ also deletes every Cloud Run revision except the one serving traffic.
 |-------------------------------|--------------------------------------|----------------------------------------------------------------------------------------------------------------------|
 | `{service}-{branch}`          | `roles/secretmanager.secretAccessor` | the project, conditioned on secret names starting with `{branch}-gdb-{service}-` or equal to `{branch}-googleai-key` |
 | `scheduler`                   | `roles/run.invoker`                  | `loader-{branch}`, granted once the first deployment has created it                                                  |
+| oracle callers (to be defined) | `roles/run.invoker`                 | `oracle-{branch}`, granted once the first deployment has created it                                                  |
 | `pipe-deployer`               | `roles/run.admin`                    | the project                                                                                                          |
 | `pipe-deployer`               | `roles/artifactregistry.writer`      | the `pipe` registry                                                                                                  |
 | `pipe-deployer`               | `roles/iam.serviceAccountUser`       | each runtime service account                                                                                         |
@@ -92,7 +94,7 @@ to that repository alone:
 
 - `data-{branch}-loader`: read and write
 - `data-{branch}-server`: read only
-- `data-{branch}-oracle`: read only, reserved for the oracle service developed on `feature/mcp`
+- `data-{branch}-oracle`: read only
 
 Passwords follow the macOS generated format (`xxxxxx-xxxxxx-xxxxxx`). The admin password is held in the
 `gdb-admin-pwd` secret.

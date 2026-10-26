@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-# One image per service, selected with --target server|loader
+# One image per service, selected with --target server|loader|oracle
 
 FROM node:24-alpine AS build
 
@@ -68,3 +68,13 @@ USER node
 
 CMD ["node", "packages/loader/lib/index.js"]
 
+
+FROM runtime AS oracle
+
+RUN npm ci --omit=dev --workspace=@ec2u/data-oracle && npm cache clean --force
+
+COPY --from=build /pipe/packages/oracle/lib ./packages/oracle/lib
+
+USER node
+
+CMD ["node", "packages/oracle/lib/index.js"]
