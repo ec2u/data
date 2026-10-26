@@ -59,7 +59,7 @@ export async function UmeaUniversity() {
 			items(path("//a[@class='eventlink']/@href"))
 			(map(link))
 		))))
-		(sync(Publisher))
+		(sync({ publisher: Publisher }))
 	);
 
 }

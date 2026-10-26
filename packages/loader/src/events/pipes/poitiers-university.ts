@@ -74,7 +74,7 @@ export async function PoitiersUniversity() {
 				(map(link))
 			)
 		))
-		(sync(Publisher))
+		(sync({ publisher: Publisher }))
 	);
 
 }

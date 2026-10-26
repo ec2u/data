@@ -70,7 +70,7 @@ export async function TurkuUniversity() {
 				(map(link))
 			)
 		))
-		(sync(Publisher))
+		(sync({ publisher: Publisher }))
 	);
 
 }

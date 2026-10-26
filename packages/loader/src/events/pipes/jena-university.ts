@@ -123,7 +123,7 @@ export async function JenaUniversity() {
 				(map(link))
 			)
 		))
-		(sync(publisher))
+		(sync({ publisher }))
 	)));
 
 }

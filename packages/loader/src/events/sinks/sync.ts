@@ -43,7 +43,19 @@ const survival = 0.75; // the smallest fraction of the stored events a single ru
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function sync(publisher: Publisher, force = false): Sink<URLLike, Tally> {
+export function sync({
+
+	force = false,
+
+	publisher
+
+}: {
+
+	readonly force?: boolean
+
+	readonly publisher: Publisher
+
+}): Sink<URLLike, Tally> {
 
 	return urls => pipe(
 		(items(urls))

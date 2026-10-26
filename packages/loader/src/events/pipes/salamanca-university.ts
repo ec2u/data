@@ -88,7 +88,7 @@ export async function SalamancaUniversity() {
 				(map(link))
 			)
 		))
-		(sync(Publisher))
+		(sync({ publisher: Publisher }))
 	);
 
 }

@@ -70,7 +70,7 @@ export async function IasiUniversity360() {
 				(map(link))
 			)
 		))
-		(sync(Publisher))
+		(sync({ publisher: Publisher }))
 	);
 
 }

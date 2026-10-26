@@ -70,7 +70,7 @@ export async function PaviaUniversity() {
 				(map(link))
 			)
 		))
-		(sync(Publisher))
+		(sync({ publisher: Publisher }))
 	);
 
 }

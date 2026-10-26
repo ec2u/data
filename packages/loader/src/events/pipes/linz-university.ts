@@ -70,7 +70,7 @@ export async function LinzUniversity() {
 				(map(link))
 			)
 		))
-		(sync(Publisher))
+		(sync({ publisher: Publisher }))
 	);
 
 }
