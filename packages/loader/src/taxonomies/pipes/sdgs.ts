@@ -15,7 +15,7 @@
  */
 
 import { execute } from "../../index.core.js";
-import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
+import { sdgs, unitedNations } from "@ec2u/data-shared/taxonomies/sdgs.js";
 import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 import { pipe } from "@metreeca/flow";
@@ -43,7 +43,7 @@ export async function SDGs() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv())
-		(sync(sdgs))
+		(sync(sdgs, { publisher: unitedNations }))
 	);
 
 }

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { base, EC2U, ec2u } from "@ec2u/data-shared";
+import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
 import { Person } from "@ec2u/data-shared/persons/index.js";
 import { OrganizationTopic } from "@ec2u/data-shared/taxonomies/organizations.js";
 import { Unit } from "@ec2u/data-shared/units/index.js";
-import { EC2U, base, ec2u } from "@ec2u/data-shared";
 import { OrgOrganization } from "@ec2u/data-shared/vocabularies/org.js";
 import { SchemaOrganization } from "@ec2u/data-shared/vocabularies/schema/organization.js";
 import { reference } from "@metreeca/blue/reference";
@@ -43,8 +43,20 @@ export const organizations = immutable({
 
 	publisher: EC2U,
 
-	rights: Copyright,
-	license: [CCBYNCND40]
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id]
+
+});
+
+export const alliance = immutable({
+
+	id: EC2U,
+
+	dataset: organizations.id,
+
+	label: "European Campus of City-Universities",
+	prefLabel: { en: "European Campus of City-Universities" },
+	altLabel: "EC2U"
 
 });
 

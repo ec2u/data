@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { base, EC2U, ec2u, Entity } from "@ec2u/data-shared";
+import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Person } from "@ec2u/data-shared/persons/index.js";
@@ -22,7 +23,6 @@ import { DocumentTopic } from "@ec2u/data-shared/taxonomies/documents.js";
 import { EuroSciVocTopic } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
 import { StakeholderTopic } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
-import { EC2U, base, ec2u, Entity } from "@ec2u/data-shared";
 import { schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
 import { dictionary } from "@metreeca/blue/dictionary";
 import { reference } from "@metreeca/blue/reference";
@@ -47,8 +47,8 @@ export const documents = immutable({
 
 	publisher: EC2U,
 
-	rights: Copyright,
-	license: [CCBYNCND40],
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id],
 
 	issued: "2023-07-15"
 

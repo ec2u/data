@@ -16,11 +16,23 @@
 
 import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
+import { base } from "@ec2u/data-shared";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 
+
+export const unescoStatistics = immutable({
+
+	id: "http://www.uis.unesco.org/",
+
+	dataset: resolve(base, "/organizations/"),
+
+	label: "UNESCO Institute for Statistics",
+	prefLabel: { en: "UNESCO Institute for Statistics" }
+
+});
 
 export const isced2011 = immutable({ // !!! persist
 
@@ -38,7 +50,7 @@ export const isced2011 = immutable({ // !!! persist
 		instrument to compile and present education statistics both nationally and internationally.
 	` },
 
-	publisher: "http://www.uis.unesco.org/",
+	publisher: unescoStatistics.id,
 	rights: "Copyright © 2012 UNESCO Institute for Statistics",
 
 	source: "https://uis.unesco.org/sites/default/files/documents"

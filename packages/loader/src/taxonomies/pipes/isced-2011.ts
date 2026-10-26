@@ -15,7 +15,7 @@
  */
 
 import { execute } from "../../index.core.js";
-import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
+import { isced2011, unescoStatistics } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 import { pipe } from "@metreeca/flow";
@@ -43,7 +43,7 @@ export async function ISCED2011() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv())
-		(sync(isced2011))
+		(sync(isced2011, { publisher: unescoStatistics }))
 	);
 
 }

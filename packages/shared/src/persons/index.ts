@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { base, EC2U, ec2u } from "@ec2u/data-shared";
+import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
-import { EC2U, base, ec2u } from "@ec2u/data-shared";
 import { FOAFPerson } from "@ec2u/data-shared/vocabularies/foaf.js";
 import { org } from "@ec2u/data-shared/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
@@ -41,8 +41,8 @@ export const persons = immutable({
 
 	publisher: EC2U,
 
-	rights: Copyright,
-	license: [CCBYNCND40]
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id]
 
 });
 

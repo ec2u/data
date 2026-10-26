@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { base, EC2U, ec2u } from "@ec2u/data-shared";
+import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Offering } from "@ec2u/data-shared/offerings/index.js";
-import { EC2U, base, ec2u } from "@ec2u/data-shared";
 import { SchemaEducationalOccupationalProgram } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
@@ -40,8 +40,8 @@ export const programs = immutable({
 
 	publisher: EC2U,
 
-	rights: Copyright,
-	license: [CCBYNCND40],
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id],
 
 	issued: "2022-03-10"
 

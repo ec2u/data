@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright } from "@ec2u/data-shared/datasets/index.core.js";
+import { EC2U } from "@ec2u/data-shared";
+import { licenses } from "@ec2u/data-shared/datasets/index.core.js";
 import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
-import { EC2U } from "@ec2u/data-shared";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
@@ -40,8 +40,8 @@ export const stakeholders = immutable({ // !!! sync from `taxonomies-ec2u-stakeh
 
 	publisher: EC2U,
 
-	rights: Copyright,
-	license: [CCBYNCND40],
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id],
 
 	issued: "2025-05-01"
 

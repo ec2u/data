@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { base, EC2U, ec2u, Place } from "@ec2u/data-shared";
+import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
-import { base, EC2U, ec2u, Place } from "@ec2u/data-shared";
 import { OrgFormalOrganization } from "@ec2u/data-shared/vocabularies/org.js";
 import { int } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
@@ -43,8 +43,8 @@ export const universities = immutable({
 
 	publisher: EC2U,
 
-	rights: Copyright,
-	license: [CCBYNCND40],
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id],
 
 	issued: "2022-01-01"
 

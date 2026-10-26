@@ -15,6 +15,7 @@
  */
 
 import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
+import { unescoStatistics } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
@@ -38,7 +39,7 @@ export const iscedf2013 = immutable({ // !!! sync from the EU vocabularies SKOS 
 		(2 digits), 29 narrow fields (3 digits) and about 80 detailed fields (4 digits).
 	` },
 
-	publisher: "http://www.uis.unesco.org/",
+	publisher: unescoStatistics.id,
 	rights: "Copyright © 2015 UNESCO Institute for Statistics",
 
 	source: "https://uis.unesco.org/sites/default/files/documents"

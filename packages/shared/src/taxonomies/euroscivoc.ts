@@ -16,11 +16,23 @@
 
 import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
+import { base } from "@ec2u/data-shared";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 
+
+export const publicationsOffice = immutable({
+
+	id: "https://op.europa.eu/",
+
+	dataset: resolve(base, "/organizations/"),
+
+	label: "Publications Office of the European Union",
+	prefLabel: { en: "Publications Office of the European Union" }
+
+});
 
 export const euroscivoc = immutable({ // !!! sync from the EU vocabularies RDF distribution
 
@@ -38,7 +50,7 @@ export const euroscivoc = immutable({ // !!! sync from the EU vocabularies RDF d
 		semi-automatic process developed with Natural Language Processing (NLP) techniques.
 	` },
 
-	publisher: "https://op.europa.eu/", // the Publications Office of the European Union
+	publisher: publicationsOffice.id,
 	rights: "Copyright © 2023 Publications Office of the European Union",
 
 	source: "https://op.europa.eu/en/web/eu-vocabularies/dataset/-/resource"

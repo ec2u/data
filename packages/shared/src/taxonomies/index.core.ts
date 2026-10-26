@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
 import { base, EC2U } from "@ec2u/data-shared";
+import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
@@ -35,7 +35,7 @@ export const taxonomies = immutable({
 
 	publisher: EC2U,
 
-	rights: Copyright,
-	license: [CCBYNCND40]
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id]
 
 });

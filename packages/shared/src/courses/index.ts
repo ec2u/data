@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { base, EC2U, ec2u } from "@ec2u/data-shared";
+import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Offering } from "@ec2u/data-shared/offerings/index.js";
 import { Person } from "@ec2u/data-shared/persons/index.js";
 import { Program } from "@ec2u/data-shared/programs/index.js";
 import { StakeholderTopic } from "@ec2u/data-shared/taxonomies/stakeholders.js";
-import { EC2U, base, ec2u } from "@ec2u/data-shared";
 import { schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
 import { SchemaCourse, SchemaCourseInstance } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
@@ -48,8 +48,8 @@ export const courses = immutable({
 
 	publisher: EC2U,
 
-	rights: Copyright,
-	license: [CCBYNCND40],
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id],
 
 	issued: "2022-03-10"
 

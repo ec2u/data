@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-import { EC2U, base } from "@ec2u/data-shared";
+import { base, EC2U } from "@ec2u/data-shared";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
-export const Copyright = "Copyright © 2022-2025 EC2U Alliance";
-export const CCBYNCND40 = "https://creativecommons.org/licenses/by-nc-nd/4.0/";
+export const licenses = immutable({
 
+	CCBYNCND40: {
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		id: "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+
+		label: "CC BY-NC-ND 4.0",
+		comment: { en: "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International" }
+
+	}
+
+});
 
 export const datasets = immutable({
 
@@ -41,7 +48,7 @@ export const datasets = immutable({
 
 	publisher: EC2U,
 
-	rights: Copyright,
-	license: [CCBYNCND40]
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id]
 
 });

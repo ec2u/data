@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { CommentLength, english } from "@ec2u/data-shared";
+import { CommentLength, english, Entity } from "@ec2u/data-shared";
+import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { getTopicId, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
+import type { State } from "@metreeca/blue/value";
 import { opt } from "@metreeca/core";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
@@ -67,7 +69,8 @@ export type Draft = Omit<Topic,
  * Gemini client carries, so the run keeps within the published rate however many drafts it opens at once.
  *
  * The taxonomy is stated as it is handed over, alongside the topics and under the same transaction, so a scheme is
- * described wherever its topics are held.
+ * described wherever its topics are held. Its publisher and licenses are stated with it, so the names they are shown
+ * with are held wherever the taxonomy is.
  *
  * Topics are stated as they are drawn. The ones the store holds for the taxonomy and the feed never named are
  * retracted once it has been drawn whole, so nothing is retired on the strength of a partial reading. A feed listing
@@ -76,6 +79,10 @@ export type Draft = Omit<Topic,
  *
  * @param taxonomy The taxonomy the topics are attributed to
  * @param taxonomy.id The identifier of the concept scheme the topics belong to
+ *
+ * @param credits The resources the taxonomy references for its provenance
+ * @param credits.publisher The organisation `taxonomy.publisher` refers to; none if omitted
+ * @param credits.licenses The licenses `taxonomy.license` refers to; none if omitted
  *
  * @param force Whether every draft is stated afresh, ignoring the digests recorded with the stored topics
  *
@@ -86,12 +93,24 @@ export type Draft = Omit<Topic,
  *
  * @throws {@link !Error Error} While the feed is consumed, if any write fails, with nothing committed
  */
-export function sync(taxonomy: Taxonomy, force = false): Sink<Draft, Tally> {
+export function sync(taxonomy: Taxonomy, {
+
+	publisher,
+	licenses = []
+
+}: {
+
+	readonly publisher?: State<typeof Organization>
+	readonly licenses?: readonly Entity[]
+
+} = {}, force = false): Sink<Draft, Tally> {
 
 	return drafts => pipe(
 		(items(drafts))
 		(tee(
 			define(),
+			credit(),
+			license(),
 			insert(),
 			remove()
 		))
@@ -105,6 +124,26 @@ export function sync(taxonomy: Taxonomy, force = false): Sink<Draft, Tally> {
 			(items([taxonomy]))
 			(validate(Taxonomy))
 			(map(taxonomy => delta(taxonomy.id, Taxonomy, taxonomy)))
+		);
+
+	}
+
+	function credit(): Task<Draft, Delta> {
+
+		return () => pipe(
+			(items(publisher === undefined ? [] : [publisher]))
+			(validate(Organization))
+			(map(publisher => delta(publisher.id, Organization, publisher)))
+		);
+
+	}
+
+	function license(): Task<Draft, Delta> {
+
+		return () => pipe(
+			(items(licenses))
+			(validate(Entity))
+			(map(license => delta(license.id, Entity, license)))
 		);
 
 	}

@@ -17,4 +17,5 @@ pruning the sheet below that share requires a forced reload.
 |--------------------------------|----------------------------------------|------------------------------------------------------------------------------------------|
 | `taxonomies-ec2u-stakeholders` | EC2U stakeholder type spreadsheet [en] | CSV export URL held in GCP Secret Manager under this key; header row, blank rows skipped |
 
+- **2026-10-26** – publisher and licenses stated with their labels alongside the taxonomy
 - **2025-09-26** – initial integration

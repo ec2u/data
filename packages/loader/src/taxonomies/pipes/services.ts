@@ -16,6 +16,8 @@
 
 import { execute } from "../../index.core.js";
 import { services } from "@ec2u/data-shared/taxonomies/services.js";
+import { licenses } from "@ec2u/data-shared/datasets/index.core.js";
+import { alliance } from "@ec2u/data-shared/organizations/index.js";
 import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 import { pipe } from "@metreeca/flow";
@@ -43,7 +45,7 @@ export async function Services() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv())
-		(sync(services))
+		(sync(services, { publisher: alliance, licenses: [licenses.CCBYNCND40] }))
 	);
 
 }

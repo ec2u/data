@@ -15,7 +15,7 @@
  */
 
 import { base, EC2U, ec2u } from "@ec2u/data-shared";
-import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, required, resource } from "@metreeca/blue/resource";
@@ -39,8 +39,8 @@ export const pages = immutable({
 
 	publisher: EC2U,
 
-	rights: Copyright,
-	license: [CCBYNCND40]
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id]
 
 });
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { euroscivoc } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
+import { euroscivoc, publicationsOffice } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { execute } from "../../index.core.js";
@@ -46,7 +46,7 @@ export async function EuroSciVoc() {
 		(items(DataURL))
 		(xml(Namespace))
 		(fill(definitions))
-		(sync(euroscivoc))
+		(sync(euroscivoc, { publisher: publicationsOffice }))
 	);
 
 }

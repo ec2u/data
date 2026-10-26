@@ -16,11 +16,23 @@
 
 import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
+import { base } from "@ec2u/data-shared";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 
+
+export const unitedNations = immutable({
+
+	id: "http://un.org/",
+
+	dataset: resolve(base, "/organizations/"),
+
+	label: "United Nations",
+	prefLabel: { en: "United Nations" }
+
+});
 
 export const sdgs = immutable({ // !!! sync from `taxonomies-ec2u-sdgs`
 
@@ -42,7 +54,7 @@ export const sdgs = immutable({ // !!! sync from `taxonomies-ec2u-sdgs`
 		forests.
 	` },
 
-	publisher: "http://un.org/", // the United Nations
+	publisher: unitedNations.id,
 
 	rights: "Copyright © 2019 United Nations",
 	accessRights: { en: dedent`

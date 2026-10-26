@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { CCBYNCND40, Copyright, datasets } from "@ec2u/data-shared/datasets/index.core.js";
+import { base, EC2U, ec2u } from "@ec2u/data-shared";
+import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { EuroSciVocTopic } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
 import { dcat } from "@ec2u/data-shared/vocabularies/dcat.js";
 import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
-import { base, EC2U, ec2u } from "@ec2u/data-shared";
 import { OrgOrganizationalUnit } from "@ec2u/data-shared/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, resource } from "@metreeca/blue/resource";
@@ -44,8 +44,8 @@ export const units = immutable({
 
 	publisher: EC2U,
 
-	rights: Copyright,
-	license: [CCBYNCND40],
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id],
 
 	issued: "2022-01-01"
 
