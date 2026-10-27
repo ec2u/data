@@ -32,7 +32,7 @@ import { validate } from "@metreeca/mime-jsonld";
 import { classify } from "../tasks/classify.js";
 import { convert } from "../tasks/convert.js";
 import { extract, type Retrieved } from "../tasks/extract.js";
-import { read } from "../tasks/read.js";
+import { harvest } from "../tasks/harvest.js";
 
 
 const retrieval = 10; // the number of pages fetched at the same time from the source site // !!! as option
@@ -131,7 +131,7 @@ export function sync({
 					(items(urls))
 					(flat(map(url => pipe(
 						(items([url]))
-						(read())
+						(harvest())
 						(map((document): Retrieved => ({ url: String(url), document })))
 					))))
 					(filter(modified))

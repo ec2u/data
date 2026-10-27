@@ -28,6 +28,8 @@ name, description, dates, attendance mode, venue and image. A page whose markup 
 still read as that text, and yields an event stated by its title and categories alone. The page address answers a
 `301` to the same path without the `event_detail` segment; the listed address stays the identity of the event.
 
+- **2026-10-27** – embedded events stating a malformed fact rejected as a whole; venue addresses stated as text and
+  images stated as schema.org `ImageObject` accepted
 - **2026-10-26** – event pages read from their embedded schema.org description, as the markup renders client-side and
   eight pages in nine yielded nothing
 - **2026-09-14** – migrated from the iCal calendar to search crawling, as the calendar carried only the events of one

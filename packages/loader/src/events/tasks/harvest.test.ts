@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { embedded, read } from "./read.js";
+import { harvest } from "./harvest.js";
 import type { Optional } from "@metreeca/core";
 import type { Markdown } from "@metreeca/core/strings";
 import { pipe } from "@metreeca/flow";
@@ -22,7 +22,6 @@ import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
 import { bind, executor } from "@metreeca/gear";
 import { createFetch, type Fetch } from "@metreeca/http";
-import { html } from "@metreeca/mime-xml";
 import { describe, expect, it } from "vitest";
 
 
@@ -32,16 +31,8 @@ function page(...scripts: readonly string[]): string {
 	}</head><body><script>var SYM = {};</script></body></html>`;
 }
 
-async function render(page: string): Promise<Optional<Markdown>> {
 
-	const [tree] = await pipe((items([page]))(html())(toArray()));
-
-	return embedded(tree);
-
-}
-
-
-describe("read()", () => {
+describe("harvest()", () => {
 
 	const unreachable = "https://unreachable.example.com/event";
 	const reachable = "https://reachable.example.com/event";
@@ -55,7 +46,12 @@ describe("read()", () => {
 
 		return url.startsWith(unreachable)
 			? Promise.reject(new TypeError("fetch failed", { cause: Object.assign(new Error(), { code: "ETIMEDOUT" }) }))
-			: new Response(page(JSON.stringify({ "@type": "Event", "name": "Concert" })), {
+			: new Response(page(JSON.stringify({
+				"@type": "Event",
+				name: "Concert",
+				description: "A concert.",
+				url: reachable
+			})), {
 				headers: { "Content-Type": "text/html" }
 			});
 
@@ -65,7 +61,7 @@ describe("read()", () => {
 	it("skips a page failing to be retrieved, reading the pages after it", async () => {
 
 		const documents = await executor(bind(createFetch, () => client))(() =>
-			pipe((items([unreachable, reachable]))(read())(toArray()))
+			pipe((items([unreachable, reachable]))(harvest())(toArray()))
 		);
 
 		expect(documents).toHaveLength(1);
@@ -73,9 +69,24 @@ describe("read()", () => {
 
 	});
 
-});
 
-describe("embedded()", () => {
+	describe("structured data", () => {
+
+	/**
+	 * Harvests a single page serving `page`, which carries no main content of its own.
+	 */
+	async function render(page: string): Promise<Optional<Markdown>> {
+
+		const [document] = await executor(bind(createFetch, () => async () => new Response(page, {
+			headers: { "Content-Type": "text/html" }
+		})))(() =>
+			pipe((items([reachable]))(harvest())(toArray()))
+		);
+
+		return document;
+
+	}
+
 
 	it("renders an embedded schema.org event as a document", async () => {
 
@@ -125,6 +136,57 @@ describe("embedded()", () => {
 
 	});
 
+	it("renders a place address stated as text", async () => {
+
+		const document = await render(page(JSON.stringify({
+			"@type": "Event",
+			name: "Seminar",
+			description: "A seminar.",
+			url: "https://example.org/seminar",
+			location: { "@type": "Place", name: "Aula Magna", address: "Strada Nuova 65, Pavia" }
+		})));
+
+		expect(document).toContain("- Location: Aula Magna, Strada Nuova 65, Pavia");
+
+	});
+
+	it.each([
+		{ image: { "@type": "ImageObject", url: "https://example.org/seminar.jpg" } },
+		{ image: [{ "@type": "ImageObject", url: "https://example.org/seminar.jpg" }, "https://example.org/other.jpg"] }
+	])("renders an image stated as a schema.org ImageObject %j", async fact => {
+
+		expect(await render(page(JSON.stringify({
+			"@type": "Event",
+			name: "Seminar",
+			description: "A seminar.",
+			url: "https://example.org/seminar",
+			...fact
+		})))).toContain("- Image: https://example.org/seminar.jpg");
+
+	});
+
+	it.each([
+		{ startDate: 20261107 },
+		{ endDate: true },
+		{ eventAttendanceMode: ["offline"] },
+		{ location: "Aula Magna" },
+		{ location: { name: 1 } },
+		{ location: { address: { addressLocality: 1 } } },
+		{ image: { "@type": "ImageObject" } },
+		{ image: [{ "@type": "ImageObject", url: 1 }] },
+		{ image: [1] }
+	])("rejects an event stating a malformed fact %j", async fact => {
+
+		expect(await render(page(JSON.stringify({
+			"@type": "Event",
+			name: "Seminar",
+			description: "A seminar.",
+			url: "https://example.org/seminar",
+			...fact
+		})))).toBeUndefined();
+
+	});
+
 	it("skips blocks describing no event", async () => {
 
 		expect(await render(page(
@@ -150,6 +212,8 @@ describe("embedded()", () => {
 	it("renders nothing for a page embedding no event", async () => {
 
 		expect(await render(page())).toBeUndefined();
+
+	});
 
 	});
 
