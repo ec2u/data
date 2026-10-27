@@ -125,7 +125,7 @@ Two levels of probe are available, and they answer different questions.
 `store.lookup()`:
 
 ```ts
-import { createStore } from "@metreeca/work/pipe-store/index.js";
+import { createStore } from "@metreeca/pipe-store";
 import { execute } from "./index.core.js";
 import { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
 import { service } from "@metreeca/gear";
