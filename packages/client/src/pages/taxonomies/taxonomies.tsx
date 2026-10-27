@@ -22,9 +22,9 @@ import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection } from "@metreeca/tile-data/store";
+import { useCollection, useCount, useMembers } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
-import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 import { site } from "../../index.core.js";
 import { Count } from "../../tiles/count.js";
 import { Failure } from "../../tiles/failure.js";
@@ -65,14 +65,18 @@ export function TaxonomiesPage() {
 	const collection = useCollection({
 		entry: route,
 		shape: Taxonomies,
-		model: useMemo(() => ({
-			resources: {
-				"taxonomy=": { id: {}, label: {}, title: {}, alternative: {}, description: {} },
-				"size=count:resources": {},
-				...getCriteria(filters)
-			}
-		}), [filters])
+		field: "resources",
+		scope: getCriteria(filters)
 	});
+
+	const members = useMembers(collection, {
+		model: {
+			"taxonomy=": { id: {}, label: {}, title: {}, alternative: {}, description: {} },
+			"size=count:resources": {}
+		}
+	});
+
+	const count = useCount(collection);
 
 	const licenses = useFacet("license", filters);
 	const publishers = useFacet("publisher", filters);
@@ -100,7 +104,7 @@ export function TaxonomiesPage() {
 		head={taxonomies.label}
 		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
 
-		back={collection({
+		back={members({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
@@ -114,7 +118,7 @@ export function TaxonomiesPage() {
 
 				options={licenses({
 
-					ready: ({ state }) => getOptions(state.filter(isFacetRow), filters.facets.license)
+					ready: ({ state }: { state: readonly unknown[] }) => getOptions(state.filter(isFacetRow), filters.facets.license)
 						.map(option => ({ ...option, label: option.value }))
 
 				})}
@@ -125,7 +129,7 @@ export function TaxonomiesPage() {
 
 				options={publishers({
 
-					ready: ({ state }) => getOptions(state.filter(isFacetRow), filters.facets.publisher)
+					ready: ({ state }: { state: readonly unknown[] }) => getOptions(state.filter(isFacetRow), filters.facets.publisher)
 						.map(option => ({ ...option, label: site(option.value) }))
 
 				})}
@@ -136,9 +140,9 @@ export function TaxonomiesPage() {
 
 		info={<>
 
-			<Count filtered={isFiltered(filters)}>{collection({
+			<Count filtered={isFiltered(filters)}>{count({
 
-				ready: ({ state }) => state.filter(isTaxonomyRow).length
+				ready: ({ state }) => state
 
 			})}</Count>
 
@@ -146,7 +150,7 @@ export function TaxonomiesPage() {
 
 		</>}
 
-	>{collection({
+	>{members({
 
 		blank: () => <Hint>{taxonomies.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{taxonomies.glyph}</Hint></Failure>,
@@ -182,16 +186,18 @@ function useFacet(facet: Facet, filters: Filters) {
 
 	const route = useRoute();
 
-	return useCollection({
+	const collection = useCollection({
 		entry: route,
 		shape: Taxonomies,
-		model: useMemo(() => ({
-			resources: {
-				[`value=${facet}`]: {},
-				"count=count:": {},
-				...getCriteria(filters, facet)
-			}
-		}), [facet, filters])
+		field: "resources",
+		scope: getCriteria(filters, facet)
+	});
+
+	return useMembers(collection, {
+		model: {
+			[`value=${facet}`]: {},
+			"count=count:": {}
+		}
 	});
 
 }

@@ -23,10 +23,10 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useResource } from "@metreeca/tile-data/store";
+import { useCollection, useCount, useMembers, useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
@@ -34,7 +34,6 @@ import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
 import { SKOSConcepts } from "../../tiles/skos/concepts.js";
 import { taxonomies } from "./taxonomies.js";
-import { isCountRow } from "./taxonomies.core.js";
 
 
 export const taxonomy = immutable({
@@ -66,12 +65,6 @@ export const taxonomy = immutable({
 
 		hasTopConcept: { id: {}, notation: {}, prefLabel: {}, narrower: {} }
 
-	},
-
-	stats: {
-
-		hasConcept: { "count=count:": {} }
-
 	}
 
 });
@@ -92,11 +85,11 @@ export function TaxonomyPage() {
 		model: taxonomy.model
 	});
 
-	const stats = useCollection({
+	const concepts = useCount(useCollection({
 		entry: route,
 		shape: Taxonomy,
-		model: taxonomy.stats
-	});
+		field: "hasConcept"
+	}));
 
 	const title = resource({
 
@@ -136,9 +129,9 @@ export function TaxonomyPage() {
 
 			<Info place={"spread"}>{{
 
-				Concepts: stats({
+				Concepts: concepts({
 
-					ready: ({ state }) => state.filter(isCountRow).at(0)?.count.toLocaleString()
+					ready: ({ state }) => state.toLocaleString()
 
 				})
 
@@ -224,12 +217,15 @@ function TaxonomySearch({
 	const collection = useCollection({
 		entry: route,
 		shape: Taxonomy,
-		model: useMemo(() => ({
-			hasConcept: { id: {}, notation: {}, prefLabel: {}, narrower: {}, "~label": keywords }
-		}), [keywords])
+		field: "hasConcept",
+		scope: { "~label": keywords }
 	});
 
-	return collection({
+	const members = useMembers(collection, {
+		model: { id: {}, notation: {}, prefLabel: {}, narrower: {} }
+	});
+
+	return members({
 
 		error: ({ state }) => <Failure problem={state}><Hint>{taxonomy.glyph}</Hint></Failure>,
 

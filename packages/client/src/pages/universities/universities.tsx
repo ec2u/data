@@ -22,7 +22,7 @@ import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection } from "@metreeca/tile-data/store";
+import { useCollection, useMembers } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { useEffect } from "preact/hooks";
 import { Failure } from "../../tiles/failure.js";
@@ -37,14 +37,12 @@ export const universities = immutable({
 
 	model: {
 
-		resources: {
-			id: {},
-			label: {},
-			definition: {},
-			depiction: {},
-			country: { id: {}, label: {} },
-			city: { id: {}, label: {} }
-		}
+		id: {},
+		label: {},
+		definition: {},
+		depiction: {},
+		country: { id: {}, label: {} },
+		city: { id: {}, label: {} }
 
 	}
 
@@ -61,8 +59,11 @@ export function UniversitiesPage() {
 	const collection = useCollection({
 		entry: route,
 		shape: Universities,
-		model: universities.model
+		field: "resources"
 	});
+
+	const members = useMembers(collection, { model: universities.model });
+
 
 	useEffect(() => router({ title: universities.label }), []);
 
@@ -72,13 +73,13 @@ export function UniversitiesPage() {
 		head={universities.label}
 		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
 
-		back={collection({
+		back={members({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
 		})}
 
-	>{collection({
+	>{members({
 
 		blank: () => <Hint>{universities.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{universities.glyph}</Hint></Failure>,

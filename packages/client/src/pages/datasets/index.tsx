@@ -23,7 +23,7 @@ import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection } from "@metreeca/tile-data/store";
+import { useCollection, useMembers } from "@metreeca/tile-data/store";
 import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
 import { ec2u } from "../../index.core.js";
@@ -62,18 +62,14 @@ export const datasets = immutable({
 
 	model: {
 
-		resources: {
+		"dataset=": {
+			id: {},
+			title: {},
+			alternative: {},
+			description: {}
+		},
 
-			"dataset=": {
-				id: {},
-				title: {},
-				alternative: {},
-				description: {}
-			},
-
-			"size=count:resources": {}
-
-		}
+		"size=count:resources": {}
 
 	}
 
@@ -91,8 +87,10 @@ export function DatasetsPage() {
 	const collection = useCollection({
 		entry: route,
 		shape: Datasets,
-		model: datasets.model
+		field: "resources"
 	});
+
+	const members = useMembers(collection, { model: datasets.model });
 
 	useEffect(() => router({ title: "" }), []);
 
@@ -102,13 +100,13 @@ export function DatasetsPage() {
 		head={datasets.label}
 		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
 
-		back={collection({
+		back={members({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
 		})}
 
-	>{collection({
+	>{members({
 
 		blank: () => <Hint>{datasets.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{datasets.glyph}</Hint></Failure>,

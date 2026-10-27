@@ -188,12 +188,3 @@ export function isFacetRow(value: unknown): value is FacetRow {
 		count: isNumber
 	});
 }
-
-/**
- * Checks if a projected row holds a count.
- */
-export function isCountRow(value: unknown): value is { readonly count: number } {
-	return isObject(value, {
-		count: isNumber
-	});
-}
