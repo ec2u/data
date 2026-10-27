@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import { embedded } from "./read.js";
+import { embedded, read } from "./read.js";
 import type { Optional } from "@metreeca/core";
 import type { Markdown } from "@metreeca/core/strings";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
+import { bind, executor } from "@metreeca/gear";
+import { createFetch, type Fetch } from "@metreeca/http";
 import { html } from "@metreeca/mime-xml";
 import { describe, expect, it } from "vitest";
 
@@ -38,6 +40,40 @@ async function render(page: string): Promise<Optional<Markdown>> {
 
 }
 
+
+describe("read()", () => {
+
+	const unreachable = "https://unreachable.example.com/event";
+	const reachable = "https://reachable.example.com/event";
+
+	/**
+	 * Fetches the pages of `reachable`, failing to connect to `unreachable` as a client does to a host not answering.
+	 */
+	const client: Fetch = async input => {
+
+		const url = input instanceof Request ? input.url : String(input);
+
+		return url.startsWith(unreachable)
+			? Promise.reject(new TypeError("fetch failed", { cause: Object.assign(new Error(), { code: "ETIMEDOUT" }) }))
+			: new Response(page(JSON.stringify({ "@type": "Event", "name": "Concert" })), {
+				headers: { "Content-Type": "text/html" }
+			});
+
+	};
+
+
+	it("skips a page failing to be retrieved, reading the pages after it", async () => {
+
+		const documents = await executor(bind(createFetch, () => client))(() =>
+			pipe((items([unreachable, reachable]))(read())(toArray()))
+		);
+
+		expect(documents).toHaveLength(1);
+		expect(documents[0]).toContain("Concert");
+
+	});
+
+});
 
 describe("embedded()", () => {
 
