@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { getEventId, isStaleEvent } from "./index.js";
+import { events, getEventId, isStaleEvent } from "./index.js";
 
 
 const url = "https://example.org/events/1";
@@ -63,6 +63,10 @@ describe("getEventId", () => {
 
 	it("names a different event for a different address", () => {
 		expect(getEventId(url)).not.toBe(getEventId(`${url}/2`));
+	});
+
+	it("names the event as a direct member of the events catalogue", () => {
+		expect(getEventId(url)).toMatch(new RegExp(`^${events.id}[^/]+$`));
 	});
 
 });

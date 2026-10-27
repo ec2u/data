@@ -152,6 +152,6 @@ export function isStaleEvent(event: {
  */
 export function getEventId(url: URLLike): Reference {
 
-	return `${(events.id)}/${uuid.v3(String(url), uuid.v3.URL)}`;
+	return resolve(events.id, uuid.v3(String(url), uuid.v3.URL));
 
 }
