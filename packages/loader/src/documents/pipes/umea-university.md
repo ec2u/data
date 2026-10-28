@@ -7,7 +7,7 @@ status: active
 
 Authoritative integration status for the Umeå University institutional documents, most recent version first.
 
-# 2023-07-12 – Curated spreadsheet
+# 2025-05-22 – Curated sheet
 
 Documents are drawn from a manually curated Google Sheet published as CSV and replaced as a whole under a single store
 transaction. A sheet naming fewer than three quarters of the stored documents states nothing and fails the run, so
@@ -26,4 +26,4 @@ stakeholder taxonomies. For this sheet, the sheet currently lists no documents a
 
 - **2026-10-28** – ported to the TypeScript loader: local-only titles and descriptions translated to English, types and
 	audience classified against the taxonomies with the sheet columns as cues, unchanged rows skipped
-- **2023-07-12** – initial integration
+- **2025-05-22** – initial integration

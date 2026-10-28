@@ -7,7 +7,7 @@ status: active
 
 Authoritative integration status for the Pavia University institutional documents, most recent version first.
 
-# 2023-07-12 – Curated spreadsheet
+# 2023-07-12 – Curated sheet
 
 Documents are drawn from a manually curated Google Sheet published as CSV and replaced as a whole under a single store
 transaction. A sheet naming fewer than three quarters of the stored documents states nothing and fails the run, so
