@@ -26,6 +26,8 @@ import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
+import type { Reference } from "@metreeca/qest/state";
+import * as uuid from "uuid";
 
 
 export const organizations = immutable({
@@ -98,4 +100,23 @@ export function Organization() {
 		hasMember: multiple(reference(Person))
 
 	});
+}
+
+
+/**
+ * Identifies an organisation named by a partner university.
+ *
+ * The same key always names the same organisation within a university, so that every source of the university naming
+ * it states the same organisation, while equal keys at different universities never do. Keys are matched regardless
+ * of case.
+ *
+ * @param university The identifier of the university naming the organisation
+ * @param key The key the organisation is named with, either its home page or its name
+ *
+ * @returns The identifier of the organisation named by `key` at `university`
+ */
+export function getOrganizationId(university: Reference, key: string): Reference {
+
+	return resolve(organizations.id, uuid.v3(key.toLowerCase(), uuid.v3(university, uuid.v3.URL)));
+
 }

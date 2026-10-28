@@ -20,6 +20,7 @@ import { server } from "@metreeca/gate";
 import { gcp } from "@metreeca/gear-gcp";
 import { service } from "@metreeca/gear";
 import { createStore } from "@metreeca/pipe-store";
+import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
 import { execute } from "./index.core.js";
 import { taxonomies } from "./taxonomies/index.js";
@@ -31,6 +32,7 @@ await execute(() => server(service(createStore))
 
 	.use("/universities/", universities())
 	.use("/units/", units())
+	.use("/documents/", documents())
 	.use("/events/", events())
 
 	.use("/taxonomies/", taxonomies())

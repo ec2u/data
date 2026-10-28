@@ -27,9 +27,12 @@ import { schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
 import { dictionary } from "@metreeca/blue/dictionary";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { date, iri, tag, text } from "@metreeca/blue/string";
+import { date, iri, string, tag, text } from "@metreeca/blue/string";
+import type { State } from "@metreeca/blue/value";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
+import type { Reference } from "@metreeca/qest/state";
+import * as uuid from "uuid";
 
 
 export const documents = immutable({
@@ -53,6 +56,12 @@ export const documents = immutable({
 	issued: "2023-07-15"
 
 });
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Documents = State<typeof Documents>;
+export type Document = State<typeof Document>;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,8 +102,8 @@ export function Document() {
 		title: required(dictionary({ uniqueLang: true })),
 		description: optional(dictionary({ uniqueLang: true })),
 
-		creator: optional(Person),
-		contributor: multiple(Person),
+		creator: optional(reference(Person)),
+		contributor: multiple(reference(Person)),
 		publisher: optional(reference(Organization)),
 
 		created: optional(date),
@@ -116,7 +125,36 @@ export function Document() {
 		subject: multiple(reference(EuroSciVocTopic)),
 		audience: multiple(reference(StakeholderTopic)),
 
-		relation: multiple(reference(Document))
+		relation: multiple(reference(Document)),
+
+		digest: required(string, {
+
+			forward: ec2u,
+
+			hidden: true,
+
+			name: "Source Digest",
+			description: "A unique identification of the content the source entry carried when it was read."
+
+		})
 
 	});
+}
+
+
+/**
+ * Identifies a document listed by a partner university.
+ *
+ * The same key always names the same document within a university, so that a listing re-read on a later run restates
+ * the documents it already stood for, while equal keys listed by different universities never name the same document.
+ *
+ * @param university The identifier of the university listing the document
+ * @param key The key the listing names the document with
+ *
+ * @returns The identifier of the document listed under `key` by `university`
+ */
+export function getDocumentId(university: Reference, key: string): Reference {
+
+	return resolve(documents.id, uuid.v3(key, uuid.v3(university, uuid.v3.URL)));
+
 }

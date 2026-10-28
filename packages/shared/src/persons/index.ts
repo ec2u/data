@@ -24,6 +24,8 @@ import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
+import type { Reference } from "@metreeca/qest/state";
+import * as uuid from "uuid";
 
 
 export const persons = immutable({
@@ -87,4 +89,23 @@ export function Person() {
 		})
 
 	});
+}
+
+
+/**
+ * Identifies a person named by a partner university.
+ *
+ * The same name always names the same person within a university, so that every source of the university naming them
+ * states the same person, while namesakes at different universities never do.
+ *
+ * @param university The identifier of the university naming the person
+ * @param familyName The family name of the person
+ * @param givenName The given name of the person
+ *
+ * @returns The identifier of the person named `givenName familyName` by `university`
+ */
+export function getPersonId(university: Reference, familyName: string, givenName: string): Reference {
+
+	return resolve(persons.id, uuid.v3(`${familyName}, ${givenName}`, uuid.v3(university, uuid.v3.URL)));
+
 }
