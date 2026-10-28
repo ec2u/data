@@ -17,7 +17,7 @@
 import type { University } from "@ec2u/data-shared/universities/index.core.js";
 import { schema } from "@metreeca/blue";
 import { optional, resource } from "@metreeca/blue/resource";
-import { text } from "@metreeca/blue/string";
+import { string, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
 import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
@@ -48,7 +48,7 @@ function Reported() {
 			description: "The name of the unit translated to English; stated only where a source name was given"
 		}),
 
-		description: optional(text, {
+		description: optional(string, { // ;( multi-line: descriptions keep the line and paragraph breaks of the source
 			name: "Description",
 			description: "The description of the unit translated to English; stated only where a source description was given"
 		})
