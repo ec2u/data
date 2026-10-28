@@ -21,6 +21,7 @@ import { Iasi } from "./pipes/iasi/index.js";
 import { Jena } from "./pipes/jena/index.js";
 import { Linz } from "./pipes/linz/index.js";
 import { Poitiers } from "./pipes/poitiers/index.js";
+import { Salamanca } from "./pipes/salamanca/index.js";
 import { Turku } from "./pipes/turku/index.js";
 
 
@@ -33,6 +34,7 @@ export function units(): Router {
 		.post("/jena", worker(Jena))
 		.post("/linz", worker(Linz))
 		.post("/poitiers", worker(Poitiers))
+		.post("/salamanca", worker(Salamanca))
 		.post("/turku", worker(Turku));
 
 }
