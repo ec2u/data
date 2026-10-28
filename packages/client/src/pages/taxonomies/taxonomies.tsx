@@ -40,7 +40,8 @@ import {
 	isFiltered,
 	isTaxonomyRow,
 	NoFilters,
-	select
+	select,
+	type TaxonomyRow
 } from "./taxonomies.core.js";
 
 
@@ -155,27 +156,37 @@ export function TaxonomiesPage() {
 		blank: () => <Hint>{taxonomies.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{taxonomies.glyph}</Hint></Failure>,
 
-		ready: ({ state }) => <>{state
-
-			.filter(isTaxonomyRow)
-
-			.sort(by(({ taxonomy }) => taxonomy.label, locale()))
-
-			.map(({ taxonomy: { id, title, alternative, description }, size }) => <Card key={id}
-
-				title={<Link look={"strong"} href={id}>{alternative
-					? `${alternative} / ${title}`
-					: title
-				}</Link>}
-
-				tags={`${size.toLocaleString()} concepts`}
-
-			>{description}</Card>)
-
-		}</>
+		ready: ({ state }) => cards(state.filter(isTaxonomyRow))
 
 	})}</Page>;
 
+}
+
+
+/**
+ * Renders the taxonomies matching the filters in force.
+ *
+ * @param rows The taxonomies to be rendered, with their size
+ *
+ * @returns A card for each taxonomy, sorted by label, or the collection glyph if `rows` is empty
+ */
+function cards(rows: readonly TaxonomyRow[]) {
+	return rows.length === 0 ? <Hint>{taxonomies.glyph}</Hint> : <>{[...rows] // copy, as rows are shared
+
+		.sort(by(({ taxonomy }) => taxonomy.label, locale()))
+
+		.map(({ taxonomy: { id, title, alternative, description }, size }) => <Card key={id}
+
+			title={<Link look={"strong"} href={id}>{alternative
+				? `${alternative} / ${title}`
+				: title
+			}</Link>}
+
+			tags={`${size.toLocaleString()} concepts`}
+
+		>{description}</Card>)
+
+	}</>;
 }
 
 

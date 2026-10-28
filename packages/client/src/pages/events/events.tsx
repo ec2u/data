@@ -96,7 +96,7 @@ export function EventsPage() {
 		blank: () => <Hint>{events.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{events.glyph}</Hint></Failure>,
 
-		ready: ({ state, load }) => <>
+		ready: ({ state, load }) => state.length === 0 ? <Hint>{events.glyph}</Hint> : <>
 
 			{state.map(({ id, label, disambiguatingDescription, startDate, endDate, image, university }) => <Card key={id}
 

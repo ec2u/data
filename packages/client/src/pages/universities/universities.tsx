@@ -84,7 +84,7 @@ export function UniversitiesPage() {
 		blank: () => <Hint>{universities.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{universities.glyph}</Hint></Failure>,
 
-		ready: ({ state }) => <>{[...state]
+		ready: ({ state }) => state.length === 0 ? <Hint>{universities.glyph}</Hint> : <>{[...state]
 
 			.sort(by(({ city }) => city.label, locale())) // copy, as state is shared
 

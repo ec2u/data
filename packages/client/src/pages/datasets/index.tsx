@@ -35,7 +35,7 @@ import { events } from "../events/events.js";
 import { programs } from "../programs/programs.js";
 import { units } from "../units/units.js";
 import { universities } from "../universities/universities.js";
-import { isDatasetRow } from "./index.core.js";
+import { type DatasetRow, isDatasetRow } from "./index.core.js";
 import "./index.css";
 
 
@@ -111,27 +111,37 @@ export function DatasetsPage() {
 		blank: () => <Hint>{datasets.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{datasets.glyph}</Hint></Failure>,
 
-		ready: ({ state }) => createElement("datasets-grid", {}, state
-
-			.filter(isDatasetRow)
-
-			.sort(by(({ dataset }) => new URL(dataset.id).pathname, by(path =>
-				order.includes(path) ? order.indexOf(path) : order.length
-			)))
-
-			.map(({ dataset: { id, title, alternative, description }, size }) => <Fragment key={id}>
-
-				<span class="size">{size.toLocaleString()}</span>
-				<span class="title"><Link href={id}>{ec2u(title)}</Link></span>
-
-				<span class="alternative">{opt(alternative, ec2u)}</span>
-				<span class="description">{opt(description, ec2u)}</span>
-
-			</Fragment>)
-
-		)
+		ready: ({ state }) => grid(state.filter(isDatasetRow))
 
 	})}</Page>;
 
 
+}
+
+
+/**
+ * Renders the datasets published on the hub.
+ *
+ * @param rows The datasets to be rendered, with their size
+ *
+ * @returns A grid row for each dataset, in display order, or the collection glyph if `rows` is empty
+ */
+function grid(rows: readonly DatasetRow[]) {
+	return rows.length === 0 ? <Hint>{datasets.glyph}</Hint> : createElement("datasets-grid", {}, [...rows] // copy, as rows are shared
+
+		.sort(by(({ dataset }) => new URL(dataset.id).pathname, by(path =>
+			order.includes(path) ? order.indexOf(path) : order.length
+		)))
+
+		.map(({ dataset: { id, title, alternative, description }, size }) => <Fragment key={id}>
+
+			<span class="size">{size.toLocaleString()}</span>
+			<span class="title"><Link href={id}>{ec2u(title)}</Link></span>
+
+			<span class="alternative">{opt(alternative, ec2u)}</span>
+			<span class="description">{opt(description, ec2u)}</span>
+
+		</Fragment>)
+
+	);
 }
