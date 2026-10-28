@@ -86,9 +86,11 @@ export function convert(
 
 				startDate: stamp(startDate, payload.startTime, university.zone),
 
+				// an end date stated alone takes in the whole of that day, so a same-day end never precedes the start
+
 				endDate: optional(endDate === undefined && endTime === undefined
 					? undefined
-					: stamp(endDate ?? startDate, endTime, university.zone)
+					: stamp(endDate ?? startDate, endTime ?? "23:59:59", university.zone)
 				),
 
 				inLanguage: payload.language,

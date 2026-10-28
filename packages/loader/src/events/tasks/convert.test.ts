@@ -232,10 +232,17 @@ describe("convert", () => {
 
 		});
 
-		it("closes an event stating an end date alone at midnight", async () => {
+		it("closes an event stating an end date alone at the end of that day", async () => {
 
 			expect(await converted({ startDate: "2026-07-02", endDate: "2026-07-09" }))
-				.toMatchObject({ endDate: "2026-07-09T00:00:00+01:00" });
+				.toMatchObject({ endDate: "2026-07-09T23:59:59+01:00" });
+
+		});
+
+		it("closes an event stating its opening day alone as end date after it opens", async () => {
+
+			expect(await converted({ startDate: "2026-07-02", startTime: "15:00:00", endDate: "2026-07-02" }))
+				.toMatchObject({ endDate: "2026-07-02T23:59:59+01:00" });
 
 		});
 
