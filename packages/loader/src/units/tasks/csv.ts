@@ -123,7 +123,7 @@ export function csv(university: University): Task<URLLike, Draft> {
 			unitOf: [...new Set(values(record["Parent"]).map(parent).flatMap(multiple))],
 			institutes: values(record["VI"]).map(institute).flatMap(multiple),
 
-			head: opt(record["Head"], name),
+			heads: [opt(record["Head"], name)].flatMap(multiple),
 
 			cues: {
 				type: record["Type"],

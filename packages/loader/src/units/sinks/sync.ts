@@ -24,7 +24,7 @@ import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
-import { distinct, filter, fork, map, tee, trim } from "@metreeca/flow/tasks";
+import { distinct, filter, flat, fork, map, tee, trim } from "@metreeca/flow/tasks";
 import { validate } from "@metreeca/mime-jsonld";
 import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
 import type { Reference } from "@metreeca/qest/state";
@@ -41,8 +41,8 @@ const survival = 0.75; // the smallest fraction of the stored units a sheet must
 /**
  * A unit as read from a source, independent of the university listing it.
  *
- * The identifier is the key the source lists the unit under, and so are the identifiers of its parent units; the head
- * is stated as the source names them. The sink resolves them and derives the label, the comment, the dataset and
+ * The identifier is the key the source lists the unit under, and so are the identifiers of its parent units; the heads
+ * are stated as the source names them. The sink resolves them and derives the label, the comment, the dataset and
  * university links, the digest and the classification, so a draft carries only what the source itself states.
  */
 export type Draft = {
@@ -50,6 +50,7 @@ export type Draft = {
 	readonly id: string
 
 	readonly identifier?: string
+	readonly isDefinedBy?: string
 
 	readonly prefLabel: Dictionary
 	readonly altLabel?: string
@@ -69,7 +70,7 @@ export type Draft = {
 	 */
 	readonly institutes: readonly Reference[]
 
-	readonly head?: Name
+	readonly heads: readonly Name[]
 
 	/**
 	 * The unit type and research topics the source states in its own words, as cues for the classification.
@@ -121,9 +122,9 @@ export type Entry = {
  * Completing a draft translates its name and description to English where the source states them only in the local
  * language, and tags the unit with its type from the EC2U organisation taxonomy and with up to three research subjects
  * from EuroSciVoc. A draft the model fails on is dropped and records no digest, so it is completed again on the next
- * run, while the unit the store holds for it, if any, is left in place. The head a unit names is stated alongside it,
- * so the name it is shown with is held wherever the unit is; it is never retracted along with it, as other resources,
- * such as the documents of the same university, may name the same person as well.
+ * run, while the unit the store holds for it, if any, is left in place. The heads a unit names are stated alongside it,
+ * so the names they are shown with are held wherever the unit is; they are never retracted along with it, as other
+ * resources, such as the documents of the same university, may name the same people as well.
  *
  * The units the store holds for the university and the feed never named are retracted once it has been drawn whole,
  * so nothing is retired on the strength of a partial reading. A feed listing fewer than three quarters of the stored
@@ -220,7 +221,7 @@ export function sync(university: University, {
 					unitOf,
 					institutes,
 
-					head,
+					heads,
 
 					cues,
 
@@ -260,7 +261,7 @@ export function sync(university: University, {
 						...institutes
 					],
 
-					hasHead: opt(head, head => [person(head)]),
+					hasHead: [...new Set(heads.map(person))],
 
 					classification,
 					subject,
@@ -276,8 +277,7 @@ export function sync(university: University, {
 		function heads(): Task<Classified, Delta> {
 			return classifieds => pipe(
 				(items(classifieds))
-				(map(({ draft: { head } }) => head))
-				(trim())
+				(flat(map(({ draft: { heads } }) => heads)))
 				(map(name => immutable({
 
 					...name,

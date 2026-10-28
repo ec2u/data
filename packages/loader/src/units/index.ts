@@ -16,10 +16,11 @@
 
 import { worker } from "@metreeca/gate/worker";
 import { Router } from "express";
-import { IasiUniversity } from "./pipes/iasi-university.js";
-import { JenaUniversity } from "./pipes/jena-university.js";
-import { LinzUniversity } from "./pipes/linz-university.js";
-import { TurkuUniversity } from "./pipes/turku-university.js";
+import { IasiUniversity } from "./pipes/iasi-university/index.js";
+import { JenaUniversity } from "./pipes/jena-university/index.js";
+import { LinzUniversity } from "./pipes/linz-university/index.js";
+import { PoitiersUniversity } from "./pipes/poitiers-university/index.js";
+import { TurkuUniversity } from "./pipes/turku-university/index.js";
 
 
 export function units(): Router {
@@ -29,6 +30,7 @@ export function units(): Router {
 		.post("/iasi-university", worker(IasiUniversity))
 		.post("/jena-university", worker(JenaUniversity))
 		.post("/linz-university", worker(LinzUniversity))
+		.post("/poitiers-university", worker(PoitiersUniversity))
 		.post("/turku-university", worker(TurkuUniversity));
 
 }
