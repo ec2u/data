@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
+import { worker } from "@metreeca/gate/worker";
 import { Router } from "express";
+import { PaviaUniversity } from "./pipes/pavia-university.js";
 
 
 export function units(): Router {
 
-	return Router();
+	return Router()
+
+		.post("/pavia-university", worker(PaviaUniversity));
 
 }

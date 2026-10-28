@@ -1,5 +1,5 @@
 ---
-title: Prompt Testing Log for @pavia.sys.md
+title: Prompt Testing Log for @list.sys.md
 ---
 
 # Inbox
@@ -25,7 +25,7 @@ When asked to validate this prompt:
 
 1. **Create and run temporary test driver**:
 	- Use Write tool to create `.test.ts` with test code
-	- Import `scan` function from `pavia.ts`
+	- Import `list` task from `list.ts`
 	- Configure test URL and options (structured vs raw output)
 	- Execute `npx tsx .test.ts` to generate output
 	- Delete `.test.ts` after the complete testing process is finished

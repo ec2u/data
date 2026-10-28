@@ -17,7 +17,7 @@
 /**
  * Web page fetching tool for the Gemini API.
  *
- * Provides {@link fetchPage} for handing a {@link Retriever} to the model as a `fetchPage` function, so that a
+ * Provides {@link fetchPage} for handing live web page retrieval to the model as a `fetchPage` function, so that a
  * generation may explore linked pages on its own, without the caller mediating the retrievals.
  *
  * The tool is packaged as a
@@ -35,9 +35,10 @@
  * @module
  */
 
-import { retrieve, type Retriever } from "../index.js";
+import { type Content, scrape } from "./scrape.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import { dedent } from "@metreeca/core/strings";
+import { immutable } from "@metreeca/core/values";
 import { log, report } from "@metreeca/tape";
 
 
@@ -49,29 +50,17 @@ const logger = log(import.meta.url);
 /**
  * Creates a web page fetching tool.
  *
- * Exposes a {@link Retriever} to the Gemini API as a `fetchPage` function reporting the title, markdown content and
- * outbound links of the requested page. Pages that can't be retrieved are reported as an error response rather than
- * raised, so that a failed call doesn't interrupt the generation loop; repeated requests for the same URL are
- * short-circuited only as far as the configured retriever does.
- *
- * @param options The page lookup options
- * @param options.cache The {@link Retriever} consulted for the page on every call; defaults to {@link retrieve},
- * retaining nothing, so that every request retrieves the page again
+ * Exposes live web page retrieval to the Gemini API as a `fetchPage` function returning the title, markdown content
+ * and outbound links of the requested page. Pages that can't be retrieved are reported as an error response rather
+ * than raised, so that a failed call doesn't interrupt the generation loop; nothing is retained, so every call
+ * retrieves its page again.
  *
  * @returns A {@link https://googleapis.github.io/js-genai/release_docs/interfaces/types.CallableTool.html
  * CallableTool} declaring the `fetchPage` function and handling the calls the model makes to it
  *
  * @see {@link https://ai.google.dev/gemini-api/docs/function-calling Function calling with the Gemini API}
  */
-export function fetchPage({
-
-	cache = retrieve
-
-}: {
-
-	readonly cache?: Retriever
-
-} = {}): CallableTool {
+export function fetchPage(): CallableTool {
 
 	const name = "fetchPage" as const;
 
@@ -118,7 +107,7 @@ export function fetchPage({
 
 				try {
 
-					const page = await cache(url);
+					const page = await retrieve(url);
 
 					logger.info`fetched <${url}> (${page.content.length} chars)`;
 
@@ -148,5 +137,34 @@ export function fetchPage({
 		)
 
 	};
+
+}
+
+
+/**
+ * Retrieves the content of a web page.
+ *
+ * @param url The absolute URL of the page to be retrieved
+ *
+ * @returns The immutable content of the page, titled with `url` if the document doesn't provide a title, with links
+ * resolved against the address the content was eventually served from, as a browser would resolve them
+ *
+ * @throws {@link !Error Error} If the page can't be retrieved or processed
+ */
+async function retrieve(url: string): Promise<Content> {
+
+	const response = await fetch(url);
+
+	if ( response.ok ) {
+
+		const { title, content, links } = await scrape(await response.text(), response.url);
+
+		return immutable({ title: title || url, content, links });
+
+	} else {
+
+		throw new Error(`failed to retrieve <${url}> <${response.status} ${response.statusText}>`);
+
+	}
 
 }
