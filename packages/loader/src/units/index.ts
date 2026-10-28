@@ -23,6 +23,7 @@ import { Linz } from "./pipes/linz/index.js";
 import { Poitiers } from "./pipes/poitiers/index.js";
 import { Salamanca } from "./pipes/salamanca/index.js";
 import { Turku } from "./pipes/turku/index.js";
+import { Umea } from "./pipes/umea/index.js";
 
 
 export function units(): Router {
@@ -35,6 +36,7 @@ export function units(): Router {
 		.post("/linz", worker(Linz))
 		.post("/poitiers", worker(Poitiers))
 		.post("/salamanca", worker(Salamanca))
-		.post("/turku", worker(Turku));
+		.post("/turku", worker(Turku))
+		.post("/umea", worker(Umea));
 
 }
