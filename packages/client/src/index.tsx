@@ -23,12 +23,20 @@ import { Store } from "@metreeca/tile-data/store";
 import { host } from "@metreeca/tile-hive";
 import { Toast } from "@metreeca/tile-hive/toast";
 import { render } from "preact";
+import { courses } from "./pages/courses/courses.js";
+import { Courses } from "./pages/courses/index.js";
 import { datasets, DatasetsPage } from "./pages/datasets/index.js";
+import { documents } from "./pages/documents/documents.js";
+import { Documents } from "./pages/documents/index.js";
 import { events } from "./pages/events/events.js";
 import { Events } from "./pages/events/index.js";
 import { Unknown, unknown } from "./pages/index.js";
+import { Programs } from "./pages/programs/index.js";
+import { programs } from "./pages/programs/programs.js";
 import { Taxonomies } from "./pages/taxonomies/index.js";
 import { taxonomies } from "./pages/taxonomies/taxonomies.js";
+import { Units } from "./pages/units/index.js";
+import { units } from "./pages/units/units.js";
 import { Universities } from "./pages/universities/index.js";
 import { universities } from "./pages/universities/universities.js";
 import { Fetch } from "@metreeca/tile-data/fetch";
@@ -57,8 +65,12 @@ function Hub() {
 
 						[datasets.route]: <DatasetsPage/>,
 						[universities.route]: <Universities/>,
-						[taxonomies.route]: <Taxonomies/>,
+						[units.route]: <Units/>,
+						[programs.route]: <Programs/>,
+						[courses.route]: <Courses/>,
+						[documents.route]: <Documents/>,
 						[events.route]: <Events/>,
+						[taxonomies.route]: <Taxonomies/>,
 
 						[unknown.route]: <Unknown/>
 
