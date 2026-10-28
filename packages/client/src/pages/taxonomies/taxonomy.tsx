@@ -218,8 +218,10 @@ function TaxonomySearch({
 		entry: route,
 		shape: Taxonomy,
 		field: "hasConcept",
-		scope: { "~label": keywords }
+		criteria: { "~label": keywords }
 	});
+
+	useEffect(() => { collection.filter({ "~label": keywords }); }, [collection, keywords]);
 
 	const members = useMembers(collection, {
 		model: { id: {}, notation: {}, prefLabel: {}, narrower: {} }

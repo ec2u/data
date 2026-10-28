@@ -116,15 +116,16 @@ export function select(filters: Filters, facet: Facet, value: string, selected: 
  * @param filters The filters in force
  * @param facet The facet left unconstrained, so its own values are counted under the other filters alone
  *
- * @returns The collection criteria matching labels against the keywords and facet values against their selection
+ * @returns The collection criteria matching labels against the keywords and facet values against their selection; every
+ *     criterion is stated, `undefined` where no filter applies, so that a revision lifts those no longer in force
  */
 export function getCriteria({ keywords, facets }: Filters, facet?: Facet) {
 	return {
 
-		...(keywords !== "" ? { "~label": keywords } : {}),
+		"~label": keywords !== "" ? keywords : undefined,
 
-		...(facet !== "license" && facets.license.length > 0 ? { "?license": facets.license } : {}),
-		...(facet !== "publisher" && facets.publisher.length > 0 ? { "?publisher": facets.publisher } : {})
+		"?license": facet !== "license" && facets.license.length > 0 ? facets.license : undefined,
+		"?publisher": facet !== "publisher" && facets.publisher.length > 0 ? facets.publisher : undefined
 
 	};
 }

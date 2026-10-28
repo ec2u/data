@@ -66,9 +66,10 @@ export function TaxonomiesPage() {
 	const collection = useCollection({
 		entry: route,
 		shape: Taxonomies,
-		field: "resources",
-		scope: getCriteria(filters)
+		field: "resources"
 	});
+
+	useEffect(() => { collection.filter(getCriteria(filters)); }, [collection, filters]);
 
 	const members = useMembers(collection, {
 		model: {
@@ -200,9 +201,10 @@ function useFacet(facet: Facet, filters: Filters) {
 	const collection = useCollection({
 		entry: route,
 		shape: Taxonomies,
-		field: "resources",
-		scope: getCriteria(filters, facet)
+		field: "resources"
 	});
+
+	useEffect(() => { collection.filter(getCriteria(filters, facet)); }, [collection, filters, facet]);
 
 	return useMembers(collection, {
 		model: {
