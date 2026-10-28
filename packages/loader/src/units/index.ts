@@ -16,6 +16,7 @@
 
 import { worker } from "@metreeca/gate/worker";
 import { Router } from "express";
+import { Coimbra } from "./pipes/coimbra/index.js";
 import { Iasi } from "./pipes/iasi/index.js";
 import { Jena } from "./pipes/jena/index.js";
 import { Linz } from "./pipes/linz/index.js";
@@ -27,6 +28,7 @@ export function units(): Router {
 
 	return Router()
 
+		.post("/coimbra", worker(Coimbra))
 		.post("/iasi", worker(Iasi))
 		.post("/jena", worker(Jena))
 		.post("/linz", worker(Linz))
