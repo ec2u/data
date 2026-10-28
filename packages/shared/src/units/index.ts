@@ -23,10 +23,12 @@ import { dcat } from "@ec2u/data-shared/vocabularies/dcat.js";
 import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
 import { OrgOrganizationalUnit } from "@ec2u/data-shared/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, nonempty, resource } from "@metreeca/blue/resource";
-import { text } from "@metreeca/blue/string";
+import { multiple, nonempty, optional, resource } from "@metreeca/blue/resource";
+import { string, text } from "@metreeca/blue/string";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
+import type { Reference } from "@metreeca/qest/state";
+import * as uuid from "uuid";
 
 
 export const units = immutable({
@@ -81,7 +83,36 @@ export function Unit() {
 		unitOf: nonempty(reference(Organization)),
 
 		subject: multiple(reference(EuroSciVocTopic), { forward: dct }),
-		keyword: multiple(text, { forward: dcat })
+		keyword: multiple(text, { forward: dcat }),
+
+		digest: optional(string, {
+
+			hidden: true,
+
+			forward: ec2u,
+
+			name: "Source Digest",
+			description: "A unique identification of the content the source entry carried when it was read."
+
+		})
 
 	});
+}
+
+
+/**
+ * Identifies a unit listed by a partner university.
+ *
+ * The same key always names the same unit within a university, so that a listing re-read on a later run restates the
+ * units it already stood for, while equal keys listed by different universities never name the same unit.
+ *
+ * @param university The identifier of the university listing the unit
+ * @param key The key the listing names the unit with
+ *
+ * @returns The identifier of the unit listed under `key` by `university`
+ */
+export function getUnitId(university: Reference, key: string): Reference {
+
+	return resolve(units.id, uuid.v3(key, uuid.v3(university, uuid.v3.URL)));
+
 }

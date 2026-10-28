@@ -111,13 +111,7 @@ export function OrgOrganization() {
 
 		}),
 
-		hasHead: multiple(reference(FOAFPerson), {
-
-			foreign: true,
-
-			reverse: org.headOf
-
-		}),
+		hasHead: multiple(reference(FOAFPerson)),
 
 		hasMember: multiple(reference(FOAFPerson), {
 

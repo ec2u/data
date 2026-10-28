@@ -77,7 +77,9 @@ export function Person() {
 
 		headOf: multiple(reference(Organization), {
 
-			forward: org
+			foreign: true,
+
+			reverse: org.hasHead
 
 		}),
 
