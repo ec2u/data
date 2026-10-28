@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
+import { worker } from "@metreeca/gate/worker";
 import { Router } from "express";
+import { IasiUniversity } from "./pipes/iasi-university.js";
+import { JenaUniversity } from "./pipes/jena-university.js";
+import { LinzUniversity } from "./pipes/linz-university.js";
+import { TurkuUniversity } from "./pipes/turku-university.js";
 
 
 export function units(): Router {
 
-	return Router();
+	return Router()
+
+		.post("/iasi-university", worker(IasiUniversity))
+		.post("/jena-university", worker(JenaUniversity))
+		.post("/linz-university", worker(LinzUniversity))
+		.post("/turku-university", worker(TurkuUniversity));
 
 }
