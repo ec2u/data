@@ -24,12 +24,14 @@ import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
 import { execute } from "./index.core.js";
 import { taxonomies } from "./taxonomies/index.js";
+import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
 await execute(() => server(service(createStore))
 
 	.use("/universities/", universities())
+	.use("/units/", units())
 	.use("/documents/", documents())
 	.use("/events/", events())
 
