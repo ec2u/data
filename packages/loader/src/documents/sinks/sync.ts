@@ -19,13 +19,14 @@ import { Document, documents, Documents, getDocumentId } from "@ec2u/data-shared
 import { getOrganizationId, Organization, organizations } from "@ec2u/data-shared/organizations/index.js";
 import { getPersonId, Person, persons } from "@ec2u/data-shared/persons/index.js";
 import type { University } from "@ec2u/data-shared/universities/index.core.js";
+import type { State } from "@metreeca/blue/value";
 import { opt } from "@metreeca/core";
-import { required } from "@metreeca/core/arrays";
+import { multiple, required } from "@metreeca/core/arrays";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { toSet } from "@metreeca/flow/sinks";
+import { toArray, toSet } from "@metreeca/flow/sinks";
 import { distinct, filter, flat, fork, map, tee, trim } from "@metreeca/flow/tasks";
 import { validate } from "@metreeca/mime-jsonld";
 import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
@@ -108,6 +109,17 @@ export type Entry = {
 
 }
 
+/**
+ * A classified entry along with the valid states of the people, publisher and license it names.
+ */
+type Attached = Classified & {
+
+	readonly people: readonly State<typeof Person>[]
+	readonly publisher?: State<typeof Organization>
+	readonly license?: State<typeof Entity>
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -125,7 +137,8 @@ export type Entry = {
  * A draft the model fails on is dropped and records no digest, so it is completed again on the next run, while the
  * document the store holds for it, if any, is left in place. The people, publisher and license a document names are
  * stated alongside it, so the names they are shown with are held wherever the document is; they are never retracted
- * along with it, as other resources may name them as well.
+ * along with it, as other resources may name them as well. One whose state fails validation is logged and left out,
+ * and the document is stated without linking it, so no document links a resource the store doesn't hold.
  *
  * Documents are stated as they are drawn. The ones the store holds for the university and the feed never named are
  * retracted once it has been drawn whole, so nothing is retired on the strength of a partial reading. A feed listing
@@ -191,6 +204,7 @@ export function sync(university: University, {
 					(translate(university))
 					(classify())
 				)))
+				(map(attach))
 				(tee(
 					define(),
 					people(),
@@ -202,10 +216,81 @@ export function sync(university: University, {
 		};
 
 
-		function define(): Task<Classified, Delta> {
+		/**
+		 * Settles the people, publisher and license a draft names, leaving out the ones that fail validation, so the
+		 * document links only resources that are stated alongside it in the same transaction, never dangling ones.
+		 */
+		async function attach(classified: Classified): Promise<Attached> {
 
-			return classifieds => pipe(
-				(items(classifieds))
+			const { draft: { creator, contributor = [], publisher, license } } = classified;
+
+			const [people, publishers, licenses] = await Promise.all([
+
+				pipe(
+					(items([creator, ...contributor]))
+					(trim())
+					(map(name => immutable({
+
+						...name,
+
+						id: person(name),
+
+						dataset: persons.id,
+						university: university.id,
+
+						label: clip(`${name.givenName} ${name.familyName}`, LabelLength)
+
+					})))
+					(distinct(person => person.id))
+					(validate(Person))
+					(toArray())
+				),
+
+				pipe(
+					(items([publisher]))
+					(trim())
+					(map(publisher => immutable({
+
+						id: organization(publisher),
+
+						dataset: organizations.id,
+						university: university.id,
+
+						label: Object.fromEntries(Object.entries(publisher.name).map(([tag, label]) =>
+							[tag, clip(label, LabelLength)]
+						)),
+
+						prefLabel: publisher.name,
+						homepage: opt(publisher.homepage, homepage => [homepage])
+
+					})))
+					(validate(Organization))
+					(toArray())
+				),
+
+				pipe(
+					(items([license]))
+					(trim())
+					(map(license => immutable({
+
+						id: license,
+						label: clip(license, LabelLength)
+
+					})))
+					(validate(Entity))
+					(toArray())
+				)
+
+			]);
+
+			return immutable({ ...classified, people, publisher: publishers[0], license: licenses[0] });
+
+		}
+
+		function define(): Task<Attached, Delta> {
+
+			return attached => pipe(
+				(items(attached))
 				(map(complete))
 				(validate(Document))
 				(map(document => delta(document.id, Document, document)))
@@ -237,9 +322,17 @@ export function sync(university: University, {
 				},
 
 				type,
-				audience
+				audience,
 
-			}: Classified) {
+				people,
+				publisher: stated,
+				license: granted
+
+			}: Attached) {
+
+				const valid = new Set(people.map(({ id }) => id));
+
+				const linked = (name: Name) => opt(person(name), id => valid.has(id) ? id : undefined);
 
 				return immutable({
 
@@ -263,11 +356,11 @@ export function sync(university: University, {
 					title,
 					description,
 
-					creator: opt(creator, person),
-					contributor: contributor.map(person),
-					publisher: opt(publisher, organization),
+					creator: opt(creator, linked),
+					contributor: contributor.map(linked).flatMap(multiple),
+					publisher: stated?.id,
 
-					license,
+					license: granted?.id,
 
 					type,
 					audience,
@@ -282,68 +375,31 @@ export function sync(university: University, {
 
 		}
 
-		function people(): Task<Classified, Delta> {
-			return classifieds => pipe(
-				(items(classifieds))
-				(flat(map(({ draft: { creator, contributor = [] } }) => [creator, ...contributor])))
-				(trim())
-				(map(name => immutable({
-
-					...name,
-
-					id: person(name),
-
-					dataset: persons.id,
-					university: university.id,
-
-					label: clip(`${name.givenName} ${name.familyName}`, LabelLength)
-
-				})))
+		function people(): Task<Attached, Delta> {
+			return attached => pipe(
+				(items(attached))
+				(flat(map(({ people }) => people)))
 				(distinct(person => person.id))
-				(validate(Person))
 				(map(person => delta(person.id, Person, person)))
 			);
 		}
 
-		function publishers(): Task<Classified, Delta> {
-			return classifieds => pipe(
-				(items(classifieds))
-				(map(({ draft: { publisher } }) => publisher))
+		function publishers(): Task<Attached, Delta> {
+			return attached => pipe(
+				(items(attached))
+				(map(({ publisher }) => publisher))
 				(trim())
-				(map(publisher => immutable({
-
-					id: organization(publisher),
-
-					dataset: organizations.id,
-					university: university.id,
-
-					label: Object.fromEntries(Object.entries(publisher.name).map(([tag, label]) =>
-						[tag, clip(label, LabelLength)]
-					)),
-
-					prefLabel: publisher.name,
-					homepage: opt(publisher.homepage, homepage => [homepage])
-
-				})))
 				(distinct(organization => organization.id))
-				(validate(Organization))
 				(map(organization => delta(organization.id, Organization, organization)))
 			);
 		}
 
-		function licenses(): Task<Classified, Delta> {
-			return classifieds => pipe(
-				(items(classifieds))
-				(map(({ draft: { license } }) => license))
+		function licenses(): Task<Attached, Delta> {
+			return attached => pipe(
+				(items(attached))
+				(map(({ license }) => license))
 				(trim())
-				(distinct())
-				(map(license => immutable({
-
-					id: license,
-					label: clip(license, LabelLength)
-
-				})))
-				(validate(Entity))
+				(distinct(license => license.id))
 				(map(license => delta(license.id, Entity, license)))
 			);
 		}

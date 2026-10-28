@@ -18,12 +18,13 @@ import { CommentLength, LabelLength } from "@ec2u/data-shared";
 import { getPersonId, Person, persons } from "@ec2u/data-shared/persons/index.js";
 import { getUnitId, Unit, units, Units } from "@ec2u/data-shared/units/index.js";
 import type { University } from "@ec2u/data-shared/universities/index.core.js";
+import type { State } from "@metreeca/blue/value";
 import { opt } from "@metreeca/core";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { toSet } from "@metreeca/flow/sinks";
+import { toArray, toSet } from "@metreeca/flow/sinks";
 import { distinct, filter, flat, fork, map, tee, trim } from "@metreeca/flow/tasks";
 import { validate } from "@metreeca/mime-jsonld";
 import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
@@ -108,6 +109,15 @@ export type Entry = {
 
 }
 
+/**
+ * A classified entry along with the valid states of the people it names as heads.
+ */
+type Staffed = Classified & {
+
+	readonly people: readonly State<typeof Person>[]
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -124,7 +134,8 @@ export type Entry = {
  * from EuroSciVoc. A draft the model fails on is dropped and records no digest, so it is completed again on the next
  * run, while the unit the store holds for it, if any, is left in place. The heads a unit names are stated alongside it,
  * so the names they are shown with are held wherever the unit is; they are never retracted along with it, as other
- * resources, such as the documents of the same university, may name the same people as well.
+ * resources, such as the documents of the same university, may name the same people as well. A head whose state fails
+ * validation is logged and left out, and the unit is stated without it, so no unit links a person the store lacks.
  *
  * The units the store holds for the university and the feed never named are retracted once it has been drawn whole,
  * so nothing is retired on the strength of a partial reading. A feed listing fewer than three quarters of the stored
@@ -188,6 +199,7 @@ export function sync(university: University, {
 					(translate(university))
 					(classify())
 				)))
+				(map(staff))
 				(tee(
 					define(),
 					heads()
@@ -197,10 +209,41 @@ export function sync(university: University, {
 		};
 
 
-		function define(): Task<Classified, Delta> {
+		/**
+		 * Settles the people a draft names as heads, leaving out the ones that fail validation, so the unit links only
+		 * people that are stated alongside it in the same run, never ones the store doesn't hold.
+		 */
+		async function staff(classified: Classified): Promise<Staffed> {
+			return immutable({
 
-			return classifieds => pipe(
-				(items(classifieds))
+				...classified,
+
+				people: await pipe(
+					(items(classified.draft.heads))
+					(map(name => immutable({
+
+						...name,
+
+						id: person(name),
+
+						dataset: persons.id,
+						university: university.id,
+
+						label: clip(`${name.givenName} ${name.familyName}`, LabelLength)
+
+					})))
+					(distinct(person => person.id))
+					(validate(Person))
+					(toArray())
+				)
+
+			});
+		}
+
+		function define(): Task<Staffed, Delta> {
+
+			return staffed => pipe(
+				(items(staffed))
 				(map(complete))
 				(validate(Unit))
 				(map(unit => delta(unit.id, Unit, unit)))
@@ -230,9 +273,11 @@ export function sync(university: University, {
 				},
 
 				classification,
-				subject
+				subject,
 
-			}: Classified) {
+				people
+
+			}: Staffed) {
 
 				return immutable({
 
@@ -261,7 +306,7 @@ export function sync(university: University, {
 						...institutes
 					],
 
-					hasHead: [...new Set(heads.map(person))],
+					hasHead: people.map(({ id }) => id),
 
 					classification,
 					subject,
@@ -274,24 +319,11 @@ export function sync(university: University, {
 
 		}
 
-		function heads(): Task<Classified, Delta> {
-			return classifieds => pipe(
-				(items(classifieds))
-				(flat(map(({ draft: { heads } }) => heads)))
-				(map(name => immutable({
-
-					...name,
-
-					id: person(name),
-
-					dataset: persons.id,
-					university: university.id,
-
-					label: clip(`${name.givenName} ${name.familyName}`, LabelLength)
-
-				})))
+		function heads(): Task<Staffed, Delta> {
+			return staffed => pipe(
+				(items(staffed))
+				(flat(map(({ people }) => people)))
 				(distinct(person => person.id))
-				(validate(Person))
 				(map(person => delta(person.id, Person, person)))
 			);
 		}

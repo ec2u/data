@@ -34,7 +34,7 @@ const logger = log(import.meta.url);
 const NamePattern = /^([^,]+),([^(]+)(?:\(([^)]+)\))?$/;
 const EmailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
-const ValueSeparator = ";";
+const ValueSeparator = /[;\n]/;
 
 const HomepageColumns = [
 	"Factsheet",
@@ -66,11 +66,12 @@ const CSVFormat = immutable({
  *
  * Names and descriptions are stated in English and in the local language of `university`, from the `(English)` and
  * `(Local)` column pairs. Web addresses are read from the `Factsheet` and `Homepage` columns and their language
- * variants, the head from `Head` as `Family, Given (Title)`. A parent unit is named in `Parent`, semicolon-separated,
- * by its code, acronym or either name, matched regardless of case against the other rows of the same sheet; a unit
- * naming no parent, or only parents matching no row, stands directly under the university. A virtual institute is
- * named in `VI`, semicolon-separated, by its acronym. The `Type` column and the `Topics` column pair are handed on
- * unchanged, as cues guiding the classification of the unit against the EC2U organisation taxonomy and EuroSciVoc.
+ * variants, the heads from `Head` as `Family, Given (Title)`. Multi-valued columns separate their values with
+ * semicolons or line breaks. A parent unit is named in `Parent` by its code, acronym or either name, matched regardless
+ * of case against the other rows of the same sheet; a unit naming no parent, or only parents matching no row, stands
+ * directly under the university. A virtual institute is named in `VI` by its acronym. The `Type` column and the
+ * `Topics` column pair are handed on unchanged, as cues guiding the classification against the EC2U organisation
+ * taxonomy and EuroSciVoc, which falls back on the name and description where the sheet leaves them empty.
  *
  * Web addresses that do not parse as absolute `http` or `https` URLs, email addresses and names in any other form, and
  * virtual institutes matching none of the EC2U ones are left out, as is any column without a counterpart in the unit
@@ -95,6 +96,15 @@ export function csv(university: University): Task<URLLike, Draft> {
 				(filter(record => isDefined(record["Name (English)"] ?? record["Name (Local)"])))
 				(toArray())
 			);
+
+			// parents often name faculties the sheet doesn't list, so they're reported once per sheet rather than per row
+
+			const unmatched = [...new Set(records.flatMap(record => values(record["Parent"])))]
+				.filter(parent => !records.some(candidate => named(candidate, parent)));
+
+			if ( unmatched.length > 0 ) {
+				logger.warning`no matches for parent units <${unmatched.join("; ")}>`;
+			}
 
 			return records.map(record => draft(record, records));
 
@@ -123,7 +133,7 @@ export function csv(university: University): Task<URLLike, Draft> {
 			unitOf: [...new Set(values(record["Parent"]).map(parent).flatMap(multiple))],
 			institutes: values(record["VI"]).map(institute).flatMap(multiple),
 
-			heads: [opt(record["Head"], name)].flatMap(multiple),
+			heads: values(record["Head"]).map(name).flatMap(multiple),
 
 			cues: {
 				type: record["Type"],
@@ -135,30 +145,13 @@ export function csv(university: University): Task<URLLike, Draft> {
 
 		function parent(value: string): undefined | string {
 
-			const target = value.toLowerCase();
+			const matches = records.filter(candidate => candidate !== record && named(candidate, value));
 
-			const matches = records.filter(candidate => candidate !== record && [
-				candidate["Code"],
-				candidate["Acronym"],
-				candidate["Name (English)"],
-				candidate["Name (Local)"]
-			].some(label => label?.toLowerCase() === target));
-
-			if ( matches.length === 0 ) {
-
-				logger.warning`no matches for parent unit <${value}>`;
-
-				return undefined;
-
-			} else {
-
-				if ( matches.length > 1 ) {
-					logger.warning`multiple matches for parent unit <${value}>`;
-				}
-
-				return key(matches[0]);
-
+			if ( matches.length > 1 ) {
+				logger.warning`multiple matches for parent unit <${value}>`;
 			}
+
+			return opt(matches[0], key);
 
 		}
 
@@ -167,6 +160,15 @@ export function csv(university: University): Task<URLLike, Draft> {
 
 	function key(record: Record): string {
 		return required(record["Code"] ?? record["Name (English)"] ?? record["Name (Local)"]);
+	}
+
+	function named(record: Record, value: string): boolean {
+
+		const target = value.toLowerCase();
+
+		return [record["Code"], record["Acronym"], record["Name (English)"], record["Name (Local)"]]
+			.some(label => label?.toLowerCase() === target);
+
 	}
 
 	function institute(value: string): undefined | string {
@@ -182,7 +184,12 @@ export function csv(university: University): Task<URLLike, Draft> {
 	}
 
 	function name(value: string): undefined | Name {
-		return opt(NamePattern.exec(value) ?? undefined, ([, familyName, givenName, title]) => immutable({
+
+		// runs of whitespace, non-breaking spaces included, collapse to a single space, as names admit no other
+
+		const normalised = value.replace(/\s+/g, " ");
+
+		return opt(NamePattern.exec(normalised) ?? undefined, ([, familyName, givenName, title]) => immutable({
 
 			title: title?.trim(),
 			givenName: givenName.trim(),

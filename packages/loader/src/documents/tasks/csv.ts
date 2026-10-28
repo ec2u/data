@@ -185,7 +185,12 @@ export function csv(university: University): Task<URLLike, Draft> {
 	}
 
 	function name(value: string): undefined | Name {
-		return opt(NamePattern.exec(value) ?? undefined, ([, familyName, givenName, title]) => immutable({
+
+		// runs of whitespace, non-breaking spaces included, collapse to a single space, as names admit no other
+
+		const normalised = value.replace(/\s+/g, " ");
+
+		return opt(NamePattern.exec(normalised) ?? undefined, ([, familyName, givenName, title]) => immutable({
 
 			title: title?.trim(),
 			givenName: givenName.trim(),
