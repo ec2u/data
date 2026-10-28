@@ -16,29 +16,29 @@
 
 import { worker } from "@metreeca/gate/worker";
 import { Router } from "express";
-import { CoimbraUniversity } from "./pipes/coimbra-university.js";
-import { IasiUniversity } from "./pipes/iasi-university.js";
-import { JenaUniversity } from "./pipes/jena-university.js";
-import { LinzUniversity } from "./pipes/linz-university.js";
-import { PaviaUniversity } from "./pipes/pavia-university.js";
-import { PoitiersUniversity } from "./pipes/poitiers-university.js";
-import { SalamancaUniversity } from "./pipes/salamanca-university.js";
-import { TurkuUniversity } from "./pipes/turku-university.js";
-import { UmeaUniversity } from "./pipes/umea-university.js";
+import { Coimbra } from "./pipes/coimbra.js";
+import { Iasi } from "./pipes/iasi.js";
+import { Jena } from "./pipes/jena.js";
+import { Linz } from "./pipes/linz.js";
+import { Pavia } from "./pipes/pavia.js";
+import { Poitiers } from "./pipes/poitiers.js";
+import { Salamanca } from "./pipes/salamanca.js";
+import { Turku } from "./pipes/turku.js";
+import { Umea } from "./pipes/umea.js";
 
 
 export function documents(): Router {
 
 	return Router()
 
-		.post("/coimbra-university", worker(CoimbraUniversity))
-		.post("/iasi-university", worker(IasiUniversity))
-		.post("/jena-university", worker(JenaUniversity))
-		.post("/linz-university", worker(LinzUniversity))
-		.post("/pavia-university", worker(PaviaUniversity))
-		.post("/poitiers-university", worker(PoitiersUniversity))
-		.post("/salamanca-university", worker(SalamancaUniversity))
-		.post("/turku-university", worker(TurkuUniversity))
-		.post("/umea-university", worker(UmeaUniversity));
+		.post("/coimbra", worker(Coimbra))
+		.post("/iasi", worker(Iasi))
+		.post("/jena", worker(Jena))
+		.post("/linz", worker(Linz))
+		.post("/pavia", worker(Pavia))
+		.post("/poitiers", worker(Poitiers))
+		.post("/salamanca", worker(Salamanca))
+		.post("/turku", worker(Turku))
+		.post("/umea", worker(Umea));
 
 }

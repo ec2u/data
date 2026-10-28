@@ -39,6 +39,8 @@ const analysis = 10; // the number of drafts translated and classified at the sa
 const survival = 0.75; // the smallest fraction of the stored units a sheet must account for // !!! as option
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * A unit as read from a source, independent of the university listing it.
  *
@@ -112,7 +114,7 @@ export type Entry = {
 /**
  * A classified entry along with the valid states of the people it names as heads.
  */
-type Staffed = Classified & {
+export type Staffed = Classified & {
 
 	readonly people: readonly State<typeof Person>[]
 
