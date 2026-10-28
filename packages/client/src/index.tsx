@@ -26,6 +26,7 @@ import { render } from "preact";
 import { courses } from "./pages/courses/courses.js";
 import { Courses } from "./pages/courses/index.js";
 import { datasets, DatasetsPage } from "./pages/datasets/index.js";
+import { Docs, docs } from "./pages/docs/index.js";
 import { documents } from "./pages/documents/documents.js";
 import { Documents } from "./pages/documents/index.js";
 import { events } from "./pages/events/events.js";
@@ -71,6 +72,9 @@ function Hub() {
 						[documents.route]: <Documents/>,
 						[events.route]: <Events/>,
 						[taxonomies.route]: <Taxonomies/>,
+
+						[docs.routes.about]: <Docs/>,
+						[docs.routes.datasets]: <Docs/>,
 
 						[unknown.route]: <Unknown/>
 
