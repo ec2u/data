@@ -1,0 +1,24 @@
+{
+  "name": "@metreeca/work",
+  "version": "0.0.0",
+  "description": "Incubated Metreeca packages",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "./*.js": {
+      "@ec2u/source": "./src/*.ts",
+      "default": "./lib/*.js"
+    }
+  },
+  "dependencies": {
+    "@metreeca/blue": "^0.13.1",
+    "@metreeca/core": "^0.13.0",
+    "@metreeca/flow": "^0.12.0",
+    "@metreeca/mime-xml": "^0.2.0",
+    "@metreeca/trio": "^0.2.0",
+    "domhandler": "^6.0.1",
+    "domutils": "^4.0.2"
+  },
+  "scripts": {}
+}

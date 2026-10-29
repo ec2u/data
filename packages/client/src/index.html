@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+	<head>
+
+		<meta charset="UTF-8">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="color-scheme" content="light dark">
+
+		<title>Knowledge Hub</title>
+
+		<meta name="description" content="Central knowledge sharing and semantic search facility of the EC2U Alliance">
+		<meta name="copyright" content="&copy; 2022‑2026 EC2U Alliance">
+
+		<link rel="icon" type="image/svg+xml" href="./index.svg"/>
+
+		<style>
+
+			:root {
+
+				--tile--color-subtle: light-dark(#1C275D, #8899AA);
+				--tile--color-strong: light-dark(#AC931A, #D4BC4E);
+
+			}
+
+			html, body {
+				display: block;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+
+			body:not(:has(*)) {
+				display: block;
+				width: 10vh;
+				height: 10vh;
+				margin: 40vh auto auto;
+				overflow: visible;
+				text-align: center;
+				animation: loader-rotate 2s infinite linear;
+			}
+
+			body:not(:has(*))::before,
+			body:not(:has(*))::after {
+				content: '';
+				position: absolute;
+				left: 0;
+				right: 0;
+				width: 59%;
+				height: 59%;
+				display: inline-block;
+				border-radius: 100%;
+				animation: loader-bounce 2s infinite ease-in-out;
+			}
+
+			body:not(:has(*))::before {
+				top: 0;
+				background-color: var(--tile--color-subtle);
+			}
+
+			body:not(:has(*))::after {
+				bottom: 0;
+				background-color: var(--tile--color-strong);
+				animation-delay: -1s;
+			}
+
+			@keyframes loader-rotate {
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+
+			@keyframes loader-bounce {
+				0%, 100% {
+					transform: scale(0.25);
+				}
+				50% {
+					transform: scale(1);
+				}
+			}
+
+		</style>
+
+		<script type="module" src="./index.tsx"></script>
+
+	</head>
+
+</html>

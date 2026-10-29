@@ -1,0 +1,91 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { createRESTStore } from "@metreeca/keep-rest";
+import "@metreeca/tile/index.css";
+import { createCachingStore } from "@metreeca/keep/caching";
+import { Board } from "@metreeca/tile-data/board";
+import { Router, Routes } from "@metreeca/tile-data/router";
+import { Store } from "@metreeca/tile-data/store";
+import { host } from "@metreeca/tile-hive";
+import { Toast } from "@metreeca/tile-hive/toast";
+import { render } from "preact";
+import { courses } from "./pages/courses/courses.js";
+import { Courses } from "./pages/courses/index.js";
+import { datasets, DatasetsPage } from "./pages/datasets/index.js";
+import { Docs, docs } from "./pages/docs/index.js";
+import { documents } from "./pages/documents/documents.js";
+import { Documents } from "./pages/documents/index.js";
+import { events } from "./pages/events/events.js";
+import { Events } from "./pages/events/index.js";
+import { Unknown, unknown } from "./pages/index.js";
+import { Programs } from "./pages/programs/index.js";
+import { programs } from "./pages/programs/programs.js";
+import { Taxonomies } from "./pages/taxonomies/index.js";
+import { taxonomies } from "./pages/taxonomies/taxonomies.js";
+import { Units } from "./pages/units/index.js";
+import { units } from "./pages/units/units.js";
+import { Universities } from "./pages/universities/index.js";
+import { universities } from "./pages/universities/universities.js";
+import { Fetch } from "@metreeca/tile-data/fetch";
+
+
+render(<Hub/>, host("ec2u-hub"));
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function Hub() {
+
+	return <Board>
+
+		<Fetch>
+
+			<Store factory={fetch =>
+				createCachingStore(createRESTStore({ trusted: true, fetch }))
+			}>
+
+				<Router>
+
+					<Toast/>
+
+					<Routes>{{
+
+						[datasets.route]: <DatasetsPage/>,
+						[universities.route]: <Universities/>,
+						[units.route]: <Units/>,
+						[programs.route]: <Programs/>,
+						[courses.route]: <Courses/>,
+						[documents.route]: <Documents/>,
+						[events.route]: <Events/>,
+						[taxonomies.route]: <Taxonomies/>,
+
+						[docs.routes.about]: <Docs/>,
+						[docs.routes.datasets]: <Docs/>,
+
+						[unknown.route]: <Unknown/>
+
+					}}</Routes>
+
+				</Router>
+
+			</Store>
+
+		</Fetch>
+
+	</Board>;
+
+}

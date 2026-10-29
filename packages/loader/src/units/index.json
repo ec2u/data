@@ -1,0 +1,58 @@
+[
+	{
+		"id": "glade",
+		"label": "GLADE",
+		"prefLabel": {
+			"en": "Virtual Institute for Good Health and Well‑Being"
+		},
+		"altLabel": "GLADE",
+		"definition": {
+			"en": "GLADE is the EC2U Alliance’s Virtual Institute aimed to develop specific approaches in education,\nresearch, innovation and service transfer to the community in areas of the third UNSDG: Good Health\nand Well-being for All.\n\nThe Virtual Institute GLADE is the headquarter for:\n\n- EC2U Glade Literacy LAB that encourages itinerant conferences of EC2U specialists, Summer Schools\n  and short video trainings in the area of good health and well-being for all;\n- EC2U GLADE Transformative Research HUB that initiates and supports studies, guidelines for local\n  authorities, policy papers on Good Health and Well-being;\n- EC2U GLADE Healthy Campus Services that focuses on a brand new approach of Health in Campuses.\n\nThe main objective of the GLADE Virtual Institute is to develop cooperation’s contexts for promoting\nhealth and well-being in the 7 EC2U universities and their cities."
+		},
+		"homepage": [
+			"https://ec2u.eu/virtual-institutes-staff/glade-for-researchers-staff/"
+		]
+	},
+	{
+		"id": "viqe",
+		"label": "VIQE",
+		"prefLabel": {
+			"en": "Virtual Institute for Quality Education"
+		},
+		"altLabel": "VIQE",
+		"definition": {
+			"en": "Virtual Institutes are a completely new way of approaching and solving a given challenge. The VIQE,\nVirtual Institute for Quality Education combines education, research and innovation for advanced\nstudies in quality education.\n\nIn practice, VIQE will carry out the following activities:\n\n- Language Policy Research Project\n- Research Seed Mobility Programme on Language and Cultural Diversity\n- Joint PhD training activities for the existing PhD programmes on European languages and cultures."
+		},
+		"homepage": [
+			"https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-quality-education-viqe/"
+		]
+	},
+	{
+		"id": "viscc",
+		"label": "VISCC",
+		"prefLabel": {
+			"en": "Virtual Institute for Sustainable Cities and Communities"
+		},
+		"altLabel": "VISCC",
+		"definition": {
+			"en": "The Virtual Institute for Sustainable Cities and Communities (VISCC) aims at bringing together\nresearch, education and innovation, and outreaching in the field of the United Nation’s sustainable\ndevelopment goal n°11: “Sustainable Cities and Communities”.\n\nThe VISCC carries out scientific activities that promote interdisciplinarity, collaborative work and\nmobility between the EC2U Partner Universities, the cities and the citizens.\n\nWhat does the VISCC offer?\n\n- A Joint Master Degree in Sustainable Cities and Communities\n- PhD training activities and thesis projects in co-supervision\n- Online courses\n- Winter and Summer Schools\n- Research projects"
+		},
+		"homepage": [
+			"https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-sustainable-cities-and-communities/"
+		]
+	},
+	{
+		"id": "vipjsi",
+		"label": "VIPJSI",
+		"prefLabel": {
+			"en": "Virtual Institute for Peace, Justice and Strong Institutions"
+		},
+		"altLabel": "VIPJSI",
+		"definition": {
+			"en": "The Virtual Institute for Peace, Justice and Strong Institutions (VIPJSI) carries out scientific\nactivities that promote interdisciplinarity, collaborative work and mobility between the EC2U Partner\nUniversities, the cities and the citizens.\n\nThe VIPJSI aims at bringing together interdisciplinary research, education and innovation, and\noutreaching in the field of the United Nation’s Sustainable Development Goal #16: Promote peaceful and\ninclusive societies for sustainable development, provide access to justice for all and build\neffective, accountable and inclusive institutions at all levels.\n\nOur research deals with current questions regarding Peace, Justice and Strong Institutions in Europe\nfrom different points of view: law, politics, history and ethics.\n\nThe VIPJSI offers:\n\n- A Joint Master Program in Peace, Justice and Good Governance (starting 2027)\n- PhD training activities and thesis projects in co-supervision (starting 2025)\n- Online courses\n- Winter and Summer Schools\n- Thinktanks & Conferences"
+		},
+		"homepage": [
+			"https://ec2u.eu/virtual-institutes-staff/virtual-institute-for-peace-justice-and-strong-institutions/"
+		]
+	}
+]

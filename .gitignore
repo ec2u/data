@@ -1,12 +1,13 @@
-/.env
 /.idea/
 /.vscode/
 
+lib/
+cache/
+node_modules/
+
 /data/
 /target/
-/node_modules/
-
-@*
+deploy/.env
 
 *~
 ~*

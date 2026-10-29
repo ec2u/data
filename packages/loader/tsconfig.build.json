@@ -1,0 +1,28 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "customConditions": [],
+    "noEmit": false,
+    "composite": true,
+    "rootDir": "src",
+    "outDir": "lib",
+    "incremental": true,
+    "tsBuildInfoFile": "lib/.tsbuildinfo"
+  },
+  "include": [
+    "src",
+    "src/**/*.json"
+  ],
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test-d.ts"
+  ],
+  "references": [
+    {
+      "path": "../_/tsconfig.build.json"
+    },
+    {
+      "path": "../shared/tsconfig.build.json"
+    }
+  ]
+}

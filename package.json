@@ -1,37 +1,40 @@
 {
+  "name": "@ec2u/data",
+  "version": "0.0.0",
+  "description": "AI-based data ingestion pipelines for the EC2U Knowledge Hub",
+  "homepage": "https://github.com/ec2u/data",
+  "bugs": "https://github.com/ec2u/data/issues",
+  "license": "Apache-2.0",
+  "author": "EC2U Alliance",
+  "repository": "github:ec2u/data",
   "private": true,
   "type": "module",
-  "name": "@ec2u/data",
-  "description": "EC2U Knowledge Hub",
-  "homepage": "https://github.com/ec2u/data",
-  "repository": "github:ec2u/data",
-  "bugs": {
-    "url": "https://github.com/ec2u/data/issues",
-    "email": "cc@ml.ec2u.eu"
-  },
-  "license": "Apache-2.0",
-  "author": {
-    "name": "EC2U Connect Centre",
-    "email": "cc@ml.ec2u.eu",
-    "url": "https://www.ec2u.eu/"
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.22.0"
   },
   "scripts": {
-    "clean": "rm -rf node_modules",
-    "setup": "npm install",
-    "start": "vite --open --host",
-    "build": "vite build"
-  },
-  "dependencies": {
-    "@metreeca/view": "^4.0.0-2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "clean": "ush rm 'packages/*/lib' 'packages/*/node_modules' node_modules",
+    "prime": "npm ci",
+    "setup": "npm ci && ush ln ~/Metreeca/Packages",
+    "build": "ush rm 'packages/*/lib' && tsc --build tsconfig.build.json && npm run build --workspaces --if-present",
+    "check": "npx vitest run",
+    "start": "concurrently 'npm run serve -w packages/server' 'wait-on tcp:8080 && npm run watch -w packages/client'"
   },
   "devDependencies": {
-    "@types/react": "^18.2.65",
-    "@types/react-dom": "^18.2.21",
-    "@vitejs/plugin-react": "^4.2.1",
-    "postcss-nesting": "^12.1.0",
-    "typescript": "^5.4.2",
-    "vite": "^6.3.3"
+    "@metreeca/rack": "^0.6.1",
+    "concurrently": "^10.0.5",
+    "tsx": "^4.23.12",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10",
+    "wait-on": "^9.1.0"
+  },
+  "allowScripts": {
+    "@google/genai@2.30.0": true,
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.3": true,
+    "protobufjs@7.6.6": true
   }
 }

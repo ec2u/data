@@ -1,0 +1,29 @@
+{
+  "name": "@ec2u/data-client",
+  "version": "0.0.0",
+  "description": "Knowledge Hub web UI",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "watch": "vite --open --host"
+  },
+  "dependencies": {
+    "@ec2u/data-shared": "*",
+    "@metreeca/blue": "^0.13.1",
+    "@metreeca/core": "^0.13.0",
+    "@metreeca/http": "^0.5.0",
+    "@metreeca/keep": "^0.12.2",
+    "@metreeca/keep-rest": "^0.12.2",
+    "@metreeca/tile": "^0.6.0",
+    "@metreeca/tile-cell": "^0.6.0",
+    "@metreeca/tile-data": "^0.6.0",
+    "@metreeca/tile-hive": "^0.6.0",
+    "preact": "^10.29.8"
+  },
+  "devDependencies": {
+    "@metreeca/rack": "^0.6.0",
+    "@preact/preset-vite": "^2.10.6",
+    "vite": "^8.3.0"
+  }
+}
