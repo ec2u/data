@@ -17,11 +17,18 @@
 import { Resource } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { ISCED2011Topic } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { ISCEDF2013Topic } from "@ec2u/data-shared/taxonomies/isced-f-2013.js";
+import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { ec2u } from "@ec2u/data-shared";
 import { SchemaLearningResource } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
+import { string } from "@metreeca/blue/string";
+import { resolve } from "@metreeca/core/resource";
+import type { Reference } from "@metreeca/qest/state";
+import * as uuid from "uuid";
+
+
+const YearPattern = "^\\d{4}/\\d{4}$";
 
 
 export function Offering() {
@@ -35,10 +42,81 @@ export function Offering() {
 
 	}, {
 
+		year: optional(string({ pattern: YearPattern }), {
+
+			name: "Academic Year",
+			description: "The academic year in which the offering is delivered."
+
+		}),
+
 		provider: optional(reference(Organization)),
 
 		educationalLevel: multiple(reference(ISCED2011Topic)),
-		about: multiple(reference(ISCEDF2013Topic))
+		about: multiple(reference(Topic)), // ISCED-F 2013 fields and SDGs ;( a union of references types models as {}
+
+		digest: optional(string, {
+
+			hidden: true,
+
+			forward: ec2u,
+
+			name: "Source Digest",
+			description: "A unique identification of the content the source entry carried when it was read."
+
+		})
 
 	});
+}
+
+
+/**
+ * Identifies an offering listed by a partner university.
+ *
+ * An offering is named by the key the source lists it under together with the academic year and terms it is delivered
+ * in, so that the same key delivered in different years or terms names distinct offerings, while a listing re-read on
+ * a later run restates the offerings it already stood for. A missing year or term is a value of its own: an offering
+ * with no stated year never shares its identifier with one delivered in a stated year. Terms are matched as a set, so
+ * their order and repetitions are immaterial, and an empty list of terms is the same as no terms at all.
+ *
+ * @param dataset The identifier of the dataset the offering belongs to
+ * @param university The identifier of the university listing the offering
+ * @param key The key the source lists the offering with
+ * @param period The academic period the offering is delivered in
+ * @param period.year The academic year, formatted as `YYYY/YYYY`
+ * @param period.term The academic terms
+ *
+ * @returns The identifier of the offering listed under `key` by `university` for `period`, within `dataset`
+ *
+ * @throws {@link !RangeError RangeError} If `key` is blank or `year` is malformed
+ */
+export function getOfferingId(dataset: Reference, university: Reference, key: string, {
+
+	year,
+	term = []
+
+}: {
+
+	readonly year?: string
+	readonly term?: readonly string[]
+
+} = {}): Reference {
+
+	if ( key.trim() === "" ) {
+
+		throw new RangeError("blank offering key");
+
+	} else if ( year !== undefined && !new RegExp(YearPattern).test(year) ) {
+
+		throw new RangeError(`malformed academic year <${year}>`);
+
+	} else {
+
+		// a JSON tuple keeps the fields apart whatever they hold, and null states a missing year in a slot of its own
+
+		const name = JSON.stringify([key, year ?? null, [...new Set(term)].sort()]); // ;( no es2023 toSorted(): sorts a copy
+
+		return resolve(dataset, uuid.v3(name, uuid.v3(university, uuid.v3.URL)));
+
+	}
+
 }
