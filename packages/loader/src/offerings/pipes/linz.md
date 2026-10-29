@@ -20,7 +20,8 @@ the catalogue: a pruning below that share requires a forced reload, once the wit
 | https://ec2u.datahub.jku.at/api/1/courses  | courses [de, en]     | held in GCP Secret Manager as `courses-linz-url`; no descriptions |
 
 A program is keyed by its first `identifier`, a course by its `courseCode`; the APIs state no academic year or term, so
-each code names a single offering, and a course listed more than once is stated once. Names and descriptions keep the
+offerings are dated with the academic year current at retrieval, switching in August, and marked as inferred, while
+terms are left unstated; a course listed more than once is stated once. Names and descriptions keep the
 languages the records tag them with, a German-only text being translated to English. `educationalLevel` states a legacy
 `/concepts/isced-2011/{level}` address, mapped to the ISCED 2011 taxonomy, and a field of education is classified from
 the texts against ISCED-F 2013. A course names its programs by their first `identifier` in `inProgram`, and a

@@ -20,7 +20,9 @@ costs a run rather than the catalogue, and pruning below that share requires a f
 
 A program is keyed by its `programCode` and named in Spanish; a course is keyed by its `code`, named in English and
 Spanish where the API states each, with its `ects` as credits and its teaching period (`A`, `S`, `Q`, `T`) as the time
-it requires. The APIs state no academic year or term. The memberships listing repeats some pairs and names courses the
+it requires. The APIs state no academic year or term: offerings are dated with the academic year current at retrieval,
+switching in August, and marked as inferred, while terms are left unstated. The memberships listing repeats some pairs
+and names courses the
 courses listing omits: each course links to the listed programs it is taught in, once, and memberships are read before
 any course, so a memberships listing that fails to load or comes back empty fails the run before anything is stated.
 Values are stripped of the stray quotes some reach the APIs wrapped in, which would otherwise surface in the labels.

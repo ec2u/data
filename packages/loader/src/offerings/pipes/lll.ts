@@ -111,8 +111,9 @@ export async function LLL() {
  * A row states one course delivered by the partner university named in `University`, keyed by its `Code` or, failing
  * that, by its English or local title, prefixed with `LLL/` so that it never names the same course as another source
  * listing the same code. `Year` and the comma-separated `Term` place the course in its academic period, an `each
- * semester` year standing for a course with no year of its own; titles, provider and program are read from their
- * `(English)` and `(Local)` column pairs, and the free texts as English, the language the sheet states them in.
+ * semester` year standing for a course stating no year, whose year the sink then infers from the retrieval date.
+ * Titles, provider and program are read from their `(English)` and `(Local)` column pairs, and the free texts as
+ * English, the language the curators write them in, so that they are never sent for translation.
  *
  * The course is tagged as addressed to continuing education students; its levels are read from `ISCED-2011`, its
  * fields from `ISCED-F 2013` along with their broader fields and its goals from `SDG`. `Badge` is stated as the Open

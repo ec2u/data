@@ -20,6 +20,7 @@ import { ISCED2011Topic } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { ec2u } from "@ec2u/data-shared";
 import { SchemaLearningResource } from "@ec2u/data-shared/vocabularies/schema/learning.js";
+import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { iri, string } from "@metreeca/blue/string";
@@ -46,6 +47,13 @@ export function Offering() {
 
 			name: "Academic Year",
 			description: "The academic year in which the offering is delivered."
+
+		}),
+
+		inferred: optional(boolean, {
+
+			name: "Inferred Year",
+			description: "Whether the academic year was inferred from the retrieval date, the source stating none."
 
 		}),
 
@@ -77,6 +85,25 @@ export function Offering() {
 		})
 
 	});
+}
+
+
+/**
+ * Infers the academic year current at a date.
+ *
+ * An academic year runs from August to July, so a date from August onwards falls in the year starting in its calendar
+ * year, and an earlier one in the year that started the calendar year before; months are read in UTC.
+ *
+ * @param date The date the academic year is inferred for
+ *
+ * @returns The academic year current at `date`, formatted as `YYYY/YYYY`
+ */
+export function getAcademicYear(date: Date): string {
+
+	const start = date.getUTCFullYear()-(date.getUTCMonth() < 7 ? 1 : 0); // months are zero-based: 7 is August
+
+	return `${start}/${start+1}`;
+
 }
 
 

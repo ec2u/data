@@ -24,6 +24,7 @@ import { describe, expect, it } from "vitest";
 import {
 	type Attached,
 	type CourseDraft,
+	date,
 	identify,
 	organization,
 	person,
@@ -62,6 +63,44 @@ function attached(draft: ProgramDraft | CourseDraft, extra: Partial<Attached> = 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+describe("date", () => {
+
+	const current = "2026/2027";
+
+	it("infers the year of a draft stating none", async () => {
+		expect(date({ ...program, year: undefined }, current)).toMatchObject({ year: current, inferred: true });
+	});
+
+	it("leaves a draft stating a year as it stands", async () => {
+
+		const dated = date(course, current);
+
+		expect(dated).toMatchObject({ year });
+		expect(dated).not.toHaveProperty("inferred");
+
+	});
+
+	it("dates the programs a dated course lists with no year", async () => {
+		expect(date({ ...course, year: undefined, inProgram: [{ key: "05201" }, { key: "05202", year }] }, current))
+			.toMatchObject({ inProgram: [{ key: "05201", year: current }, { key: "05202", year }] });
+	});
+
+	it("leaves the programs of a course stating a year as they stand", async () => {
+		expect(date({ ...course, inProgram: [{ key: "05201" }] }, current))
+			.toMatchObject({ inProgram: [{ key: "05201" }] });
+	});
+
+	it("infers no terms", async () => {
+
+		const { term, year, ...undated } = course;
+
+		expect(date(undated, current)).not.toHaveProperty("term");
+
+	});
+
+});
+
 
 describe("identify", () => {
 

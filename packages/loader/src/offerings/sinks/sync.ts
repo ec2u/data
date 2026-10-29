@@ -16,6 +16,7 @@
 
 import { CommentLength, LabelLength } from "@ec2u/data-shared";
 import { Course, courses, Courses, getCourseId } from "@ec2u/data-shared/courses/index.js";
+import { getAcademicYear } from "@ec2u/data-shared/offerings/index.js";
 import { getOrganizationId, Organization, organizations } from "@ec2u/data-shared/organizations/index.js";
 import { getPersonId, Person, persons } from "@ec2u/data-shared/persons/index.js";
 import { getProgramId, Program, programs, Programs } from "@ec2u/data-shared/programs/index.js";
@@ -189,6 +190,10 @@ export type Attached = Entry & {
  * a university may be served by several sources: every offering records the source stating it, and a source states,
  * skips and retracts only the offerings it stated itself, leaving the ones other sources state untouched.
  *
+ * A draft stating no academic year is dated as {@link date} describes, with the year current at the start of the run,
+ * before anything else is done with it: the inferred year names the offering like a stated one, so at the August
+ * rollover a source stating no years lists a new set of offerings, retracting the previous ones past the floor only.
+ *
  * Every offering is stated as it is drawn, each in a store operation of its own, so a run cut short keeps what it has
  * stated and the next one carries on from there. A draft whose digest matches the one recorded with the offering the
  * store already holds is dropped before it is completed, so an unchanged listing costs a retrieval and a comparison
@@ -220,8 +225,11 @@ export function sync(source: Reference, {
 
 } = {}): Sink<Draft, Tally> {
 
+	const year = getAcademicYear(new Date()); // taken once, so a run straddling the rollover dates all drafts alike
+
 	return drafts => pipe(
 		(items(drafts))
+		(map(draft => date(draft, year)))
 		(tee(
 			drafts => {
 
@@ -477,6 +485,47 @@ export function retract(source: Reference): Task<Reference, Delta> {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Dates a draft its source states no academic year for.
+ *
+ * A draft stating no year is given `year`, inferred from the retrieval date, and marked as inferred; a course so dated
+ * also names the programs it lists with no year as delivered in `year`, as they come from the same retrieval. A draft
+ * stating a year of its own is returned as it stands. Terms the source does not state are never inferred.
+ *
+ * @param draft The draft to date
+ * @param year The academic year current at the retrieval date, formatted as `YYYY/YYYY`
+ *
+ * @returns `draft`, given `year` if it stated none
+ */
+export function date(draft: Draft, year: string): Draft {
+
+	if ( draft.year !== undefined ) {
+
+		return draft;
+
+	} else if ( draft.kind === "program" ) {
+
+		return immutable({ ...draft, year, inferred: true });
+
+	} else {
+
+		return immutable({
+
+			...draft,
+
+			year,
+			inferred: true,
+
+			...opt(draft.inProgram, programs => ({
+				inProgram: programs.map(listing => listing.year === undefined ? { ...listing, year } : listing)
+			}))
+
+		});
+
+	}
+
+}
 
 /**
  * Identifies the offering a draft states.
