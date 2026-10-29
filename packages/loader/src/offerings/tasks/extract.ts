@@ -128,7 +128,7 @@ export function Reported() {
 			description: "The study workload of a course, as an ISO 8601 duration"
 		}),
 
-		code: optional(text, {
+		code: optional(string, {
 			name: "Code",
 			description: "The code of a course"
 		}),

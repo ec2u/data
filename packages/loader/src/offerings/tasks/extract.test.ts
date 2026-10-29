@@ -17,9 +17,13 @@
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { umea } from "@ec2u/data-shared/universities/index.core.js";
+import { pipe } from "@metreeca/flow";
+import { items } from "@metreeca/flow/feeds";
+import { toArray } from "@metreeca/flow/sinks";
+import { validate } from "@metreeca/mime-jsonld";
 import { describe, expect, it } from "vitest";
 import type { CourseDraft, ProgramDraft } from "../sinks/sync.js";
-import { drafted, type Reported } from "./extract.js";
+import { drafted, Reported } from "./extract.js";
 
 
 const url = "https://www.umu.se/utbildning/program/datavetenskap/";
@@ -151,6 +155,26 @@ describe("drafted", () => {
 			expect(read).not.toHaveProperty("programPrerequisites");
 
 		});
+
+		it("leaves out a blank code", async () => {
+			expect(drafted(course, url, { ...reported, code: " " })).not.toHaveProperty("courseCode");
+		});
+
+	});
+
+});
+
+describe("Reported", () => {
+
+	it("accepts a blank or padded code", async () => {
+
+		const accepted = await pipe(
+			(items([{ ...reported, code: "" }, { ...reported, code: " 5DV001 " }]))
+			(validate(Reported))
+			(toArray())
+		);
+
+		expect(accepted).toHaveLength(2);
 
 	});
 
