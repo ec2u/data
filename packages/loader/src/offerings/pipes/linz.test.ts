@@ -19,7 +19,7 @@ import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { linz } from "@ec2u/data-shared/universities/index.core.js";
 import { describe, expect, it } from "vitest";
-import { course, program } from "./linz.js";
+import { course, program } from "./linz.core.js";
 
 
 const programRecord = {

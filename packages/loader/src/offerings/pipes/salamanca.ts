@@ -15,12 +15,9 @@
  */
 
 import { base } from "@ec2u/data-shared";
-import { salamanca } from "@ec2u/data-shared/universities/index.core.js";
-import { isArray, isNumber, opt, type Optional } from "@metreeca/core";
-import { multiple } from "@metreeca/core/arrays";
+import { isArray, opt, type Optional } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
@@ -29,9 +26,9 @@ import { service } from "@metreeca/gear";
 import { createVault } from "@metreeca/gear/vault";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
-import { isHTTP } from "@metreeca/work/core/resources.js";
 import { execute } from "../../index.core.js";
-import { type CourseDraft, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
+import { type Draft, sync } from "../sinks/sync.js";
+import { course, type CourseRecord, program, type ProgramRecord, text } from "./salamanca.core.js";
 
 
 const Source = resolve(base, "/offerings/salamanca");
@@ -40,47 +37,14 @@ const ProgramsURL = "offerings-salamanca-programs-url";
 const CoursesURL = "offerings-salamanca-courses-url";
 const MembershipsURL = "offerings-salamanca-programs-courses-url";
 
-const Periods: { readonly [code: string]: string } = {
-	A: "P365D",
-	S: "P180D",
-	Q: "P120D",
-	T: "P90D"
-};
-
 
 const logger = log(import.meta.url);
 
 
 /**
- * A program record of the Salamanca programs API.
- */
-export type ProgramRecord = {
-
-	readonly programCode?: null | string
-	readonly programName?: null | string
-	readonly programUrl?: null | string
-
-}
-
-/**
- * A course record of the Salamanca courses API.
- */
-export type CourseRecord = {
-
-	readonly code?: null | string
-	readonly nameInEnglish?: null | string
-	readonly nameInSpanish?: null | string
-	readonly url?: null | string
-
-	readonly ects?: null | number | string
-	readonly field_guias_asig_tdu_value?: null | string
-
-}
-
-/**
  * A program-course membership record of the Salamanca memberships API.
  */
-export type MembershipRecord = {
+type MembershipRecord = {
 
 	readonly code?: null | string
 	readonly programCode?: null | string
@@ -214,88 +178,4 @@ function read<R, D extends Draft>(record: R, reader: (record: R) => Optional<D>)
 
 	}
 
-}
-
-
-/**
- * Reads a program record of the Salamanca programs API.
- *
- * The program is keyed by its `programCode`, which it also states as its identifier, and named in Spanish by its
- * `programName`; its `programUrl` is stated as its web page. Values are stripped of the stray quotes some reach the
- * API wrapped in, and blank ones are left out as if the record did not state them at all.
- *
- * @param record The program record as the API states it
- *
- * @returns The draft of the program, or `undefined` if the record states no code or no name
- */
-export function program({ programCode, programName, programUrl }: ProgramRecord): Optional<ProgramDraft> {
-	return opt(text(programCode), key => opt(text(programName), name => immutable({
-
-		kind: "program",
-
-		university: salamanca,
-		key,
-
-		identifier: key,
-		name: { [salamanca.locale]: name },
-		url: [text(programUrl)].flatMap(multiple).filter(isHTTP)
-
-	})));
-}
-
-/**
- * Reads a course record of the Salamanca courses API.
- *
- * The course is keyed by its `code`, which it also states as its course code, and named in English and Spanish by its
- * `nameInEnglish` and `nameInSpanish`; its `url` is stated as its web page and its `ects` as its credits. The teaching
- * period code `field_guias_asig_tdu_value` sets the time the course requires: a year for `A`, a semester for `S`, four
- * months for `Q` and three for `T`. The course is linked to the programs `memberships` lists it under.
- *
- * @param record The course record as the API states it
- * @param memberships The codes of the listed programs each course is taught in, keyed by course code
- *
- * @returns The draft of the course, or `undefined` if the record states no code or no name
- */
-export function course({
-	code, nameInEnglish, nameInSpanish, url, ects, field_guias_asig_tdu_value
-}: CourseRecord, memberships: ReadonlyMap<string, readonly string[]>): Optional<CourseDraft> {
-
-	const english = text(nameInEnglish);
-	const spanish = text(nameInSpanish);
-
-	return opt(text(code), key => english === undefined && spanish === undefined ? undefined : immutable({
-
-		kind: "course",
-
-		university: salamanca,
-		key,
-
-		courseCode: key,
-		name: {
-			...opt(english, en => ({ en })),
-			...opt(spanish, es => ({ [salamanca.locale]: es }))
-		},
-		url: [text(url)].flatMap(multiple).filter(isHTTP),
-
-		...opt(credits(ects), numberOfCredits => ({ numberOfCredits })),
-		...opt(Periods[text(field_guias_asig_tdu_value) ?? ""], timeRequired => ({ timeRequired })),
-
-		inProgram: (memberships.get(key) ?? []).map(program => ({ key: program }))
-
-	}));
-
-}
-
-
-/**
- * Reads a non-blank string, trimmed and stripped of a matching pair of leading and trailing quotes.
- */
-function text(value: Optional<null | string>): Optional<string> {
-	return value?.trim().replace(/^(['"]+)(.*?)\1$/s, "$2").trim() || undefined;
-}
-
-function credits(value: Optional<null | number | string>): Optional<number> {
-	return opt(isNumber(value) ? value : opt(text(value), Number.parseFloat), credits =>
-		Number.isFinite(credits) && credits > 0 ? credits : undefined
-	);
 }

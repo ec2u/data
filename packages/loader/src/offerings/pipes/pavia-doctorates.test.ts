@@ -18,7 +18,7 @@ import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { pavia } from "@ec2u/data-shared/universities/index.core.js";
 import { describe, expect, it } from "vitest";
-import { lead } from "./pavia-doctorates.js";
+import { lead } from "./pavia-doctorates.core.js";
 
 
 const url = "https://phd.unipv.it/comp-mat/";

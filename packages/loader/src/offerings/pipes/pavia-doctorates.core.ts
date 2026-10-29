@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
+import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
+import { pavia } from "@ec2u/data-shared/universities/index.core.js";
 import { schema } from "@metreeca/blue";
 import { multiple, required, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
+import type { Optional } from "@metreeca/core";
+import { immutable } from "@metreeca/core/values";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { flat, map } from "@metreeca/flow/tasks";
@@ -26,6 +31,8 @@ import { getResource } from "@metreeca/gear/space";
 import { createGoogleAI, json } from "@metreeca/llms-google";
 import { validate } from "@metreeca/mime-jsonld";
 import { log, report } from "@metreeca/tape";
+import { isHTTP } from "@metreeca/work/core/resources.js";
+import type { Lead } from "../sinks/crawl.js";
 
 
 /**
@@ -131,5 +138,45 @@ export function doctorates(): Task<string, Listed> {
 
 		}
 	}
+
+}
+
+/**
+ * Seeds a doctorate the school index lists.
+ *
+ * The doctorate is keyed by its page address and named `Dottorato in` or `Doctorate in` its listed name, depending on
+ * the language the name is written in, falling back to Italian for an unknown language; it is stated at ISCED 2011
+ * level 8, awarding the Italian research doctorate degree, facts the page extraction never overrides.
+ *
+ * @param listed The doctorate as the index lists it
+ *
+ * @returns The lead of the doctorate, or `undefined` if its address is unusable or its name blank
+ */
+export function lead({ name, language, url }: Listed): Optional<Lead> {
+
+	const address = url.trim();
+	const title = name.trim();
+	const locale = language === "en" ? "en" : pavia.locale;
+
+	return isHTTP(address) && title !== "" ? immutable({
+
+		url: address,
+
+		seed: immutable({
+
+			kind: "program",
+
+			university: pavia,
+			key: address,
+
+			name: { [locale]: `${locale === "en" ? "Doctorate in" : "Dottorato in"} ${title}` },
+			url: [address],
+
+			educationalLevel: [getTopicId(isced2011, "8")],
+			educationalCredentialAwarded: { credentialCategory: "Degree", name: { [pavia.locale]: "Dottorato di Ricerca" } }
+
+		})
+
+	}) : undefined;
 
 }

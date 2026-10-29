@@ -21,7 +21,7 @@ import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { coimbra } from "@ec2u/data-shared/universities/index.core.js";
 import { describe, expect, it } from "vitest";
-import { row } from "./lll.js";
+import { row } from "./lll.core.js";
 
 
 const year = "2025/2026";

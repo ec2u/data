@@ -16,7 +16,7 @@
 
 import { umea } from "@ec2u/data-shared/universities/index.core.js";
 import { describe, expect, it } from "vitest";
-import { leads } from "./umea.js";
+import { leads } from "./umea.core.js";
 
 
 const program = "https://www.umu.se/utbildning/program/apotekarprogrammet/";

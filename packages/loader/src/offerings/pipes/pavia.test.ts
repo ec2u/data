@@ -24,7 +24,7 @@ import { toArray } from "@metreeca/flow/sinks";
 import { xml, xpath } from "@metreeca/mime-xml";
 import { describe, expect, it } from "vitest";
 import type { CourseDraft, ProgramDraft } from "../sinks/sync.js";
-import { courses, pages, program, programs, qualify } from "./pavia.js";
+import { courses, pages, program, programs, qualify } from "./pavia.core.js";
 
 
 const catalogue = "https://unipv.coursecatalogue.cineca.it";
