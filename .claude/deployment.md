@@ -68,7 +68,7 @@ also deletes every Cloud Run revision except the one serving traffic.
 | `pipe-deployer`                | `roles/run.admin`                    | the project                                              |
 | `pipe-deployer`                | `roles/artifactregistry.writer`      | the `pipe` registry                                      |
 | `pipe-deployer`                | `roles/iam.serviceAccountUser`       | each runtime service account                             |
-| GitHub repository `ec2u/pipe`  | `roles/iam.workloadIdentityUser`     | `pipe-deployer`, through the `github` pool               |
+| GitHub repository `ec2u/data`  | `roles/iam.workloadIdentityUser`     | `pipe-deployer`, through the `github` pool               |
 
 ## GraphDB
 
