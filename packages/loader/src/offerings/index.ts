@@ -21,7 +21,9 @@ import { Jena } from "./pipes/jena.js";
 import { Linz } from "./pipes/linz.js";
 import { LLL } from "./pipes/lll.js";
 import { PaviaDoctorates } from "./pipes/pavia-doctorates.js";
+import { PaviaMasters } from "./pipes/pavia-masters.js";
 import { PaviaSchools } from "./pipes/pavia-schools.js";
+import { PaviaTraining } from "./pipes/pavia-training.js";
 import { Pavia } from "./pipes/pavia.js";
 import { Poitiers } from "./pipes/poitiers.js";
 import { Salamanca } from "./pipes/salamanca.js";
@@ -38,7 +40,9 @@ export function offerings(): Router {
 		.post("/lll", worker(LLL))
 		.post("/pavia", worker(Pavia))
 		.post("/pavia-doctorates", worker(PaviaDoctorates))
+		.post("/pavia-masters", worker(PaviaMasters))
 		.post("/pavia-schools", worker(PaviaSchools))
+		.post("/pavia-training", worker(PaviaTraining))
 		.post("/poitiers", worker(Poitiers))
 		.post("/salamanca", worker(Salamanca))
 		.post("/umea", worker(Umea));

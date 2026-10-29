@@ -18,58 +18,47 @@ import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { pavia } from "@ec2u/data-shared/universities/index.core.js";
 import { describe, expect, it } from "vitest";
-import { school } from "./pavia-schools.js";
+import { lead } from "./pavia-schools.core.js";
+
+
+const url = "https://portale.unipv.it/it/didattica/post-laurea/scuole-di-specializzazione/cardiochirurgia-0";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-describe("school", () => {
+describe("lead", () => {
 
-	it("drafts the school the listing describes", async () => {
-		expect(school({
-			name: "Cardiochirurgia",
-			summary: "Sintesi.",
-			contents: "Contenuti.",
-			outcomes: "Competenze.",
-			prerequisites: "Laurea in Medicina.",
-			requirements: "Esame finale."
-		})).toEqual({
-
-			kind: "program",
-
-			university: pavia,
-			key: "Scuola di Specializzazione in Cardiochirurgia",
-
-			generated: true,
-
-			name: { it: "Scuola di Specializzazione in Cardiochirurgia" },
-
-			disambiguatingDescription: { it: "Sintesi." },
-			teaches: { it: "Contenuti." },
-			assesses: { it: "Competenze." },
-			programPrerequisites: { it: "Laurea in Medicina." },
-			competencyRequired: { it: "Esame finale." },
-
-			educationalLevel: [getTopicId(isced2011, "8")],
-			educationalCredentialAwarded: {
-				credentialCategory: "Degree",
-				name: { it: "Diploma di Specializzazione" }
+	it("seeds the school the catalogue lists", async () => {
+		expect(lead({ url, type: "Laureati medici", name: "Cardiochirurgia", notes: ["Durata 5 anni"] })).toEqual({
+			url,
+			seed: {
+				kind: "program",
+				university: pavia,
+				key: url,
+				name: { it: "Scuola di Specializzazione in Cardiochirurgia" },
+				url: [url],
+				timeToComplete: "P5Y",
+				educationalLevel: [getTopicId(isced2011, "8")],
+				educationalCredentialAwarded: {
+					credentialCategory: "Degree",
+					name: { it: "Diploma di Specializzazione" }
+				}
 			}
-
 		});
 	});
 
-	it("leaves out blank texts", async () => {
-
-		const drafted = school({ name: "Cardiochirurgia", summary: " " });
-
-		expect(drafted).not.toHaveProperty("disambiguatingDescription");
-		expect(drafted).not.toHaveProperty("teaches");
-
+	it("names schools listed in capitals in sentence case", async () => {
+		expect(lead({ url, type: "Laureati medici", name: "MALATTIE DELL'APPARATO DIGERENTE", notes: [] })?.seed)
+			.toMatchObject({ name: { it: "Scuola di Specializzazione in Malattie dell'apparato digerente" } });
 	});
 
-	it("drafts nothing from a blank name", async () => {
-		expect(school({ name: " " })).toBeUndefined();
+	it("leaves out an unstated duration", async () => {
+		expect(lead({ url, type: "Laureati medici", name: "Cardiochirurgia", notes: [] })?.seed)
+			.not.toHaveProperty("timeToComplete");
+	});
+
+	it("seeds nothing from a blank name", async () => {
+		expect(lead({ url, type: "Laureati medici", name: " ", notes: [] })).toBeUndefined();
 	});
 
 });
