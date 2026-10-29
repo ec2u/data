@@ -12,9 +12,9 @@ are harvested by pipes of their own, each documented in its own integration note
 
 Programs drawn from the public ESSE3 offer API and courses from the internal UGov teaching plan export, linked to the
 public course catalogue and stated one at a time, so an interrupted run keeps the offerings it stated and the next one
-carries on; unchanged ones are skipped. A run naming fewer than three quarters of the stored offerings retracts nothing
-and fails, and a teaching plan that fails to load fails the run before anything is stated, so a failed request never
-retracts the courses of its program on the strength of their absence from a scan that could not see them.
+carries on; unchanged ones are skipped. A teaching plan that fails to load is logged and lists no course, and a run
+naming fewer than three quarters of the stored offerings retracts nothing and fails, so failed plans never empty the
+dataset; the courses of a program whose plan failed are retracted and restated once the plan loads again.
 
 | Source                                                        | Description           | Notes                                                                  |
 |---------------------------------------------------------------|-----------------------|------------------------------------------------------------------------|
@@ -34,7 +34,7 @@ it states, and `OB_SVIL_SOS` is read for the SDGs it numbers. Names shared by se
 cohort of their catalogue page, names shared by several courses with the name of their program.
 
 - **2026-10-29** – ported to the TypeScript loader: offerings stated one at a time with unchanged ones skipped and a
-	retraction floor; the offer year switches in August; a teaching plan failing to load fails the run
+	retraction floor; the offer year switches in August; a teaching plan failing to load is logged like any other failure
 - **2026-09-21** – link programs and courses to their pages on the CINECA course catalogue, composing the address from
   codes the sources already carry and keeping it only once the catalogue confirms it; identify a course by program as
   well as by code, so that each entry stands for one published page, and qualify a course name with its program and a

@@ -63,13 +63,11 @@ if ( import.meta.main ) {
  *
  * Reads the programs ESSE3 lists for the academic year current at retrieval, switching in August, page by page until a
  * short page closes the listing, then the teaching plan UGov exports for each of them. A teaching plan that fails to
- * load fails the run before anything is stated, so the courses of a program are never retracted on the strength of a
- * failed request. Programs and courses are linked to their catalogue pages where the catalogue confirms them, and
+ * load is logged and lists no course, leaving the retraction floor to keep the courses of failed plans from being
+ * retracted wholesale. Programs and courses are linked to their catalogue pages where the catalogue confirms them, and
  * qualified as {@link programs} and {@link courses} describe, before being stated.
  *
  * @returns A promise resolving to a tally of what the run did
- *
- * @throws {@link !Error Error} If the teaching plan of a listed program fails to load
  */
 export async function Pavia() {
 
@@ -89,30 +87,19 @@ export async function Pavia() {
 		(toArray())
 	);
 
-	const failed = harvests.filter(({ plan }) => !plan).length;
+	const stated = programs(harvests.flatMap(({ program }) => program === undefined ? [] : [program]));
+	const taught = qualify(harvests.flatMap(({ courses }) => courses), stated);
 
-	if ( failed > 0 ) {
-
-		throw new Error(`failed teaching plans for <${failed}> programs`);
-
-	} else {
-
-		const stated = programs(harvests.flatMap(({ program }) => program === undefined ? [] : [program]));
-		const taught = qualify(harvests.flatMap(({ courses }) => courses), stated);
-
-		return pipe(
-			(items<Draft>([...stated, ...taught]))
-			(sync(Source))
-		);
-
-	}
+	return pipe(
+		(items<Draft>([...stated, ...taught]))
+		(sync(Source))
+	);
 
 
 	async function harvest(record: OfferRecord): Promise<{
 
 		readonly program?: { readonly draft: ProgramDraft, readonly cohort?: number }
 		readonly courses: readonly CourseDraft[]
-		readonly plan: boolean
 
 	}> {
 
@@ -137,8 +124,7 @@ export async function Pavia() {
 
 			...opt(draft, draft => ({ program: { draft, ...opt(page?.cohort, cohort => ({ cohort })) } })),
 
-			courses: located,
-			plan: plans.length > 0
+			courses: located
 
 		});
 

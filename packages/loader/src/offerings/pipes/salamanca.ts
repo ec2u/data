@@ -65,12 +65,10 @@ if ( import.meta.main ) {
  * Harvests the programs and courses listed by the Salamanca study guides APIs.
  *
  * Reads the programs listing and the program-course memberships first, then the courses listing, each course linked to
- * the listed programs it is taught in. A memberships listing that fails to load, or comes back empty, fails the run
- * before anything is stated, so courses are never restated without the programs they belong to.
+ * the listed programs it is taught in. A memberships listing that fails to load, or comes back empty, is logged and
+ * links no course to its programs until a later run reads it again, while programs and courses are still stated.
  *
  * @returns A promise resolving to a tally of what the run did
- *
- * @throws {@link !Error Error} If the memberships listing fails to load or lists no membership
  */
 export async function Salamanca() {
 
@@ -82,26 +80,22 @@ export async function Salamanca() {
 	]);
 
 	if ( memberships.length === 0 ) {
-
-		throw new Error("empty program-course memberships listing");
-
-	} else {
-
-		const listed = programs.flatMap(record => read(record, program));
-		const index = programsByCourse(memberships, new Set(listed.map(({ key }) => key)));
-
-		const taught: Feed<Draft> = pipe(
-			(items([await vault(CoursesURL)]))
-			(records<CourseRecord>())
-			(flat(map(record => read(record, record => course(record, index)))))
-		);
-
-		return pipe(
-			(flat(items([items<Draft>(listed), taught])))
-			(sync(Source))
-		);
-
+		logger.error`empty program-course memberships listing`;
 	}
+
+	const listed = programs.flatMap(record => read(record, program));
+	const index = programsByCourse(memberships, new Set(listed.map(({ key }) => key)));
+
+	const taught: Feed<Draft> = pipe(
+		(items([await vault(CoursesURL)]))
+		(records<CourseRecord>())
+		(flat(map(record => read(record, record => course(record, index)))))
+	);
+
+	return pipe(
+		(flat(items([items<Draft>(listed), taught])))
+		(sync(Source))
+	);
 
 }
 
