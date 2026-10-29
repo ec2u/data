@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import type { Some } from "@metreeca/core/arrays";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
@@ -209,7 +208,7 @@ describe("denoise", () => {
 	/**
 	 * Runs a page through a denoiser, rendering the result.
 	 */
-	async function denoised(markup: string, ...rules: readonly Some<(document: Document) => Document>[]): Promise<string> {
+	async function denoised(markup: string, ...rules: readonly ((document: Document) => Document)[]): Promise<string> {
 
 		const [document] = await pipe((items([await page(markup)]))(denoise(...rules))(toArray()));
 
@@ -239,28 +238,6 @@ describe("denoise", () => {
 			marker(" beta"),
 			marker(" gamma")
 		)).toBe("alpha@example.com\n\nbeta gamma");
-
-	});
-
-	it("accepts extra rules as arrays, mixed with bare rules, flattening them in the order given", async () => {
-
-		expect(await denoised(
-			`<p>alpha</p>`,
-			[marker(" beta"), marker(" gamma")],
-			marker(" delta"),
-			[marker(" epsilon")]
-		)).toBe("alpha\n\nbeta gamma delta epsilon");
-
-	});
-
-	it("accepts extra rules as iterables, skipping undefined arguments", async () => {
-
-		expect(await denoised(
-			`<p>alpha</p>`,
-			new Set([marker(" beta"), marker(" gamma")]),
-			undefined,
-			marker(" delta")
-		)).toBe("alpha\n\nbeta gamma delta");
 
 	});
 

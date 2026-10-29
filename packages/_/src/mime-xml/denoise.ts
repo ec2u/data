@@ -38,7 +38,6 @@
  * @module
  */
 
-import { type Some, some } from "@metreeca/core/arrays";
 import type { Task } from "@metreeca/flow";
 import { map } from "@metreeca/flow/tasks";
 import type { Document, Element } from "domhandler";
@@ -47,7 +46,7 @@ import { existsOne, findAll } from "domutils";
 
 
 /**
- * The rules every page is scrubbed by.
+ * The rules every page is denoised by.
  */
 const Defaults = [
 	cfemail
@@ -57,28 +56,27 @@ const Defaults = [
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Creates a page scrubber.
+ * Creates a page denoiser.
  *
  * The task converts a feed of parsed HTML pages into a feed of the same pages cleared of per-request noise, one page
  * per input, so that a page whose content didn't change yields the same rendering and digest on every read. Pages are
- * scrubbed by the default rules first, currently {@link cfemail}, then by the extra `rules`, in the order given.
+ * denoised by the default rules first, currently {@link cfemail}, then by the extra `rules`, in the order given.
  *
- * Input trees are left untouched: a page carrying noise is scrubbed into a new tree, and one carrying none is passed
+ * Input trees are left untouched: a page carrying noise is denoised into a new tree, and one carrying none is passed
  * through as it stands. Base URLs recorded on the input trees are kept, so relative links still resolve against the
  * address a page was retrieved from, and renderings still state that address as the page URL.
  *
- * @param rules Extra rules for noise peculiar to a source, applied after the defaults; each argument is a bare rule, a
- *   collection of rules, or `undefined` for none, so a rule set built by a helper is passed without a spread
+ * @param rules Extra rules for noise peculiar to a source, applied after the defaults in the order given
  *
  * @returns A task converting a feed of parsed HTML pages into a feed of the same pages cleared of per-request noise
  *
  * @throws {@link !Error Error} While the feed is consumed, if the source feed fails
  */
-export function denoise(...rules: readonly Some<(document: Document) => Document>[]): Task<Document, Document> {
+export function denoise(...rules: readonly ((document: Document) => Document)[]): Task<Document, Document> {
 
-	const applied = [...Defaults, ...rules.flatMap(rule => some(rule))];
+	const applied = [...Defaults, ...rules];
 
-	return map(document => applied.reduce((scrubbed, rule) => rule(scrubbed), document));
+	return map(document => applied.reduce((denoised, rule) => rule(denoised), document));
 
 }
 
@@ -86,7 +84,7 @@ export function denoise(...rules: readonly Some<(document: Document) => Document
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Decodes the e-mail addresses Cloudflare obfuscates.
+ * Decodes Cloudflare-obfuscated e-mail addresses.
  *
  * Cloudflare e-mail obfuscation replaces each address on a page with a payload encrypted under a key drawn anew on
  * every request, so an unchanged page reads differently on each load and the address itself is lost to readers. The
@@ -99,7 +97,7 @@ export function denoise(...rules: readonly Some<(document: Document) => Document
  *
  * A payload that can't be decoded is left as it stands.
  *
- * @param document The parsed page to be scrubbed
+ * @param document The parsed page to be denoised
  *
  * @returns A tree holding the content of `document` with Cloudflare obfuscated addresses restored in plain form
  *
@@ -121,20 +119,20 @@ export function cfemail(document: Document): Document {
 
 		findAll(obfuscated, copy).forEach(element => {
 
-			const address = text(element);
-			const target = link(element);
+			const shown = shownAddress(element);
+			const linked = linkedAddress(element);
 
-			if ( address !== undefined ) {
+			if ( shown !== undefined ) {
 
-				const node = new Text(address);
+				const node = new Text(shown);
 
 				node.parent = element;
 				element.children = [node];
 
 			}
 
-			if ( target !== undefined ) {
-				element.attribs = { ...element.attribs, href: `mailto:${target}` };
+			if ( linked !== undefined ) {
+				element.attribs = { ...element.attribs, href: `mailto:${linked}` };
 			}
 
 		});
@@ -144,26 +142,26 @@ export function cfemail(document: Document): Document {
 	}
 
 	function obfuscated(element: Element): boolean {
-		return text(element) !== undefined || link(element) !== undefined;
+		return shownAddress(element) !== undefined || linkedAddress(element) !== undefined;
 	}
 
-	function text(element: Element): undefined | string {
+	function shownAddress(element: Element): undefined | string {
 
-		const classes = (element.attribs["class"] ?? "").split(/\s+/);
-		const payload = element.attribs["data-cfemail"];
+		const payload = (element.attribs["class"] ?? "").split(/\s+/).includes("__cf_email__")
+			? element.attribs["data-cfemail"]
+			: undefined;
 
-		return classes.includes("__cf_email__") && payload !== undefined ? decode(payload) : undefined;
+		return payload === undefined ? undefined : decode(payload);
 
 	}
 
-	function link(element: Element): undefined | string {
+	function linkedAddress(element: Element): undefined | string {
 
-		// the protection path, relative or absolute, capturing the payload fragment
+		const payload = element.name === "a"
+			? /^(?:[a-z][a-z0-9+.-]*:\/\/[^/?#]*)?\/cdn-cgi\/l\/email-protection#(.*)$/i.exec(element.attribs["href"] ?? "")?.[1]
+			: undefined;
 
-		const payload = /^(?:[a-z][a-z0-9+.-]*:\/\/[^/?#]*)?\/cdn-cgi\/l\/email-protection#(.*)$/i
-			.exec(element.attribs["href"] ?? "")?.[1];
-
-		return element.name === "a" && payload !== undefined ? decode(payload) : undefined;
+		return payload === undefined ? undefined : decode(payload);
 
 	}
 
