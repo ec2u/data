@@ -24,7 +24,7 @@ import { StakeholderTopic } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
 import { SchemaCourse, SchemaCourseInstance } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, resource } from "@metreeca/blue/resource";
+import { multiple, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
 import { resolve } from "@metreeca/core/resource";

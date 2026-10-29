@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { SchemaEvent } from "@ec2u/data-shared/vocabularies/schema/event.js";
 import { dictionary } from "@metreeca/blue/dictionary";
 import { multiple, nonempty, optional, resource } from "@metreeca/blue/resource";
 import { iri, string, text } from "@metreeca/blue/string";
