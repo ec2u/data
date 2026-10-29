@@ -26,6 +26,7 @@ import {
 	type Optional,
 	type URLLike
 } from "@metreeca/core";
+import { type Some, some } from "@metreeca/core/arrays";
 import { type Markdown, markdown } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -65,7 +66,7 @@ type EmbeddedEvent = {
 
 	}
 
-	readonly image?: string | { readonly url: string } | readonly (string | { readonly url: string })[]
+	readonly image?: Some<string | { readonly url: string }>
 
 }
 
@@ -187,7 +188,7 @@ export function harvest(): Task<URLLike, Markdown> {
 					address?.addressCountry
 				]
 			].filter(isString).join(", ")),
-			Image: opt([image].flat()[0], image => isString(image) ? image : image.url)
+			Image: opt(some(image)[0],image => isString(image) ? image : image.url)
 		})}
 		`;
 
