@@ -56,7 +56,8 @@ export const execute = executor(
 	bind(createFetch, () => createFetch(cache({
 		ttl: 60*minute,
 		store: service(createCache),
-		skip: "https://docs.google.com/**"
+		avoid: "https://docs.google.com/**",
+		force: "https://www.umu.se/**"
 	}))),
 	bind(createStore, async () => createSPARQLStore(createRDF4JRepository({
 		server: "https://graphdb.ec2u.net",
