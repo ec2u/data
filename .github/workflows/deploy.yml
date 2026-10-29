@@ -2,12 +2,14 @@ name: Deploy to Cloud Run
 
 on:
 
-  push:
+  workflow_dispatch:
 
-    branches:
+# !!! push:
+# !!!
+# !!!   branches:
 # !!! - 'main'
 # !!! - 'next'
-      - 'yard'
+# !!! - 'yard'
 
 permissions:
   contents: read
