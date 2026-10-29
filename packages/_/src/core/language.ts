@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-import { memo, opt, type Optional } from "@metreeca/core";
-import type { nameTag, Tag } from "@metreeca/core/language";
+import { lazy, memo, opt, type Optional } from "@metreeca/core";
+import type { Tag } from "@metreeca/core/language";
 
 
-const Letters = [..."abcdefghijklmnopqrstuvwxyz"];
+const letters = [..."abcdefghijklmnopqrstuvwxyz"];
 
 /**
  * The ISO 639-1 tags of the languages Intl can name, leaving out deprecated aliases such as `iw` for `he`.
  */
-const Tags: readonly Tag[] = Letters
-	.flatMap(first => Letters.map(second => `${first}${second}`))
-	.filter(tag => Intl.getCanonicalLocales(tag)[0] === tag && opt(display("en").of(tag), name => name !== tag));
+const tags = lazy((): readonly Tag[] => letters
+	.flatMap(first => letters.map(second => `${first}${second}`))
+	.filter(tag => Intl.getCanonicalLocales(tag)[0] === tag && opt(display("en").of(tag), label => label !== tag))
+);
 
 /**
- * The language names of every locale Intl can display them in.
+ * The language names Intl displays in a locale.
  */
-const Names: readonly Intl.DisplayNames[] = Tags.map(display);
+const display = memo((locale: Tag) => new Intl.DisplayNames([locale], { type: "language" }));
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,21 +47,26 @@ const Names: readonly Intl.DisplayNames[] = Tags.map(display);
  *
  * @returns The ISO 639-1 tag of the language `name` names, or `undefined` if no language is known by that name
  */
-export const tagName = memo((name: string): Optional<Tag> => {
-
-	const key = normalize(name);
-	const tags = Tags.filter(tag => Names.some(names => opt(names.of(tag), label => label !== tag && normalize(label) === key)));
-
-	return tags.length === 1 ? tags[0] : undefined;
-
-});
+export function tagName(name: string): Optional<Tag> {
+	return resolve(normalize(name));
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function display(locale: Tag): Intl.DisplayNames {
-	return new Intl.DisplayNames([locale], { type: "language" });
-}
+/**
+ * Resolves a normalised language name to the single tag it names in any locale.
+ */
+const resolve = memo((key: string): Optional<Tag> => {
+
+	const matches = tags().filter(tag => tags().some(locale =>
+		opt(display(locale).of(tag), label => label !== tag && normalize(label) === key)
+	));
+
+	return matches.length === 1 ? matches[0] : undefined;
+
+});
+
 
 /**
  * Normalises a language name for lookup, ignoring case and Latin accents.
