@@ -1,8 +1,9 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-| Skill           | Purpose                                                            |
-|-----------------|--------------------------------------------------------------------|
-| `pipe-designer` | Design and review of source ingestion pipes under `packages/loader` |
+| Skill                | Purpose                                                                       |
+|----------------------|-------------------------------------------------------------------------------|
+| `pipe-designer`      | Design and review of source ingestion pipes under `packages/loader`           |
+| `deployment-manager` | Google Cloud and GraphDB resources of each environment, grants, current state |
 
 ---
 
@@ -110,12 +111,6 @@ Localised text is stored and handled as language maps (qest `Dictionary`); no la
 Run `sh package.sh` by hand once per workstation, and again whenever `gcloud` points elsewhere: it signs in to `gcloud`
 and selects the `ec2u-data` project, whose resources local runs reach with the developer's own credentials.
 
-## Deployment
-
-The Google Cloud and GraphDB resources each environment runs on, their access grants and their current state are
-described in `.claude/deployment.md`. Read it before creating, changing or reasoning about any of them, and keep it in
-sync with every change.
-
 ## Testing
 
 - **Run a single test file**: `npm run check -- path/to/test.ts`
@@ -158,7 +153,7 @@ The model is still validated against the shape, so a property the shape does not
 did not resolve it, not that the data is missing: confirm at the triple level before concluding anything.
 
 **Triple level** - what the repository holds. Open the RDF4J repository of the environment directly, taking the
-read-only server credentials from the vault (`yard` below; see `.claude/deployment.md` for the others):
+read-only server credentials from the vault (`yard` below; see the `deployment-manager` skill for the others):
 
 ```ts
 import { createGCPVault } from "@metreeca/gear-gcp/secrets";

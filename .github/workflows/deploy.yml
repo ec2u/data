@@ -35,7 +35,7 @@ jobs:
           - service: server
             vars: ""
             flags: --allow-unauthenticated
-          - service: loader # invoked only by Cloud Scheduler, with the attempt deadline of its jobs (see .claude/deployment.md)
+          - service: loader # invoked only by Cloud Scheduler, with the attempt deadline of its jobs (see .claude/skills/deployment-manager/SKILL.md)
             vars: ""
             flags: --no-allow-unauthenticated --timeout=30m
 
