@@ -70,11 +70,6 @@ describe("program", () => {
 		expect(program({ ...programRecord, name: undefined })).toBeUndefined();
 	});
 
-	it("reads no program from a malformed record", async () => {
-		expect(program(null)).toBeUndefined();
-		expect(program("066/990")).toBeUndefined();
-	});
-
 	it("leaves out blank texts", async () => {
 		expect(program({ ...programRecord, description: { de: " ", en: "A master." } }))
 			.toMatchObject({ description: { en: "A master." } });
@@ -85,9 +80,9 @@ describe("program", () => {
 
 		const read = program({
 			...programRecord,
-			numberOfCredits: "120",
+			numberOfCredits: null,
 			educationalLevel: "https://data.ec2u.eu/concepts/unknown/7",
-			url: ["not a url", 42]
+			url: ["not a url"]
 		});
 
 		expect(read).not.toHaveProperty("numberOfCredits");
@@ -135,7 +130,7 @@ describe("course", () => {
 	});
 
 	it("leaves out programs it cannot name", async () => {
-		expect(course({ ...courseRecord, inProgram: [{ identifier: [] }, programRecord, "066/990"] }))
+		expect(course({ ...courseRecord, inProgram: [{ identifier: [] }, programRecord, {}] }))
 			.toMatchObject({ inProgram: [{ key: "066/990" }] });
 	});
 

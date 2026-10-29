@@ -18,7 +18,7 @@ import { base } from "@ec2u/data-shared";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { poitiers } from "@ec2u/data-shared/universities/index.core.js";
-import { isNumber, isObject, opt, type Optional } from "@metreeca/core";
+import { opt, type Optional } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
@@ -28,7 +28,6 @@ import { flat, map } from "@metreeca/flow/tasks";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
 import { type ProgramDraft, sync } from "../sinks/sync.js";
-import { text } from "../index.core.js";
 import snapshot from "./poitiers.json" with { type: "json" };
 
 
@@ -36,6 +35,23 @@ const Source = resolve(base, "/offerings/poitiers");
 
 
 const logger = log(import.meta.url);
+
+
+/**
+ * A program entry of the Poitiers catalogue snapshot.
+ */
+export type Entry = {
+
+	readonly code: string
+	readonly name: string
+
+	readonly credits: number
+	readonly levelISCED: number
+
+	readonly composante: string
+	readonly discipline: null | string
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +81,7 @@ export async function Poitiers() {
 }
 
 
-function read(entry: unknown): readonly ProgramDraft[] {
+function read(entry: Entry): readonly ProgramDraft[] {
 
 	const draft = program(entry);
 
@@ -96,8 +112,12 @@ function read(entry: unknown): readonly ProgramDraft[] {
  *
  * @returns The draft of the program, or `undefined` if the entry states no code or no name
  */
-export function program(entry: unknown): Optional<ProgramDraft> {
-	return isObject(entry) ? opt(text(entry.code), key => opt(text(entry.name), name => immutable({
+export function program({ code, name, credits, levelISCED, composante, discipline }: Entry): Optional<ProgramDraft> {
+
+	const key = code.trim();
+	const title = name.trim();
+
+	return key === "" || title === "" ? undefined : immutable({
 
 		kind: "program",
 
@@ -105,19 +125,17 @@ export function program(entry: unknown): Optional<ProgramDraft> {
 		key,
 
 		identifier: key,
-		name: { [poitiers.locale]: `${key} - ${name}` },
+		name: { [poitiers.locale]: `${key} - ${title}` },
 
-		...opt(isNumber(entry.credits) && entry.credits > 0 ? entry.credits : undefined, numberOfCredits => ({
-			numberOfCredits
-		})),
+		...(credits > 0 ? { numberOfCredits: credits } : {}),
 
-		educationalLevel: isNumber(entry.levelISCED) && Number.isInteger(entry.levelISCED)
-		&& entry.levelISCED >= 0 && entry.levelISCED <= 9
-			? [getTopicId(isced2011, String(entry.levelISCED))]
+		educationalLevel: Number.isInteger(levelISCED) && levelISCED >= 0 && levelISCED <= 9
+			? [getTopicId(isced2011, String(levelISCED))]
 			: [],
 
-		...opt(text(entry.composante), provider => ({ provider: { name: { [poitiers.locale]: provider } } })),
-		...opt(text(entry.discipline), field => ({ cues: { field } }))
+		...opt(composante.trim() || undefined, provider => ({ provider: { name: { [poitiers.locale]: provider } } })),
+		...opt(discipline?.trim() || undefined, field => ({ cues: { field } }))
 
-	}))) : undefined;
+	});
+
 }

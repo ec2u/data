@@ -19,7 +19,7 @@ import { getAcademicYear } from "@ec2u/data-shared/offerings/index.js";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { coimbra } from "@ec2u/data-shared/universities/index.core.js";
-import { isArray, isNumber, isObject, isString, opt, type Optional } from "@metreeca/core";
+import { opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
@@ -33,8 +33,8 @@ import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
 import { tagName } from "@metreeca/work/core/language.js";
 import { hours } from "@metreeca/work/core/temporal.js";
+import { isHTTP } from "@metreeca/work/core/resources.js";
 import { execute } from "../../index.core.js";
-import { isHTTPS } from "../index.core.js";
 import { type CourseDraft, type Dictionary, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -70,6 +70,52 @@ const Periods: { readonly [unit: string]: (amount: number) => string } = {
 
 
 const logger = log(import.meta.url);
+
+
+/**
+ * A response of the Coimbra courses API.
+ */
+export type Results = {
+
+	readonly status?: null | string
+	readonly listaResultados?: null | readonly OfferingRecord[]
+
+}
+
+/**
+ * An offering record of the Coimbra courses API.
+ */
+export type OfferingRecord = {
+
+	readonly cursoId?: null | number
+	readonly cicloTipo?: null | string
+	readonly categoriaCursoTipo?: null | string
+
+	readonly designacoes?: Localized
+	readonly urlEN?: null | string
+	readonly urlPT?: null | string
+
+	readonly objetivosCurso?: Localized
+	readonly objetivosAprendizagem?: Localized
+	readonly regrasDeAvaliacao?: Localized
+	readonly condicoesAcesso?: Localized
+	readonly qualificoesAtribuidas?: Localized
+
+	readonly ects?: null | string
+	readonly duracaoEN?: null | string
+	readonly linguasAprendizagem?: Localized
+
+}
+
+/**
+ * A text the Coimbra courses API states in several languages, one item per language.
+ */
+export type Localized = null | readonly {
+
+	readonly locSigla: string
+	readonly designacao?: null | string
+
+}[]
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,15 +165,15 @@ export async function Coimbra() {
 		(fetch())
 		(flat(map(async response => {
 
-			const json: unknown = await response.json();
+			const { status, listaResultados }: Results = await response.json();
 
-			if ( isObject(json) && json.status === "SUCCESS" && isArray(json.listaResultados) ) {
+			if ( status === "SUCCESS" && listaResultados ) {
 
-				return json.listaResultados;
+				return listaResultados;
 
 			} else {
 
-				logger.error`unexpected response with status <${isObject(json) ? json.status : undefined}>`;
+				logger.error`unexpected response with status <${status}>`;
 
 				return [];
 
@@ -141,7 +187,7 @@ export async function Coimbra() {
 }
 
 
-function read(record: unknown): readonly Draft[] {
+function read(record: OfferingRecord): readonly Draft[] {
 
 	const draft = offering(record);
 
@@ -177,95 +223,87 @@ function read(record: unknown): readonly Draft[] {
  *
  * @returns The draft of the program or course, or `undefined` if the record states no identifier or no name
  */
-export function offering(record: unknown): Optional<Draft> {
+export function offering({
+	cursoId, cicloTipo, categoriaCursoTipo, designacoes, urlEN, urlPT,
+	objetivosCurso, objetivosAprendizagem, regrasDeAvaliacao, condicoesAcesso, qualificoesAtribuidas,
+	ects, duracaoEN, linguasAprendizagem
+}: OfferingRecord): Optional<Draft> {
+	return opt(cursoId ?? undefined, id => opt(localized(designacoes), name => {
 
-	if ( isObject(record) && isNumber(record.cursoId) ) {
+		const key = String(id);
+		const cycle = cicloTipo ?? "";
+		const category = categoriaCursoTipo ?? "*";
 
-		const key = String(record.cursoId);
-		const cycle = isString(record.cicloTipo) ? record.cicloTipo : "";
-		const category = isString(record.categoriaCursoTipo) ? record.categoriaCursoTipo : "*";
+		const common = immutable({
 
-		return opt(localized(record.designacoes), name => {
+			university: coimbra,
+			key,
 
-			const common = immutable({
+			name,
+			url: [urlEN ?? "", urlPT ?? ""].filter(isHTTP),
 
-				university: coimbra,
-				key,
+			...opt(localized(objetivosCurso), teaches => ({ teaches })),
+			...opt(localized(objetivosAprendizagem), assesses => ({ assesses })),
+			...opt(localized(regrasDeAvaliacao), competencyRequired => ({ competencyRequired })),
 
-				name,
-				url: [record.urlEN, record.urlPT].filter(isString).filter(isHTTPS),
+			...opt(opt(ects ?? undefined, Number.parseFloat), credits =>
+				Number.isFinite(credits) && credits > 0 ? { numberOfCredits: credits } : {}
+			),
 
-				...opt(localized(record.objetivosCurso), teaches => ({ teaches })),
-				...opt(localized(record.objetivosAprendizagem), assesses => ({ assesses })),
-				...opt(localized(record.regrasDeAvaliacao), competencyRequired => ({ competencyRequired })),
+			educationalLevel: [opt(Levels[cycle], categories => categories[category] ?? categories["*"])]
+				.flatMap(multiple)
+				.map(level => getTopicId(isced2011, level)),
 
-				...opt(isString(record.ects) ? Number.parseFloat(record.ects) : undefined, credits =>
-					Number.isFinite(credits) && credits > 0 ? { numberOfCredits: credits } : {}
-				),
-
-				educationalLevel: [opt(Levels[cycle], categories => categories[category] ?? categories["*"])]
-					.flatMap(multiple)
-					.map(level => getTopicId(isced2011, level)),
-
-				...opt(localized(record.qualificoesAtribuidas), name => ({
-					educationalCredentialAwarded: { credentialCategory: "Degree", name }
-				} satisfies Pick<Draft, "educationalCredentialAwarded">))
-
-			});
-
-			const prerequisites = localized(record.condicoesAcesso);
-			const duration = isString(record.duracaoEN) ? record.duracaoEN.trim().toLowerCase() : "";
-
-			const course = (): CourseDraft => immutable({
-
-				kind: "course",
-
-				...common,
-
-				courseCode: key,
-				...opt(prerequisites, coursePrerequisites => ({ coursePrerequisites })),
-				...opt(time(duration), timeRequired => ({ timeRequired })),
-				inLanguage: languages(record.linguasAprendizagem)
-
-			});
-
-			const program = (): ProgramDraft => immutable({
-
-				kind: "program",
-
-				...common,
-
-				identifier: key,
-				...opt(prerequisites, programPrerequisites => ({ programPrerequisites })),
-				...opt(period(duration), timeToComplete => ({ timeToComplete }))
-
-			});
-
-			return cycle === "NAO_CONFERENTE_GRAU" ? course() : program();
+			...opt(localized(qualificoesAtribuidas), name => ({
+				educationalCredentialAwarded: { credentialCategory: "Degree", name }
+			} satisfies Pick<Draft, "educationalCredentialAwarded">))
 
 		});
 
-	} else {
+		const prerequisites = localized(condicoesAcesso);
+		const duration = duracaoEN?.trim().toLowerCase() ?? "";
 
-		return undefined;
+		const course = (): CourseDraft => immutable({
 
-	}
+			kind: "course",
 
+			...common,
+
+			courseCode: key,
+			...opt(prerequisites, coursePrerequisites => ({ coursePrerequisites })),
+			...opt(time(duration), timeRequired => ({ timeRequired })),
+			inLanguage: languages(linguasAprendizagem)
+
+		});
+
+		const program = (): ProgramDraft => immutable({
+
+			kind: "program",
+
+			...common,
+
+			identifier: key,
+			...opt(prerequisites, programPrerequisites => ({ programPrerequisites })),
+			...opt(period(duration), timeToComplete => ({ timeToComplete }))
+
+		});
+
+		return cycle === "NAO_CONFERENTE_GRAU" ? course() : program();
+
+	}));
 }
 
 
 /**
  * Reads a localised list, keyed by lowercase `locSigla`, leaving out blank texts.
  */
-function localized(value: unknown): Optional<Dictionary> {
+function localized(texts: Optional<Localized>): Optional<Dictionary> {
 
-	const texts: Dictionary = Object.fromEntries((isArray(value) ? value : []).flatMap(item =>
-		isObject(item) && isString(item.locSigla) && isString(item.designacao) && item.designacao.trim() !== ""
-			? [[item.locSigla.toLowerCase(), item.designacao.trim()]]
-			: []
-	));
+	const entries = (texts ?? []).flatMap(({ locSigla, designacao }) =>
+		opt(designacao?.trim() || undefined, text => [[locSigla.toLowerCase(), text]]) ?? []
+	);
 
-	return Object.keys(texts).length > 0 ? texts : undefined;
+	return entries.length > 0 ? Object.fromEntries(entries) : undefined;
 
 }
 
@@ -296,12 +334,9 @@ function time(duration: string): Optional<string> {
 /**
  * Reads the languages named in the English descriptions of a list, in order of first mention.
  */
-function languages(value: unknown): readonly string[] {
-	return [...new Set((isArray(value) ? value : [])
-		.flatMap(item => isObject(item) && item.locSigla === "EN" && isString(item.designacao)
-			? item.designacao.split(/\P{L}+/u)
-			: []
-		)
+function languages(texts: Optional<Localized>): readonly string[] {
+	return [...new Set((texts ?? [])
+		.flatMap(({ locSigla, designacao }) => locSigla === "EN" ? designacao?.split(/\P{L}+/u) ?? [] : [])
 		.map(tagName)
 		.flatMap(multiple)
 	)];

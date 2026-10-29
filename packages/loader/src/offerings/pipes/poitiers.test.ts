@@ -63,8 +63,7 @@ describe("program", () => {
 
 	it("reads no program without a code or a name", async () => {
 		expect(program({ ...entry, code: "" })).toBeUndefined();
-		expect(program({ ...entry, name: null })).toBeUndefined();
-		expect(program(null)).toBeUndefined();
+		expect(program({ ...entry, name: " " })).toBeUndefined();
 	});
 
 });

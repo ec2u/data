@@ -18,7 +18,7 @@ import { base } from "@ec2u/data-shared";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { jena } from "@ec2u/data-shared/universities/index.core.js";
-import { isObject, opt, type Optional } from "@metreeca/core";
+import { isObject, opt, type Optional, type Value } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
@@ -29,8 +29,7 @@ import { html, link, unwrap, xpath } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
-import { type Dictionary, type ProgramDraft, sync } from "../sinks/sync.js";
-import { text } from "../index.core.js";
+import { type ProgramDraft, sync } from "../sinks/sync.js";
 
 
 const Source = resolve(base, "/offerings/jena");
@@ -54,6 +53,21 @@ const Levels: { readonly [degree: string]: string } = {
 
 
 const logger = log(import.meta.url);
+
+
+/**
+ * The `AboutPage` a program page embeds as JSON-LD.
+ */
+export type AboutPage = {
+
+	readonly "@type": "AboutPage"
+
+	readonly headline?: null | string
+	readonly abstract?: null | string
+	readonly inLanguage?: null | string
+	readonly educationalLevel?: null | string
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +131,7 @@ export async function Jena() {
 }
 
 
-function read(values: readonly unknown[], url: string): readonly ProgramDraft[] {
+function read(values: readonly Value[], url: string): readonly ProgramDraft[] {
 
 	const draft = program(values, url);
 
@@ -139,7 +153,7 @@ function read(values: readonly unknown[], url: string): readonly ProgramDraft[] 
 /**
  * Reads the JSON-LD values a page embeds, or nothing if the page fails to load.
  */
-async function embedded(url: string): Promise<Optional<readonly unknown[]>> {
+async function embedded(url: string): Promise<Optional<readonly Value[]>> {
 
 	const lists = await pipe(
 		(items([url]))
@@ -167,36 +181,27 @@ async function embedded(url: string): Promise<Optional<readonly unknown[]>> {
  *
  * @returns The draft of the program, or `undefined` if the page embeds no `AboutPage` stating a headline
  */
-export function program(values: readonly unknown[], url: string): Optional<ProgramDraft> {
+export function program(values: readonly Value[], url: string): Optional<ProgramDraft> {
+	return opt(values.find(isAboutPage), ({ headline, abstract, inLanguage, educationalLevel }) => {
 
-	const page = values.find(value => isObject(value) && value["@type"] === "AboutPage");
+		const locale = /^([a-z]{2})(-|$)/i.exec(inLanguage?.trim() ?? "")?.[1]?.toLowerCase() ?? "en";
+		const description = abstract?.trim() || undefined;
+		const credential = educationalLevel?.trim() || undefined;
 
-	if ( !isObject(page) ) {
-
-		return undefined;
-
-	} else {
-
-		const locale = opt(text(page.inLanguage), tag => opt(/^([a-z]{2})(-|$)/i.exec(tag) ?? undefined, ([, language]) =>
-			language.toLowerCase()
-		)) ?? "en";
-
-		const local = (value: unknown): Optional<Dictionary> => opt(text(value), value => ({ [locale]: value }));
-		const credential = text(page.educationalLevel);
-
-		return opt(local(page.headline), name => immutable({
+		return opt(headline?.trim() || undefined, name => immutable({
 
 			kind: "program",
 
 			university: jena,
 			key: url,
 
-			name,
-			...opt(local(page.abstract), description => ({ description })),
+			name: { [locale]: name },
+			...opt(description, description => ({ description: { [locale]: description } })),
 			url: [url],
 
-			educationalLevel: [opt(credential, credential => Levels[credential])]
-				.flatMap(level => level === undefined ? [] : [getTopicId(isced2011, level)]),
+			educationalLevel: opt(credential, credential => opt(Levels[credential], level =>
+				[getTopicId(isced2011, level)]
+			)) ?? [],
 
 			...opt(credential, credential => ({
 				educationalCredentialAwarded: { credentialCategory: "Degree", name: { [locale]: credential } }
@@ -204,6 +209,10 @@ export function program(values: readonly unknown[], url: string): Optional<Progr
 
 		}));
 
-	}
+	});
+}
 
+
+function isAboutPage(value: Value): value is AboutPage {
+	return isObject(value) && value["@type"] === "AboutPage";
 }

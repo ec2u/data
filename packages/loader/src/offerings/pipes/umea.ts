@@ -16,8 +16,6 @@
 
 import { base } from "@ec2u/data-shared";
 import { umea } from "@ec2u/data-shared/universities/index.core.js";
-import { isArray, isObject } from "@metreeca/core";
-import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe } from "@metreeca/flow";
@@ -26,15 +24,29 @@ import { flat, map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { createVault } from "@metreeca/gear/vault";
 import { fetch } from "@metreeca/pipe-url";
+import { isHTTP } from "@metreeca/work/core/resources.js";
 import { execute } from "../../index.core.js";
 import { crawl, type Lead } from "../sinks/crawl.js";
 import type { Draft } from "../sinks/sync.js";
-import { isHTTPS, text } from "../index.core.js";
 
 
 const Source = resolve(base, "/offerings/umea");
 
 const DataURL = "offerings-umea-url";
+
+
+/**
+ * A response of the Umeå search API.
+ */
+export type Results = {
+
+	readonly hits: readonly {
+
+		readonly url?: null | string
+
+	}[]
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,17 +119,14 @@ function listing(url: string, label: string, kind: Draft["kind"]): Feed<Lead> {
  *
  * Every hit with a web address names one offering of `kind`, keyed by its page address and seeded with nothing else.
  *
- * @param response The search API response as parsed JSON
+ * @param results The search API response
  * @param kind The kind of offering the response lists
  *
  * @returns The leads the response lists, in order of first mention
  */
-export function leads(response: unknown, kind: Draft["kind"]): readonly Lead[] {
+export function leads(results: Results, kind: Draft["kind"]): readonly Lead[] {
 
-	const urls = isObject(response) && isArray(response.hits) ? response.hits
-		.map(hit => isObject(hit) ? text(hit.url) : undefined)
-		.flatMap(multiple)
-		.filter(isHTTPS) : [];
+	const urls = results.hits.map(({ url }) => url?.trim() ?? "").filter(isHTTP);
 
 	return [...new Set(urls)].map(url => immutable({
 		url,

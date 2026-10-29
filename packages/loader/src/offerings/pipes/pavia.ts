@@ -20,7 +20,7 @@ import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
 import { pavia } from "@ec2u/data-shared/universities/index.core.js";
-import { isArray, isNumber, isObject, isString, opt, type Optional } from "@metreeca/core";
+import { isArray, opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
@@ -36,7 +36,6 @@ import { log } from "@metreeca/tape";
 import { tagName } from "@metreeca/work/core/language.js";
 import { hours } from "@metreeca/work/core/temporal.js";
 import { execute } from "../../index.core.js";
-import { text } from "../index.core.js";
 import { type CourseDraft, type Dictionary, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -99,6 +98,20 @@ const Modes: { readonly [mode: string]: NonNullable<CourseDraft["courseMode"]> }
 
 const logger = log(import.meta.url);
 
+
+/**
+ * A program record of the ESSE3 offer API.
+ */
+export type OfferRecord = {
+
+	readonly aaOffId?: null | number
+	readonly cdsCod?: null | string
+	readonly cdsDes?: null | string
+	readonly tipoCorsoCod?: null | string
+	readonly dipCod?: null | string
+	readonly dipDes?: null | string
+
+}
 
 /**
  * A catalogue page an offering may be published on, along with the API address telling whether it is.
@@ -183,7 +196,7 @@ export async function Pavia() {
 	}
 
 
-	async function harvest(record: unknown): Promise<{
+	async function harvest(record: OfferRecord): Promise<{
 
 		readonly program?: { readonly draft: ProgramDraft, readonly cohort?: number }
 		readonly courses: readonly CourseDraft[]
@@ -194,8 +207,10 @@ export async function Pavia() {
 		const page = await first(pages(record));
 		const draft = program(record, page?.url);
 
-		const plans = isObject(record) && isString(record.cdsCod) && isNumber(record.aaOffId)
-			? await teaching(record.cdsCod, record.aaOffId)
+		const { cdsCod, aaOffId } = record;
+
+		const plans = cdsCod !== undefined && cdsCod !== null && aaOffId !== undefined && aaOffId !== null
+			? await teaching(cdsCod, aaOffId)
 			: [];
 
 		const located = await Promise.all(plans.flatMap(courses).map(async ({ draft, page }) =>
@@ -203,7 +218,7 @@ export async function Pavia() {
 		));
 
 		if ( draft === undefined ) {
-			logger.warning`malformed program <${isObject(record) ? record.cdsCod : undefined}>`;
+			logger.warning`malformed program <${cdsCod}>`;
 		}
 
 		return immutable({
@@ -253,12 +268,12 @@ export async function Pavia() {
 /**
  * Reads the ESSE3 programs offered in a year, page by page until a short page closes the listing.
  */
-async function listing(offer: number, start = 0): Promise<readonly unknown[]> {
+async function listing(offer: number, start = 0): Promise<readonly OfferRecord[]> {
 
 	const page = await pipe(
 		(items([`${OfferURL}?aaOffId=${offer}&start=${start}&limit=${PageSize}`]))
 		(fetch())
-		(flat(map(async response => opt(await response.json(), (json: unknown) => isArray(json) ? json : []) ?? [])))
+		(flat(map(async response => opt(await response.json(), (json: unknown) => isArray<OfferRecord>(json) ? json : []) ?? [])))
 		(toArray())
 	);
 
@@ -298,30 +313,32 @@ async function resolves(url: string): Promise<boolean> {
  *
  * @returns The draft of the program, or `undefined` if the record states no code, no name or no offer year
  */
-export function program(record: unknown, page?: string): Optional<ProgramDraft> {
-	return isObject(record) && isNumber(record.aaOffId) && Number.isInteger(record.aaOffId)
-		? opt(text(record.cdsCod), key => opt(text(record.cdsDes), name => immutable({
+export function program({
+	aaOffId, cdsCod, cdsDes, tipoCorsoCod, dipCod, dipDes
+}: OfferRecord, page?: string): Optional<ProgramDraft> {
+	return opt(Number.isInteger(aaOffId) ? aaOffId ?? undefined : undefined, offer =>
+		opt(cdsCod?.trim() || undefined, key => opt(cdsDes?.trim() || undefined, name => immutable({
 
 			kind: "program",
 
 			university: pavia,
 			key,
-			year: academic(Number(record.aaOffId)),
+			year: academic(offer),
 
 			identifier: key,
 			name: { [pavia.locale]: name },
 			url: [page].flatMap(multiple),
 
-			educationalLevel: [opt(text(record.tipoCorsoCod), type => Levels[type])]
+			educationalLevel: [opt(tipoCorsoCod?.trim() || undefined, type => Levels[type])]
 				.flatMap(multiple)
 				.map(level => getTopicId(isced2011, level)),
 
-			...opt(text(record.dipCod) === "NN" ? undefined : text(record.dipDes), department => ({
+			...opt(dipCod?.trim() === "NN" ? undefined : dipDes?.trim() || undefined, department => ({
 				provider: { name: { [pavia.locale]: department } }
 			}))
 
 		})))
-		: undefined;
+	);
 }
 
 /**
@@ -336,14 +353,18 @@ export function program(record: unknown, page?: string): Optional<ProgramDraft> 
  * @returns The candidate pages of the program with the enrolment year of the cohort each stands for, most recent first;
  * empty for a program type the catalogue does not publish, or for a record stating no code or offer year
  */
-export function pages(record: unknown): readonly (Page & { readonly cohort: number })[] {
-	return isObject(record) && isNumber(record.aaOffId) && Published.has(text(record.tipoCorsoCod) ?? "")
-		? opt(text(record.cdsCod), code => Array.from({ length: CohortDepth }, (_, offset) => Number(record.aaOffId)-offset)
+export function pages({
+	aaOffId, cdsCod, tipoCorsoCod
+}: OfferRecord): readonly (Page & { readonly cohort: number })[] {
+	return Published.has(tipoCorsoCod?.trim() ?? "")
+		? opt(aaOffId ?? undefined, offer => opt(cdsCod?.trim() || undefined, code => Array
+		.from({ length: CohortDepth }, (_, offset) => offer-offset)
 		.map(cohort => immutable({
 			cohort,
 			probe: `${CatalogueURL}/api/v1/corso-code?anno=${cohort}&cdsCod=${code}`,
 			url: `${CatalogueURL}/corsi-code/${cohort}/${code}`
-		}))) ?? []
+		}))
+	)) ?? []
 		: [];
 }
 
@@ -553,7 +574,7 @@ function duration(value: Optional<string>): Optional<string> {
  * Reads the first value an expression selects, trimmed, leaving out blank ones.
  */
 function value(scope: XPath, expression: string): Optional<string> {
-	return opt(scope(expression)[0], node => text(string(node)));
+	return opt(scope(expression)[0], node => string(node).trim() || undefined);
 }
 
 function academic(start: number): string {

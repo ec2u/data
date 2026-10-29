@@ -28,7 +28,7 @@ const course = "https://www.umu.se/utbildning/kurser/3d-modellering-och-siktanal
 describe("leads", () => {
 
 	it("keys each listed offering by its page address", async () => {
-		expect(leads({ hits: [{ url: program, title: "Apotekarprogrammet" }] }, "program")).toEqual([{
+		expect(leads({ hits: [{ url: program }] }, "program")).toEqual([{
 			url: program,
 			seed: { kind: "program", university: umea, key: program, name: {} }
 		}]);
@@ -46,12 +46,7 @@ describe("leads", () => {
 	});
 
 	it("leaves out hits with no usable web address", async () => {
-		expect(leads({ hits: [{ url: null }, { url: "kurser/x/" }, { title: "x" }, null] }, "course")).toEqual([]);
-	});
-
-	it("lists nothing from a malformed response", async () => {
-		expect(leads(null, "course")).toEqual([]);
-		expect(leads({ hits: "none" }, "course")).toEqual([]);
+		expect(leads({ hits: [{ url: null }, { url: " " }, { url: "kurser/x/" }, {}] }, "course")).toEqual([]);
 	});
 
 });

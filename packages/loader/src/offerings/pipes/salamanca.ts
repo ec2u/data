@@ -16,7 +16,7 @@
 
 import { base } from "@ec2u/data-shared";
 import { salamanca } from "@ec2u/data-shared/universities/index.core.js";
-import { isArray, isNumber, isObject, isString, opt, type Optional } from "@metreeca/core";
+import { isArray, isNumber, opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
@@ -29,8 +29,8 @@ import { service } from "@metreeca/gear";
 import { createVault } from "@metreeca/gear/vault";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
+import { isHTTP } from "@metreeca/work/core/resources.js";
 import { execute } from "../../index.core.js";
-import { isHTTPS } from "../index.core.js";
 import { type CourseDraft, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -49,6 +49,43 @@ const Periods: { readonly [code: string]: string } = {
 
 
 const logger = log(import.meta.url);
+
+
+/**
+ * A program record of the Salamanca programs API.
+ */
+export type ProgramRecord = {
+
+	readonly programCode?: null | string
+	readonly programName?: null | string
+	readonly programUrl?: null | string
+
+}
+
+/**
+ * A course record of the Salamanca courses API.
+ */
+export type CourseRecord = {
+
+	readonly code?: null | string
+	readonly nameInEnglish?: null | string
+	readonly nameInSpanish?: null | string
+	readonly url?: null | string
+
+	readonly ects?: null | number | string
+	readonly field_guias_asig_tdu_value?: null | string
+
+}
+
+/**
+ * A program-course membership record of the Salamanca memberships API.
+ */
+export type MembershipRecord = {
+
+	readonly code?: null | string
+	readonly programCode?: null | string
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,8 +113,8 @@ export async function Salamanca() {
 	const vault = service(createVault);
 
 	const [programs, memberships] = await Promise.all([
-		listing(await vault(ProgramsURL)),
-		listing(await vault(MembershipsURL))
+		listing<ProgramRecord>(await vault(ProgramsURL)),
+		listing<MembershipRecord>(await vault(MembershipsURL))
 	]);
 
 	if ( memberships.length === 0 ) {
@@ -91,7 +128,7 @@ export async function Salamanca() {
 
 		const taught: Feed<Draft> = pipe(
 			(items([await vault(CoursesURL)]))
-			(records())
+			(records<CourseRecord>())
 			(flat(map(record => read(record, record => course(record, index)))))
 		);
 
@@ -108,14 +145,16 @@ export async function Salamanca() {
 /**
  * Indexes the listed programs each course is taught in, as the program-course memberships state them.
  */
-function programsByCourse(memberships: readonly unknown[], listed: ReadonlySet<string>): ReadonlyMap<string, readonly string[]> {
+function programsByCourse(
+	memberships: readonly MembershipRecord[], listed: ReadonlySet<string>
+): ReadonlyMap<string, readonly string[]> {
 
-	const pairs = memberships.flatMap(record => isObject(record)
-			? opt(text(record.code), course => opt(text(record.programCode), program =>
-			listed.has(program) ? [{ course, program }] : []
-		)) ?? []
-			: []
-	);
+	const pairs = memberships.flatMap(({
+		code,
+		programCode
+	}) => opt(text(code), course => opt(text(programCode), program =>
+		listed.has(program) ? [{ course, program }] : []
+	)) ?? []);
 
 	return new Map([...new Set(pairs.map(({ course }) => course))].map(course =>
 		[course, [...new Set(pairs.filter(pair => pair.course === course).map(({ program }) => program))]]
@@ -124,10 +163,10 @@ function programsByCourse(memberships: readonly unknown[], listed: ReadonlySet<s
 }
 
 
-async function listing(url: string): Promise<readonly unknown[]> {
+async function listing<R>(url: string): Promise<readonly R[]> {
 	return pipe(
 		(items([url]))
-		(records())
+		(records<R>())
 		(toArray())
 	);
 }
@@ -135,7 +174,7 @@ async function listing(url: string): Promise<readonly unknown[]> {
 /**
  * Retrieves JSON array listings, yielding their records; a listing that fails or is no array yields none.
  */
-function records(): Task<string, unknown> {
+function records<R>(): Task<string, R> {
 	return urls => pipe(
 		(items(urls))
 		(fetch())
@@ -143,7 +182,7 @@ function records(): Task<string, unknown> {
 
 			const json: unknown = await response.json();
 
-			if ( isArray(json) ) {
+			if ( isArray<R>(json) ) {
 
 				return json;
 
@@ -159,7 +198,7 @@ function records(): Task<string, unknown> {
 	);
 }
 
-function read<D extends Draft>(record: unknown, reader: (record: unknown) => Optional<D>): readonly D[] {
+function read<R, D extends Draft>(record: R, reader: (record: R) => Optional<D>): readonly D[] {
 
 	const draft = reader(record);
 
@@ -189,8 +228,8 @@ function read<D extends Draft>(record: unknown, reader: (record: unknown) => Opt
  *
  * @returns The draft of the program, or `undefined` if the record states no code or no name
  */
-export function program(record: unknown): Optional<ProgramDraft> {
-	return isObject(record) ? opt(text(record.programCode), key => opt(text(record.programName), name => immutable({
+export function program({ programCode, programName, programUrl }: ProgramRecord): Optional<ProgramDraft> {
+	return opt(text(programCode), key => opt(text(programName), name => immutable({
 
 		kind: "program",
 
@@ -199,9 +238,9 @@ export function program(record: unknown): Optional<ProgramDraft> {
 
 		identifier: key,
 		name: { [salamanca.locale]: name },
-		url: [text(record.programUrl)].flatMap(multiple).filter(isHTTPS)
+		url: [text(programUrl)].flatMap(multiple).filter(isHTTP)
 
-	}))) : undefined;
+	})));
 }
 
 /**
@@ -217,39 +256,33 @@ export function program(record: unknown): Optional<ProgramDraft> {
  *
  * @returns The draft of the course, or `undefined` if the record states no code or no name
  */
-export function course(record: unknown, memberships: ReadonlyMap<string, readonly string[]>): Optional<CourseDraft> {
+export function course({
+	code, nameInEnglish, nameInSpanish, url, ects, field_guias_asig_tdu_value
+}: CourseRecord, memberships: ReadonlyMap<string, readonly string[]>): Optional<CourseDraft> {
 
-	if ( isObject(record) ) {
+	const english = text(nameInEnglish);
+	const spanish = text(nameInSpanish);
 
-		const english = text(record.nameInEnglish);
-		const spanish = text(record.nameInSpanish);
+	return opt(text(code), key => english === undefined && spanish === undefined ? undefined : immutable({
 
-		return opt(text(record.code), key => english === undefined && spanish === undefined ? undefined : immutable({
+		kind: "course",
 
-			kind: "course",
+		university: salamanca,
+		key,
 
-			university: salamanca,
-			key,
+		courseCode: key,
+		name: {
+			...opt(english, en => ({ en })),
+			...opt(spanish, es => ({ [salamanca.locale]: es }))
+		},
+		url: [text(url)].flatMap(multiple).filter(isHTTP),
 
-			courseCode: key,
-			name: {
-				...opt(english, en => ({ en })),
-				...opt(spanish, es => ({ [salamanca.locale]: es }))
-			},
-			url: [text(record.url)].flatMap(multiple).filter(isHTTPS),
+		...opt(credits(ects), numberOfCredits => ({ numberOfCredits })),
+		...opt(Periods[text(field_guias_asig_tdu_value) ?? ""], timeRequired => ({ timeRequired })),
 
-			...opt(credits(record.ects), numberOfCredits => ({ numberOfCredits })),
-			...opt(Periods[text(record.field_guias_asig_tdu_value) ?? ""], timeRequired => ({ timeRequired })),
+		inProgram: (memberships.get(key) ?? []).map(program => ({ key: program }))
 
-			inProgram: (memberships.get(key) ?? []).map(program => ({ key: program }))
-
-		}));
-
-	} else {
-
-		return undefined;
-
-	}
+	}));
 
 }
 
@@ -257,13 +290,11 @@ export function course(record: unknown, memberships: ReadonlyMap<string, readonl
 /**
  * Reads a non-blank string, trimmed and stripped of a matching pair of leading and trailing quotes.
  */
-function text(value: unknown): Optional<string> {
-	return isString(value)
-		? opt(value.trim().replace(/^(['"]+)(.*?)\1$/s, "$2").trim(), text => text === "" ? undefined : text)
-		: undefined;
+function text(value: Optional<null | string>): Optional<string> {
+	return value?.trim().replace(/^(['"]+)(.*?)\1$/s, "$2").trim() || undefined;
 }
 
-function credits(value: unknown): Optional<number> {
+function credits(value: Optional<null | number | string>): Optional<number> {
 	return opt(isNumber(value) ? value : opt(text(value), Number.parseFloat), credits =>
 		Number.isFinite(credits) && credits > 0 ? credits : undefined
 	);

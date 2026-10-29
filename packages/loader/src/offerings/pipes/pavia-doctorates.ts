@@ -27,8 +27,8 @@ import { map, trim } from "@metreeca/flow/tasks";
 import { focus, html, untag } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
 import { denoise } from "@metreeca/work/mime-xml/denoise.js";
+import { isHTTP } from "@metreeca/work/core/resources.js";
 import { execute } from "../../index.core.js";
-import { isHTTPS } from "../index.core.js";
 import { crawl, type Lead } from "../sinks/crawl.js";
 import { doctorates, type Listed } from "./pavia-doctorates.core.js";
 
@@ -91,7 +91,7 @@ export function lead({ name, language, url }: Listed): Optional<Lead> {
 	const title = name.trim();
 	const locale = language === "en" ? "en" : pavia.locale;
 
-	return isHTTPS(address) && title !== "" ? immutable({
+	return isHTTP(address) && title !== "" ? immutable({
 
 		url: address,
 

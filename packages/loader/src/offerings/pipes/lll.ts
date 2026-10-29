@@ -34,8 +34,8 @@ import { csv } from "@metreeca/mime-csv";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
 import { hours } from "@metreeca/work/core/temporal.js";
+import { isHTTP } from "@metreeca/work/core/resources.js";
 import { execute } from "../../index.core.js";
-import { isHTTPS } from "../index.core.js";
 import { type CourseDraft, type Dictionary, type Draft, identify, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -183,7 +183,7 @@ export function row(row: { readonly [column: string]: Optional<string> }): reado
 
 			name: named("Title", university) ?? {},
 			...opt(value("Code"), code => /^\S+$/.test(code) ? { courseCode: code } : {}),
-			url: [value("URL (English)") ?? value("URL (Local)")].flatMap(multiple).filter(isHTTPS),
+			url: [value("URL (English)") ?? value("URL (Local)")].flatMap(multiple).filter(isHTTP),
 
 			...english("Description", "description"),
 			...english("Syllabus", "teaches"),
@@ -214,7 +214,7 @@ export function row(row: { readonly [column: string]: Optional<string> }): reado
 
 			audience: [Audience],
 
-			...opt(value("Badge"), badge => isHTTPS(badge) ? {
+			...opt(value("Badge"), badge => isHTTP(badge) ? {
 				educationalCredentialAwarded: { credentialCategory: "Badge", url: [badge] }
 			} : {}),
 

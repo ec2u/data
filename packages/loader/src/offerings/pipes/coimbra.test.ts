@@ -23,7 +23,7 @@ import { offering } from "./coimbra.js";
 
 
 function localized(en: string, pt: string) {
-	return [{ id: 1, designacao: en, locSigla: "EN" }, { id: 1, designacao: pt, locSigla: "PT" }];
+	return [{ designacao: en, locSigla: "EN" }, { designacao: pt, locSigla: "PT" }];
 }
 
 const record = {
@@ -157,7 +157,7 @@ describe("offering", () => {
 		it("reads only the words naming a language", async () => {
 
 			const languages = (designacao: string) => opt(offering({
-				...course, linguasAprendizagem: [{ id: 1, designacao, locSigla: "EN" }]
+				...course, linguasAprendizagem: [{ designacao, locSigla: "EN" }]
 			}), draft => draft.kind === "course" ? draft.inLanguage : undefined);
 
 			expect(languages("Portuguese Language.")).toEqual(["pt"]);
@@ -173,7 +173,6 @@ describe("offering", () => {
 		it("reads nothing from a record without an identifier or a name", async () => {
 			expect(offering({ ...record, cursoId: undefined })).toBeUndefined();
 			expect(offering({ ...record, designacoes: [] })).toBeUndefined();
-			expect(offering(null)).toBeUndefined();
 		});
 
 		it("leaves out unusable facts", async () => {

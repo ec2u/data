@@ -19,7 +19,7 @@ import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { linz } from "@ec2u/data-shared/universities/index.core.js";
-import { isArray, isNumber, isObject, isString, opt, type Optional } from "@metreeca/core";
+import { isArray, opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
@@ -32,9 +32,9 @@ import { createVault } from "@metreeca/gear/vault";
 import { fetch } from "@metreeca/pipe-url";
 import type { Reference } from "@metreeca/qest/state";
 import { log } from "@metreeca/tape";
+import { isHTTP } from "@metreeca/work/core/resources.js";
 import { execute } from "../../index.core.js";
 import { type CourseDraft, type Dictionary, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
-import { isHTTPS, text } from "../index.core.js";
 
 
 const Source = resolve(base, "/offerings/linz");
@@ -48,6 +48,40 @@ const Audiences: { readonly [audience: string]: Reference } = {
 
 
 const logger = log(import.meta.url);
+
+
+/**
+ * A program record of the Linz programs API.
+ */
+export type ProgramRecord = {
+
+	readonly identifier?: readonly string[]
+	readonly url?: readonly string[]
+
+	readonly name?: Texts
+	readonly description?: Texts
+
+	readonly numberOfCredits?: null | number
+	readonly educationalLevel?: null | string
+
+}
+
+/**
+ * A course record of the Linz courses API.
+ */
+export type CourseRecord = Omit<ProgramRecord, "identifier"> & {
+
+	readonly courseCode?: null | string
+
+	readonly audience?: readonly string[]
+	readonly inProgram?: readonly Pick<ProgramRecord, "identifier">[]
+
+}
+
+/**
+ * Texts keyed by language tag.
+ */
+export type Texts = { readonly [tag: string]: null | string };
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,16 +116,16 @@ export async function Linz() {
 	);
 
 
-	function listing(url: string, reader: (record: unknown) => Optional<Draft>): Feed<Draft> {
+	function listing<R>(url: string, reader: (record: R) => Optional<Draft>): Feed<Draft> {
 		return pipe(
 			(items([url]))
-			(records())
+			(records<R>())
 			(flat(map(record => read(record, reader))))
 			(distinct(({ key }) => key))
 		);
 	}
 
-	function records(): Task<string, unknown> {
+	function records<R>(): Task<string, R> {
 		return urls => pipe(
 			(items(urls))
 			(fetch())
@@ -99,7 +133,7 @@ export async function Linz() {
 
 				const json: unknown = await response.json();
 
-				if ( isArray(json) ) {
+				if ( isArray<R>(json) ) {
 
 					return json;
 
@@ -115,7 +149,7 @@ export async function Linz() {
 		);
 	}
 
-	function read(record: unknown, reader: (record: unknown) => Optional<Draft>): readonly Draft[] {
+	function read<R>(record: R, reader: (record: R) => Optional<Draft>): readonly Draft[] {
 
 		const draft = reader(record);
 
@@ -148,8 +182,10 @@ export async function Linz() {
  *
  * @returns The draft of the program, or `undefined` if the record states no identifier or no name
  */
-export function program(record: unknown): Optional<ProgramDraft> {
-	return isObject(record) ? opt(first(record.identifier), key => opt(localized(record.name), name => immutable({
+export function program({
+	identifier, url, name, description, numberOfCredits, educationalLevel
+}: ProgramRecord): Optional<ProgramDraft> {
+	return opt(first(identifier), key => opt(localized(name), name => immutable({
 
 		kind: "program",
 
@@ -157,15 +193,15 @@ export function program(record: unknown): Optional<ProgramDraft> {
 		key,
 
 		identifier: key,
-		url: urls(record.url),
+		url: urls(url),
 
 		name,
-		...opt(localized(record.description), description => ({ description })),
+		...opt(localized(description), description => ({ description })),
 
-		...opt(credits(record.numberOfCredits), numberOfCredits => ({ numberOfCredits })),
-		educationalLevel: level(record.educationalLevel)
+		...opt(credits(numberOfCredits), numberOfCredits => ({ numberOfCredits })),
+		educationalLevel: level(educationalLevel)
 
-	}))) : undefined;
+	})));
 }
 
 /**
@@ -180,8 +216,10 @@ export function program(record: unknown): Optional<ProgramDraft> {
  *
  * @returns The draft of the course, or `undefined` if the record states no course code or no name
  */
-export function course(record: unknown): Optional<CourseDraft> {
-	return isObject(record) ? opt(text(record.courseCode), key => opt(localized(record.name), name => immutable({
+export function course({
+	courseCode, url, name, description, numberOfCredits, educationalLevel, audience = [], inProgram = []
+}: CourseRecord): Optional<CourseDraft> {
+	return opt(courseCode?.trim() || undefined, key => opt(localized(name), name => immutable({
 
 		kind: "course",
 
@@ -189,59 +227,54 @@ export function course(record: unknown): Optional<CourseDraft> {
 		key,
 
 		courseCode: key,
-		url: urls(record.url),
+		url: urls(url),
 
 		name,
-		...opt(localized(record.description), description => ({ description })),
+		...opt(localized(description), description => ({ description })),
 
-		...opt(credits(record.numberOfCredits), numberOfCredits => ({ numberOfCredits })),
-		educationalLevel: level(record.educationalLevel),
+		...opt(credits(numberOfCredits), numberOfCredits => ({ numberOfCredits })),
+		educationalLevel: level(educationalLevel),
 
-		audience: (isArray(record.audience) ? record.audience : [])
-			.map(audience => isString(audience) ? Audiences[audience] : undefined)
-			.flatMap(multiple),
+		audience: audience.map(audience => Audiences[audience]).flatMap(multiple),
+		inProgram: inProgram.flatMap(({ identifier }) => opt(first(identifier), key => [{ key }]) ?? [])
 
-		inProgram: (isArray(record.inProgram) ? record.inProgram : [])
-			.map(program => isObject(program) ? opt(first(program.identifier), key => ({ key })) : undefined)
-			.flatMap(multiple)
-
-	}))) : undefined;
+	})));
 }
 
 
 /**
- * Reads the first non-blank string of a list, trimmed.
+ * Reads the first non-blank identifier of a list, trimmed.
  */
-function first(value: unknown): Optional<string> {
-	return isArray(value) ? value.map(text).find(isString) : undefined;
+function first(identifiers: readonly string[] = []): Optional<string> {
+	return identifiers.map(identifier => identifier.trim()).find(identifier => identifier !== "");
 }
 
 /**
  * Reads the non-blank texts of a language map, trimmed and keyed by lowercase language tag.
  */
-function localized(value: unknown): Optional<Dictionary> {
+function localized(texts: Texts = {}): Optional<Dictionary> {
 
-	const texts: Dictionary = isObject(value) ? Object.fromEntries(Object.entries(value).flatMap(([tag, value]) =>
-		opt(text(value), text => [[tag.toLowerCase(), text]]) ?? []
-	)) : {};
+	const entries = Object.entries(texts).flatMap(([tag, text]) =>
+		opt(text?.trim() || undefined, text => [[tag.toLowerCase(), text]]) ?? []
+	);
 
-	return Object.keys(texts).length > 0 ? texts : undefined;
+	return entries.length > 0 ? Object.fromEntries(entries) : undefined;
 
 }
 
-function urls(value: unknown): readonly string[] {
-	return (isArray(value) ? value : []).filter(isString).filter(isHTTPS);
+function urls(urls: readonly string[] = []): readonly string[] {
+	return urls.filter(isHTTP);
 }
 
-function credits(value: unknown): Optional<number> {
-	return isNumber(value) && Number.isFinite(value) && value >= 0 ? value : undefined;
+function credits(credits: Optional<null | number>): Optional<number> {
+	return credits !== undefined && credits !== null && Number.isFinite(credits) && credits >= 0 ? credits : undefined;
 }
 
 /**
  * Maps the legacy ISCED 2011 concept address the API states to the matching topic of the ISCED 2011 taxonomy.
  */
-function level(value: unknown): readonly Reference[] {
-	return opt(isString(value) ? /^https:\/\/data\.ec2u\.eu\/concepts\/isced-2011\/(\d)$/.exec(value) ?? undefined : undefined,
-		([, code]) => [getTopicId(isced2011, code)]
+function level(concept: Optional<null | string>): readonly Reference[] {
+	return opt(/^https:\/\/data\.ec2u\.eu\/concepts\/isced-2011\/(\d)$/.exec(concept ?? "") ?? undefined, ([, code]) =>
+		[getTopicId(isced2011, code)]
 	) ?? [];
 }

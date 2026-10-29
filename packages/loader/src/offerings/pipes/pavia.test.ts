@@ -131,7 +131,7 @@ describe("program", () => {
 	it("reads no program without a code, a name or an offer year", async () => {
 		expect(program({ ...record, cdsCod: "" })).toBeUndefined();
 		expect(program({ ...record, cdsDes: null })).toBeUndefined();
-		expect(program({ ...record, aaOffId: "next" })).toBeUndefined();
+		expect(program({ ...record, aaOffId: null })).toBeUndefined();
 	});
 
 });

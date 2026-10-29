@@ -65,7 +65,6 @@ describe("program", () => {
 	it("reads no program without a code or a name", async () => {
 		expect(program({ ...programRecord, programCode: " " })).toBeUndefined();
 		expect(program({ ...programRecord, programName: null })).toBeUndefined();
-		expect(program(null)).toBeUndefined();
 	});
 
 	it("leaves out an unusable web page", async () => {
