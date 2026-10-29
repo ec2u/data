@@ -101,12 +101,11 @@ function Reported() {
 /**
  * Lists by model the specialisation schools listing pages describe.
  *
- * Every page the model reads yields the list of the schools it describes, possibly empty; a page the model fails to
- * read is logged and yields nothing at all, so that callers can tell it apart from a page listing no school.
+ * A page the model fails to read is logged and yields no school.
  *
- * @returns A task converting a feed of listing documents, as plain text, into a feed of the schools each one lists
+ * @returns A task converting a feed of listing documents, as plain text, into a feed of the schools they list
  */
-export function schools(): Task<string, readonly Listed[]> {
+export function schools(): Task<string, Listed> {
 
 	const ai = service(createGoogleAI);
 
@@ -115,7 +114,7 @@ export function schools(): Task<string, readonly Listed[]> {
 		(flat(map(async document => pipe(
 			(items(await list(document)))
 			(validate(Reported))
-			(map(({ schools = [] }) => schools))
+			(flat(map(({ schools = [] }) => schools)))
 		))))
 	);
 

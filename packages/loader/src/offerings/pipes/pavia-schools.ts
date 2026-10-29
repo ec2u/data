@@ -23,7 +23,6 @@ import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { toArray } from "@metreeca/flow/sinks";
 import { flat, map } from "@metreeca/flow/tasks";
 import { focus, html, untag } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
@@ -54,42 +53,23 @@ if ( import.meta.main ) {
  * Harvests the medical specialisation schools listed by Pavia University.
  *
  * Reads by model every school the two listing pages describe, for medical and for non-medical graduates, and states
- * them as programs. A listing page that fails to load, or that the model fails to read, fails the run before anything
- * is stated, so the schools it lists are never retracted on the strength of a failed request.
+ * them as programs. A listing page that fails to load or to be read is logged and lists no school, leaving the
+ * retraction floor to keep the schools it used to list from being retracted wholesale.
  *
  * @returns A promise resolving to a tally of what the run did
- *
- * @throws {@link !Error Error} If a listing page fails to load or to be read
  */
 export async function PaviaSchools() {
-
-	const listings = await Promise.all(IndexURLs.map(async url => pipe(
-		(items([url]))
+	return pipe(
+		(items(IndexURLs))
 		(fetch())
 		(html())
 		(denoise())
 		(focus())
 		(untag())
 		(schools())
-		(toArray())
-	)));
-
-	const failed = listings.filter(listing => listing.length === 0).length;
-
-	if ( failed > 0 ) {
-
-		throw new Error(`failed listing pages <${failed}>`);
-
-	} else {
-
-		return pipe(
-			(items(listings.flat(2)))
-			(flat(map(listed => opt(school(listed), draft => [draft]) ?? [])))
-			(sync(Source))
-		);
-
-	}
-
+		(flat(map(listed => opt(school(listed), draft => [draft]) ?? [])))
+		(sync(Source))
+	);
 }
 
 

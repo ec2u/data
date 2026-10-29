@@ -11,8 +11,8 @@ Authoritative integration status for the medical specialisation schools listed b
 
 Schools described on the two listing pages of medical specialisation schools, for medical and for non-medical
 graduates, each read whole by model and its schools stated one at a time as programs, unchanged ones skipped. A listing
-page that fails to load or to be read fails the run before anything is stated, so its schools are never retracted on
-the strength of a failed request, and a run naming fewer than three quarters of the stored schools retracts nothing.
+page that fails to load or to be read is logged and lists no school, and a run naming fewer than three quarters of the
+stored schools retracts nothing, so a failed request never retracts the schools of a page wholesale.
 
 | Source                                                      | Description             | Notes                                     |
 |-------------------------------------------------------------|-------------------------|-------------------------------------------|
@@ -26,7 +26,7 @@ as needed. The listing pages state no academic year: schools are dated with the 
 switching in August. Both pages are read by model on every run.
 
 - **2026-10-29** – ported to the TypeScript loader: schools stated one at a time with unchanged ones skipped and a
-	retraction floor; a listing page failing to load or to be read fails the run before anything is stated
+	retraction floor; a listing page failing to load or to be read is logged like any other failure
 - **2026-07-21** – extract goals, structure and contents for `schema:teaches` and graduation requirements for
   `schema:competencyRequired` from the specialisation-school pages
 - **2024-11-07** – initial integration
