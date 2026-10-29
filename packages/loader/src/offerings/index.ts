@@ -18,6 +18,7 @@ import { worker } from "@metreeca/gate/worker";
 import { Router } from "express";
 import { Linz } from "./pipes/linz.js";
 import { LLL } from "./pipes/lll.js";
+import { Salamanca } from "./pipes/salamanca.js";
 
 
 export function offerings(): Router {
@@ -25,6 +26,7 @@ export function offerings(): Router {
 	return Router()
 
 		.post("/linz", worker(Linz))
-		.post("/lll", worker(LLL));
+		.post("/lll", worker(LLL))
+		.post("/salamanca", worker(Salamanca));
 
 }
