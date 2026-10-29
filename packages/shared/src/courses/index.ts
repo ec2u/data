@@ -57,6 +57,10 @@ export const courses = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export type Courses = State<typeof Courses>;
+export type Course = State<typeof Course>;
+
+
 export function Courses() {
 	return resource(Dataset, {
 

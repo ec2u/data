@@ -22,7 +22,7 @@ import { ec2u } from "@ec2u/data-shared";
 import { SchemaLearningResource } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
-import { string } from "@metreeca/blue/string";
+import { iri, string } from "@metreeca/blue/string";
 import { resolve } from "@metreeca/core/resource";
 import type { Reference } from "@metreeca/qest/state";
 import * as uuid from "uuid";
@@ -53,6 +53,17 @@ export function Offering() {
 
 		educationalLevel: multiple(reference(ISCED2011Topic)),
 		about: multiple(reference(Topic)), // ISCED-F 2013 fields and SDGs ;( a union of references types models as {}
+
+		source: optional(iri, {
+
+			hidden: true,
+
+			forward: ec2u,
+
+			name: "Source",
+			description: "The source listing the offering, which alone states and withdraws it."
+
+		}),
 
 		digest: optional(string, {
 

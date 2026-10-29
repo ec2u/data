@@ -21,6 +21,7 @@ import { getOfferingId, Offering } from "@ec2u/data-shared/offerings/index.js";
 import { SchemaEducationalOccupationalProgram } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, resource } from "@metreeca/blue/resource";
+import type { State } from "@metreeca/blue/value";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import type { Reference } from "@metreeca/qest/state";
@@ -50,6 +51,10 @@ export const programs = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Programs = State<typeof Programs>;
+export type Program = State<typeof Program>;
+
 
 export function Programs() {
 	return resource(Dataset, {
