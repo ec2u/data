@@ -32,6 +32,7 @@ import { items } from "@metreeca/flow/feeds";
 import { map, trim } from "@metreeca/flow/tasks";
 import { focus, html, untag, unwrap } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
+import { coalesce } from "@metreeca/work/flow/coalesce.js";
 import { denoise } from "@metreeca/work/mime-xml/denoise.js";
 
 
@@ -98,7 +99,19 @@ export function harvest(): Task<URLLike, Markdown> {
 		(fetch())
 		(html())
 		(denoise())
-		(trim(map(tree => opt(focus(tree), untag, () => opt(unwrap(tree).find(isEvent), render)))))
+		(coalesce(
+			trees => pipe(
+				items(trees)
+				(focus())
+				(untag())
+			),
+			trees => pipe(
+				items(trees)
+				(unwrap())
+				(trim(map(values => values.find(isEvent))))
+				(map(render))
+			)
+		))
 	);
 
 

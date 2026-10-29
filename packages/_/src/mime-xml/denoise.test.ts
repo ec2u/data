@@ -51,6 +51,17 @@ async function page(markup: string, base?: string): Promise<Document> {
 
 }
 
+/**
+ * Renders a page as Markdown.
+ */
+async function rendered(document: Document): Promise<string> {
+
+	const [markdown] = await pipe((items([document]))(untag())(toArray()));
+
+	return markdown!; // ;(cast) the renderer emits one rendering for each page it is fed
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -60,7 +71,7 @@ describe("cfemail", () => {
 
 		it("replaces a marked element with the address", async () => {
 
-			expect(untag(cfemail(await page(
+			expect(await rendered(cfemail(await page(
 				`<p>write to <span class="__cf_email__" data-cfemail="${Alpha}">[email&#160;protected]</span></p>`
 			)))).toBe("write to alpha@example.com");
 
@@ -68,7 +79,7 @@ describe("cfemail", () => {
 
 		it("matches the marker among other classes", async () => {
 
-			expect(untag(cfemail(await page(
+			expect(await rendered(cfemail(await page(
 				`<p><span class="link __cf_email__ mail" data-cfemail="${Alpha}">[email&#160;protected]</span></p>`
 			)))).toBe("alpha@example.com");
 
@@ -76,7 +87,7 @@ describe("cfemail", () => {
 
 		it("decodes addresses outside the ASCII range", async () => {
 
-			expect(untag(cfemail(await page(
+			expect(await rendered(cfemail(await page(
 				`<p><span class="__cf_email__" data-cfemail="${Zoe}">[email&#160;protected]</span></p>`
 			)))).toBe("zoë@example.com");
 
@@ -88,7 +99,7 @@ describe("cfemail", () => {
 
 		it("retargets a relative protection link to the address", async () => {
 
-			expect(untag(cfemail(await page(
+			expect(await rendered(cfemail(await page(
 				`<p><a href="/cdn-cgi/l/email-protection#${Alpha}">mail us</a></p>`
 			)))).toBe("[mail us](mailto:alpha@example.com)");
 
@@ -96,7 +107,7 @@ describe("cfemail", () => {
 
 		it("retargets an absolute protection link to the address", async () => {
 
-			expect(untag(cfemail(await page(
+			expect(await rendered(cfemail(await page(
 				`<p><a href="https://example.org/cdn-cgi/l/email-protection#${Alpha}">mail us</a></p>`
 			)))).toBe("[mail us](mailto:alpha@example.com)");
 
@@ -104,7 +115,7 @@ describe("cfemail", () => {
 
 		it("restores both target and label of a link wrapping obfuscated text", async () => {
 
-			expect(untag(cfemail(await page(`<p><a href="/cdn-cgi/l/email-protection#${Alpha}">`
+			expect(await rendered(cfemail(await page(`<p><a href="/cdn-cgi/l/email-protection#${Alpha}">`
 				+ `<span class="__cf_email__" data-cfemail="${AlphaAgain}">[email&#160;protected]</span>`
 				+ `</a></p>`
 			)))).toBe("[alpha@example.com](mailto:alpha@example.com)");
@@ -113,7 +124,7 @@ describe("cfemail", () => {
 
 		it("leaves other links as they stand", async () => {
 
-			expect(untag(cfemail(await page(
+			expect(await rendered(cfemail(await page(
 				`<p><a href="/contacts#${Alpha}">contacts</a></p>`
 			)))).toBe(`[contacts](/contacts#${Alpha})`);
 
@@ -125,9 +136,9 @@ describe("cfemail", () => {
 
 		it("yields the same rendering whatever key the payload is encoded under", async () => {
 
-			expect(untag(cfemail(await page(
+			expect(await rendered(cfemail(await page(
 				`<p><a href="/cdn-cgi/l/email-protection#${Alpha}">mail us</a></p>`
-			)))).toBe(untag(cfemail(await page(
+			)))).toBe(await rendered(cfemail(await page(
 				`<p><a href="/cdn-cgi/l/email-protection#${AlphaAgain}">mail us</a></p>`
 			))));
 
@@ -139,7 +150,7 @@ describe("cfemail", () => {
 
 		it("leaves a marked element with an undecodable payload as it stands", async () => {
 
-			expect(untag(cfemail(await page(
+			expect(await rendered(cfemail(await page(
 				`<p><span class="__cf_email__" data-cfemail="4z">[email&#160;protected]</span></p>`
 			)))).toBe("[email protected]");
 
@@ -147,7 +158,7 @@ describe("cfemail", () => {
 
 		it("leaves a protection link with an undecodable payload as it stands", async () => {
 
-			expect(untag(cfemail(await page(
+			expect(await rendered(cfemail(await page(
 				`<p><a href="/cdn-cgi/l/email-protection#4">mail us</a></p>`
 			)))).toBe("[mail us](/cdn-cgi/l/email-protection#4)");
 
@@ -163,11 +174,11 @@ describe("cfemail", () => {
 				+ ` <a href="/cdn-cgi/l/email-protection#${Alpha}">mail us</a></p>`
 			);
 
-			const before = untag(document);
+			const before = await rendered(document);
 
 			cfemail(document);
 
-			expect(untag(document)).toBe(before);
+			expect(await rendered(document)).toBe(before);
 
 		});
 
@@ -181,7 +192,7 @@ describe("cfemail", () => {
 
 		it("keeps the base URL of the page", async () => {
 
-			expect(untag(cfemail(await page(
+			expect(await rendered(cfemail(await page(
 				`<p><a href="/cdn-cgi/l/email-protection#${Alpha}">mail us</a></p>`,
 				"https://example.com/a/b"
 			)))).toBe(`---\nurl: "https://example.com/a/b"\n---\n\n[mail us](mailto:alpha@example.com)`);
@@ -202,7 +213,7 @@ describe("denoise", () => {
 
 		const [document] = await pipe((items([await page(markup)]))(denoise(...rules))(toArray()));
 
-		return untag(document!); // ;(cast) the denoiser emits one page for each page it is fed
+		return rendered(document!); // ;(cast) the denoiser emits one page for each page it is fed
 
 	}
 

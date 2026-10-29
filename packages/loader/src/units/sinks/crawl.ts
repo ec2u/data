@@ -15,12 +15,11 @@
  */
 
 import type { University } from "@ec2u/data-shared/universities/index.core.js";
-import { opt } from "@metreeca/core";
 import type { Markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { filter, flat, fork, map, tee, trim } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
 import { focus, html, untag } from "@metreeca/mime-xml";
 import { settle, type Tally } from "@metreeca/pipe-store";
 import { fetch } from "@metreeca/pipe-url";
@@ -122,7 +121,8 @@ export function crawl(university: University, {
 			(fetch())
 			(html())
 			(denoise())
-			(trim(map(tree => opt(focus(tree), untag))))
+			(focus())
+			(untag())
 			(map((document): Page => immutable({ url, document })))
 		);
 	}

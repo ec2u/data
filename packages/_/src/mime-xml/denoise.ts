@@ -22,13 +22,13 @@
  * same digest until its content actually changes, and so that downstream readers see the content as it is meant.
  *
  * ```typescript
- * import { scrub } from "@metreeca/work/mime-xml/scrub.js";
+ * import { denoise } from "@metreeca/work/mime-xml/denoise.js";
  *
  * pipe(
  *   (items(urls))
  *   (fetch())
  *   (html())
- *   (scrub())
+ *   (denoise())
  *   (untag())
  * );
  * ```
