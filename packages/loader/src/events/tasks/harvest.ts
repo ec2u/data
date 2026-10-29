@@ -30,10 +30,9 @@ import { type Some, some } from "@metreeca/core/arrays";
 import { type Markdown, markdown } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { map, trim } from "@metreeca/flow/tasks";
+import { coalesce, map, trim } from "@metreeca/flow/tasks";
 import { focus, html, untag, unwrap } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
-import { coalesce } from "@metreeca/work/flow/coalesce.js";
 import { denoise } from "@metreeca/work/mime-xml/denoise.js";
 
 
