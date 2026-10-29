@@ -1,12 +1,19 @@
-# EC2U Knowledge Hub - Data Ingestion Pipelines
+# EC2U Knowledge Hub
 
-This repository contains AI-based data ingestion pipelines for the [EC2U Knowledge Hub](https://github.com/ec2u/data/),
-the central knowledge sharing and semantic search facility of the EC2U Alliance.
+The EC2U Knowledge Hub is the central knowledge sharing and semantic search facility of the
+[EC2U Alliance](https://www.ec2u.eu/). This repository holds its AI-based data ingestion pipelines, the data server
+that publishes the datasets and the web UI through which people browse and search them.
 
 The pipelines gather, cleanse and cross-link content from a wide range of internal and external data sources, leveraging
 AI to extract and structure information. The processed data is made available to data consumers like user-facing apps
 and intelligence tools as ready-to-use structured data about skills, courses, research, local events and other areas of
 common interest.
+
+# Datasets
+
+EC2U Knowledge Hub resources are organized as a collection of cross-linked [datasets](https://data.ec2u.eu/) published
+both through an interactive semantic search tool and a machine-readable REST/JSON-LD API. Both services support
+extensive faceted search and linked data navigation facilities across every dataset and its cross-links.
 
 # Support
 

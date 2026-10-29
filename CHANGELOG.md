@@ -23,3 +23,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - SPARQL queries and store steps come from the released `@metreeca/pipe-sparql` and `@metreeca/pipe-store` packages,
   replacing the copies incubated in `@metreeca/work`, which no longer carries them or their dependencies
 - Upgrade `@metreeca/pipe-url` to `^0.11.1`
+
+### Removed
+
+- The Java harvesters, server and React UI deployed to App Engine, superseded by the pipe loader, server and client;
+  the last Java state stays reachable at the `java-legacy` tag for reference and for backports to `main` and `next`

@@ -1,5 +1,12 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+| Skill           | Purpose                                                            |
+|-----------------|--------------------------------------------------------------------|
+| `modelling`     | Standards for documenting and structuring data models              |
+| `pipe-designer` | Design and review of source ingestion pipes under `packages/loader` |
+
+---
+
 # References
 
 ## Utilities
