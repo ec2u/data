@@ -19,7 +19,7 @@
 
 FROM node:24-alpine AS build
 
-WORKDIR /pipe
+WORKDIR /data
 
 COPY package.json package-lock.json ./
 COPY --parents packages/*/package.json ./
@@ -36,20 +36,20 @@ FROM node:24-alpine AS runtime
 
 ENV NODE_ENV=production
 
-WORKDIR /pipe
+WORKDIR /data
 
-COPY --from=build /pipe/package.json /pipe/package-lock.json ./
-COPY --from=build --parents /pipe/./packages/*/package.json ./
+COPY --from=build /data/package.json /data/package-lock.json ./
+COPY --from=build --parents /data/./packages/*/package.json ./
 
-COPY --from=build /pipe/packages/_/lib ./packages/_/lib
-COPY --from=build /pipe/packages/shared/lib ./packages/shared/lib
+COPY --from=build /data/packages/_/lib ./packages/_/lib
+COPY --from=build /data/packages/shared/lib ./packages/shared/lib
 
 
 FROM runtime AS server
 
 RUN npm ci --omit=dev --workspace=@ec2u/data-server && npm cache clean --force
 
-COPY --from=build /pipe/packages/server/lib ./packages/server/lib
+COPY --from=build /data/packages/server/lib ./packages/server/lib
 
 USER node
 
@@ -60,7 +60,7 @@ FROM runtime AS loader
 
 RUN npm ci --omit=dev --workspace=@ec2u/data-loader && npm cache clean --force
 
-COPY --from=build /pipe/packages/loader/lib ./packages/loader/lib
+COPY --from=build /data/packages/loader/lib ./packages/loader/lib
 
 RUN chown node:node . # the file cache of fetched pages is created under the working directory
 

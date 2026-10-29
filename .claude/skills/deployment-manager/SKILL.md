@@ -21,15 +21,15 @@ only the project-specific layout.
 
 # Environments
 
-The pipe runs as two **Cloud Run** services per environment in the Google Cloud project `ec2u-data` (number
+The Knowledge Hub runs as two **Cloud Run** services per environment in the Google Cloud project `ec2u-data` (number
 `891057038566`), region `europe-west1`. GitHub Actions deploys both of them in a single workflow run on every push to
 the branch of the environment (`.github/workflows/deploy.yml`).
 
 | Environment | Branch | Server        | Loader        | GraphDB repository | GraphDB users         |
 |-------------|--------|---------------|---------------|--------------------|-----------------------|
-| production  | `main` | `server-main` | `loader-main` | `data-main`        | `data-main-{service}` |
-| staging     | `next` | `server-next` | `loader-next` | `data-next`        | `data-next-{service}` |
-| development | `edge` | `server-edge` | `loader-edge` | `data-edge`        | `data-edge-{service}` |
+| production  | `main` | `main-server` | `main-loader` | `data-main`        | `data-main-{service}` |
+| staging     | `next` | `next-server` | `next-loader` | `data-next`        | `data-next-{service}` |
+| development | `edge` | `edge-server` | `edge-loader` | `data-edge`        | `data-edge-{service}` |
 
 - **Server**: serves the data endpoints and the web UI, open to the public
 - **Loader**: runs the ingestion pipes, closed to every caller except Cloud Scheduler jobs signed as `scheduler`
@@ -40,7 +40,7 @@ user and its own credentials, and only the loader can write.
 
 ## Bindings
 
-The workflow names the environment in the `PIPE_ENVIRONMENT` variable of every service. Each service derives its
+The workflow names the environment in the `DATA_ENVIRONMENT` variable of every service. Each service derives its
 resources from it, binding them in its own `src/index.core.ts`:
 
 - GraphDB repository `data-{environment}` on `https://graphdb.ec2u.net`
@@ -52,7 +52,7 @@ The server reads the repository without opening transactions, since GraphDB gran
 write access.
 
 Local runs default to `edge` and reach the same resources through the `gcloud` credentials the developer sets up with
-`sh package.sh`. Set `PIPE_ENVIRONMENT` to run against another environment, picking the resources they read and write.
+`sh package.sh`. Set `DATA_ENVIRONMENT` to run against another environment, picking the resources they read and write.
 
 # Resources
 
@@ -60,11 +60,11 @@ Local runs default to `edge` and reach the same resources through the `gcloud` c
 
 | Resource                  | Name                                                                                | Role                                                    |
 |---------------------------|-------------------------------------------------------------------------------------|---------------------------------------------------------|
-| Cloud Run services        | `server-{branch}`, `loader-{branch}`                                                | Created and updated by the workflow                     |
-| Artifact Registry         | `pipe`, Docker format, one image per service and environment                        | Holds the images; keeps the last two of each            |
-| Runtime service accounts  | `server-{branch}`, `loader-{branch}`                                                | Identities the services run as                          |
+| Cloud Run services        | `{branch}-server`, `{branch}-loader`                                                | Created and updated by the workflow                     |
+| Artifact Registry         | `images`, Docker format, one image per service and environment                        | Holds the images; keeps the last two of each            |
+| Runtime service accounts  | `{branch}-server`, `{branch}-loader`                                                | Identities the services run as                          |
 | Scheduler service account | `scheduler`                                                                         | Identity Cloud Scheduler jobs sign their calls with     |
-| Deployer service account  | `pipe-deployer`                                                                     | Identity the workflow deploys as                        |
+| Deployer service account  | `deployer`                                                                     | Identity the workflow deploys as                        |
 | Workload Identity pool    | `github`, OIDC provider `ec2u`, restricted to owner `ec2u`                          | Lets the workflow sign in without a service account key |
 | Secrets                   | `{branch}-gdb-{service}-usr`, `{branch}-gdb-{service}-pwd`, `{branch}-googleai-key` | Credentials of each environment and service             |
 
@@ -78,12 +78,12 @@ also deletes every Cloud Run revision except the one serving traffic.
 
 | Principal                     | Role                                 | On                                                                                                                   |
 |-------------------------------|--------------------------------------|----------------------------------------------------------------------------------------------------------------------|
-| `{service}-{branch}`          | `roles/secretmanager.secretAccessor` | the project, conditioned on secret names starting with `{branch}-gdb-{service}-` or equal to `{branch}-googleai-key` |
-| `scheduler`                   | `roles/run.invoker`                  | `loader-{branch}`, granted once the first deployment has created it                                                  |
-| `pipe-deployer`               | `roles/run.admin`                    | the project                                                                                                          |
-| `pipe-deployer`               | `roles/artifactregistry.writer`      | the `pipe` registry                                                                                                  |
-| `pipe-deployer`               | `roles/iam.serviceAccountUser`       | each runtime service account                                                                                         |
-| GitHub repository `ec2u/data` | `roles/iam.workloadIdentityUser`     | `pipe-deployer`, through the `github` pool                                                                           |
+| `{branch}-{service}`          | `roles/secretmanager.secretAccessor` | the project, conditioned on secret names starting with `{branch}-gdb-{service}-` or equal to `{branch}-googleai-key` |
+| `scheduler`                   | `roles/run.invoker`                  | `{branch}-loader`, granted once the first deployment has created it                                                  |
+| `deployer`               | `roles/run.admin`                    | the project                                                                                                          |
+| `deployer`               | `roles/artifactregistry.writer`      | the `images` registry                                                                                                  |
+| `deployer`               | `roles/iam.serviceAccountUser`       | each runtime service account                                                                                         |
+| GitHub repository `ec2u/data` | `roles/iam.workloadIdentityUser`     | `deployer`, through the `github` pool                                                                           |
 
 ## GraphDB
 

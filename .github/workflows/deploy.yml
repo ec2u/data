@@ -40,8 +40,8 @@ jobs:
             flags: --no-allow-unauthenticated --timeout=30m
 
     env:
-      IMAGE: europe-west1-docker.pkg.dev/ec2u-data/pipe/${{ matrix.service }}-${{ github.ref_name }}
-      SERVICE: ${{ matrix.service }}-${{ github.ref_name }}
+      IMAGE: europe-west1-docker.pkg.dev/ec2u-data/images/${{ github.ref_name }}-${{ matrix.service }}
+      SERVICE: ${{ github.ref_name }}-${{ matrix.service }}
 
     steps:
 
@@ -53,7 +53,7 @@ jobs:
         uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: projects/891057038566/locations/global/workloadIdentityPools/github/providers/ec2u
-          service_account: pipe-deployer@ec2u-data.iam.gserviceaccount.com
+          service_account: deployer@ec2u-data.iam.gserviceaccount.com
           token_format: access_token
 
       - name: Sign in to Artifact Registry
@@ -85,7 +85,7 @@ jobs:
           region: ${{ env.REGION }}
           image: ${{ env.IMAGE }}:${{ github.sha }}
           env_vars: |
-            PIPE_ENVIRONMENT=${{ github.ref_name }}
+            DATA_ENVIRONMENT=${{ github.ref_name }}
             ${{ matrix.vars }}
           env_vars_update_strategy: overwrite
           flags: >-

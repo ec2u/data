@@ -41,7 +41,7 @@ import { Metadata as units } from "./units/index.core.js";
 import { Metadata as universities } from "./universities/index.core.js";
 
 
-const environment = process.env.PIPE_ENVIRONMENT || "edge"; // !!! align default to branch
+const environment = process.env.DATA_ENVIRONMENT || "edge"; // !!! align default to branch
 
 
 export const execute = executor(

@@ -23,8 +23,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - SPARQL queries and store steps come from the released `@metreeca/pipe-sparql` and `@metreeca/pipe-store` packages,
   replacing the copies incubated in `@metreeca/work`, which no longer carries them or their dependencies
 - Upgrade `@metreeca/pipe-url` to `^0.11.1`
-- The development environment is named `edge` in place of `yard`: branch, default `PIPE_ENVIRONMENT`, secrets
+- The development environment is named `edge` in place of `yard`: branch, default environment, secrets
   (`edge-gdb-{service}-*`, `edge-googleai-key`), GraphDB repository `data-edge` and users `data-edge-{service}`
+- Services read their environment from `DATA_ENVIRONMENT` in place of `PIPE_ENVIRONMENT`; Cloud Run services, runtime
+  service accounts and images are named `{environment}-{service}`, deployed as `deployer` into the `images` registry
 
 ### Removed
 
