@@ -22,6 +22,7 @@ import { LLL } from "./pipes/lll.js";
 import { Pavia } from "./pipes/pavia.js";
 import { Poitiers } from "./pipes/poitiers.js";
 import { Salamanca } from "./pipes/salamanca.js";
+import { Umea } from "./pipes/umea.js";
 
 
 export function offerings(): Router {
@@ -33,6 +34,7 @@ export function offerings(): Router {
 		.post("/lll", worker(LLL))
 		.post("/pavia", worker(Pavia))
 		.post("/poitiers", worker(Poitiers))
-		.post("/salamanca", worker(Salamanca));
+		.post("/salamanca", worker(Salamanca))
+		.post("/umea", worker(Umea));
 
 }
