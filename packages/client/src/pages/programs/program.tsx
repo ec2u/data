@@ -52,6 +52,8 @@ export const program = immutable({
 		identifier: {},
 		url: {},
 
+		year: {},
+
 		numberOfCredits: {},
 		timeToComplete: {},
 
@@ -118,7 +120,7 @@ export function ProgramPage() {
 
 		tray={resource({
 
-			ready: ({ state: { url = [], university, provider, identifier, numberOfCredits, timeToComplete } }) => <>
+			ready: ({ state: { url = [], university, year, provider, identifier, numberOfCredits, timeToComplete } }) => <>
 
 				<Info place={"spread"}>{{
 
@@ -131,6 +133,7 @@ export function ProgramPage() {
 				<Info place={"spread"}>{{
 
 					University: opt(university, ({ id, label }) => <Link look={"strong"} href={id}>{label}</Link>),
+					Year: year,
 					Provider: opt(provider, ({ label }) => label)
 
 				}}</Info>

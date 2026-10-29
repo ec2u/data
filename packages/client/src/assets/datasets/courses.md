@@ -14,6 +14,7 @@ model.
 |-----------------------------------|-----------------------------------------------------------|------|------------------------------------------------------------------------------|
 | **ec2u:Course**                   | [ec2u:Resource], [schema:Course], [schema:CourseInstance] |      | EC2U Knowledge Hub course                                                    |
 | ec2u:year                         | string as {`YYYY/YYYY`}                                   | 0..1 | the academic year in which the course is offered (for instance, `2026/2027`) |
+| ec2u:inferred                     | boolean                                                   | 0..1 | whether the academic year was inferred from the retrieval date, the source stating none |
 | ec2u:term                         | [ec2u:Term]                                               | *    | the academic term(s) in which the course is offered                          |
 | [schema:provider]                 | [ec2u:Organization]                                       | 1    | link to the organization providing the course                                |
 | [schema:instructor]               | [ec2u:Person]                                             | *    | links to the instructors of the course                                       |

@@ -42,6 +42,8 @@ export const programs = immutable({
 		label: {},
 		comment: {},
 
+		year: {},
+
 		university: { id: {}, label: {} }
 
 	}
@@ -92,10 +94,10 @@ export function ProgramsPage() {
 
 		ready: ({ state, load }) => state.length === 0 ? <Hint>{programs.glyph}</Hint> : <>
 
-			{state.map(({ id, label, comment, university }) => <Card key={id}
+			{state.map(({ id, label, comment, year, university }) => <Card key={id}
 
 				title={<Link look={"strong"} href={id}>{label}</Link>}
-				tags={university?.label}
+				tags={[university?.label, year].filter(Boolean).join(" · ")}
 
 			>{comment}</Card>)}
 
