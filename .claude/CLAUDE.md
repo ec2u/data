@@ -153,7 +153,7 @@ The model is still validated against the shape, so a property the shape does not
 did not resolve it, not that the data is missing: confirm at the triple level before concluding anything.
 
 **Triple level** - what the repository holds. Open the RDF4J repository of the environment directly, taking the
-read-only server credentials from the vault (`yard` below; see the `deployment-manager` skill for the others):
+read-only server credentials from the vault (`edge` below; see the `deployment-manager` skill for the others):
 
 ```ts
 import { createGCPVault } from "@metreeca/gear-gcp/secrets";
@@ -165,8 +165,8 @@ const vault = createGCPVault();
 
 const repository = createRDF4JRepository({
 	server: "https://graphdb.ec2u.net",
-	repository: "data-yard",
-	fetch: createFetch(basic(await vault("yard-gdb-server-usr"), await vault("yard-gdb-server-pwd")))
+	repository: "data-edge",
+	fetch: createFetch(basic(await vault("edge-gdb-server-usr"), await vault("edge-gdb-server-pwd")))
 });
 
 for (const tuple of await repository.select(`select ?p (count(*) as ?n) where { <…> ?p ?o } group by ?p`)) {
@@ -221,6 +221,6 @@ Issues live in `ec2u/data` and belong to the Knowledge Hub project (`github.com/
 
 ## Branching
 
-Branch issue work off `yard` (the development branch), not `next` or `main`. Issue branches follow the
-`{type}/gh-{number}-{slug}` convention and merge back into `yard`.
+Branch issue work off `edge` (the development branch), not `next` or `main`. Issue branches follow the
+`{type}/gh-{number}-{slug}` convention and merge back into `edge`.
 

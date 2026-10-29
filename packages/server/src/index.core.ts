@@ -24,7 +24,7 @@ import { createGCPVault } from "@metreeca/gear-gcp/secrets";
 import { createStore } from "@metreeca/pipe-store";
 
 
-const environment = process.env.PIPE_ENVIRONMENT || "yard"; // !!! align default to branch
+const environment = process.env.PIPE_ENVIRONMENT || "edge"; // !!! align default to branch
 
 
 export const execute = executor(

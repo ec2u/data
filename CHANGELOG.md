@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/ec2u/data/commits/yard)
+## [Unreleased](https://github.com/ec2u/data/commits/edge)
 
 ### Added
 
@@ -23,6 +23,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - SPARQL queries and store steps come from the released `@metreeca/pipe-sparql` and `@metreeca/pipe-store` packages,
   replacing the copies incubated in `@metreeca/work`, which no longer carries them or their dependencies
 - Upgrade `@metreeca/pipe-url` to `^0.11.1`
+- The development environment is named `edge` in place of `yard`: branch, default `PIPE_ENVIRONMENT`, secrets
+  (`edge-gdb-{service}-*`, `edge-googleai-key`), GraphDB repository `data-edge` and users `data-edge-{service}`
 
 ### Removed
 

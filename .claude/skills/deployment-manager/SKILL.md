@@ -29,7 +29,7 @@ the branch of the environment (`.github/workflows/deploy.yml`).
 |-------------|--------|---------------|---------------|--------------------|-----------------------|
 | production  | `main` | `server-main` | `loader-main` | `data-main`        | `data-main-{service}` |
 | staging     | `next` | `server-next` | `loader-next` | `data-next`        | `data-next-{service}` |
-| development | `yard` | `server-yard` | `loader-yard` | `data-yard`        | `data-yard-{service}` |
+| development | `edge` | `server-edge` | `loader-edge` | `data-edge`        | `data-edge-{service}` |
 
 - **Server**: serves the data endpoints and the web UI, open to the public
 - **Loader**: runs the ingestion pipes, closed to every caller except Cloud Scheduler jobs signed as `scheduler`
@@ -51,7 +51,7 @@ resources from it, binding them in its own `src/index.core.ts`:
 The server reads the repository without opening transactions, since GraphDB grants transactions only to users with
 write access.
 
-Local runs default to `yard` and reach the same resources through the `gcloud` credentials the developer sets up with
+Local runs default to `edge` and reach the same resources through the `gcloud` credentials the developer sets up with
 `sh package.sh`. Set `PIPE_ENVIRONMENT` to run against another environment, picking the resources they read and write.
 
 # Resources
@@ -109,7 +109,7 @@ loader and verifies their OIDC token before a request reaches the service. Keep 
 
 # Current State
 
-| Resource                                      | `main`               | `next`               | `yard`                        |
+| Resource                                      | `main`               | `next`               | `edge`                        |
 |-----------------------------------------------|----------------------|----------------------|-------------------------------|
 | Secrets                                       | missing              | missing              | created, one pair per service |
 | GraphDB repository                            | exists               | exists               | created                       |
@@ -117,10 +117,9 @@ loader and verifies their OIDC token before a request reaches the service. Keep 
 | Service accounts, registry, Workload Identity | missing              | missing              | missing                       |
 | Cloud Run services, scheduled jobs            | missing              | missing              | missing                       |
 
-Until the shared resources exist, a push to `main`, `next` or `yard` fails at the sign-in step of the workflow. The
+Until the shared resources exist, a push to `main`, `next` or `edge` fails at the sign-in step of the workflow. The
 legacy secrets (`gdb-server-usr`, `gdb-server-pwd`, `googleai-key`) and the shared GraphDB user `data-server` stay in
 place until `main` and `next` move to their own.
-
 # Quality Validation
 
 Before reporting a deployment change done, verify:
