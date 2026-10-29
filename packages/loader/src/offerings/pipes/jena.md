@@ -11,8 +11,8 @@ Authoritative integration status for the University of Jena degree programs.
 
 Program catalog scraped from the study programme page; program details read from the structured data each program page
 embeds, then stated one at a time, so an interrupted run keeps the programs it stated and the next one carries on;
-unchanged programs are skipped. A listed page that fails to load fails the run before anything is stated, and a run
-naming fewer than three quarters of the stored programs retracts nothing and fails.
+unchanged programs are skipped. A listed page that fails to load is logged and states no program, and a run naming
+fewer than three quarters of the stored programs retracts nothing and fails, so failed pages never empty the dataset.
 
 | Source                                     | Description          |
 |--------------------------------------------|----------------------|
@@ -27,6 +27,6 @@ the classification filling it in otherwise. The pages carry no richer `Education
 retrieval, switching in August, while terms are left unstated.
 
 - **2026-10-29** – ported to the TypeScript loader: programs stated one at a time with unchanged ones skipped and a
-	retraction floor; a listed page failing to load fails the run; embedded JSON-LD read as plain JSON
+	retraction floor; a listed page failing to load is logged like any other failure; embedded JSON-LD read as plain JSON
 - **2024-04-03** – fix root XPath crawling expression
 - **2023-03-02** – initial integration

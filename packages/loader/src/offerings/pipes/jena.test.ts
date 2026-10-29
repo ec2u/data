@@ -18,7 +18,7 @@ import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { jena } from "@ec2u/data-shared/universities/index.core.js";
 import { describe, expect, it } from "vitest";
-import { program } from "./jena.js";
+import { program } from "./jena.core.js";
 
 
 const url = "https://www.uni-jena.de/en/6120/b-a-min-ancient-history";

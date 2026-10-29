@@ -15,12 +15,8 @@
  */
 
 import { base } from "@ec2u/data-shared";
-import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
-import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { jena } from "@ec2u/data-shared/universities/index.core.js";
-import { isObject, opt, type Optional, type Value } from "@metreeca/core";
+import { opt, type Optional, type Value } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
@@ -30,6 +26,7 @@ import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
 import { type ProgramDraft, sync } from "../sinks/sync.js";
+import { program } from "./jena.core.js";
 
 
 const Source = resolve(base, "/offerings/jena");
@@ -38,36 +35,8 @@ const CatalogueURL = "https://www.uni-jena.de/en/study-programme";
 
 const retrieval = 10; // the number of pages fetched at the same time from the source site // !!! as option
 
-/**
- * The ISCED 2011 levels of the degrees the catalogue names.
- */
-const Levels: { readonly [degree: string]: string } = {
-	"Bachelor of Arts": "6",
-	"Bachelor of Science": "6",
-	"Master of Arts": "7",
-	"Master of Education": "7",
-	"Master of Science": "7",
-	"state examination": "9",
-	"Diploma/church board examination": "9"
-};
-
 
 const logger = log(import.meta.url);
-
-
-/**
- * The `AboutPage` a program page embeds as JSON-LD.
- */
-export type AboutPage = {
-
-	readonly "@type": "AboutPage"
-
-	readonly headline?: null | string
-	readonly abstract?: null | string
-	readonly inLanguage?: null | string
-	readonly educationalLevel?: null | string
-
-}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,51 +52,26 @@ if ( import.meta.main ) {
  * Harvests the degree programs listed by the Jena study programme catalogue.
  *
  * Reads the program pages the catalogue links from its filterable list, then the `AboutPage` structured data each page
- * embeds as JSON-LD, as {@link program} describes. A listed page that fails to load fails the run before anything is
- * stated, so its program is never retracted on the strength of a failed request; a page embedding no usable structured
- * data is logged and dropped, its program being retracted as no longer described.
+ * embeds as JSON-LD, as {@link program} describes. A listed page that fails to load is logged and states no program,
+ * leaving the retraction floor to keep the programs of failed pages from being retracted wholesale; a page embedding no
+ * usable structured data is logged and dropped, its program being retracted as no longer described.
  *
  * @returns A promise resolving to a tally of what the run did
- *
- * @throws {@link !Error Error} If a listed program page fails to load
  */
 export async function Jena() {
-
-	const links = await pipe(
+	return pipe(
 		(items([CatalogueURL]))
 		(fetch())
 		(html())
 		(xpath())
 		(flat(map(path => path("//li[@data-filter]/a/@href").map(link))))
 		(distinct())
-		(toArray())
-	);
-
-	const pages = await pipe(
-		(items(links))
-		(fork(retrieval, links => pipe(
-			(items(links))
-			(map(async url => immutable({ url, values: await embedded(url) })))
+		(fork(retrieval, urls => pipe(
+			(items(urls))
+			(flat(map(async url => opt(await embedded(url), values => read(values, url)) ?? [])))
 		)))
-		(toArray())
+		(sync(Source))
 	);
-
-	const failed = pages.filter(({ values }) => values === undefined).length;
-
-	if ( failed > 0 ) {
-
-		throw new Error(`failed program pages <${failed}>`);
-
-	} else {
-
-		return pipe(
-			(items(pages))
-			(flat(map(({ url, values = [] }) => read(values, url))))
-			(sync(Source))
-		);
-
-	}
-
 }
 
 
@@ -165,54 +109,4 @@ async function embedded(url: string): Promise<Optional<readonly Value[]>> {
 
 	return lists.length === 0 ? undefined : lists.flat();
 
-}
-
-
-/**
- * Reads the program a page states in its embedded JSON-LD.
- *
- * Picks the `AboutPage` among the values the page embeds: the program is keyed by the page address the catalogue
- * links, named by the `headline` and described by the `abstract`, in the language `inLanguage` names, English by
- * default. Its `educationalLevel`, a degree name such as `Master of Science`, is stated as the degree awarded and
- * mapped to an ISCED 2011 level where the degree is known, the classification filling the level in otherwise.
- *
- * @param values The JSON-LD values the page embeds
- * @param url The address of the page, as the catalogue links it
- *
- * @returns The draft of the program, or `undefined` if the page embeds no `AboutPage` stating a headline
- */
-export function program(values: readonly Value[], url: string): Optional<ProgramDraft> {
-	return opt(values.find(isAboutPage), ({ headline, abstract, inLanguage, educationalLevel }) => {
-
-		const locale = /^([a-z]{2})(-|$)/i.exec(inLanguage?.trim() ?? "")?.[1]?.toLowerCase() ?? "en";
-		const description = abstract?.trim() || undefined;
-		const credential = educationalLevel?.trim() || undefined;
-
-		return opt(headline?.trim() || undefined, name => immutable({
-
-			kind: "program",
-
-			university: jena,
-			key: url,
-
-			name: { [locale]: name },
-			...opt(description, description => ({ description: { [locale]: description } })),
-			url: [url],
-
-			educationalLevel: opt(credential, credential => opt(Levels[credential], level =>
-				[getTopicId(isced2011, level)]
-			)) ?? [],
-
-			...opt(credential, credential => ({
-				educationalCredentialAwarded: { credentialCategory: "Degree", name: { [locale]: credential } }
-			}))
-
-		}));
-
-	});
-}
-
-
-function isAboutPage(value: Value): value is AboutPage {
-	return isObject(value) && value["@type"] === "AboutPage";
 }
