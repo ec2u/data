@@ -24,7 +24,6 @@ import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
 import { execute } from "./index.core.js";
 import { offerings } from "./offerings/index.js";
-import { taxonomies } from "./taxonomies/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
