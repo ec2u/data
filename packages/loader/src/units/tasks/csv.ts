@@ -62,7 +62,8 @@ const CSVFormat = immutable({
  * Retrieves each sheet and reads it as a CSV table with a header row, blank rows skipped, one unit draft per row
  * naming the unit in English or in the local language of the university; rows named in neither are dropped as
  * placeholders. A row is keyed by its `Code`, falling back to its English and then to its local name, so renaming a
- * unit without a code lists it as a new one, and rows sharing a key state the same unit.
+ * unit without a code lists it as a new one. Only the first row listing a key is read and later ones are dropped with
+ * a warning, so a unit listed twice is stated the same way on every run rather than from each of its rows in turn.
  *
  * Names and descriptions are stated in English and in the local language of `university`, from the `(English)` and
  * `(Local)` column pairs. Web addresses are read from the `Factsheet` and `Homepage` columns and their language
@@ -90,12 +91,22 @@ export function csv(university: University): Task<URLLike, Draft> {
 		(fetch())
 		(flat(map(async sheet => {
 
-			const records = await pipe(
+			const rows = await pipe(
 				(items([sheet]))
 				(parse(CSVFormat))
 				(filter(record => isDefined(record["Name (English)"] ?? record["Name (Local)"])))
 				(toArray())
 			);
+
+			// a key listed twice would state the unit from each row in turn, so only its first row is read
+
+			const records = rows.filter((record, index) => rows.findIndex(row => key(row) === key(record)) === index);
+
+			const duplicated = [...new Set(rows.filter(row => !records.includes(row)).map(key))];
+
+			if ( duplicated.length > 0 ) {
+				logger.warning`ignored repeated rows for units <${duplicated.join("; ")}>`;
+			}
 
 			// parents often name faculties the sheet doesn't list, so they're reported once per sheet rather than per row
 
