@@ -33,11 +33,9 @@ await execute(() => server(service(createStore))
 
 	.use("/universities/", universities())
 	.use("/units/", units())
+	.use("/offerings/", offerings())
 	.use("/documents/", documents())
 	.use("/events/", events())
-	.use("/offerings/", offerings())
-
-	.use("/taxonomies/", taxonomies())
 
 	.listen({
 
