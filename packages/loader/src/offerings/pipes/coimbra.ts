@@ -132,7 +132,7 @@ if ( import.meta.main ) {
  *
  * Asks the API for the offerings with a course sheet in the academic year current at retrieval, switching in August,
  * the one year the API answers for at a time. The records state no year of their own, so the sink dates them with the
- * same year and marks it as inferred. A response the API does not report as a success yields no drafts at all, so the
+ * same year. A response the API does not report as a success yields no drafts at all, so the
  * run retracts nothing on the strength of it and fails on the retraction floor instead.
  *
  * @returns A promise resolving to a tally of what the run did

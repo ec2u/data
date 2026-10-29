@@ -21,7 +21,7 @@ so pruning it below that share requires a forced reload, once the withdrawal is 
 A course is keyed by its `Code` or, failing that, by its English or local title, prefixed with `LLL/` so that it never
 names the course another source lists under the same code; `Year` and `Term` place it in its academic period, so the
 same code in another year or term is another course. A year of `each semester` is read as no year, and the course is
-dated with the academic year current at retrieval, switching in August, and marked as inferred; any other value that
+dated with the academic year current at retrieval, switching in August; any other value that
 is not `YYYY/YYYY` drops the row with a warning, as do a row naming no partner
 university and one stating no title; a non-blank `-` column disables a row. A program named in `Program (English)` is
 stated as a program of its own, keyed by name and the course year, and the course links to it. Closed-set columns

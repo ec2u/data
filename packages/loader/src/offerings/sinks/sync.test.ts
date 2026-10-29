@@ -70,15 +70,12 @@ describe("date", () => {
 	const current = "2026/2027";
 
 	it("infers the year of a draft stating none", async () => {
-		expect(date({ ...program, year: undefined }, current)).toMatchObject({ year: current, inferred: true });
+		expect(date({ ...program, year: undefined }, current)).toMatchObject({ year: current });
 	});
 
 	it("leaves a draft stating a year as it stands", async () => {
 
-		const dated = date(course, current);
-
-		expect(dated).toMatchObject({ year });
-		expect(dated).not.toHaveProperty("inferred");
+		expect(date(course, current)).toMatchObject({ year });
 
 	});
 

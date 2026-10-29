@@ -542,7 +542,7 @@ export function named(source: Reference, draft: Draft): readonly Reference[] {
 /**
  * Dates a draft its source states no academic year for.
  *
- * A draft stating no year is given `year`, inferred from the retrieval date, and marked as inferred; a course so dated
+ * A draft stating no year is given `year`, inferred from the retrieval date; a course so dated
  * also names the programs it lists with no year as delivered in `year`, as they come from the same retrieval. A draft
  * stating a year of its own is returned as it stands. Terms the source does not state are never inferred.
  *
@@ -559,7 +559,7 @@ export function date(draft: Draft, year: string): Draft {
 
 	} else if ( draft.kind === "program" ) {
 
-		return immutable({ ...draft, year, inferred: true });
+		return immutable({ ...draft, year });
 
 	} else {
 
@@ -568,7 +568,6 @@ export function date(draft: Draft, year: string): Draft {
 			...draft,
 
 			year,
-			inferred: true,
 
 			...opt(draft.inProgram, programs => ({
 				inProgram: programs.map(listing => listing.year === undefined ? { ...listing, year } : listing)

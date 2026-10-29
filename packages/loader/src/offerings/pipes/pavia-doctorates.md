@@ -22,8 +22,8 @@ The index lists each doctorate by name, linking its page: a program is keyed by 
 or `Doctorate in` its listed name according to the language of the name, stated at ISCED 2011 level 8 and awarding the
 `Dottorato di Ricerca` degree. Summary, description, contents, learning outcomes, admission and graduation requirements
 and credits are extracted from the program page, then translated to English and classified as needed. Pages state no
-academic year: programs are dated with the academic year current at retrieval, switching in August, and marked as
-inferred. A page that fails to load is skipped and stays listed, so it is never retracted for it.
+academic year: programs are dated with the academic year current at retrieval, switching in August.
+ A page that fails to load is skipped and stays listed, so it is never retracted for it.
 
 - **2026-10-29** – ported to the TypeScript loader: pages are read on every run and extracted again only when their
 	content changes, replacing the 30-day refresh and the per-run time budget; pages are retracted only once the index

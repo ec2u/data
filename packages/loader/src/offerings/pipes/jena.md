@@ -24,7 +24,7 @@ facts as a schema.org `AboutPage` in JSON-LD. A program is keyed by the page add
 degree name such as `Master of Science`, is stated as the degree awarded and mapped to an ISCED 2011 level where known,
 the classification filling it in otherwise. The pages carry no richer `EducationalOccupationalProgram` description, and
 `educationalLevel` is mostly empty. Pages state no academic year: programs are dated with the academic year current at
-retrieval, switching in August, and marked as inferred, while terms are left unstated.
+retrieval, switching in August, while terms are left unstated.
 
 - **2026-10-29** – ported to the TypeScript loader: programs stated one at a time with unchanged ones skipped and a
 	retraction floor; a listed page failing to load fails the run; embedded JSON-LD read as plain JSON

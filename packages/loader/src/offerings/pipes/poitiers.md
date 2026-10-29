@@ -40,7 +40,7 @@ skipped, so after the first run the pipe only restates what the August rollover 
 A program is keyed by its `code` and named in French as `code - name`; its `levelISCED` is mapped to ISCED 2011, its
 positive `credits` kept and its `composante` stated as its provider, while its `discipline` guides the classification
 of its field of education against ISCED-F 2013. The snapshot states no academic year, so programs are dated with the
-academic year current at retrieval, switching in August, and marked as inferred. The `options` and the pedagogical
+academic year current at retrieval, switching in August. The `options` and the pedagogical
 elements they list are not read.
 
 - **2026-10-29** – ported to the TypeScript loader, with the snapshot moved into the loader sources; programs dated

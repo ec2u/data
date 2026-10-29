@@ -68,7 +68,7 @@ if ( import.meta.main ) {
  *
  * Reads the one-off extract of the Poitiers training offer bundled with the loader, keyed by program code, as no live
  * feed is available yet; courses are not ingested. The snapshot states no academic year, so the sink dates its programs
- * with the one current at retrieval, switching in August, and marks that year as inferred.
+ * with the one current at retrieval, switching in August.
  *
  * @returns A promise resolving to a tally of what the run did
  */

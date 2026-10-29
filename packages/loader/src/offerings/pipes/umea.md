@@ -24,7 +24,7 @@ by their page address. The listing facts (title, code, credits, level) are not r
 outcomes, requirements, credits, credentials, level, duration and, for courses, code, workload, teaching language, fees
 and attendance mode are extracted from the page in its language, then translated to English and classified as needed.
 Pages state no academic year or term: offerings are dated with the academic year current at retrieval, switching in
-August, and marked as inferred. A page that fails to load is skipped and stays listed, so it is never retracted for it.
+August. A page that fails to load is skipped and stays listed, so it is never retracted for it.
 
 - **2026-10-29** – ported to the TypeScript loader, programs and courses harvested by a single pipe: pages are read on
 	every run and extracted again only when their content changes, replacing the 30-day refresh and `publishDate`

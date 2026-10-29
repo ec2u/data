@@ -20,7 +20,7 @@ catalogue, and pruning below that share requires a forced reload, once the withd
 
 The API answers for one academic year per request, whatever the number of `anoLectivo` values posted, and its records
 state no year of their own: the pipe asks for the academic year current at retrieval, switching in August, and states
-every offering in it, marked as inferred, while terms are left unstated. Only offerings with a course sheet in that year
+every offering in it, while terms are left unstated. Only offerings with a course sheet in that year
 are listed (`obterInformacaoFichaCurso`, `devolverSoCursosComFichaCurso`). A record is a degree program unless its
 `cicloTipo` is `NAO_CONFERENTE_GRAU`, which marks a course awarding no degree; either is keyed by its `cursoId`.
 

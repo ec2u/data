@@ -20,7 +20,6 @@ import { ISCED2011Topic } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { ec2u } from "@ec2u/data-shared";
 import { SchemaLearningResource } from "@ec2u/data-shared/vocabularies/schema/learning.js";
-import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { iri, string } from "@metreeca/blue/string";
@@ -47,13 +46,6 @@ export function Offering() {
 
 			name: "Academic Year",
 			description: "The academic year in which the offering is delivered."
-
-		}),
-
-		inferred: optional(boolean, {
-
-			name: "Inferred Year",
-			description: "Whether the academic year was inferred from the retrieval date, the source stating none."
 
 		}),
 

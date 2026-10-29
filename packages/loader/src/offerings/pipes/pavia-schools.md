@@ -23,7 +23,7 @@ Schools have no pages of their own: each is keyed and named in Italian as `Scuol
 name, stated at ISCED 2011 level 8 and awarding the `Diploma di Specializzazione` degree, with the summary, contents,
 learning outcomes, admission and completion requirements the listing states, then translated to English and classified
 as needed. The listing pages state no academic year: schools are dated with the academic year current at retrieval,
-switching in August, and marked as inferred. Both pages are read by model on every run.
+switching in August. Both pages are read by model on every run.
 
 - **2026-10-29** – ported to the TypeScript loader: schools stated one at a time with unchanged ones skipped and a
 	retraction floor; a listing page failing to load or to be read fails the run before anything is stated
