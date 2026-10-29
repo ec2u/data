@@ -18,79 +18,24 @@ import { base } from "@ec2u/data-shared";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { pavia } from "@ec2u/data-shared/universities/index.core.js";
-import { multiple, required, resource } from "@metreeca/blue/resource";
-import { string, text } from "@metreeca/blue/string";
-import type { State } from "@metreeca/blue/value";
+import type { Optional } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { flat, map, trim } from "@metreeca/flow/tasks";
-import { getResource } from "@metreeca/gear/space";
-import { validate } from "@metreeca/mime-jsonld";
+import { map, trim } from "@metreeca/flow/tasks";
 import { focus, html, untag } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
-import { log, report } from "@metreeca/tape";
 import { denoise } from "@metreeca/work/mime-xml/denoise.js";
 import { execute } from "../../index.core.js";
-import { degree, generate, isWeb } from "../index.core.js";
+import { isHTTPS } from "../index.core.js";
 import { crawl, type Lead } from "../sinks/crawl.js";
+import { doctorates, type Listed } from "./pavia-doctorates.core.js";
 
 
 const Source = resolve(base, "/offerings/pavia-doctorates");
 
 const IndexURL = "https://phd.unipv.it/la-scuola-di-alta-formazione-dottorale-di-pavia-safd/";
-
-
-const logger = log(import.meta.url);
-
-
-function Reported() {
-	return resource({
-
-		name: "Listed Doctorates",
-		description: "The doctoral programs a doctoral school index lists"
-
-	}, {
-
-		programs: multiple(resource({
-
-			name: "Listed Doctorate",
-			description: "A doctoral program as the index lists it"
-
-		}, {
-
-			name: required(text, {
-				name: "Name",
-				description: "The name of the doctoral program as the index lists it"
-			}),
-
-			language: required(string, {
-				name: "Language",
-				description: "The ISO 639-1 tag of the language the name is written in, in lowercase"
-			}),
-
-			url: required(string, {
-				name: "Address",
-				description: "The web address of the page describing the doctoral program, as the index links it"
-			})
-
-		}))
-
-	});
-}
-
-
-/**
- * A doctorate as the school index lists it.
- */
-export type Listed = {
-
-	readonly name: string
-	readonly language: string
-	readonly url: string
-
-}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,30 +65,11 @@ export async function PaviaDoctorates() {
 		(denoise())
 		(focus())
 		(untag())
-		(flat(map(async document => pipe(
-			(items(await list(document)))
-			(validate(Reported))
-			(flat(map(({ programs = [] }) => programs)))
-			(map(lead))
-			(trim())
-		))))
+		(doctorates())
+		(map(lead))
+		(trim())
 		(crawl(Source))
 	);
-
-
-	async function list(document: string): Promise<readonly State<typeof Reported>[]> {
-		try {
-
-			return [await generate<State<typeof Reported>>(Reported, await getResource(".sys.md", import.meta.url), document)];
-
-		} catch ( error ) {
-
-			logger.error`failed to list doctorates: ${report(error)}`;
-
-			return [];
-
-		}
-	}
 
 }
 
@@ -159,13 +85,13 @@ export async function PaviaDoctorates() {
  *
  * @returns The lead of the doctorate, or `undefined` if its address is unusable or its name blank
  */
-export function lead({ name, language, url }: Listed): undefined | Lead {
+export function lead({ name, language, url }: Listed): Optional<Lead> {
 
 	const address = url.trim();
 	const title = name.trim();
 	const locale = language === "en" ? "en" : pavia.locale;
 
-	return isWeb(address) && title !== "" ? immutable({
+	return isHTTPS(address) && title !== "" ? immutable({
 
 		url: address,
 
@@ -180,7 +106,7 @@ export function lead({ name, language, url }: Listed): undefined | Lead {
 			url: [address],
 
 			educationalLevel: [getTopicId(isced2011, "8")],
-			educationalCredentialAwarded: degree({ [pavia.locale]: "Dottorato di Ricerca" })
+			educationalCredentialAwarded: { credentialCategory: "Degree", name: { [pavia.locale]: "Dottorato di Ricerca" } }
 
 		})
 

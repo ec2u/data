@@ -22,7 +22,7 @@ import { getPersonId, Person, persons, Persons } from "@ec2u/data-shared/persons
 import { getProgramId, Program, programs, Programs } from "@ec2u/data-shared/programs/index.js";
 import type { University } from "@ec2u/data-shared/universities/index.core.js";
 import type { State } from "@metreeca/blue/value";
-import { opt } from "@metreeca/core";
+import { opt, type Optional } from "@metreeca/core";
 import { multiple, required } from "@metreeca/core/arrays";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
@@ -590,7 +590,7 @@ export function date(draft: Draft, year: string): Draft {
  *
  * @returns The identifier of the program or course `draft` states, or `undefined` for a blank key or malformed year
  */
-export function identify(draft: Draft): undefined | Reference {
+export function identify(draft: Draft): Optional<Reference> {
 	return attempt(() => draft.kind === "program"
 		? getProgramId(draft.university.id, draft.key, { year: draft.year })
 		: getCourseId(draft.university.id, draft.key, { year: draft.year, term: draft.term })
@@ -618,7 +618,7 @@ export function state(source: Reference, {
 	provider,
 	people
 
-}: Attached): undefined | Program | Course {
+}: Attached): Optional<Program | Course> {
 
 	const { university } = draft;
 
@@ -748,7 +748,7 @@ export function person(source: Reference, university: University, name: Name): S
 /**
  * Names an offering, absorbing the rejection of a blank key or a malformed year.
  */
-function attempt(identifier: () => Reference): undefined | Reference {
+function attempt(identifier: () => Reference): Optional<Reference> {
 	try {
 
 		return identifier();

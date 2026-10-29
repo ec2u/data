@@ -19,7 +19,7 @@ import { getAcademicYear } from "@ec2u/data-shared/offerings/index.js";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { coimbra } from "@ec2u/data-shared/universities/index.core.js";
-import { isArray, isNumber, isObject, isString, opt } from "@metreeca/core";
+import { isArray, isNumber, isObject, isString, opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
@@ -31,8 +31,10 @@ import { service } from "@metreeca/gear";
 import { createVault } from "@metreeca/gear/vault";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
+import { tagName } from "@metreeca/work/core/language.js";
+import { hours } from "@metreeca/work/core/temporal.js";
 import { execute } from "../../index.core.js";
-import { degree, hours, isWeb, languageTags } from "../index.core.js";
+import { isHTTPS } from "../index.core.js";
 import { type CourseDraft, type Dictionary, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -65,11 +67,6 @@ const Periods: { readonly [unit: string]: (amount: number) => string } = {
 	week: amount => `P${7*amount}D`,
 	day: amount => `P${amount}D`
 };
-
-/**
- * The ISO 639-1 tags of languages, keyed by their lowercase English name.
- */
-const Languages = languageTags("en");
 
 
 const logger = log(import.meta.url);
@@ -180,7 +177,7 @@ function read(record: unknown): readonly Draft[] {
  *
  * @returns The draft of the program or course, or `undefined` if the record states no identifier or no name
  */
-export function offering(record: unknown): undefined | Draft {
+export function offering(record: unknown): Optional<Draft> {
 
 	if ( isObject(record) && isNumber(record.cursoId) ) {
 
@@ -196,7 +193,7 @@ export function offering(record: unknown): undefined | Draft {
 				key,
 
 				name,
-				url: [record.urlEN, record.urlPT].filter(isString).filter(isWeb),
+				url: [record.urlEN, record.urlPT].filter(isString).filter(isHTTPS),
 
 				...opt(localized(record.objetivosCurso), teaches => ({ teaches })),
 				...opt(localized(record.objetivosAprendizagem), assesses => ({ assesses })),
@@ -210,7 +207,9 @@ export function offering(record: unknown): undefined | Draft {
 					.flatMap(multiple)
 					.map(level => getTopicId(isced2011, level)),
 
-				...opt(localized(record.qualificoesAtribuidas), name => ({ educationalCredentialAwarded: degree(name) }))
+				...opt(localized(record.qualificoesAtribuidas), name => ({
+					educationalCredentialAwarded: { credentialCategory: "Degree", name }
+				} satisfies Pick<Draft, "educationalCredentialAwarded">))
 
 			});
 
@@ -258,7 +257,7 @@ export function offering(record: unknown): undefined | Draft {
 /**
  * Reads a localised list, keyed by lowercase `locSigla`, leaving out blank texts.
  */
-function localized(value: unknown): undefined | Dictionary {
+function localized(value: unknown): Optional<Dictionary> {
 
 	const texts: Dictionary = Object.fromEntries((isArray(value) ? value : []).flatMap(item =>
 		isObject(item) && isString(item.locSigla) && isString(item.designacao) && item.designacao.trim() !== ""
@@ -273,7 +272,7 @@ function localized(value: unknown): undefined | Dictionary {
 /**
  * Reads an amount of calendar units as an ISO 8601 period.
  */
-function period(duration: string): undefined | string {
+function period(duration: string): Optional<string> {
 	return opt(/^(\d+)\s+([a-z]+?)s?$/.exec(duration) ?? undefined, ([, amount, unit]) =>
 		Periods[unit]?.(Number.parseInt(amount, 10))
 	);
@@ -282,7 +281,7 @@ function period(duration: string): undefined | string {
 /**
  * Reads an amount of days or hours as an ISO 8601 duration.
  */
-function time(duration: string): undefined | string {
+function time(duration: string): Optional<string> {
 	return opt(/^(\d+(?:\.\d+)?)\s+(day|hour)s?$/.exec(duration) ?? undefined, ([, amount, unit]) => {
 
 		const value = Number.parseFloat(amount);
@@ -303,7 +302,7 @@ function languages(value: unknown): readonly string[] {
 			? item.designacao.split(/\P{L}+/u)
 			: []
 		)
-		.map(word => Languages.get(word.toLowerCase()))
+		.map(tagName)
 		.flatMap(multiple)
 	)];
 }

@@ -18,7 +18,7 @@ import { schema } from "@metreeca/blue";
 import { optional, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
-import { isString } from "@metreeca/core";
+import { isString, type Optional } from "@metreeca/core";
 import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Task } from "@metreeca/flow";
@@ -122,7 +122,7 @@ export function translate(): Task<Entry, Entry> {
 			const { draft } = entry;
 			const { locale } = draft.university;
 
-			const local = (text: undefined | Dictionary) => text === undefined || text.en !== undefined
+			const local = (text: Optional<Dictionary>) => text === undefined || text.en !== undefined
 				? undefined
 				: text[locale];
 
@@ -150,7 +150,7 @@ export function translate(): Task<Entry, Entry> {
 	);
 
 
-	function named(credential: Credential): undefined | Dictionary {
+	function named(credential: Credential): Optional<Dictionary> {
 		return credential === undefined || credential.name === undefined || isString(credential.name)
 			? undefined
 			: credential.name;
@@ -193,11 +193,11 @@ export function translate(): Task<Entry, Entry> {
 
 	}
 
-	function english(text: undefined | Dictionary, translation: undefined | string): undefined | Dictionary {
+	function english(text: Optional<Dictionary>, translation: Optional<string>): Optional<Dictionary> {
 		return text === undefined || translation === undefined ? text : { ...text, en: translation };
 	}
 
-	function credential(credential: Credential, translation: undefined | string): Credential {
+	function credential(credential: Credential, translation: Optional<string>): Credential {
 		return credential === undefined ? undefined : immutable({
 			...credential,
 			name: english(named(credential), translation) ?? credential.name

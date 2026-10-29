@@ -18,25 +18,19 @@ import { base } from "@ec2u/data-shared";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { pavia } from "@ec2u/data-shared/universities/index.core.js";
-import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { string, text } from "@metreeca/blue/string";
-import type { State } from "@metreeca/blue/value";
-import { opt } from "@metreeca/core";
+import { opt, type Optional } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
 import { flat, map } from "@metreeca/flow/tasks";
-import { getResource } from "@metreeca/gear/space";
-import { validate } from "@metreeca/mime-jsonld";
 import { focus, html, untag } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
-import { log, report } from "@metreeca/tape";
 import { denoise } from "@metreeca/work/mime-xml/denoise.js";
 import { execute } from "../../index.core.js";
-import { degree, generate } from "../index.core.js";
 import { type Dictionary, type ProgramDraft, sync } from "../sinks/sync.js";
+import { type Listed, schools } from "./pavia-schools.core.js";
 
 
 const Source = resolve(base, "/offerings/pavia-schools");
@@ -45,76 +39,6 @@ const IndexURLs = [
 	"https://portale.unipv.it/it/didattica/post-laurea/scuole-di-specializzazione/scuole-di-specializzazione-di-area-sanitaria/scuole-di-specializzazione-laureati-medici",
 	"https://portale.unipv.it/it/didattica/post-laurea/scuole-di-specializzazione/scuole-di-specializzazione-di-area-sanitaria/scuole-di-specializzazione-laureati-non-medici"
 ];
-
-
-/**
- * A specialisation school as a listing page describes it.
- */
-export type Listed = {
-
-	readonly name: string
-
-	readonly summary?: string
-	readonly contents?: string
-	readonly outcomes?: string
-	readonly prerequisites?: string
-	readonly requirements?: string
-
-}
-
-
-const logger = log(import.meta.url);
-
-
-function Reported() {
-	return resource({
-
-		name: "Listed Schools",
-		description: "The specialisation schools a listing page describes"
-
-	}, {
-
-		schools: multiple(resource({
-
-			name: "Listed School",
-			description: "A specialisation school as the listing page describes it"
-
-		}, {
-
-			name: required(text, {
-				name: "Name",
-				description: "The name of the school, without the `Scuola di Specializzazione in` prefix"
-			}),
-
-			summary: optional(string, {
-				name: "Summary",
-				description: "A plain text summary of the school of about 500 characters"
-			}),
-
-			contents: optional(string, {
-				name: "Contents",
-				description: "The goals, structure and contents of the school"
-			}),
-
-			outcomes: optional(string, {
-				name: "Outcomes",
-				description: "The acquired competencies or intended learning outcomes"
-			}),
-
-			prerequisites: optional(string, {
-				name: "Prerequisites",
-				description: "The admission requirements"
-			}),
-
-			requirements: optional(string, {
-				name: "Requirements",
-				description: "The graduation or completion requirements"
-			})
-
-		}))
-
-	});
-}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,10 +70,7 @@ export async function PaviaSchools() {
 		(denoise())
 		(focus())
 		(untag())
-		(flat(map(async document => pipe(
-			(items(await list(url, document)))
-			(validate(Reported))
-		))))
+		(schools())
 		(toArray())
 	)));
 
@@ -162,26 +83,11 @@ export async function PaviaSchools() {
 	} else {
 
 		return pipe(
-			(items(listings.flat().flatMap(({ schools = [] }) => schools)))
+			(items(listings.flat(2)))
 			(flat(map(listed => opt(school(listed), draft => [draft]) ?? [])))
 			(sync(Source))
 		);
 
-	}
-
-
-	async function list(url: string, document: string): Promise<readonly State<typeof Reported>[]> {
-		try {
-
-			return [await generate<State<typeof Reported>>(Reported, await getResource(".sys.md", import.meta.url), document)];
-
-		} catch ( error ) {
-
-			logger.error`failed to list schools at <${url}>: ${report(error)}`;
-
-			return [];
-
-		}
 	}
 
 }
@@ -205,9 +111,9 @@ export function school({
 	outcomes,
 	prerequisites,
 	requirements
-}: Listed): undefined | ProgramDraft {
+}: Listed): Optional<ProgramDraft> {
 
-	const local = (value: undefined | string): undefined | Dictionary => opt(value?.trim(), value =>
+	const local = (value: Optional<string>): Optional<Dictionary> => opt(value?.trim(), value =>
 		value === "" ? undefined : { [pavia.locale]: value }
 	);
 
@@ -232,7 +138,7 @@ export function school({
 		...opt(local(requirements), competencyRequired => ({ competencyRequired })),
 
 		educationalLevel: [getTopicId(isced2011, "8")],
-		educationalCredentialAwarded: degree({ [pavia.locale]: "Diploma di Specializzazione" })
+		educationalCredentialAwarded: { credentialCategory: "Degree", name: { [pavia.locale]: "Diploma di Specializzazione" } }
 
 	});
 

@@ -16,7 +16,7 @@
 
 import { base } from "@ec2u/data-shared";
 import { salamanca } from "@ec2u/data-shared/universities/index.core.js";
-import { isArray, isNumber, isObject, isString, opt } from "@metreeca/core";
+import { isArray, isNumber, isObject, isString, opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
@@ -30,7 +30,7 @@ import { createVault } from "@metreeca/gear/vault";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
-import { isWeb } from "../index.core.js";
+import { isHTTPS } from "../index.core.js";
 import { type CourseDraft, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -159,7 +159,7 @@ function records(): Task<string, unknown> {
 	);
 }
 
-function read<D extends Draft>(record: unknown, reader: (record: unknown) => undefined | D): readonly D[] {
+function read<D extends Draft>(record: unknown, reader: (record: unknown) => Optional<D>): readonly D[] {
 
 	const draft = reader(record);
 
@@ -189,7 +189,7 @@ function read<D extends Draft>(record: unknown, reader: (record: unknown) => und
  *
  * @returns The draft of the program, or `undefined` if the record states no code or no name
  */
-export function program(record: unknown): undefined | ProgramDraft {
+export function program(record: unknown): Optional<ProgramDraft> {
 	return isObject(record) ? opt(text(record.programCode), key => opt(text(record.programName), name => immutable({
 
 		kind: "program",
@@ -199,7 +199,7 @@ export function program(record: unknown): undefined | ProgramDraft {
 
 		identifier: key,
 		name: { [salamanca.locale]: name },
-		url: [text(record.programUrl)].flatMap(multiple).filter(isWeb)
+		url: [text(record.programUrl)].flatMap(multiple).filter(isHTTPS)
 
 	}))) : undefined;
 }
@@ -217,7 +217,7 @@ export function program(record: unknown): undefined | ProgramDraft {
  *
  * @returns The draft of the course, or `undefined` if the record states no code or no name
  */
-export function course(record: unknown, memberships: ReadonlyMap<string, readonly string[]>): undefined | CourseDraft {
+export function course(record: unknown, memberships: ReadonlyMap<string, readonly string[]>): Optional<CourseDraft> {
 
 	if ( isObject(record) ) {
 
@@ -236,7 +236,7 @@ export function course(record: unknown, memberships: ReadonlyMap<string, readonl
 				...opt(english, en => ({ en })),
 				...opt(spanish, es => ({ [salamanca.locale]: es }))
 			},
-			url: [text(record.url)].flatMap(multiple).filter(isWeb),
+			url: [text(record.url)].flatMap(multiple).filter(isHTTPS),
 
 			...opt(credits(record.ects), numberOfCredits => ({ numberOfCredits })),
 			...opt(Periods[text(record.field_guias_asig_tdu_value) ?? ""], timeRequired => ({ timeRequired })),
@@ -257,13 +257,13 @@ export function course(record: unknown, memberships: ReadonlyMap<string, readonl
 /**
  * Reads a non-blank string, trimmed and stripped of a matching pair of leading and trailing quotes.
  */
-function text(value: unknown): undefined | string {
+function text(value: unknown): Optional<string> {
 	return isString(value)
 		? opt(value.trim().replace(/^(['"]+)(.*?)\1$/s, "$2").trim(), text => text === "" ? undefined : text)
 		: undefined;
 }
 
-function credits(value: unknown): undefined | number {
+function credits(value: unknown): Optional<number> {
 	return opt(isNumber(value) ? value : opt(text(value), Number.parseFloat), credits =>
 		Number.isFinite(credits) && credits > 0 ? credits : undefined
 	);

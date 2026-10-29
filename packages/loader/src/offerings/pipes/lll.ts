@@ -21,7 +21,7 @@ import { iscedf2013 } from "@ec2u/data-shared/taxonomies/isced-f-2013.js";
 import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { type University, universities } from "@ec2u/data-shared/universities/index.core.js";
-import { opt } from "@metreeca/core";
+import { opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
@@ -33,8 +33,9 @@ import { createVault } from "@metreeca/gear/vault";
 import { csv } from "@metreeca/mime-csv";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
+import { hours } from "@metreeca/work/core/temporal.js";
 import { execute } from "../../index.core.js";
-import { hours, isWeb } from "../index.core.js";
+import { isHTTPS } from "../index.core.js";
 import { type CourseDraft, type Dictionary, type Draft, identify, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -128,7 +129,7 @@ export async function LLL() {
  * @returns The drafts of the course and of the program it names, if any; empty if the row is disabled by a non-blank
  * `-` column, names no partner university, states no title or states a year other than `YYYY/YYYY` or `each semester`
  */
-export function row(row: { readonly [column: string]: undefined | string }): readonly Draft[] {
+export function row(row: { readonly [column: string]: Optional<string> }): readonly Draft[] {
 
 	const university = opt(value("University"), name => universities[resolve(base, `/universities/${name.toLowerCase()}`)]);
 	const title = value("Title (English)") ?? value("Title (Local)");
@@ -157,9 +158,9 @@ export function row(row: { readonly [column: string]: undefined | string }): rea
 	}
 
 
-	function drafts(university: University, key: string, year: undefined | string): readonly Draft[] {
+	function drafts(university: University, key: string, year: Optional<string>): readonly Draft[] {
 
-		const program: undefined | ProgramDraft = opt(named("Program", university), name => immutable({
+		const program: Optional<ProgramDraft> = opt(named("Program", university), name => immutable({
 
 			kind: "program",
 
@@ -182,7 +183,7 @@ export function row(row: { readonly [column: string]: undefined | string }): rea
 
 			name: named("Title", university) ?? {},
 			...opt(value("Code"), code => /^\S+$/.test(code) ? { courseCode: code } : {}),
-			url: [value("URL (English)") ?? value("URL (Local)")].flatMap(multiple).filter(isWeb),
+			url: [value("URL (English)") ?? value("URL (Local)")].flatMap(multiple).filter(isHTTPS),
 
 			...english("Description", "description"),
 			...english("Syllabus", "teaches"),
@@ -213,7 +214,7 @@ export function row(row: { readonly [column: string]: undefined | string }): rea
 
 			audience: [Audience],
 
-			...opt(value("Badge"), badge => isWeb(badge) ? {
+			...opt(value("Badge"), badge => isHTTPS(badge) ? {
 				educationalCredentialAwarded: { credentialCategory: "Badge", url: [badge] }
 			} : {}),
 
@@ -235,7 +236,7 @@ export function row(row: { readonly [column: string]: undefined | string }): rea
 	}
 
 
-	function value(column: string): undefined | string {
+	function value(column: string): Optional<string> {
 		return opt(row[column]?.trim(), value => value === "" ? undefined : value);
 	}
 
@@ -254,7 +255,7 @@ export function row(row: { readonly [column: string]: undefined | string }): rea
 
 	}
 
-	function named(column: string, { locale }: University): undefined | Dictionary {
+	function named(column: string, { locale }: University): Optional<Dictionary> {
 
 		const name: Dictionary = {
 			...opt(value(`${column} (English)`), en => ({ en })),
@@ -269,13 +270,13 @@ export function row(row: { readonly [column: string]: undefined | string }): rea
 		return opt(value(column), en => ({ [property]: { en } })) ?? {};
 	}
 
-	function amount(column: string): undefined | number {
+	function amount(column: string): Optional<number> {
 		return opt(value(column), value => opt(Number.parseFloat(value), amount =>
 			Number.isFinite(amount) && amount > 0 ? amount : undefined
 		));
 	}
 
-	function examination(): undefined | string {
+	function examination(): Optional<string> {
 
 		const rows = [
 			["Format", listed("Test", Tests).join(", ")],

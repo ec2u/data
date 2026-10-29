@@ -19,7 +19,7 @@ import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { linz } from "@ec2u/data-shared/universities/index.core.js";
-import { isArray, isNumber, isObject, isString, opt } from "@metreeca/core";
+import { isArray, isNumber, isObject, isString, opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
@@ -34,7 +34,7 @@ import type { Reference } from "@metreeca/qest/state";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
 import { type CourseDraft, type Dictionary, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
-import { isWeb, text } from "../index.core.js";
+import { isHTTPS, text } from "../index.core.js";
 
 
 const Source = resolve(base, "/offerings/linz");
@@ -82,7 +82,7 @@ export async function Linz() {
 	);
 
 
-	function listing(url: string, reader: (record: unknown) => undefined | Draft): Feed<Draft> {
+	function listing(url: string, reader: (record: unknown) => Optional<Draft>): Feed<Draft> {
 		return pipe(
 			(items([url]))
 			(records())
@@ -115,7 +115,7 @@ export async function Linz() {
 		);
 	}
 
-	function read(record: unknown, reader: (record: unknown) => undefined | Draft): readonly Draft[] {
+	function read(record: unknown, reader: (record: unknown) => Optional<Draft>): readonly Draft[] {
 
 		const draft = reader(record);
 
@@ -148,7 +148,7 @@ export async function Linz() {
  *
  * @returns The draft of the program, or `undefined` if the record states no identifier or no name
  */
-export function program(record: unknown): undefined | ProgramDraft {
+export function program(record: unknown): Optional<ProgramDraft> {
 	return isObject(record) ? opt(first(record.identifier), key => opt(localized(record.name), name => immutable({
 
 		kind: "program",
@@ -180,7 +180,7 @@ export function program(record: unknown): undefined | ProgramDraft {
  *
  * @returns The draft of the course, or `undefined` if the record states no course code or no name
  */
-export function course(record: unknown): undefined | CourseDraft {
+export function course(record: unknown): Optional<CourseDraft> {
 	return isObject(record) ? opt(text(record.courseCode), key => opt(localized(record.name), name => immutable({
 
 		kind: "course",
@@ -212,14 +212,14 @@ export function course(record: unknown): undefined | CourseDraft {
 /**
  * Reads the first non-blank string of a list, trimmed.
  */
-function first(value: unknown): undefined | string {
+function first(value: unknown): Optional<string> {
 	return isArray(value) ? value.map(text).find(isString) : undefined;
 }
 
 /**
  * Reads the non-blank texts of a language map, trimmed and keyed by lowercase language tag.
  */
-function localized(value: unknown): undefined | Dictionary {
+function localized(value: unknown): Optional<Dictionary> {
 
 	const texts: Dictionary = isObject(value) ? Object.fromEntries(Object.entries(value).flatMap(([tag, value]) =>
 		opt(text(value), text => [[tag.toLowerCase(), text]]) ?? []
@@ -230,10 +230,10 @@ function localized(value: unknown): undefined | Dictionary {
 }
 
 function urls(value: unknown): readonly string[] {
-	return (isArray(value) ? value : []).filter(isString).filter(isWeb);
+	return (isArray(value) ? value : []).filter(isString).filter(isHTTPS);
 }
 
-function credits(value: unknown): undefined | number {
+function credits(value: unknown): Optional<number> {
 	return isNumber(value) && Number.isFinite(value) && value >= 0 ? value : undefined;
 }
 

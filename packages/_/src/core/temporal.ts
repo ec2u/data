@@ -38,8 +38,8 @@
  * - Calendar-aware date arithmetic via `Temporal.Duration`
  * - Type-safe operations comparable to Java's java.time
  *
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal | MDN Temporal API}
- * @see {@link https://tc39.es/proposal-temporal/docs/ | TC39 Temporal Proposal}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal MDN Temporal API}
+ * @see {@link https://tc39.es/proposal-temporal/docs/ TC39 Temporal Proposal}
  *
  * @module
  */
@@ -116,7 +116,7 @@ export const duration = { // !!! review // !!! review const case
  * Reports an absolute timestamp as milliseconds elapsed since the Unix epoch, as reported by `Date.now()`, carrying no
  * timezone or calendar information.
  *
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now | MDN Date.now}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now MDN Date.now}
  */
 export type Instant = number
 
@@ -133,4 +133,19 @@ export type Duration = number
 
 export function getDate() {
 	return new Date().toISOString().slice(0, 10);
+}
+
+/**
+ * Reads an amount of hours as an ISO 8601 duration, rounded to the minute.
+ *
+ * @param amount The amount of hours
+ *
+ * @returns The duration, stating minutes only where the amount is not a whole number of hours
+ */
+export function hours(amount: number): string {
+
+	const minutes = Math.round(amount*60);
+
+	return `PT${Math.floor(minutes/60)}H${minutes%60 === 0 ? "" : `${minutes%60}M`}`;
+
 }

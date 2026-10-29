@@ -18,7 +18,7 @@ import { base } from "@ec2u/data-shared";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { jena } from "@ec2u/data-shared/universities/index.core.js";
-import { isObject, opt } from "@metreeca/core";
+import { isObject, opt, type Optional } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
@@ -30,7 +30,7 @@ import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
 import { type Dictionary, type ProgramDraft, sync } from "../sinks/sync.js";
-import { degree, text } from "../index.core.js";
+import { text } from "../index.core.js";
 
 
 const Source = resolve(base, "/offerings/jena");
@@ -139,7 +139,7 @@ function read(values: readonly unknown[], url: string): readonly ProgramDraft[] 
 /**
  * Reads the JSON-LD values a page embeds, or nothing if the page fails to load.
  */
-async function embedded(url: string): Promise<undefined | readonly unknown[]> {
+async function embedded(url: string): Promise<Optional<readonly unknown[]>> {
 
 	const lists = await pipe(
 		(items([url]))
@@ -167,7 +167,7 @@ async function embedded(url: string): Promise<undefined | readonly unknown[]> {
  *
  * @returns The draft of the program, or `undefined` if the page embeds no `AboutPage` stating a headline
  */
-export function program(values: readonly unknown[], url: string): undefined | ProgramDraft {
+export function program(values: readonly unknown[], url: string): Optional<ProgramDraft> {
 
 	const page = values.find(value => isObject(value) && value["@type"] === "AboutPage");
 
@@ -181,7 +181,7 @@ export function program(values: readonly unknown[], url: string): undefined | Pr
 			language.toLowerCase()
 		)) ?? "en";
 
-		const local = (value: unknown): undefined | Dictionary => opt(text(value), value => ({ [locale]: value }));
+		const local = (value: unknown): Optional<Dictionary> => opt(text(value), value => ({ [locale]: value }));
 		const credential = text(page.educationalLevel);
 
 		return opt(local(page.headline), name => immutable({
@@ -199,7 +199,7 @@ export function program(values: readonly unknown[], url: string): undefined | Pr
 				.flatMap(level => level === undefined ? [] : [getTopicId(isced2011, level)]),
 
 			...opt(credential, credential => ({
-				educationalCredentialAwarded: degree({ [locale]: credential })
+				educationalCredentialAwarded: { credentialCategory: "Degree", name: { [locale]: credential } }
 			}))
 
 		}));

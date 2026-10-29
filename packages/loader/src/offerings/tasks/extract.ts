@@ -21,7 +21,7 @@ import { number } from "@metreeca/blue/number";
 import { optional, required, resource } from "@metreeca/blue/resource";
 import { duration, string, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
-import { isArray, isObject, opt } from "@metreeca/core";
+import { isArray, isObject, opt, type Optional } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -233,7 +233,7 @@ export function drafted(seed: Draft, url: string, reported: Reported): Draft {
 
 	const locale = /^[a-z]{2}$/.test(reported.language) ? reported.language : seed.university.locale;
 
-	const local = (value: undefined | string): undefined | Dictionary => opt(value?.trim(), value =>
+	const local = (value: Optional<string>): Optional<Dictionary> => opt(value?.trim(), value =>
 		value === "" ? undefined : { [locale]: value }
 	);
 
@@ -323,6 +323,6 @@ function degree(name: Dictionary): NonNullable<Draft["educationalCredentialAward
 	return immutable({ credentialCategory: "Degree", name });
 }
 
-function isLevel(level: undefined | number): level is number {
+function isLevel(level: Optional<number>): level is number {
 	return level !== undefined && Number.isInteger(level) && level >= 6 && level <= 8;
 }

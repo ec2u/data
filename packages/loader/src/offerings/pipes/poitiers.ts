@@ -18,7 +18,7 @@ import { base } from "@ec2u/data-shared";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { poitiers } from "@ec2u/data-shared/universities/index.core.js";
-import { isNumber, isObject, opt } from "@metreeca/core";
+import { isNumber, isObject, opt, type Optional } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
@@ -96,7 +96,7 @@ function read(entry: unknown): readonly ProgramDraft[] {
  *
  * @returns The draft of the program, or `undefined` if the entry states no code or no name
  */
-export function program(entry: unknown): undefined | ProgramDraft {
+export function program(entry: unknown): Optional<ProgramDraft> {
 	return isObject(entry) ? opt(text(entry.code), key => opt(text(entry.name), name => immutable({
 
 		kind: "program",

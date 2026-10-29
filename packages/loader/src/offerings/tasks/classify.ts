@@ -21,6 +21,7 @@ import { schema } from "@metreeca/blue";
 import { multiple, resource } from "@metreeca/blue/resource";
 import { iri } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
+import type { Optional } from "@metreeca/core";
 import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Task } from "@metreeca/flow";
@@ -190,7 +191,7 @@ export function classify(): Task<Entry, Entry> {
 		}
 	}
 
-	function english(text: undefined | Dictionary): string {
+	function english(text: Optional<Dictionary>): string {
 		return text?.en ?? Object.values(text ?? {})[0] ?? "";
 	}
 

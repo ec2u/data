@@ -29,7 +29,7 @@ import { fetch } from "@metreeca/pipe-url";
 import { execute } from "../../index.core.js";
 import { crawl, type Lead } from "../sinks/crawl.js";
 import type { Draft } from "../sinks/sync.js";
-import { isWeb, text } from "../index.core.js";
+import { isHTTPS, text } from "../index.core.js";
 
 
 const Source = resolve(base, "/offerings/umea");
@@ -117,7 +117,7 @@ export function leads(response: unknown, kind: Draft["kind"]): readonly Lead[] {
 	const urls = isObject(response) && isArray(response.hits) ? response.hits
 		.map(hit => isObject(hit) ? text(hit.url) : undefined)
 		.flatMap(multiple)
-		.filter(isWeb) : [];
+		.filter(isHTTPS) : [];
 
 	return [...new Set(urls)].map(url => immutable({
 		url,

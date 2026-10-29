@@ -20,7 +20,7 @@ import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
 import { pavia } from "@ec2u/data-shared/universities/index.core.js";
-import { isArray, isNumber, isObject, isString, opt } from "@metreeca/core";
+import { isArray, isNumber, isObject, isString, opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
@@ -33,8 +33,10 @@ import { createVault } from "@metreeca/gear/vault";
 import { string, type Target, xml, xpath, type XPath } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
+import { tagName } from "@metreeca/work/core/language.js";
+import { hours } from "@metreeca/work/core/temporal.js";
 import { execute } from "../../index.core.js";
-import { hours, languageTags, text } from "../index.core.js";
+import { text } from "../index.core.js";
 import { type CourseDraft, type Dictionary, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -93,11 +95,6 @@ const Modes: { readonly [mode: string]: NonNullable<CourseDraft["courseMode"]> }
 	"Teledidattica": "OnlineEventAttendanceMode",
 	"Blend/modalità mista": "MixedEventAttendanceMode"
 };
-
-/**
- * The ISO 639-1 tags of languages, keyed by their lowercase Italian name.
- */
-const Languages = languageTags("it");
 
 
 const logger = log(import.meta.url);
@@ -272,7 +269,7 @@ async function listing(offer: number, start = 0): Promise<readonly unknown[]> {
 /**
  * Finds the first page the catalogue confirms.
  */
-async function first<P extends Page>(pages: readonly P[]): Promise<undefined | P> {
+async function first<P extends Page>(pages: readonly P[]): Promise<Optional<P>> {
 	return pages.length === 0 ? undefined
 		: await resolves(pages[0].probe) ? pages[0]
 			: first(pages.slice(1));
@@ -301,7 +298,7 @@ async function resolves(url: string): Promise<boolean> {
  *
  * @returns The draft of the program, or `undefined` if the record states no code, no name or no offer year
  */
-export function program(record: unknown, page?: string): undefined | ProgramDraft {
+export function program(record: unknown, page?: string): Optional<ProgramDraft> {
 	return isObject(record) && isNumber(record.aaOffId) && Number.isInteger(record.aaOffId)
 		? opt(text(record.cdsCod), key => opt(text(record.cdsDes), name => immutable({
 
@@ -433,7 +430,7 @@ function activities(regdid: Target): readonly Listed[] {
 	const actual = scope("ns2:pds/ns2:pdsCod")
 		.map(code => string(code).trim())
 		.filter(code => code !== CommonTrack)
-		.reduce<undefined | string>((first, code) => first === undefined || code < first ? code : first, undefined);
+		.reduce<Optional<string>>((first, code) => first === undefined || code < first ? code : first, undefined);
 
 	return scope("ns2:pds").flatMap(pds => {
 
@@ -456,7 +453,7 @@ function activities(regdid: Target): readonly Listed[] {
 
 }
 
-function course({ code, af }: Listed, program: string, offer: number): undefined | CourseDraft {
+function course({ code, af }: Listed, program: string, offer: number): Optional<CourseDraft> {
 
 	const scope = xpath(af);
 	const year = academic(offer);
@@ -487,7 +484,7 @@ function course({ code, af }: Listed, program: string, offer: number): undefined
 		...opt(duration(value(scope, "ns2:oreStuInd")), courseWorkload => ({ courseWorkload })),
 
 		inLanguage: [...new Set(scope("ns2:linDid/ns2:linDidAf/ns2:linDidDes")
-			.map(name => Languages.get(string(name).trim().toLowerCase()))
+			.map(name => tagName(string(name)))
 			.flatMap(multiple)
 		)],
 
@@ -517,7 +514,7 @@ function page(offer: number, course: string, ordinamento: string, track: string,
 /**
  * Reads the plan texts of the given types, keyed by language and joined in the order the types are given.
  */
-function texts(scope: XPath, ...types: readonly string[]): undefined | Dictionary {
+function texts(scope: XPath, ...types: readonly string[]): Optional<Dictionary> {
 
 	// several text sections are possible, as for course partitions: the first one is read
 
@@ -548,14 +545,14 @@ function texts(scope: XPath, ...types: readonly string[]): undefined | Dictionar
 /**
  * Reads an amount of hours as an ISO 8601 duration, leaving out non-positive amounts.
  */
-function duration(value: undefined | string): undefined | string {
+function duration(value: Optional<string>): Optional<string> {
 	return opt(opt(value, Number.parseFloat), amount => Number.isFinite(amount) && amount > 0 ? hours(amount) : undefined);
 }
 
 /**
  * Reads the first value an expression selects, trimmed, leaving out blank ones.
  */
-function value(scope: XPath, expression: string): undefined | string {
+function value(scope: XPath, expression: string): Optional<string> {
 	return opt(scope(expression)[0], node => text(string(node)));
 }
 
