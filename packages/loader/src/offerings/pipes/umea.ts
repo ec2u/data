@@ -16,7 +16,8 @@
 
 import { base } from "@ec2u/data-shared";
 import { umea } from "@ec2u/data-shared/universities/index.core.js";
-import { isArray, isObject, isString } from "@metreeca/core";
+import { isArray, isObject } from "@metreeca/core";
+import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe } from "@metreeca/flow";
@@ -28,6 +29,7 @@ import { fetch } from "@metreeca/pipe-url";
 import { execute } from "../../index.core.js";
 import { crawl, type Lead } from "../sinks/crawl.js";
 import type { Draft } from "../sinks/sync.js";
+import { isWeb, text } from "../index.core.js";
 
 
 const Source = resolve(base, "/offerings/umea");
@@ -113,19 +115,15 @@ function listing(url: string, label: string, kind: Draft["kind"]): Feed<Lead> {
 export function leads(response: unknown, kind: Draft["kind"]): readonly Lead[] {
 
 	const urls = isObject(response) && isArray(response.hits) ? response.hits
-		.map(hit => isObject(hit) && isString(hit.url) ? hit.url.trim() : "")
-		.filter(url => URL.canParse(url) && /^https?:$/.test(new URL(url).protocol)) : [];
+		.map(hit => isObject(hit) ? text(hit.url) : undefined)
+		.flatMap(multiple)
+		.filter(isWeb) : [];
 
-	return [...new Set(urls)].map(url => immutable({ url, seed: seed(kind, url) }));
+	return [...new Set(urls)].map(url => immutable({
+		url,
+		seed: kind === "program"
+			? { kind: "program", university: umea, key: url, name: {} }
+			: { kind: "course", university: umea, key: url, name: {} }
+	}));
 
-}
-
-
-/**
- * Seeds an offering keyed by its page address, leaving every other fact to the page.
- */
-function seed(kind: Draft["kind"], key: string): Draft {
-	return kind === "program"
-		? immutable({ kind: "program", university: umea, key, name: {} })
-		: immutable({ kind: "course", university: umea, key, name: {} });
 }

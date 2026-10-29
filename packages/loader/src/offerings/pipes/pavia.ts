@@ -34,6 +34,7 @@ import { string, type Target, xml, xpath, type XPath } from "@metreeca/mime-xml"
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
+import { hours, languageTags, text } from "../index.core.js";
 import { type CourseDraft, type Dictionary, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -96,13 +97,7 @@ const Modes: { readonly [mode: string]: NonNullable<CourseDraft["courseMode"]> }
 /**
  * The ISO 639-1 tags of languages, keyed by their lowercase Italian name.
  */
-const Languages: ReadonlyMap<string, string> = opt(new Intl.DisplayNames(["it"], { type: "language" }), names =>
-	new Map([..."abcdefghijklmnopqrstuvwxyz"]
-		.flatMap(first => [..."abcdefghijklmnopqrstuvwxyz"].map(second => `${first}${second}`))
-		.flatMap(tag => opt(names.of(tag), name => name === tag ? [] : [language(name, tag)]) ?? [])
-	),
-	() => new Map()
-);
+const Languages = languageTags("it");
 
 
 const logger = log(import.meta.url);
@@ -200,27 +195,23 @@ export async function Pavia() {
 	}> {
 
 		const page = await first(pages(record));
+		const draft = program(record, page?.url);
 
-		const [plans, read] = await Promise.all([
-			isObject(record) && isString(record.cdsCod) && isNumber(record.aaOffId)
-				? teaching(record.cdsCod, record.aaOffId)
-				: Promise.resolve([]),
-			Promise.resolve(program(record, page?.url))
-		]);
+		const plans = isObject(record) && isString(record.cdsCod) && isNumber(record.aaOffId)
+			? await teaching(record.cdsCod, record.aaOffId)
+			: [];
 
-		const activities = plans.flatMap(courses);
-
-		const located = await Promise.all(activities.map(async ({ draft, page }) =>
+		const located = await Promise.all(plans.flatMap(courses).map(async ({ draft, page }) =>
 			page !== undefined && await resolves(page.probe) ? immutable({ ...draft, url: [page.url] }) : draft
 		));
 
-		if ( read === undefined ) {
+		if ( draft === undefined ) {
 			logger.warning`malformed program <${isObject(record) ? record.cdsCod : undefined}>`;
 		}
 
 		return immutable({
 
-			...opt(read, draft => ({ program: { draft, ...opt(page?.cohort, cohort => ({ cohort })) } })),
+			...opt(draft, draft => ({ program: { draft, ...opt(page?.cohort, cohort => ({ cohort })) } })),
 
 			courses: located,
 			plan: plans.length > 0
@@ -241,7 +232,15 @@ export async function Pavia() {
 					"Authorization": authorization
 				},
 
-				body: request(code, year)
+				// the UGov SOAP request exporting the teaching plan of a program for an offer year
+
+				body: `<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Header/><soap:Body>`
+					+`<ws:ProgrammazioneDidattica xmlns:ws="http://ws.di.u-gov.cineca.it/">`
+					+`<parametriEsportazioneProgrammazioneDidattica>`
+					+`<aaOffId>${year}</aaOffId>`
+					+`<cdsCod>${code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</cdsCod>`
+					+`</parametriEsportazioneProgrammazioneDidattica>`
+					+`</ws:ProgrammazioneDidattica></soap:Body></soap:Envelope>`
 
 			})]))
 			(fetch())
@@ -289,23 +288,6 @@ async function resolves(url: string): Promise<boolean> {
 		(toArray())
 	)).length > 0;
 }
-
-/**
- * Composes the UGov SOAP request exporting the teaching plan of a program for an offer year.
- */
-function request(code: string, year: number): string {
-	return `<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Header/><soap:Body>`
-		+`<ws:ProgrammazioneDidattica xmlns:ws="http://ws.di.u-gov.cineca.it/">`
-		+`<parametriEsportazioneProgrammazioneDidattica>`
-		+`<aaOffId>${year}</aaOffId><cdsCod>${escape(code)}</cdsCod>`
-		+`</parametriEsportazioneProgrammazioneDidattica>`
-		+`</ws:ProgrammazioneDidattica></soap:Body></soap:Envelope>`;
-}
-
-function escape(text: string): string {
-	return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
 
 /**
  * Reads a program record of the ESSE3 offer API.
@@ -491,7 +473,7 @@ function course({ code, af }: Listed, program: string, offer: number): undefined
 		university: pavia,
 		key: `${program}/${code}`,
 		year,
-		term: cycles(value(scope, "ns2:tipoCicloCod")),
+		term: opt(value(scope, "ns2:tipoCicloCod"), cycle => opt(Terms[cycle], term => [term])) ?? [],
 
 		courseCode: code,
 		name,
@@ -501,8 +483,8 @@ function course({ code, af }: Listed, program: string, offer: number): undefined
 		...opt(texts(scope, "PREREQ"), coursePrerequisites => ({ coursePrerequisites })),
 		...opt(texts(scope, "MOD_VER_APPR"), competencyRequired => ({ competencyRequired })),
 
-		...opt(hours(value(scope, "ns2:oreFrontAf")), timeRequired => ({ timeRequired })),
-		...opt(hours(value(scope, "ns2:oreStuInd")), courseWorkload => ({ courseWorkload })),
+		...opt(duration(value(scope, "ns2:oreFrontAf")), timeRequired => ({ timeRequired })),
+		...opt(duration(value(scope, "ns2:oreStuInd")), courseWorkload => ({ courseWorkload })),
 
 		inLanguage: [...new Set(scope("ns2:linDid/ns2:linDidAf/ns2:linDidDes")
 			.map(name => Languages.get(string(name).trim().toLowerCase()))
@@ -524,10 +506,6 @@ function course({ code, af }: Listed, program: string, offer: number): undefined
 
 }
 
-function cycles(cycle: undefined | string): NonNullable<CourseDraft["term"]> {
-	return opt(cycle, cycle => opt(Terms[cycle], term => [term])) ?? [];
-}
-
 function page(offer: number, course: string, ordinamento: string, track: string, program: string): Page {
 	return immutable({
 		probe: `${CatalogueURL}/api/v1/insegnamento-code`
@@ -547,9 +525,13 @@ function texts(scope: XPath, ...types: readonly string[]): undefined | Dictionar
 
 		const text = xpath(testo);
 
-		return opt(value(text, "ns2:contenuto"), content => opt(tag(value(text, "ns2:linguaCod")), language =>
-			[{ language, content }]
-		)) ?? [];
+		// the plan states ISO 639-2 language codes
+
+		const language = opt(value(text, "ns2:linguaCod"), code =>
+			/^[a-z]{2,3}$/.test(code) ? new Intl.Locale(code).maximize().language : undefined
+		);
+
+		return opt(value(text, "ns2:contenuto"), content => opt(language, language => [{ language, content }])) ?? [];
 
 	}));
 
@@ -564,25 +546,10 @@ function texts(scope: XPath, ...types: readonly string[]): undefined | Dictionar
 }
 
 /**
- * Reads an ISO 639-2 language code as its ISO 639-1 tag.
- */
-function tag(code: undefined | string): undefined | string {
-	return opt(code, code => /^[a-z]{2,3}$/.test(code) ? new Intl.Locale(code).maximize().language : undefined);
-}
-
-/**
  * Reads an amount of hours as an ISO 8601 duration, leaving out non-positive amounts.
  */
-function hours(value: undefined | string): undefined | string {
-	return opt(opt(value, Number.parseFloat), amount => {
-
-		const minutes = Math.round(amount*60);
-
-		return Number.isFinite(amount) && amount > 0
-			? `PT${Math.floor(minutes/60)}H${minutes%60 === 0 ? "" : `${minutes%60}M`}`
-			: undefined;
-
-	});
+function duration(value: undefined | string): undefined | string {
+	return opt(opt(value, Number.parseFloat), amount => Number.isFinite(amount) && amount > 0 ? hours(amount) : undefined);
 }
 
 /**
@@ -592,19 +559,8 @@ function value(scope: XPath, expression: string): undefined | string {
 	return opt(scope(expression)[0], node => text(string(node)));
 }
 
-function text(value: unknown): undefined | string {
-	return isString(value) && value.trim() !== "" ? value.trim() : undefined;
-}
-
 function academic(start: number): string {
 	return `${start}/${start+1}`;
-}
-
-/**
- * Pairs the lowercase name of a language with its tag.
- */
-function language(name: string, tag: string): [string, string] {
-	return [name.toLowerCase(), tag];
 }
 
 /**
@@ -629,19 +585,22 @@ function shared(names: readonly Dictionary[]): ReadonlySet<string> {
  *
  * @returns The programs, those sharing a name qualified with their cohort
  */
-export function programs(programs: readonly { readonly draft: ProgramDraft, readonly cohort?: number }[]): readonly ProgramDraft[] {
+export function programs(programs: readonly {
+	readonly draft: ProgramDraft,
+	readonly cohort?: number
+}[]): readonly ProgramDraft[] {
 
 	const duplicates = shared(programs.map(({ draft }) => draft.name));
 
 	return programs.map(({ draft, cohort }) => cohort !== undefined
-	&& Object.entries(draft.name).some(([tag, label]) => duplicates.has(`${tag}:${label}`))
-		? immutable({
-			...draft,
-			name: Object.fromEntries(Object.entries(draft.name).map(([tag, label]) =>
-				[tag, `${label} (${academic(cohort)})`]
-			))
-		})
-		: draft
+		&& Object.entries(draft.name).some(([tag, label]) => duplicates.has(`${tag}:${label}`))
+			? immutable({
+				...draft,
+				name: Object.fromEntries(Object.entries(draft.name).map(([tag, label]) =>
+					[tag, `${label} (${academic(cohort)})`]
+				))
+			})
+			: draft
 	);
 
 }

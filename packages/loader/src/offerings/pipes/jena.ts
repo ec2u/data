@@ -18,7 +18,7 @@ import { base } from "@ec2u/data-shared";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { jena } from "@ec2u/data-shared/universities/index.core.js";
-import { isObject, isString, opt } from "@metreeca/core";
+import { isObject, opt } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
@@ -30,6 +30,7 @@ import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
 import { type Dictionary, type ProgramDraft, sync } from "../sinks/sync.js";
+import { degree, text } from "../index.core.js";
 
 
 const Source = resolve(base, "/offerings/jena");
@@ -181,7 +182,7 @@ export function program(values: readonly unknown[], url: string): undefined | Pr
 		)) ?? "en";
 
 		const local = (value: unknown): undefined | Dictionary => opt(text(value), value => ({ [locale]: value }));
-		const degree = text(page.educationalLevel);
+		const credential = text(page.educationalLevel);
 
 		return opt(local(page.headline), name => immutable({
 
@@ -194,27 +195,15 @@ export function program(values: readonly unknown[], url: string): undefined | Pr
 			...opt(local(page.abstract), description => ({ description })),
 			url: [url],
 
-			educationalLevel: [opt(degree, degree => Levels[degree])]
+			educationalLevel: [opt(credential, credential => Levels[credential])]
 				.flatMap(level => level === undefined ? [] : [getTopicId(isced2011, level)]),
 
-			...opt(degree, degree => ({
-				educationalCredentialAwarded: credential({ [locale]: degree })
+			...opt(credential, credential => ({
+				educationalCredentialAwarded: degree({ [locale]: credential })
 			}))
 
 		}));
 
 	}
 
-}
-
-
-/**
- * States a degree as the credential a program awards.
- */
-function credential(name: Dictionary): NonNullable<ProgramDraft["educationalCredentialAwarded"]> {
-	return immutable({ credentialCategory: "Degree", name });
-}
-
-function text(value: unknown): undefined | string {
-	return isString(value) && value.trim() !== "" ? value.trim() : undefined;
 }

@@ -18,7 +18,6 @@ import { base } from "@ec2u/data-shared";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { pavia } from "@ec2u/data-shared/universities/index.core.js";
-import { schema } from "@metreeca/blue";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
@@ -29,15 +28,14 @@ import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
 import { flat, map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
 import { getResource } from "@metreeca/gear/space";
-import { createGoogleAI, json } from "@metreeca/llms-google";
 import { validate } from "@metreeca/mime-jsonld";
 import { focus, html, untag } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
 import { log, report } from "@metreeca/tape";
 import { denoise } from "@metreeca/work/mime-xml/denoise.js";
 import { execute } from "../../index.core.js";
+import { degree, generate } from "../index.core.js";
 import { type Dictionary, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -141,8 +139,6 @@ if ( import.meta.main ) {
  */
 export async function PaviaSchools() {
 
-	const ai = service(createGoogleAI);
-
 	const listings = await Promise.all(IndexURLs.map(async url => pipe(
 		(items([url]))
 		(fetch())
@@ -167,8 +163,7 @@ export async function PaviaSchools() {
 
 		return pipe(
 			(items(listings.flat().flatMap(({ schools = [] }) => schools)))
-			(map(school))
-			(flat(map(draft => draft === undefined ? [] : [draft])))
+			(flat(map(listed => opt(school(listed), draft => [draft]) ?? [])))
 			(sync(Source))
 		);
 
@@ -178,25 +173,7 @@ export async function PaviaSchools() {
 	async function list(url: string, document: string): Promise<readonly State<typeof Reported>[]> {
 		try {
 
-			return [json<State<typeof Reported>>(await ai.models.generateContent({
-
-				model: "gemini-3.6-flash",
-
-				contents: document,
-
-				config: {
-
-					seed: 0,
-					temperature: 0,
-
-					systemInstruction: await getResource(".sys.md", import.meta.url),
-
-					responseMimeType: "application/json",
-					responseJsonSchema: schema(Reported)
-
-				}
-
-			}))];
+			return [await generate<State<typeof Reported>>(Reported, await getResource(".sys.md", import.meta.url), document)];
 
 		} catch ( error ) {
 
@@ -221,7 +198,14 @@ export async function PaviaSchools() {
  *
  * @returns The draft of the school, or `undefined` if its name is blank
  */
-export function school({ name, summary, contents, outcomes, prerequisites, requirements }: Listed): undefined | ProgramDraft {
+export function school({
+	name,
+	summary,
+	contents,
+	outcomes,
+	prerequisites,
+	requirements
+}: Listed): undefined | ProgramDraft {
 
 	const local = (value: undefined | string): undefined | Dictionary => opt(value?.trim(), value =>
 		value === "" ? undefined : { [pavia.locale]: value }
@@ -248,7 +232,7 @@ export function school({ name, summary, contents, outcomes, prerequisites, requi
 		...opt(local(requirements), competencyRequired => ({ competencyRequired })),
 
 		educationalLevel: [getTopicId(isced2011, "8")],
-		educationalCredentialAwarded: { credentialCategory: "Degree", name: { [pavia.locale]: "Diploma di Specializzazione" } }
+		educationalCredentialAwarded: degree({ [pavia.locale]: "Diploma di Specializzazione" })
 
 	});
 

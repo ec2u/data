@@ -34,6 +34,7 @@ import type { Reference } from "@metreeca/qest/state";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
 import { type CourseDraft, type Dictionary, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
+import { isWeb, text } from "../index.core.js";
 
 
 const Source = resolve(base, "/offerings/linz");
@@ -58,41 +59,27 @@ if ( import.meta.main ) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function Linz() {
-
-	const vault = service(createVault);
-
-	return pipe(
-		(offerings({ programs: await vault(ProgramsURL), courses: await vault(CoursesURL) }))
-		(sync(Source))
-	);
-
-}
-
-
 /**
- * Reads the programs and courses listed by the Linz offerings APIs.
+ * Harvests the programs and courses listed by the Linz offerings APIs.
  *
  * Retrieves each listing and reads it as a JSON array, one draft per program or course, as {@link program} and
  * {@link course} describe; an offering listed more than once is stated once. A listing that fails to be retrieved, or
  * that answers with anything other than an array, yields no drafts at all, so the run retracts nothing on the strength
  * of it; a record that cannot be read is logged and dropped, so it costs only itself rather than the listing.
  *
- * @param listings The addresses of the programs and courses listings
- *
- * @returns A feed of the offering drafts read from the listings
+ * @returns A promise resolving to a tally of what the run did
  */
-function offerings({ programs, courses }: {
+export async function Linz() {
 
-	readonly programs: string
-	readonly courses: string
+	const vault = service(createVault);
 
-}): Feed<Draft> {
-
-	return flat(items([
-		listing(programs, program),
-		listing(courses, course)
-	]));
+	return pipe(
+		(flat(items([
+			listing(await vault(ProgramsURL), program),
+			listing(await vault(CoursesURL), course)
+		])))
+		(sync(Source))
+	);
 
 
 	function listing(url: string, reader: (record: unknown) => undefined | Draft): Feed<Draft> {
@@ -162,7 +149,7 @@ function offerings({ programs, courses }: {
  * @returns The draft of the program, or `undefined` if the record states no identifier or no name
  */
 export function program(record: unknown): undefined | ProgramDraft {
-	return isObject(record) ? opt(first(record.identifier), key => opt(text(record.name), name => immutable({
+	return isObject(record) ? opt(first(record.identifier), key => opt(localized(record.name), name => immutable({
 
 		kind: "program",
 
@@ -173,7 +160,7 @@ export function program(record: unknown): undefined | ProgramDraft {
 		url: urls(record.url),
 
 		name,
-		...opt(text(record.description), description => ({ description })),
+		...opt(localized(record.description), description => ({ description })),
 
 		...opt(credits(record.numberOfCredits), numberOfCredits => ({ numberOfCredits })),
 		educationalLevel: level(record.educationalLevel)
@@ -194,7 +181,7 @@ export function program(record: unknown): undefined | ProgramDraft {
  * @returns The draft of the course, or `undefined` if the record states no course code or no name
  */
 export function course(record: unknown): undefined | CourseDraft {
-	return isObject(record) ? opt(code(record.courseCode), key => opt(text(record.name), name => immutable({
+	return isObject(record) ? opt(text(record.courseCode), key => opt(localized(record.name), name => immutable({
 
 		kind: "course",
 
@@ -205,7 +192,7 @@ export function course(record: unknown): undefined | CourseDraft {
 		url: urls(record.url),
 
 		name,
-		...opt(text(record.description), description => ({ description })),
+		...opt(localized(record.description), description => ({ description })),
 
 		...opt(credits(record.numberOfCredits), numberOfCredits => ({ numberOfCredits })),
 		educationalLevel: level(record.educationalLevel),
@@ -226,23 +213,16 @@ export function course(record: unknown): undefined | CourseDraft {
  * Reads the first non-blank string of a list, trimmed.
  */
 function first(value: unknown): undefined | string {
-	return isArray(value) ? value.map(code).find(isString) : undefined;
-}
-
-/**
- * Reads a non-blank string, trimmed.
- */
-function code(value: unknown): undefined | string {
-	return isString(value) && value.trim() !== "" ? value.trim() : undefined;
+	return isArray(value) ? value.map(text).find(isString) : undefined;
 }
 
 /**
  * Reads the non-blank texts of a language map, trimmed and keyed by lowercase language tag.
  */
-function text(value: unknown): undefined | Dictionary {
+function localized(value: unknown): undefined | Dictionary {
 
-	const texts: Dictionary = isObject(value) ? Object.fromEntries(Object.entries(value).flatMap(([tag, text]) =>
-		opt(code(text), text => [[tag.toLowerCase(), text]]) ?? []
+	const texts: Dictionary = isObject(value) ? Object.fromEntries(Object.entries(value).flatMap(([tag, value]) =>
+		opt(text(value), text => [[tag.toLowerCase(), text]]) ?? []
 	)) : {};
 
 	return Object.keys(texts).length > 0 ? texts : undefined;
@@ -250,9 +230,7 @@ function text(value: unknown): undefined | Dictionary {
 }
 
 function urls(value: unknown): readonly string[] {
-	return (isArray(value) ? value : [])
-		.filter(isString)
-		.filter(url => URL.canParse(url) && /^https?:$/.test(new URL(url).protocol));
+	return (isArray(value) ? value : []).filter(isString).filter(isWeb);
 }
 
 function credits(value: unknown): undefined | number {

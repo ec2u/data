@@ -18,7 +18,7 @@ import { base } from "@ec2u/data-shared";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { poitiers } from "@ec2u/data-shared/universities/index.core.js";
-import { isNumber, isObject, isString, opt } from "@metreeca/core";
+import { isNumber, isObject, opt } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
@@ -28,6 +28,7 @@ import { flat, map } from "@metreeca/flow/tasks";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
 import { type ProgramDraft, sync } from "../sinks/sync.js";
+import { text } from "../index.core.js";
 import snapshot from "./poitiers.json" with { type: "json" };
 
 
@@ -119,9 +120,4 @@ export function program(entry: unknown): undefined | ProgramDraft {
 		...opt(text(entry.discipline), field => ({ cues: { field } }))
 
 	}))) : undefined;
-}
-
-
-function text(value: unknown): undefined | string {
-	return isString(value) && value.trim() !== "" ? value.trim() : undefined;
 }

@@ -32,6 +32,7 @@ import { createVault } from "@metreeca/gear/vault";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
+import { degree, hours, isWeb, languageTags } from "../index.core.js";
 import { type CourseDraft, type Dictionary, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -68,13 +69,7 @@ const Periods: { readonly [unit: string]: (amount: number) => string } = {
 /**
  * The ISO 639-1 tags of languages, keyed by their lowercase English name.
  */
-const Languages: ReadonlyMap<string, string> = opt(new Intl.DisplayNames(["en"], { type: "language" }), names =>
-	new Map([..."abcdefghijklmnopqrstuvwxyz"]
-		.flatMap(first => [..."abcdefghijklmnopqrstuvwxyz"].map(second => `${first}${second}`))
-		.flatMap(tag => opt(names.of(tag), name => name === tag ? [] : [language(name, tag)]) ?? [])
-	),
-	() => new Map()
-);
+const Languages = languageTags("en");
 
 
 const logger = log(import.meta.url);
@@ -174,11 +169,12 @@ function read(record: unknown): readonly Draft[] {
  * A record is a degree program unless its `cicloTipo` is `NAO_CONFERENTE_GRAU`, which marks a course awarding no
  * degree; either is keyed by its `cursoId`, stated as its identifier or course code. Names, the credential awarded,
  * contents, learning outcomes, prerequisites and examination rules are read from the localised lists the record
- * states, keyed by `locSigla`; both web pages and the `ects` credits are stated as given. The ISCED 2011 level is mapped
- * from `cicloTipo` and `categoriaCursoTipo`: first cycles to bachelor's level, second cycles to master's level, third
- * cycles to doctoral level, and non-degree courses to level 9. `duracaoEN` is read as the time a program takes to
- * complete in years, semesters, trimesters, months, weeks or days, and as the time a course requires in days or hours.
- * Teaching languages are read from the English names in `linguasAprendizagem`, ignoring words that name no language.
+ * states, keyed by `locSigla`; both web pages and the `ects` credits are stated as given. The ISCED 2011 level is
+ * mapped from `cicloTipo` and `categoriaCursoTipo`: first cycles to bachelor's level, second cycles to master's level,
+ * third cycles to doctoral level, and non-degree courses to level 9. `duracaoEN` is read as the time a program takes
+ * to complete in years, semesters, trimesters, months, weeks or days, and as the time a course requires in days or
+ * hours. Teaching languages are read from the English names in `linguasAprendizagem`, ignoring words that name no
+ * language.
  *
  * @param record The offering record as the API states it
  *
@@ -206,7 +202,9 @@ export function offering(record: unknown): undefined | Draft {
 				...opt(localized(record.objetivosAprendizagem), assesses => ({ assesses })),
 				...opt(localized(record.regrasDeAvaliacao), competencyRequired => ({ competencyRequired })),
 
-				...opt(credits(record.ects), numberOfCredits => ({ numberOfCredits })),
+				...opt(isString(record.ects) ? Number.parseFloat(record.ects) : undefined, credits =>
+					Number.isFinite(credits) && credits > 0 ? { numberOfCredits: credits } : {}
+				),
 
 				educationalLevel: [opt(Levels[cycle], categories => categories[category] ?? categories["*"])]
 					.flatMap(multiple)
@@ -273,26 +271,6 @@ function localized(value: unknown): undefined | Dictionary {
 }
 
 /**
- * States a degree as the credential an offering awards.
- */
-function degree(name: Dictionary): NonNullable<Draft["educationalCredentialAwarded"]> {
-	return immutable({ credentialCategory: "Degree", name });
-}
-
-/**
- * Pairs the lowercase English name of a language with its tag.
- */
-function language(name: string, tag: string): [string, string] {
-	return [name.toLowerCase(), tag];
-}
-
-function credits(value: unknown): undefined | number {
-	return opt(isString(value) ? Number.parseFloat(value) : undefined, credits =>
-		Number.isFinite(credits) && credits > 0 ? credits : undefined
-	);
-}
-
-/**
  * Reads an amount of calendar units as an ISO 8601 period.
  */
 function period(duration: string): undefined | string {
@@ -308,11 +286,10 @@ function time(duration: string): undefined | string {
 	return opt(/^(\d+(?:\.\d+)?)\s+(day|hour)s?$/.exec(duration) ?? undefined, ([, amount, unit]) => {
 
 		const value = Number.parseFloat(amount);
-		const minutes = Math.round(value*60);
 
 		return unit === "day"
 			? Number.isInteger(value) ? `P${value}D` : undefined
-			: `PT${Math.floor(minutes/60)}H${minutes%60 === 0 ? "" : `${minutes%60}M`}`;
+			: hours(value);
 
 	});
 }
@@ -322,13 +299,11 @@ function time(duration: string): undefined | string {
  */
 function languages(value: unknown): readonly string[] {
 	return [...new Set((isArray(value) ? value : [])
-		.filter(item => isObject(item) && item.locSigla === "EN" && isString(item.designacao))
-		.flatMap(item => isObject(item) && isString(item.designacao) ? item.designacao.split(/\P{L}+/u) : [])
+		.flatMap(item => isObject(item) && item.locSigla === "EN" && isString(item.designacao)
+			? item.designacao.split(/\P{L}+/u)
+			: []
+		)
 		.map(word => Languages.get(word.toLowerCase()))
 		.flatMap(multiple)
 	)];
-}
-
-function isWeb(url: string): boolean {
-	return URL.canParse(url) && /^https?:$/.test(new URL(url).protocol);
 }

@@ -32,10 +32,10 @@ import { service } from "@metreeca/gear";
 import { createVault } from "@metreeca/gear/vault";
 import { csv } from "@metreeca/mime-csv";
 import { fetch } from "@metreeca/pipe-url";
-import type { Reference } from "@metreeca/qest/state";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
-import { type CourseDraft, type Dictionary, type Draft, identify, type Name, type ProgramDraft, sync } from "../sinks/sync.js";
+import { hours, isWeb } from "../index.core.js";
+import { type CourseDraft, type Dictionary, type Draft, identify, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
 const Source = resolve(base, "/offerings/lll");
@@ -213,10 +213,19 @@ export function row(row: { readonly [column: string]: undefined | string }): rea
 
 			audience: [Audience],
 
-			...opt(value("Badge"), badge => isWeb(badge) ? { educationalCredentialAwarded: credential(badge) } : {}),
+			...opt(value("Badge"), badge => isWeb(badge) ? {
+				educationalCredentialAwarded: { credentialCategory: "Badge", url: [badge] }
+			} : {}),
 
 			...opt(named("Provider", university), name => ({ provider: { name } })),
-			instructor: (value("Instructor") ?? "").split(";").map(person).flatMap(multiple),
+
+			instructor: (value("Instructor") ?? "").split(";").flatMap(person =>
+				opt(/^([^,]+),([^,]+)$/.exec(person.trim()) ?? undefined, ([, familyName, givenName]) => [{
+					familyName: familyName.trim(),
+					givenName: givenName.trim()
+				}]) ?? []
+			),
+
 			inProgram: opt(program, ({ key }) => [{ key, ...opt(year, year => ({ year })) }]) ?? []
 
 		});
@@ -281,31 +290,4 @@ export function row(row: { readonly [column: string]: undefined | string }): rea
 
 	}
 
-}
-
-
-function person(value: string): undefined | Name {
-	return opt(/^([^,]+),([^,]+)$/.exec(value.trim()) ?? undefined, ([, familyName, givenName]) => immutable({
-		familyName: familyName.trim(),
-		givenName: givenName.trim()
-	}));
-}
-
-/**
- * States an Open Badge as the credential a course awards.
- */
-function credential(badge: string): NonNullable<CourseDraft["educationalCredentialAwarded"]> {
-	return immutable({ credentialCategory: "Badge", url: [badge] });
-}
-
-function hours(amount: number): string {
-
-	const minutes = Math.round(amount*60);
-
-	return `PT${Math.floor(minutes/60)}H${minutes%60 === 0 ? "" : `${minutes%60}M`}`;
-
-}
-
-function isWeb(url: string): boolean {
-	return URL.canParse(url) && /^https?:$/.test(new URL(url).protocol);
 }

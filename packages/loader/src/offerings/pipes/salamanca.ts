@@ -30,6 +30,7 @@ import { createVault } from "@metreeca/gear/vault";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
 import { execute } from "../../index.core.js";
+import { isWeb } from "../index.core.js";
 import { type CourseDraft, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
 
 
@@ -86,18 +87,7 @@ export async function Salamanca() {
 	} else {
 
 		const listed = programs.flatMap(record => read(record, program));
-		const codes = new Set(listed.map(({ key }) => key));
-
-		const pairs = memberships.flatMap(record => isObject(record)
-			? opt(text(record.code), course => opt(text(record.programCode), program =>
-				codes.has(program) ? [{ course, program }] : []
-			)) ?? []
-			: []
-		);
-
-		const index = new Map([...new Set(pairs.map(({ course }) => course))].map(course =>
-			[course, [...new Set(pairs.filter(pair => pair.course === course).map(({ program }) => program))]]
-		));
+		const index = programsByCourse(memberships, new Set(listed.map(({ key }) => key)));
 
 		const taught: Feed<Draft> = pipe(
 			(items([await vault(CoursesURL)]))
@@ -111,6 +101,25 @@ export async function Salamanca() {
 		);
 
 	}
+
+}
+
+
+/**
+ * Indexes the listed programs each course is taught in, as the program-course memberships state them.
+ */
+function programsByCourse(memberships: readonly unknown[], listed: ReadonlySet<string>): ReadonlyMap<string, readonly string[]> {
+
+	const pairs = memberships.flatMap(record => isObject(record)
+			? opt(text(record.code), course => opt(text(record.programCode), program =>
+			listed.has(program) ? [{ course, program }] : []
+		)) ?? []
+			: []
+	);
+
+	return new Map([...new Set(pairs.map(({ course }) => course))].map(course =>
+		[course, [...new Set(pairs.filter(pair => pair.course === course).map(({ program }) => program))]]
+	));
 
 }
 
@@ -258,8 +267,4 @@ function credits(value: unknown): undefined | number {
 	return opt(isNumber(value) ? value : opt(text(value), Number.parseFloat), credits =>
 		Number.isFinite(credits) && credits > 0 ? credits : undefined
 	);
-}
-
-function isWeb(url: string): boolean {
-	return URL.canParse(url) && /^https?:$/.test(new URL(url).protocol);
 }

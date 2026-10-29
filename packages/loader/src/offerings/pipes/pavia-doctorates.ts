@@ -18,7 +18,6 @@ import { base } from "@ec2u/data-shared";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { pavia } from "@ec2u/data-shared/universities/index.core.js";
-import { schema } from "@metreeca/blue";
 import { multiple, required, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
@@ -27,15 +26,14 @@ import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { flat, map, trim } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
 import { getResource } from "@metreeca/gear/space";
-import { createGoogleAI, json } from "@metreeca/llms-google";
 import { validate } from "@metreeca/mime-jsonld";
 import { focus, html, untag } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
 import { log, report } from "@metreeca/tape";
 import { denoise } from "@metreeca/work/mime-xml/denoise.js";
 import { execute } from "../../index.core.js";
+import { degree, generate, isWeb } from "../index.core.js";
 import { crawl, type Lead } from "../sinks/crawl.js";
 
 
@@ -115,8 +113,6 @@ if ( import.meta.main ) {
  */
 export async function PaviaDoctorates() {
 
-	const ai = service(createGoogleAI);
-
 	return pipe(
 		(items([IndexURL]))
 		(fetch())
@@ -138,25 +134,7 @@ export async function PaviaDoctorates() {
 	async function list(document: string): Promise<readonly State<typeof Reported>[]> {
 		try {
 
-			return [json<State<typeof Reported>>(await ai.models.generateContent({
-
-				model: "gemini-3.6-flash",
-
-				contents: document,
-
-				config: {
-
-					seed: 0,
-					temperature: 0,
-
-					systemInstruction: await getResource(".sys.md", import.meta.url),
-
-					responseMimeType: "application/json",
-					responseJsonSchema: schema(Reported)
-
-				}
-
-			}))];
+			return [await generate<State<typeof Reported>>(Reported, await getResource(".sys.md", import.meta.url), document)];
 
 		} catch ( error ) {
 
@@ -187,7 +165,7 @@ export function lead({ name, language, url }: Listed): undefined | Lead {
 	const title = name.trim();
 	const locale = language === "en" ? "en" : pavia.locale;
 
-	return URL.canParse(address) && /^https?:$/.test(new URL(address).protocol) && title !== "" ? immutable({
+	return isWeb(address) && title !== "" ? immutable({
 
 		url: address,
 
@@ -202,7 +180,7 @@ export function lead({ name, language, url }: Listed): undefined | Lead {
 			url: [address],
 
 			educationalLevel: [getTopicId(isced2011, "8")],
-			educationalCredentialAwarded: { credentialCategory: "Degree", name: { [pavia.locale]: "Dottorato di Ricerca" } }
+			educationalCredentialAwarded: degree({ [pavia.locale]: "Dottorato di Ricerca" })
 
 		})
 
