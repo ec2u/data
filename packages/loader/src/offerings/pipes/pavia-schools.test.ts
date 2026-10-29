@@ -40,6 +40,8 @@ describe("school", () => {
 			university: pavia,
 			key: "Scuola di Specializzazione in Cardiochirurgia",
 
+			generated: true,
+
 			name: { it: "Scuola di Specializzazione in Cardiochirurgia" },
 
 			disambiguatingDescription: { it: "Sintesi." },

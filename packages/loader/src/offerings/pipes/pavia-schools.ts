@@ -237,6 +237,8 @@ export function school({ name, summary, contents, outcomes, prerequisites, requi
 		university: pavia,
 		key,
 
+		generated: true, // read by model from the listing pages
+
 		name: { [pavia.locale]: key },
 
 		...opt(local(summary), disambiguatingDescription => ({ disambiguatingDescription })),

@@ -26,6 +26,7 @@ import {
 	type CourseDraft,
 	date,
 	identify,
+	named,
 	organization,
 	person,
 	type ProgramDraft,
@@ -136,7 +137,6 @@ describe("state", () => {
 				id: getProgramId(pavia.id, program.key, { year }),
 				dataset: programs.id,
 				university: pavia.id,
-				generated: true,
 				source,
 				digest: "digest"
 			});
@@ -147,10 +147,17 @@ describe("state", () => {
 				id: getCourseId(pavia.id, course.key, { year, term: ["First"] }),
 				dataset: courses.id,
 				university: pavia.id,
-				generated: true,
 				source,
 				digest: "digest"
 			});
+		});
+
+		it("flags an offering a model generated content for", async () => {
+			expect(state(source, attached({ ...program, generated: true }))).toMatchObject({ generated: true });
+		});
+
+		it("leaves unflagged an offering stated by its source alone", async () => {
+			expect(state(source, attached(program))).not.toHaveProperty("generated");
 		});
 
 		it("attributes the offering to the university of its draft", async () => {
@@ -260,7 +267,7 @@ describe("state", () => {
 
 		it("links the settled provider", async () => {
 
-			const provider = organization(pavia, { name: { en: "Department of Engineering" } });
+			const provider = organization(source, pavia, { name: { en: "Department of Engineering" } });
 
 			expect(state(source, attached(program, { provider }))).toMatchObject({ provider: provider.id });
 
@@ -276,8 +283,9 @@ describe("state", () => {
 			const valid = { givenName: "Ada", familyName: "Lovelace" };
 			const invalid = { givenName: "Charles", familyName: "Babbage" };
 
-			expect(state(source, attached({ ...course, instructor: [valid, invalid] }, { people: [person(pavia, valid)] })))
-				.toMatchObject({ instructor: [getPersonId(pavia.id, "Lovelace", "Ada")] });
+			expect(state(source, attached({ ...course, instructor: [valid, invalid] }, {
+				people: [person(source, pavia, valid)]
+			}))).toMatchObject({ instructor: [getPersonId(pavia.id, "Lovelace", "Ada", source)] });
 
 		});
 
@@ -286,27 +294,53 @@ describe("state", () => {
 });
 
 
+describe("named", () => {
+
+	it("names the offering a draft states", async () => {
+		expect(named(source, program)).toEqual([getProgramId(pavia.id, program.key, { year })]);
+	});
+
+	it("names the provider and instructors a draft states, within the source", async () => {
+		expect(named(source, {
+			...course,
+			provider: { name: { en: "Engineering" } },
+			instructor: [{ givenName: "Ada", familyName: "Lovelace" }]
+		})).toEqual([
+			getCourseId(pavia.id, course.key, { year, term: ["First"] }),
+			getOrganizationId(pavia.id, "Engineering", source),
+			getPersonId(pavia.id, "Lovelace", "Ada", source)
+		]);
+	});
+
+	it("names nothing for a draft it cannot identify", async () => {
+		expect(named(source, { ...program, key: "", provider: { name: { en: "Engineering" } } })).toEqual([]);
+	});
+
+});
+
+
 describe("organization", () => {
 
-	it("keys the organisation by its home page first", async () => {
-		expect(organization(pavia, { name: { en: "Engineering" }, homepage: "https://example.org/" }).id)
-			.toBe(getOrganizationId(pavia.id, "https://example.org/"));
+	it("keys the organisation by its home page first, within the source", async () => {
+		expect(organization(source, pavia, { name: { en: "Engineering" }, homepage: "https://example.org/" }).id)
+			.toBe(getOrganizationId(pavia.id, "https://example.org/", source));
 	});
 
 	it("falls back to the English name", async () => {
-		expect(organization(pavia, { name: { it: "Ingegneria", en: "Engineering" } }).id)
-			.toBe(getOrganizationId(pavia.id, "Engineering"));
+		expect(organization(source, pavia, { name: { it: "Ingegneria", en: "Engineering" } }).id)
+			.toBe(getOrganizationId(pavia.id, "Engineering", source));
 	});
 
 	it("falls back to any name", async () => {
-		expect(organization(pavia, { name: { it: "Ingegneria" } }).id)
-			.toBe(getOrganizationId(pavia.id, "Ingegneria"));
+		expect(organization(source, pavia, { name: { it: "Ingegneria" } }).id)
+			.toBe(getOrganizationId(pavia.id, "Ingegneria", source));
 	});
 
-	it("states the organisation in the organisations catalogue under its names", async () => {
-		expect(organization(pavia, { name: { it: "Ingegneria" }, homepage: "https://example.org/" })).toMatchObject({
+	it("states the organisation owned by the source under its names", async () => {
+		expect(organization(source, pavia, { name: { it: "Ingegneria" }, homepage: "https://example.org/" })).toMatchObject({
 			dataset: organizations.id,
 			university: pavia.id,
+			source,
 			label: { it: "Ingegneria" },
 			prefLabel: { it: "Ingegneria" },
 			homepage: ["https://example.org/"]
@@ -318,11 +352,12 @@ describe("organization", () => {
 
 describe("person", () => {
 
-	it("states the person in the persons catalogue under their full name", async () => {
-		expect(person(pavia, { title: "Prof.", givenName: "Ada", familyName: "Lovelace" })).toMatchObject({
-			id: getPersonId(pavia.id, "Lovelace", "Ada"),
+	it("states the person owned by the source under their full name", async () => {
+		expect(person(source, pavia, { title: "Prof.", givenName: "Ada", familyName: "Lovelace" })).toMatchObject({
+			id: getPersonId(pavia.id, "Lovelace", "Ada", source),
 			dataset: persons.id,
 			university: pavia.id,
+			source,
 			label: "Ada Lovelace",
 			title: "Prof.",
 			givenName: "Ada",

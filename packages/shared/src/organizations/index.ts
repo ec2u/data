@@ -23,7 +23,8 @@ import { Unit } from "@ec2u/data-shared/units/index.js";
 import { OrgOrganization } from "@ec2u/data-shared/vocabularies/org.js";
 import { SchemaOrganization } from "@ec2u/data-shared/vocabularies/schema/organization.js";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, resource } from "@metreeca/blue/resource";
+import { multiple, optional, resource } from "@metreeca/blue/resource";
+import { iri } from "@metreeca/blue/string";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import type { Reference } from "@metreeca/qest/state";
@@ -97,7 +98,18 @@ export function Organization() {
 		classification: multiple(reference(OrganizationTopic)),
 
 		hasHead: multiple(reference(Person)),
-		hasMember: multiple(reference(Person))
+		hasMember: multiple(reference(Person)),
+
+		source: optional(iri, {
+
+			hidden: true,
+
+			forward: ec2u,
+
+			name: "Source",
+			description: "The source owning the organisation, which alone states and withdraws it."
+
+		})
 
 	});
 }
@@ -108,15 +120,19 @@ export function Organization() {
  *
  * The same key always names the same organisation within a university, so that every source of the university naming
  * it states the same organisation, while equal keys at different universities never do. Keys are matched regardless
- * of case.
+ * of case. An organisation owned by a single source is named within that source alone, so that the source may withdraw
+ * it without affecting the organisations other sources state under the same key.
  *
  * @param university The identifier of the university naming the organisation
  * @param key The key the organisation is named with, either its home page or its name
+ * @param source The identifier of the source owning the organisation; omit for an organisation shared across sources
  *
- * @returns The identifier of the organisation named by `key` at `university`
+ * @returns The identifier of the organisation named by `key` at `university`, within `source` if given
  */
-export function getOrganizationId(university: Reference, key: string): Reference {
+export function getOrganizationId(university: Reference, key: string, source?: Reference): Reference {
 
-	return resolve(organizations.id, uuid.v3(key.toLowerCase(), uuid.v3(university, uuid.v3.URL)));
+	const scope = uuid.v3(university, uuid.v3.URL);
+
+	return resolve(organizations.id, uuid.v3(key.toLowerCase(), source === undefined ? scope : uuid.v3(source, scope)));
 
 }

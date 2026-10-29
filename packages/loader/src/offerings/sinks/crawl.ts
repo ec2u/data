@@ -19,7 +19,7 @@ import type { Markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { filter, flat, fork, map, tee, trim } from "@metreeca/flow/tasks";
+import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
 import { focus, html, untag } from "@metreeca/mime-xml";
 import { settle, type Tally } from "@metreeca/pipe-store";
 import { fetch } from "@metreeca/pipe-url";
@@ -28,7 +28,7 @@ import { log } from "@metreeca/tape";
 import { digest } from "@metreeca/work/core/digest.js";
 import { denoise } from "@metreeca/work/mime-xml/denoise.js";
 import { extract } from "../tasks/extract.js";
-import { complete, date, type Draft, identify, retract, stated } from "./sync.js";
+import { complete, date, type Draft, identify, named, retract, stated } from "./sync.js";
 
 
 const retrieval = 10; // the number of pages fetched at the same time from the source site // !!! as option
@@ -130,8 +130,7 @@ export function crawl(source: Reference, {
 			},
 			leads => pipe(
 				(items(leads))
-				(map(({ seed }) => identify(seed)))
-				(trim())
+				(flat(map(({ seed }) => named(source, seed))))
 				(retract(source))
 			)
 		))

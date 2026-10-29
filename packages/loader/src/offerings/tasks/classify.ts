@@ -82,9 +82,10 @@ function Reported() {
  * Tags each draft stating no educational level with one from ISCED 2011, and each draft stating no field of education
  * with one from ISCED-F 2013, reading its English name, summary, description and contents along with the level and
  * field the source states in its own words; topics the source states are kept as they are, and a draft stating both
- * passes through untouched. Only topics the taxonomies hold are stated, each chain cut to its most specific member. A
- * draft the model fails on is logged and dropped rather than handed on untagged, and records no digest downstream, so
- * that it is classified again on the next run, while the offering the store holds for it stays as it was.
+ * passes through untouched, while a draft given any topic is flagged as generated. Only topics the taxonomies hold are
+ * stated, each chain cut to its most specific member. A draft the model fails on is logged and dropped rather than
+ * handed on untagged, and records no digest downstream, so that it is classified again on the next run, while the
+ * offering the store holds for it stays exactly as the last successful run stated it, topics and flag included.
  *
  * @returns A task completing the educational level and field of a feed of draft entries
  */
@@ -104,23 +105,31 @@ export function classify(): Task<Entry, Entry> {
 			return level.length > 0 && field.length > 0 ? [entry] : pipe(
 				(items(await tag(draft)))
 				(validate(Reported))
-				(map(async tagged => immutable({
+				(map(async tagged => {
 
-					...entry,
+					const levels = level.length > 0 ? [] : (await known(isced2011, tagged.level)).slice(0, 1);
+					const fields = field.length > 0 ? [] : (await known(iscedf2013, tagged.field)).slice(0, 1);
 
-					draft: immutable({
+					return immutable({
 
-						...draft,
+						...entry,
 
-						educationalLevel: level.length > 0 ? level : (await known(isced2011, tagged.level)).slice(0, 1),
-						about: field.length > 0 ? draft.about : [
-							...(draft.about ?? []),
-							...(await known(iscedf2013, tagged.field)).slice(0, 1)
-						]
+						draft: immutable({
 
-					})
+							...draft,
 
-				})))
+							// topics added by the model mark the offering as generated
+
+							...(levels.length > 0 || fields.length > 0 ? { generated: true } : {}),
+
+							educationalLevel: [...level, ...levels],
+							about: [...(draft.about ?? []), ...fields]
+
+						})
+
+					});
+
+				}))
 			);
 
 		})))

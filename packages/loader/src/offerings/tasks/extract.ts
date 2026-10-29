@@ -219,8 +219,9 @@ export function extract(): Task<Page, Entry> {
  * Every text is stated in the language the page is written in, falling back to the local language of the university
  * delivering the offering where the page language can't be told, and blank texts are left out. A fact the seed states
  * is kept as it stands; the page supplies only the facts the seed leaves out, the page address standing as the web
- * page of an offering whose seed names none. Durations stand as the time a program takes to complete or the time a
- * course requires; the course code, workload, teaching language, fees and mode apply to courses alone.
+ * page of an offering whose seed names none. Credits are rounded to the nearest half credit. Durations stand as the
+ * time a program takes to complete or the time a course requires; the course code, workload, teaching language, fees
+ * and attendance mode apply to courses alone, and are never stated for a program whatever its page states.
  *
  * @param seed The seed of the lead listing the page
  * @param url The address of the page
@@ -238,6 +239,8 @@ export function drafted(seed: Draft, url: string, reported: Reported): Draft {
 
 	const common = immutable({
 
+		generated: true,
+
 		name: local(reported.name) ?? {},
 		url: [url],
 
@@ -247,7 +250,7 @@ export function drafted(seed: Draft, url: string, reported: Reported): Draft {
 		...opt(local(reported.outcomes), assesses => ({ assesses })),
 		...opt(local(reported.requirements), competencyRequired => ({ competencyRequired })),
 
-		...opt(reported.credits, numberOfCredits => ({ numberOfCredits })),
+		...opt(reported.credits, credits => ({ numberOfCredits: Math.round(credits*2)/2 })), // nearest half credit
 		educationalLevel: [reported.level].flatMap(level => isLevel(level) ? [getTopicId(isced2011, String(level))] : []),
 
 		...opt(local(reported.educationalCredential), name => ({ educationalCredentialAwarded: degree(name) })),

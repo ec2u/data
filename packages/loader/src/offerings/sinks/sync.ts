@@ -17,8 +17,8 @@
 import { CommentLength, LabelLength } from "@ec2u/data-shared";
 import { Course, courses, Courses, getCourseId } from "@ec2u/data-shared/courses/index.js";
 import { getAcademicYear } from "@ec2u/data-shared/offerings/index.js";
-import { getOrganizationId, Organization, organizations } from "@ec2u/data-shared/organizations/index.js";
-import { getPersonId, Person, persons } from "@ec2u/data-shared/persons/index.js";
+import { getOrganizationId, Organization, organizations, Organizations } from "@ec2u/data-shared/organizations/index.js";
+import { getPersonId, Person, persons, Persons } from "@ec2u/data-shared/persons/index.js";
 import { getProgramId, Program, programs, Programs } from "@ec2u/data-shared/programs/index.js";
 import type { University } from "@ec2u/data-shared/universities/index.core.js";
 import type { State } from "@metreeca/blue/value";
@@ -118,7 +118,6 @@ type Derived =
 	| "comment"
 	| "dataset"
 	| "university"
-	| "generated"
 	| "name"
 	| "provider"
 	| "source"
@@ -246,8 +245,7 @@ export function sync(source: Reference, {
 			},
 			drafts => pipe(
 				(items(drafts))
-				(map(identify))
-				(trim())
+				(flat(map(draft => named(source, draft))))
 				(retract(source))
 			)
 		))
@@ -327,10 +325,10 @@ export async function stated(source: Reference): Promise<ReadonlySet<string>> {
  * source states none. A draft the model fails on is dropped and records no digest, so it is completed again on the
  * next run, while the offering the store holds for it, if any, is left in place as the last successful run stated it.
  *
- * The provider and instructors an offering names are stated alongside it, so the names they are shown with are held
- * wherever the offering is; they are never retracted along with it, as other resources, such as the documents of the
- * same university, may name them as well. One whose state fails validation is logged and left out, and the offering
- * is stated without linking it, so no offering links a resource the store doesn't hold.
+ * The provider and instructors an offering names are stated alongside it as resources owned by the source, so the names
+ * they are shown with are held wherever the offering is, and they are retracted once the source no longer names them,
+ * leaving no leftovers behind. One whose state fails validation is logged and left out, and the offering is stated
+ * without linking it, so that no offering ever links a provider or instructor the store doesn't hold.
  *
  * @param source The identifier of the source listing the offerings
  *
@@ -367,14 +365,14 @@ export function complete(source: Reference): Task<Entry, Delta> {
 			pipe(
 				(items([draft.provider]))
 				(trim())
-				(map(agency => organization(draft.university, agency)))
+				(map(agency => organization(source, draft.university, agency)))
 				(validate(Organization))
 				(toArray())
 			),
 
 			pipe(
 				(items(draft.kind === "course" ? draft.instructor ?? [] : []))
-				(map(name => person(draft.university, name)))
+				(map(name => person(source, draft.university, name)))
 				(distinct(person => person.id))
 				(validate(Person))
 				(toArray())
@@ -430,16 +428,17 @@ export function complete(source: Reference): Task<Entry, Delta> {
 /**
  * Creates an offering retractor.
  *
- * Watches the identifiers a scan names and, once it has been drawn whole, retracts the programs and courses the store
- * holds for the source and the scan never named, so nothing is retired on the strength of a partial reading. A scan
- * naming fewer than three quarters of the stored offerings retracts nothing and fails, so a broken source costs a run.
+ * Watches the identifiers a scan names and, once it has been drawn whole, retracts the programs, courses, providers and
+ * instructors the store holds for the source and the scan never named, so nothing is retired on the strength of a
+ * partial reading. A scan naming fewer than three quarters of them retracts nothing and fails, so that a broken source
+ * costs a single run rather than its whole catalogue, providers and instructors included.
  *
  * @param source The identifier of the source listing the offerings
  *
- * @returns A task converting a feed of offering identifiers into deltas retracting the offerings it never named
+ * @returns A task converting a feed of identifiers, as {@link named} lists them, into retracting deltas for the rest
  *
  * @throws {@link !RangeError RangeError} While the feed is consumed, if the run would leave in place less than three
- * quarters of the stored offerings of `source`, with nothing retracted by the run
+ * quarters of the resources owned by `source`, with nothing retracted by the run
  */
 export function retract(source: Reference): Task<Reference, Delta> {
 
@@ -469,6 +468,30 @@ export function retract(source: Reference): Task<Reference, Delta> {
 
 				}))
 				(map(course => course.id))
+			),
+
+			pipe(
+				(lookup({
+
+					entry: organizations.id,
+					shape: Organizations,
+
+					model: { resources: { id: {}, "?source": [source] } } // !!! DSL
+
+				}))
+				(map(organization => organization.id))
+			),
+
+			pipe(
+				(lookup({
+
+					entry: persons.id,
+					shape: Persons,
+
+					model: { resources: { id: {}, "?source": [source] } } // !!! DSL
+
+				}))
+				(map(person => person.id))
 			)
 
 		]));
@@ -476,11 +499,41 @@ export function retract(source: Reference): Task<Reference, Delta> {
 		return pipe(
 			(items(ids))
 			(retire({ survival, existing }))
-			(map(id => id.startsWith(programs.id) ? delta(id, Program, null) : delta(id, Course, null)))
+			(map(retraction))
 		);
 
 	};
 
+
+	function retraction(id: Reference): Delta {
+		return id.startsWith(programs.id) ? delta(id, Program, null)
+			: id.startsWith(courses.id) ? delta(id, Course, null)
+				: id.startsWith(organizations.id) ? delta(id, Organization, null)
+					: delta(id, Person, null);
+	}
+
+}
+
+
+/**
+ * Lists the resources a draft names: the offering it states, its provider and its instructors, all within `source`.
+ *
+ * @param source The identifier of the source listing the draft
+ * @param draft The draft to list the resources of
+ *
+ * @returns The identifiers of the resources `draft` names; empty if the draft cannot be identified
+ */
+export function named(source: Reference, draft: Draft): readonly Reference[] {
+	return opt(identify(draft), id => [
+
+		id,
+
+		...opt(draft.provider, agency => [organization(source, draft.university, agency).id]) ?? [],
+
+		...(draft.kind === "course" ? draft.instructor ?? [] : [])
+			.map(name => person(source, draft.university, name).id)
+
+	]) ?? [];
 }
 
 
@@ -538,7 +591,7 @@ export function date(draft: Draft, year: string): Draft {
  * @returns The identifier of the program or course `draft` states, or `undefined` for a blank key or malformed year
  */
 export function identify(draft: Draft): undefined | Reference {
-	return named(() => draft.kind === "program"
+	return attempt(() => draft.kind === "program"
 		? getProgramId(draft.university.id, draft.key, { year: draft.year })
 		: getCourseId(draft.university.id, draft.key, { year: draft.year, term: draft.term })
 	);
@@ -577,7 +630,7 @@ export function state(source: Reference, {
 
 			university: university.id,
 
-			generated: true,
+			...(draft.generated === true ? { generated: true } : {}),
 
 			label: clipped(draft.name, LabelLength),
 			comment: opt(
@@ -614,11 +667,11 @@ export function state(source: Reference, {
 				dataset: courses.id,
 
 				instructor: instructor
-					.map(({ familyName, givenName }) => getPersonId(university.id, familyName, givenName))
+					.map(name => person(source, university, name).id)
 					.filter(id => valid.has(id)),
 
 				inProgram: inProgram
-					.map(({ key, year }) => named(() => getProgramId(university.id, key, { year })))
+					.map(({ key, year }) => attempt(() => getProgramId(university.id, key, { year })))
 					.flatMap(multiple)
 
 			});
@@ -632,21 +685,29 @@ export function state(source: Reference, {
 /**
  * States the organisation a source names as the provider of an offering.
  *
- * The organisation is keyed by its home page, falling back to its English name and then to any of its names, so that
- * every source of the university naming it, documents included, states the same organisation.
+ * The organisation is owned by the source, keyed within it by its home page, falling back to its English name and then
+ * to any of its names, so that every offering of the source naming it states the same organisation, which the source
+ * alone states and withdraws, apart from the organisations other sources state under the same key.
  *
+ * @param source The identifier of the source naming the organisation
  * @param university The university naming the organisation
  * @param agency The organisation as the source names it
  *
  * @returns The state of the organisation, ready to be validated
  */
-export function organization(university: University, { name, homepage }: Agency): State<typeof Organization> {
+export function organization(source: Reference, university: University, {
+
+	name,
+	homepage
+
+}: Agency): State<typeof Organization> {
 	return immutable({
 
-		id: getOrganizationId(university.id, required(homepage ?? name.en ?? Object.values(name)[0])),
+		id: getOrganizationId(university.id, required(homepage ?? name.en ?? Object.values(name)[0]), source),
 
 		dataset: organizations.id,
 		university: university.id,
+		source,
 
 		label: clipped(name, LabelLength),
 
@@ -659,19 +720,23 @@ export function organization(university: University, { name, homepage }: Agency)
 /**
  * States a person a source names as an instructor.
  *
+ * The person is owned by the source, keyed within it by name, so that the source alone states and withdraws them.
+ *
+ * @param source The identifier of the source naming the person
  * @param university The university naming the person
  * @param name The person as the source names them
  *
  * @returns The state of the person, ready to be validated
  */
-export function person(university: University, name: Name): State<typeof Person> {
+export function person(source: Reference, university: University, name: Name): State<typeof Person> {
 	return immutable({
 
 		...name,
 
-		id: getPersonId(university.id, name.familyName, name.givenName),
+		id: getPersonId(university.id, name.familyName, name.givenName, source),
 
 		dataset: persons.id,
+		source,
 		university: university.id,
 
 		label: clip(`${name.givenName} ${name.familyName}`, LabelLength)
@@ -683,7 +748,7 @@ export function person(university: University, name: Name): State<typeof Person>
 /**
  * Names an offering, absorbing the rejection of a blank key or a malformed year.
  */
-function named(identifier: () => Reference): undefined | Reference {
+function attempt(identifier: () => Reference): undefined | Reference {
 	try {
 
 		return identifier();

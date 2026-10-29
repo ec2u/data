@@ -105,8 +105,9 @@ function Reported() {
  * Completes the English texts of each draft (name, description, summary, contents, learning outcomes, requirements,
  * prerequisites and the names of the credentials awarded) from the ones stated in the local language of the university
  * delivering it, where the draft states no English one; a draft already stating them in English, or stating nothing in
- * the local language to translate, passes through untouched. A draft the model fails on is logged and dropped rather
- * than handed on untranslated, so that it records no digest downstream and is translated again on the next run.
+ * the local language to translate, passes through untouched, while a draft given any translated text is flagged as
+ * generated. A draft the model fails on is logged and dropped rather than handed on untranslated, so that it records
+ * no digest downstream and is translated again on the next run, its stored offering left as the last run stated it.
  *
  * @returns A task completing the English texts of a feed of draft entries
  */
@@ -158,6 +159,10 @@ export function translate(): Task<Entry, Entry> {
 	function merge(draft: Draft, translated: Texts): Draft {
 
 		const common = {
+
+			// texts translated by the model mark the offering as generated
+
+			...(Object.values(translated).some(text => text !== undefined) ? { generated: true } : {}),
 
 			name: english(draft.name, translated.name) ?? draft.name,
 			description: english(draft.description, translated.description),

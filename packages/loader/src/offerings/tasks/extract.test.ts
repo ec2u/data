@@ -61,6 +61,8 @@ describe("drafted", () => {
 				university: umea,
 				key: url,
 
+				generated: true,
+
 				name: { sv: "Datavetenskap" },
 				url: [url],
 
@@ -77,6 +79,11 @@ describe("drafted", () => {
 				educationalCredentialAwarded: { credentialCategory: "Degree", name: { sv: "Kandidatexamen" } }
 
 			});
+		});
+
+		it("rounds credits to the nearest half", async () => {
+			expect(drafted(program, url, { ...reported, credits: 7.3 })).toMatchObject({ numberOfCredits: 7.5 });
+			expect(drafted(program, url, { ...reported, credits: 7.2 })).toMatchObject({ numberOfCredits: 7 });
 		});
 
 		it("keeps the facts the seed states", async () => {

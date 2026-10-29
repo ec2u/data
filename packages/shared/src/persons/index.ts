@@ -21,7 +21,8 @@ import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { FOAFPerson } from "@ec2u/data-shared/vocabularies/foaf.js";
 import { org } from "@ec2u/data-shared/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, resource } from "@metreeca/blue/resource";
+import { multiple, optional, resource } from "@metreeca/blue/resource";
+import { iri } from "@metreeca/blue/string";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import type { Reference } from "@metreeca/qest/state";
@@ -88,6 +89,17 @@ export function Person() {
 			forward: org,
 			reverse: org.hasMember
 
+		}),
+
+		source: optional(iri, {
+
+			hidden: true,
+
+			forward: ec2u,
+
+			name: "Source",
+			description: "The source owning the person, which alone states and withdraws them."
+
 		})
 
 	});
@@ -98,16 +110,21 @@ export function Person() {
  * Identifies a person named by a partner university.
  *
  * The same name always names the same person within a university, so that every source of the university naming them
- * states the same person, while namesakes at different universities never do.
+ * states the same person, while namesakes at different universities never do. A person owned by a single source is
+ * named within that source alone, so that the source may withdraw them without affecting the people other sources
+ * state under the same name, such as the authors of documents or the heads of units.
  *
  * @param university The identifier of the university naming the person
  * @param familyName The family name of the person
  * @param givenName The given name of the person
+ * @param source The identifier of the source owning the person; omit for a person shared across sources
  *
- * @returns The identifier of the person named `givenName familyName` by `university`
+ * @returns The identifier of the person named `givenName familyName` by `university`, within `source` if given
  */
-export function getPersonId(university: Reference, familyName: string, givenName: string): Reference {
+export function getPersonId(university: Reference, familyName: string, givenName: string, source?: Reference): Reference {
 
-	return resolve(persons.id, uuid.v3(`${familyName}, ${givenName}`, uuid.v3(university, uuid.v3.URL)));
+	const scope = uuid.v3(university, uuid.v3.URL);
+
+	return resolve(persons.id, uuid.v3(`${familyName}, ${givenName}`, source === undefined ? scope : uuid.v3(source, scope)));
 
 }
