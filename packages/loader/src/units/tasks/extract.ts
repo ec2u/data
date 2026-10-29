@@ -28,7 +28,7 @@ import { getResource } from "@metreeca/gear/space";
 import { createGoogleAI, json } from "@metreeca/llms-google";
 import { validate } from "@metreeca/mime-jsonld";
 import { log, report } from "@metreeca/tape";
-import { fingerprint } from "@metreeca/work/core/digest.js";
+import { digest } from "@metreeca/work/core/digest.js";
 import type { Page } from "../sinks/crawl.js";
 import type { Entry } from "../sinks/sync.js";
 
@@ -81,8 +81,8 @@ function Reported() {
  * Drafts the unit each page describes, keyed by the page address and linking it as the homepage, with the official
  * name, the acronym where the page defines one, and the description, all in the language the page is written in,
  * falling back to the local language of `university` where the page language can't be told. The draft is recorded with
- * the fingerprint of the page content, so it is extracted again only once the visible text of the page changes. A
- * page the model fails on is logged and dropped rather than drafted incomplete, so it is extracted again next run.
+ * the digest of the page content, so it is extracted again only once the page changes. A page the model fails on is
+ * logged and dropped rather than drafted incomplete, so that it is extracted again on the next run.
  *
  * @param university The university the pages are listed by, supplying the fallback language of their content
  *
@@ -103,7 +103,7 @@ export function extract(university: University): Task<Page, Entry> {
 
 				return immutable({
 
-					hash: fingerprint(document),
+					hash: digest(document),
 
 					draft: {
 

@@ -57,23 +57,8 @@ describe("harvest()", () => {
 
 	};
 
-
-	it("skips a page failing to be retrieved, reading the pages after it", async () => {
-
-		const documents = await executor(bind(createFetch, () => client))(() =>
-			pipe((items([unreachable, reachable]))(harvest())(toArray()))
-		);
-
-		expect(documents).toHaveLength(1);
-		expect(documents[0]).toContain("Concert");
-
-	});
-
-
-	describe("structured data", () => {
-
 	/**
-	 * Harvests a single page serving `page`, which carries no main content of its own.
+	 * Harvests a single page serving `page`.
 	 */
 	async function render(page: string): Promise<Optional<Markdown>> {
 
@@ -87,6 +72,37 @@ describe("harvest()", () => {
 
 	}
 
+
+	it("skips a page failing to be retrieved, reading the pages after it", async () => {
+
+		const documents = await executor(bind(createFetch, () => client))(() =>
+			pipe((items([unreachable, reachable]))(harvest())(toArray()))
+		);
+
+		expect(documents).toHaveLength(1);
+		expect(documents[0]).toContain("Concert");
+
+	});
+
+
+	describe("noise", () => {
+
+		it("decodes e-mail addresses obfuscated by Cloudflare in the main content", async () => {
+
+			const document = await render(`<html><body><main><p>Contact: `
+				+ `<a href="/cdn-cgi/l/email-protection#42232e322a2302273a232f322e276c212d2f">`
+				+ `<span class="__cf_email__" data-cfemail="7a1b160a121b3a1f021b170a161f54191517">[email&#160;protected]</span>`
+				+ `</a></p></main></body></html>`
+			);
+
+			expect(document).toContain("[alpha@example.com](mailto:alpha@example.com)");
+
+		});
+
+	});
+
+
+	describe("structured data", () => {
 
 	it("renders an embedded schema.org event as a document", async () => {
 

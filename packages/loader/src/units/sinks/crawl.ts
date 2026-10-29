@@ -24,7 +24,8 @@ import { filter, flat, fork, map, tee, trim } from "@metreeca/flow/tasks";
 import { focus, html, untag } from "@metreeca/mime-xml";
 import { settle, type Tally } from "@metreeca/pipe-store";
 import { fetch } from "@metreeca/pipe-url";
-import { fingerprint } from "@metreeca/work/core/digest.js";
+import { digest } from "@metreeca/work/core/digest.js";
+import { denoise } from "@metreeca/work/mime-xml/denoise.js";
 import { extract } from "../tasks/extract.js";
 import { complete, retract, stated } from "./sync.js";
 
@@ -53,9 +54,9 @@ export type Page = {
  * Creates a sink keeping the units a university describes one per web page in line with a crawl of those pages.
  *
  * The scan is the feed of page addresses, each naming the unit its page describes. Every page is read for its main
- * content, and a page whose content fingerprint matches the one recorded with the unit the store already holds is
- * skipped before extraction, so an unchanged page costs a fetch and no model call, even where its links carry noise
- * that changes on every request; under `force` every page is extracted and stated afresh. The unit of each remaining
+ * content, cleared of the noise that changes on every request, and a page whose content digest matches the one recorded
+ * with the unit the store already holds is skipped before extraction, so an unchanged page costs a fetch and no model
+ * call; under `force` every page is extracted and stated afresh. The unit of each remaining
  * page is extracted from its content, then completed and stated as {@link complete} describes, one at a time, so a run
  * cut short keeps what it has stated and the next one carries on from there, with nothing to reconcile in between.
  *
@@ -97,7 +98,7 @@ export function crawl(university: University, {
 						(items(urls))
 						(flat(map(read)))
 					)))
-					(filter(async ({ document }) => !(await digests).has(fingerprint(document))))
+					(filter(async ({ document }) => !(await digests).has(digest(document))))
 					(fork(analysis, pages => pipe(
 						(items(pages))
 						(extract(university))
@@ -120,6 +121,7 @@ export function crawl(university: University, {
 			(items([url]))
 			(fetch())
 			(html())
+			(denoise())
 			(trim(map(tree => opt(focus(tree), untag))))
 			(map((document): Page => immutable({ url, document })))
 		);

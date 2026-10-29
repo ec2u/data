@@ -32,6 +32,7 @@ import { items } from "@metreeca/flow/feeds";
 import { map, trim } from "@metreeca/flow/tasks";
 import { focus, html, untag, unwrap } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
+import { denoise } from "@metreeca/work/mime-xml/denoise.js";
 
 
 /**
@@ -78,6 +79,9 @@ type EmbeddedEvent = {
  * document of its own. A page rendering its content client-side thus still yields its event if the site publishes
  * structured data for it. A page yielding neither is skipped and left to the next run.
  *
+ * Pages are cleared of the noise that changes on every request before they are read, so an unchanged page yields the
+ * same document on every run, and addresses a site obfuscates reach the extractor in plain form.
+ *
  * The rendered event is the first stating a name, a web address and a description. Its document opens with a
  * frontmatter block stating its title and web address. Blocks that fail to parse are skipped, so a malformed block
  * cannot hide an event. An event stating any malformed fact, such as a date that is not text, is rejected as a whole.
@@ -93,6 +97,7 @@ export function harvest(): Task<URLLike, Markdown> {
 		(items(urls))
 		(fetch())
 		(html())
+		(denoise())
 		(trim(map(tree => opt(focus(tree), untag, () => opt(unwrap(tree).find(isEvent), render)))))
 	);
 

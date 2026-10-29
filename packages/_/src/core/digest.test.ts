@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { digest, fingerprint } from "./digest.js";
+import { digest } from "./digest.js";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,85 +125,6 @@ describe("digest", () => {
 		it("digests negative zero as zero", async () => {
 
 			expect(digest(-0)).toBe(digest(0));
-
-		});
-
-	});
-
-});
-
-describe("fingerprint", () => {
-
-	it("computes a lowercase hex-encoded SHA-256 digest", async () => {
-
-		expect(fingerprint("alpha")).toMatch(/^[0-9a-f]{64}$/);
-
-	});
-
-	it("computes distinct fingerprints for documents with distinct text", async () => {
-
-		expect(fingerprint("alpha beta")).not.toBe(fingerprint("alpha gamma"));
-
-	});
-
-	it("ignores runs of whitespace", async () => {
-
-		expect(fingerprint("alpha  beta\n\ngamma ")).toBe(fingerprint("alpha beta gamma"));
-
-	});
-
-
-	describe("with links", () => {
-
-		it("ignores link targets", async () => {
-
-			expect(fingerprint("see [alpha](https://example.org/a?session=1)"))
-				.toBe(fingerprint("see [alpha](https://example.org/a?session=2)"));
-
-		});
-
-		it("ignores link titles", async () => {
-
-			expect(fingerprint("[alpha](/a \"one\")")).toBe(fingerprint("[alpha](/a \"two\")"));
-
-		});
-
-		it("keeps link text", async () => {
-
-			expect(fingerprint("[alpha](/a)")).not.toBe(fingerprint("[beta](/a)"));
-
-		});
-
-		it("ignores targets of links whose text holds brackets", async () => {
-
-			expect(fingerprint("[[email protected]](/cdn-cgi/l/email-protection#b6d7d8d2)"))
-				.toBe(fingerprint("[[email protected]](/cdn-cgi/l/email-protection#8beae5ef)"));
-
-		});
-
-		it("ignores targets holding parentheses", async () => {
-
-			expect(fingerprint("[alpha](/wiki/A_(one))")).toBe(fingerprint("[alpha](/wiki/A_(two))"));
-
-		});
-
-		it("ignores image targets, keeping their alternative text", async () => {
-
-			expect(fingerprint("![alpha](/a.png?v=1)")).toBe(fingerprint("![alpha](/a.png?v=2)"));
-			expect(fingerprint("![alpha](/a.png)")).not.toBe(fingerprint("![beta](/a.png)"));
-
-		});
-
-		it("ignores autolinks", async () => {
-
-			expect(fingerprint("alpha <https://example.org/?t=1>")).toBe(fingerprint("alpha <https://example.org/?t=2>"));
-
-		});
-
-		it("ignores link reference definitions", async () => {
-
-			expect(fingerprint("[alpha][a]\n\n[a]: https://example.org/?t=1"))
-				.toBe(fingerprint("[alpha][a]\n\n[a]: https://example.org/?t=2"));
 
 		});
 
