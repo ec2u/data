@@ -19,6 +19,7 @@ import { Router } from "express";
 import { Coimbra } from "./pipes/coimbra.js";
 import { Linz } from "./pipes/linz.js";
 import { LLL } from "./pipes/lll.js";
+import { Pavia } from "./pipes/pavia.js";
 import { Poitiers } from "./pipes/poitiers.js";
 import { Salamanca } from "./pipes/salamanca.js";
 
@@ -30,6 +31,7 @@ export function offerings(): Router {
 		.post("/coimbra", worker(Coimbra))
 		.post("/linz", worker(Linz))
 		.post("/lll", worker(LLL))
+		.post("/pavia", worker(Pavia))
 		.post("/poitiers", worker(Poitiers))
 		.post("/salamanca", worker(Salamanca));
 
