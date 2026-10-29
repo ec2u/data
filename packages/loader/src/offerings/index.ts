@@ -17,12 +17,14 @@
 import { worker } from "@metreeca/gate/worker";
 import { Router } from "express";
 import { Linz } from "./pipes/linz.js";
+import { LLL } from "./pipes/lll.js";
 
 
 export function offerings(): Router {
 
 	return Router()
 
-		.post("/linz", worker(Linz));
+		.post("/linz", worker(Linz))
+		.post("/lll", worker(LLL));
 
 }
