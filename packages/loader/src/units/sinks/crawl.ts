@@ -53,11 +53,11 @@ export type Page = {
  * Creates a sink keeping the units a university describes one per web page in line with a crawl of those pages.
  *
  * The scan is the feed of page addresses, each naming the unit its page describes. Every page is read for its main
- * content, cleared of the noise that changes on every request, and a page whose content digest matches the one recorded
- * with the unit the store already holds is skipped before extraction, so an unchanged page costs a fetch and no model
- * call; under `force` every page is extracted and stated afresh. The unit of each remaining
- * page is extracted from its content, then completed and stated as {@link complete} describes, one at a time, so a run
- * cut short keeps what it has stated and the next one carries on from there, with nothing to reconcile in between.
+ * content, cleared of the noise that changes on every request, and a page whose content digest matches the one
+ * recorded with the unit the store already holds is skipped before extraction, so an unchanged page costs a fetch and
+ * no model call; under `force` every page is extracted and stated afresh. The unit of each remaining page is extracted
+ * from its content, then completed and stated as {@link complete} describes, one at a time, so a run cut short keeps
+ * what it has stated and the next one carries on with the pages whose units are still missing or out of date.
  *
  * A page that fails to be read is skipped and left to the next run, while it stays in the scan, so the unit the store
  * holds for it is kept rather than retracted on the strength of a fetch failure. The units the store holds for the

@@ -187,7 +187,7 @@ export function harvest(): Task<URLLike, Markdown> {
 					address?.addressCountry
 				]
 			].filter(isString).join(", ")),
-			Image: opt(some(image)[0],image => isString(image) ? image : image.url)
+			Image: opt(some(image)[0], image => isString(image) ? image : image.url)
 		})}
 		`;
 
