@@ -20,6 +20,7 @@ import { Coimbra } from "./pipes/coimbra.js";
 import { Jena } from "./pipes/jena.js";
 import { Linz } from "./pipes/linz.js";
 import { LLL } from "./pipes/lll.js";
+import { PaviaDoctorates } from "./pipes/pavia-doctorates.js";
 import { PaviaPortal } from "./pipes/pavia-portal.js";
 import { Pavia } from "./pipes/pavia.js";
 import { Poitiers } from "./pipes/poitiers.js";
@@ -36,6 +37,7 @@ export function offerings(): Router {
 		.post("/linz", worker(Linz))
 		.post("/lll", worker(LLL))
 		.post("/pavia", worker(Pavia))
+		.post("/pavia-doctorates", worker(PaviaDoctorates))
 		.post("/pavia-portal", worker(PaviaPortal))
 		.post("/poitiers", worker(Poitiers))
 		.post("/salamanca", worker(Salamanca))

@@ -15,7 +15,6 @@
  */
 
 import { execute } from "../../index.core.js";
-import { PaviaDoctorates } from "./pavia-doctorates.js";
 import { PaviaMasters } from "./pavia-masters.js";
 import { PaviaSchools } from "./pavia-schools.js";
 import { PaviaTraining } from "./pavia-training.js";
@@ -31,19 +30,19 @@ if ( import.meta.main ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Harvests the post-graduate offerings Pavia University lists.
+ * Harvests the post-graduate offerings the catalogues of the Pavia University portal list.
  *
- * Runs the doctorates, specialisation schools, masters and advanced training pipes side by side, so that one failing
- * pipe never keeps the others from completing; the run fails once all four have settled if any of them failed, so
- * the scheduler sees the failure and retries the whole run, its unchanged pages costing no extraction.
+ * Runs the specialisation schools, masters and advanced training pipes side by side, so that one failing pipe never
+ * keeps the others from completing; the run fails once all three have settled if any of them failed, so the
+ * scheduler sees the failure and retries the whole run, its unchanged pages costing no extraction.
  *
- * @returns A promise resolving to the outcomes of the four pipes
+ * @returns A promise resolving to the outcomes of the three pipes
  *
  * @throws {@link !AggregateError AggregateError} If any of the pipes fails, listing the errors of the failed ones
  */
 export async function PaviaPortal() {
 
-	const settled = await Promise.allSettled([PaviaDoctorates(), PaviaSchools(), PaviaMasters(), PaviaTraining()]);
+	const settled = await Promise.allSettled([PaviaSchools(), PaviaMasters(), PaviaTraining()]);
 	const errors = settled.flatMap(result => result.status === "rejected" ? [result.reason] : []);
 
 	return errors.length === 0 ? settled : Promise.reject(new AggregateError(errors, "failed Pavia portal pipes"));
