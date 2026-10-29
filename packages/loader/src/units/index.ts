@@ -16,15 +16,15 @@
 
 import { worker } from "@metreeca/gate/worker";
 import { Router } from "express";
-import { Coimbra } from "./pipes/coimbra/index.js";
-import { Iasi } from "./pipes/iasi/index.js";
-import { Jena } from "./pipes/jena/index.js";
-import { Linz } from "./pipes/linz/index.js";
-import { Pavia } from "./pipes/pavia/index.js";
-import { Poitiers } from "./pipes/poitiers/index.js";
-import { Salamanca } from "./pipes/salamanca/index.js";
-import { Turku } from "./pipes/turku/index.js";
-import { Umea } from "./pipes/umea/index.js";
+import { Coimbra } from "./pipes/coimbra.js";
+import { Iasi } from "./pipes/iasi.js";
+import { Jena } from "./pipes/jena.js";
+import { Linz } from "./pipes/linz.js";
+import { Pavia } from "./pipes/pavia.js";
+import { Poitiers } from "./pipes/poitiers.js";
+import { Salamanca } from "./pipes/salamanca.js";
+import { Turku } from "./pipes/turku.js";
+import { Umea } from "./pipes/umea.js";
 
 
 export function units(): Router {

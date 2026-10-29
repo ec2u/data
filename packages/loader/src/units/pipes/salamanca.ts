@@ -28,9 +28,9 @@ import { csv } from "@metreeca/mime-csv";
 import { fetch } from "@metreeca/pipe-url";
 import type { Reference } from "@metreeca/qest/state";
 import { log } from "@metreeca/tape";
-import { execute } from "../../../index.core.js";
-import { VirtualInstitutes } from "../../index.core.js";
-import { type Draft, type Name, sync } from "../../sinks/sync.js";
+import { execute } from "../../index.core.js";
+import { VirtualInstitutes } from "../index.core.js";
+import { type Draft, type Name, sync } from "../sinks/sync.js";
 
 
 const DataURL = "units-salamanca-url";

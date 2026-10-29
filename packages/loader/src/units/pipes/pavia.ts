@@ -20,8 +20,8 @@ import { items } from "@metreeca/flow/feeds";
 import { distinct, filter, flat, map } from "@metreeca/flow/tasks";
 import { html, link, xpath } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
-import { execute } from "../../../index.core.js";
-import { crawl } from "../../sinks/crawl.js";
+import { execute } from "../../index.core.js";
+import { crawl } from "../sinks/crawl.js";
 
 
 /**

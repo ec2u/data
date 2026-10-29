@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-import { turku } from "@ec2u/data-shared/universities/index.core.js";
+import { linz } from "@ec2u/data-shared/universities/index.core.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { service } from "@metreeca/gear";
 import { createVault } from "@metreeca/gear/vault";
-import { execute } from "../../../index.core.js";
-import { sync } from "../../sinks/sync.js";
-import { csv } from "../../tasks/csv.js";
+import { execute } from "../../index.core.js";
+import { sync } from "../sinks/sync.js";
+import { csv } from "../tasks/csv.js";
 
 
-const DataURL = "units-turku-url";
+const DataURL = "units-linz-url";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if ( import.meta.main ) {
-	await execute(Turku);
+	await execute(Linz);
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function Turku() {
+export async function Linz() {
 
 	const vault = service(createVault);
 
 	return pipe(
 		(items(await vault(DataURL)))
-		(csv(turku))
-		(sync(turku))
+		(csv(linz))
+		(sync(linz))
 	);
 
 }

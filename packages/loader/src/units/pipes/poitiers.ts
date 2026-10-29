@@ -23,8 +23,8 @@ import { items } from "@metreeca/flow/feeds";
 import { flat, map } from "@metreeca/flow/tasks";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
-import { execute } from "../../../index.core.js";
-import { type Draft, type Name, sync } from "../../sinks/sync.js";
+import { execute } from "../../index.core.js";
+import { type Draft, type Name, sync } from "../sinks/sync.js";
 
 
 const DataURL = "https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets"

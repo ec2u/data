@@ -25,8 +25,8 @@ import { service } from "@metreeca/gear";
 import { createVault } from "@metreeca/gear/vault";
 import { fetch } from "@metreeca/pipe-url";
 import { log } from "@metreeca/tape";
-import { execute } from "../../../index.core.js";
-import { type Draft, sync } from "../../sinks/sync.js";
+import { execute } from "../../index.core.js";
+import { type Draft, sync } from "../sinks/sync.js";
 
 
 const DataURL = "units-coimbra-url";

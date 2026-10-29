@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-import { iasi } from "@ec2u/data-shared/universities/index.core.js";
+import { jena } from "@ec2u/data-shared/universities/index.core.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { service } from "@metreeca/gear";
 import { createVault } from "@metreeca/gear/vault";
-import { execute } from "../../../index.core.js";
-import { sync } from "../../sinks/sync.js";
-import { csv } from "../../tasks/csv.js";
+import { execute } from "../../index.core.js";
+import { sync } from "../sinks/sync.js";
+import { csv } from "../tasks/csv.js";
 
 
-const DataURL = "units-iasi-url";
+const DataURL = "units-jena-url";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if ( import.meta.main ) {
-	await execute(Iasi);
+	await execute(Jena);
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function Iasi() {
+export async function Jena() {
 
 	const vault = service(createVault);
 
 	return pipe(
 		(items(await vault(DataURL)))
-		(csv(iasi))
-		(sync(iasi))
+		(csv(jena))
+		(sync(jena))
 	);
 
 }

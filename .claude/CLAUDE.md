@@ -26,7 +26,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Each pipe carries a standalone integration-notes Markdown file alongside it (for example,
 `packages/loader/src/events/pipes/turku-university.md` next to `turku-university.ts`). A pipe kept in a folder of its
 own, together with the source-specific readers it alone uses, carries its notes as `index.md` next to its `index.ts`
-(for example, `packages/loader/src/units/pipes/poitiers/index.md`). The file is the authoritative,
+(for example, `packages/loader/src/<dataset>/pipes/<source>/index.md`). The file is the authoritative,
 non-technical status record for that source and must read as a brief standalone document.
 
 ## Structure
