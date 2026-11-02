@@ -16,6 +16,9 @@
 
 import { immutable } from "@metreeca/core/values";
 import { Icon } from "@metreeca/tile-cell/icon";
+import { Link } from "@metreeca/tile-cell/link";
+import { Mark } from "@metreeca/tile-cell/mark";
+import { Path } from "@metreeca/tile-cell/path";
 import { useRoute } from "@metreeca/tile-data/router";
 import { useEffect, useState } from "preact/hooks";
 import { Failure } from "../../tiles/failure.js";
@@ -69,11 +72,27 @@ export function Docs() {
 	}, [route]);
 
 
-	return <Page head={docs.label}>{
+	const [section, label] = route.startsWith(docs.routes.datasets)
+		? [docs.routes.datasets, "Datasets"]
+		: [docs.routes.about, "About"];
+
+	return <Page
+
+		head={<Path>
+
+			<Link look={"subtle"} href={section}>{label}</Link>
+
+			{typeof text === "string" && <Mark meta={"title"}>{text}</Mark>}
+
+		</Path>}
+
+		tray={typeof text === "string" && <Mark meta={"toc"}>{text}</Mark>}
+
+	>{
 
 		text === null ? <Failure problem={unknown.problem}/>
 			: text === undefined ? null
-				: <pre>{text}</pre> // !!! stub: render Markdown
+				: <Mark>{text}</Mark>
 
 	}</Page>;
 
