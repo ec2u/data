@@ -11,6 +11,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Integration notes for the taxonomy pipes (`documents`, `euroscivoc`, `events`, `isced-2011`, `isced-f-2013`,
   `organizations`, `stakeholders`) and for the `wikidata` university pipe, recording the sources each one depends on
+- `/resources/` endpoint listing the resources published in issued datasets, queried like any stored collection
 
 ### Changed
 

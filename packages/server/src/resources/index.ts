@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
+import { Resource } from "@ec2u/data-shared/datasets/index.js";
 import { reference } from "@metreeca/blue/reference";
-import { id, multiple, required, resource } from "@metreeca/blue/resource";
+import { id, multiple, resource } from "@metreeca/blue/resource";
+import { driver } from "@metreeca/gate/driver";
 import { Router } from "express";
-import { driver } from "./_.js";
 
 
 export function Resources() {
@@ -31,11 +31,7 @@ export function Resources() {
 
 		id: id(),
 
-		resources: multiple(reference(() => resource(Resource, {
-
-			dataset: required(reference(Dataset))
-
-		})))
+		resources: multiple(reference(Resource))
 
 	});
 }
@@ -46,7 +42,7 @@ export function Resources() {
 export function resources(): Router {
 
 	return Router()
-		.use("/", driver(Resources).lookup({
+		.use("/", driver(Resources, { virtual: true }).lookup({
 
 			model: {
 				resources: {
