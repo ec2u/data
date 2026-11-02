@@ -132,7 +132,7 @@ export function sync({
 					(flat(map(url => pipe(
 						(items([url]))
 						(harvest())
-						(map((document): Retrieved => ({ url: String(url), document })))
+						(map(document => ({ url: String(url), document })))
 					))))
 					(filter(modified))
 				)))
