@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { integer } from "@metreeca/tile-type/integer";
 import { createElement } from "preact";
 import "./count.css";
 
@@ -49,7 +50,7 @@ export function Count({
 
 	return createElement("ec2u-count", {}, children === undefined ? undefined
 		: children === 0 ? `no ${noun}`
-			: `${children.toLocaleString()} ${noun}`
+			: `${integer.format(children)} ${noun}`
 	);
 
 }

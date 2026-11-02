@@ -27,6 +27,8 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useMembers, useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { integer } from "@metreeca/tile-type/integer";
+import { year } from "@metreeca/tile-type/year";
 import { useEffect } from "preact/hooks";
 import { ec2u, site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
@@ -143,8 +145,8 @@ export function UniversityPage() {
 
 				<Info place={"spread"}>{{
 
-					Inception: inception,
-					Students: students.toLocaleString()
+					Inception: year.format(inception),
+					Students: integer.format(students)
 
 				}}</Info>
 
@@ -157,7 +159,7 @@ export function UniversityPage() {
 						.map(({ dataset, size }) => ({
 
 							label: <Link href={dataset.id} query={{ university: route }}>{ec2u(dataset.alternative ?? dataset.title)}</Link>,
-							value: size.toLocaleString()
+							value: integer.format(size)
 
 						}))
 

@@ -24,6 +24,7 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useMembers } from "@metreeca/tile-data/store";
+import { integer } from "@metreeca/tile-type/integer";
 import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
 import { ec2u } from "../../index.core.js";
@@ -135,7 +136,7 @@ function grid(rows: readonly DatasetRow[]) {
 
 		.map(({ dataset: { id, title, alternative, description }, size }) => <Fragment key={id}>
 
-			<span class="size">{size.toLocaleString()}</span>
+			<span class="size">{integer.format(size)}</span>
 			<span class="title"><Link href={id}>{ec2u(title)}</Link></span>
 
 			<span class="alternative">{opt(alternative, ec2u)}</span>

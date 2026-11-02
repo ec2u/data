@@ -26,8 +26,9 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { date } from "@metreeca/tile-type/date";
 import { useEffect } from "preact/hooks";
-import { site } from "../../index.core.js";
+import { site, toLanguage } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { links } from "../../tiles/links.js";
@@ -164,7 +165,7 @@ export function DocumentPage() {
 
 					University: opt(university, ({ id, label }) => <Link look={"strong"} href={id}>{label}</Link>),
 					Code: identifier,
-					Language: language.length > 0 ? language.join(", ") : undefined
+					Language: language.length > 0 ? language.map(toLanguage).join(", ") : undefined
 
 				}}</Info>
 
@@ -178,8 +179,8 @@ export function DocumentPage() {
 
 				<Info place={"spread"}>{{
 
-					Issued: opt(issued, date),
-					Updated: opt(modified, date),
+					Issued: opt(issued, value => date.format(value)),
+					Updated: opt(modified, value => date.format(value)),
 					Valid: valid
 
 				}}</Info>
@@ -231,18 +232,4 @@ export function DocumentPage() {
 
 	})}</Page>;
 
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Formats a calendar date for display.
- *
- * @param value The ISO date to be formatted
- *
- * @returns The date in the reader's locale
- */
-function date(value: string): string {
-	return new Date(value).toLocaleDateString(undefined, { dateStyle: "medium" });
 }

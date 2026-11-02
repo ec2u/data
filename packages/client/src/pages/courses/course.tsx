@@ -26,8 +26,10 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { decimal } from "@metreeca/tile-type/decimal";
+import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { site } from "../../index.core.js";
+import { site, toCourseMode, toCourseTerm, toLanguage } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { links } from "../../tiles/links.js";
@@ -165,7 +167,7 @@ export function CoursePage() {
 
 					University: opt(university, ({ id, label }) => <Link look={"strong"} href={id}>{label}</Link>),
 					Year: year,
-					Term: term.length > 0 ? term.join(", ") : undefined
+					Term: term.length > 0 ? term.map(toCourseTerm).join(", ") : undefined
 
 				}}</Info>
 
@@ -179,12 +181,12 @@ export function CoursePage() {
 				<Info place={"spread"}>{{
 
 					Code: courseCode,
-					Attendance: courseMode,
-					Language: inLanguage.length > 0 ? inLanguage.join(", ") : undefined,
+					Attendance: opt(courseMode, toCourseMode),
+					Language: inLanguage.length > 0 ? inLanguage.map(toLanguage).join(", ") : undefined,
 					"Fees for Externals": opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
-					Credits: opt(numberOfCredits, credits => credits.toLocaleString()),
-					Duration: timeRequired,
-					Workload: courseWorkload
+					Credits: opt(numberOfCredits, credits => decimal.format(credits)),
+					Duration: opt(timeRequired, value => duration.format(value)),
+					Workload: opt(courseWorkload, value => duration.format(value))
 
 				}}</Info>
 

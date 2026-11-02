@@ -27,13 +27,21 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { date } from "@metreeca/tile-type/date";
+import { instant } from "@metreeca/tile-type/instant";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { site } from "../../index.core.js";
+import { site, toEventAttendanceMode, toEventStatus, toLanguage } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { events } from "./events.js";
+
+
+/**
+ * The day an instant falls on.
+ */
+const day = date({ instant: true });
 
 
 export const event = immutable({
@@ -166,11 +174,12 @@ export function EventPage() {
 
 				<Info place={"spread"}>{{
 
-					When: schedule(startDate, endDate),
+					Start: instant.format(startDate),
+					End: opt(endDate, end => end === startDate ? undefined : instant.format(end)),
 					Where: opt(location, venue),
-					Status: eventStatus,
-					Attendance: eventAttendanceMode,
-					Language: inLanguage,
+					Status: opt(eventStatus, toEventStatus),
+					Attendance: opt(eventAttendanceMode, toEventAttendanceMode),
+					Language: opt(inLanguage, toLanguage),
 					Free: opt(isAccessibleForFree, free => free ? "Yes" : "No")
 
 				}}</Info>
@@ -224,21 +233,20 @@ export function EventPage() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Formats the time span of an event for display.
+ * Formats the days an event spans for display.
  *
  * @param start The instant the event starts at
  * @param end The instant the event ends at, if stated
  *
- * @returns The start, followed by the end when one is stated, in the reader's locale
+ * @returns The day the event starts on, followed by the day it ends on where it ends on another one, in the reader's
+ *     locale
  */
 export function schedule(start: string, end?: string): string {
 
-	const format = (instant: string) => new Date(instant).toLocaleString(undefined, {
-		dateStyle: "medium",
-		timeStyle: "short"
-	});
+	const from = day.format(start);
+	const to = opt(end, value => day.format(value));
 
-	return end ? `${format(start)} – ${format(end)}` : format(start);
+	return to === undefined || to === from ? from : `${from} – ${to}`;
 
 }
 

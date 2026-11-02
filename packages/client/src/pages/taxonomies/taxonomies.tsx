@@ -24,6 +24,7 @@ import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useMembers } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
+import { integer } from "@metreeca/tile-type/integer";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import { site } from "../../index.core.js";
 import { Count } from "../../tiles/count.js";
@@ -183,7 +184,7 @@ function cards(rows: readonly TaxonomyRow[]) {
 				: title
 			}</Link>}
 
-			tags={`${size.toLocaleString()} concepts`}
+			tags={`${integer.format(size)} concepts`}
 
 		>{description}</Card>)
 

@@ -26,6 +26,8 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { decimal } from "@metreeca/tile-type/decimal";
+import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
 import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
@@ -141,8 +143,8 @@ export function ProgramPage() {
 				<Info place={"spread"}>{{
 
 					Code: identifier,
-					Credits: opt(numberOfCredits, credits => credits.toLocaleString()),
-					Duration: timeToComplete
+					Credits: opt(numberOfCredits, credits => decimal.format(credits)),
+					Duration: opt(timeToComplete, value => duration.format(value))
 
 				}}</Info>
 

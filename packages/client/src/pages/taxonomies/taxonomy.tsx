@@ -26,6 +26,7 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useMembers, useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { integer } from "@metreeca/tile-type/integer";
 import { useEffect, useState } from "preact/hooks";
 import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
@@ -131,7 +132,7 @@ export function TaxonomyPage() {
 
 				Concepts: concepts({
 
-					ready: ({ state }) => state.toLocaleString()
+					ready: ({ state }) => integer.format(state)
 
 				})
 

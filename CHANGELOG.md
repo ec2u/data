@@ -19,6 +19,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Views show values formatted for the reader: durations, credits, counts, years and dates localised, event days and
+  times by the instant they fall on, and language tags, course terms and attendance modes, and event statuses by name
+
 - Shape definitions, vocabularies and dataset metadata moved from `@ec2u/data-loader` to `@ec2u/data-shared`, so that
   endpoints and clients state a resource without pulling in the ingestion machinery; the topic retrieval and embedding
   operations stay with the loader

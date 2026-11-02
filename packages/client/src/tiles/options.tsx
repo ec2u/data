@@ -16,6 +16,7 @@
 
 import { Button } from "@metreeca/tile-cell/button";
 import { Icon } from "@metreeca/tile-cell/icon";
+import { integer } from "@metreeca/tile-type/integer";
 import { type ComponentChildren, createElement } from "preact";
 import "./options.css";
 
@@ -91,7 +92,7 @@ export function Options({
 					/>
 
 					<span>{label}</span>
-					<small>{count.toLocaleString()}</small>
+					<small>{integer.format(count)}</small>
 
 				</li>
 			)}</ul>

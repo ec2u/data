@@ -13,7 +13,95 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+const CourseTerms: Readonly<Record<string, string>> = {
+	Annual: "Annual",
+	First: "First Semester",
+	Second: "Second Semester",
+	Summer: "Summer",
+	Open: "Open"
+};
 
+const CourseModes: Readonly<Record<string, string>> = {
+	OfflineEventAttendanceMode: "Presence",
+	OnlineEventAttendanceMode: "Online",
+	MixedEventAttendanceMode: "Hybrid"
+};
+
+const EventStatuses: Readonly<Record<string, string>> = {
+	EventCancelled: "Cancelled",
+	EventMovedOnline: "Moved Online",
+	EventPostponed: "Postponed",
+	EventRescheduled: "Rescheduled",
+	EventScheduled: "Scheduled"
+};
+
+const EventAttendanceModes: Readonly<Record<string, string>> = {
+	MixedEventAttendanceMode: "Mixed",
+	OfflineEventAttendanceMode: "Offline",
+	OnlineEventAttendanceMode: "Online"
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Names a language for the reader.
+ *
+ * @param tag The language tag to be named
+ *
+ * @returns The name of the language `tag` identifies, in the runtime locale, or `tag` itself if it names none
+ */
+export function toLanguage(tag: string): string {
+	try {
+		return new Intl.DisplayNames(undefined, { type: "language" }).of(tag) ?? tag;
+	} catch {
+		return tag; // a malformed tag is shown as stated
+	}
+}
+
+/**
+ * Names the term a course is taught in.
+ *
+ * @param term The term code, as stated by the course
+ *
+ * @returns The term label, or `term` itself if it is not a known term
+ */
+export function toCourseTerm(term: string): string {
+	return CourseTerms[term] ?? term;
+}
+
+/**
+ * Names the way a course is attended.
+ *
+ * @param mode The attendance mode code, as stated by the course
+ *
+ * @returns The attendance label, or `mode` itself if it is not a known mode
+ */
+export function toCourseMode(mode: string): string {
+	return CourseModes[mode] ?? mode;
+}
+
+/**
+ * Names the status of an event.
+ *
+ * @param status The status code, as stated by the event
+ *
+ * @returns The status label, or `status` itself if it is not a known status
+ */
+export function toEventStatus(status: string): string {
+	return EventStatuses[status] ?? status;
+}
+
+/**
+ * Names the way an event is attended.
+ *
+ * @param mode The attendance mode code, as stated by the event
+ *
+ * @returns The attendance label, or `mode` itself if it is not a known mode
+ */
+export function toEventAttendanceMode(mode: string): string {
+	return EventAttendanceModes[mode] ?? mode;
+}
 
 
 /**
