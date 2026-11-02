@@ -33,6 +33,7 @@ ec2u-search {
         grid-column: 1;
         margin-left: var(--tile--spacing-050);
         color: var(--tile--color-placeholder);
+        background-color: transparent; /* the glyph lets the field show through rather than masking it */
         pointer-events: none;
     }
 
@@ -41,8 +42,16 @@ ec2u-search {
         grid-column: 1 / 4;
         z-index: 0;
 
+        /* the field is painted in the page colour, standing out from the sunken tray as the facets below it do */
+
+        background-color: var(--tile--background-color);
+
         padding-block: var(--tile--spacing-025);
         padding-inline: var(--tile--scaling-150);
+
+        /* the text clears the glyph by the inset the glyph keeps from the edge */
+
+        padding-inline-start: calc(2 * var(--tile--spacing-050) + var(--tile--scaling-100));
 
         border-radius: var(--tile--border-radius-100);
 

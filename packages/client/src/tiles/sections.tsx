@@ -15,8 +15,9 @@
  */
 
 import { Mark } from "@metreeca/tile-cell/mark";
-import { Card } from "@metreeca/tile-hive/card";
+import { Stack } from "@metreeca/tile-hive/stack";
 import type { ComponentChildren } from "preact";
+import { Text } from "./text.js";
 
 
 /**
@@ -24,13 +25,22 @@ import type { ComponentChildren } from "preact";
  *
  * @param contents The content of each block, keyed by block label; blocks with no content are left out
  *
- * @returns A card titled by its label for each block stating some content, in the order `contents` lists them
+ * @returns A stack of blocks, each its label over its content, in the order `contents` lists them, or nothing if no
+ *     block states any content
  */
 export function blocks(contents: Readonly<Record<string, ComponentChildren>>): ComponentChildren {
-	return Object.entries(contents).map(([label, content]) => content
-		? <Card key={label} title={label}>{content}</Card>
-		: undefined
-	);
+
+	const stated = Object.entries(contents).filter(([, content]) => content);
+
+	return stated.length > 0 ? <Stack space={"spacing100"}>{stated.map(([label, content]) =>
+
+		<Stack key={label} space={"spacing025"}>
+			<Text look={"label"}>{label}</Text>
+			{content}
+		</Stack>
+
+	)}</Stack> : undefined;
+
 }
 
 /**
@@ -38,7 +48,7 @@ export function blocks(contents: Readonly<Record<string, ComponentChildren>>): C
  *
  * @param texts The Markdown text of each section, keyed by section label; sections with no text are left out
  *
- * @returns A card titled by its label for each section stating a text, in the order `texts` lists them
+ * @returns A stack of sections, each its label over its rendered text, in the order `texts` lists them
  */
 export function sections(texts: Readonly<Record<string, undefined | string>>): ComponentChildren {
 	return blocks(Object.fromEntries(Object.entries(texts).map(([label, text]) =>

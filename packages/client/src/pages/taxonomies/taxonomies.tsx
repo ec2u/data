@@ -22,28 +22,18 @@ import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useMembers } from "@metreeca/tile-data/store";
+import { useCollection, useCount, useKeywords, useMembers, useQuery, useTally } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
+import { Clear } from "@metreeca/tile-lens/clear";
+import { Count } from "@metreeca/tile-lens/count";
+import { Tally } from "@metreeca/tile-lens/tally";
 import { integer } from "@metreeca/tile-type/integer";
-import { useCallback, useEffect, useState } from "preact/hooks";
-import { site } from "../../index.core.js";
-import { Count } from "../../tiles/count.js";
+import { useEffect } from "preact/hooks";
+import { FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
-import { Options } from "../../tiles/options.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
-import {
-	type Facet,
-	type Filters,
-	getCriteria,
-	getOptions,
-	isFacetRow,
-	isFiltered,
-	isTaxonomyRow,
-	NoFilters,
-	select,
-	type TaxonomyRow
-} from "./taxonomies.core.js";
+import { isTaxonomyRow, type TaxonomyRow } from "./taxonomies.core.js";
 
 
 export const taxonomies = immutable({
@@ -62,15 +52,15 @@ export function TaxonomiesPage() {
 	const route = useRoute();
 	const router = useRouter();
 
-	const [filters, setFilters] = useState<Filters>(NoFilters);
+	const [query, setQuery] = useQuery();
 
 	const collection = useCollection({
 		entry: route,
 		shape: Taxonomies,
-		field: "resources"
+		field: "resources",
+		criteria: query,
+		onChange: setQuery
 	});
-
-	useEffect(() => { collection.filter(getCriteria(filters)); }, [collection, filters]);
 
 	const members = useMembers(collection, {
 		model: {
@@ -80,26 +70,9 @@ export function TaxonomiesPage() {
 	});
 
 	const count = useCount(collection);
-
-	const licenses = useFacet("license", filters);
-	const publishers = useFacet("publisher", filters);
+	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
 
 	useEffect(() => router({ title: taxonomies.label }), []);
-
-
-	const search = useCallback((keywords: string) => setFilters(filters => ({ ...filters, keywords })), []);
-
-	function choose(facet: Facet) {
-		return (value: string, selected: boolean) => setFilters(filters => select(filters, facet, value, selected));
-	}
-
-	function reset(facet: Facet) {
-		return () => setFilters(filters => ({ ...filters, facets: { ...filters.facets, [facet]: [] } }));
-	}
-
-	function clear() {
-		setFilters(NoFilters);
-	}
 
 
 	return <Page
@@ -115,42 +88,16 @@ export function TaxonomiesPage() {
 
 		tray={<>
 
-			<Search placeholder={"Name"} value={filters.keywords} onChange={search}/>
+			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Options name={"License"} onSelect={choose("license")} onReset={reset("license")}
-
-				options={licenses({
-
-					ready: ({ state }: { state: readonly unknown[] }) => getOptions(state.filter(isFacetRow), filters.facets.license)
-						.map(option => ({ ...option, label: option.value }))
-
-				})}
-
-			/>
-
-			<Options name={"Publisher"} onSelect={choose("publisher")} onReset={reset("publisher")}
-
-				options={publishers({
-
-					ready: ({ state }: { state: readonly unknown[] }) => getOptions(state.filter(isFacetRow), filters.facets.publisher)
-						.map(option => ({ ...option, label: site(option.value) }))
-
-				})}
-
-			/>
+			<Tally name={"License"} tally={useTally(collection, "license", { label: "label", size: FacetSize })}/>
+			<Tally name={"Publisher"} tally={useTally(collection, "publisher", { label: "label", size: FacetSize })}/>
 
 		</>}
 
 		info={<>
-
-			<Count filtered={isFiltered(filters)}>{count({
-
-				ready: ({ state }) => state
-
-			})}</Count>
-
-			<Button disabled={!isFiltered(filters)} icon={<Icon.Clear/>} title={"Clear Filters"} onClick={clear}/>
-
+			<Count collection={collection} count={count}/>
+			<Clear collection={collection}/>
 		</>}
 
 	>{members({
@@ -189,29 +136,4 @@ function cards(rows: readonly TaxonomyRow[]) {
 		>{description}</Card>)
 
 	}</>;
-}
-
-
-/**
- * Retrieves the values a facet takes over the taxonomies matching the filters in force on the other facets.
- */
-function useFacet(facet: Facet, filters: Filters) {
-
-	const route = useRoute();
-
-	const collection = useCollection({
-		entry: route,
-		shape: Taxonomies,
-		field: "resources"
-	});
-
-	useEffect(() => { collection.filter(getCriteria(filters, facet)); }, [collection, filters, facet]);
-
-	return useMembers(collection, {
-		model: {
-			[`value=${facet}`]: {},
-			"count=count:": {}
-		}
-	});
-
 }
