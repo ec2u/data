@@ -29,6 +29,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   shape requires the short name as `skos:altLabel`
 - The sidebar takes the width of the legacy hub sidebar
 - Event pages credit the image in a caption under it, in place of an `Image Credits` entry among the event details
+- Event pages set the location one part per line, the venue text split at its commas, so long addresses are not clipped
 
 - Shape definitions, vocabularies and dataset metadata moved from `@ec2u/data-loader` to `@ec2u/data-shared`, so that
   endpoints and clients state a resource without pulling in the ingestion machinery; the topic retrieval and embedding

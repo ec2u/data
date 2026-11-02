@@ -276,28 +276,48 @@ export function schedule(start: string, end?: string): string {
 }
 
 /**
+ * The location of an event, as retrieved for its page.
+ */
+type Location = NonNullable<Match<typeof Event, typeof event.model>["location"]>;
+
+/**
  * Renders the location of an event.
  *
  * @param location The location to be rendered
  *
  * @returns The venue text, the name and address of a place or postal address, or the link to a virtual location
  */
-function venue(location: NonNullable<Match<typeof Event, typeof event.model>["location"]>): ComponentChildren {
-	return isString(location) ? location
-		: "latitude" in location ? text(location.name, opt(location.address, venue))
-			: "addressLocality" in location ? text(location.name,
-					location.streetAddress, location.postalCode, location.addressLocality, location.addressCountry
-				)
-				: <Link href={location.url[0]}>{site(location.url[0])}</Link>;
+function venue(location: Location): ComponentChildren {
+	return isString(location) || "latitude" in location || "addressLocality" in location ? lines(parts(location))
+			: <Link href={location.url[0]}>{site(location.url[0])}</Link>;
 }
 
 /**
- * Joins the parts of a location for display.
+ * Lists the text parts of a venue, place or postal address.
  *
- * @param parts The parts to be joined; only the text ones are shown, as union members keep their broad type
+ * @param location The location to be listed
  *
- * @returns The text parts, comma-separated
+ * @returns The comma-separated segments of a venue text, or the name of a place or postal address followed by its
+ *     address parts, leaving out the ones not stated
  */
-function text(...parts: readonly unknown[]): string {
-	return parts.filter(isString).join(", ");
+function parts(location: Location): readonly string[] {
+	return isString(location) ? location.split(",").map(part => part.trim()).filter(part => part.length > 0)
+		: "latitude" in location ? [location.name, ...opt(location.address, parts) ?? []].filter(isString)
+			: "addressLocality" in location ? [
+					location.name,
+					location.streetAddress, location.postalCode, location.addressLocality, location.addressCountry
+				].filter(isString)
+				: [];
+}
+
+/**
+ * Sets the parts of a location for display.
+ *
+ * @param values The parts to be set
+ *
+ * @returns The parts separated by line breaks, so a long address is not clipped to a single line; nothing if no part
+ *     is stated, so the panel leaves the location out rather than showing it as an empty entry
+ */
+function lines(values: readonly string[]): ComponentChildren {
+	return values.length === 0 ? undefined : values.flatMap((value, index) => index === 0 ? [value] : [<br key={index}/>, value]);
 }
