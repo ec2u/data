@@ -17,6 +17,7 @@
 import { Mark } from "@metreeca/tile-cell/mark";
 import { Stack } from "@metreeca/tile-hive/stack";
 import type { ComponentChildren } from "preact";
+import "./sections.css";
 import { Text } from "./text.js";
 
 
@@ -34,7 +35,7 @@ export function blocks(contents: Readonly<Record<string, ComponentChildren>>): C
 
 	return stated.length > 0 ? <Stack space={"spacing100"}>{stated.map(([label, content]) =>
 
-		<Stack key={label} space={"spacing025"}>
+		<Stack key={label} space={"spacing050"}>
 			<Text look={"label"}>{label}</Text>
 			{content}
 		</Stack>

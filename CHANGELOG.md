@@ -32,6 +32,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Event pages set the location one part per line, the venue text split at its commas, so long addresses are not clipped
 - The clear control of catalogue name searches matches the one in facet headers: a smaller glyph in a round hover fill
   kept clear of the field border
+- Detail pages set their title, labelled blocks and sections evenly apart, each label a step clear of its content
 
 - Shape definitions, vocabularies and dataset metadata moved from `@ec2u/data-loader` to `@ec2u/data-shared`, so that
   endpoints and clients state a resource without pulling in the ingestion machinery; the topic retrieval and embedding

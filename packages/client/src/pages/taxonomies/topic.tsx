@@ -28,6 +28,7 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { Stack } from "@metreeca/tile-hive/stack";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
@@ -139,7 +140,7 @@ export function TopicPage() {
 			state: {
 				prefLabel, definition, isDefinedBy, broaderTransitive = [], narrower = [], related, exactMatch
 			}
-		}) => <>
+		}) => <Stack space={"spacing100"}>
 
 			<Card title={prefLabel}>{opt(definition, text => <Mark>{text}</Mark>)}</Card>
 
@@ -160,7 +161,7 @@ export function TopicPage() {
 
 			})}
 
-		</>
+		</Stack>
 
 	})}</Page>;
 

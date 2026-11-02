@@ -28,6 +28,7 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { Stack } from "@metreeca/tile-hive/stack";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { site, toUniversity, UniversityModel } from "../../index.core.js";
@@ -161,7 +162,7 @@ export function UnitPage() {
 		blank: () => <Hint>{unit.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{unit.glyph}</Hint></Failure>,
 
-		ready: ({ state: { prefLabel, definition, university, unitOf, hasUnit = [], subject = [], keyword = [] } }) => <>
+		ready: ({ state: { prefLabel, definition, university, unitOf, hasUnit = [], subject = [], keyword = [] } }) => <Stack space={"spacing100"}>
 
 			<Card title={prefLabel}>{opt(definition, text => <Mark>{text}</Mark>)}</Card>
 
@@ -175,7 +176,7 @@ export function UnitPage() {
 
 			})}
 
-		</>
+		</Stack>
 
 	})}</Page>;
 

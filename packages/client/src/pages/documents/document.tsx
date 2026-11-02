@@ -27,6 +27,7 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { Stack } from "@metreeca/tile-hive/stack";
 import { date } from "@metreeca/tile-type/date";
 import { useEffect } from "preact/hooks";
 import { scope, site, toLanguage, toUniversity, UniversityModel } from "../../index.core.js";
@@ -218,7 +219,7 @@ export function DocumentPage() {
 		blank: () => <Hint>{document.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{document.glyph}</Hint></Failure>,
 
-		ready: ({ state: { title, description, relation = [] } }) => <>
+		ready: ({ state: { title, description, relation = [] } }) => <Stack space={"spacing100"}>
 
 			<Card title={title}>{opt(description, text => <Mark>{text}</Mark>)}</Card>
 
@@ -228,7 +229,7 @@ export function DocumentPage() {
 
 			})}
 
-		</>
+		</Stack>
 
 	})}</Page>;
 

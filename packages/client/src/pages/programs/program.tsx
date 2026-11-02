@@ -26,6 +26,7 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { Stack } from "@metreeca/tile-hive/stack";
 import { decimal } from "@metreeca/tile-type/decimal";
 import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
@@ -194,7 +195,7 @@ export function ProgramPage() {
 
 			}
 
-		}) => <>
+		}) => <Stack space={"spacing100"}>
 
 			<Card title={label}>{description !== teaches ? description : undefined}</Card>
 
@@ -218,7 +219,7 @@ export function ProgramPage() {
 
 			})}
 
-		</>
+		</Stack>
 
 	})}</Page>;
 

@@ -26,6 +26,7 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { Stack } from "@metreeca/tile-hive/stack";
 import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
 import { site, toCourseMode, toCourseTerm, toLanguage, toUniversity, UniversityModel } from "../../index.core.js";
@@ -228,7 +229,7 @@ export function CoursePage() {
 
 			}
 
-		}) => <>
+		}) => <Stack space={"spacing100"}>
 
 			<Card title={label}>{description}</Card>
 
@@ -253,7 +254,7 @@ export function CoursePage() {
 
 			})}
 
-		</>
+		</Stack>
 
 	})}</Page>;
 

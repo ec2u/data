@@ -16,6 +16,7 @@
 
 import { Link } from "@metreeca/tile-cell/link";
 import { Mark } from "@metreeca/tile-cell/mark";
+import { Stack } from "@metreeca/tile-hive/stack";
 import { site } from "../index.core.js";
 
 
@@ -56,9 +57,9 @@ export function Credential({
 
 }) {
 
-	return <>
+	return <Stack space={"spacing025"}>
 
-		<p>{[
+		<span>{[
 
 			<strong key={"category"}>{credentialCategory}</strong>,
 
@@ -66,10 +67,10 @@ export function Credential({
 
 			...url.map(href => <span key={href}> · <Link href={href}>{site(href)}</Link></span>)
 
-		]}</p>
+		]}</span>
 
 		{description && <Mark>{description}</Mark>}
 
-	</>;
+	</Stack>;
 
 }
