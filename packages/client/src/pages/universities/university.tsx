@@ -18,7 +18,6 @@ import { Resources } from "@ec2u/data-shared/resources/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { by } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
-import { encodeCriteria } from "@metreeca/qest/model";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -157,7 +156,7 @@ export function UniversityPage() {
 
 						.map(({ dataset, size }) => ({
 
-							label: <Link href={`${dataset.id}?${encodeCriteria({ "?university": [route] })}`}>{ec2u(dataset.alternative ?? dataset.title)}</Link>,
+							label: <Link href={dataset.id} query={{ university: route }}>{ec2u(dataset.alternative ?? dataset.title)}</Link>,
 							value: size.toLocaleString()
 
 						}))
