@@ -35,6 +35,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Detail pages set their title, labelled blocks and sections evenly apart, each label a step clear of its content
 - About and dataset docs pages render their Markdown in place of the raw text, titled by a trail from the section to
   the page title and outlined by a table of contents in the sidebar, as in the legacy client
+- Detail pages list links, credentials and concept trees in a property panel below the description, each label beside
+  its values and several values one per line, leaving labelled blocks to the Markdown sections
 
 - Shape definitions, vocabularies and dataset metadata moved from `@ec2u/data-loader` to `@ec2u/data-shared`, so that
   endpoints and clients state a resource without pulling in the ingestion machinery; the topic retrieval and embedding

@@ -15,6 +15,7 @@
  */
 
 import { Mark } from "@metreeca/tile-cell/mark";
+import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import type { ComponentChildren } from "preact";
 import "./sections.css";
@@ -22,26 +23,15 @@ import { Text } from "./text.js";
 
 
 /**
- * Renders the labelled blocks of a resource description.
+ * Renders the non-textual properties of a resource description, such as links, credentials and concept trees.
  *
- * @param contents The content of each block, keyed by block label; blocks with no content are left out
+ * @param contents The content of each property, keyed by property label; properties with no content are left out
  *
- * @returns A stack of blocks, each its label over its content, in the order `contents` lists them, or nothing if no
- *     block states any content
+ * @returns A property panel, each label beside its content, a list of several values set one per line, in the order
+ *     `contents` lists them, or nothing if no property states any content
  */
 export function blocks(contents: Readonly<Record<string, ComponentChildren>>): ComponentChildren {
-
-	const stated = Object.entries(contents).filter(([, content]) => content);
-
-	return stated.length > 0 ? <Stack space={"spacing100"}>{stated.map(([label, content]) =>
-
-		<Stack key={label} space={"spacing050"}>
-			<Text look={"label"}>{label}</Text>
-			{content}
-		</Stack>
-
-	)}</Stack> : undefined;
-
+	return <Info>{Object.fromEntries(Object.entries(contents).filter(([, content]) => content))}</Info>;
 }
 
 /**
@@ -49,10 +39,20 @@ export function blocks(contents: Readonly<Record<string, ComponentChildren>>): C
  *
  * @param texts The Markdown text of each section, keyed by section label; sections with no text are left out
  *
- * @returns A stack of sections, each its label over its rendered text, in the order `texts` lists them
+ * @returns A stack of sections, each its label over its rendered text, in the order `texts` lists them, or nothing if
+ *     no section states any text
  */
 export function sections(texts: Readonly<Record<string, undefined | string>>): ComponentChildren {
-	return blocks(Object.fromEntries(Object.entries(texts).map(([label, text]) =>
-		[label, text && <Mark>{text}</Mark>]
-	)));
+
+	const stated = Object.entries(texts).flatMap(([label, text]) => text ? [{ label, text }] : []);
+
+	return stated.length > 0 ? <Stack space={"spacing100"}>{stated.map(({ label, text }) =>
+
+		<Stack key={label} space={"spacing050"}>
+			<Text look={"label"}>{label}</Text>
+			<Mark>{text}</Mark>
+		</Stack>
+
+	)}</Stack> : undefined;
+
 }
