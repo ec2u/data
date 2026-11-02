@@ -118,7 +118,10 @@ and selects the `ec2u-data` project, whose resources local runs reach with the d
 ## Probing the Store
 
 To check what a pipe actually committed, write a throwaway script under `packages/loader/src/` named `~probe.ts` (the
-`~*` pattern is gitignored) and run it with `npx tsx`, then delete it. Pipe logs are not evidence: writes are buffered
+`~*` pattern is gitignored) and run it with `npx tsx --import @metreeca/rack/node "$PWD/~probe.ts"`, then delete it.
+Never run it with bare `npx tsx` or `node`: without the rack hooks, linked `@metreeca/*` checkouts resolve to their
+`dist` builds, which may predate the source and silently return stale results. Pass the absolute path, as `npx` runs
+from the workspace root. Pipe logs are not evidence: writes are buffered
 and flushed as a single update when the transaction commits, so an `inserted resource` line only records that the delta
 was queued.
 
