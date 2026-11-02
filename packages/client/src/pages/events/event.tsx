@@ -22,6 +22,7 @@ import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
+import { Mark } from "@metreeca/tile-cell/mark";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
@@ -29,11 +30,13 @@ import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { date } from "@metreeca/tile-type/date";
 import { instant } from "@metreeca/tile-type/instant";
+import { time } from "@metreeca/tile-type/time";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { site, toEventAttendanceMode, toEventStatus, toLanguage } from "../../index.core.js";
+import { scope, site, toEventAttendanceMode, toEventStatus, toLanguage, toUniversity, UniversityModel } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
+import { filters } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { events } from "./events.js";
 
@@ -60,7 +63,7 @@ export const event = immutable({
 		disambiguatingDescription: {},
 
 		url: {},
-		image: { url: {} },
+		image: { url: {}, description: {}, copyrightNotice: {} },
 
 		startDate: {},
 		endDate: {},
@@ -91,8 +94,8 @@ export const event = immutable({
 
 		},
 
-		university: { id: {}, label: {} },
-		publisher: { id: {}, label: {} },
+		university: UniversityModel,
+		publisher: { id: {}, label: {}, url: {} },
 		keywords: { id: {}, label: {} }
 
 	}
@@ -160,7 +163,10 @@ export function EventPage() {
 
 					location,
 					university,
-					publisher
+					publisher,
+					image,
+
+					keywords = []
 
 				}
 
@@ -168,26 +174,43 @@ export function EventPage() {
 
 				<Info place={"spread"}>{{
 
-					Source: <ul>{url.map(url => <li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>)}</ul>
+					University: opt(university, value => <Link look={"strong"} href={value.id}>{toUniversity(value)}</Link>)
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
-					Start: instant.format(startDate),
-					End: opt(endDate, end => end === startDate ? undefined : instant.format(end)),
-					Where: opt(location, venue),
-					Status: opt(eventStatus, toEventStatus),
-					Attendance: opt(eventAttendanceMode, toEventAttendanceMode),
+					Topics: filters(keywords, events.route, keywords => ({ ...scope(university), keywords }))
+
+				}}</Info>
+
+				<Info place={"spread"}>{{
+
+					"Start Date": day.format(startDate),
+					"Start Time": clock(startDate),
+
+					...(endDate === undefined || endDate === startDate ? {} : {
+						"End Date": day.format(endDate) === day.format(startDate) ? undefined : day.format(endDate),
+						"End Time": clock(endDate)
+					})
+
+				}}</Info>
+
+				<Info place={"spread"}>{{
+
+					Entry: opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
 					Language: opt(inLanguage, toLanguage),
-					Free: opt(isAccessibleForFree, free => free ? "Yes" : "No")
+					Attendance: opt(eventAttendanceMode, toEventAttendanceMode),
+					Status: opt(eventStatus, toEventStatus),
+					Location: opt(location, venue)
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, ({ id, label }) => <Link look={"strong"} href={id}>{label}</Link>),
-					Publisher: opt(publisher, ({ id, label }) => <Link look={"strong"} href={id}>{label}</Link>)
+					Info: <ul>{url.map(url => <li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>)}</ul>,
+					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link look={"strong"} href={url[0] ?? id}>{label}</Link>),
+					"Image Credits": image?.copyrightNotice
 
 				}}</Info>
 
@@ -206,27 +229,30 @@ export function EventPage() {
 		blank: () => <Hint>{event.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{event.glyph}</Hint></Failure>,
 
-		ready: ({ state: { label, description, disambiguatingDescription, image, keywords = [] } }) => <>
+		ready: ({ state: { label, description, disambiguatingDescription, image } }) => <Card
 
-			<Card
+			title={label}
 
-				title={label}
-				image={opt(image, ({ url }) => url[0])}
+			image={opt(image, ({ url, description: alt }) => <img src={url[0]} alt={alt ?? `Image of ${label}`}/>)}
 
-			>{description ?? disambiguatingDescription}</Card>
-
-			<Info>{{
-
-				Topics: keywords.length > 0 ? <ul>{keywords.map(({ id, label }) =>
-					<li key={id}><Link href={id}>{label}</Link></li>
-				)}</ul> : undefined
-
-			}}</Info>
-
-		</>
+		>{opt(description, text => <Mark>{text}</Mark>) ?? disambiguatingDescription}</Card>
 
 	})}</Page>;
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Formats the time of day an instant falls on for display.
+ *
+ * @param value The instant to be formatted
+ *
+ * @returns The wall-clock time of `value` in the runtime time zone, in the reader's locale
+ */
+function clock(value: string): string {
+	return time.format(instant.write(value).slice("YYYY-MM-DDT".length)); // the local wall-clock time of the instant
 }
 
 
@@ -246,7 +272,7 @@ export function schedule(start: string, end?: string): string {
 	const from = day.format(start);
 	const to = opt(end, value => day.format(value));
 
-	return to === undefined || to === from ? from : `${from} – ${to}`;
+	return to === undefined || to === from ? from : `${from} › ${to}`;
 
 }
 

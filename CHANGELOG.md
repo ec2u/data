@@ -17,13 +17,17 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Catalogue pages for units, programs, courses, documents and events are filtered by the criteria their address
   carries, and count matches rather than items while filtered
 - Catalogue pages for universities, units, programs, courses, documents and events offer a name search and the facets
-  of the legacy client, with a reset clearing every filter; facets over linked resources show no options until
-  projected references keep their identifier in the store
+  of the legacy client, with a reset clearing every filter
 
 ### Changed
 
 - Views show values formatted for the reader: durations, credits, counts, years and dates localised, event days and
   times by the instant they fall on, and language tags, course terms and attendance modes, and event statuses by name
+- Detail views follow the layout of the legacy client: long descriptions rendered as Markdown, labelled blocks for
+  credentials, links and sections, and catalogue links filtered on the university and the value shown
+- Universities are named by their short name, as `Coimbra`, in views, catalogue cards and facets; the `University`
+  shape requires the short name as `skos:altLabel`
+- The sidebar takes the width of the legacy hub sidebar
 
 - Shape definitions, vocabularies and dataset metadata moved from `@ec2u/data-loader` to `@ec2u/data-shared`, so that
   endpoints and clients state a resource without pulling in the ingestion machinery; the topic retrieval and embedding

@@ -15,6 +15,7 @@
  */
 
 import { Programs } from "@ec2u/data-shared/programs/index.js";
+import { opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -29,7 +30,7 @@ import { Count } from "@metreeca/tile-lens/count";
 import { Tally } from "@metreeca/tile-lens/tally";
 import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { FacetSize, named } from "../../index.core.js";
+import { FacetSize, named, toUniversity, UniversityModel } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
@@ -47,9 +48,7 @@ export const programs = immutable({
 		label: {},
 		comment: {},
 
-		year: {},
-
-		university: { id: {}, label: {} }
+		university: UniversityModel
 
 	}
 
@@ -95,7 +94,7 @@ export function ProgramsPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"University"} tally={useTally(collection, "university", { label: "label", size: FacetSize })}/>
+			<Tally name={"University"} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
 			<Tally name={"Level"} tally={useTally(collection, "educationalLevel", { label: "label", size: FacetSize })}/>
 			<Tally name={"Duration"} tally={useTally(collection, "timeToComplete", { size: FacetSize })}>{named(value => duration.format(value))}</Tally>
 			<Tally name={"Subjects"} tally={useTally(collection, "about", { label: "label", size: FacetSize })}/>
@@ -115,10 +114,10 @@ export function ProgramsPage() {
 
 		ready: ({ state, load }) => state.length === 0 ? <Hint>{programs.glyph}</Hint> : <>
 
-			{state.map(({ id, label, comment, year, university }) => <Card key={id}
+			{state.map(({ id, label, comment, university }) => <Card key={id}
 
 				title={<Link look={"strong"} href={id}>{label}</Link>}
-				tags={[university?.label, year].filter(Boolean).join(" · ")}
+				tags={opt(university, toUniversity)}
 
 			>{comment}</Card>)}
 

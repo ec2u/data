@@ -26,15 +26,16 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
-import { decimal } from "@metreeca/tile-type/decimal";
 import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { site, toCourseMode, toCourseTerm, toLanguage } from "../../index.core.js";
+import { site, toCourseMode, toCourseTerm, toLanguage, toUniversity, UniversityModel } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
+import { Credential, CredentialModel } from "../../tiles/credential.js";
 import { Failure } from "../../tiles/failure.js";
-import { links } from "../../tiles/links.js";
+import { links, list } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
-import { credential } from "../programs/program.js";
+import { blocks, sections } from "../../tiles/sections.js";
+import { credits } from "../programs/program.js";
 import { courses } from "./courses.js";
 
 
@@ -70,10 +71,10 @@ export const course = immutable({
 		assesses: {},
 		competencyRequired: {},
 
-		educationalCredentialAwarded: { name: {}, credentialCategory: {} },
-		occupationalCredentialAwarded: { name: {}, credentialCategory: {} },
+		educationalCredentialAwarded: CredentialModel,
+		occupationalCredentialAwarded: CredentialModel,
 
-		university: { id: {}, label: {} },
+		university: UniversityModel,
 		provider: { id: {}, label: {} },
 		instructor: { id: {}, label: {} },
 
@@ -157,24 +158,16 @@ export function CoursePage() {
 
 				<Info place={"spread"}>{{
 
-					Source: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>
-					)}</ul> : undefined
-
-				}}</Info>
-
-				<Info place={"spread"}>{{
-
-					University: opt(university, ({ id, label }) => <Link look={"strong"} href={id}>{label}</Link>),
+					University: opt(university, value => <Link look={"strong"} href={value.id}>{toUniversity(value)}</Link>),
 					Year: year,
-					Term: term.length > 0 ? term.map(toCourseTerm).join(", ") : undefined
+					Term: list(term.map(toCourseTerm))
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
 					Provider: opt(provider, ({ label }) => label),
-					Instructor: links(instructor, "strong")
+					Instructor: list(instructor.map(({ label }) => label))
 
 				}}</Info>
 
@@ -182,11 +175,19 @@ export function CoursePage() {
 
 					Code: courseCode,
 					Attendance: opt(courseMode, toCourseMode),
-					Language: inLanguage.length > 0 ? inLanguage.map(toLanguage).join(", ") : undefined,
+					Language: list(inLanguage.map(toLanguage)),
 					"Fees for Externals": opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
-					Credits: opt(numberOfCredits, credits => decimal.format(credits)),
+					Credits: opt(numberOfCredits, value => credits.format(value)),
 					Duration: opt(timeRequired, value => duration.format(value)),
 					Workload: opt(courseWorkload, value => duration.format(value))
+
+				}}</Info>
+
+				<Info place={"spread"}>{{
+
+					Info: url.length > 0 ? <ul>{url.map(url =>
+						<li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>
+					)}</ul> : undefined
 
 				}}</Info>
 
@@ -231,26 +232,26 @@ export function CoursePage() {
 
 			<Card title={label}>{description}</Card>
 
-			<Info>{{
+			{blocks({
 
-				"Educational Credential Awarded": opt(educationalCredentialAwarded, credential),
-				"Occupational Credential Awarded": opt(occupationalCredentialAwarded, credential),
+				"Educational Credential Awarded": opt(educationalCredentialAwarded, value => <Credential credential={value}/>),
+				"Occupational Credential Awarded": opt(occupationalCredentialAwarded, value => <Credential credential={value}/>),
 
 				Programs: links(inProgram),
 				Audience: links(audience),
 				Level: links(educationalLevel),
 				Subjects: links(about)
 
-			}}</Info>
+			})}
 
-			<Info>{{
+			{sections({
 
 				"Contents and Structure": teaches,
 				"Admission Requirements": coursePrerequisites,
 				"Learning Objectives and Intended Skills": assesses,
 				"Examination Requirements": competencyRequired
 
-			}}</Info>
+			})}
 
 		</>
 

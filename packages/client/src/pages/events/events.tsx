@@ -31,7 +31,7 @@ import { Range } from "@metreeca/tile-lens/range";
 import { Tally } from "@metreeca/tile-lens/tally";
 import { date } from "@metreeca/tile-type/date";
 import { useEffect } from "preact/hooks";
-import { FacetSize, named, toEventAttendanceMode } from "../../index.core.js";
+import { FacetSize, named, toEventAttendanceMode, toUniversity, UniversityModel } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
@@ -48,13 +48,13 @@ export const events = immutable({
 
 		id: {},
 		label: {},
-		disambiguatingDescription: {},
+		disambiguatingDescription: {}, // the summary events state in place of a comment
 
 		startDate: {},
 		endDate: {},
 
 		image: { url: {} },
-		university: { id: {}, label: {} }
+		university: UniversityModel
 
 	}
 
@@ -78,7 +78,7 @@ export function EventsPage() {
 		onChange: setQuery
 	});
 
-	const members = useMembers(collection, { model: events.model, order: { startDate: "asc" } });
+	const members = useMembers(collection, { model: events.model, order: { startDate: "asc", label: "asc" } });
 	const count = useCount(collection);
 	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
 
@@ -100,11 +100,11 @@ export function EventsPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"University"} tally={useTally(collection, "university", { label: "label", size: FacetSize })}/>
+			<Tally name={"University"} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
 			<Range name={"Date"} type={date({ instant: true })} range={useRange(collection, "startDate")}/>
-			<Tally name={"Free"} tally={useTally(collection, "isAccessibleForFree", { size: FacetSize })}>{named(free => free === "true" ? "Yes" : "No")}</Tally>
-			<Tally name={"Attendance"} tally={useTally(collection, "eventAttendanceMode", { size: FacetSize })}>{named(toEventAttendanceMode)}</Tally>
-			<Tally name={"Topic"} tally={useTally(collection, "keywords", { label: "label", size: FacetSize })}/>
+			<Tally name={"Free"} compact tally={useTally(collection, "isAccessibleForFree", { size: FacetSize })}>{named(free => free === "true" ? "Yes" : "No")}</Tally>
+			<Tally name={"Attendance"} compact tally={useTally(collection, "eventAttendanceMode", { size: FacetSize })}>{named(toEventAttendanceMode)}</Tally>
+			<Tally name={"Topic"} compact tally={useTally(collection, "keywords", { label: "label", size: FacetSize })}/>
 
 		</>}
 
@@ -122,8 +122,8 @@ export function EventsPage() {
 
 			{state.map(({ id, label, disambiguatingDescription, startDate, endDate, image, university }) => <Card key={id}
 
-				title={<Link look={"strong"} href={id}>{label}</Link>}
-				tags={[schedule(startDate, endDate), university?.label].filter(Boolean).join(" · ")}
+				title={<Link look={"strong"} href={id}>{`${schedule(startDate, endDate)} / ${label}`}</Link>}
+				tags={opt(university, toUniversity)}
 				image={opt(image, ({ url }) => url[0])}
 
 			>{disambiguatingDescription}</Card>)}

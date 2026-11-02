@@ -21,6 +21,7 @@ import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
+import { Mark } from "@metreeca/tile-cell/mark";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
@@ -28,11 +29,12 @@ import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { date } from "@metreeca/tile-type/date";
 import { useEffect } from "preact/hooks";
-import { site, toLanguage } from "../../index.core.js";
+import { scope, site, toLanguage, toUniversity, UniversityModel } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
-import { links } from "../../tiles/links.js";
+import { filters, links, list } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
+import { blocks } from "../../tiles/sections.js";
 import { documents } from "./documents.js";
 
 
@@ -61,11 +63,10 @@ export const document = immutable({
 		valid: {},
 
 		rights: {},
-		accessRights: {},
 		license: { id: {}, label: {} },
 
-		university: { id: {}, label: {} },
-		publisher: { id: {}, label: {} },
+		university: UniversityModel,
+		publisher: { id: {}, label: {}, url: {} },
 		creator: { id: {}, label: {} },
 		contributor: { id: {}, label: {} },
 
@@ -146,8 +147,7 @@ export function DocumentPage() {
 					audience = [],
 
 					license,
-					rights,
-					accessRights
+					rights
 
 				}
 
@@ -155,25 +155,25 @@ export function DocumentPage() {
 
 				<Info place={"spread"}>{{
 
-					Source: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>
-					)}</ul> : undefined
+					University: opt(university, value => <Link look={"strong"} href={value.id}>{toUniversity(value)}</Link>)
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, ({ id, label }) => <Link look={"strong"} href={id}>{label}</Link>),
 					Code: identifier,
-					Language: language.length > 0 ? language.map(toLanguage).join(", ") : undefined
+					Web: url.length > 0 ? <ul>{url.map(url =>
+						<li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>
+					)}</ul> : undefined,
+					Language: list(language.map(toLanguage))
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
-					Type: links(type, "strong"),
-					Audience: links(audience, "strong"),
-					Topics: links(subject, "strong")
+					Type: filters(type, documents.route, type => ({ ...scope(university), type })),
+					Audience: filters(audience, documents.route, audience => ({ ...scope(university), audience })),
+					Topics: filters(subject, documents.route, subject => ({ ...scope(university), subject }))
 
 				}}</Info>
 
@@ -187,19 +187,19 @@ export function DocumentPage() {
 
 				<Info place={"spread"}>{{
 
-					Publisher: opt(publisher, ({ label }) => label),
+					Publisher: opt(publisher, ({ label, url = [] }) => url.length > 0
+						? <Link look={"strong"} href={url[0]}>{label}</Link>
+						: label
+					),
 					Contact: opt(creator, ({ label }) => label),
-					Contributor: contributor.length > 0 ? <ul>{contributor.map(({ id, label }) =>
-						<li key={id}>{label}</li>
-					)}</ul> : undefined
+					Contributor: list(contributor.map(({ label }) => label))
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
 					License: opt(license, ({ id, label }) => <Link look={"strong"} href={id}>{label}</Link>),
-					Rights: rights,
-					Access: accessRights
+					Rights: rights
 
 				}}</Info>
 
@@ -220,13 +220,13 @@ export function DocumentPage() {
 
 		ready: ({ state: { title, description, relation = [] } }) => <>
 
-			<Card title={title}>{description}</Card>
+			<Card title={title}>{opt(description, text => <Mark>{text}</Mark>)}</Card>
 
-			<Info>{{
+			{blocks({
 
 				"Related Documents": links(relation)
 
-			}}</Info>
+			})}
 
 		</>
 

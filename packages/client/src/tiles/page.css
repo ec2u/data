@@ -22,6 +22,14 @@ tile-shell {
 
     --tile-shell-head-font-size: var(--tile--scaling-150);
 
+    /* the tray carries labelled property panels and facets, so it takes the width of the legacy hub sidebar */
+
+    --tile-shell-tray-width: 20rem;
+
+    /* the tray stacks boxed facets and info panels, set apart rather than run together */
+
+    --tile-shell-tray-gap: var(--tile--spacing-075);
+
     /* the page name reads a tad higher than the app name in the tray header, though their baselines match */
 
     & > main > header > span:first-child {

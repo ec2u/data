@@ -22,6 +22,7 @@ import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
+import { Mark } from "@metreeca/tile-cell/mark";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
@@ -31,6 +32,7 @@ import { useEffect } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
+import { blocks } from "../../tiles/sections.js";
 import { SKOSConcepts, SKOSLineage } from "../../tiles/skos/concepts.js";
 import { taxonomies } from "./taxonomies.js";
 
@@ -139,9 +141,9 @@ export function TopicPage() {
 			}
 		}) => <>
 
-			<Card title={prefLabel}>{definition}</Card>
+			<Card title={prefLabel}>{opt(definition, text => <Mark>{text}</Mark>)}</Card>
 
-			<Info>{{
+			{blocks({
 
 				"Source": opt(isDefinedBy, url => <Link href={url}>{url}</Link>),
 
@@ -156,7 +158,7 @@ export function TopicPage() {
 				"Related Concepts": links(related),
 				"Exact Matches": links(exactMatch)
 
-			}}</Info>
+			})}
 
 		</>
 

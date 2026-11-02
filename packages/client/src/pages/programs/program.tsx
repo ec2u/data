@@ -29,12 +29,20 @@ import { Info } from "@metreeca/tile-hive/info";
 import { decimal } from "@metreeca/tile-type/decimal";
 import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { site } from "../../index.core.js";
+import { site, toUniversity, UniversityModel } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
+import { Credential, CredentialModel } from "../../tiles/credential.js";
 import { Failure } from "../../tiles/failure.js";
 import { links } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
+import { blocks, sections } from "../../tiles/sections.js";
 import { programs } from "./programs.js";
+
+
+/**
+ * The presentation of credits, with one fractional digit.
+ */
+export const credits = decimal({ fractionDigits: 1 });
 
 
 export const program = immutable({
@@ -54,8 +62,6 @@ export const program = immutable({
 		identifier: {},
 		url: {},
 
-		year: {},
-
 		numberOfCredits: {},
 		timeToComplete: {},
 
@@ -64,10 +70,10 @@ export const program = immutable({
 		assesses: {},
 		competencyRequired: {},
 
-		educationalCredentialAwarded: { name: {}, credentialCategory: {} },
-		occupationalCredentialAwarded: { name: {}, credentialCategory: {} },
+		educationalCredentialAwarded: CredentialModel,
+		occupationalCredentialAwarded: CredentialModel,
 
-		university: { id: {}, label: {} },
+		university: UniversityModel,
 		provider: { id: {}, label: {} },
 
 		hasCourse: { id: {}, label: {} },
@@ -122,20 +128,16 @@ export function ProgramPage() {
 
 		tray={resource({
 
-			ready: ({ state: { url = [], university, year, provider, identifier, numberOfCredits, timeToComplete } }) => <>
+			ready: ({ state: { url = [], university, provider, identifier, numberOfCredits, timeToComplete } }) => <>
 
 				<Info place={"spread"}>{{
 
-					Source: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>
-					)}</ul> : undefined
+					University: opt(university, value => <Link look={"strong"} href={value.id}>{toUniversity(value)}</Link>)
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, ({ id, label }) => <Link look={"strong"} href={id}>{label}</Link>),
-					Year: year,
 					Provider: opt(provider, ({ label }) => label)
 
 				}}</Info>
@@ -143,8 +145,16 @@ export function ProgramPage() {
 				<Info place={"spread"}>{{
 
 					Code: identifier,
-					Credits: opt(numberOfCredits, credits => decimal.format(credits)),
+					Credits: opt(numberOfCredits, value => credits.format(value)),
 					Duration: opt(timeToComplete, value => duration.format(value))
+
+				}}</Info>
+
+				<Info place={"spread"}>{{
+
+					Info: url.length > 0 ? <ul>{url.map(url =>
+						<li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>
+					)}</ul> : undefined
 
 				}}</Info>
 
@@ -188,49 +198,28 @@ export function ProgramPage() {
 
 			<Card title={label}>{description !== teaches ? description : undefined}</Card>
 
-			<Info>{{
+			{blocks({
 
-				"Educational Credential Awarded": opt(educationalCredentialAwarded, credential),
-				"Occupational Credential Awarded": opt(occupationalCredentialAwarded, credential),
+				"Educational Credential Awarded": opt(educationalCredentialAwarded, value => <Credential credential={value}/>),
+				"Occupational Credential Awarded": opt(occupationalCredentialAwarded, value => <Credential credential={value}/>),
 
 				Courses: links(hasCourse),
 				Level: links(educationalLevel),
 				Subjects: links(about)
 
-			}}</Info>
+			})}
 
-			<Info>{{
+			{sections({
 
 				"Contents and Structure": teaches,
 				"Admission Requirements": programPrerequisites,
 				"Learning Objectives and Intended Skills": assesses,
 				"Graduation Requirements": competencyRequired
 
-			}}</Info>
+			})}
 
 		</>
 
 	})}</Page>;
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Formats a credential awarded on completion of an educational offering.
- *
- * @param credential The credential to be formatted
- *
- * @returns The name of the credential followed by its bracketed category, or the category alone if it has no name
- */
-export function credential({ name, credentialCategory }: {
-
-	readonly name?: string
-	readonly credentialCategory: string
-
-}): string {
-
-	return name ? `${name} (${credentialCategory})` : credentialCategory;
 
 }

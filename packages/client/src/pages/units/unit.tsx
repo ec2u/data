@@ -16,22 +16,26 @@
 
 import { Unit } from "@ec2u/data-shared/units/index.js";
 import { opt } from "@metreeca/core";
+import { by, compound, locale } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
+import { Mark } from "@metreeca/tile-cell/mark";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { site } from "../../index.core.js";
+import { site, toUniversity, UniversityModel } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
-import { links } from "../../tiles/links.js";
+import { links, list } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
+import { blocks } from "../../tiles/sections.js";
 import { units } from "./units.js";
 
 
@@ -54,14 +58,14 @@ export const unit = immutable({
 		identifier: {},
 		homepage: {},
 
-		university: { id: {}, label: {} },
+		university: UniversityModel,
 		classification: { id: {}, label: {} },
 		hasHead: { id: {}, label: {} },
 
 		unitOf: { id: {}, label: {} },
 		hasUnit: { id: {}, label: {} },
 
-		subject: { id: {}, label: {} },
+		subject: { id: {}, label: {}, broaderTransitive: {} },
 		keyword: {}
 
 	}
@@ -116,14 +120,6 @@ export function UnitPage() {
 
 				<Info place={"spread"}>{{
 
-					Home: homepage.length > 0 ? <ul>{homepage.map(url =>
-						<li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>
-					)}</ul> : undefined
-
-				}}</Info>
-
-				<Info place={"spread"}>{{
-
 					Short: altLabel,
 					Code: identifier
 
@@ -131,14 +127,22 @@ export function UnitPage() {
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, ({ id, label }) => <Link look={"strong"} href={id}>{label}</Link>),
+					University: opt(university, value => <Link look={"strong"} href={value.id}>{toUniversity(value)}</Link>),
 					Type: links(classification, "strong")
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
-					Head: hasHead.length > 0 ? <ul>{hasHead.map(({ id, label }) => <li key={id}>{label}</li>)}</ul> : undefined
+					Head: list(hasHead.map(({ label }) => label))
+
+				}}</Info>
+
+				<Info place={"spread"}>{{
+
+					Info: homepage.length > 0 ? <ul>{homepage.map(url =>
+						<li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>
+					)}</ul> : undefined
 
 				}}</Info>
 
@@ -159,20 +163,49 @@ export function UnitPage() {
 
 		ready: ({ state: { prefLabel, definition, university, unitOf, hasUnit = [], subject = [], keyword = [] } }) => <>
 
-			<Card title={prefLabel}>{definition}</Card>
+			<Card title={prefLabel}>{opt(definition, text => <Mark>{text}</Mark>)}</Card>
 
-			<Info>{{
+			{blocks({
 
-				Topics: links(subject),
-				Keywords: keyword.length > 0 ? <ul>{keyword.map(keyword => <li key={keyword}>{keyword}</li>)}</ul> : undefined,
+				Topics: topics(subject),
+				Keywords: list(keyword),
 
 				"Parent Organizations": links(unitOf.filter(({ id }) => id !== university?.id)),
 				"Organizational Units": links(hasUnit)
 
-			}}</Info>
+			})}
 
 		</>
 
 	})}</Page>;
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Renders the topics a unit is concerned with.
+ *
+ * @param subject The topics to be listed, with the broader topics each falls under
+ *
+ * @returns A list of topic links, broader topics first and then by label, or `undefined` if `subject` is empty
+ */
+function topics(subject: readonly {
+	readonly id: string
+	readonly label: string
+	readonly broaderTransitive?: readonly string[]
+}[]): ComponentChildren {
+
+	return subject.length > 0 ? <ul>{[...subject] // copy, as topics are shared
+
+		.sort(compound(
+			by(({ broaderTransitive = [] }) => broaderTransitive.length),
+			by(({ label }) => label, locale())
+		))
+
+		.map(({ id, label }) => <li key={id}><Link href={id}>{label}</Link></li>)
+
+	}</ul> : undefined;
 
 }

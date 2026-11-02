@@ -21,11 +21,13 @@ import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
+import { Mark } from "@metreeca/tile-cell/mark";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useMembers, useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
+import { date } from "@metreeca/tile-type/date";
 import { integer } from "@metreeca/tile-type/integer";
 import { useEffect, useState } from "preact/hooks";
 import { site } from "../../index.core.js";
@@ -143,9 +145,9 @@ export function TaxonomyPage() {
 				ready: ({ state: { version, created, issued, modified } }) => <Info place={"spread"}>{{
 
 					Version: version,
-					Created: created,
-					Published: issued,
-					Modified: modified
+					Created: opt(created, value => date.format(value)),
+					Published: opt(issued, value => date.format(value)),
+					Modified: opt(modified, value => date.format(value))
 
 				}}</Info>
 
@@ -170,7 +172,7 @@ export function TaxonomyPage() {
 			}
 		}) => <>
 
-			<Card title={title}>{description}</Card>
+			<Card title={title}>{opt(description, text => <Mark>{text}</Mark>)}</Card>
 
 			<Info>{{
 
@@ -180,7 +182,7 @@ export function TaxonomyPage() {
 					<li key={id}><Link href={id}>{label}</Link></li>
 				)}</ul> : undefined), // a boolean would read as its name
 				Source: opt(source, ({ id }) => <Link href={id}>{site(id)}</Link>),
-				Access: accessRights
+				Access: opt(accessRights, text => <Mark>{text}</Mark>)
 
 			}}</Info>
 

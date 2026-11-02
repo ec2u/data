@@ -19,10 +19,11 @@ import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { OrgFormalOrganization } from "@ec2u/data-shared/vocabularies/org.js";
+import { skos } from "@ec2u/data-shared/vocabularies/skos.js";
 import { int } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, required, resource } from "@metreeca/blue/resource";
-import { iri, year } from "@metreeca/blue/string";
+import { iri, text, year } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
@@ -83,6 +84,14 @@ export function University() {
 	}, {
 
 		dataset: required(reference(resource(Dataset, { hasValue: [ universities.id ] }))),
+
+		altLabel: required(text, {
+
+			forward: skos,
+
+			description: "The short name the university is known by across the alliance, as its city."
+
+		}),
 
 		depiction: nonempty(iri),
 		homepage: nonempty(iri),

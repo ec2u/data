@@ -125,6 +125,48 @@ export function toEventAttendanceMode(mode: string): string {
 
 
 /**
+ * Shortens a resource identifier for use in links.
+ *
+ * @param iri The absolute identifier of the resource
+ *
+ * @returns The root-relative form of `iri` where it shares the origin of the current location, `iri` itself otherwise
+ */
+export function local(iri: string): string {
+
+	const url = new URL(iri);
+
+	return url.origin === location.origin ? `${url.pathname}${url.search}` : iri;
+
+}
+
+/**
+ * The values a university reference is shown with, as a retrieval model.
+ */
+export const UniversityModel = { id: {}, label: {}, altLabel: {} };
+
+/**
+ * Names a university as the hub shows it.
+ *
+ * @param university The university to be named
+ *
+ * @returns The short name of the university, as in `Coimbra`, or its full label if it states none
+ */
+export function toUniversity({ label, altLabel }: { readonly label: string, readonly altLabel?: string }): string {
+	return altLabel ?? label;
+}
+
+/**
+ * Scopes catalogue criteria to a university.
+ *
+ * @param university The university the criteria are scoped to, if any
+ *
+ * @returns The criteria narrowing a catalogue to `university`, or none if it is missing
+ */
+export function scope(university?: { readonly id: string }): Readonly<Record<string, string>> {
+	return university ? { university: local(university.id) } : {};
+}
+
+/**
  * Removes the leading alliance name from a label.
  *
  * @param label The label to be shortened

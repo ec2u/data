@@ -17,6 +17,7 @@
 import { by, locale } from "@metreeca/core/order";
 import { Link } from "@metreeca/tile-cell/link";
 import type { ComponentChildren } from "preact";
+import { local } from "../index.core.js";
 
 
 /**
@@ -38,6 +39,52 @@ export function links(
 
 		.sort(by(({ label }) => label, locale()))
 		.map(({ id, label }) => <li key={id}><Link look={look} href={id}>{label}</Link></li>)
+
+	}</ul> : undefined;
+
+}
+
+/**
+ * Renders a list of linked resources, each leading to a catalogue filtered on it.
+ *
+ * @param entries The resources to be listed, each with its identifier and label
+ * @param catalogue The route of the catalogue the links lead to
+ * @param query The criteria each link narrows the catalogue by, given the root-relative identifier of its resource
+ *
+ * @returns A list of strong links sorted by label, or `undefined` if `entries` is empty, so that the panel omits the
+ *     entry
+ */
+export function filters(
+
+	entries: readonly { readonly id: string, readonly label: string }[],
+	catalogue: string,
+	query: (id: string) => Readonly<Record<string, string>>
+
+): ComponentChildren {
+
+	return entries.length > 0 ? <ul>{[...entries] // copy, as entries are shared
+
+		.sort(by(({ label }) => label, locale()))
+		.map(({ id, label }) => <li key={id}><Link look={"strong"} href={catalogue} query={query(local(id))}>{label}</Link></li>)
+
+	}</ul> : undefined;
+
+}
+
+/**
+ * Renders a list of values for an info panel.
+ *
+ * @param values The values to be listed
+ *
+ * @returns A list of the values sorted in the reader locale, or `undefined` if `values` is empty, so that the panel
+ *     omits the entry
+ */
+export function list(values: readonly string[]): ComponentChildren {
+
+	return values.length > 0 ? <ul>{[...values] // copy, as values are shared
+
+		.sort(by(value => value, locale()))
+		.map(value => <li key={value}>{value}</li>)
 
 	}</ul> : undefined;
 
