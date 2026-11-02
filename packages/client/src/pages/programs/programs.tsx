@@ -22,12 +22,17 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { More } from "@metreeca/tile-cell/more";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useMembers, useQuery } from "@metreeca/tile-data/store";
+import { useCollection, useCount, useKeywords, useMembers, useQuery, useTally } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
+import { Clear } from "@metreeca/tile-lens/clear";
+import { Count } from "@metreeca/tile-lens/count";
+import { Tally } from "@metreeca/tile-lens/tally";
+import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { Count } from "../../tiles/count.js";
+import { FacetSize, named } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
+import { Search } from "../../tiles/search.js";
 
 
 export const programs = immutable({
@@ -70,6 +75,7 @@ export function ProgramsPage() {
 
 	const members = useMembers(collection, { model: programs.model });
 	const count = useCount(collection);
+	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
 
 	useEffect(() => router({ title: programs.label }), []);
 
@@ -85,11 +91,22 @@ export function ProgramsPage() {
 
 		})}
 
-		info={<Count filtered={Object.keys(query).length > 0}>{count({
+		tray={<>
 
-			ready: ({ state }) => state
+			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-		})}</Count>}
+			<Tally name={"University"} tally={useTally(collection, "university", { label: "label", size: FacetSize })}/>
+			<Tally name={"Level"} tally={useTally(collection, "educationalLevel", { label: "label", size: FacetSize })}/>
+			<Tally name={"Duration"} tally={useTally(collection, "timeToComplete", { size: FacetSize })}>{named(value => duration.format(value))}</Tally>
+			<Tally name={"Subjects"} tally={useTally(collection, "about", { label: "label", size: FacetSize })}/>
+			<Tally name={"Provider"} tally={useTally(collection, "provider", { label: "label", size: FacetSize })}/>
+
+		</>}
+
+		info={<>
+			<Count collection={collection} count={count}/>
+			<Clear collection={collection}/>
+		</>}
 
 	>{members({
 

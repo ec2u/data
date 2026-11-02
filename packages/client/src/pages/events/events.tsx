@@ -23,12 +23,18 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { More } from "@metreeca/tile-cell/more";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useMembers, useQuery } from "@metreeca/tile-data/store";
+import { useCollection, useCount, useKeywords, useMembers, useQuery, useRange, useTally } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
+import { Clear } from "@metreeca/tile-lens/clear";
+import { Count } from "@metreeca/tile-lens/count";
+import { Range } from "@metreeca/tile-lens/range";
+import { Tally } from "@metreeca/tile-lens/tally";
+import { date } from "@metreeca/tile-type/date";
 import { useEffect } from "preact/hooks";
-import { Count } from "../../tiles/count.js";
+import { FacetSize, named, toEventAttendanceMode } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
+import { Search } from "../../tiles/search.js";
 import { schedule } from "./event.js";
 
 
@@ -74,6 +80,7 @@ export function EventsPage() {
 
 	const members = useMembers(collection, { model: events.model, order: { startDate: "asc" } });
 	const count = useCount(collection);
+	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
 
 	useEffect(() => router({ title: events.label }), []);
 
@@ -89,11 +96,22 @@ export function EventsPage() {
 
 		})}
 
-		info={<Count filtered={Object.keys(query).length > 0}>{count({
+		tray={<>
 
-			ready: ({ state }) => state
+			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-		})}</Count>}
+			<Tally name={"University"} tally={useTally(collection, "university", { label: "label", size: FacetSize })}/>
+			<Range name={"Date"} type={date({ instant: true })} range={useRange(collection, "startDate")}/>
+			<Tally name={"Free"} tally={useTally(collection, "isAccessibleForFree", { size: FacetSize })}>{named(free => free === "true" ? "Yes" : "No")}</Tally>
+			<Tally name={"Attendance"} tally={useTally(collection, "eventAttendanceMode", { size: FacetSize })}>{named(toEventAttendanceMode)}</Tally>
+			<Tally name={"Topic"} tally={useTally(collection, "keywords", { label: "label", size: FacetSize })}/>
+
+		</>}
+
+		info={<>
+			<Count collection={collection} count={count}/>
+			<Clear collection={collection}/>
+		</>}
 
 	>{members({
 

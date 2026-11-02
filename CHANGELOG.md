@@ -16,6 +16,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   the dataset catalogue filtered on the university
 - Catalogue pages for units, programs, courses, documents and events are filtered by the criteria their address
   carries, and count matches rather than items while filtered
+- Catalogue pages for universities, units, programs, courses, documents and events offer a name search and the facets
+  of the legacy client, with a reset clearing every filter; facets over linked resources show no options until
+  projected references keep their identifier in the store
 
 ### Changed
 

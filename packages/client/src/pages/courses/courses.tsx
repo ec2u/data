@@ -22,12 +22,19 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { More } from "@metreeca/tile-cell/more";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useMembers, useQuery } from "@metreeca/tile-data/store";
+import { useCollection, useCount, useKeywords, useMembers, useQuery, useRange, useTally } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
+import { Clear } from "@metreeca/tile-lens/clear";
+import { Count } from "@metreeca/tile-lens/count";
+import { Range } from "@metreeca/tile-lens/range";
+import { Tally } from "@metreeca/tile-lens/tally";
+import { decimal } from "@metreeca/tile-type/decimal";
+import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { Count } from "../../tiles/count.js";
+import { FacetSize, named, toCourseMode, toCourseTerm, toLanguage } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
+import { Search } from "../../tiles/search.js";
 
 
 export const courses = immutable({
@@ -69,6 +76,7 @@ export function CoursesPage() {
 
 	const members = useMembers(collection, { model: courses.model });
 	const count = useCount(collection);
+	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
 
 	useEffect(() => router({ title: courses.label }), []);
 
@@ -84,11 +92,29 @@ export function CoursesPage() {
 
 		})}
 
-		info={<Count filtered={Object.keys(query).length > 0}>{count({
+		tray={<>
 
-			ready: ({ state }) => state
+			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-		})}</Count>}
+			<Tally name={"University"} tally={useTally(collection, "university", { label: "label", size: FacetSize })}/>
+			<Tally name={"Year"} tally={useTally(collection, "year", { size: FacetSize })}/>
+			<Tally name={"Term"} tally={useTally(collection, "term", { size: FacetSize })}>{named(toCourseTerm)}</Tally>
+			<Tally name={"Attendance"} tally={useTally(collection, "courseMode", { size: FacetSize })}>{named(toCourseMode)}</Tally>
+			<Tally name={"Language"} tally={useTally(collection, "inLanguage", { size: FacetSize })}>{named(toLanguage)}</Tally>
+			<Tally name={"Fees for Externals"} tally={useTally(collection, "isAccessibleForFree", { size: FacetSize })}>{named(free => free === "true" ? "Free" : "Paid")}</Tally>
+			<Range name={"Credits"} type={decimal} range={useRange(collection, "numberOfCredits")}/>
+			<Tally name={"Duration"} tally={useTally(collection, "timeRequired", { size: FacetSize })}>{named(value => duration.format(value))}</Tally>
+			<Tally name={"Level"} tally={useTally(collection, "educationalLevel", { label: "label", size: FacetSize })}/>
+			<Tally name={"Credentials"} tally={useTally(collection, "educationalCredentialAwarded.credentialCategory", { size: FacetSize })}/>
+			<Tally name={"Subjects"} tally={useTally(collection, "about", { label: "label", size: FacetSize })}/>
+			<Tally name={"Audience"} tally={useTally(collection, "audience", { label: "label", size: FacetSize })}/>
+
+		</>}
+
+		info={<>
+			<Count collection={collection} count={count}/>
+			<Clear collection={collection}/>
+		</>}
 
 	>{members({
 

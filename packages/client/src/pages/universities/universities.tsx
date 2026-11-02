@@ -22,11 +22,17 @@ import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useMembers } from "@metreeca/tile-data/store";
+import { useCollection, useCount, useKeywords, useMembers, useQuery, useRange } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
+import { Clear } from "@metreeca/tile-lens/clear";
+import { Count } from "@metreeca/tile-lens/count";
+import { Range } from "@metreeca/tile-lens/range";
+import { integer } from "@metreeca/tile-type/integer";
+import { year } from "@metreeca/tile-type/year";
 import { useEffect } from "preact/hooks";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
+import { Search } from "../../tiles/search.js";
 
 
 export const universities = immutable({
@@ -56,13 +62,19 @@ export function UniversitiesPage() {
 	const route = useRoute();
 	const router = useRouter();
 
+	const [query, setQuery] = useQuery();
+
 	const collection = useCollection({
 		entry: route,
 		shape: Universities,
-		field: "resources"
+		field: "resources",
+		criteria: query,
+		onChange: setQuery
 	});
 
 	const members = useMembers(collection, { model: universities.model });
+	const count = useCount(collection);
+	const keywords = useKeywords(collection, "prefLabel", { delay: 0 }); // the search field times the pause itself
 
 
 	useEffect(() => router({ title: universities.label }), []);
@@ -78,6 +90,20 @@ export function UniversitiesPage() {
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
 		})}
+
+		tray={<>
+
+			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
+
+			<Range name={"Inception"} type={year} range={useRange(collection, "inception")}/>
+			<Range name={"Students"} type={integer} range={useRange(collection, "students")}/>
+
+		</>}
+
+		info={<>
+			<Count collection={collection} count={count}/>
+			<Clear collection={collection}/>
+		</>}
 
 	>{members({
 

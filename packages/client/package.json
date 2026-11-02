@@ -19,6 +19,7 @@
     "@metreeca/tile-cell": "^0.6.0",
     "@metreeca/tile-data": "^0.6.0",
     "@metreeca/tile-hive": "^0.6.0",
+    "@metreeca/tile-lens": "^0.6.1",
     "@metreeca/tile-type": "^0.6.1",
     "preact": "^10.29.8"
   },

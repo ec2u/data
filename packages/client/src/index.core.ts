@@ -13,6 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type { TallyBucket } from "@metreeca/tile-data/store";
+
+
+/**
+ * The number of values a tally facet shows at first and fetches with each batch, within the server result set limit.
+ */
+export const FacetSize = 10;
+
+
 const CourseTerms: Readonly<Record<string, string>> = {
 	Annual: "Annual",
 	First: "First Semester",
@@ -43,6 +52,17 @@ const EventAttendanceModes: Readonly<Record<string, string>> = {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Names the values of a tally facet.
+ *
+ * @param name Names a value from its text
+ *
+ * @returns A renderer naming each bucket by `name`, or `None` for the items holding no value
+ */
+export function named(name: (text: string) => string): (bucket: TallyBucket) => string {
+	return ({ value, label }) => value === null ? "None" : name(label ?? String(value));
+}
 
 /**
  * Names a language for the reader.
