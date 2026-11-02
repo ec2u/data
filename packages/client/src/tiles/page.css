@@ -24,7 +24,7 @@ tile-shell {
 
     /* the tray carries labelled property panels and facets, so it takes the width of the legacy hub sidebar */
 
-    --tile-shell-tray-width: 17.5rem;
+    --tile-shell-tray-width: 20rem;
 
     /* the tray stacks boxed facets and info panels, set apart rather than run together */
 

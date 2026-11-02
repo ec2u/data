@@ -164,7 +164,6 @@ export function EventPage() {
 					location,
 					university,
 					publisher,
-					image,
 
 					keywords = []
 
@@ -209,8 +208,7 @@ export function EventPage() {
 				<Info place={"spread"}>{{
 
 					Info: <ul>{url.map(url => <li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>)}</ul>,
-					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link look={"strong"} href={url[0] ?? id}>{label}</Link>),
-					"Image Credits": image?.copyrightNotice
+					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link look={"strong"} href={url[0] ?? id}>{label}</Link>)
 
 				}}</Info>
 
@@ -234,6 +232,7 @@ export function EventPage() {
 			title={label}
 
 			image={opt(image, ({ url, description: alt }) => <img src={url[0]} alt={alt ?? `Image of ${label}`}/>)}
+			caption={image?.copyrightNotice}
 
 		>{opt(description, text => <Mark>{text}</Mark>) ?? disambiguatingDescription}</Card>
 
