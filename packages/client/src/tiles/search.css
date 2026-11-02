@@ -65,7 +65,29 @@ ec2u-search {
 
     & > tile-button > button {
         grid-column: 3;
-        margin-right: var(--tile--spacing-025);
+        margin-right: calc(var(--tile--spacing-025) / 2); /* the fill lines up with the clear controls of the facets */
+    }
+
+    /*
+     * The clear control matches the one in the facet headers: a smaller glyph in a round hover fill clipped to the box
+     * around it, clear of the field border, while the control keeps the full pointer target of the buttons beside it.
+     */
+
+    & > tile-button:has(> button > .clear) > button {
+
+        /* the button gives up part of its padding to the fill, which leaves the glyph more air within it */
+
+        padding: calc(var(--tile--spacing-025) * 0.75);
+        align-items: center;
+
+        background-clip: content-box;
+        border-radius: 50%;
+
+        & > .clear {
+            width: var(--tile--scaling-075);
+            height: var(--tile--scaling-075);
+        }
+
     }
 
 }
