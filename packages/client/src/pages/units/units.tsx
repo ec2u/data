@@ -22,7 +22,7 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { More } from "@metreeca/tile-cell/more";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useMembers } from "@metreeca/tile-data/store";
+import { useCollection, useCount, useMembers, useQuery } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { useEffect } from "preact/hooks";
 import { Count } from "../../tiles/count.js";
@@ -56,10 +56,14 @@ export function UnitsPage() {
 	const route = useRoute();
 	const router = useRouter();
 
+	const [query, setQuery] = useQuery();
+
 	const collection = useCollection({
 		entry: route,
 		shape: Units,
-		field: "resources"
+		field: "resources",
+		criteria: query,
+		onChange: setQuery
 	});
 
 	const members = useMembers(collection, { model: units.model });
@@ -79,7 +83,7 @@ export function UnitsPage() {
 
 		})}
 
-		info={<Count filtered={false}>{count({
+		info={<Count filtered={Object.keys(query).length > 0}>{count({
 
 			ready: ({ state }) => state
 

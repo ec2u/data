@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
+import { Resources } from "@ec2u/data-shared/resources/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
+import { by } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
+import { encodeCriteria } from "@metreeca/qest/model";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useResource } from "@metreeca/tile-data/store";
+import { useCollection, useMembers, useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { useEffect } from "preact/hooks";
-import { site } from "../../index.core.js";
+import { ec2u, site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
+import { isDatasetRow } from "../datasets/index.core.js";
 import { universities } from "./universities.js";
 
 
@@ -55,6 +59,18 @@ export const university = immutable({
 		country: { id: {}, label: {} },
 		city: { id: {}, label: {} }
 
+	},
+
+	stats: {
+
+		"dataset=dataset": {
+			id: {},
+			title: {},
+			alternative: {}
+		},
+
+		"size=count:": {}
+
 	}
 
 });
@@ -72,6 +88,14 @@ export function UniversityPage() {
 		shape: University,
 		model: university.model
 	});
+
+	const collection = useCollection({
+		entry: "/resources/",
+		shape: Resources,
+		criteria: { "?university": [route] }
+	});
+
+	const stats = useMembers(collection, { model: university.stats });
 
 	const title = resource({
 
@@ -125,16 +149,22 @@ export function UniversityPage() {
 
 				}}</Info>
 
-				{/* !!! dataset links: per-dataset resource counts need a grouped count over /resources/ not yet available
+				{stats({
 
-				<Info place={"spread"}>{stats.map(({ dataset, resources }) => ({
+					ready: ({ state }) => <Info place={"spread"}>{[...state.filter(isDatasetRow)] // copy, as rows are shared
 
-					label: <Link href={`${dataset.id}?university=${encodeURIComponent(id)}`}>{dataset.alternative}</Link>,
-					value: resources.toLocaleString()
+						.sort(by(({ size }) => size))
 
-				}))}</Info>
+						.map(({ dataset, size }) => ({
 
-				*/}
+							label: <Link href={`${dataset.id}?${encodeCriteria({ "?university": [route] })}`}>{ec2u(dataset.alternative ?? dataset.title)}</Link>,
+							value: size.toLocaleString()
+
+						}))
+
+					}</Info>
+
+				})}
 
 			</>
 
