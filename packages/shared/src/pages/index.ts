@@ -16,7 +16,8 @@
 
 import { base, EC2U, ec2u } from "@ec2u/data-shared";
 import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
-import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, required, resource } from "@metreeca/blue/resource";
 import { iri, string } from "@metreeca/blue/string";

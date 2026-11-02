@@ -16,8 +16,9 @@
 
 import { base, CommentLength, EC2U, ec2u, LabelLength } from "@ec2u/data-shared";
 import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
-import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
+import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { EventTopic } from "@ec2u/data-shared/taxonomies/events.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { SchemaEvent } from "@ec2u/data-shared/vocabularies/schema/event.js";

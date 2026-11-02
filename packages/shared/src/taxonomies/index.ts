@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { ec2u } from "@ec2u/data-shared";
 import { SKOSConcept, SKOSConceptScheme } from "@ec2u/data-shared/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";

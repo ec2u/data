@@ -14,30 +14,10 @@
  * limitations under the License.
  */
 
-import { Resource } from "@ec2u/data-shared/datasets/index.js";
-import { reference } from "@metreeca/blue/reference";
-import { id, multiple, resource } from "@metreeca/blue/resource";
+import { Resources } from "@ec2u/data-shared/resources/index.js";
 import { driver } from "@metreeca/gate/driver";
 import { Router } from "express";
 
-
-export function Resources() {
-	return resource({
-
-		name: "Resources",
-		description: "Resources published in issued datasets on the EC2U Knowledge Hub."
-
-	}, {
-
-		id: id(),
-
-		resources: multiple(reference(Resource))
-
-	});
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function resources(): Router {
 

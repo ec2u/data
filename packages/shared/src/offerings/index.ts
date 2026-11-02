@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Resource } from "@ec2u/data-shared/datasets/index.js";
+import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { ISCED2011Topic } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";

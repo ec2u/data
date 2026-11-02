@@ -16,8 +16,9 @@
 
 import { base, EC2U, ec2u } from "@ec2u/data-shared";
 import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
-import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
+import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { FOAFPerson } from "@ec2u/data-shared/vocabularies/foaf.js";
 import { org } from "@ec2u/data-shared/vocabularies/org.js";
 import { reference } from "@metreeca/blue/reference";

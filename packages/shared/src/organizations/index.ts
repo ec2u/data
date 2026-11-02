@@ -16,8 +16,9 @@
 
 import { base, EC2U, ec2u } from "@ec2u/data-shared";
 import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
-import { Dataset, Resource } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Person } from "@ec2u/data-shared/persons/index.js";
+import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { OrganizationTopic } from "@ec2u/data-shared/taxonomies/organizations.js";
 import { Unit } from "@ec2u/data-shared/units/index.js";
 import { OrgOrganization } from "@ec2u/data-shared/vocabularies/org.js";
