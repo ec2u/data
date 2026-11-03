@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Courses } from "@ec2u/data-shared/courses/index.js";
+import { Course, Courses } from "@ec2u/data-shared/courses/index.js";
 import { opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -62,7 +62,10 @@ export const courses = immutable({
 
 export function CoursesMeta() {
 
-	return <DatasetMeta href={courses.route} label={courses.label} glyph={courses.glyph}/>;
+	return <DatasetMeta about={courses} shapes={[
+		Courses,
+		Course
+	]}/>;
 
 }
 

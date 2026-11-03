@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Units } from "@ec2u/data-shared/units/index.js";
+import { Unit, Units } from "@ec2u/data-shared/units/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -58,7 +58,10 @@ export const units = immutable({
 
 export function UnitsMeta() {
 
-	return <DatasetMeta href={units.route} label={units.label} glyph={units.glyph}/>;
+	return <DatasetMeta about={units} shapes={[
+		Units,
+		Unit
+	]}/>;
 
 }
 

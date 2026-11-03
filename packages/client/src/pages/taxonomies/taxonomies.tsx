@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Taxonomies } from "@ec2u/data-shared/taxonomies/index.js";
+import { Taxonomies, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { by, locale } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -50,7 +50,11 @@ export const taxonomies = immutable({
 
 export function TaxonomiesMeta() {
 
-	return <DatasetMeta href={taxonomies.route} label={taxonomies.label} glyph={taxonomies.glyph}/>;
+	return <DatasetMeta about={taxonomies} shapes={[
+		Taxonomies,
+		Taxonomy,
+		Topic
+	]}/>;
 
 }
 

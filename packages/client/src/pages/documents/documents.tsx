@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Documents } from "@ec2u/data-shared/documents/index.js";
+import { Document, Documents } from "@ec2u/data-shared/documents/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -58,7 +58,10 @@ export const documents = immutable({
 
 export function DocumentsMeta() {
 
-	return <DatasetMeta href={documents.route} label={documents.label} glyph={documents.glyph}/>;
+	return <DatasetMeta about={documents} shapes={[
+		Documents,
+		Document
+	]}/>;
 
 }
 

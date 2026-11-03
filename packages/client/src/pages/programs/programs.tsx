@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Programs } from "@ec2u/data-shared/programs/index.js";
+import { Program, Programs } from "@ec2u/data-shared/programs/index.js";
 import { opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -60,7 +60,10 @@ export const programs = immutable({
 
 export function ProgramsMeta() {
 
-	return <DatasetMeta href={programs.route} label={programs.label} glyph={programs.glyph}/>;
+	return <DatasetMeta about={programs} shapes={[
+		Programs,
+		Program
+	]}/>;
 
 }
 

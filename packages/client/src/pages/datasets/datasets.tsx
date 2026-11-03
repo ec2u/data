@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Datasets } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset, Datasets } from "@ec2u/data-shared/datasets/index.js";
 import { opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -67,7 +67,10 @@ export const datasets = immutable({
 
 export function DatasetsMeta() {
 
-	return <DatasetMeta href={datasets.route} label={datasets.label} glyph={datasets.glyph}/>;
+	return <DatasetMeta about={datasets} shapes={[
+		Datasets,
+		Dataset
+	]}/>;
 
 }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Events } from "@ec2u/data-shared/events/index.js";
+import { Event, Events } from "@ec2u/data-shared/events/index.js";
 import { opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -66,7 +66,10 @@ export const events = immutable({
 
 export function EventsMeta() {
 
-	return <DatasetMeta href={events.route} label={events.label} glyph={events.glyph}/>;
+	return <DatasetMeta about={events} shapes={[
+		Events,
+		Event
+	]}/>;
 
 }
 

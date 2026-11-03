@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Universities } from "@ec2u/data-shared/universities/index.js";
+import { Universities, University } from "@ec2u/data-shared/universities/index.js";
 import { by, locale } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -60,7 +60,10 @@ export const universities = immutable({
 
 export function UniversitiesMeta() {
 
-	return <DatasetMeta href={universities.route} label={universities.label} glyph={universities.glyph}/>;
+	return <DatasetMeta about={universities} shapes={[
+		Universities,
+		University
+	]}/>;
 
 }
 

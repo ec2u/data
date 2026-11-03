@@ -15,7 +15,9 @@
  */
 
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
-import { opt } from "@metreeca/core";
+import type { ResourceShape } from "@metreeca/blue/resource";
+import { type Lazy, opt } from "@metreeca/core";
+import type { Some } from "@metreeca/core/arrays";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -25,7 +27,8 @@ import { Mark } from "@metreeca/tile-cell/mark";
 import { useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
-import { Info } from "@metreeca/tile-hive/info";import { date } from "@metreeca/tile-type/date";
+import { Info } from "@metreeca/tile-hive/info";
+import { date } from "@metreeca/tile-type/date";
 import { integer } from "@metreeca/tile-type/integer";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
@@ -61,6 +64,31 @@ export const dataset = immutable({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * The dataset metadata the client presents a dataset with, as exported by the module of each dataset catalogue.
+ */
+export type About = {
+
+	/**
+	 * The address of the dataset, which is also the route of the catalogue listing its resources.
+	 */
+	readonly route: string
+
+	/**
+	 * The name the dataset is headed and titled with.
+	 */
+	readonly label: string
+
+	/**
+	 * The glyph standing for the dataset, shown where there is nothing else to show.
+	 */
+	readonly glyph: ComponentChildren
+
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
  * Creates a link to the introduction to a dataset.
  *
  * Leads to the page introducing the dataset listed by a catalogue, at an address of its own the reader may bookmark.
@@ -87,6 +115,7 @@ export function DatasetLink({
 }
 
 
+
 /**
  * Creates the introduction to the dataset listed by a catalogue.
  *
@@ -99,26 +128,23 @@ export function DatasetLink({
  */
 export function DatasetMeta({
 
-	href,
-	label,
-	glyph
+	about: {
+		route: href,
+		label,
+		glyph
+	}
 
 }: {
 
 	/**
-	 * The route of the catalogue listing the resources of the dataset, which is also the address of the dataset.
+	 * The metadata of the dataset to be introduced.
 	 */
-	href: string
+	about: About
 
 	/**
-	 * The heading and title of the page, as the catalogue it introduces is headed.
+	 * The shapes describing the resources the dataset holds; none if omitted.
 	 */
-	label: string
-
-	/**
-	 * The glyph shown while the dataset is loading or failed to load, as the catalogue it introduces shows it.
-	 */
-	glyph: ComponentChildren
+	shapes?: Some<Lazy<ResourceShape>>
 
 }) {
 
