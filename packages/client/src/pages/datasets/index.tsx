@@ -23,13 +23,17 @@ import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useMembers } from "@metreeca/tile-data/store";
+import { useCollection, useCount, useKeywords, useMembers, useQuery, useTally } from "@metreeca/tile-data/store";
+import { Clear } from "@metreeca/tile-lens/clear";
+import { Count } from "@metreeca/tile-lens/count";
+import { Tally } from "@metreeca/tile-lens/tally";
 import { integer } from "@metreeca/tile-type/integer";
 import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
-import { ec2u } from "../../index.core.js";
+import { ec2u, FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
+import { Search } from "../../tiles/search.js";
 import { courses } from "../courses/courses.js";
 import { documents } from "../documents/documents.js";
 import { events } from "../events/events.js";
@@ -85,13 +89,19 @@ export function DatasetsPage() {
 	const route = useRoute();
 	const router = useRouter();
 
+	const [query, setQuery] = useQuery();
+
 	const collection = useCollection({
 		entry: route,
 		shape: Datasets,
-		field: "resources"
+		field: "resources",
+		criteria: query,
+		onChange: setQuery
 	});
 
 	const members = useMembers(collection, { model: datasets.model });
+	const count = useCount(collection);
+	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
 
 	useEffect(() => router({ title: "" }), []);
 
@@ -106,6 +116,19 @@ export function DatasetsPage() {
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
 		})}
+
+		tray={<>
+
+			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
+
+			<Tally name={"License"} tally={useTally(collection, "license", { label: "label", size: FacetSize })}/>
+
+		</>}
+
+		info={<>
+			<Count collection={collection} count={count}/>
+			<Clear collection={collection}/>
+		</>}
 
 	>{members({
 
