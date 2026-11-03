@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
+import { offerings } from "@ec2u/data-shared/offerings/index.js";
 import { resolve } from "@metreeca/core/resource";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -27,7 +27,7 @@ import { crawl } from "../sinks/crawl.js";
 import { doctorates, lead } from "./pavia-doctorates.core.js";
 
 
-const Source = resolve(base, "/offerings/pavia-doctorates");
+const Source = resolve(offerings.id, "pavia-doctorates");
 
 const IndexURL = "https://phd.unipv.it/la-scuola-di-alta-formazione-dottorale-di-pavia-safd/";
 

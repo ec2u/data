@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
-import { getAcademicYear } from "@ec2u/data-shared/offerings/index.js";
+import { getAcademicYear, offerings } from "@ec2u/data-shared/offerings/index.js";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
 import { pipe } from "@metreeca/flow";
@@ -30,7 +29,7 @@ import { type Draft, sync } from "../sinks/sync.js";
 import { offering, type OfferingRecord } from "./coimbra.core.js";
 
 
-const Source = resolve(base, "/offerings/coimbra");
+const Source = resolve(offerings.id, "coimbra");
 
 const DataURL = "offerings-coimbra-url";
 const DataId = "offerings-coimbra-id";

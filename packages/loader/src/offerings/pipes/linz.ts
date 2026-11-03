@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
+import { offerings } from "@ec2u/data-shared/offerings/index.js";
 import { isArray, type Optional } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
@@ -30,7 +30,7 @@ import { type Draft, sync } from "../sinks/sync.js";
 import { course, program } from "./linz.core.js";
 
 
-const Source = resolve(base, "/offerings/linz");
+const Source = resolve(offerings.id, "linz");
 
 const ProgramsURL = "programs-linz-url";
 const CoursesURL = "courses-linz-url";

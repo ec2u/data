@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
+import { offerings } from "@ec2u/data-shared/offerings/index.js";
 import { resolve } from "@metreeca/core/resource";
 import { type Feed, pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -28,7 +28,7 @@ import type { Draft } from "../sinks/sync.js";
 import { leads } from "./umea.core.js";
 
 
-const Source = resolve(base, "/offerings/umea");
+const Source = resolve(offerings.id, "umea");
 
 const DataURL = "offerings-umea-url";
 

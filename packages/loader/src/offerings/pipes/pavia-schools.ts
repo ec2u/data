@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
+import { offerings } from "@ec2u/data-shared/offerings/index.js";
 import { resolve } from "@metreeca/core/resource";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -25,7 +25,7 @@ import { catalogue } from "./pavia-portal.core.js";
 import { lead } from "./pavia-schools.core.js";
 
 
-const Source = resolve(base, "/offerings/pavia-schools");
+const Source = resolve(offerings.id, "pavia-schools");
 
 const CatalogueURL = "https://portale.unipv.it/it/didattica/post-laurea/scuole-di-specializzazione/scuole-di-specializzazione-di-area-sanitaria/offerta-didattica";
 

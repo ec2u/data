@@ -18,18 +18,30 @@ import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { ISCED2011Topic } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
-import { ec2u } from "@ec2u/data-shared";
+import { base, ec2u } from "@ec2u/data-shared";
 import { SchemaLearningResource } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { iri, string } from "@metreeca/blue/string";
 import { resolve } from "@metreeca/core/resource";
+import { immutable } from "@metreeca/core/values";
 import type { Reference } from "@metreeca/qest/state";
 import * as uuid from "uuid";
 
 
 const YearPattern = "^\\d{4}/\\d{4}$";
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const offerings = immutable({
+
+	id: resolve(base, "/offerings/")
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Offering() {
 	return resource(Resource, SchemaLearningResource, {
@@ -80,24 +92,7 @@ export function Offering() {
 }
 
 
-/**
- * Infers the academic year current at a date.
- *
- * An academic year runs from August to July, so a date from August onwards falls in the year starting in its calendar
- * year, and an earlier one in the year that started the calendar year before; months are read in UTC.
- *
- * @param date The date the academic year is inferred for
- *
- * @returns The academic year current at `date`, formatted as `YYYY/YYYY`
- */
-export function getAcademicYear(date: Date): string {
-
-	const start = date.getUTCFullYear()-(date.getUTCMonth() < 7 ? 1 : 0); // months are zero-based: 7 is August
-
-	return `${start}/${start+1}`;
-
-}
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Identifies an offering listed by a partner university.
@@ -148,5 +143,23 @@ export function getOfferingId(dataset: Reference, university: Reference, key: st
 		return resolve(dataset, uuid.v3(name, uuid.v3(university, uuid.v3.URL)));
 
 	}
+
+}
+
+/**
+ * Infers the academic year current at a date.
+ *
+ * An academic year runs from August to July, so a date from August onwards falls in the year starting in its calendar
+ * year, and an earlier one in the year that started the calendar year before; months are read in UTC.
+ *
+ * @param date The date the academic year is inferred for
+ *
+ * @returns The academic year current at `date`, formatted as `YYYY/YYYY`
+ */
+export function getAcademicYear(date: Date): string {
+
+	const start = date.getUTCFullYear()-(date.getUTCMonth() < 7 ? 1 : 0); // months are zero-based: 7 is August
+
+	return `${start}/${start+1}`;
 
 }

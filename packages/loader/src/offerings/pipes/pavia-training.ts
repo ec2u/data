@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
+import { offerings } from "@ec2u/data-shared/offerings/index.js";
 import { resolve } from "@metreeca/core/resource";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -25,7 +25,7 @@ import { catalogue } from "./pavia-portal.core.js";
 import { lead } from "./pavia-training.core.js";
 
 
-const Source = resolve(base, "/offerings/pavia-training");
+const Source = resolve(offerings.id, "pavia-training");
 
 const CatalogueURL = "https://portale.unipv.it/it/didattica/post-laurea/master-universitari/offerta-didattica";
 

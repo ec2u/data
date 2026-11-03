@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
+import { offerings } from "@ec2u/data-shared/offerings/index.js";
 import { resolve } from "@metreeca/core/resource";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -28,7 +28,7 @@ import { identify, sync } from "../sinks/sync.js";
 import { row } from "./lll.core.js";
 
 
-const Source = resolve(base, "/offerings/lll");
+const Source = resolve(offerings.id, "lll");
 
 const DataURL = "offerings-lll-url";
 

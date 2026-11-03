@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
+import { offerings } from "@ec2u/data-shared/offerings/index.js";
 import { opt, type Optional, type Value } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { pipe } from "@metreeca/flow";
@@ -29,7 +29,7 @@ import { type ProgramDraft, sync } from "../sinks/sync.js";
 import { program } from "./jena.core.js";
 
 
-const Source = resolve(base, "/offerings/jena");
+const Source = resolve(offerings.id, "jena");
 
 const CatalogueURL = "https://www.uni-jena.de/en/study-programme";
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
+import { offerings } from "@ec2u/data-shared/offerings/index.js";
 import { isArray, opt, type Optional } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
@@ -31,7 +31,7 @@ import { type Draft, sync } from "../sinks/sync.js";
 import { course, type CourseRecord, program, type ProgramRecord, text } from "./salamanca.core.js";
 
 
-const Source = resolve(base, "/offerings/salamanca");
+const Source = resolve(offerings.id, "salamanca");
 
 const ProgramsURL = "offerings-salamanca-programs-url";
 const CoursesURL = "offerings-salamanca-courses-url";

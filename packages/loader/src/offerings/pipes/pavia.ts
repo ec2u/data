@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
-import { getAcademicYear } from "@ec2u/data-shared/offerings/index.js";
+import { getAcademicYear, offerings } from "@ec2u/data-shared/offerings/index.js";
 import { isArray, opt, type Optional } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
@@ -33,7 +32,7 @@ import { type CourseDraft, type Draft, type ProgramDraft, sync } from "../sinks/
 import { courses, type OfferRecord, type Page, pages, program, programs, qualify } from "./pavia.core.js";
 
 
-const Source = resolve(base, "/offerings/pavia");
+const Source = resolve(offerings.id, "pavia");
 
 const OfferURL = "https://studentionline.unipv.it/e3rest/api/offerta-service-v1/offerte/";
 

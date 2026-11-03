@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
+import { offerings } from "@ec2u/data-shared/offerings/index.js";
 import { resolve } from "@metreeca/core/resource";
 import { clip } from "@metreeca/core/strings";
 import { pipe } from "@metreeca/flow";
@@ -27,7 +27,7 @@ import { type Entry, program } from "./poitiers.core.js";
 import snapshot from "./poitiers.json" with { type: "json" };
 
 
-const Source = resolve(base, "/offerings/poitiers");
+const Source = resolve(offerings.id, "poitiers");
 
 
 const logger = log(import.meta.url);
