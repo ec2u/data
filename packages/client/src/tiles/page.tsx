@@ -66,7 +66,7 @@ export function Page({
 		copy={<Strip grow place={"head"}>
 
 			<small>{app.copy}</small>
-			<Link href={"https://github.com/ec2u/data"} title={"GitHub Repository"}><Icon.GitHub/></Link>
+			<Link href={"https://github.com/ec2u/data"} title={"GitHub Repository"}><Icon.GitHub class={"repo"}/></Link>
 
 		</Strip>}
 

@@ -45,4 +45,11 @@ tile-shell {
         translate: 0 var(--page-head-nudge);
     }
 
+    /* the repository icon in the footer stands a tad larger than the copyright notice beside it */
+
+    & .repo {
+        width: var(--tile--scaling-125);
+        height: var(--tile--scaling-125);
+    }
+
 }
