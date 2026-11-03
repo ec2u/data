@@ -17,25 +17,27 @@
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import type { ResourceShape } from "@metreeca/blue/resource";
 import { type Lazy, opt } from "@metreeca/core";
-import type { Some } from "@metreeca/core/arrays";
+import { some, type Some } from "@metreeca/core/arrays";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { Mark } from "@metreeca/tile-cell/mark";
+import { Toc } from "@metreeca/tile-cell/toc";
 import { useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useResource } from "@metreeca/tile-data/store";
-import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { date } from "@metreeca/tile-type/date";
 import { integer } from "@metreeca/tile-type/integer";
-import type { ComponentChildren } from "preact";
+import { type ComponentChildren, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
 import { site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { links } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
+import { getShapeName } from "../../tiles/shape.core.js";
+import { Shape } from "../../tiles/shape.js";
 
 
 export const dataset = immutable({
@@ -132,7 +134,9 @@ export function DatasetMeta({
 		route: href,
 		label,
 		glyph
-	}
+	},
+
+	shapes
 
 }: {
 
@@ -163,12 +167,21 @@ export function DatasetMeta({
 	}));
 
 
-	useEffect(() => router({ title: label }), []);
+	const title = resource({
+
+		blank: label,
+		error: label,
+
+		ready: ({ state }) => state.title
+
+	});
+
+	useEffect(() => router({ title }), [title]);
 
 
 	return <Page
 
-		head={label}
+		head={title}
 		menu={<Link href={href} title={"Data"}><Icon.Eye/></Link>}
 
 		back={resource({
@@ -177,33 +190,41 @@ export function DatasetMeta({
 
 		})}
 
-		tray={resource({
+		tray={<>
 
-			ready: ({ state: { created, issued, modified } }) => <Info place={"spread"}>{{
+			{resource({
 
-				Published: opt(issued, value => date.format(value)),
-				Created: opt(created, value => date.format(value)),
+				ready: ({ state: { created, issued, modified } }) => <Info place={"spread"}>{{
 
-				Resources: resources({
+					Published: opt(issued, value => date.format(value)),
+					Created: opt(created, value => date.format(value)),
+					Modified: opt(modified, value => date.format(value)),
 
-					ready: ({ state }) => integer.format(state)
+					Resources: resources({
 
-				}),
+						ready: ({ state }) => integer.format(state)
 
-				Modified: opt(modified, value => date.format(value))
+					}),
 
-			}}</Info>
+				}}</Info>
 
-		})}
+			})}
+
+			{opt(shapes, shapes => <Toc entries={some(shapes).map(getShapeName).map(name => ({
+				label: name,
+				href: `#${name}`
+			}))}/>)}
+
+		</>}
 
 	>{resource({
 
 		blank: () => <Hint>{glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{glyph}</Hint></Failure>,
 
-		ready: ({ state: { title, description, publisher, source, rights, license = [], accessRights } }) => <>
+		ready: ({ state: { description, publisher, source, rights, license = [], accessRights } }) => <>
 
-			<Card title={title}><Mark>{description}</Mark></Card>
+			<Mark>{description}</Mark>
 
 			<Info>{{
 
@@ -214,6 +235,11 @@ export function DatasetMeta({
 				Access: opt(accessRights, text => <Mark>{text}</Mark>)
 
 			}}</Info>
+
+			{opt(shapes, shapes => some(shapes).map(shape => <Fragment key={getShapeName(shape)}>
+				<h1 id={getShapeName(shape)}>{getShapeName(shape)}</h1>
+				<Shape shape={shape}/>
+			</Fragment>))}
 
 		</>
 
