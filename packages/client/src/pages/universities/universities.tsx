@@ -82,7 +82,7 @@ export function UniversitiesData() {
 		onChange: setQuery
 	});
 
-	const keywords = useKeywords(collection, "prefLabel", { delay: 0 }); // the search field times the pause itself
+	const keywords = useKeywords(collection, "prefLabel");
 	const inception = useRange(collection, "inception");
 	const students = useRange(collection, "students");
 	const count = useCount(collection);

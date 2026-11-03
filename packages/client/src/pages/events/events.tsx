@@ -88,7 +88,7 @@ export function EventsData() {
 		onChange: setQuery
 	});
 
-	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
+	const keywords = useKeywords(collection, "label");
 	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
 	const startDate = useRange(collection, "startDate");
 	const isAccessibleForFree = useTally(collection, "isAccessibleForFree", { size: FacetSize });

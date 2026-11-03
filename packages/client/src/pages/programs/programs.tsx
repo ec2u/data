@@ -82,7 +82,7 @@ export function ProgramsData() {
 		onChange: setQuery
 	});
 
-	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
+	const keywords = useKeywords(collection, "label");
 	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
 	const educationalLevel = useTally(collection, "educationalLevel", { label: "label", size: FacetSize });
 	const timeToComplete = useTally(collection, "timeToComplete", { size: FacetSize });

@@ -74,7 +74,7 @@ export function TaxonomiesData() {
 	});
 
 
-	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
+	const keywords = useKeywords(collection, "label");
 	const license = useTally(collection, "license", { label: "label", size: FacetSize });
 	const publisher = useTally(collection, "publisher", { label: "label", size: FacetSize });
 	const count = useCount(collection);

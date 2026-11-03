@@ -25,7 +25,7 @@ import "./search.css";
  * Creates a keyword search field.
  *
  * Hands the trimmed keywords over once the reader pauses typing, so a search runs once per query rather than once per
- * keystroke; the clear control empties the field and hands over the empty query at once.
+ * keystroke; the clear control empties the field and, where keywords are searched for, hands over the empty query.
  */
 export function Search({
 
@@ -62,22 +62,41 @@ export function Search({
 }) {
 
 	const [input, setInput] = useState(value);
+	const [due, setDue] = useState<string>();
 
-	useEffect(() => setInput(value), [value]); // a query reset from outside empties the field
+	// keywords changed from outside replace the field; keywords echoing it back leave the reader's spacing alone
+
+	useEffect(() => setInput(input => input.trim() === value ? input : value), [value]);
+
+	// the pause only marks the keywords as due, so a parent render doesn't restart it
 
 	useEffect(() => {
 
 		const keywords = input.trim();
-		const timer = keywords === value ? undefined : setTimeout(() => onChange(keywords), delay);
+		const timer = keywords === value ? undefined : setTimeout(() => setDue(keywords), delay);
 
 		return () => clearTimeout(timer);
 
-	}, [input, value, delay, onChange]);
+	}, [input, value, delay]);
+
+	// due keywords are handed to the current handler, never to one captured before the pause
+
+	useEffect(() => {
+		if ( due !== undefined ) {
+			setDue(undefined);
+			onChange(due);
+		}
+	}, [due, onChange]);
 
 
 	function clear() {
+
 		setInput("");
-		onChange("");
+
+		if ( value ) { // as with the pause, keywords are handed over only when they change
+			onChange("");
+		}
+
 	}
 
 
