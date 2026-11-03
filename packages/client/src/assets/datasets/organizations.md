@@ -12,15 +12,15 @@ data models.
 
 # Organization
 
-| term                     | type                                                       | # | description                                                           |
-|--------------------------|------------------------------------------------------------|---|-----------------------------------------------------------------------|
-| **ec2u:Organization**    | [ec2u:Resource], [org:Organization], [schema:Organization] |   | EC2U Knowledge Hub organization                                       |
-| [org:classification]     | [ec2u:Topic]                                               | * | links to organization types in the [EC2U Organization Types] taxonomy |
-| [org:subOrganizationOf]  | [ec2u:Organization]                                        | * | links to parent organizations                                         |
-| [org:hasSubOrganization] | [ec2u:Organization]                                        | * | links to child organizations                                          |
-| [org:hasUnit]            | [ec2u:Unit]                                                | * | links to organizational units                                         |
-| [org:hasHead]            | [ec2u:Person]                                              | * | links to persons heading the organization                             |
-| [org:hasMember]          | [ec2u:Person]                                              | * | links to members of the organization                                  |
+| term                     | type                                                       | # | description                                                                        |
+|--------------------------|------------------------------------------------------------|---|------------------------------------------------------------------------------------|
+| **ec2u:Organization**    | [ec2u:Resource], [org:Organization], [schema:Organization] |   | An organisation related to EC2U partner universities                               |
+| [org:classification]     | [ec2u:Topic]                                               | * | categories classifying the organization, in the [EC2U Organization Types] taxonomy |
+| [org:subOrganizationOf]  | [ec2u:Organization]                                        | * | organizations the organization is part of                                          |
+| [org:hasSubOrganization] | [ec2u:Organization]                                        | * | organizations that are part of the organization                                    |
+| [org:hasUnit]            | [ec2u:Unit]                                                | * | organizational units belonging to the organization                                 |
+| [org:hasHead]            | [ec2u:Person]                                              | * | persons leading the organization                                                   |
+| [org:hasMember]          | [ec2u:Person]                                              | * | persons who are members of the organization                                        |
 
 [The Organization Ontology]: https://www.w3.org/TR/vocab-org/
 

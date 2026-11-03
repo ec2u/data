@@ -10,18 +10,13 @@ model.
 
 # Course
 
-| term                              | type                                                      | #    | description                                                                  |
-|-----------------------------------|-----------------------------------------------------------|------|------------------------------------------------------------------------------|
-| **ec2u:Course**                   | [ec2u:Resource], [schema:Course], [schema:CourseInstance] |      | EC2U Knowledge Hub course                                                    |
-| ec2u:year                         | string as {`YYYY/YYYY`}                                   | 0..1 | the academic year in which the course is offered (for instance, `2026/2027`) |
-| ec2u:inferred                     | boolean                                                   | 0..1 | whether the academic year was inferred from the retrieval date, the source stating none |
-| ec2u:term                         | [ec2u:Term]                                               | *    | the academic term(s) in which the course is offered                          |
-| [schema:provider]                 | [ec2u:Organization]                                       | 1    | link to the organization providing the course                                |
-| [schema:instructor]               | [ec2u:Person]                                             | *    | links to the instructors of the course                                       |
-| [schema:educationalLevel]         | [ec2u:Topic]                                              | *    | links to educational levels in the [ISCED 2011] taxonomy                     |
-| [schema:about]                    | [ec2u:Topic]                                              | *    | links to educational and training fields in the [ISCED-F 2013] taxonomy      |
-| [schema:audience]                 | [ec2u:Topic]                                              | *    | links to intended audience groups in the [EC2U Stakeholders] taxonomy        |
-| ‹inProgram› = ^[schema:hasCourse] | [ec2u:Program]                                            | *    | links to programs including the course                                       |
+| term                              | type                                                      | # | description                                                                               |
+|-----------------------------------|-----------------------------------------------------------|---|-------------------------------------------------------------------------------------------|
+| **ec2u:Course**                   | [ec2u:Offering], [schema:Course], [schema:CourseInstance] |   | A degree, vocational or personal development course offered by an EC2U partner university |
+| ec2u:term                         | [ec2u:Term]                                               | * | academic terms in which the course is delivered                                           |
+| [schema:instructor]               | [ec2u:Person]                                             | * | persons teaching the course                                                               |
+| [schema:audience]                 | [ec2u:Topic]                                              | * | groups the course is intended for, in the [EC2U Stakeholders] taxonomy                    |
+| ‹inProgram› = ^[schema:hasCourse] | [ec2u:Program]                                            | * | programs the course is part of                                                            |
 
 # Term
 
@@ -35,25 +30,17 @@ Academic term in which a course is offered.
 | `Summer` | a summer school              |
 | `Open`   | open enrolment               |
 
-[ec2u:Resource]: ./index.md#resource
+[ec2u:Offering]: ./index.md#offering
 
 [schema:Course]: ../about/vocabularies/schema-resource.md#course
 
 [schema:CourseInstance]: ../about/vocabularies/schema-resource.md#course-instance
 
-[schema:provider]: https://schema.org/provider
-
 [schema:instructor]: https://schema.org/instructor
-
-[schema:educationalLevel]: https://schema.org/educationalLevel
-
-[schema:about]: https://schema.org/about
 
 [schema:audience]: https://schema.org/audience
 
 [schema:hasCourse]: https://schema.org/hasCourse
-
-[ec2u:Organization]: organizations.md#organization
 
 [ec2u:Person]: persons.md#person
 
@@ -62,10 +49,6 @@ Academic term in which a course is offered.
 [ec2u:Term]: #term
 
 [ec2u:Topic]: taxonomies.md#topic
-
-[ISCED 2011]: /taxonomies/isced-2011/
-
-[ISCED-F 2013]: /taxonomies/isced-f-2013/
 
 [EC2U Stakeholders]: /taxonomies/stakeholders/
 

@@ -3,29 +3,30 @@ This dataset is mainly intended to support event search on the [My Mobile Tutor]
 EC2U events are described using a controlled subset of [Schema.org](../about/vocabularies/schema-event.md) data
 model.
 
-| prefix  | namespace                   | definition                            |
-|---------|-----------------------------|---------------------------------------|
-| ec2u:   | https://data.ec2u.eu/terms/ | EC2U Knowledge Hub vocabulary         |
-| schema: | https://schema.org/         | [Schema.org] vocabulary   |
+| prefix  | namespace                   | definition                    |
+|---------|-----------------------------|-------------------------------|
+| ec2u:   | https://data.ec2u.eu/terms/ | EC2U Knowledge Hub vocabulary |
+| schema: | https://schema.org/         | [Schema.org] vocabulary       |
 
 ![event data model](index/events.svg)
 
 # Event
 
-| term                | type                            | # | description                                                                                      |
-|---------------------|---------------------------------|---|--------------------------------------------------------------------------------------------------|
-| **ec2u:Event**      | [ec2u:Resource], [schema:Event] |   | EC2U event                                                                                       |
-| [schema:publisher]  | [ec2u:Organization]             | 1 | link to the organization publishing the event                                                    |
-| [schema:about]      | [ec2u:Topic]                    | * | links to event topics in the [EC2U Event Topics] taxonomy                                         |
-| [schema:audience]   | [ec2u:Topic]                    | * | links to intended audience groups in the [EC2U Stakeholders] taxonomy                             |
+| term                               | type                            | #    | description                                                                |
+|------------------------------------|---------------------------------|------|----------------------------------------------------------------------------|
+| **ec2u:Event**                     | [ec2u:Resource], [schema:Event] |      | An event at an EC2U partner university or an associated local organisation |
+| [schema:name]                      | text {maxLength(100)}           | 0..1 | the human-readable name of the resource                                    |
+| [schema:disambiguatingDescription] | text {maxLength(500)}           | 0..1 | the short account telling the resource apart from similar ones             |
+| [schema:publisher]                 | [ec2u:Organization]             | 0..1 | the organization publishing the event                                      |
+| [schema:keywords]                  | [ec2u:Topic]                    | *    | subject terms tagging the event, in the [EC2U Event Topics] taxonomy       |
 
 [Schema.org]: https://schema.org/
 [ec2u:Resource]: ./index.md#resource
 [schema:Event]: ../about/vocabularies/schema-event.md
+[schema:name]: https://schema.org/name
+[schema:disambiguatingDescription]: https://schema.org/disambiguatingDescription
 [schema:publisher]: https://schema.org/publisher
 [ec2u:Organization]: organizations.md#organization
-[schema:about]: https://schema.org/about
+[schema:keywords]: https://schema.org/keywords
 [ec2u:Topic]: taxonomies.md#topic
 [EC2U Event Topics]: /taxonomies/events/
-[schema:audience]: https://schema.org/audience
-[EC2U Stakeholders]: /taxonomies/stakeholders/

@@ -18,25 +18,25 @@ enabling the publication and use of vocabularies in a linked data environment.
 | term                                 | type                    | # | description                                                                                            |
 |--------------------------------------|-------------------------|---|--------------------------------------------------------------------------------------------------------|
 | [skos:ConceptScheme][conceptschemes] |                         |   | A set of concepts, optionally including statements about semantic relationships between those concepts |
-| [skos:hasTopConcept]                 | [skos:Concept][concept] | * | relates a concept scheme to a concept which is topmost in the broader/narrower concept hierarchy       |
-| ‹hasConcept› = ^skos:inScheme        | [skos:Concept][concept] | * | relates a concept scheme to a concept which is in that scheme                                          |
+| [skos:hasTopConcept]                 | [skos:Concept][concept] | * | topmost concepts in the concept hierarchy of the concept scheme                                        |
 
 # Concept
 
-| term                     | type                                 | #    | description                                                                                                  |
-|--------------------------|--------------------------------------|------|--------------------------------------------------------------------------------------------------------------|
-| [skos:Concept][concepts] |                                      |      | An idea or notion; a unit of thought                                                                         |
-| [skos:inScheme]          | [skos:ConceptScheme][concept-scheme] | 1    | relates a resource (for example a concept) to a concept scheme in which it is included                       |
-| [skos:topConceptOf]      | [skos:ConceptScheme][concept-scheme] | 0..1 | relates a concept to the concept scheme that it is a top level concept of                                    |
-| [skos:notation]          | string                               | 0..1 | a notation, also known as classification code, is a string of characters used to uniquely identify a concept |
-| [skos:prefLabel]         | text                                 | 1    | the preferred lexical label for a resource, in a given language                                              |
-| [skos:altLabel]          | text                                 | *    | an alternative lexical label for a resource                                                                  |
-| [skos:hiddenLabel]       | text                                 | *    | a lexical label for a resource that should be hidden when generating visual displays of the resource         |
-| [skos:definition]        | text                                 | 0..1 | a statement or formal explanation of the meaning of a concept                                                |
-| [skos:broader]           | [skos:Concept][concept]              | *    | relates a concept to a concept that is more general in meaning                                               |
-| [skos:narrower]          | [skos:Concept][concept]              | *    | relates a concept to a concept that is more specific in meaning                                              |
-| [skos:related]           | [skos:Concept][concept]              | *    | relates a concept to a concept with which there is an associative semantic relationship                      |
-| [skos:exactMatch]        | [skos:Concept][concept]              | *    | indicates that two concepts can, with a high degree of confidence, be used interchangeably                   |
+| term                     | type                                 | #    | description                                                               |
+|--------------------------|--------------------------------------|------|---------------------------------------------------------------------------|
+| [skos:Concept][concepts] |                                      |      | An idea or notion; a unit of thought                                      |
+| [skos:inScheme]          | [skos:ConceptScheme][concept-scheme] | 1    | concept scheme the concept is included in                                 |
+| [skos:topConceptOf]      | [skos:ConceptScheme][concept-scheme] | 0..1 | concept scheme the concept is a top level concept of                      |
+| [skos:notation]          | string                               | 0..1 | code uniquely identifying the concept within its concept scheme           |
+| [skos:prefLabel]         | text                                 | 1    | preferred lexical label of the concept                                    |
+| [skos:altLabel]          | text                                 | 0..1 | alternative lexical labels of the concept                                 |
+| [skos:hiddenLabel]       | text                                 | 0..1 | lexical labels of the concept excluded from visual displays               |
+| [skos:definition]        | text                                 | 0..1 | formal explanation of the meaning of the concept                          |
+| [skos:broader]           | [skos:Concept][concept]              | *    | concepts more general in meaning than the concept                         |
+| [skos:broaderTransitive] | [skos:Concept][concept]              | *    | concepts more general in meaning than the concept, directly or indirectly |
+| [skos:narrower]          | [skos:Concept][concept]              | *    | concepts more specific in meaning than the concept                        |
+| [skos:related]           | [skos:Concept][concept]              | *    | concepts associatively related to the concept                             |
+| [skos:exactMatch]        | [skos:Concept][concept]              | *    | concepts interchangeable in meaning with the concept                      |
 
 > [!WARNING]
 > Known deviation from standard:
@@ -71,6 +71,8 @@ enabling the publication and use of vocabularies in a linked data environment.
 [skos:definition]: https://www.w3.org/TR/skos-reference/#definition
 
 [skos:broader]: https://www.w3.org/TR/skos-reference/#broader
+
+[skos:broaderTransitive]: https://www.w3.org/TR/skos-reference/#broadertransitive
 
 [skos:narrower]: https://www.w3.org/TR/skos-reference/#narrower
 

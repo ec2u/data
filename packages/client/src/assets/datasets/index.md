@@ -3,34 +3,35 @@ the [Dublin Core Terms](https://www.dublincore.org/specifications/dublin-core/dc
 and [WGS84 Geo Positioning](http://www.w3.org/2003/01/geo/wgs84_pos#) data models, extended with some internal
 housekeeping properties.
 
-| prefix | namespace                                | description                                            |
-|--------|------------------------------------------|--------------------------------------------------------|
-| ec2u:  | https://data.ec2u.eu/terms/              | EC2U Knowledge Hub vocabulary                          |
-| dct:   | http://purl.org/dc/terms/                | [Dublin Core] [DCMI Terms]                             |
-| rdfs:  | http://www.w3.org/2000/01/rdf-schema#    | [RDF Schema 1.1 (RDFS)] vocabulary                     |
-| geo:   | http://www.w3.org/2003/01/geo/wgs84_pos# | [WGS84 Geo Positioning] vocabulary                     |
-| void:  | http://rdfs.org/ns/void#                 | [Vocabulary of Interlinked Datasets (VoID)] vocabulary |
+| prefix  | namespace                                | description                                            |
+|---------|------------------------------------------|--------------------------------------------------------|
+| ec2u:   | https://data.ec2u.eu/terms/              | EC2U Knowledge Hub vocabulary                          |
+| dct:    | http://purl.org/dc/terms/                | [Dublin Core] [DCMI Terms]                             |
+| rdfs:   | http://www.w3.org/2000/01/rdf-schema#    | [RDF Schema 1.1 (RDFS)] vocabulary                     |
+| geo:    | http://www.w3.org/2003/01/geo/wgs84_pos# | [WGS84 Geo Positioning] vocabulary                     |
+| void:   | http://rdfs.org/ns/void#                 | [Vocabulary of Interlinked Datasets (VoID)] vocabulary |
+| schema: | https://schema.org/                      | [Schema.org] vocabulary                                |
 
 ![dataset data model](index/datasets.svg#75)
 
 # Reference
 
-| term               | type                  | #    | definition                                                                                                                                 |
-|--------------------|-----------------------|------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| ***Reference***    |                       |      | Generic reference to an entity                                                                                                             |
-| id                 | uri                   | 1    | unique entity identifier                                                                                                                   |
-| [rdfs:label]       | text {maxLength(100)} | 1    | human readable label for the entity; should uniquely identify the entity even out of context and optimally not exceed 50 characters        |
-| [rdfs:comment]     | text {maxLength(500)} | *    | human readable description of the entity ; should uniquely describe the entity even out of context and optimally not exceed 500 characters |
-| [rdfs:isDefinedBy] | uri                   | 0..1 | link to a human or machine-readable specification providing a formal definition of the entity or its data model                            |
-| [rdfs:seeAlso]     | uri                   | *    | links to other entities describing the same subject                                                                                        |
+| term               | type                  | #    | definition                                                       |
+|--------------------|-----------------------|------|------------------------------------------------------------------|
+| ***Reference***    |                       |      | An entity described on the EC2U Knowledge Hub                    |
+| id                 | uri                   | 1    | unique entity identifier                                         |
+| [rdfs:label]       | text {maxLength(100)} | 1    | the human-readable name identifying the entity                   |
+| [rdfs:comment]     | text {maxLength(500)} | 0..1 | the human-readable account of the entity                         |
+| [rdfs:isDefinedBy] | uri                   | 0..1 | the specification formally defining the entity or its data model |
+| [rdfs:seeAlso]     | uri                   | *    | further resources describing the same entity                     |
 
 # Geo Reference
 
-| term               | type          | # | definition                                   |
-|--------------------|---------------|---|----------------------------------------------|
-| ***GeoReference*** | [*Reference*] |   | Geographic reference with WGS84 coordinates  |
-| [geo:lat]          | double        | 1 | the WGS84 latitude of the referenced entity  |
-| [geo:long]         | double        | 1 | the WGS84 longitude of the referenced entity |
+| term               | type          | # | definition                                                |
+|--------------------|---------------|---|-----------------------------------------------------------|
+| ***GeoReference*** | [*Reference*] |   | A geographic location identified by its WGS84 coordinates |
+| [geo:lat]          | decimal       | 1 | the WGS84 latitude of the referenced entity               |
+| [geo:long]         | decimal       | 1 | the WGS84 longitude of the referenced entity              |
 
 # Resource
 
@@ -39,13 +40,12 @@ housekeeping properties.
 > definitions factoring generic properties shared by the specialised [models](../about/index.md#data-models) defined
 > by each dataset.
 
-| term              | type              | #    | definition                                                                                                                               |
-|-------------------|-------------------|------|------------------------------------------------------------------------------------------------------------------------------------------|
-| **ec2u:Resource** | [*Reference*]     |      | A resource included in the EC2U Knowledge Hub                                                                                            |
-| ec2u:dataset      | [ec2u:Dataset]    | 1    | link to the EC2U Knowledge Hub dataset the resource belongs to                                                                           |
-| ec2u:university   | [ec2u:University] | 0..1 | link to a EC2U partner university associated with the resource                                                                           |
-| ec2u:generated    | boolean           | 1    | `true` if the resource description was even partially  generated by means of automated AI-based analysis; `false` or undefined otherwise |
-| ec2u:version      | string            | 0..1 | version identifier for the resource                                                                                                      |
+| term              | type              | #    | definition                                                  |
+|-------------------|-------------------|------|-------------------------------------------------------------|
+| **ec2u:Resource** | [*Reference*]     |      | A resource published in a dataset on the EC2U Knowledge Hub |
+| ec2u:dataset      | [ec2u:Dataset]    | 1    | the dataset the resource is published in                    |
+| ec2u:university   | [ec2u:University] | 0..1 | the EC2U partner university the resource is associated with |
+| ec2u:generated    | boolean           | 0..1 | flags resources wholly or partially generated by AI tools   |
 
 > [!NOTE]
 >
@@ -59,22 +59,37 @@ housekeeping properties.
 > definitions factoring generic properties shared by the specialised [models](../about/index.md#data-models) defined
 > by each dataset.
 
-| term               | type                | #    | definition                                      |
-|--------------------|---------------------|------|-------------------------------------------------|
-| **ec2u:Dataset**   | [ec2u:Resource]     |      | EC2U Knowledge Hub dataset                      |
-| [dct:title]        | text                | 1    | the title of the dataset                        |
-| [dct:alternative]  | text                | *    | alternative titles of the dataset               |
-| [dct:description]  | text                | *    | the description of the dataset                  |
-| [dct:created]      | date                | 0..1 | the dataset creation date                       |
-| [dct:issued]       | date                | 0..1 | the formal issuance date of the dataset         |
-| [dct:modified]     | date                | 0..1 | the latest modification date of the dataset     |
-| [dct:publisher]    | [ec2u:Organization] | 0..1 | link to the organization publishing the dataset |
-| [dct:source]       | [*Reference*]       | 0..1 | link to the source of the dataset               |
-| [dct:rights]       | text                | 0..1 | the rights information for the dataset          |
-| [dct:license]      | [*Reference*]       | *    | links to the licensing terms of the dataset     |
-| [dct:accessRights] | text                | *    | the access rights for the dataset               |
-| [dct:subject]      | [ec2u:Topic]        | *    | links to topics that classify the dataset       |
-| [rdfs:member]      | [ec2u:Resource]     | *    | links to resources that belong to the dataset   |
+| term                        | type                | #    | definition                                                             |
+|-----------------------------|---------------------|------|------------------------------------------------------------------------|
+| **ec2u:Dataset**            | [ec2u:Resource]     |      | A dataset published on the EC2U Knowledge Hub                          |
+| [dct:title]                 | text                | 1    | the formal title of the dataset                                        |
+| [dct:alternative]           | text                | 0..1 | the short title the dataset is also known by                           |
+| [dct:description]           | text                | 1    | the account of the content of the dataset                              |
+| [dct:created]               | date                | 0..1 | the date of creation of the dataset                                    |
+| [dct:issued]                | date                | 0..1 | the date of formal issuance of the dataset                             |
+| [dct:modified]              | date                | 0..1 | the date of the latest modification of the dataset                     |
+| [dct:publisher]             | [ec2u:Organization] | 0..1 | the organization responsible for making the dataset available          |
+| [dct:source]                | [*Reference*]       | 0..1 | the resource the dataset is derived from                               |
+| [dct:rights]                | text                | 0..1 | the statement of the rights held over the dataset                      |
+| [dct:license]               | [*Reference*]       | *    | legal documents granting permission to use the dataset                 |
+| [dct:accessRights]          | text                | 0..1 | the statement of who may access the dataset and under which conditions |
+| [dct:subject]               | [ec2u:Topic]        | *    | topics the dataset is about, in the [EuroSciVoc] taxonomy              |
+| ‹resources› = ^ec2u:dataset | [ec2u:Resource]     | *    | resources published in the dataset                                     |
+
+# Offering
+
+> [!WARNING]
+> The `ec2u:Offering` data model is not intended to be used in isolation but only to provide base
+> definitions factoring generic properties shared by the specialised [models](../about/index.md#data-models) defined
+> by each dataset.
+
+| term                      | type                                       | #    | definition                                                                       |
+|---------------------------|--------------------------------------------|------|----------------------------------------------------------------------------------|
+| **ec2u:Offering**         | [ec2u:Resource], [schema:LearningResource] |      | An educational offering of an EC2U partner university                            |
+| ec2u:year                 | string as {`YYYY/YYYY`}                    | 0..1 | the academic year in which the offering is delivered (for instance, `2026/2027`) |
+| [schema:provider]         | [ec2u:Organization]                        | 0..1 | the organization providing the learning resource                                 |
+| [schema:educationalLevel] | [ec2u:Topic]                               | *    | educational levels of the learning resource, in the [ISCED 2011] taxonomy        |
+| [schema:about]            | [ec2u:Topic]                               | *    | topics covered by the learning resource                                          |
 
 [Dublin Core]: https://www.dublincore.org
 
@@ -134,4 +149,16 @@ housekeeping properties.
 
 [ec2u:Topic]: taxonomies.md#topic
 
-[rdfs:member]: https://www.w3.org/TR/rdf-schema/#ch_member
+[EuroSciVoc]: /taxonomies/euroscivoc/
+
+[Schema.org]: https://schema.org/
+
+[schema:LearningResource]: ../about/vocabularies/schema-resource.md#learning-resource
+
+[schema:provider]: https://schema.org/provider
+
+[schema:educationalLevel]: https://schema.org/educationalLevel
+
+[ISCED 2011]: /taxonomies/isced-2011/
+
+[schema:about]: https://schema.org/about

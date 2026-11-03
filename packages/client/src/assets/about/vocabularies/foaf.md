@@ -15,13 +15,13 @@ organizations, and their social relationships on the web.
 
 # Agent
 
-| term                     | type   | # | description                                  |
-|--------------------------|--------|---|----------------------------------------------|
-| [foaf:Agent][term-agent] |        |   | an agent (for instance, a person or a group) |
-| [foaf:depiction]         | URI    | * | a link to an image depicting the agent       |
-| [foaf:homepage]          | URI    | * | a link to the homepage of the agent          |
-| [foaf:mbox]              | string | * | a mailbox for the agent                      |
-| [foaf:phone]             | string | * | a phone number for the agent                 |
+| term                     | type  | # | description                                  |
+|--------------------------|-------|---|----------------------------------------------|
+| [foaf:Agent][term-agent] |       |   | an agent (for instance, a person or a group) |
+| [foaf:depiction]         | URI   | * | images depicting the agent                   |
+| [foaf:homepage]          | URI   | * | homepages of the agent                       |
+| [foaf:mbox]              | email | * | email addresses of the agent                 |
+| [foaf:phone]             | phone | * | phone numbers of the agent                   |
 
 > [!WARNING]
 > Known deviations from standard:
@@ -37,12 +37,12 @@ organizations, and their social relationships on the web.
 
 # Person
 
-| term              | type                | #    | description                                           |
-|-------------------|---------------------|------|-------------------------------------------------------|
-| **[foaf:Person]** | [foaf:Agent][agent] |      | a person                                              |
-| [foaf:title]      | string              | 0..1 | personal professional title; for instance `Professor` |
-| [foaf:givenName]  | string              | 1    | the given name of the person                          |
-| [foaf:familyName] | string              | 1    | the family name of the person                         |
+| term              | type                | #    | description                                   |
+|-------------------|---------------------|------|-----------------------------------------------|
+| **[foaf:Person]** | [foaf:Agent][agent] |      | a person                                      |
+| [foaf:title]      | string              | 0..1 | professional or honorific title of the person |
+| [foaf:givenName]  | string              | 1    | the given name of the person                  |
+| [foaf:familyName] | string              | 1    | the family name of the person                 |
 
 [FOAF Vocabulary Specification 0.99]: http://xmlns.com/foaf/spec/
 

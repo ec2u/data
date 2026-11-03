@@ -20,15 +20,14 @@ relationships between people and organizations.
 |------------------------------------------|-----------------------------------------------|------|---------------------------------------------------------------------------------------------------------------|
 | [**org:Organization**][org-organization] | foaf:Organization                             |      | a collection of people organized together into a community or other social, commercial or political structure |
 | [skos:prefLabel]                         | text                                          | 1    | preferred name of the organization                                                                            |
-| [skos:altLabel]                          | text                                          | *    | alternative names of the organization                                                                         |
-| [skos:definition]                        | text                                          | 0..1 | definition of the organization                                                                                |
-| [org:identifier]                         | string                                        | 0..1 | identifier of the organization                                                                                |
-| [org:classification]                     | [skos:Concept]                                | *    | links to classification concepts for the organization                                                         |
-| [org:subOrganizationOf]                  | [org:Organization][organization]              | *    | links to parent organizations                                                                                 |
-| [org:hasSubOrganization]                 | [org:Organization][organization]              | *    | links to sub-organizations                                                                                    |
-| [org:hasUnit]                            | [org:OrganizationalUnit][organizational-unit] | *    | links to organizational units of the organization                                                             |
-| [org:hasMember]                          | foaf:Person                                   | *    | links to persons who are members of the organization                                                          |
-| ‹hasHead› = ^[org:headOf]                | foaf:Person                                   | *    | links to persons who lead the organization                                                                    |
+| [skos:altLabel]                          | string                                        | 0..1 | alternative name of the organization                                                                          |
+| [skos:definition]                        | text                                          | 0..1 | statement of the nature and purpose of the organization                                                       |
+| [org:classification]                     | [skos:Concept]                                | *    | categories classifying the organization                                                                       |
+| [org:subOrganizationOf]                  | [org:Organization][organization]              | *    | organizations the organization is part of                                                                     |
+| [org:hasSubOrganization]                 | [org:Organization][organization]              | *    | organizations that are part of the organization                                                               |
+| [org:hasUnit]                            | [org:OrganizationalUnit][organizational-unit] | *    | organizational units belonging to the organization                                                            |
+| [org:hasMember]                          | foaf:Person                                   | *    | persons who are members of the organization                                                                   |
+| org:hasHead                              | foaf:Person                                   | *    | persons leading the organization                                                                              |
 
 > [!WARNING]
 > Known deviation from standard:
@@ -53,7 +52,7 @@ relationships between people and organizations.
 | term                                                   | type                             | #    | description                                              |
 |--------------------------------------------------------|----------------------------------|------|----------------------------------------------------------|
 | [**org:OrganizationalUnit**][class-organizationalunit] | [org:Organization][organization] |      | an organization that is part of some larger organization |
-| [org:unitOf]                                           | [org:Organization][organization] | 1..* | links to organizations this unit belongs to              |
+| [org:unitOf]                                           | [org:Organization][organization] | 1..* | organizations the unit belongs to                        |
 
 [The Organization Ontology]: https://www.w3.org/TR/vocab-org/
 
@@ -66,8 +65,6 @@ relationships between people and organizations.
 [skos:altLabel]: https://www.w3.org/TR/skos-reference/#altlabel
 
 [skos:definition]: https://www.w3.org/TR/skos-reference/#definition
-
-[org:identifier]: https://www.w3.org/TR/vocab-org/#org:identifier
 
 [org:classification]: https://www.w3.org/TR/vocab-org/#org:classification
 
@@ -84,8 +81,6 @@ relationships between people and organizations.
 [organizational-unit]: #organizational-unit
 
 [org:hasMember]: https://www.w3.org/TR/vocab-org/#org:hasMember
-
-[org:headOf]: https://www.w3.org/TR/vocab-org/#org:headOf
 
 [**org:FormalOrganization**]: https://www.w3.org/TR/vocab-org/#class-formalorganization
 
