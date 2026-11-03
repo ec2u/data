@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { base } from "@ec2u/data-shared";
 import { resource } from "@metreeca/blue/resource";
@@ -36,9 +35,9 @@ export const unitedNations = immutable({
 
 export const sdgs = immutable({ // !!! sync from `taxonomies-ec2u-sdgs`
 
-	id: resolve(taxonomies.id, "sdgs"),
+	id: resolve(base, "/taxonomies/sdgs"),
 
-	dataset: taxonomies.id,
+	dataset: resolve(base, "/taxonomies/"),
 
 	label: "UN SDGs",
 

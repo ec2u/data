@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import { EC2U } from "@ec2u/data-shared";
-import { licenses } from "@ec2u/data-shared/datasets/index.core.js";
-import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
+import { base, EC2U, licenses } from "@ec2u/data-shared";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
@@ -26,9 +24,9 @@ import { immutable } from "@metreeca/core/values";
 
 export const organizations = immutable({ // !!! sync from `taxonomies-ec2u-organizations`
 
-	id: resolve(taxonomies.id, "organizations"),
+	id: resolve(base, "/taxonomies/organizations"),
 
-	dataset: taxonomies.id,
+	dataset: resolve(base, "/taxonomies/"),
 
 	label: "EC2U Organisations",
 

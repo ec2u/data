@@ -18,11 +18,42 @@ import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { EuroSciVocTopic } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
-import { ec2u, Entity } from "@ec2u/data-shared";
+import { base, EC2U, ec2u, Entity, licenses } from "@ec2u/data-shared";
 import { dictionary } from "@metreeca/blue/dictionary";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { date, text } from "@metreeca/blue/string";
+import type { State } from "@metreeca/blue/value";
+import { resolve } from "@metreeca/core/resource";
+import { immutable } from "@metreeca/core/values";
+
+
+export const datasets = immutable({
+
+	id: base,
+
+	isDefinedBy: resolve(base, "/datasets/"),
+	dataset: base, // the catalogue lists itself among the datasets it publishes
+
+
+	label: "EC2U Knowledge Hub",
+
+	title: { en: "EC2U Knowledge Hub" },
+	alternative: { en: "EC2U Datasets" },
+	description: { en: "Catalogue of the datasets published by the EC2U Alliance on the EC2U Knowledge Hub." },
+
+	publisher: EC2U,
+
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id]
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Datasets = State<typeof Datasets>;
+export type Dataset = State<typeof Dataset>;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { base, EC2U, ec2u } from "@ec2u/data-shared";
-import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
+import { base, EC2U, ec2u, licenses } from "@ec2u/data-shared";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { reference } from "@metreeca/blue/reference";
@@ -30,7 +29,7 @@ export const pages = immutable({
 	id: resolve(base, "/pages/"),
 
 	isDefinedBy: resolve(base, "/datasets/pages"),
-	dataset: datasets.id,
+	dataset: base,
 
 	label: "EC2U Pages",
 

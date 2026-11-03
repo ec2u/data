@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { base, CommentLength, EC2U, ec2u, LabelLength } from "@ec2u/data-shared";
-import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
+import { base, CommentLength, EC2U, ec2u, LabelLength, licenses } from "@ec2u/data-shared";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
@@ -38,7 +37,7 @@ export const events = immutable({
 	id: resolve(base, "/events/"),
 
 	isDefinedBy: resolve(base, "/datasets/events"),
-	dataset: datasets.id,
+	dataset: base,
 
 	label: "EC2U Events",
 

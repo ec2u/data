@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { base } from "@ec2u/data-shared";
 import { resource } from "@metreeca/blue/resource";
@@ -36,9 +35,9 @@ export const unescoStatistics = immutable({
 
 export const isced2011 = immutable({ // !!! persist
 
-	id: resolve(taxonomies.id, "isced-2011"),
+	id: resolve(base, "/taxonomies/isced-2011"),
 
-	dataset: taxonomies.id,
+	dataset: resolve(base, "/taxonomies/"),
 
 	label: "ISCED 2011",
 

@@ -20,6 +20,7 @@ import { iri, text } from "@metreeca/blue/string";
 import { union } from "@metreeca/blue/union";
 import type { State } from "@metreeca/blue/value";
 import { createNamespace, resolve } from "@metreeca/core/resource";
+import { immutable } from "@metreeca/core/values";
 import { wgs, WGSPoint } from "@metreeca/work/open/wgs.js";
 
 
@@ -77,6 +78,20 @@ export const rdfs = createNamespace("http://www.w3.org/2000/01/rdf-schema#", [
 	"member"
 
 ]);
+
+
+export const licenses = immutable({
+
+	CCBYNCND40: {
+
+		id: "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+
+		label: "CC BY-NC-ND 4.0",
+		comment: { en: "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International" }
+
+	}
+
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

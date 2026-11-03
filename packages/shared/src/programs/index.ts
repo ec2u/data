@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { base, EC2U, ec2u } from "@ec2u/data-shared";
-import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
+import { base, EC2U, ec2u, licenses } from "@ec2u/data-shared";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { getOfferingId, Offering } from "@ec2u/data-shared/offerings/index.js";
 import { SchemaEducationalOccupationalProgram } from "@ec2u/data-shared/vocabularies/schema/learning.js";
@@ -32,7 +31,7 @@ export const programs = immutable({
 	id: resolve(base, "/programs/"),
 
 	isDefinedBy: resolve(base, "/datasets/programs"),
-	dataset: datasets.id,
+	dataset: base,
 
 	label: "EC2U Programs",
 

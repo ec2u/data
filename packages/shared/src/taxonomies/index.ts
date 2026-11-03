@@ -16,14 +16,41 @@
 
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
-import { ec2u } from "@ec2u/data-shared";
+import { base, EC2U, ec2u, licenses } from "@ec2u/data-shared";
 import { SKOSConcept, SKOSConceptScheme } from "@ec2u/data-shared/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
 import type { Reference } from "@metreeca/qest/state";
 import type { State } from "@metreeca/blue/value";
+import { resolve } from "@metreeca/core/resource";
+import { immutable } from "@metreeca/core/values";
 
+
+// never read from taxonomy modules at load time: they are imported cyclically by the shapes below
+
+export const taxonomies = immutable({
+
+	id: resolve(base, "/taxonomies/"),
+
+	isDefinedBy: resolve(base, "/datasets/taxonomies"),
+	dataset: base,
+
+	label: "EC2U Taxonomies",
+
+	title: { en: "EC2U Classification Taxonomies" },
+	alternative: { en: "EC2U Taxonomies" },
+	description: { en: "Standardised topic taxonomies and other concept schemes for classifying resources." },
+
+	publisher: EC2U,
+
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id]
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type Taxonomy = State<typeof Taxonomy>;
 export type Topic = State<typeof Topic>;

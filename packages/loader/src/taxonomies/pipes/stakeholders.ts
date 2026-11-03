@@ -16,7 +16,7 @@
 
 import { execute } from "../../index.core.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
-import { licenses } from "@ec2u/data-shared/datasets/index.core.js";
+import { licenses } from "@ec2u/data-shared";
 import { alliance } from "@ec2u/data-shared/organizations/index.js";
 import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";

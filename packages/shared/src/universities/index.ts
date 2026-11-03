@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { base, EC2U, ec2u, Place } from "@ec2u/data-shared";
-import { datasets, licenses } from "@ec2u/data-shared/datasets/index.core.js";
+import { base, EC2U, ec2u, licenses, Place } from "@ec2u/data-shared";
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { OrgFormalOrganization } from "@ec2u/data-shared/vocabularies/org.js";
@@ -34,7 +33,7 @@ export const universities = immutable({
 	id: resolve(base, "/universities/"),
 
 	isDefinedBy: resolve(base, "/datasets/universities"),
-	dataset: datasets.id,
+	dataset: base,
 
 	label: "EC2U Universities",
 

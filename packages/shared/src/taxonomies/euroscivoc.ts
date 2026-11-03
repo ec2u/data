@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { base } from "@ec2u/data-shared";
 import { resource } from "@metreeca/blue/resource";
@@ -36,9 +35,9 @@ export const publicationsOffice = immutable({
 
 export const euroscivoc = immutable({ // !!! sync from the EU vocabularies RDF distribution
 
-	id: resolve(taxonomies.id, "euroscivoc"),
+	id: resolve(base, "/taxonomies/euroscivoc"),
 
-	dataset: taxonomies.id,
+	dataset: resolve(base, "/taxonomies/"),
 
 	label: "EuroSciVoc",
 

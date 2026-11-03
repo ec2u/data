@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { taxonomies } from "@ec2u/data-shared/taxonomies/index.core.js";
+import { base } from "@ec2u/data-shared";
 import { unescoStatistics } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { resource } from "@metreeca/blue/resource";
@@ -25,9 +25,9 @@ import { immutable } from "@metreeca/core/values";
 
 export const iscedf2013 = immutable({ // !!! sync from the EU vocabularies SKOS distribution
 
-	id: resolve(taxonomies.id, "isced-f-2013"),
+	id: resolve(base, "/taxonomies/isced-f-2013"),
 
-	dataset: taxonomies.id,
+	dataset: resolve(base, "/taxonomies/"),
 
 	label: "ISCED-F 2013",
 
