@@ -54,20 +54,41 @@ export function SchemaEvent() {
 
 		url: nonempty(iri),
 
-		startDate: required(instant),
-		endDate: optional(instant),
+		startDate: required(instant, {
+			description: "Date and time at which the event starts."
+		}),
 
-		inLanguage: optional(tag),
-		isAccessibleForFree: optional(boolean),
+		endDate: optional(instant, {
+			description: "Date and time at which the event ends."
+		}),
 
-		eventStatus: optional(SchemaEventStatusType),
-		eventAttendanceMode: optional(SchemaEventAttendanceModeEnumeration),
+		inLanguage: optional(tag, {
+			description: "Language the event is held in."
+		}),
 
-		location: optional(SchemaLocation),
+		isAccessibleForFree: optional(boolean, {
+			description: "Flags events accessible free of charge."
+		}),
 
-		publisher: optional(reference(SchemaOrganization)),
+		eventStatus: optional(SchemaEventStatusType, {
+			description: "Current scheduling status of the event."
+		}),
 
-		keywords: multiple(reference(SKOSConcept))
+		eventAttendanceMode: optional(SchemaEventAttendanceModeEnumeration, {
+			description: "Mode of attendance offered by the event."
+		}),
+
+		location: optional(SchemaLocation, {
+			description: "Physical or virtual location where the event is held."
+		}),
+
+		publisher: optional(reference(SchemaOrganization), {
+			description: "Organization publishing the event."
+		}),
+
+		keywords: multiple(reference(SKOSConcept), {
+			description: "Subject terms tagging the event."
+		})
 
 	});
 }

@@ -57,6 +57,8 @@ export const units = immutable({
 export function Units() {
 	return resource(Dataset, {
 
+		pattern: units.id,
+
 		name: "Units",
 		description: "Information about research units and supporting structures at EC2U partner universities."
 
@@ -72,6 +74,7 @@ export function Unit() {
 
 		space: ec2u,
 		class: ec2u.Unit,
+		pattern: `${units.id}{code}`,
 
 		name: "Unit",
 		description: "A research unit or supporting structure at an EC2U partner university."
@@ -80,8 +83,21 @@ export function Unit() {
 
 		unitOf: nonempty(reference(Organization)),
 
-		subject: multiple(reference(EuroSciVocTopic), { forward: dct }),
-		keyword: multiple(text, { forward: dcat }),
+		subject: multiple(reference(EuroSciVocTopic), {
+
+			forward: dct,
+
+			description: "Research topics the unit is concerned with."
+
+		}),
+
+		keyword: multiple(text, {
+
+			forward: dcat,
+
+			description: "Free-text terms characterising the activities of the unit."
+
+		}),
 
 		digest: optional(string, {
 

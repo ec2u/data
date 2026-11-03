@@ -48,11 +48,21 @@ export function FOAFAgent() {
 
 	}, {
 
-		depiction: multiple(iri),
-		homepage: multiple(iri),
+		depiction: multiple(iri, {
+			description: "Images depicting the agent."
+		}),
 
-		mbox: multiple(email),
-		phone: multiple(phone)
+		homepage: multiple(iri, {
+			description: "Homepages of the agent."
+		}),
+
+		mbox: multiple(email, {
+			description: "Email addresses of the agent."
+		}),
+
+		phone: multiple(phone, {
+			description: "Phone numbers of the agent."
+		})
 
 	});
 }
@@ -72,10 +82,17 @@ export function FOAFPerson() {
 
 	}, {
 
-		title: optional(text),
+		title: optional(text, {
+			description: "Professional or honorific title of the person."
+		}),
 
-		givenName: required(text),
-		familyName: required(text)
+		givenName: required(text, {
+			description: "Given name of the person."
+		}),
+
+		familyName: required(text, {
+			description: "Family name of the person."
+		})
 
 	});
 }

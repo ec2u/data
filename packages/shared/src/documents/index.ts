@@ -68,6 +68,8 @@ export type Document = State<typeof Document>;
 export function Documents() {
 	return resource(Dataset, {
 
+		pattern: documents.id,
+
 		name: "Documents",
 		description: "Regulations, policies and other governance documents shared by EC2U partner universities."
 
@@ -83,6 +85,7 @@ export function Document() {
 
 		space: dct,
 		class: ec2u.Document,
+		pattern: `${documents.id}{code}`,
 
 		name: "Document",
 		description: "A regulation, policy or other governance document shared by an EC2U partner university."
@@ -91,40 +94,87 @@ export function Document() {
 
 		url: multiple(iri, {
 
-			forward: schema
+			forward: schema,
+
+			description: "Web addresses of the online versions of the document."
 
 		}),
 
-		identifier: optional(text),
-		language: multiple(tag),
+		identifier: optional(text, {
+			description: "Formal identifier assigned to the document by its publisher."
+		}),
 
-		title: required(dictionary({ uniqueLang: true })),
-		description: optional(dictionary({ uniqueLang: true })),
+		language: multiple(tag, {
+			description: "Languages the document is written in."
+		}),
 
-		creator: optional(reference(Person)),
-		contributor: multiple(reference(Person)),
-		publisher: optional(reference(Organization)),
+		title: required(dictionary({ uniqueLang: true }), {
+			description: "Official title of the document."
+		}),
 
-		created: optional(date),
-		issued: optional(date),
-		modified: optional(date),
+		description: optional(dictionary({ uniqueLang: true }), {
+			description: "Summary of the content of the document."
+		}),
 
-		valid: optional(text),
+		creator: optional(reference(Person), {
+			description: "Person primarily responsible for the content of the document."
+		}),
 
-		rights: optional(text),
-		accessRights: optional(dictionary({ uniqueLang: true })),
-		license: optional(reference(Entity)),
+		contributor: multiple(reference(Person), {
+			description: "Other persons who contributed to the content of the document."
+		}),
+
+		publisher: optional(reference(Organization), {
+			description: "Organization responsible for issuing the document."
+		}),
+
+		created: optional(date, {
+			description: "Date of creation of the document."
+		}),
+
+		issued: optional(date, {
+			description: "Date of formal issuance of the document."
+		}),
+
+		modified: optional(date, {
+			description: "Date of the latest modification of the document."
+		}),
+
+		valid: optional(text, {
+			description: "Period during which the document is in force."
+		}),
+
+		rights: optional(text, {
+			description: "Statement of the copyright held over the document."
+		}),
+
+		accessRights: optional(dictionary({ uniqueLang: true }), {
+			description: "Statement of who may access the document and under which conditions."
+		}),
+
+		license: optional(reference(Entity), {
+			description: "Legal document granting permission to use the document."
+		}),
 
 		type: multiple(reference(DocumentTopic), {
 
-			forward: dct.type
+			forward: dct.type,
+
+			description: "Categories of governance document the document falls under."
 
 		}),
 
-		subject: multiple(reference(EuroSciVocTopic)),
-		audience: multiple(reference(StakeholderTopic)),
+		subject: multiple(reference(EuroSciVocTopic), {
+			description: "Topics the document is about."
+		}),
 
-		relation: multiple(reference(Document)),
+		audience: multiple(reference(StakeholderTopic), {
+			description: "Stakeholder groups the document is intended for."
+		}),
+
+		relation: multiple(reference(Document), {
+			description: "Other documents the document is related to."
+		}),
 
 		digest: required(string, {
 

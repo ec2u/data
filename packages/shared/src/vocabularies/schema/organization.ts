@@ -27,12 +27,21 @@ export function SchemaOrganization() {
 
 	}, {
 
-		legalName: optional(text),
+		legalName: optional(text, {
+			description: "Official registered name of the organization."
+		}),
 
-		email: multiple(email),
-		telephone: multiple(phone),
+		email: multiple(email, {
+			description: "Email addresses of the organization."
+		}),
 
-		location: optional(SchemaLocation)
+		telephone: multiple(phone, {
+			description: "Telephone numbers of the organization."
+		}),
+
+		location: optional(SchemaLocation, {
+			description: "Physical or virtual location of the organization."
+		})
 
 	});
 }

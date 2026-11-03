@@ -62,6 +62,8 @@ export type Course = State<typeof Course>;
 export function Courses() {
 	return resource(Dataset, {
 
+		pattern: courses.id,
+
 		name: "Courses",
 		description: "Degree, vocational and personal development courses offered by EC2U partner universities."
 
@@ -77,20 +79,25 @@ export function Course() {
 
 		space: ec2u,
 		class: ec2u.Course,
+		pattern: `${courses.id}{code}`,
 
 		name: "Course",
 		description: "A degree, vocational or personal development course offered by an EC2U partner university."
 
 	}, {
 
-		term: multiple(Term),
+		term: multiple(Term, {
+			description: "Academic terms in which the course is delivered."
+		}),
 
 		audience: multiple(reference(StakeholderTopic)),
 		instructor: multiple(reference(Person)),
 
 		inProgram: multiple(reference(Program), {
 
-			reverse: schema.hasCourse
+			reverse: schema.hasCourse,
+
+			description: "Programs the course is part of."
 
 		})
 

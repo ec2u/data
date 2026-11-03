@@ -60,6 +60,8 @@ export type University = State<typeof University>;
 export function Universities() {
 	return resource(Dataset, {
 
+		pattern: universities.id,
+
 		name: "Universities",
 		description: "Background, historical context and statistical data about EC2U partner universities."
 
@@ -75,6 +77,7 @@ export function University() {
 
 		space: ec2u,
 		class: ec2u.University,
+		pattern: `${universities.id}{code}`,
 
 		name: "University",
 		description: "An EC2U partner university."
@@ -94,11 +97,21 @@ export function University() {
 		depiction: nonempty(iri),
 		homepage: nonempty(iri),
 
-		inception: required(year),
-		students: required(int),
+		inception: required(year, {
+			description: "Year the university was founded."
+		}),
 
-		city: required(reference(Place)),
-		country: required(reference(Place))
+		students: required(int, {
+			description: "Number of students enrolled at the university."
+		}),
+
+		city: required(reference(Place), {
+			description: "City where the university is located."
+		}),
+
+		country: required(reference(Place), {
+			description: "Country where the university is located."
+		})
 
 	});
 }

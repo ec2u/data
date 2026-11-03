@@ -44,19 +44,41 @@ export function SchemaCredentialCategory() {
 export function SchemaLearningResource() {
 	return resource(SchemaThing, {
 
-		numberOfCredits: optional(decimal({ minInclusive: 0 })),
+		numberOfCredits: optional(decimal({ minInclusive: 0 }), {
+			description: "Number of academic credits awarded for the learning resource."
+		}),
 
-		teaches: optional(dictionary({ uniqueLang: true })),
-		assesses: optional(dictionary({ uniqueLang: true })),
-		competencyRequired: optional(dictionary({ uniqueLang: true })),
+		teaches: optional(dictionary({ uniqueLang: true }), {
+			description: "Goals, structure and contents of the learning resource."
+		}),
 
-		educationalCredentialAwarded: optional(SchemaEducationalOccupationalCredential),
-		occupationalCredentialAwarded: optional(SchemaEducationalOccupationalCredential),
+		assesses: optional(dictionary({ uniqueLang: true }), {
+			description: "Competences acquired through the learning resource."
+		}),
 
-		provider: optional(reference(SchemaOrganization)),
+		competencyRequired: optional(dictionary({ uniqueLang: true }), {
+			description: "Competences to be demonstrated to complete the learning resource."
+		}),
 
-		educationalLevel: multiple(reference(SKOSConcept)),
-		about: multiple(reference(SKOSConcept))
+		educationalCredentialAwarded: optional(SchemaEducationalOccupationalCredential, {
+			description: "Educational credential awarded on completion of the learning resource."
+		}),
+
+		occupationalCredentialAwarded: optional(SchemaEducationalOccupationalCredential, {
+			description: "Occupational credential awarded on completion of the learning resource."
+		}),
+
+		provider: optional(reference(SchemaOrganization), {
+			description: "Organization providing the learning resource."
+		}),
+
+		educationalLevel: multiple(reference(SKOSConcept), {
+			description: "Educational levels of the learning resource."
+		}),
+
+		about: multiple(reference(SKOSConcept), {
+			description: "Topics covered by the learning resource."
+		})
 
 	});
 }
@@ -64,13 +86,19 @@ export function SchemaLearningResource() {
 export function SchemaEducationalOccupationalProgram() {
 	return resource(SchemaLearningResource, {
 
-		timeToComplete: optional(duration),
+		timeToComplete: optional(duration, {
+			description: "Expected time to complete the program."
+		}),
 
-		programPrerequisites: optional(dictionary({ uniqueLang: true })),
+		programPrerequisites: optional(dictionary({ uniqueLang: true }), {
+			description: "Requirements a candidate must satisfy to be admitted to the program."
+		}),
 
 		hasCourse: multiple(reference(Course), {
 
-			foreign: true
+			foreign: true,
+
+			description: "Courses included in the program."
 
 		})
 
@@ -80,12 +108,21 @@ export function SchemaEducationalOccupationalProgram() {
 export function SchemaCourse() {
 	return resource(SchemaLearningResource, {
 
-		courseCode: optional(text),
+		courseCode: optional(text, {
+			description: "Code identifying the course within the offering of its provider."
+		}),
 
-		inLanguage: multiple(tag),
-		timeRequired: optional(duration),
+		inLanguage: multiple(tag, {
+			description: "Languages the course is taught in."
+		}),
 
-		coursePrerequisites: optional(dictionary({ uniqueLang: true }))
+		timeRequired: optional(duration, {
+			description: "Typical time required to work through the course."
+		}),
+
+		coursePrerequisites: optional(dictionary({ uniqueLang: true }), {
+			description: "Requirements a candidate must satisfy to be admitted to the course."
+		})
 
 	});
 }
@@ -93,14 +130,27 @@ export function SchemaCourse() {
 export function SchemaCourseInstance() {
 	return resource(SchemaThing, {
 
-		isAccessibleForFree: optional(boolean),
-		courseWorkload: optional(duration),
-		courseMode: optional(SchemaEventAttendanceModeEnumeration),
+		isAccessibleForFree: optional(boolean, {
+			description: "Flags courses accessible free of charge."
+		}),
 
-		instructor: multiple(reference(FOAFPerson)),
+		courseWorkload: optional(duration, {
+			description: "Amount of work expected of students taking the course."
+		}),
 
-		about: multiple(reference(SKOSConcept)),
-		audience: multiple(reference(SKOSConcept))
+		courseMode: optional(SchemaEventAttendanceModeEnumeration, {
+			description: "Mode of attendance offered by the course."
+		}),
+
+		instructor: multiple(reference(FOAFPerson), {
+			description: "Persons teaching the course."
+		}),
+
+		about: multiple(reference(SKOSConcept)), // described by SchemaLearningResource, merged with it in Course
+
+		audience: multiple(reference(SKOSConcept), {
+			description: "Groups the course is intended for."
+		})
 
 	});
 }
@@ -112,7 +162,9 @@ export function SchemaEducationalOccupationalCredential() {
 
 	}, {
 
-		credentialCategory: required(SchemaCredentialCategory)
+		credentialCategory: required(SchemaCredentialCategory, {
+			description: "Kind of qualification the credential represents."
+		})
 
 	});
 }

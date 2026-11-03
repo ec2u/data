@@ -60,7 +60,9 @@ export function OrgOrganizationalUnit() {
 		unitOf: nonempty(reference(OrgOrganization), {
 
 			forward: org,
-			reverse: org.hasUnit
+			reverse: org.hasUnit,
+
+			description: "Organizations the unit belongs to."
 
 		})
 
@@ -79,43 +81,59 @@ export function OrgOrganization() {
 
 		prefLabel: required(union(text, dictionary({ uniqueLang: true })), {
 
-			forward: skos
+			forward: skos,
+
+			description: "Preferred name of the organization."
 
 		}),
 
 		altLabel: optional(text, {
 
-			forward: skos
+			forward: skos // no description: extending shapes state their own, and blue rejects a conflicting one
 
 		}),
 
 		definition: optional(dictionary({ uniqueLang: true }), {
 
-			forward: skos
+			forward: skos,
+
+			description: "Statement of the nature and purpose of the organization."
 
 		}),
 
-		classification: multiple(reference(SKOSConcept)),
+		classification: multiple(reference(SKOSConcept), {
+			description: "Categories classifying the organization."
+		}),
 
-		subOrganizationOf: multiple(reference(OrgOrganization)),
+		subOrganizationOf: multiple(reference(OrgOrganization), {
+			description: "Organizations the organization is part of."
+		}),
 
 		hasSubOrganization: multiple(reference(OrgOrganization), {
 
-			foreign: true
+			foreign: true,
+
+			description: "Organizations that are part of the organization."
 
 		}),
 
 		hasUnit: multiple(reference(OrgOrganizationalUnit), {
 
-			foreign: true
+			foreign: true,
+
+			description: "Organizational units belonging to the organization."
 
 		}),
 
-		hasHead: multiple(reference(FOAFPerson)),
+		hasHead: multiple(reference(FOAFPerson), {
+			description: "Persons leading the organization."
+		}),
 
 		hasMember: multiple(reference(FOAFPerson), {
 
-			foreign: true
+			foreign: true,
+
+			description: "Persons who are members of the organization."
 
 		})
 

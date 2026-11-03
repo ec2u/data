@@ -79,14 +79,18 @@ export function Person() {
 
 			foreign: true,
 
-			reverse: org.hasHead
+			reverse: org.hasHead,
+
+			description: "Organizations headed by the person."
 
 		}),
 
 		memberOf: multiple(reference(Organization), {
 
 			forward: org,
-			reverse: org.hasMember
+			reverse: org.hasMember,
+
+			description: "Organizations the person is a member of."
 
 		}),
 

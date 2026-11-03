@@ -60,7 +60,9 @@ export function SKOSConceptScheme() {
 
 			foreign: true,
 
-			reverse: skos.topConceptOf
+			reverse: skos.topConceptOf,
+
+			description: "Topmost concepts in the concept hierarchy of the concept scheme."
 
 		}),
 
@@ -84,48 +86,75 @@ export function SKOSConcept() {
 
 	}, {
 
-		notation: optional(string), // ;( should be typed as per SKOS best practices
+		notation: optional(string, { // ;( should be typed as per SKOS best practices
+			description: "Code uniquely identifying the concept within its concept scheme."
+		}),
 
-		prefLabel: required(dictionary({ uniqueLang: true })),
-		altLabel: optional(dictionary()),
-		hiddenLabel: optional(dictionary()),
-		definition: optional(dictionary({ uniqueLang: true })),
+		prefLabel: required(dictionary({ uniqueLang: true }), {
+			description: "Preferred lexical label of the concept."
+		}),
 
-		inScheme: required(reference(SKOSConceptScheme)),
+		altLabel: optional(dictionary(), {
+			description: "Alternative lexical labels of the concept."
+		}),
+
+		hiddenLabel: optional(dictionary(), {
+			description: "Lexical labels of the concept excluded from visual displays."
+		}),
+
+		definition: optional(dictionary({ uniqueLang: true }), {
+			description: "Formal explanation of the meaning of the concept."
+		}),
+
+		inScheme: required(reference(SKOSConceptScheme), {
+			description: "Concept scheme the concept is included in."
+		}),
 
 		topConceptOf: optional(reference(SKOSConceptScheme), {
 
 			forward: skos,
-			reverse: skos.hasTopConcept
+			reverse: skos.hasTopConcept,
+
+			description: "Concept scheme the concept is a top level concept of."
 
 		}),
 
 		broader: multiple(reference(SKOSConcept), {
 
 			forward: skos,
-			reverse: skos.narrower
+			reverse: skos.narrower,
+
+			description: "Concepts more general in meaning than the concept."
 
 		}),
 
-		broaderTransitive: multiple(reference(SKOSConcept)),
+		broaderTransitive: multiple(reference(SKOSConcept), {
+			description: "Concepts more general in meaning than the concept, directly or indirectly."
+		}),
 
 		narrower: multiple(reference(SKOSConcept), {
 
-			foreign: true
+			foreign: true,
+
+			description: "Concepts more specific in meaning than the concept."
 
 		}),
 
 		related: multiple(reference(SKOSConcept), {
 
 			forward: skos,
-			reverse: skos
+			reverse: skos,
+
+			description: "Concepts associatively related to the concept."
 
 		}),
 
 		exactMatch: multiple(reference(SKOSConcept), {
 
 			forward: skos,
-			reverse: skos
+			reverse: skos,
+
+			description: "Concepts interchangeable in meaning with the concept."
 
 		})
 

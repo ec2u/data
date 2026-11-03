@@ -60,6 +60,8 @@ export type Topic = State<typeof Topic>;
 export function Taxonomies() {
 	return resource(Dataset, {
 
+		pattern: taxonomies.id,
+
 		name: "Taxonomies",
 		description: "Standardised topic taxonomies and other concept schemes for classifying resources."
 
@@ -75,6 +77,7 @@ export function Taxonomy() {
 
 		space: ec2u,
 		class: ec2u.Taxonomy,
+		pattern: `${taxonomies.id}{taxonomy}`,
 
 		name: "Taxonomy",
 		description: "A standardised topic taxonomy or other concept scheme for classifying resources."
@@ -101,6 +104,7 @@ export function Topic() {
 
 		space: ec2u,
 		class: ec2u.Topic,
+		pattern: `${taxonomies.id}*`,
 
 		name: "Topic",
 		description: "A topic for classifying resources, as defined by a taxonomy."

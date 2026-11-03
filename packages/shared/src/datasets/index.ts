@@ -60,6 +60,8 @@ export type Dataset = State<typeof Dataset>;
 export function Datasets() {
 	return resource(Dataset, {
 
+		pattern: datasets.id,
+
 		name: "Datasets",
 		description: "Datasets published on the EC2U Knowledge Hub."
 
@@ -75,35 +77,68 @@ export function Dataset() {
 
 		space: dct,
 		class: ec2u.Dataset,
+		pattern: `${datasets.id}*`, // narrowed by each dataset to the root of its catalogue
 
 		name: "Dataset",
 		description: "A dataset published on the EC2U Knowledge Hub."
 
 	}, {
 
-		title: required(dictionary({ uniqueLang: true })),
-		alternative: optional(dictionary({ uniqueLang: true })),
-		description: required(dictionary({ uniqueLang: true })),
+		title: required(dictionary({ uniqueLang: true }), {
+			description: "Formal title of the dataset."
+		}),
 
-		created: optional(date),
-		issued: optional(date),
-		modified: optional(date),
+		alternative: optional(dictionary({ uniqueLang: true }), {
+			description: "Short title the dataset is also known by."
+		}),
 
-		publisher: optional(reference(Organization)),
+		description: required(dictionary({ uniqueLang: true }), {
+			description: "Account of the content of the dataset."
+		}),
 
-		source: optional(reference(Entity)),
+		created: optional(date, {
+			description: "Date of creation of the dataset."
+		}),
 
-		rights: optional(text),
-		license: multiple(reference(Entity)),
-		accessRights: optional(dictionary({ uniqueLang: true })),
+		issued: optional(date, {
+			description: "Date of formal issuance of the dataset."
+		}),
 
-		subject: multiple(reference(EuroSciVocTopic)),
+		modified: optional(date, {
+			description: "Date of the latest modification of the dataset."
+		}),
+
+		publisher: optional(reference(Organization), {
+			description: "Organization responsible for making the dataset available."
+		}),
+
+		source: optional(reference(Entity), {
+			description: "Resource the dataset is derived from."
+		}),
+
+		rights: optional(text, {
+			description: "Statement of the rights held over the dataset."
+		}),
+
+		license: multiple(reference(Entity), {
+			description: "Legal documents granting permission to use the dataset."
+		}),
+
+		accessRights: optional(dictionary({ uniqueLang: true }), {
+			description: "Statement of who may access the dataset and under which conditions."
+		}),
+
+		subject: multiple(reference(EuroSciVocTopic), {
+			description: "Topics the dataset is about."
+		}),
 
 		resources: multiple(reference(Resource), {
 
 			foreign: true,
 
-			reverse: ec2u.dataset
+			reverse: ec2u.dataset,
+
+			description: "Resources published in the dataset."
 
 		})
 

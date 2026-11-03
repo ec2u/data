@@ -16,16 +16,19 @@
 
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
-import { ec2u, Entity, rdfs } from "@ec2u/data-shared";
+import { base, ec2u, Entity, rdfs } from "@ec2u/data-shared";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
 import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
+import { resolve } from "@metreeca/core/resource";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Resources() {
 	return resource({
+
+		pattern: resolve(base, "/resources/"),
 
 		name: "Resources",
 		description: "Resources published in issued datasets on the EC2U Knowledge Hub."
@@ -34,7 +37,9 @@ export function Resources() {
 
 		id: id(),
 
-		resources: multiple(reference(Resource))
+		resources: multiple(reference(Resource), {
+			description: "Resources published in issued datasets."
+		})
 
 	});
 }
@@ -59,11 +64,15 @@ export function Resource() {
 		dataset: required(reference(Dataset), {
 
 			forward: ec2u,
-			reverse: rdfs.member
+			reverse: rdfs.member,
+
+			description: "Dataset the resource is published in."
 
 		}),
 
-		university: optional(reference(University))
+		university: optional(reference(University), {
+			description: "EC2U partner university the resource is associated with."
+		})
 
 	});
 }

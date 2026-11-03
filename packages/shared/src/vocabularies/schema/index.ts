@@ -107,13 +107,25 @@ export function SchemaBase() {
 
 	}, {
 
-		url: multiple(iri),
+		url: multiple(iri, {
+			description: "Web pages describing the resource."
+		}),
 
-		identifier: optional(string), // ;( single plain string: the standard range is Text | URL | PropertyValue
+		identifier: optional(string, { // ;( single plain string: the standard range is Text | URL | PropertyValue
+			description: "Code identifying the resource within an identification scheme."
+		}),
 
-		name: optional(union(text, dictionary({ uniqueLang: true }))),
-		description: optional(dictionary({ uniqueLang: true })),
-		disambiguatingDescription: optional(dictionary({ uniqueLang: true }))
+		name: optional(union(text, dictionary({ uniqueLang: true })), {
+			description: "Human-readable name of the resource."
+		}),
+
+		description: optional(dictionary({ uniqueLang: true }), {
+			description: "Human-readable account of the resource."
+		}),
+
+		disambiguatingDescription: optional(dictionary({ uniqueLang: true }), {
+			description: "Short account telling the resource apart from similar ones."
+		})
 
 	});
 }
@@ -121,7 +133,9 @@ export function SchemaBase() {
 export function SchemaThing() {
 	return resource(SchemaBase, {
 
-		image: optional(SchemaImageObject)
+		image: optional(SchemaImageObject, {
+			description: "Image depicting the resource."
+		})
 
 	});
 }
@@ -135,9 +149,17 @@ export function SchemaImageObject() {
 
 		url: nonempty(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
 
-		caption: optional(dictionary({ uniqueLang: true })),
-		author: optional(text),
-		copyrightNotice: optional(text)
+		caption: optional(dictionary({ uniqueLang: true }), {
+			description: "Text accompanying the image."
+		}),
+
+		author: optional(text, {
+			description: "Creator of the image."
+		}),
+
+		copyrightNotice: optional(text, {
+			description: "Statement of the copyright held over the image."
+		})
 
 	});
 }

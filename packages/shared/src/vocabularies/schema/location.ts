@@ -37,10 +37,17 @@ export function SchemaPlace() {
 
 	}, {
 
-		address: optional(SchemaPostalAddress),
+		address: optional(SchemaPostalAddress, {
+			description: "Postal address of the place."
+		}),
 
-		latitude: required(decimal),
-		longitude: required(decimal)
+		latitude: required(decimal, {
+			description: "WGS84 latitude of the place."
+		}),
+
+		longitude: required(decimal, {
+			description: "WGS84 longitude of the place."
+		})
 
 	});
 }
@@ -55,16 +62,33 @@ export function SchemaPostalAddress() {
 		// ;( the locality is what an address is told apart by: a venue is named in a city far more often than in a
 		// street, and a street the union could be entered through would leave a city-level address unstatable
 
-		addressLocality: required(text),
+		addressLocality: required(text, {
+			description: "City or other locality the address lies in."
+		}),
 
-		streetAddress: optional(text),
-		postalCode: optional(text),
+		streetAddress: optional(text, {
+			description: "Street name and number of the address."
+		}),
 
-		addressCountry: optional(text),
-		addressRegion: optional(text),
+		postalCode: optional(text, {
+			description: "Code assigned to the address by the postal service."
+		}),
 
-		email: optional(email),
-		telephone: optional(phone)
+		addressCountry: optional(text, {
+			description: "Country the address lies in."
+		}),
+
+		addressRegion: optional(text, {
+			description: "Region the address lies in."
+		}),
+
+		email: optional(email, {
+			description: "Email address of the contact point at the address."
+		}),
+
+		telephone: optional(phone, {
+			description: "Telephone number of the contact point at the address."
+		})
 
 	});
 }

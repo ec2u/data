@@ -111,7 +111,10 @@ export type Place = State<typeof Place>
 export function Entity() {
 	return resource({
 
-		space: rdfs
+		space: rdfs,
+
+		name: "Entity",
+		description: "An entity described on the EC2U Knowledge Hub."
 
 	}, {
 
@@ -125,15 +128,24 @@ export function Entity() {
 				uniqueLang: true,
 				maxLength: LabelLength
 			})
-		)),
+		), {
+			description: "Human-readable name identifying the entity."
+		}),
 
 		comment: optional(dictionary({
 			uniqueLang: true,
 			maxLength: CommentLength
-		})),
+		}), {
+			description: "Human-readable account of the entity."
+		}),
 
-		isDefinedBy: optional(iri),
-		seeAlso: multiple(iri)
+		isDefinedBy: optional(iri, {
+			description: "Specification formally defining the entity or its data model."
+		}),
+
+		seeAlso: multiple(iri, {
+			description: "Further resources describing the same entity."
+		})
 
 	});
 }
@@ -141,7 +153,10 @@ export function Entity() {
 export function Place() {
 	return resource(Entity, WGSPoint, {
 
-		space: wgs
+		space: wgs,
+
+		name: "Place",
+		description: "A geographic location identified by its WGS84 coordinates."
 
 	});
 }
