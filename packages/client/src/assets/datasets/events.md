@@ -1,7 +1,8 @@
-This dataset is mainly intended to support event search on the [My Mobile Tutor](https://mmt.ec2u.eu) mobile app developed by WP2 of the EC2U project under the coordination of the University of Turku, but can be searched and integrated by third-party tools as any other EC2U dataset.
+This dataset is mainly intended to support event search on the [My Mobile Tutor](https://mmt.ec2u.eu) mobile app
+developed by WP2 of the EC2U project under the coordination of the University of Turku, but can be searched and
+integrated by third-party tools as any other EC2U dataset.
 
-EC2U events are described using a controlled subset of [Schema.org](../about/vocabularies/schema-event.md) data
-model.
+EC2U events are described using a controlled subset of [Schema.org](../about/vocabularies/schema-event.md) data model.
 
 | prefix  | namespace                   | definition                    |
 |---------|-----------------------------|-------------------------------|
