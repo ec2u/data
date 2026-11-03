@@ -15,6 +15,26 @@
  */
 
 import { isNumber, isObject, isOptional, isString } from "@metreeca/core";
+import { by } from "@metreeca/core/order";
+import { courses } from "../courses/courses.js";
+import { documents } from "../documents/documents.js";
+import { events } from "../events/events.js";
+import { programs } from "../programs/programs.js";
+import { units } from "../units/units.js";
+import { universities } from "../universities/universities.js";
+
+
+/**
+ * Dataset paths in display order; datasets not listed follow in store order.
+ */
+const order = [
+	universities.route,
+	units.route,
+	programs.route,
+	courses.route,
+	documents.route,
+	events.route
+];
 
 
 /**
@@ -58,3 +78,10 @@ export function isDatasetRow(value: unknown): value is DatasetRow {
 
 	});
 }
+
+/**
+ * Orders dataset rows as the hub lists them, datasets outside the canonical set following in store order.
+ */
+export const byDataset = by(({ dataset }: DatasetRow) => new URL(dataset.id).pathname, by(path =>
+	order.includes(path) ? order.indexOf(path) : order.length
+));

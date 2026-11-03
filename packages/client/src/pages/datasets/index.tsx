@@ -16,7 +16,6 @@
 
 import { Datasets } from "@ec2u/data-shared/datasets/index.js";
 import { opt } from "@metreeca/core";
-import { by } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -34,27 +33,8 @@ import { ec2u, FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
-import { courses } from "../courses/courses.js";
-import { documents } from "../documents/documents.js";
-import { events } from "../events/events.js";
-import { programs } from "../programs/programs.js";
-import { units } from "../units/units.js";
-import { universities } from "../universities/universities.js";
-import { type DatasetRow, isDatasetRow } from "./index.core.js";
+import { byDataset, type DatasetRow, isDatasetRow } from "./index.core.js";
 import "./index.css";
-
-
-/**
- * Dataset paths in display order; datasets not listed follow in store order.
- */
-const order = [
-	universities.route,
-	units.route,
-	programs.route,
-	courses.route,
-	documents.route,
-	events.route
-];
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,9 +133,7 @@ export function DatasetsPage() {
 function grid(rows: readonly DatasetRow[]) {
 	return rows.length === 0 ? <Hint>{datasets.glyph}</Hint> : createElement("datasets-grid", {}, [...rows] // copy, as rows are shared
 
-		.sort(by(({ dataset }) => new URL(dataset.id).pathname, by(path =>
-			order.includes(path) ? order.indexOf(path) : order.length
-		)))
+		.sort(byDataset)
 
 		.map(({ dataset: { id, title, alternative, description }, size }) => <Fragment key={id}>
 

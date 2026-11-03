@@ -12,8 +12,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Integration notes for the taxonomy pipes (`documents`, `euroscivoc`, `events`, `isced-2011`, `isced-f-2013`,
   `organizations`, `stakeholders`) and for the `wikidata` university pipe, recording the sources each one depends on
 - `/resources/` endpoint listing the resources published in issued datasets, queried like any stored collection
-- University pages list the datasets holding resources of the university, each with its resource count and linked to
-  the dataset catalogue filtered on the university
+- University pages list the datasets holding resources of the university in the order of the home page, each with its
+  resource count and linked to the dataset catalogue filtered on the university
 - Catalogue pages for units, programs, courses, documents and events are filtered by the criteria their address
   carries, and count matches rather than items while filtered
 - Catalogue pages for datasets, universities, units, programs, courses, documents, events and taxonomies offer a name

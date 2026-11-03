@@ -16,7 +16,6 @@
 
 import { Resources } from "@ec2u/data-shared/resources/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
-import { by } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -33,7 +32,7 @@ import { useEffect } from "preact/hooks";
 import { ec2u, site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { isDatasetRow } from "../datasets/index.core.js";
+import { byDataset, isDatasetRow } from "../datasets/index.core.js";
 import { universities } from "./universities.js";
 
 
@@ -154,7 +153,7 @@ export function UniversityPage() {
 
 					ready: ({ state }) => <Info place={"spread"}>{[...state.filter(isDatasetRow)] // copy, as rows are shared
 
-						.sort(by(({ size }) => size))
+						.sort(byDataset)
 
 						.map(({ dataset, size }) => ({
 
