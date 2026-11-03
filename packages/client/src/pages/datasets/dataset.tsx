@@ -36,7 +36,7 @@ import { site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { links } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
-import { getShapeName } from "../../tiles/shape.core.js";
+import { getShapeDescription, getShapeName } from "../../tiles/shape.core.js";
 import { Shape } from "../../tiles/shape.js";
 
 
@@ -238,7 +238,8 @@ export function DatasetMeta({
 
 			{opt(shapes, shapes => some(shapes).map(shape => <Fragment key={getShapeName(shape)}>
 				<h1 id={getShapeName(shape)}>{getShapeName(shape)}</h1>
-				<Shape shape={shape}/>
+				{opt(getShapeDescription(shape), description => <p>{description}</p>)}
+				<Shape shape={shape} universe={shapes}/>
 			</Fragment>))}
 
 		</>

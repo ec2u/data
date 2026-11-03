@@ -20,8 +20,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   search and the facets of the legacy client through the shared facet widgets, with a reset clearing every filter
 - Datasets are introduced at an address of their own under their catalogue, as `/universities/~`, with description,
   publisher, license and dates, linked from the info icon on the catalogue and on the pages of its resources
-- Dataset introductions are headed by the dataset title and document its data model in a table for each entry shape,
-  outlined in the sidebar, with extended shapes and value types linked to the introductions documenting them
+- Dataset introductions are headed by the dataset title and document its data model for each entry shape, outlined in
+  the sidebar: the endpoint serving it, the shapes it extends and the properties referring to it, followed by a table
+  of the properties it declares, with shapes linked to the introductions documenting them
 
 ### Changed
 

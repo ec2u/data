@@ -25,7 +25,7 @@ import { string, year } from "@metreeca/blue/string";
 import { union } from "@metreeca/blue/union";
 import { createNamespace } from "@metreeca/core/resource";
 import { describe, expect, it } from "vitest";
-import { getShapeHref, getShapeName, tabulate } from "./shape.core.js";
+import { getShapeDescription, getShapeHref, getShapeName, getShapeReferrers, tabulate } from "./shape.core.js";
 
 
 const test = createNamespace("https://example.org/terms#");
@@ -48,7 +48,8 @@ function Thing() {
 
 		label: required(dictionary(), { description: "The label of the thing." }),
 		code: optional(string()),
-		hidden: optional(string(), { hidden: true })
+		hidden: optional(string(), { hidden: true }),
+		peer: optional(reference(Part))
 
 	});
 }
@@ -116,6 +117,18 @@ describe("getShapeName()", () => {
 
 });
 
+describe("getShapeDescription()", () => {
+
+	it("describes a shape by its English description, with whitespace collapsed", () => {
+		expect(getShapeDescription(Thing)).toBe("A thing described at length.");
+	});
+
+	it("describes no shape stating no English description", () => {
+		expect(getShapeDescription(Part)).toBeUndefined();
+	});
+
+});
+
 describe("getShapeHref()", () => {
 
 	it("locates a shape on the introduction of the catalogue its pattern is rooted in", () => {
@@ -136,6 +149,30 @@ describe("getShapeHref()", () => {
 
 });
 
+describe("getShapeReferrers()", () => {
+
+	it("lists the properties linking to a shape across the model, where they are declared", () => {
+		expect(getShapeReferrers(Part, Item)).toEqual([
+			{ name: "Item.parts", href: "/things/~#Item" },
+			{ name: "Item.either", href: "/things/~#Item" },
+			{ name: "Thing.peer", href: "/things/~#Thing" }
+		]);
+	});
+
+	it("lists properties declared by shapes reached through the model", () => {
+		expect(getShapeReferrers(Item, Item)).toEqual([{ name: "Part.item", href: "/~#Part" }]);
+	});
+
+	it("lists properties linking to an extended shape", () => {
+		expect(getShapeReferrers(Thing, Item)).toEqual([{ name: "Item.owner", href: "/things/~#Item" }]);
+	});
+
+	it("lists nothing for a shape no property links to", () => {
+		expect(getShapeReferrers(Bare, [Item, Bare])).toEqual([]);
+	});
+
+});
+
 describe("tabulate()", () => {
 
 	describe("tables", () => {
@@ -143,10 +180,15 @@ describe("tabulate()", () => {
 		it("describes the shape", () => {
 			expect(tabulate(Thing)).toMatchObject({
 				name: "Thing",
-				description: "A thing described at length.",
 				class: "https://example.org/terms#Thing",
 				parents: []
 			});
+		});
+
+		it("states the endpoint of the shape as a root-relative pattern", () => {
+			expect(tabulate(Thing).endpoint).toBe("/things/{code}");
+			expect(tabulate(Part).endpoint).toBe("/");
+			expect(tabulate(Bare).endpoint).toBeUndefined();
 		});
 
 		it("names the extended shapes", () => {
@@ -157,12 +199,8 @@ describe("tabulate()", () => {
 			expect(tabulate(Part).name).toBe("Part");
 		});
 
-		it("leaves out a description stated in no English", () => {
-			expect(tabulate(Part).description).toBeUndefined();
-		});
-
 		it("lists declared properties in declaration order, leaving out hidden ones", () => {
-			expect(tabulate(Thing).rows.map(({ term }) => term)).toEqual(["label", "code"]);
+			expect(tabulate(Thing).rows.map(({ term }) => term)).toEqual(["label", "code", "peer"]);
 		});
 
 		it("leaves out properties inherited unchanged from shapes resolved apart", () => {

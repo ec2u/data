@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import { model } from "@metreeca/blue";
 import type { Property, ResourceShape } from "@metreeca/blue/resource";
 import { eager, type Shape } from "@metreeca/blue/value";
 import { isString, type Lazy, opt, type Optional } from "@metreeca/core";
+import type { Some } from "@metreeca/core/arrays";
 
 
 /**
@@ -30,14 +32,15 @@ export type ShapeTable = {
 	readonly name: string
 
 	/**
-	 * The description of the shape, as stated in English, with its whitespace collapsed; none if not stated in English.
-	 */
-	readonly description: Optional<string>
-
-	/**
 	 * The IRI of the class the shape states; none if the shape states no class.
 	 */
 	readonly class: Optional<string>
+
+	/**
+	 * The root-relative address of the resources the shape describes, as stated by its identifier pattern, such as
+	 * `/universities/{code}`; none if the shape states no pattern.
+	 */
+	readonly endpoint: Optional<string>
 
 	/**
 	 * The named shapes the shape extends, in the order they are extended.
@@ -119,27 +122,32 @@ export type ShapeLink = {
 export function tabulate(lazy: Lazy<ResourceShape>): ShapeTable {
 
 	const shape = eager(lazy);
-	const parents = shape.parents.map(parent => eager(parent));
 
 	return {
 
 		name: getShapeName(shape),
-		description: english(shape.description),
 		class: shape.class,
-		parents: parents.map(linked).filter(({ name }) => name !== ""), // unnamed mixins add no documented type
+		endpoint: opt(shape.pattern, pattern => pattern.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]*/i, "")),
+		parents: shape.parents.map(linked).filter(({ name }) => name !== ""), // unnamed mixins add no documented type
 
-		rows: Object.entries(shape.members).flatMap(([term, member]) =>
-			member.kind === "property" && !member.hidden && !inherited(term)
-				? [row(term, member)]
-				: []
-		)
+		rows: declared(shape).map(([term, property]) => row(term, property))
 
 	};
 
+}
 
-	function inherited(term: string): boolean {
-		return parents.some(({ members }) => term in members);
-	}
+/**
+ * Lists the visible properties a shape declares in its own right, leaving out the ones the shapes it extends declare.
+ */
+function declared(shape: ResourceShape): readonly (readonly [string, Property])[] {
+
+	const parents = shape.parents.map(parent => eager(parent));
+
+	return Object.entries(shape.members).flatMap(([term, member]) =>
+		member.kind === "property" && !member.hidden && !parents.some(({ members }) => term in members)
+			? [[term, member] as const]
+			: []
+	);
 
 }
 
@@ -173,6 +181,54 @@ export function getShapeName(lazy: Lazy<ResourceShape>): string {
 
 	return english(shape.name) ?? opt(shape.class, local) ?? (shape.parents.map(getShapeName).find(Boolean) ?? "");
 
+}
+
+/**
+ * Lists the properties referring to a resource shape.
+ *
+ * Scans the shapes reachable from `universe`, as collected by {@link @metreeca/blue!model model}, for the properties
+ * they declare in their own right whose values link to or embed `lazy`, leaving out hidden ones.
+ *
+ * @param lazy The shape to be referred to, possibly deferred
+ * @param universe The entry shapes of the model to be scanned, possibly deferred
+ *
+ * @returns The referring properties in model order, each named as `Shape.property` and linked to the documentation of
+ *     the shape declaring it; empty if no property refers to `lazy`
+ */
+export function getShapeReferrers(lazy: Lazy<ResourceShape>, universe: Some<Lazy<ResourceShape>>): readonly ShapeLink[] {
+
+	const target = eager(lazy);
+
+	return model(universe).flatMap(shape => declared(shape)
+		.filter(([, { range }]) => targets(range.shape).includes(target))
+		.map(([term]) => ({ name: `${getShapeName(shape)}.${term}`, href: getShapeHref(shape) }))
+	);
+
+}
+
+/**
+ * Lists the resource shapes the values of a shape link to or embed, one for each alternative.
+ */
+function targets(lazy: Lazy<Shape>): readonly ResourceShape[] {
+
+	const shape = eager(lazy);
+
+	return shape.kind === "union" ? shape.branches.flatMap(targets)
+		: shape.kind === "reference" ? [eager(shape.target)]
+			: shape.kind === "resource" ? [shape]
+				: [];
+
+}
+
+/**
+ * Describes a resource shape.
+ *
+ * @param lazy The shape to be described, possibly deferred
+ *
+ * @returns The English description `lazy` states, with its whitespace collapsed; none if it states none in English
+ */
+export function getShapeDescription(lazy: Lazy<ResourceShape>): Optional<string> {
+	return english(eager(lazy).description);
 }
 
 /**
