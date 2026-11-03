@@ -18,8 +18,9 @@
 
 project=ec2u-data
 
-gcloud auth print-access-token >/dev/null 2>&1 || gcloud auth login --update-adc
-gcloud auth application-default print-access-token >/dev/null 2>&1 || gcloud auth application-default login
+gcloud auth print-access-token >/dev/null 2>&1 &&
+	gcloud auth application-default print-access-token >/dev/null 2>&1 ||
+	gcloud auth login --update-adc
 
 gcloud auth application-default set-quota-project ${project}
 gcloud config set project ${project}
