@@ -32,6 +32,7 @@ import { FacetSize, toUniversity, UniversityModel } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
+import { DatasetLink, DatasetPage } from "../datasets/dataset.js";
 
 
 export const units = immutable({
@@ -54,6 +55,12 @@ export const units = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function UnitsInfo() {
+
+	return <DatasetPage href={units.route} label={units.label} glyph={units.glyph}/>;
+
+}
 
 export function UnitsData() {
 
@@ -84,7 +91,7 @@ export function UnitsData() {
 	return <Page
 
 		head={units.label}
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		menu={<DatasetLink href={units.route}/>}
 
 		back={members({
 

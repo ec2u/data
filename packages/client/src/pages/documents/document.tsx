@@ -36,6 +36,7 @@ import { Failure } from "../../tiles/failure.js";
 import { filters, links, list } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { blocks } from "../../tiles/sections.js";
+import { DatasetLink } from "../datasets/dataset.js";
 import { documents } from "./documents.js";
 
 
@@ -115,7 +116,7 @@ export function DocumentData() {
 
 		</Path>}
 
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		menu={<DatasetLink href={documents.route}/>}
 
 		back={resource({
 

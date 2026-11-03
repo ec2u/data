@@ -25,7 +25,7 @@ import { Toast } from "@metreeca/tile-hive/toast";
 import { render } from "preact";
 import { courses } from "./pages/courses/courses.js";
 import { Courses } from "./pages/courses/index.js";
-import { datasets } from "./pages/datasets/datasets.js";
+import { datasets, DatasetsInfo } from "./pages/datasets/datasets.js";
 import { Datasets } from "./pages/datasets/index.js";
 import { Docs, docs } from "./pages/docs/index.js";
 import { documents } from "./pages/documents/documents.js";
@@ -66,6 +66,7 @@ function Hub() {
 					<Routes>{{
 
 						[datasets.route]: <Datasets/>,
+						"/~": <DatasetsInfo/>, // the hub catalogue sits at the root, whose pattern routes nothing below it
 						[universities.route]: <Universities/>,
 						[units.route]: <Units/>,
 						[programs.route]: <Programs/>,

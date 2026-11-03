@@ -38,6 +38,7 @@ import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { filters } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
+import { DatasetLink } from "../datasets/dataset.js";
 import { events } from "./events.js";
 
 
@@ -136,7 +137,7 @@ export function EventData() {
 
 		</Path>}
 
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		menu={<DatasetLink href={events.route}/>}
 
 		back={resource({
 

@@ -37,6 +37,7 @@ import { links, list } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { blocks, sections } from "../../tiles/sections.js";
 import { credits } from "../programs/program.js";
+import { DatasetLink } from "../datasets/dataset.js";
 import { courses } from "./courses.js";
 
 
@@ -122,7 +123,7 @@ export function CourseData() {
 
 		</Path>}
 
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		menu={<DatasetLink href={courses.route}/>}
 
 		back={resource({
 

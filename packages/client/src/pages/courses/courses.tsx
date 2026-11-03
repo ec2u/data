@@ -36,6 +36,7 @@ import { FacetSize, named, toCourseMode, toCourseTerm, toLanguage, toUniversity,
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
+import { DatasetLink, DatasetPage } from "../datasets/dataset.js";
 
 
 export const courses = immutable({
@@ -58,6 +59,12 @@ export const courses = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function CoursesInfo() {
+
+	return <DatasetPage href={courses.route} label={courses.label} glyph={courses.glyph}/>;
+
+}
 
 export function CoursesData() {
 
@@ -97,7 +104,7 @@ export function CoursesData() {
 	return <Page
 
 		head={courses.label}
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		menu={<DatasetLink href={courses.route}/>}
 
 		back={members({
 

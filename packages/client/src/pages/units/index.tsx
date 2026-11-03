@@ -16,7 +16,7 @@
 
 import { Routes } from "@metreeca/tile-data/router";
 import { UnitData } from "./unit.js";
-import { UnitsData } from "./units.js";
+import { UnitsData, UnitsInfo } from "./units.js";
 
 
 export function Units() {
@@ -24,6 +24,7 @@ export function Units() {
 	return <Routes>{{
 
 		"/": <UnitsData/>,
+		"/~": <UnitsInfo/>,
 		"/:unit": <UnitData/>
 
 	}}</Routes>;

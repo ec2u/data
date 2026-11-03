@@ -35,6 +35,7 @@ import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { blocks } from "../../tiles/sections.js";
 import { SKOSConcepts, SKOSLineage } from "../../tiles/skos/concepts.js";
+import { DatasetLink } from "../datasets/dataset.js";
 import { taxonomies } from "./taxonomies.js";
 
 
@@ -107,7 +108,7 @@ export function TopicData() {
 
 		</Path>}
 
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		menu={<DatasetLink href={taxonomies.route}/>}
 
 		back={resource({
 

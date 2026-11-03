@@ -35,6 +35,7 @@ import { FacetSize, named, toEventAttendanceMode, toUniversity, UniversityModel 
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
+import { DatasetLink, DatasetPage } from "../datasets/dataset.js";
 import { schedule } from "./event.js";
 
 
@@ -62,6 +63,12 @@ export const events = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function EventsInfo() {
+
+	return <DatasetPage href={events.route} label={events.label} glyph={events.glyph}/>;
+
+}
 
 export function EventsData() {
 
@@ -94,7 +101,7 @@ export function EventsData() {
 	return <Page
 
 		head={events.label}
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		menu={<DatasetLink href={events.route}/>}
 
 		back={members({
 

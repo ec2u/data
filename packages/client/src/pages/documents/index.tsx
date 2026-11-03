@@ -16,7 +16,7 @@
 
 import { Routes } from "@metreeca/tile-data/router";
 import { DocumentData } from "./document.js";
-import { DocumentsData } from "./documents.js";
+import { DocumentsData, DocumentsInfo } from "./documents.js";
 
 
 export function Documents() {
@@ -24,6 +24,7 @@ export function Documents() {
 	return <Routes>{{
 
 		"/": <DocumentsData/>,
+		"/~": <DocumentsInfo/>,
 		"/:document": <DocumentData/>
 
 	}}</Routes>;

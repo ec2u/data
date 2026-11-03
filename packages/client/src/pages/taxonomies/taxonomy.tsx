@@ -36,6 +36,7 @@ import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
 import { SKOSConcepts } from "../../tiles/skos/concepts.js";
+import { DatasetLink } from "../datasets/dataset.js";
 import { taxonomies } from "./taxonomies.js";
 
 
@@ -120,7 +121,7 @@ export function TaxonomyData() {
 
 		</Path>}
 
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		menu={<DatasetLink href={taxonomies.route}/>}
 
 		back={resource({
 

@@ -33,6 +33,7 @@ import { FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
+import { DatasetLink, DatasetPage } from "../datasets/dataset.js";
 import { isTaxonomyRow, type TaxonomyRow } from "./taxonomies.core.js";
 
 
@@ -46,6 +47,12 @@ export const taxonomies = immutable({
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function TaxonomiesInfo() {
+
+	return <DatasetPage href={taxonomies.route} label={taxonomies.label} glyph={taxonomies.glyph}/>;
+
+}
 
 export function TaxonomiesData() {
 
@@ -81,7 +88,7 @@ export function TaxonomiesData() {
 	return <Page
 
 		head={taxonomies.label}
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		menu={<DatasetLink href={taxonomies.route}/>}
 
 		back={members({
 

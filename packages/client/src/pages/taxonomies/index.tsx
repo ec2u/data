@@ -15,7 +15,7 @@
  */
 
 import { Routes } from "@metreeca/tile-data/router";
-import { TaxonomiesData } from "./taxonomies.js";
+import { TaxonomiesData, TaxonomiesInfo } from "./taxonomies.js";
 import { TaxonomyData } from "./taxonomy.js";
 import { TopicData } from "./topic.js";
 
@@ -25,6 +25,7 @@ export function Taxonomies() {
 	return <Routes>{{
 
 		"/": <TaxonomiesData/>,
+		"/~": <TaxonomiesInfo/>,
 		"/:taxonomy": <TaxonomyData/>,
 		"/:taxonomy/": <TopicData/> // topic routes nest along the taxonomy hierarchy
 

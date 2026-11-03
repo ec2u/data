@@ -16,7 +16,7 @@
 
 import { Routes } from "@metreeca/tile-data/router";
 import { CourseData } from "./course.js";
-import { CoursesData } from "./courses.js";
+import { CoursesData, CoursesInfo } from "./courses.js";
 
 
 export function Courses() {
@@ -24,6 +24,7 @@ export function Courses() {
 	return <Routes>{{
 
 		"/": <CoursesData/>,
+		"/~": <CoursesInfo/>,
 		"/:course": <CourseData/>
 
 	}}</Routes>;

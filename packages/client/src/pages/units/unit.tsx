@@ -37,6 +37,7 @@ import { Failure } from "../../tiles/failure.js";
 import { links, list } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { blocks } from "../../tiles/sections.js";
+import { DatasetLink } from "../datasets/dataset.js";
 import { units } from "./units.js";
 
 
@@ -107,7 +108,7 @@ export function UnitData() {
 
 		</Path>}
 
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		menu={<DatasetLink href={units.route}/>}
 
 		back={resource({
 
