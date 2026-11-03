@@ -88,11 +88,19 @@ export const umea = immutable({
 });
 
 
-export const universities = immutable(Object.fromEntries(
-	[coimbra, iasi, jena, linz, pavia, poitiers, salamanca, turku, umea].map(
-		university => [university.id, university]
-	)
-));
+export const universities = immutable(Object.fromEntries([
+	coimbra,
+	iasi,
+	jena,
+	linz,
+	pavia,
+	poitiers,
+	salamanca,
+	turku,
+	umea
+].map(university =>
+	[university.id, university]
+)));
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
