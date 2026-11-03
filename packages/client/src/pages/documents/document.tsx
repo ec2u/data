@@ -84,7 +84,7 @@ export const document = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function DocumentPage() {
+export function DocumentData() {
 
 	const route = useRoute();
 	const router = useRouter();

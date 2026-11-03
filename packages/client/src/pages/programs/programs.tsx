@@ -57,7 +57,7 @@ export const programs = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function ProgramsPage() {
+export function ProgramsData() {
 
 	const route = useRoute();
 	const router = useRouter();
@@ -72,9 +72,15 @@ export function ProgramsPage() {
 		onChange: setQuery
 	});
 
-	const members = useMembers(collection, { model: programs.model });
-	const count = useCount(collection);
 	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
+	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
+	const educationalLevel = useTally(collection, "educationalLevel", { label: "label", size: FacetSize });
+	const timeToComplete = useTally(collection, "timeToComplete", { size: FacetSize });
+	const about = useTally(collection, "about", { label: "label", size: FacetSize });
+	const provider = useTally(collection, "provider", { label: "label", size: FacetSize });
+	const count = useCount(collection);
+
+	const members = useMembers(collection, { model: programs.model });
 
 	useEffect(() => router({ title: programs.label }), []);
 
@@ -94,11 +100,11 @@ export function ProgramsPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"University"} compact={false} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
-			<Tally name={"Level"} compact tally={useTally(collection, "educationalLevel", { label: "label", size: FacetSize })}/>
-			<Tally name={"Duration"} compact tally={useTally(collection, "timeToComplete", { size: FacetSize })}>{named(value => duration.format(value))}</Tally>
-			<Tally name={"Subjects"} compact tally={useTally(collection, "about", { label: "label", size: FacetSize })}/>
-			<Tally name={"Provider"} compact tally={useTally(collection, "provider", { label: "label", size: FacetSize })}/>
+			<Tally name={"University"} compact={false} tally={university}/>
+			<Tally name={"Level"} compact tally={educationalLevel}/>
+			<Tally name={"Duration"} compact tally={timeToComplete}>{named(value => duration.format(value))}</Tally>
+			<Tally name={"Subjects"} compact tally={about}/>
+			<Tally name={"Provider"} compact tally={provider}/>
 
 		</>}
 

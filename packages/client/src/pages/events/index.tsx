@@ -15,16 +15,16 @@
  */
 
 import { Routes } from "@metreeca/tile-data/router";
-import { EventPage } from "./event.js";
-import { EventsPage } from "./events.js";
+import { EventData } from "./event.js";
+import { EventsData } from "./events.js";
 
 
 export function Events() {
 
 	return <Routes>{{
 
-		"/": <EventsPage/>,
-		"/:event": <EventPage/>
+		"/": <EventsData/>,
+		"/:event": <EventData/>
 
 	}}</Routes>;
 

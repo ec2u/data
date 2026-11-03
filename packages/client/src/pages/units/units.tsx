@@ -55,7 +55,7 @@ export const units = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function UnitsPage() {
+export function UnitsData() {
 
 	const route = useRoute();
 	const router = useRouter();
@@ -70,9 +70,13 @@ export function UnitsPage() {
 		onChange: setQuery
 	});
 
-	const members = useMembers(collection, { model: units.model });
-	const count = useCount(collection);
 	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
+	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
+	const classification = useTally(collection, "classification", { label: "label", size: FacetSize });
+	const subject = useTally(collection, "subject", { label: "label", size: FacetSize });
+	const count = useCount(collection);
+
+	const members = useMembers(collection, { model: units.model });
 
 	useEffect(() => router({ title: units.label }), []);
 
@@ -92,9 +96,9 @@ export function UnitsPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"University"} compact={false} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
-			<Tally name={"Type"} compact tally={useTally(collection, "classification", { label: "label", size: FacetSize })}/>
-			<Tally name={"Topic"} compact tally={useTally(collection, "subject", { label: "label", size: FacetSize })}/>
+			<Tally name={"University"} compact={false} tally={university}/>
+			<Tally name={"Type"} compact tally={classification}/>
+			<Tally name={"Topic"} compact tally={subject}/>
 
 		</>}
 

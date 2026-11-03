@@ -63,7 +63,7 @@ export const events = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function EventsPage() {
+export function EventsData() {
 
 	const route = useRoute();
 	const router = useRouter();
@@ -78,9 +78,15 @@ export function EventsPage() {
 		onChange: setQuery
 	});
 
-	const members = useMembers(collection, { model: events.model, order: { startDate: "asc", label: "asc" } });
-	const count = useCount(collection);
 	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
+	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
+	const startDate = useRange(collection, "startDate");
+	const isAccessibleForFree = useTally(collection, "isAccessibleForFree", { size: FacetSize });
+	const eventAttendanceMode = useTally(collection, "eventAttendanceMode", { size: FacetSize });
+	const topics = useTally(collection, "keywords", { label: "label", size: FacetSize });
+	const count = useCount(collection);
+
+	const members = useMembers(collection, { model: events.model, order: { startDate: "asc", label: "asc" } });
 
 	useEffect(() => router({ title: events.label }), []);
 
@@ -100,11 +106,11 @@ export function EventsPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"University"} compact={false} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
-			<Range name={"Date"} compact type={date({ instant: true })} range={useRange(collection, "startDate")}/>
-			<Tally name={"Free"} compact tally={useTally(collection, "isAccessibleForFree", { size: FacetSize })}>{named(free => free === "true" ? "Yes" : "No")}</Tally>
-			<Tally name={"Attendance"} compact tally={useTally(collection, "eventAttendanceMode", { size: FacetSize })}>{named(toEventAttendanceMode)}</Tally>
-			<Tally name={"Topic"} compact tally={useTally(collection, "keywords", { label: "label", size: FacetSize })}/>
+			<Tally name={"University"} compact={false} tally={university}/>
+			<Range name={"Date"} compact type={date({ instant: true })} range={startDate}/>
+			<Tally name={"Free"} compact tally={isAccessibleForFree}>{named(free => free === "true" ? "Yes" : "No")}</Tally>
+			<Tally name={"Attendance"} compact tally={eventAttendanceMode}>{named(toEventAttendanceMode)}</Tally>
+			<Tally name={"Topic"} compact tally={topics}/>
 
 		</>}
 

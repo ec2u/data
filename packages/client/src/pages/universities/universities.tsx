@@ -33,7 +33,7 @@ import { useEffect } from "preact/hooks";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
-import { DatasetPage, useIntro } from "../datasets/dataset.js";
+import { DatasetLink, DatasetPage } from "../datasets/dataset.js";
 
 
 export const universities = immutable({
@@ -58,7 +58,13 @@ export const universities = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function UniversitiesPage() {
+export function UniversitiesInfo() {
+
+	return <DatasetPage href={universities.route} label={universities.label} glyph={universities.glyph}/>;
+
+}
+
+export function UniversitiesData() {
 
 	const route = useRoute();
 	const router = useRouter();
@@ -73,30 +79,21 @@ export function UniversitiesPage() {
 		onChange: setQuery
 	});
 
-	const members = useMembers(collection, { model: universities.model });
-	const count = useCount(collection);
 	const keywords = useKeywords(collection, "prefLabel", { delay: 0 }); // the search field times the pause itself
-
 	const inception = useRange(collection, "inception");
 	const students = useRange(collection, "students");
+	const count = useCount(collection);
 
-	const [intro, setIntro] = useIntro(Object.keys(collection.criteria).length > 0);
+	const members = useMembers(collection, { model: universities.model });
 
 
 	useEffect(() => router({ title: universities.label }), []);
 
 
-	return intro ? <DatasetPage
+	return <Page
 
 		head={universities.label}
-		glyph={universities.glyph}
-
-		onBrowse={() => setIntro(false)}
-
-	/> : <Page
-
-		head={universities.label}
-		menu={<Link href={"?"} title={"Info"} onClick={introduce}><Icon.Info/></Link>}
+		menu={<DatasetLink href={universities.route}/>}
 
 		back={members({
 
@@ -138,14 +135,5 @@ export function UniversitiesPage() {
 		}</>
 
 	})}</Page>;
-
-
-	/**
-	 * Brings the reader back to the introduction of the dataset, dropping the criteria the listing was narrowed by.
-	 */
-	function introduce(): void {
-		collection.clear();
-		setIntro(true);
-	}
 
 }

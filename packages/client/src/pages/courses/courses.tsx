@@ -59,7 +59,7 @@ export const courses = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function CoursesPage() {
+export function CoursesData() {
 
 	const route = useRoute();
 	const router = useRouter();
@@ -74,9 +74,22 @@ export function CoursesPage() {
 		onChange: setQuery
 	});
 
-	const members = useMembers(collection, { model: courses.model });
-	const count = useCount(collection);
 	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
+	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
+	const year = useTally(collection, "year", { size: FacetSize });
+	const term = useTally(collection, "term", { size: FacetSize });
+	const courseMode = useTally(collection, "courseMode", { size: FacetSize });
+	const inLanguage = useTally(collection, "inLanguage", { size: FacetSize });
+	const isAccessibleForFree = useTally(collection, "isAccessibleForFree", { size: FacetSize });
+	const numberOfCredits = useRange(collection, "numberOfCredits");
+	const timeRequired = useTally(collection, "timeRequired", { size: FacetSize });
+	const educationalLevel = useTally(collection, "educationalLevel", { label: "label", size: FacetSize });
+	const credentialCategory = useTally(collection, "educationalCredentialAwarded.credentialCategory", { size: FacetSize });
+	const about = useTally(collection, "about", { label: "label", size: FacetSize });
+	const audience = useTally(collection, "audience", { label: "label", size: FacetSize });
+	const count = useCount(collection);
+
+	const members = useMembers(collection, { model: courses.model });
 
 	useEffect(() => router({ title: courses.label }), []);
 
@@ -96,18 +109,18 @@ export function CoursesPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"University"} compact={false} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
-			<Tally name={"Year"} compact tally={useTally(collection, "year", { size: FacetSize })}/>
-			<Tally name={"Term"} compact tally={useTally(collection, "term", { size: FacetSize })}>{named(toCourseTerm)}</Tally>
-			<Tally name={"Attendance"} compact tally={useTally(collection, "courseMode", { size: FacetSize })}>{named(toCourseMode)}</Tally>
-			<Tally name={"Language"} compact tally={useTally(collection, "inLanguage", { size: FacetSize })}>{named(toLanguage)}</Tally>
-			<Tally name={"Fees for Externals"} compact tally={useTally(collection, "isAccessibleForFree", { size: FacetSize })}>{named(free => free === "true" ? "Free" : "Paid")}</Tally>
-			<Range name={"Credits"} compact type={decimal} range={useRange(collection, "numberOfCredits")}/>
-			<Tally name={"Duration"} compact tally={useTally(collection, "timeRequired", { size: FacetSize })}>{named(value => duration.format(value))}</Tally>
-			<Tally name={"Level"} compact tally={useTally(collection, "educationalLevel", { label: "label", size: FacetSize })}/>
-			<Tally name={"Credentials"} compact tally={useTally(collection, "educationalCredentialAwarded.credentialCategory", { size: FacetSize })}/>
-			<Tally name={"Subjects"} compact tally={useTally(collection, "about", { label: "label", size: FacetSize })}/>
-			<Tally name={"Audience"} compact tally={useTally(collection, "audience", { label: "label", size: FacetSize })}/>
+			<Tally name={"University"} compact={false} tally={university}/>
+			<Tally name={"Year"} compact tally={year}/>
+			<Tally name={"Term"} compact tally={term}>{named(toCourseTerm)}</Tally>
+			<Tally name={"Attendance"} compact tally={courseMode}>{named(toCourseMode)}</Tally>
+			<Tally name={"Language"} compact tally={inLanguage}>{named(toLanguage)}</Tally>
+			<Tally name={"Fees for Externals"} compact tally={isAccessibleForFree}>{named(free => free === "true" ? "Free" : "Paid")}</Tally>
+			<Range name={"Credits"} compact type={decimal} range={numberOfCredits}/>
+			<Tally name={"Duration"} compact tally={timeRequired}>{named(value => duration.format(value))}</Tally>
+			<Tally name={"Level"} compact tally={educationalLevel}/>
+			<Tally name={"Credentials"} compact tally={credentialCategory}/>
+			<Tally name={"Subjects"} compact tally={about}/>
+			<Tally name={"Audience"} compact tally={audience}/>
 
 		</>}
 

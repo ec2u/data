@@ -15,16 +15,16 @@
  */
 
 import { Routes } from "@metreeca/tile-data/router";
-import { ProgramPage } from "./program.js";
-import { ProgramsPage } from "./programs.js";
+import { ProgramData } from "./program.js";
+import { ProgramsData } from "./programs.js";
 
 
 export function Programs() {
 
 	return <Routes>{{
 
-		"/": <ProgramsPage/>,
-		"/:program": <ProgramPage/>
+		"/": <ProgramsData/>,
+		"/:program": <ProgramData/>
 
 	}}</Routes>;
 

@@ -33,7 +33,7 @@ import { ec2u, site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { DatasetLink } from "../datasets/dataset.js";
-import { byDataset, isDatasetRow } from "../datasets/index.core.js";
+import { byDataset, isDatasetRow } from "../datasets/datasets.core.js";
 import { universities } from "./universities.js";
 
 
@@ -79,7 +79,7 @@ export const university = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function UniversityPage() {
+export function UniversityData() {
 
 	const route = useRoute();
 	const router = useRouter();

@@ -22,14 +22,13 @@ import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { Mark } from "@metreeca/tile-cell/mark";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
+import { useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useResource } from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
-import { Info } from "@metreeca/tile-hive/info";
-import { date } from "@metreeca/tile-type/date";
+import { Info } from "@metreeca/tile-hive/info";import { date } from "@metreeca/tile-type/date";
 import { integer } from "@metreeca/tile-type/integer";
 import type { ComponentChildren } from "preact";
-import { useState } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 import { site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { links } from "../../tiles/links.js";
@@ -59,45 +58,12 @@ export const dataset = immutable({
 });
 
 
-/**
- * The history state marking a catalogue entry to be opened on the introduction to its dataset.
- */
-const Intro = "intro";
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Binds a catalogue page to the introduction to its dataset.
- *
- * The introduction is shown as the page is reached through a {@link DatasetLink}, or with no criteria narrowing it,
- * and is kept in the history entry of the page, so that the reader going back to it finds the view they left.
- *
- * @param narrowed `true` if the catalogue starts narrowed by the reader's criteria
- *
- * @returns `true` if the introduction is to be shown, and a setter switching between the introduction and the listing
- */
-export function useIntro(narrowed: boolean): readonly [boolean, (intro: boolean) => void] {
-
-	const router = useRouter();
-
-	const [intro, setIntro] = useState(() => history.state === Intro || !narrowed);
-
-	return [intro, update];
-
-
-	function update(value: boolean): void {
-		router({ state: value ? Intro : null });
-		setIntro(value);
-	}
-
-}
-
 
 /**
  * Creates a link to the introduction to a dataset.
  *
- * Opens the catalogue of the dataset on its introduction, whatever criteria the reader last narrowed it by.
+ * Leads to the page introducing the dataset listed by a catalogue, at an address of its own the reader may bookmark.
  *
  * @param options The link configuration
  *
@@ -116,18 +82,16 @@ export function DatasetLink({
 
 }) {
 
-	const router = useRouter();
-
-	return <Link href={href} title={"Info"} onClick={() => router({ route: href, state: Intro })}><Icon.Info/></Link>;
+	return <Link href={`${href.replace(/\/$/, "")}/~`} title={"Info"}><Icon.Info/></Link>;
 
 }
 
 
 /**
- * Creates the introduction to the dataset published at the current route.
+ * Creates the introduction to the dataset listed by a catalogue.
  *
- * Shows what the dataset holds and the terms it is published under, in place of the catalogue listing its resources,
- * so a catalogue page renders it while the reader has not yet asked for the resources themselves.
+ * Shows what the dataset holds and the terms it is published under, at the `/~` route nested under the route of the
+ * catalogue, which the route table of the catalogue declares ahead of the routes of its resources.
  *
  * @param options The view configuration
  *
@@ -135,49 +99,51 @@ export function DatasetLink({
  */
 export function DatasetPage({
 
-	head,
-	glyph,
-
-	onBrowse
+	href,
+	label,
+	glyph
 
 }: {
 
 	/**
-	 * The heading of the page, as the catalogue it introduces is headed.
+	 * The route of the catalogue listing the resources of the dataset, which is also the address of the dataset.
 	 */
-	head: ComponentChildren
+	href: string
+
+	/**
+	 * The heading and title of the page, as the catalogue it introduces is headed.
+	 */
+	label: string
 
 	/**
 	 * The glyph shown while the dataset is loading or failed to load, as the catalogue it introduces shows it.
 	 */
 	glyph: ComponentChildren
 
-	/**
-	 * Moves the reader on to the catalogue listing the resources of the dataset.
-	 */
-	onBrowse: () => void
-
 }) {
 
-	const route = useRoute();
+	const router = useRouter();
 
 	const resource = useResource({
-		entry: route,
+		entry: href,
 		shape: Dataset,
 		model: dataset.model
 	});
 
 	const resources = useCount(useCollection({
-		entry: route,
+		entry: href,
 		shape: Dataset,
 		field: "resources"
 	}));
 
 
+	useEffect(() => router({ title: label }), []);
+
+
 	return <Page
 
-		head={head}
-		menu={<Link href={"?"} title={"Data"} onClick={onBrowse}><Icon.Eye/></Link>}
+		head={label}
+		menu={<Link href={href} title={"Data"}><Icon.Eye/></Link>}
 
 		back={resource({
 

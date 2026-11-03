@@ -47,7 +47,7 @@ export const taxonomies = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function TaxonomiesPage() {
+export function TaxonomiesData() {
 
 	const route = useRoute();
 	const router = useRouter();
@@ -62,15 +62,18 @@ export function TaxonomiesPage() {
 		onChange: setQuery
 	});
 
+
+	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
+	const license = useTally(collection, "license", { label: "label", size: FacetSize });
+	const publisher = useTally(collection, "publisher", { label: "label", size: FacetSize });
+	const count = useCount(collection);
+
 	const members = useMembers(collection, {
 		model: {
 			"taxonomy=": { id: {}, label: {}, title: {}, alternative: {}, description: {} },
 			"size=count:resources": {}
 		}
 	});
-
-	const count = useCount(collection);
-	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
 
 	useEffect(() => router({ title: taxonomies.label }), []);
 
@@ -90,8 +93,8 @@ export function TaxonomiesPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"License"} compact tally={useTally(collection, "license", { label: "label", size: FacetSize })}/>
-			<Tally name={"Publisher"} compact tally={useTally(collection, "publisher", { label: "label", size: FacetSize })}/>
+			<Tally name={"License"} compact tally={license}/>
+			<Tally name={"Publisher"} compact tally={publisher}/>
 
 		</>}
 

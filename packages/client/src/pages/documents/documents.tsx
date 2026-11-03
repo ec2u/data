@@ -55,7 +55,7 @@ export const documents = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function DocumentsPage() {
+export function DocumentsData() {
 
 	const route = useRoute();
 	const router = useRouter();
@@ -70,9 +70,16 @@ export function DocumentsPage() {
 		onChange: setQuery
 	});
 
-	const members = useMembers(collection, { model: documents.model });
-	const count = useCount(collection);
 	const keywords = useKeywords(collection, "label", { delay: 0 }); // the search field times the pause itself
+	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
+	const type = useTally(collection, "type", { label: "label", size: FacetSize });
+	const audience = useTally(collection, "audience", { label: "label", size: FacetSize });
+	const subject = useTally(collection, "subject", { label: "label", size: FacetSize });
+	const language = useTally(collection, "language", { size: FacetSize });
+	const license = useTally(collection, "license", { label: "label", size: FacetSize });
+	const count = useCount(collection);
+
+	const members = useMembers(collection, { model: documents.model });
 
 	useEffect(() => router({ title: documents.label }), []);
 
@@ -92,12 +99,12 @@ export function DocumentsPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"University"} compact={false} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
-			<Tally name={"Type"} compact tally={useTally(collection, "type", { label: "label", size: FacetSize })}/>
-			<Tally name={"Audience"} compact tally={useTally(collection, "audience", { label: "label", size: FacetSize })}/>
-			<Tally name={"Topic"} compact tally={useTally(collection, "subject", { label: "label", size: FacetSize })}/>
-			<Tally name={"Language"} compact tally={useTally(collection, "language", { size: FacetSize })}>{named(toLanguage)}</Tally>
-			<Tally name={"License"} compact tally={useTally(collection, "license", { label: "label", size: FacetSize })}/>
+			<Tally name={"University"} compact={false} tally={university}/>
+			<Tally name={"Type"} compact tally={type}/>
+			<Tally name={"Audience"} compact tally={audience}/>
+			<Tally name={"Topic"} compact tally={subject}/>
+			<Tally name={"Language"} compact tally={language}>{named(toLanguage)}</Tally>
+			<Tally name={"License"} compact tally={license}/>
 
 		</>}
 

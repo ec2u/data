@@ -105,7 +105,7 @@ export const event = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function EventPage() {
+export function EventData() {
 
 	const route = useRoute();
 	const router = useRouter();
