@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Mark } from "@metreeca/tile-cell/mark";
+import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import type { ComponentChildren } from "preact";
@@ -50,7 +50,7 @@ export function sections(texts: Readonly<Record<string, undefined | string>>): C
 
 		<Stack key={label} space={"spacing050"}>
 			<Text look={"label"}>{label}</Text>
-			<Mark>{text}</Mark>
+			<Markdown>{text}</Markdown>
 		</Stack>
 
 	)}</Stack> : undefined;

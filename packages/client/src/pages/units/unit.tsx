@@ -22,7 +22,7 @@ import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
-import { Mark } from "@metreeca/tile-cell/mark";
+import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
@@ -165,7 +165,7 @@ export function UnitData() {
 
 		ready: ({ state: { prefLabel, definition, university, unitOf, hasUnit = [], subject = [], keyword = [] } }) => <Stack space={"spacing100"}>
 
-			<Card title={prefLabel}>{opt(definition, text => <Mark>{text}</Mark>)}</Card>
+			<Card title={prefLabel}>{opt(definition, text => <Markdown>{text}</Markdown>)}</Card>
 
 			{blocks({
 

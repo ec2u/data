@@ -23,7 +23,7 @@ import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
-import { Mark } from "@metreeca/tile-cell/mark";
+import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Toc } from "@metreeca/tile-cell/toc";
 import { useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useResource } from "@metreeca/tile-data/store";
@@ -224,7 +224,7 @@ export function DatasetMeta({
 
 		ready: ({ state: { description, publisher, source, rights, license = [], accessRights } }) => <>
 
-			<Mark>{description}</Mark>
+			<Markdown>{description}</Markdown>
 
 			<Info>{{
 
@@ -232,7 +232,7 @@ export function DatasetMeta({
 				Copyright: rights,
 				License: links(license),
 				Source: opt(source, ({ id }) => <Link href={id}>{site(id)}</Link>),
-				Access: opt(accessRights, text => <Mark>{text}</Mark>)
+				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
 
 			}}</Info>
 

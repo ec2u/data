@@ -22,7 +22,7 @@ import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
-import { Mark } from "@metreeca/tile-cell/mark";
+import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
@@ -235,7 +235,7 @@ export function EventData() {
 			image={opt(image, ({ url, description: alt }) => <img src={url[0]} alt={alt ?? `Image of ${label}`}/>)}
 			caption={image?.copyrightNotice}
 
-		>{opt(description, text => <Mark>{text}</Mark>) ?? disambiguatingDescription}</Card>
+		>{opt(description, text => <Markdown>{text}</Markdown>) ?? disambiguatingDescription}</Card>
 
 	})}</Page>;
 

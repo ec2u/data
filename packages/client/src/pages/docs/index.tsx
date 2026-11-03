@@ -17,7 +17,7 @@
 import { immutable } from "@metreeca/core/values";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
-import { Mark } from "@metreeca/tile-cell/mark";
+import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute } from "@metreeca/tile-data/router";
 import { useEffect, useState } from "preact/hooks";
@@ -82,17 +82,17 @@ export function Docs() {
 
 			<Link look={"subtle"} href={section}>{label}</Link>
 
-			{typeof text === "string" && <Mark meta={"title"}>{text}</Mark>}
+			{typeof text === "string" && <Markdown meta={"title"}>{text}</Markdown>}
 
 		</Path>}
 
-		tray={typeof text === "string" && <Mark meta={"toc"}>{text}</Mark>}
+		tray={typeof text === "string" && <Markdown meta={"toc"}>{text}</Markdown>}
 
 	>{
 
 		text === null ? <Failure problem={unknown.problem}/>
 			: text === undefined ? null
-				: <Mark>{text}</Mark>
+				: <Markdown>{text}</Markdown>
 
 	}</Page>;
 

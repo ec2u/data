@@ -21,7 +21,7 @@ import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
-import { Mark } from "@metreeca/tile-cell/mark";
+import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useMembers, useResource } from "@metreeca/tile-data/store";
@@ -165,7 +165,7 @@ export function TaxonomyData() {
 			}
 		}) => <>
 
-			<Card title={title}>{opt(description, text => <Mark>{text}</Mark>)}</Card>
+			<Card title={title}>{opt(description, text => <Markdown>{text}</Markdown>)}</Card>
 
 			<Info>{{
 
@@ -175,7 +175,7 @@ export function TaxonomyData() {
 					<li key={id}><Link href={id}>{label}</Link></li>
 				)}</ul> : undefined), // a boolean would read as its name
 				Source: opt(source, ({ id }) => <Link href={id}>{site(id)}</Link>),
-				Access: opt(accessRights, text => <Mark>{text}</Mark>)
+				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
 
 			}}</Info>
 

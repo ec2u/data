@@ -15,7 +15,7 @@
  */
 
 import { Link } from "@metreeca/tile-cell/link";
-import { Mark } from "@metreeca/tile-cell/mark";
+import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { site } from "../index.core.js";
 
@@ -69,7 +69,7 @@ export function Credential({
 
 		]}</span>
 
-		{description && <Mark>{description}</Mark>}
+		{description && <Markdown>{description}</Markdown>}
 
 	</Stack>;
 
