@@ -36,7 +36,6 @@ export const events = immutable({
 
 	id: resolve(base, "/events/"),
 
-	isDefinedBy: resolve(base, "/datasets/events"),
 	dataset: base,
 
 	label: "EC2U Events",

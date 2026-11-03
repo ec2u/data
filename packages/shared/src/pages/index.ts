@@ -28,7 +28,6 @@ export const pages = immutable({
 
 	id: resolve(base, "/pages/"),
 
-	isDefinedBy: resolve(base, "/datasets/pages"),
 	dataset: base,
 
 	label: "EC2U Pages",

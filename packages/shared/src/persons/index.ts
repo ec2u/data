@@ -33,7 +33,6 @@ export const persons = immutable({
 
 	id: resolve(base, "/persons/"),
 
-	isDefinedBy: resolve(base, "/datasets/persons"),
 	dataset: base,
 
 	label: "EC2U People",

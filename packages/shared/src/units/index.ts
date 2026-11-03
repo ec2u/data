@@ -34,7 +34,6 @@ export const units = immutable({
 
 	id: resolve(base, "/units/"),
 
-	isDefinedBy: resolve(base, "/datasets/units"),
 	dataset: base,
 
 	label: "EC2U Units",

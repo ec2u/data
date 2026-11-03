@@ -39,7 +39,6 @@ export const documents = immutable({
 
 	id: resolve(base, "/documents/"),
 
-	isDefinedBy: resolve(base, "/datasets/documents"),
 	dataset: base,
 
 	label: "EC2U Documents",

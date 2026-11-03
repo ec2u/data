@@ -32,7 +32,6 @@ export const universities = immutable({
 
 	id: resolve(base, "/universities/"),
 
-	isDefinedBy: resolve(base, "/datasets/universities"),
 	dataset: base,
 
 	label: "EC2U Universities",

@@ -30,7 +30,6 @@ export const programs = immutable({
 
 	id: resolve(base, "/programs/"),
 
-	isDefinedBy: resolve(base, "/datasets/programs"),
 	dataset: base,
 
 	label: "EC2U Programs",

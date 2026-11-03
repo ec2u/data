@@ -62,3 +62,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - The Java harvesters, server and React UI deployed to App Engine, superseded by the pipe loader, server and client;
   the last Java state stays reachable at the `java-legacy` tag for reference and for backports to `main` and `next`
+- Dataset metadata links (`rdfs:isDefinedBy`) to the dataset docs pages, superseded by the dataset introductions

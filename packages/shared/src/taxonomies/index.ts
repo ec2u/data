@@ -33,7 +33,6 @@ export const taxonomies = immutable({
 
 	id: resolve(base, "/taxonomies/"),
 
-	isDefinedBy: resolve(base, "/datasets/taxonomies"),
 	dataset: base,
 
 	label: "EC2U Taxonomies",

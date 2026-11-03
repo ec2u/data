@@ -35,7 +35,6 @@ export const courses = immutable({
 
 	id: resolve(base, "/courses/"),
 
-	isDefinedBy: resolve(base, "/datasets/courses"),
 	dataset: base,
 
 	label: "EC2U Courses",

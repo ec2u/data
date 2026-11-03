@@ -32,7 +32,6 @@ export const datasets = immutable({
 
 	id: base,
 
-	isDefinedBy: resolve(base, "/datasets/"),
 	dataset: base, // the catalogue lists itself among the datasets it publishes
 
 
