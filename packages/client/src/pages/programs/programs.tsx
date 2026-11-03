@@ -34,7 +34,7 @@ import { FacetSize, named, toUniversity, UniversityModel } from "../../index.cor
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
-import { DatasetLink, DatasetPage } from "../datasets/dataset.js";
+import { DatasetLink, DatasetMeta } from "../datasets/dataset.js";
 
 
 export const programs = immutable({
@@ -58,9 +58,9 @@ export const programs = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function ProgramsInfo() {
+export function ProgramsMeta() {
 
-	return <DatasetPage href={programs.route} label={programs.label} glyph={programs.glyph}/>;
+	return <DatasetMeta href={programs.route} label={programs.label} glyph={programs.glyph}/>;
 
 }
 

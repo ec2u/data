@@ -97,7 +97,7 @@ export function DatasetLink({
  *
  * @returns The dataset page
  */
-export function DatasetPage({
+export function DatasetMeta({
 
 	href,
 	label,

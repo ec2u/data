@@ -33,7 +33,7 @@ import { ec2u, FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
-import { DatasetLink, DatasetPage } from "./dataset.js";
+import { DatasetLink, DatasetMeta } from "./dataset.js";
 import { byDataset, type DatasetRow, isDatasetRow } from "./datasets.core.js";
 import "./datasets.css";
 
@@ -65,9 +65,9 @@ export const datasets = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function DatasetsInfo() {
+export function DatasetsMeta() {
 
-	return <DatasetPage href={datasets.route} label={datasets.label} glyph={datasets.glyph}/>;
+	return <DatasetMeta href={datasets.route} label={datasets.label} glyph={datasets.glyph}/>;
 
 }
 

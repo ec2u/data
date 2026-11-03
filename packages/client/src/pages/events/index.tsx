@@ -16,7 +16,7 @@
 
 import { Routes } from "@metreeca/tile-data/router";
 import { EventData } from "./event.js";
-import { EventsData, EventsInfo } from "./events.js";
+import { EventsData, EventsMeta } from "./events.js";
 
 
 export function Events() {
@@ -24,7 +24,7 @@ export function Events() {
 	return <Routes>{{
 
 		"/": <EventsData/>,
-		"/~": <EventsInfo/>,
+		"/~": <EventsMeta/>,
 		"/:event": <EventData/>
 
 	}}</Routes>;

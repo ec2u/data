@@ -16,7 +16,7 @@
 
 import { Routes } from "@metreeca/tile-data/router";
 import { ProgramData } from "./program.js";
-import { ProgramsData, ProgramsInfo } from "./programs.js";
+import { ProgramsData, ProgramsMeta } from "./programs.js";
 
 
 export function Programs() {
@@ -24,7 +24,7 @@ export function Programs() {
 	return <Routes>{{
 
 		"/": <ProgramsData/>,
-		"/~": <ProgramsInfo/>,
+		"/~": <ProgramsMeta/>,
 		"/:program": <ProgramData/>
 
 	}}</Routes>;

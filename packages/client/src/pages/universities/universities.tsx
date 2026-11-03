@@ -33,7 +33,7 @@ import { useEffect } from "preact/hooks";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
-import { DatasetLink, DatasetPage } from "../datasets/dataset.js";
+import { DatasetLink, DatasetMeta } from "../datasets/dataset.js";
 
 
 export const universities = immutable({
@@ -58,9 +58,9 @@ export const universities = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function UniversitiesInfo() {
+export function UniversitiesMeta() {
 
-	return <DatasetPage href={universities.route} label={universities.label} glyph={universities.glyph}/>;
+	return <DatasetMeta href={universities.route} label={universities.label} glyph={universities.glyph}/>;
 
 }
 
