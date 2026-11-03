@@ -34,8 +34,8 @@ import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { Search } from "../../tiles/search.js";
-import { SKOSConcepts } from "../../tiles/skos/concepts.js";
+import { Search } from "../../_/search.js";
+import { SKOSConcepts } from "../../_/skos/concepts.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { taxonomies } from "./taxonomies.js";
 

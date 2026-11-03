@@ -32,7 +32,7 @@ import { useEffect } from "preact/hooks";
 import { ec2u, FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { Search } from "../../tiles/search.js";
+import { Search } from "../../_/search.js";
 import { DatasetLink, DatasetMeta } from "./dataset.js";
 import { byDataset, type DatasetRow, isDatasetRow } from "./datasets.core.js";
 import "./datasets.css";

@@ -34,7 +34,7 @@ import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { blocks } from "../../tiles/sections.js";
-import { SKOSConcepts, SKOSLineage } from "../../tiles/skos/concepts.js";
+import { SKOSConcepts, SKOSLineage } from "../../_/skos/concepts.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { taxonomies } from "./taxonomies.js";
 

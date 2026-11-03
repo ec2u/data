@@ -19,7 +19,7 @@ import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import type { ComponentChildren } from "preact";
 import "./sections.css";
-import { Text } from "./text.js";
+import { Text } from "../_/text.js";
 
 
 /**

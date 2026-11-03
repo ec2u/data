@@ -34,7 +34,7 @@ import { useEffect } from "preact/hooks";
 import { FacetSize, named, toEventAttendanceMode, toUniversity, UniversityModel } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { Search } from "../../tiles/search.js";
+import { Search } from "../../_/search.js";
 import { DatasetLink, DatasetMeta } from "../datasets/dataset.js";
 import { schedule } from "./event.js";
 
