@@ -104,7 +104,7 @@ export function UnitData() {
 
 		head={<Path>
 
-			<Link look={"subtle"} href={units.route}>{units.label}</Link>
+			<Link href={units.route}>{units.label}</Link>
 
 		</Path>}
 

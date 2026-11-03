@@ -112,7 +112,7 @@ export function DocumentData() {
 
 		head={<Path>
 
-			<Link look={"subtle"} href={documents.route}>{documents.label}</Link>
+			<Link href={documents.route}>{documents.label}</Link>
 
 		</Path>}
 

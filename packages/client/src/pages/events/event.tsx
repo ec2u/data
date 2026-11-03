@@ -133,7 +133,7 @@ export function EventData() {
 
 		head={<Path>
 
-			<Link look={"subtle"} href={events.route}>{events.label}</Link>
+			<Link href={events.route}>{events.label}</Link>
 
 		</Path>}
 

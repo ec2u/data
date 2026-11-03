@@ -80,7 +80,7 @@ export function Docs() {
 
 		head={<Path>
 
-			<Link look={"subtle"} href={section}>{label}</Link>
+			<Link href={section}>{label}</Link>
 
 			{typeof text === "string" && <Markdown meta={"title"}>{text}</Markdown>}
 

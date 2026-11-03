@@ -119,7 +119,7 @@ export function CourseData() {
 
 		head={<Path>
 
-			<Link look={"subtle"} href={courses.route}>{courses.label}</Link>
+			<Link href={courses.route}>{courses.label}</Link>
 
 		</Path>}
 

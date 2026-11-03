@@ -114,7 +114,7 @@ export function UniversityData() {
 
 		head={<Path>
 
-			<Link look={"subtle"} href={universities.route}>{universities.label}</Link>
+			<Link href={universities.route}>{universities.label}</Link>
 
 		</Path>}
 

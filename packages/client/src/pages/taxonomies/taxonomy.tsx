@@ -111,7 +111,7 @@ export function TaxonomyData() {
 
 		head={<Path>
 
-			<Link look={"subtle"} href={taxonomies.route}>{taxonomies.label}</Link>
+			<Link href={taxonomies.route}>{taxonomies.label}</Link>
 
 			{resource({
 

@@ -116,7 +116,7 @@ export function ProgramData() {
 
 		head={<Path>
 
-			<Link look={"subtle"} href={programs.route}>{programs.label}</Link>
+			<Link href={programs.route}>{programs.label}</Link>
 
 		</Path>}
 

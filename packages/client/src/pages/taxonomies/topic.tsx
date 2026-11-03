@@ -97,12 +97,12 @@ export function TopicData() {
 
 		head={<Path>
 
-			<Link look={"subtle"} href={taxonomies.route}>{taxonomies.label}</Link>
+			<Link href={taxonomies.route}>{taxonomies.label}</Link>
 
 			{resource({
 
 				ready: ({ state: { inScheme } }) =>
-					<Link look={"subtle"} href={inScheme.id}>{inScheme.label}</Link>
+					<Link href={inScheme.id}>{inScheme.label}</Link>
 
 			})}
 
