@@ -25,7 +25,6 @@ import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useMembers, useResource } from "@metreeca/tile-data/store";
-import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { date } from "@metreeca/tile-type/date";
 import { integer } from "@metreeca/tile-type/integer";
@@ -34,6 +33,7 @@ import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
+import { Title } from "../../tiles/title.js";
 import { Search } from "../../_/search.js";
 import { SKOSConcepts } from "../../_/skos/concepts.js";
 import { DatasetLink } from "../datasets/dataset.js";
@@ -165,7 +165,7 @@ export function TaxonomyData() {
 			}
 		}) => <>
 
-			<Card title={title}>{opt(description, text => <Markdown>{text}</Markdown>)}</Card>
+			<Title title={title}>{opt(description, text => <Markdown>{text}</Markdown>)}</Title>
 
 			<Info>{{
 

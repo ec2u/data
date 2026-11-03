@@ -24,7 +24,6 @@ import { Link } from "@metreeca/tile-cell/link";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
-import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { duration } from "@metreeca/tile-type/duration";
@@ -36,6 +35,7 @@ import { Failure } from "../../tiles/failure.js";
 import { links, list } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { blocks, sections } from "../../tiles/sections.js";
+import { Title } from "../../tiles/title.js";
 import { credits } from "../programs/program.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { courses } from "./courses.js";
@@ -232,7 +232,7 @@ export function CourseData() {
 
 		}) => <Stack space={"spacing100"}>
 
-			<Card title={label}>{description}</Card>
+			<Title title={label}>{description}</Title>
 
 			{blocks({
 

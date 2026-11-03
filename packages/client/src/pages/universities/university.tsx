@@ -24,7 +24,6 @@ import { Link } from "@metreeca/tile-cell/link";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useMembers, useResource } from "@metreeca/tile-data/store";
-import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { integer } from "@metreeca/tile-type/integer";
 import { year } from "@metreeca/tile-type/year";
@@ -32,6 +31,7 @@ import { useEffect } from "preact/hooks";
 import { ec2u, site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
+import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { byDataset, isDatasetRow } from "../datasets/datasets.core.js";
 import { universities } from "./universities.js";
@@ -176,12 +176,12 @@ export function UniversityData() {
 		blank: () => <Hint>{university.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{university.glyph}</Hint></Failure>,
 
-		ready: ({ state: { depiction, prefLabel, definition } }) => <Card
+		ready: ({ state: { depiction, prefLabel, definition } }) => <Title
 
 			title={prefLabel}
 			image={depiction[0]}
 
-		>{definition}</Card>
+		>{definition}</Title>
 
 	})}</Page>;
 

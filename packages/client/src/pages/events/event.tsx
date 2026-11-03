@@ -26,7 +26,6 @@ import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
-import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { date } from "@metreeca/tile-type/date";
 import { instant } from "@metreeca/tile-type/instant";
@@ -38,6 +37,7 @@ import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { filters } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
+import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { events } from "./events.js";
 
@@ -228,14 +228,14 @@ export function EventData() {
 		blank: () => <Hint>{event.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{event.glyph}</Hint></Failure>,
 
-		ready: ({ state: { label, description, disambiguatingDescription, image } }) => <Card
+		ready: ({ state: { label, description, disambiguatingDescription, image } }) => <Title
 
 			title={label}
 
 			image={opt(image, ({ url, description: alt }) => <img src={url[0]} alt={alt ?? `Image of ${label}`}/>)}
 			caption={image?.copyrightNotice}
 
-		>{opt(description, text => <Markdown>{text}</Markdown>) ?? disambiguatingDescription}</Card>
+		>{opt(description, text => <Markdown>{text}</Markdown>) ?? disambiguatingDescription}</Title>
 
 	})}</Page>;
 

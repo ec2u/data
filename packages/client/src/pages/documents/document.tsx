@@ -25,7 +25,6 @@ import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
-import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { date } from "@metreeca/tile-type/date";
@@ -36,6 +35,7 @@ import { Failure } from "../../tiles/failure.js";
 import { filters, links, list } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { blocks } from "../../tiles/sections.js";
+import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { documents } from "./documents.js";
 
@@ -222,7 +222,7 @@ export function DocumentData() {
 
 		ready: ({ state: { title, description, relation = [] } }) => <Stack space={"spacing100"}>
 
-			<Card title={title}>{opt(description, text => <Markdown>{text}</Markdown>)}</Card>
+			<Title title={title}>{opt(description, text => <Markdown>{text}</Markdown>)}</Title>
 
 			{blocks({
 

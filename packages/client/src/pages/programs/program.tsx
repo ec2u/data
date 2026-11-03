@@ -24,7 +24,6 @@ import { Link } from "@metreeca/tile-cell/link";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
-import { Card } from "@metreeca/tile-hive/card";
 import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { decimal } from "@metreeca/tile-type/decimal";
@@ -37,6 +36,7 @@ import { Failure } from "../../tiles/failure.js";
 import { links } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { blocks, sections } from "../../tiles/sections.js";
+import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { programs } from "./programs.js";
 
@@ -198,7 +198,7 @@ export function ProgramData() {
 
 		}) => <Stack space={"spacing100"}>
 
-			<Card title={label}>{description !== teaches ? description : undefined}</Card>
+			<Title title={label}>{description !== teaches ? description : undefined}</Title>
 
 			{blocks({
 
