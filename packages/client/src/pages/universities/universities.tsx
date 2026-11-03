@@ -33,6 +33,7 @@ import { useEffect } from "preact/hooks";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../tiles/search.js";
+import { DatasetPage, useIntro } from "../datasets/dataset.js";
 
 
 export const universities = immutable({
@@ -76,14 +77,26 @@ export function UniversitiesPage() {
 	const count = useCount(collection);
 	const keywords = useKeywords(collection, "prefLabel", { delay: 0 }); // the search field times the pause itself
 
+	const inception = useRange(collection, "inception");
+	const students = useRange(collection, "students");
+
+	const [intro, setIntro] = useIntro(Object.keys(collection.criteria).length > 0);
+
 
 	useEffect(() => router({ title: universities.label }), []);
 
 
-	return <Page
+	return intro ? <DatasetPage
 
 		head={universities.label}
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		glyph={universities.glyph}
+
+		onBrowse={() => setIntro(false)}
+
+	/> : <Page
+
+		head={universities.label}
+		menu={<Link href={"?"} title={"Info"} onClick={introduce}><Icon.Info/></Link>}
 
 		back={members({
 
@@ -95,8 +108,8 @@ export function UniversitiesPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Range name={"Inception"} compact type={year} range={useRange(collection, "inception")}/>
-			<Range name={"Students"} compact type={integer} range={useRange(collection, "students")}/>
+			<Range name={"Inception"} compact type={year} range={inception}/>
+			<Range name={"Students"} compact type={integer} range={students}/>
 
 		</>}
 
@@ -125,5 +138,14 @@ export function UniversitiesPage() {
 		}</>
 
 	})}</Page>;
+
+
+	/**
+	 * Brings the reader back to the introduction of the dataset, dropping the criteria the listing was narrowed by.
+	 */
+	function introduce(): void {
+		collection.clear();
+		setIntro(true);
+	}
 
 }

@@ -18,6 +18,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   carries, and count matches rather than items while filtered
 - Catalogue pages for datasets, universities, units, programs, courses, documents, events and taxonomies offer a name
   search and the facets of the legacy client through the shared facet widgets, with a reset clearing every filter
+- The universities catalogue opens on an introduction to its dataset, with its description, publisher, license and
+  dates, reached again through the info link on the catalogue and on university pages
 
 ### Changed
 
@@ -40,6 +42,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Catalogue facets other than the university one open compact, and links across the hub take their strong look from
   the shared page style rather than from each view
 - The GitHub link in the footer is set a step larger than the copyright notice beside it
+- Taxonomy pages gather the concept count, version and dates in a single sidebar panel
 
 - Shape definitions, vocabularies and dataset metadata moved from `@ec2u/data-loader` to `@ec2u/data-shared`, so that
   endpoints and clients state a resource without pulling in the ingestion machinery; the topic retrieval and embedding

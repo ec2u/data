@@ -32,6 +32,7 @@ import { useEffect } from "preact/hooks";
 import { ec2u, site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
+import { DatasetLink } from "../datasets/dataset.js";
 import { byDataset, isDatasetRow } from "../datasets/index.core.js";
 import { universities } from "./universities.js";
 
@@ -117,7 +118,7 @@ export function UniversityPage() {
 
 		</Path>}
 
-		menu={<Button icon={<Icon.Help/>} title={"Help"}/>}
+		menu={<DatasetLink href={universities.route}/>}
 
 		back={resource({
 

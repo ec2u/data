@@ -128,32 +128,24 @@ export function TaxonomyPage() {
 
 		})}
 
-		tray={<>
+		tray={resource({
 
-			<Info place={"spread"}>{{
+			ready: ({ state: { version, created, issued, modified } }) => <Info place={"spread"}>{{
 
 				Concepts: concepts({
 
 					ready: ({ state }) => integer.format(state)
 
-				})
+				}),
+
+				Version: version,
+				Created: opt(created, value => date.format(value)),
+				Published: opt(issued, value => date.format(value)),
+				Modified: opt(modified, value => date.format(value))
 
 			}}</Info>
 
-			{resource({
-
-				ready: ({ state: { version, created, issued, modified } }) => <Info place={"spread"}>{{
-
-					Version: version,
-					Created: opt(created, value => date.format(value)),
-					Published: opt(issued, value => date.format(value)),
-					Modified: opt(modified, value => date.format(value))
-
-				}}</Info>
-
-			})}
-
-		</>}
+		})}
 
 		info={resource({
 
