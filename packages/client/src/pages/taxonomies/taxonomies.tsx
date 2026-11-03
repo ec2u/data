@@ -90,8 +90,8 @@ export function TaxonomiesPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"License"} tally={useTally(collection, "license", { label: "label", size: FacetSize })}/>
-			<Tally name={"Publisher"} tally={useTally(collection, "publisher", { label: "label", size: FacetSize })}/>
+			<Tally name={"License"} compact tally={useTally(collection, "license", { label: "label", size: FacetSize })}/>
+			<Tally name={"Publisher"} compact tally={useTally(collection, "publisher", { label: "label", size: FacetSize })}/>
 
 		</>}
 
@@ -126,7 +126,7 @@ function cards(rows: readonly TaxonomyRow[]) {
 
 		.map(({ taxonomy: { id, title, alternative, description }, size }) => <Card key={id}
 
-			title={<Link look={"strong"} href={id}>{alternative
+			title={<Link href={id}>{alternative
 				? `${alternative} / ${title}`
 				: title
 			}</Link>}

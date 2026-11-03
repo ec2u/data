@@ -24,21 +24,15 @@ import { local } from "../index.core.js";
  * Renders a list of linked resources for an info panel.
  *
  * @param entries The resources to be listed, each with its identifier and label
- * @param look The look of the links; plain if omitted
  *
  * @returns A list of links sorted by label, or `undefined` if `entries` is empty, so that the panel omits the entry
  */
-export function links(
-
-	entries: readonly { readonly id: string, readonly label: string }[],
-	look?: "strong"
-
-): ComponentChildren {
+export function links(entries: readonly { readonly id: string, readonly label: string }[]): ComponentChildren {
 
 	return entries.length > 0 ? <ul>{[...entries] // copy, as entries are shared
 
 		.sort(by(({ label }) => label, locale()))
-		.map(({ id, label }) => <li key={id}><Link look={look} href={id}>{label}</Link></li>)
+		.map(({ id, label }) => <li key={id}><Link href={id}>{label}</Link></li>)
 
 	}</ul> : undefined;
 
@@ -51,8 +45,7 @@ export function links(
  * @param catalogue The route of the catalogue the links lead to
  * @param query The criteria each link narrows the catalogue by, given the root-relative identifier of its resource
  *
- * @returns A list of strong links sorted by label, or `undefined` if `entries` is empty, so that the panel omits the
- *     entry
+ * @returns A list of links sorted by label, or `undefined` if `entries` is empty, so that the panel omits the entry
  */
 export function filters(
 
@@ -65,7 +58,7 @@ export function filters(
 	return entries.length > 0 ? <ul>{[...entries] // copy, as entries are shared
 
 		.sort(by(({ label }) => label, locale()))
-		.map(({ id, label }) => <li key={id}><Link look={"strong"} href={catalogue} query={query(local(id))}>{label}</Link></li>)
+		.map(({ id, label }) => <li key={id}><Link href={catalogue} query={query(local(id))}>{label}</Link></li>)
 
 	}</ul> : undefined;
 

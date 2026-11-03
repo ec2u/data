@@ -96,18 +96,18 @@ export function CoursesPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"University"} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
-			<Tally name={"Year"} tally={useTally(collection, "year", { size: FacetSize })}/>
-			<Tally name={"Term"} tally={useTally(collection, "term", { size: FacetSize })}>{named(toCourseTerm)}</Tally>
-			<Tally name={"Attendance"} tally={useTally(collection, "courseMode", { size: FacetSize })}>{named(toCourseMode)}</Tally>
-			<Tally name={"Language"} tally={useTally(collection, "inLanguage", { size: FacetSize })}>{named(toLanguage)}</Tally>
-			<Tally name={"Fees for Externals"} tally={useTally(collection, "isAccessibleForFree", { size: FacetSize })}>{named(free => free === "true" ? "Free" : "Paid")}</Tally>
-			<Range name={"Credits"} type={decimal} range={useRange(collection, "numberOfCredits")}/>
-			<Tally name={"Duration"} tally={useTally(collection, "timeRequired", { size: FacetSize })}>{named(value => duration.format(value))}</Tally>
-			<Tally name={"Level"} tally={useTally(collection, "educationalLevel", { label: "label", size: FacetSize })}/>
-			<Tally name={"Credentials"} tally={useTally(collection, "educationalCredentialAwarded.credentialCategory", { size: FacetSize })}/>
-			<Tally name={"Subjects"} tally={useTally(collection, "about", { label: "label", size: FacetSize })}/>
-			<Tally name={"Audience"} tally={useTally(collection, "audience", { label: "label", size: FacetSize })}/>
+			<Tally name={"University"} compact={false} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
+			<Tally name={"Year"} compact tally={useTally(collection, "year", { size: FacetSize })}/>
+			<Tally name={"Term"} compact tally={useTally(collection, "term", { size: FacetSize })}>{named(toCourseTerm)}</Tally>
+			<Tally name={"Attendance"} compact tally={useTally(collection, "courseMode", { size: FacetSize })}>{named(toCourseMode)}</Tally>
+			<Tally name={"Language"} compact tally={useTally(collection, "inLanguage", { size: FacetSize })}>{named(toLanguage)}</Tally>
+			<Tally name={"Fees for Externals"} compact tally={useTally(collection, "isAccessibleForFree", { size: FacetSize })}>{named(free => free === "true" ? "Free" : "Paid")}</Tally>
+			<Range name={"Credits"} compact type={decimal} range={useRange(collection, "numberOfCredits")}/>
+			<Tally name={"Duration"} compact tally={useTally(collection, "timeRequired", { size: FacetSize })}>{named(value => duration.format(value))}</Tally>
+			<Tally name={"Level"} compact tally={useTally(collection, "educationalLevel", { label: "label", size: FacetSize })}/>
+			<Tally name={"Credentials"} compact tally={useTally(collection, "educationalCredentialAwarded.credentialCategory", { size: FacetSize })}/>
+			<Tally name={"Subjects"} compact tally={useTally(collection, "about", { label: "label", size: FacetSize })}/>
+			<Tally name={"Audience"} compact tally={useTally(collection, "audience", { label: "label", size: FacetSize })}/>
 
 		</>}
 
@@ -125,7 +125,7 @@ export function CoursesPage() {
 
 			{state.map(({ id, label, comment, university }) => <Card key={id}
 
-				title={<Link look={"strong"} href={id}>{label}</Link>}
+				title={<Link href={id}>{label}</Link>}
 				tags={opt(university, toUniversity)}
 
 			>{comment}</Card>)}

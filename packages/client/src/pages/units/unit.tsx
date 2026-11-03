@@ -128,8 +128,8 @@ export function UnitPage() {
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, value => <Link look={"strong"} href={value.id}>{toUniversity(value)}</Link>),
-					Type: links(classification, "strong")
+					University: opt(university, value => <Link href={value.id}>{toUniversity(value)}</Link>),
+					Type: links(classification)
 
 				}}</Info>
 
@@ -142,7 +142,7 @@ export function UnitPage() {
 				<Info place={"spread"}>{{
 
 					Info: homepage.length > 0 ? <ul>{homepage.map(url =>
-						<li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>
+						<li key={url}><Link href={url}>{site(url)}</Link></li>
 					)}</ul> : undefined
 
 				}}</Info>

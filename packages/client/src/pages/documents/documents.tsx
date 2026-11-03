@@ -92,12 +92,12 @@ export function DocumentsPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"University"} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
-			<Tally name={"Type"} tally={useTally(collection, "type", { label: "label", size: FacetSize })}/>
-			<Tally name={"Audience"} tally={useTally(collection, "audience", { label: "label", size: FacetSize })}/>
-			<Tally name={"Topic"} tally={useTally(collection, "subject", { label: "label", size: FacetSize })}/>
-			<Tally name={"Language"} tally={useTally(collection, "language", { size: FacetSize })}>{named(toLanguage)}</Tally>
-			<Tally name={"License"} tally={useTally(collection, "license", { label: "label", size: FacetSize })}/>
+			<Tally name={"University"} compact={false} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
+			<Tally name={"Type"} compact tally={useTally(collection, "type", { label: "label", size: FacetSize })}/>
+			<Tally name={"Audience"} compact tally={useTally(collection, "audience", { label: "label", size: FacetSize })}/>
+			<Tally name={"Topic"} compact tally={useTally(collection, "subject", { label: "label", size: FacetSize })}/>
+			<Tally name={"Language"} compact tally={useTally(collection, "language", { size: FacetSize })}>{named(toLanguage)}</Tally>
+			<Tally name={"License"} compact tally={useTally(collection, "license", { label: "label", size: FacetSize })}/>
 
 		</>}
 
@@ -115,7 +115,7 @@ export function DocumentsPage() {
 
 			{state.map(({ id, label, comment, university }) => <Card key={id}
 
-				title={<Link look={"strong"} href={id}>{label}</Link>}
+				title={<Link href={id}>{label}</Link>}
 				tags={university ? toUniversity(university) : "EC2U Alliance"}
 
 			>{comment}</Card>)}

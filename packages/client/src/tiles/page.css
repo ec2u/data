@@ -18,6 +18,15 @@
     --page-head-nudge: 0.05em;
 }
 
+/*
+ * Links stating no look of their own read as strong across the hub. The token is set on the links alone: set on the
+ * root, it would make every button stating no look of its own strong as well, bordered and set in bold type.
+ */
+
+tile-link {
+    --tile--look: strong;
+}
+
 tile-shell {
 
     --tile-shell-head-font-size: var(--tile--scaling-150);

@@ -100,8 +100,8 @@ export function EventsPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"University"} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
-			<Range name={"Date"} type={date({ instant: true })} range={useRange(collection, "startDate")}/>
+			<Tally name={"University"} compact={false} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
+			<Range name={"Date"} compact type={date({ instant: true })} range={useRange(collection, "startDate")}/>
 			<Tally name={"Free"} compact tally={useTally(collection, "isAccessibleForFree", { size: FacetSize })}>{named(free => free === "true" ? "Yes" : "No")}</Tally>
 			<Tally name={"Attendance"} compact tally={useTally(collection, "eventAttendanceMode", { size: FacetSize })}>{named(toEventAttendanceMode)}</Tally>
 			<Tally name={"Topic"} compact tally={useTally(collection, "keywords", { label: "label", size: FacetSize })}/>
@@ -122,7 +122,7 @@ export function EventsPage() {
 
 			{state.map(({ id, label, disambiguatingDescription, startDate, endDate, image, university }) => <Card key={id}
 
-				title={<Link look={"strong"} href={id}>{`${schedule(startDate, endDate)} / ${label}`}</Link>}
+				title={<Link href={id}>{`${schedule(startDate, endDate)} / ${label}`}</Link>}
 				tags={opt(university, toUniversity)}
 				image={opt(image, ({ url }) => url[0])}
 

@@ -156,7 +156,7 @@ export function DocumentPage() {
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, value => <Link look={"strong"} href={value.id}>{toUniversity(value)}</Link>)
+					University: opt(university, value => <Link href={value.id}>{toUniversity(value)}</Link>)
 
 				}}</Info>
 
@@ -164,7 +164,7 @@ export function DocumentPage() {
 
 					Code: identifier,
 					Web: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>
+						<li key={url}><Link href={url}>{site(url)}</Link></li>
 					)}</ul> : undefined,
 					Language: list(language.map(toLanguage))
 
@@ -189,7 +189,7 @@ export function DocumentPage() {
 				<Info place={"spread"}>{{
 
 					Publisher: opt(publisher, ({ label, url = [] }) => url.length > 0
-						? <Link look={"strong"} href={url[0]}>{label}</Link>
+						? <Link href={url[0]}>{label}</Link>
 						: label
 					),
 					Contact: opt(creator, ({ label }) => label),
@@ -199,7 +199,7 @@ export function DocumentPage() {
 
 				<Info place={"spread"}>{{
 
-					License: opt(license, ({ id, label }) => <Link look={"strong"} href={id}>{label}</Link>),
+					License: opt(license, ({ id, label }) => <Link href={id}>{label}</Link>),
 					Rights: rights
 
 				}}</Info>

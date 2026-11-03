@@ -159,7 +159,7 @@ export function CoursePage() {
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, value => <Link look={"strong"} href={value.id}>{toUniversity(value)}</Link>),
+					University: opt(university, value => <Link href={value.id}>{toUniversity(value)}</Link>),
 					Year: year,
 					Term: list(term.map(toCourseTerm))
 
@@ -187,7 +187,7 @@ export function CoursePage() {
 				<Info place={"spread"}>{{
 
 					Info: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>
+						<li key={url}><Link href={url}>{site(url)}</Link></li>
 					)}</ul> : undefined
 
 				}}</Info>

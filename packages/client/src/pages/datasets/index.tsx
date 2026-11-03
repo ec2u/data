@@ -121,7 +121,7 @@ export function DatasetsPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"License"} tally={useTally(collection, "license", { label: "label", size: FacetSize })}/>
+			<Tally name={"License"} compact tally={useTally(collection, "license", { label: "label", size: FacetSize })}/>
 
 		</>}
 

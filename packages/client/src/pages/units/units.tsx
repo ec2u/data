@@ -92,9 +92,9 @@ export function UnitsPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Tally name={"University"} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
-			<Tally name={"Type"} tally={useTally(collection, "classification", { label: "label", size: FacetSize })}/>
-			<Tally name={"Topic"} tally={useTally(collection, "subject", { label: "label", size: FacetSize })}/>
+			<Tally name={"University"} compact={false} tally={useTally(collection, "university", { label: "altLabel", size: FacetSize })}/>
+			<Tally name={"Type"} compact tally={useTally(collection, "classification", { label: "label", size: FacetSize })}/>
+			<Tally name={"Topic"} compact tally={useTally(collection, "subject", { label: "label", size: FacetSize })}/>
 
 		</>}
 
@@ -112,7 +112,7 @@ export function UnitsPage() {
 
 			{state.map(({ id, label, comment, university }) => <Card key={id}
 
-				title={<Link look={"strong"} href={id}>{label}</Link>}
+				title={<Link href={id}>{label}</Link>}
 				tags={university ? toUniversity(university) : "EC2U Alliance"}
 
 			>{comment}</Card>)}

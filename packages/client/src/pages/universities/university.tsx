@@ -132,14 +132,14 @@ export function UniversityPage() {
 
 				<Info place={"spread"}>{{
 
-					Home: <ul>{homepage.map(url => <li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>)}</ul>
+					Home: <ul>{homepage.map(url => <li key={url}><Link href={url}>{site(url)}</Link></li>)}</ul>
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
-					Country: <Link look={"strong"} href={country.id}>{country.label}</Link>,
-					City: <Link look={"strong"} href={city.id}>{city.label}</Link>
+					Country: <Link href={country.id}>{country.label}</Link>,
+					City: <Link href={city.id}>{city.label}</Link>
 
 				}}</Info>
 

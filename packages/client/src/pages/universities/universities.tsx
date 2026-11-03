@@ -95,8 +95,8 @@ export function UniversitiesPage() {
 
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
-			<Range name={"Inception"} type={year} range={useRange(collection, "inception")}/>
-			<Range name={"Students"} type={integer} range={useRange(collection, "students")}/>
+			<Range name={"Inception"} compact type={year} range={useRange(collection, "inception")}/>
+			<Range name={"Students"} compact type={integer} range={useRange(collection, "students")}/>
 
 		</>}
 
@@ -116,7 +116,7 @@ export function UniversitiesPage() {
 
 			.map(({ id, label, definition, depiction, country }) => <Card key={id}
 
-				title={<Link look={"strong"} href={id}>{label}</Link>}
+				title={<Link href={id}>{label}</Link>}
 				tags={country.label}
 				image={depiction[0]}
 

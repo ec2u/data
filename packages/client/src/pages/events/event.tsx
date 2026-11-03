@@ -173,7 +173,7 @@ export function EventPage() {
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, value => <Link look={"strong"} href={value.id}>{toUniversity(value)}</Link>)
+					University: opt(university, value => <Link href={value.id}>{toUniversity(value)}</Link>)
 
 				}}</Info>
 
@@ -207,8 +207,8 @@ export function EventPage() {
 
 				<Info place={"spread"}>{{
 
-					Info: <ul>{url.map(url => <li key={url}><Link look={"strong"} href={url}>{site(url)}</Link></li>)}</ul>,
-					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link look={"strong"} href={url[0] ?? id}>{label}</Link>)
+					Info: <ul>{url.map(url => <li key={url}><Link href={url}>{site(url)}</Link></li>)}</ul>,
+					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link href={url[0] ?? id}>{label}</Link>)
 
 				}}</Info>
 
