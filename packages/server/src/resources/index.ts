@@ -22,7 +22,11 @@ import { Router } from "express";
 export function resources(): Router {
 
 	return Router()
-		.use("/", driver(Resources, { virtual: true }).lookup({
+		.use("/", driver(Resources, {
+
+			virtual: true
+
+		}).lookup({
 
 			model: {
 				resources: {
