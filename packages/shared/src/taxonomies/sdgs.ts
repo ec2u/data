@@ -44,13 +44,12 @@ export const sdgs = immutable({ // !!! sync from `taxonomies-ec2u-sdgs`
 	title: { en: "United Nations Sustainable Development Goals" },
 	alternative: { en: "UN SDGs" },
 	description: { en: dedent`
-		[The 2030 Agenda for Sustainable Development](https://sdgs.un.org/2030agenda), adopted by all United Nations
-		Member States in 2015, provides a shared blueprint for peace and prosperity for people and the planet, now and
-		into the future. At its heart are the 17 Sustainable Development Goals (SDGs), which are an urgent call for
-		action by all countries - developed and developing - in a global partnership. They recognize that ending poverty
-		and other deprivations must go hand-in-hand with strategies that improve health and education, reduce
-		inequality, and spur economic growth – all while tackling climate change and working to preserve our oceans and
-		forests.
+		The 2030 Agenda for Sustainable Development, adopted by all United Nations Member States in 2015, provides a
+		shared blueprint for peace and prosperity for people and the planet, now and into the future. At its heart are
+		the 17 Sustainable Development Goals (SDGs), which are an urgent call for action by all countries - developed and
+		developing - in a global partnership. They recognize that ending poverty and other deprivations must go
+		hand-in-hand with strategies that improve health and education, reduce inequality, and spur economic growth –
+		all while tackling climate change and working to preserve our oceans and forests.
 	` },
 
 	publisher: unitedNations.id,
