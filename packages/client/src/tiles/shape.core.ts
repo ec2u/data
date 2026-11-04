@@ -133,8 +133,8 @@ export type ShapeRow = {
 
 	/**
 	 * The types of the property values, one for each alternative the property admits: the shape of linked or embedded
-	 * resources, `text` for localised text, the local name of the datatype of plain values, or the value kind where no
-	 * datatype is stated; only shapes are linked to their documentation.
+	 * resources, `Dictionary` for localised text, the local name of the datatype of plain values, or the value kind
+	 * where no datatype is stated; only the shapes among them are linked to their documentation.
 	 */
 	readonly types: readonly ShapeLink[]
 
@@ -159,7 +159,7 @@ export type ShapeLink = {
 
 	/**
 	 * The name of the type: the {@link getShapeName | name} of a shape, as `Schema Organization`, or else the name of
-	 * the type of plain values, as `text` for localised text or the local name of a datatype such as `dateTime`.
+	 * the type of plain values, as `Dictionary` for localised text or the local name of a datatype such as `dateTime`.
 	 */
 	readonly name: string
 
@@ -170,6 +170,74 @@ export type ShapeLink = {
 	readonly href: Optional<string>
 
 };
+
+/**
+ * The TypeScript interface describing the resources of a shape.
+ */
+export type ShapeInterface = {
+
+	/**
+	 * The name of the interface: the {@link getShapeName | name} of the shape, stripped of the characters not allowed
+	 * in TypeScript identifiers.
+	 */
+	readonly name: string
+
+	/**
+	 * The interfaces extended by the interface, one for each nearest documented ancestor of the shape, linked to its
+	 * documentation.
+	 */
+	readonly parents: readonly ShapeLink[]
+
+	/**
+	 * The members of the interface: the properties the shape declares in its own right and the ones it narrows, in
+	 * declaration order.
+	 */
+	readonly members: readonly ShapeMember[]
+
+};
+
+/**
+ * A member of the TypeScript interface describing the resources of a shape.
+ */
+export type ShapeMember = {
+
+	/**
+	 * The name the property is keyed by in resource states.
+	 */
+	readonly term: string
+
+	/**
+	 * Whether the property admits no value.
+	 */
+	readonly optional: boolean
+
+	/**
+	 * Whether the property admits more than one value, typed as an array.
+	 */
+	readonly plural: boolean
+
+	/**
+	 * The TypeScript types of the property values, one for each alternative the property admits: the interfaces of
+	 * linked or embedded resources, linked to their documentation, or `Dictionary`, `string`, `number` and `boolean`
+	 * for plain values.
+	 */
+	readonly types: readonly ShapeLink[]
+
+};
+
+/**
+ * A JSON Schema object.
+ */
+export type ShapeSchema = {
+
+	readonly [keyword: string]: ShapeSchemaValue
+
+};
+
+/**
+ * A value of a JSON Schema keyword.
+ */
+export type ShapeSchemaValue = string | number | boolean | readonly ShapeSchemaValue[] | ShapeSchema;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -407,6 +475,98 @@ export function getShapeParents(lazy: Lazy<ResourceShape>): readonly ShapeLink[]
 }
 
 /**
+ * Describes a resource shape as a TypeScript interface.
+ *
+ * States the interface extending the nearest documented ancestors of `lazy`, with the properties it declares in its
+ * own right and the inherited ones it narrows, typed differently from at least one ancestor declaring them.
+ *
+ * @param lazy The shape to be described, possibly deferred
+ *
+ * @returns The TypeScript interface describing the resources of `lazy`
+ */
+export function getShapeInterface(lazy: Lazy<ResourceShape>): ShapeInterface {
+
+	const shape = eager(lazy);
+	const ancestors = documented(shape);
+
+	return {
+
+		name: identifier(shape),
+		parents: ancestors.map(scriptable),
+
+		members: Object.entries(shape.members).flatMap(([term, member]) => {
+
+			const signature = member.kind === "property" && !member.hidden ? signed(term, member) : undefined;
+
+			const inherited = ancestors.flatMap(({ members }) => opt(members[term], ancestor =>
+				ancestor.kind === "property" ? [signed(term, ancestor)] : []
+			) ?? []);
+
+			return signature !== undefined && (inherited.length === 0 || inherited.some(ancestor =>
+				spelled(ancestor) !== spelled(signature)
+			)) ? [signature] : [];
+
+		})
+
+	};
+
+}
+
+/**
+ * Describes a resource shape as a JSON Schema.
+ *
+ * States the schema of the payloads `lazy` admits, with the members of its {@link getShapeInterface | interface},
+ * requiring the schemas of its nearest documented ancestors through `allOf`; shapes are referred to by `$ref` to their
+ * documentation, and localised text is admitted as objects mapping language tags to strings.
+ *
+ * @param lazy The shape to be described, possibly deferred
+ *
+ * @returns The JSON Schema describing the resources of `lazy`
+ */
+export function getShapeSchema(lazy: Lazy<ResourceShape>): ShapeSchema {
+
+	const { parents, members } = getShapeInterface(lazy);
+
+	const required = members.filter(({ optional }) => !optional).map(({ term }) => term);
+
+	return {
+
+		title: getShapeName(lazy),
+
+		...(parents.length > 0 ? { allOf: parents.map(referred) } : {}),
+
+		type: "object",
+		properties: Object.fromEntries(members.map(member => [member.term, valued(member)])),
+
+		...(required.length > 0 ? { required } : {})
+
+	};
+
+}
+
+/**
+ * Describes the values of a member of a TypeScript interface as a JSON Schema.
+ */
+function valued({ plural, types }: ShapeMember): ShapeSchema {
+
+	const [type] = types;
+	const items = type !== undefined && types.length === 1 ? referred(type) : { anyOf: types.map(referred) };
+
+	return plural ? { type: "array", items } : items;
+
+}
+
+/**
+ * Describes a TypeScript type as a JSON Schema, referring to shapes by the location of their documentation.
+ */
+function referred({ name, href }: ShapeLink): ShapeSchema {
+	return href !== undefined ? { $ref: href }
+		: name === "Dictionary" ? { type: "object", additionalProperties: { type: "string" } }
+			: name === "string" || name === "number" || name === "boolean" ? { type: name }
+				: { $ref: name };
+}
+
+/**
  * Links a list of shapes to their documentation, leaving out the ones sharing the documentation of a target shape and
  * listing each documentation once.
  */
@@ -501,10 +661,67 @@ function typed(lazy: Lazy<Shape>): readonly ShapeLink[] {
 }
 
 /**
+ * Describes a property as a member of a TypeScript interface.
+ */
+function signed(term: string, { range }: Property): ShapeMember {
+	return {
+
+		term,
+		optional: (range.minCount ?? 0) === 0,
+		plural: range.maxCount === undefined || range.maxCount > 1,
+		types: scripted(range.shape)
+
+	};
+}
+
+/**
+ * Spells out the signature of a member of a TypeScript interface, for comparison.
+ */
+function spelled({ optional, plural, types }: ShapeMember): string {
+	return `${optional ? "?" : ""}${plural ? "[]" : ""}${types.map(({ name }) => name).join("|")}`;
+}
+
+/**
+ * Lists the TypeScript types of the values a shape admits, one for each distinct alternative, linking the shapes to
+ * their documentation.
+ */
+function scripted(lazy: Lazy<Shape>): readonly ShapeLink[] {
+
+	const shape = eager(lazy);
+
+	const types: readonly ShapeLink[] = shape.kind === "union" ? shape.branches.flatMap(scripted)
+		: shape.kind === "reference" ? [scriptable(eager(shape.target))]
+			: shape.kind === "resource" ? [scriptable(shape)]
+				: [{
+					name: shape.kind === "dictionary" ? "Dictionary"
+						: shape.kind === "boolean" || shape.kind === "number" ? shape.kind
+							: "string",
+					href: undefined
+				}];
+
+	return types.filter(({ name }, index) => types.findIndex(type => type.name === name) === index);
+
+}
+
+/**
+ * Links a resource shape to its documentation under its TypeScript identifier.
+ */
+function scriptable(shape: ResourceShape): ShapeLink {
+	return { ...linked(shape), name: identifier(shape) };
+}
+
+/**
+ * Names a resource shape as a TypeScript identifier.
+ */
+function identifier(shape: ResourceShape): string {
+	return getShapeName(shape).replace(/[^\p{L}\p{N}_$]/gu, "");
+}
+
+/**
  * Names the type of plain values.
  */
 function plain(shape: Exclude<Shape, { readonly kind: "union" | "reference" | "resource" }>): string {
-	return shape.kind === "dictionary" ? "text"
+	return shape.kind === "dictionary" ? "Dictionary"
 		: shape.kind === "boolean" ? "boolean"
 			: opt(shape.datatype, local) ?? shape.kind;
 }

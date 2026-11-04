@@ -16,13 +16,17 @@
 
 import type { ResourceShape } from "@metreeca/blue/resource";
 import { eager } from "@metreeca/blue/value";
-import { type Lazy, opt } from "@metreeca/core";
+import { isArray, isString, type Lazy, opt } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
+import { Button } from "@metreeca/tile-cell/button";
+import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Stack } from "@metreeca/tile-hive/stack";
+import { type ComponentChildren, Fragment } from "preact";
+import { useRef } from "preact/hooks";
 import { Text } from "../_/text.js";
-import { getShapeExtenders, getShapeParents, getShapeReferences, getShapeReferrers, prefixed, type ShapeLink, type ShapeRow, type ShapeTable, tabulate } from "./shape.core.js";
+import { getShapeExtenders, getShapeInterface, getShapeParents, getShapeReferences, getShapeReferrers, getShapeSchema, prefixed, type ShapeLink, type ShapeRow, type ShapeSchemaValue, type ShapeTable, tabulate } from "./shape.core.js";
 import "./shape.css";
 
 
@@ -112,6 +116,75 @@ export function Shape({
 
 }
 
+/**
+ * Creates the TypeScript interface describing the resources of a shape.
+ *
+ * Sets out the interface as a code block, linking the interfaces it extends and the types of its members to the
+ * documentation of their shapes; see {@link getShapeInterface} for the members it states.
+ *
+ * @param options The widget configuration
+ *
+ * @returns The interface declaration
+ */
+export function ShapeDeclaration({
+
+	shape
+
+}: {
+
+	/**
+	 * The shape to be described, possibly deferred.
+	 */
+	shape: Lazy<ResourceShape>
+
+}) {
+
+	const { name, parents, members } = getShapeInterface(shape);
+
+	return <Code>
+
+		<Keyword>interface</Keyword> {name}
+		{parents.length > 0 && <> <Keyword>extends</Keyword> <Joined links={parents} separator={", "}/></>}
+		{" {\n"}
+
+		{members.length > 0 && <>{"\n"}{members.map(({ term, optional, plural, types }) => <Fragment key={term}>
+			{"\t"}<Keyword>readonly</Keyword> {term}{optional ? "?" : ""}: {plural && <><Keyword>readonly</Keyword> </>}
+			{plural && types.length > 1 && "("}<Joined links={types} separator={" | "}/>{plural && types.length > 1 && ")"}
+			{plural && "[]"}{"\n"}
+		</Fragment>)}{"\n"}</>}
+
+		{"}"}
+
+	</Code>;
+
+}
+
+/**
+ * Creates the JSON Schema describing the resources of a shape.
+ *
+ * Sets out the {@link getShapeSchema | schema} as a code block, linking each `$ref` to the documentation it refers to.
+ *
+ * @param options The widget configuration
+ *
+ * @returns The schema declaration
+ */
+export function ShapeSchema({
+
+	shape
+
+}: {
+
+	/**
+	 * The shape to be described, possibly deferred.
+	 */
+	shape: Lazy<ResourceShape>
+
+}) {
+
+	return <Code><Json value={getShapeSchema(shape)} depth={0}/></Code>;
+
+}
+
 
 /**
  * Sets out the table of the properties of a shape, the inherited ones grouped under the ancestor documenting them.
@@ -156,6 +229,63 @@ function Row({ term, predicate, types, cardinality, description }: ShapeRow) {
 		<td>{cardinality}</td>
 		<td>{opt(description, description => <Markdown>{description}</Markdown>)}</td>
 	</tr>;
+}
+
+/**
+ * Sets out a code block, with a button copying its text, as shown, to the clipboard.
+ */
+function Code({ children }: { children: ComponentChildren }) {
+
+	const code = useRef<HTMLElement>(null);
+
+	return <pre class={"ec2u-shape-code"}>
+
+		<Button look={"subtle"} icon={<Icon.Copy/>} title={"Copy"} onClick={() => opt(code.current?.textContent ?? undefined,
+			text => navigator.clipboard.writeText(text)
+		)}/>
+
+		<code ref={code}>{children}</code>
+
+	</pre>;
+
+}
+
+/**
+ * Sets out a keyword of a code block.
+ */
+function Keyword({ children }: { children: string }) {
+	return <span class={"ec2u-shape-keyword"}>{children}</span>;
+}
+
+/**
+ * Sets out a JSON value of a code block, indented by depth, linking the strings keyed by `$ref` to their documentation.
+ */
+function Json({ value, depth, link = false }: { value: ShapeSchemaValue, depth: number, link?: boolean }) {
+
+	const indent = "\t".repeat(depth);
+
+	return isString(value) ? link
+			? <Link href={value}>{JSON.stringify(value)}</Link>
+			: <span class={"ec2u-shape-string"}>{JSON.stringify(value)}</span>
+		: typeof value === "number" || typeof value === "boolean" ? <Keyword>{JSON.stringify(value)}</Keyword>
+			: isArray(value) ? <>[{value.map((item, index) => <Fragment key={index}>
+				{index > 0 ? ",\n" : "\n"}{indent}{"\t"}<Json value={item} depth={depth+1}/>
+			</Fragment>)}{value.length > 0 && `\n${indent}`}]</>
+				: <>{"{"}{Object.entries(value).map(([key, item], index) => <Fragment key={key}>
+					{index > 0 ? ",\n" : "\n"}{indent}{"\t"}<span class={"ec2u-shape-attr"}>{JSON.stringify(key)}</span>: <Json
+					value={item} depth={depth+1} link={key === "$ref"}
+				/>
+				</Fragment>)}{Object.keys(value).length > 0 && `\n${indent}`}{"}"}</>;
+
+}
+
+/**
+ * Sets out a list of types inline, joined by a separator, each linked to its documentation where located.
+ */
+function Joined({ links, separator }: { links: readonly ShapeLink[], separator: string }) {
+	return <>{links.map(({ name, href }, index) => <Fragment key={index}>
+		{index > 0 && separator}{href === undefined ? name : <Link href={href}>{name}</Link>}
+	</Fragment>)}</>;
 }
 
 /**

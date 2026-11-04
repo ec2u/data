@@ -19,10 +19,11 @@ import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
+import { Tabs } from "@metreeca/tile-hive/tabs";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../tiles/page.js";
 import { getShapeDescription, getShapeName, universe } from "../../tiles/shape.core.js";
-import { Shape, ShapeInfo } from "../../tiles/shape.js";
+import { Shape, ShapeDeclaration, ShapeInfo, ShapeSchema } from "../../tiles/shape.js";
 import { Unknown } from "../unknown.js";
 import { getModel } from "./index.core.js";
 import { models } from "./index.js";
@@ -64,7 +65,11 @@ export function ModelPage() {
 
 		{opt(getShapeDescription(shape), description => <Markdown>{description}</Markdown>)}
 
-		<Shape shape={shape}/>
+		<Tabs panels={{
+			Properties: <Shape shape={shape}/>,
+			TypeScript: <ShapeDeclaration shape={shape}/>,
+			"JSON Schema": <ShapeSchema shape={shape}/>
+		}}/>
 
 	</Page>;
 

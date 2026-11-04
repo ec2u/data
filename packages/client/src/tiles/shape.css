@@ -46,6 +46,34 @@
     text-overflow: ellipsis;
 }
 
+/* code tokens take the colours markdown highlighting gives the same kinds of tokens in fenced code */
+
+.ec2u-shape-code {
+
+    /* the copy button sits inside the block, in its top right corner, over the end of its first line */
+
+    position: relative;
+
+    & > tile-button > button { /* the wrapper lays out no box of its own, so the control is placed */
+        position: absolute;
+        top: var(--tile--spacing-050);
+        right: var(--tile--spacing-050);
+    }
+
+    & .ec2u-shape-keyword {
+        color: var(--tile--color-info-stroke);
+    }
+
+    & .ec2u-shape-string {
+        color: var(--tile--color-pass-stroke);
+    }
+
+    & .ec2u-shape-attr {
+        color: var(--tile--color-warn-stroke);
+    }
+
+}
+
 /* shape lists name one shape per line, so they are set as tight as running lines */
 
 .ec2u-shape-links > li + li {
