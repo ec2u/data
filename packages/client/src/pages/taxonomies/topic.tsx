@@ -36,34 +36,26 @@ import { blocks } from "../../tiles/sections.js";
 import { Title } from "../../tiles/title.js";
 import { SKOSConcepts, SKOSLineage } from "../../_/skos/concepts.js";
 import { DatasetLink } from "../datasets/dataset.js";
-import { taxonomies } from "./taxonomies.js";
+import { taxonomies } from "./index.js";
 
 
-export const topic = immutable({
+const model = immutable({
 
-	route: "/:taxonomy/",
-	label: "Topic",
-	glyph: <Icon.Tag/>,
+	id: {},
+	generated: {},
 
-	model: {
+	notation: {},
+	prefLabel: {},
+	definition: {},
 
-		id: {},
-		generated: {},
+	isDefinedBy: {},
 
-		notation: {},
-		prefLabel: {},
-		definition: {},
+	inScheme: { id: {}, label: {} },
 
-		isDefinedBy: {},
-
-		inScheme: { id: {}, label: {} },
-
-		broaderTransitive: { id: {}, notation: {}, prefLabel: {}, broader: {} },
-		narrower: { id: {}, notation: {}, prefLabel: {}, narrower: {} },
-		related: { id: {}, label: {} },
-		exactMatch: { id: {}, label: {} }
-
-	}
+	broaderTransitive: { id: {}, notation: {}, prefLabel: {}, broader: {} },
+	narrower: { id: {}, notation: {}, prefLabel: {}, narrower: {} },
+	related: { id: {}, label: {} },
+	exactMatch: { id: {}, label: {} }
 
 });
 
@@ -78,7 +70,7 @@ export function TopicPage() {
 	const resource = useResource({
 		entry: route,
 		shape: Topic,
-		model: topic.model
+		model
 	});
 
 	const title = resource({
@@ -134,8 +126,8 @@ export function TopicPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{topic.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{topic.glyph}</Hint></Failure>,
+		blank: () => <Hint>{taxonomies.glyph}</Hint>,
+		error: ({ state }) => <Failure problem={state}><Hint>{taxonomies.glyph}</Hint></Failure>,
 
 		ready: ({
 			state: {

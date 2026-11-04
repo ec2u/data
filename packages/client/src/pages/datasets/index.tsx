@@ -14,9 +14,22 @@
  * limitations under the License.
  */
 
+import { immutable } from "@metreeca/core/values";
+import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
 import { DatasetsPage } from "./datasets.js";
 
+
+export const datasets = immutable({
+
+	route: "/",
+	label: "European Campus of City-Universities",
+	glyph: <Icon.Package/>
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Datasets() {
 

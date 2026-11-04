@@ -40,25 +40,21 @@ import { getShapeDescription, getShapeName } from "../../tiles/shape.core.js";
 import { Shape } from "../../tiles/shape.js";
 
 
-export const dataset = immutable({
+const model = immutable({
 
-	model: {
+	title: {},
+	description: {},
 
-		title: {},
-		description: {},
+	created: {},
+	issued: {},
+	modified: {},
 
-		created: {},
-		issued: {},
-		modified: {},
+	publisher: { id: {}, label: {} },
+	source: { id: {} },
 
-		publisher: { id: {}, label: {} },
-		source: { id: {} },
-
-		rights: {},
-		license: { id: {}, label: {} },
-		accessRights: {}
-
-	}
+	rights: {},
+	license: { id: {}, label: {} },
+	accessRights: {}
 
 });
 
@@ -157,7 +153,7 @@ export function DatasetMeta({
 	const resource = useResource({
 		entry: href,
 		shape: Dataset,
-		model: dataset.model
+		model
 	});
 
 	const resources = useCount(useCollection({

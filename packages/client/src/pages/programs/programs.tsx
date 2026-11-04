@@ -35,23 +35,16 @@ import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
 import { DatasetLink } from "../datasets/dataset.js";
+import { programs } from "./index.js";
 
 
-export const programs = immutable({
+const model = immutable({
 
-	route: "/programs/",
-	label: "Programs",
-	glyph: <Icon.GraduationCap/>,
+	id: {},
+	label: {},
+	comment: {},
 
-	model: {
-
-		id: {},
-		label: {},
-		comment: {},
-
-		university: UniversityModel
-
-	}
+	university: UniversityModel
 
 });
 
@@ -81,7 +74,7 @@ export function ProgramsPage() {
 	const provider = useTally(collection, "provider", { label: "label", size: FacetSize });
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model: programs.model });
+	const members = useMembers(collection, { model });
 
 	useEffect(() => router({ title: programs.label }), []);
 

@@ -14,10 +14,23 @@
  * limitations under the License.
  */
 
+import { immutable } from "@metreeca/core/values";
+import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
 import { ProgramPage } from "./program.js";
 import { ProgramsPage } from "./programs.js";
 
+
+export const programs = immutable({
+
+	route: "/programs/",
+	label: "Programs",
+	glyph: <Icon.GraduationCap/>
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Programs() {
 

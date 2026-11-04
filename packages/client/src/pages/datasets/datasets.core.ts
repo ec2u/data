@@ -16,12 +16,12 @@
 
 import { isNumber, isObject, isOptional, isString } from "@metreeca/core";
 import { by } from "@metreeca/core/order";
-import { courses } from "../courses/courses.js";
-import { documents } from "../documents/documents.js";
-import { events } from "../events/events.js";
-import { programs } from "../programs/programs.js";
-import { units } from "../units/units.js";
-import { universities } from "../universities/universities.js";
+import { courses } from "../courses/index.js";
+import { documents } from "../documents/index.js";
+import { events } from "../events/index.js";
+import { programs } from "../programs/index.js";
+import { units } from "../units/index.js";
+import { universities } from "../universities/index.js";
 
 
 /**

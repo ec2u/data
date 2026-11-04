@@ -38,39 +38,31 @@ import { Page } from "../../tiles/page.js";
 import { blocks } from "../../tiles/sections.js";
 import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
-import { units } from "./units.js";
+import { units } from "./index.js";
 
 
-export const unit = immutable({
+const model = immutable({
 
-	route: "/:unit",
-	label: "Unit",
-	glyph: <Icon.FlaskConical/>,
+	id: {},
+	generated: {},
 
-	model: {
+	label: {},
+	prefLabel: {},
+	altLabel: {},
+	definition: {},
 
-		id: {},
-		generated: {},
+	identifier: {},
+	homepage: {},
 
-		label: {},
-		prefLabel: {},
-		altLabel: {},
-		definition: {},
+	university: UniversityModel,
+	classification: { id: {}, label: {} },
+	hasHead: { id: {}, label: {} },
 
-		identifier: {},
-		homepage: {},
+	unitOf: { id: {}, label: {} },
+	hasUnit: { id: {}, label: {} },
 
-		university: UniversityModel,
-		classification: { id: {}, label: {} },
-		hasHead: { id: {}, label: {} },
-
-		unitOf: { id: {}, label: {} },
-		hasUnit: { id: {}, label: {} },
-
-		subject: { id: {}, label: {}, broaderTransitive: {} },
-		keyword: {}
-
-	}
+	subject: { id: {}, label: {}, broaderTransitive: {} },
+	keyword: {}
 
 });
 
@@ -85,7 +77,7 @@ export function UnitPage() {
 	const resource = useResource({
 		entry: route,
 		shape: Unit,
-		model: unit.model
+		model
 	});
 
 	const title = resource({
@@ -160,8 +152,8 @@ export function UnitPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{unit.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{unit.glyph}</Hint></Failure>,
+		blank: () => <Hint>{units.glyph}</Hint>,
+		error: ({ state }) => <Failure problem={state}><Hint>{units.glyph}</Hint></Failure>,
 
 		ready: ({ state: { prefLabel, definition, university, unitOf, hasUnit = [], subject = [], keyword = [] } }) => <Stack space={"spacing100"}>
 

@@ -37,48 +37,40 @@ import { Page } from "../../tiles/page.js";
 import { blocks } from "../../tiles/sections.js";
 import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
-import { documents } from "./documents.js";
+import { documents } from "./index.js";
 
 
-export const document = immutable({
+const model = immutable({
 
-	route: "/:document",
-	label: "Document",
-	glyph: <Icon.Files/>,
+	id: {},
+	generated: {},
 
-	model: {
+	label: {},
+	title: {},
+	description: {},
 
-		id: {},
-		generated: {},
+	url: {},
 
-		label: {},
-		title: {},
-		description: {},
+	identifier: {},
+	language: {},
 
-		url: {},
+	issued: {},
+	modified: {},
+	valid: {},
 
-		identifier: {},
-		language: {},
+	rights: {},
+	license: { id: {}, label: {} },
 
-		issued: {},
-		modified: {},
-		valid: {},
+	university: UniversityModel,
+	publisher: { id: {}, label: {}, url: {} },
+	creator: { id: {}, label: {} },
+	contributor: { id: {}, label: {} },
 
-		rights: {},
-		license: { id: {}, label: {} },
+	type: { id: {}, label: {} },
+	subject: { id: {}, label: {} },
+	audience: { id: {}, label: {} },
 
-		university: UniversityModel,
-		publisher: { id: {}, label: {}, url: {} },
-		creator: { id: {}, label: {} },
-		contributor: { id: {}, label: {} },
-
-		type: { id: {}, label: {} },
-		subject: { id: {}, label: {} },
-		audience: { id: {}, label: {} },
-
-		relation: { id: {}, label: {} }
-
-	}
+	relation: { id: {}, label: {} }
 
 });
 
@@ -93,7 +85,7 @@ export function DocumentPage() {
 	const resource = useResource({
 		entry: route,
 		shape: Document,
-		model: document.model
+		model
 	});
 
 	const title = resource({
@@ -217,8 +209,8 @@ export function DocumentPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{document.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{document.glyph}</Hint></Failure>,
+		blank: () => <Hint>{documents.glyph}</Hint>,
+		error: ({ state }) => <Failure problem={state}><Hint>{documents.glyph}</Hint></Failure>,
 
 		ready: ({ state: { title, description, relation = [] } }) => <Stack space={"spacing100"}>
 

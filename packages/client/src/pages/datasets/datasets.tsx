@@ -36,28 +36,21 @@ import { Search } from "../../_/search.js";
 import { DatasetLink } from "./dataset.js";
 import { byDataset, type DatasetRow, isDatasetRow } from "./datasets.core.js";
 import "./datasets.css";
+import { datasets } from "./index.js";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const datasets = immutable({
+const model = immutable({
 
-	route: "/",
-	label: "European Campus of City-Universities",
-	glyph: <Icon.Package/>,
+	"dataset=": {
+		id: {},
+		title: {},
+		alternative: {},
+		description: {}
+	},
 
-	model: {
-
-		"dataset=": {
-			id: {},
-			title: {},
-			alternative: {},
-			description: {}
-		},
-
-		"size=count:resources": {}
-
-	}
+	"size=count:resources": {}
 
 });
 
@@ -84,7 +77,7 @@ export function DatasetsPage() {
 	const license = useTally(collection, "license", { label: "label", size: FacetSize });
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model: datasets.model });
+	const members = useMembers(collection, { model });
 
 	useEffect(() => router({ title: "" }), []);
 

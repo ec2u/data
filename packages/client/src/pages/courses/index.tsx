@@ -14,10 +14,23 @@
  * limitations under the License.
  */
 
+import { immutable } from "@metreeca/core/values";
+import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
 import { CoursePage } from "./course.js";
 import { CoursesPage } from "./courses.js";
 
+
+export const courses = immutable({
+
+	route: "/courses/",
+	label: "Courses",
+	glyph: <Icon.BookOpen/>
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Courses() {
 

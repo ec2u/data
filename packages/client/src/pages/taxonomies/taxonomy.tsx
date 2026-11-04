@@ -37,39 +37,31 @@ import { Title } from "../../tiles/title.js";
 import { Search } from "../../_/search.js";
 import { SKOSConcepts } from "../../_/skos/concepts.js";
 import { DatasetLink } from "../datasets/dataset.js";
-import { taxonomies } from "./taxonomies.js";
+import { taxonomies } from "./index.js";
 
 
-export const taxonomy = immutable({
+const model = immutable({
 
-	route: "/:taxonomy",
-	label: "Taxonomy",
-	glyph: <Icon.Tags/>,
+	id: {},
+	generated: {},
 
-	model: {
+	title: {},
+	alternative: {},
+	description: {},
 
-		id: {},
-		generated: {},
+	version: {},
+	created: {},
+	issued: {},
+	modified: {},
 
-		title: {},
-		alternative: {},
-		description: {},
+	publisher: { id: {}, label: {} },
+	source: { id: {} },
 
-		version: {},
-		created: {},
-		issued: {},
-		modified: {},
+	rights: {},
+	license: { id: {}, label: {} },
+	accessRights: {},
 
-		publisher: { id: {}, label: {} },
-		source: { id: {} },
-
-		rights: {},
-		license: { id: {}, label: {} },
-		accessRights: {},
-
-		hasTopConcept: { id: {}, notation: {}, prefLabel: {}, narrower: {} }
-
-	}
+	hasTopConcept: { id: {}, notation: {}, prefLabel: {}, narrower: {} }
 
 });
 
@@ -86,7 +78,7 @@ export function TaxonomyPage() {
 	const resource = useResource({
 		entry: route,
 		shape: Taxonomy,
-		model: taxonomy.model
+		model
 	});
 
 	const concepts = useCount(useCollection({
@@ -156,8 +148,8 @@ export function TaxonomyPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{taxonomy.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{taxonomy.glyph}</Hint></Failure>,
+		blank: () => <Hint>{taxonomies.glyph}</Hint>,
+		error: ({ state }) => <Failure problem={state}><Hint>{taxonomies.glyph}</Hint></Failure>,
 
 		ready: ({
 			state: {
@@ -225,11 +217,11 @@ function TaxonomySearch({
 
 	return members({
 
-		error: ({ state }) => <Failure problem={state}><Hint>{taxonomy.glyph}</Hint></Failure>,
+		error: ({ state }) => <Failure problem={state}><Hint>{taxonomies.glyph}</Hint></Failure>,
 
 		ready: ({ state }) => state.length > 0
 			? <SKOSConcepts concepts={state}/>
-			: <Hint>{taxonomy.glyph} No Matches</Hint>
+			: <Hint>{taxonomies.glyph} No Matches</Hint>
 
 	});
 

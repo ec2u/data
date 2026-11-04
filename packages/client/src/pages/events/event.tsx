@@ -39,7 +39,7 @@ import { filters } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
-import { events } from "./events.js";
+import { events } from "./index.js";
 
 
 /**
@@ -48,58 +48,50 @@ import { events } from "./events.js";
 const day = date({ instant: true });
 
 
-export const event = immutable({
+const model = immutable({
 
-	route: "/:event",
-	label: "Event",
-	glyph: <Icon.Calendar/>,
+	id: {},
+	generated: {},
 
-	model: {
+	label: {},
+	description: {},
+	disambiguatingDescription: {},
 
-		id: {},
-		generated: {},
+	url: {},
+	image: { url: {}, description: {}, copyrightNotice: {} },
 
-		label: {},
-		description: {},
-		disambiguatingDescription: {},
+	startDate: {},
+	endDate: {},
 
-		url: {},
-		image: { url: {}, description: {}, copyrightNotice: {} },
+	inLanguage: {},
+	isAccessibleForFree: {},
+	eventStatus: {},
+	eventAttendanceMode: {},
 
-		startDate: {},
-		endDate: {},
+	location: {
 
-		inLanguage: {},
-		isAccessibleForFree: {},
-		eventStatus: {},
-		eventAttendanceMode: {},
+		"0": {}, // a venue stated as plain text
 
-		location: {
-
-			"0": {}, // a venue stated as plain text
-
-			"1": { // a place, a postal address or a virtual location
-				name: {},
-				url: {},
+		"1": { // a place, a postal address or a virtual location
+			name: {},
+			url: {},
+			addressLocality: {},
+			streetAddress: {},
+			postalCode: {},
+			addressCountry: {},
+			address: {
 				addressLocality: {},
 				streetAddress: {},
 				postalCode: {},
-				addressCountry: {},
-				address: {
-					addressLocality: {},
-					streetAddress: {},
-					postalCode: {},
-					addressCountry: {}
-				}
+				addressCountry: {}
 			}
+		}
 
-		},
+	},
 
-		university: UniversityModel,
-		publisher: { id: {}, label: {}, url: {} },
-		keywords: { id: {}, label: {} }
-
-	}
+	university: UniversityModel,
+	publisher: { id: {}, label: {}, url: {} },
+	keywords: { id: {}, label: {} }
 
 });
 
@@ -114,7 +106,7 @@ export function EventPage() {
 	const resource = useResource({
 		entry: route,
 		shape: Event,
-		model: event.model
+		model
 	});
 
 	const title = resource({
@@ -225,8 +217,8 @@ export function EventPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{event.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{event.glyph}</Hint></Failure>,
+		blank: () => <Hint>{events.glyph}</Hint>,
+		error: ({ state }) => <Failure problem={state}><Hint>{events.glyph}</Hint></Failure>,
 
 		ready: ({ state: { label, description, disambiguatingDescription, image } }) => <Title
 
@@ -279,7 +271,7 @@ export function schedule(start: string, end?: string): string {
 /**
  * The location of an event, as retrieved for its page.
  */
-type Location = NonNullable<Match<typeof Event, typeof event.model>["location"]>;
+type Location = NonNullable<Match<typeof Event, typeof model>["location"]>;
 
 /**
  * Renders the location of an event.

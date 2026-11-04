@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
+import { immutable } from "@metreeca/core/values";
+import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
 import { TaxonomiesPage } from "./taxonomies.js";
 import { TaxonomyPage } from "./taxonomy.js";
 import { TopicPage } from "./topic.js";
 
+
+export const taxonomies = immutable({
+
+	route: "/taxonomies/",
+	label: "Taxonomies",
+	glyph: <Icon.Tags/>
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Taxonomies() {
 

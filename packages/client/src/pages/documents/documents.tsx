@@ -33,23 +33,16 @@ import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
 import { DatasetLink } from "../datasets/dataset.js";
+import { documents } from "./index.js";
 
 
-export const documents = immutable({
+const model = immutable({
 
-	route: "/documents/",
-	label: "Documents",
-	glyph: <Icon.Files/>,
+	id: {},
+	label: {},
+	comment: {},
 
-	model: {
-
-		id: {},
-		label: {},
-		comment: {},
-
-		university: UniversityModel
-
-	}
+	university: UniversityModel
 
 });
 
@@ -80,7 +73,7 @@ export function DocumentsPage() {
 	const license = useTally(collection, "license", { label: "label", size: FacetSize });
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model: documents.model });
+	const members = useMembers(collection, { model });
 
 	useEffect(() => router({ title: documents.label }), []);
 

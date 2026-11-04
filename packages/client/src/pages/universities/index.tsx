@@ -14,11 +14,23 @@
  * limitations under the License.
  */
 
+import { immutable } from "@metreeca/core/values";
+import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
 import { UniversitiesPage } from "./universities.js";
 import { UniversityPage } from "./university.js";
 
 
+export const universities = immutable({
+
+	route: "/universities/",
+	label: "Universities",
+	glyph: <Icon.Landmark/>
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Universities() {
 

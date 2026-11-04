@@ -14,10 +14,23 @@
  * limitations under the License.
  */
 
+import { immutable } from "@metreeca/core/values";
+import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
 import { EventPage } from "./event.js";
 import { EventsPage } from "./events.js";
 
+
+export const events = immutable({
+
+	route: "/events/",
+	label: "Events",
+	glyph: <Icon.Calendar/>
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Events() {
 

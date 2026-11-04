@@ -33,23 +33,16 @@ import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
 import { DatasetLink } from "../datasets/dataset.js";
+import { units } from "./index.js";
 
 
-export const units = immutable({
+const model = immutable({
 
-	route: "/units/",
-	label: "Units",
-	glyph: <Icon.FlaskConical/>,
+	id: {},
+	label: {},
+	comment: {},
 
-	model: {
-
-		id: {},
-		label: {},
-		comment: {},
-
-		university: UniversityModel
-
-	}
+	university: UniversityModel
 
 });
 
@@ -77,7 +70,7 @@ export function UnitsPage() {
 	const subject = useTally(collection, "subject", { label: "label", size: FacetSize });
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model: units.model });
+	const members = useMembers(collection, { model });
 
 	useEffect(() => router({ title: units.label }), []);
 

@@ -21,7 +21,7 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { useRouter } from "@metreeca/tile-data/router";
 import { Failure } from "../tiles/failure.js";
 import { Page } from "../tiles/page.js";
-import { datasets } from "./datasets/datasets.js";
+import { datasets } from "./datasets/index.js";
 import { immutable } from "@metreeca/core/values";
 
 

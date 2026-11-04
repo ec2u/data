@@ -34,24 +34,17 @@ import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
 import { DatasetLink } from "../datasets/dataset.js";
+import { universities } from "./index.js";
 
 
-export const universities = immutable({
+const model = immutable({
 
-	route: "/universities/",
-	label: "Universities",
-	glyph: <Icon.Landmark/>,
-
-	model: {
-
-		id: {},
-		label: {},
-		definition: {},
-		depiction: {},
-		country: { id: {}, label: {} },
-		city: { id: {}, label: {} }
-
-	}
+	id: {},
+	label: {},
+	definition: {},
+	depiction: {},
+	country: { id: {}, label: {} },
+	city: { id: {}, label: {} }
 
 });
 
@@ -78,7 +71,7 @@ export function UniversitiesPage() {
 	const students = useRange(collection, "students");
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model: universities.model });
+	const members = useMembers(collection, { model });
 
 
 	useEffect(() => router({ title: universities.label }), []);

@@ -38,7 +38,7 @@ import { Page } from "../../tiles/page.js";
 import { blocks, sections } from "../../tiles/sections.js";
 import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
-import { programs } from "./programs.js";
+import { programs } from "./index.js";
 
 
 /**
@@ -47,42 +47,34 @@ import { programs } from "./programs.js";
 export const credits = decimal({ fractionDigits: 1 });
 
 
-export const program = immutable({
+const model = immutable({
 
-	route: "/:program",
-	label: "Program",
-	glyph: <Icon.GraduationCap/>,
+	id: {},
+	generated: {},
 
-	model: {
+	label: {},
+	description: {},
 
-		id: {},
-		generated: {},
+	identifier: {},
+	url: {},
 
-		label: {},
-		description: {},
+	numberOfCredits: {},
+	timeToComplete: {},
 
-		identifier: {},
-		url: {},
+	teaches: {},
+	programPrerequisites: {},
+	assesses: {},
+	competencyRequired: {},
 
-		numberOfCredits: {},
-		timeToComplete: {},
+	educationalCredentialAwarded: CredentialModel,
+	occupationalCredentialAwarded: CredentialModel,
 
-		teaches: {},
-		programPrerequisites: {},
-		assesses: {},
-		competencyRequired: {},
+	university: UniversityModel,
+	provider: { id: {}, label: {} },
 
-		educationalCredentialAwarded: CredentialModel,
-		occupationalCredentialAwarded: CredentialModel,
-
-		university: UniversityModel,
-		provider: { id: {}, label: {} },
-
-		hasCourse: { id: {}, label: {} },
-		educationalLevel: { id: {}, label: {} },
-		about: { id: {}, label: {} }
-
-	}
+	hasCourse: { id: {}, label: {} },
+	educationalLevel: { id: {}, label: {} },
+	about: { id: {}, label: {} }
 
 });
 
@@ -97,7 +89,7 @@ export function ProgramPage() {
 	const resource = useResource({
 		entry: route,
 		shape: Program,
-		model: program.model
+		model
 	});
 
 	const title = resource({
@@ -172,8 +164,8 @@ export function ProgramPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{program.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{program.glyph}</Hint></Failure>,
+		blank: () => <Hint>{programs.glyph}</Hint>,
+		error: ({ state }) => <Failure problem={state}><Hint>{programs.glyph}</Hint></Failure>,
 
 		ready: ({
 

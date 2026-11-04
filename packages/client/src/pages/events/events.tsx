@@ -37,27 +37,20 @@ import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { schedule } from "./event.js";
+import { events } from "./index.js";
 
 
-export const events = immutable({
+const model = immutable({
 
-	route: "/events/",
-	label: "Events",
-	glyph: <Icon.Calendar/>,
+	id: {},
+	label: {},
+	disambiguatingDescription: {}, // the summary events state in place of a comment
 
-	model: {
+	startDate: {},
+	endDate: {},
 
-		id: {},
-		label: {},
-		disambiguatingDescription: {}, // the summary events state in place of a comment
-
-		startDate: {},
-		endDate: {},
-
-		image: { url: {} },
-		university: UniversityModel
-
-	}
+	image: { url: {} },
+	university: UniversityModel
 
 });
 
@@ -87,7 +80,7 @@ export function EventsPage() {
 	const topics = useTally(collection, "keywords", { label: "label", size: FacetSize });
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model: events.model, order: { startDate: "asc", label: "asc" } });
+	const members = useMembers(collection, { model, order: { startDate: "asc", label: "asc" } });
 
 	useEffect(() => router({ title: events.label }), []);
 

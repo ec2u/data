@@ -38,54 +38,46 @@ import { blocks, sections } from "../../tiles/sections.js";
 import { Title } from "../../tiles/title.js";
 import { credits } from "../programs/program.js";
 import { DatasetLink } from "../datasets/dataset.js";
-import { courses } from "./courses.js";
+import { courses } from "./index.js";
 
 
-export const course = immutable({
+const model = immutable({
 
-	route: "/:course",
-	label: "Course",
-	glyph: <Icon.BookOpen/>,
+	id: {},
+	generated: {},
 
-	model: {
+	label: {},
+	description: {},
 
-		id: {},
-		generated: {},
+	url: {},
 
-		label: {},
-		description: {},
+	year: {},
+	term: {},
 
-		url: {},
+	courseCode: {},
+	inLanguage: {},
+	numberOfCredits: {},
+	timeRequired: {},
+	courseWorkload: {},
+	courseMode: {},
+	isAccessibleForFree: {},
 
-		year: {},
-		term: {},
+	teaches: {},
+	coursePrerequisites: {},
+	assesses: {},
+	competencyRequired: {},
 
-		courseCode: {},
-		inLanguage: {},
-		numberOfCredits: {},
-		timeRequired: {},
-		courseWorkload: {},
-		courseMode: {},
-		isAccessibleForFree: {},
+	educationalCredentialAwarded: CredentialModel,
+	occupationalCredentialAwarded: CredentialModel,
 
-		teaches: {},
-		coursePrerequisites: {},
-		assesses: {},
-		competencyRequired: {},
+	university: UniversityModel,
+	provider: { id: {}, label: {} },
+	instructor: { id: {}, label: {} },
 
-		educationalCredentialAwarded: CredentialModel,
-		occupationalCredentialAwarded: CredentialModel,
-
-		university: UniversityModel,
-		provider: { id: {}, label: {} },
-		instructor: { id: {}, label: {} },
-
-		inProgram: { id: {}, label: {} },
-		audience: { id: {}, label: {} },
-		educationalLevel: { id: {}, label: {} },
-		about: { id: {}, label: {} }
-
-	}
+	inProgram: { id: {}, label: {} },
+	audience: { id: {}, label: {} },
+	educationalLevel: { id: {}, label: {} },
+	about: { id: {}, label: {} }
 
 });
 
@@ -100,7 +92,7 @@ export function CoursePage() {
 	const resource = useResource({
 		entry: route,
 		shape: Course,
-		model: course.model
+		model
 	});
 
 	const title = resource({
@@ -205,8 +197,8 @@ export function CoursePage() {
 
 	>{resource({
 
-		blank: () => <Hint>{course.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{course.glyph}</Hint></Failure>,
+		blank: () => <Hint>{courses.glyph}</Hint>,
+		error: ({ state }) => <Failure problem={state}><Hint>{courses.glyph}</Hint></Failure>,
 
 		ready: ({
 

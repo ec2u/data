@@ -37,23 +37,16 @@ import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
 import { DatasetLink } from "../datasets/dataset.js";
+import { courses } from "./index.js";
 
 
-export const courses = immutable({
+const model = immutable({
 
-	route: "/courses/",
-	label: "Courses",
-	glyph: <Icon.BookOpen/>,
+	id: {},
+	label: {},
+	comment: {},
 
-	model: {
-
-		id: {},
-		label: {},
-		comment: {},
-
-		university: UniversityModel
-
-	}
+	university: UniversityModel
 
 });
 
@@ -90,7 +83,7 @@ export function CoursesPage() {
 	const audience = useTally(collection, "audience", { label: "label", size: FacetSize });
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model: courses.model });
+	const members = useMembers(collection, { model });
 
 	useEffect(() => router({ title: courses.label }), []);
 

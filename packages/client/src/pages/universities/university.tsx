@@ -34,45 +34,37 @@ import { Page } from "../../tiles/page.js";
 import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { byDataset, isDatasetRow } from "../datasets/datasets.core.js";
-import { universities } from "./universities.js";
+import { universities } from "./index.js";
 
 
-export const university = immutable({
+const model = immutable({
 
-	route: "/:name",
-	label: "University",
-	glyph: <Icon.Landmark/>,
+	id: {},
+	label: {},
 
-	model: {
+	depiction: {},
+	homepage: {},
 
+	prefLabel: {},
+	definition: {},
+
+	inception: {},
+	students: {},
+
+	country: { id: {}, label: {} },
+	city: { id: {}, label: {} }
+
+});
+
+const stats = immutable({
+
+	"dataset=dataset": {
 		id: {},
-		label: {},
-
-		depiction: {},
-		homepage: {},
-
-		prefLabel: {},
-		definition: {},
-
-		inception: {},
-		students: {},
-
-		country: { id: {}, label: {} },
-		city: { id: {}, label: {} }
-
+		title: {},
+		alternative: {}
 	},
 
-	stats: {
-
-		"dataset=dataset": {
-			id: {},
-			title: {},
-			alternative: {}
-		},
-
-		"size=count:": {}
-
-	}
+	"size=count:": {}
 
 });
 
@@ -87,7 +79,7 @@ export function UniversityPage() {
 	const resource = useResource({
 		entry: route,
 		shape: University,
-		model: university.model
+		model
 	});
 
 	const collection = useCollection({
@@ -96,7 +88,7 @@ export function UniversityPage() {
 		criteria: { "?university": [route] }
 	});
 
-	const stats = useMembers(collection, { model: university.stats });
+	const members = useMembers(collection, { model: stats });
 
 	const title = resource({
 
@@ -150,7 +142,7 @@ export function UniversityPage() {
 
 				}}</Info>
 
-				{stats({
+				{members({
 
 					ready: ({ state }) => <Info place={"spread"}>{[...state.filter(isDatasetRow)] // copy, as rows are shared
 
@@ -173,8 +165,8 @@ export function UniversityPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{university.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{university.glyph}</Hint></Failure>,
+		blank: () => <Hint>{universities.glyph}</Hint>,
+		error: ({ state }) => <Failure problem={state}><Hint>{universities.glyph}</Hint></Failure>,
 
 		ready: ({ state: { depiction, prefLabel, definition } }) => <Title
 

@@ -16,7 +16,6 @@
 
 import { Taxonomies } from "@ec2u/data-shared/taxonomies/index.js";
 import { by, locale } from "@metreeca/core/order";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -35,18 +34,8 @@ import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { isTaxonomyRow, type TaxonomyRow } from "./taxonomies.core.js";
+import { taxonomies } from "./index.js";
 
-
-export const taxonomies = immutable({
-
-	route: "/taxonomies/",
-	label: "Taxonomies",
-	glyph: <Icon.Tags/>
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function TaxonomiesPage() {
 

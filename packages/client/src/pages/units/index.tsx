@@ -14,10 +14,23 @@
  * limitations under the License.
  */
 
+import { immutable } from "@metreeca/core/values";
+import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
 import { UnitPage } from "./unit.js";
 import { UnitsPage } from "./units.js";
 
+
+export const units = immutable({
+
+	route: "/units/",
+	label: "Units",
+	glyph: <Icon.FlaskConical/>
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Units() {
 
