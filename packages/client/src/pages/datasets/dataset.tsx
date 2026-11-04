@@ -24,6 +24,7 @@ import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
+import { Path } from "@metreeca/tile-cell/path";
 import { Toc } from "@metreeca/tile-cell/toc";
 import { useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useResource } from "@metreeca/tile-data/store";
@@ -38,6 +39,7 @@ import { links } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { getShapeDescription, getShapeName } from "../../tiles/shape.core.js";
 import { Shape } from "../../tiles/shape.js";
+import { about } from "../about/index.js";
 
 
 const model = immutable({
@@ -176,7 +178,14 @@ export function DatasetPage({
 
 	return <Page
 
-		head={title}
+		head={<Path>
+
+			<Link href={about.route}>{about.label}</Link>
+
+			{title}
+
+		</Path>}
+
 		menu={<Link href={href} title={"Data"}><Icon.Eye/></Link>}
 
 		back={resource({
