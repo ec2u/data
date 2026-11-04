@@ -390,52 +390,19 @@ export function getShapeExtenders(lazy: Lazy<ResourceShape>, universe: Some<Lazy
 }
 
 /**
- * Lists the lineage of a resource shape.
+ * Lists the parents of a resource shape.
  *
- * Collects every shape `lazy` extends, directly or transitively, unnamed mixins included, each linked to its page.
+ * Collects the shapes `lazy` extends directly, unnamed mixins included, each linked to its page.
  *
- * @param lazy The shape whose ancestors are to be listed, possibly deferred
+ * @param lazy The shape whose parents are to be listed, possibly deferred
  *
- * @returns The ancestors of `lazy`, from the most general down to the nearest, each listed once; empty if `lazy` is a
- *     root of the model hierarchy, extending no other shape directly or transitively
+ * @returns The parents of `lazy` in declaration order, each listed once; empty if `lazy` extends no other shape
  */
-export function getShapeAncestors(lazy: Lazy<ResourceShape>): readonly ShapeLink[] {
+export function getShapeParents(lazy: Lazy<ResourceShape>): readonly ShapeLink[] {
 
 	const target = eager(lazy);
 
-	return [...others(target, lineage(target))].reverse(); // fresh array from spread
-
-}
-
-/**
- * Lists the classes of a resource shape.
- *
- * Collects the class `lazy` states in its own right and the ones stated by every shape it extends, directly or
- * transitively, in the reverse order of {@link getShapeAncestors}, so the most specific class comes first.
- *
- * @param lazy The shape whose classes are to be listed, possibly deferred
- *
- * @returns The class IRIs of `lazy`, from its own down to the most general inherited one, each listed once; empty if
- *     neither `lazy` nor any shape it extends, directly or transitively, states a class of its own
- */
-export function getShapeClasses(lazy: Lazy<ResourceShape>): readonly string[] {
-
-	const target = eager(lazy);
-
-	return [target, ...lineage(target)]
-		.flatMap(shape => opt(shape.class, type => [type]) ?? [])
-		.filter((type, index, types) => types.indexOf(type) === index);
-
-}
-
-/**
- * Lists the shapes a resource shape extends, directly or transitively, from the nearest to the most general.
- */
-function lineage(shape: ResourceShape): readonly ResourceShape[] {
-
-	const parents = shape.parents.map(parent => eager(parent));
-
-	return [...parents, ...parents.flatMap(lineage)];
+	return others(target, target.parents.map(parent => eager(parent)));
 
 }
 

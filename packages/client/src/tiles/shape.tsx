@@ -15,22 +15,23 @@
  */
 
 import type { ResourceShape } from "@metreeca/blue/resource";
+import { eager } from "@metreeca/blue/value";
 import { type Lazy, opt } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
 import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { Text } from "../_/text.js";
-import { getShapeAncestors, getShapeClasses, getShapeExtenders, getShapeReferences, getShapeReferrers, prefixed, type ShapeLink, type ShapeRow, type ShapeTable, tabulate } from "./shape.core.js";
+import { getShapeExtenders, getShapeParents, getShapeReferences, getShapeReferrers, prefixed, type ShapeLink, type ShapeRow, type ShapeTable, tabulate } from "./shape.core.js";
 import "./shape.css";
 
 
 /**
  * Creates the property sheet of a resource shape.
  *
- * Locates the shape in the model, stating its own and inherited classes as prefixed names, its endpoint, its whole
- * lineage of extended shapes, the shapes extending it, the shapes it refers to and the ones referring to it, each
- * class linked to its definition and each shape to its documentation; entries with no content are left out.
+ * Locates the shape in the model, stating its target class as a prefixed name, its endpoint, the shapes it extends and
+ * the ones extending it directly, the shapes it refers to and the ones referring to it, the class linked to its
+ * definition and each shape to its documentation; entries with no content are left out.
  *
  * @param options The widget configuration
  *
@@ -56,17 +57,16 @@ export function ShapeInfo({
 }) {
 
 	const { endpoint } = tabulate(shape);
-	const classes = getShapeClasses(shape);
-	const ancestors = getShapeAncestors(shape);
+	const parents = getShapeParents(shape);
 	const extenders = getShapeExtenders(shape, universe);
 	const referrers = getShapeReferrers(shape, universe);
 	const references = getShapeReferences(shape);
 
 	const stated = Object.entries({
 
-		Classes: classes.length > 0 ? <List links={classes.map(type => ({ name: prefixed(type), href: type }))}/> : undefined,
+		Classes: opt(eager(shape).class, type => <List links={[{ name: prefixed(type), href: type }]}/>),
 		Endpoint: opt(endpoint, endpoint => <code>{endpoint}</code>),
-		Extends: ancestors.length > 0 ? <List links={ancestors}/> : undefined,
+		Extends: parents.length > 0 ? <List links={parents}/> : undefined,
 		"Extended by": extenders.length > 0 ? <List links={extenders}/> : undefined,
 		References: references.length > 0 ? <List links={references}/> : undefined,
 		"Referenced by": referrers.length > 0 ? <List links={referrers}/> : undefined
