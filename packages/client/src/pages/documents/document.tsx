@@ -16,6 +16,7 @@
 
 import { Document } from "@ec2u/data-shared/documents/index.js";
 import { opt } from "@metreeca/core";
+import { nameTag } from "@metreeca/core/language";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -29,7 +30,7 @@ import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { date } from "@metreeca/tile-type/date";
 import { useEffect } from "preact/hooks";
-import { scope, site, toLanguage, toUniversity, UniversityModel } from "../../index.core.js";
+import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { filters, links, list } from "../../tiles/links.js";
@@ -61,7 +62,7 @@ const model = immutable({
 	rights: {},
 	license: { id: {}, label: {} },
 
-	university: UniversityModel,
+	university: { id: {}, altLabel: {} },
 	publisher: { id: {}, label: {}, url: {} },
 	creator: { id: {}, label: {} },
 	contributor: { id: {}, label: {} },
@@ -149,7 +150,7 @@ export function DocumentPage() {
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, value => <Link href={value.id}>{toUniversity(value)}</Link>)
+					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>)
 
 				}}</Info>
 
@@ -159,15 +160,15 @@ export function DocumentPage() {
 					Web: url.length > 0 ? <ul>{url.map(url =>
 						<li key={url}><Link href={url}>{site(url)}</Link></li>
 					)}</ul> : undefined,
-					Language: list(language.map(toLanguage))
+					Language: list(language.map(tag => nameTag(tag, navigator.language)))
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
-					Type: filters(type, documents.route, type => ({ ...scope(university), type })),
-					Audience: filters(audience, documents.route, audience => ({ ...scope(university), audience })),
-					Topics: filters(subject, documents.route, subject => ({ ...scope(university), subject }))
+					Type: filters(type, documents.route, type => ({ ...opt(university, ({ id }) => ({ university: id })), type })),
+					Audience: filters(audience, documents.route, audience => ({ ...opt(university, ({ id }) => ({ university: id })), audience })),
+					Topics: filters(subject, documents.route, subject => ({ ...opt(university, ({ id }) => ({ university: id })), subject }))
 
 				}}</Info>
 

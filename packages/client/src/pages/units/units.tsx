@@ -28,7 +28,7 @@ import { Clear } from "@metreeca/tile-lens/clear";
 import { Count } from "@metreeca/tile-lens/count";
 import { Tally } from "@metreeca/tile-lens/tally";
 import { useEffect } from "preact/hooks";
-import { FacetSize, toUniversity, UniversityModel } from "../../index.core.js";
+import { FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
@@ -42,7 +42,7 @@ const model = immutable({
 	label: {},
 	comment: {},
 
-	university: UniversityModel
+	university: { altLabel: {} }
 
 });
 
@@ -111,7 +111,7 @@ export function UnitsPage() {
 			{state.map(({ id, label, comment, university }) => <Card key={id}
 
 				title={<Link href={id}>{label}</Link>}
-				tags={university ? toUniversity(university) : "EC2U Alliance"}
+				tags={university?.altLabel ?? "EC2U Alliance"}
 
 			>{comment}</Card>)}
 

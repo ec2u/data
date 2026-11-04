@@ -31,12 +31,13 @@ import { Range } from "@metreeca/tile-lens/range";
 import { Tally } from "@metreeca/tile-lens/tally";
 import { date } from "@metreeca/tile-type/date";
 import { useEffect } from "preact/hooks";
-import { FacetSize, named, toEventAttendanceMode, toUniversity, UniversityModel } from "../../index.core.js";
+import { FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { schedule } from "./event.js";
+import { toEventAttendanceMode } from "./index.core.js";
 import { events } from "./index.js";
 
 
@@ -50,7 +51,7 @@ const model = immutable({
 	endDate: {},
 
 	image: { url: {} },
-	university: UniversityModel
+	university: { altLabel: {} }
 
 });
 
@@ -102,8 +103,8 @@ export function EventsPage() {
 
 			<Tally name={"University"} compact={false} tally={university}/>
 			<Range name={"Date"} compact type={date({ instant: true })} range={startDate}/>
-			<Tally name={"Free"} compact tally={isAccessibleForFree}>{named(free => free === "true" ? "Yes" : "No")}</Tally>
-			<Tally name={"Attendance"} compact tally={eventAttendanceMode}>{named(toEventAttendanceMode)}</Tally>
+			<Tally name={"Free"} compact tally={isAccessibleForFree}>{({ label }) => label === "true" ? "Yes" : "No"}</Tally>
+			<Tally name={"Attendance"} compact tally={eventAttendanceMode}>{({ label }) => toEventAttendanceMode(label)}</Tally>
 			<Tally name={"Topic"} compact tally={topics}/>
 
 		</>}
@@ -123,7 +124,7 @@ export function EventsPage() {
 			{state.map(({ id, label, disambiguatingDescription, startDate, endDate, image, university }) => <Card key={id}
 
 				title={<Link href={id}>{`${schedule(startDate, endDate)} / ${label}`}</Link>}
-				tags={opt(university, toUniversity)}
+				tags={university?.altLabel}
 				image={opt(image, ({ url }) => url[0])}
 
 			>{disambiguatingDescription}</Card>)}

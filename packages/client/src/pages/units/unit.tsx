@@ -30,7 +30,7 @@ import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { site, toUniversity, UniversityModel } from "../../index.core.js";
+import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { links, list } from "../../tiles/links.js";
@@ -54,7 +54,7 @@ const model = immutable({
 	identifier: {},
 	homepage: {},
 
-	university: UniversityModel,
+	university: { id: {}, altLabel: {} },
 	classification: { id: {}, label: {} },
 	hasHead: { id: {}, label: {} },
 
@@ -121,7 +121,7 @@ export function UnitPage() {
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, value => <Link href={value.id}>{toUniversity(value)}</Link>),
+					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>),
 					Type: links(classification)
 
 				}}</Info>

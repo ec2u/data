@@ -16,6 +16,7 @@
 
 import { Courses } from "@ec2u/data-shared/courses/index.js";
 import { opt } from "@metreeca/core";
+import { nameTag } from "@metreeca/core/language";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -32,11 +33,12 @@ import { Tally } from "@metreeca/tile-lens/tally";
 import { decimal } from "@metreeca/tile-type/decimal";
 import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { FacetSize, named, toCourseMode, toCourseTerm, toLanguage, toUniversity, UniversityModel } from "../../index.core.js";
+import { FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
 import { DatasetLink } from "../datasets/dataset.js";
+import { toCourseMode, toCourseTerm } from "./index.core.js";
 import { courses } from "./index.js";
 
 
@@ -46,7 +48,7 @@ const model = immutable({
 	label: {},
 	comment: {},
 
-	university: UniversityModel
+	university: { altLabel: {} }
 
 });
 
@@ -105,12 +107,12 @@ export function CoursesPage() {
 
 			<Tally name={"University"} compact={false} tally={university}/>
 			<Tally name={"Year"} compact tally={year}/>
-			<Tally name={"Term"} compact tally={term}>{named(toCourseTerm)}</Tally>
-			<Tally name={"Attendance"} compact tally={courseMode}>{named(toCourseMode)}</Tally>
-			<Tally name={"Language"} compact tally={inLanguage}>{named(toLanguage)}</Tally>
-			<Tally name={"Fees for Externals"} compact tally={isAccessibleForFree}>{named(free => free === "true" ? "Free" : "Paid")}</Tally>
+			<Tally name={"Term"} compact tally={term}>{({ label }) => toCourseTerm(label)}</Tally>
+			<Tally name={"Attendance"} compact tally={courseMode}>{({ label }) => toCourseMode(label)}</Tally>
+			<Tally name={"Language"} compact tally={inLanguage}>{({ label }) => nameTag(label, navigator.language)}</Tally>
+			<Tally name={"Fees for Externals"} compact tally={isAccessibleForFree}>{({ label }) => label === "true" ? "Free" : "Paid"}</Tally>
 			<Range name={"Credits"} compact type={decimal} range={numberOfCredits}/>
-			<Tally name={"Duration"} compact tally={timeRequired}>{named(value => duration.format(value))}</Tally>
+			<Tally name={"Duration"} compact tally={timeRequired}>{({ label }) => duration.format(label)}</Tally>
 			<Tally name={"Level"} compact tally={educationalLevel}/>
 			<Tally name={"Credentials"} compact tally={credentialCategory}/>
 			<Tally name={"Subjects"} compact tally={about}/>
@@ -133,7 +135,7 @@ export function CoursesPage() {
 			{state.map(({ id, label, comment, university }) => <Card key={id}
 
 				title={<Link href={id}>{label}</Link>}
-				tags={opt(university, toUniversity)}
+				tags={university?.altLabel}
 
 			>{comment}</Card>)}
 

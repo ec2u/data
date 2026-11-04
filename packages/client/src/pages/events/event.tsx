@@ -17,6 +17,7 @@
 import { Event } from "@ec2u/data-shared/events/index.js";
 import type { Match } from "@metreeca/blue/value";
 import { isString, opt } from "@metreeca/core";
+import { nameTag } from "@metreeca/core/language";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -32,13 +33,14 @@ import { instant } from "@metreeca/tile-type/instant";
 import { time } from "@metreeca/tile-type/time";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { scope, site, toEventAttendanceMode, toEventStatus, toLanguage, toUniversity, UniversityModel } from "../../index.core.js";
+import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { filters } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
+import { toEventAttendanceMode, toEventStatus } from "./index.core.js";
 import { events } from "./index.js";
 
 
@@ -89,7 +91,7 @@ const model = immutable({
 
 	},
 
-	university: UniversityModel,
+	university: { id: {}, altLabel: {} },
 	publisher: { id: {}, label: {}, url: {} },
 	keywords: { id: {}, label: {} }
 
@@ -166,13 +168,13 @@ export function EventPage() {
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, value => <Link href={value.id}>{toUniversity(value)}</Link>)
+					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>)
 
 				}}</Info>
 
 				<Info place={"spread"}>{{
 
-					Topics: filters(keywords, events.route, keywords => ({ ...scope(university), keywords }))
+					Topics: filters(keywords, events.route, keywords => ({ ...opt(university, ({ id }) => ({ university: id })), keywords }))
 
 				}}</Info>
 
@@ -191,7 +193,7 @@ export function EventPage() {
 				<Info place={"spread"}>{{
 
 					Entry: opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
-					Language: opt(inLanguage, toLanguage),
+					Language: opt(inLanguage, tag => nameTag(tag, navigator.language)),
 					Attendance: opt(eventAttendanceMode, toEventAttendanceMode),
 					Status: opt(eventStatus, toEventStatus),
 					Location: opt(location, venue)

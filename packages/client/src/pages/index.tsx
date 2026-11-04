@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-import { base } from "@ec2u/data-shared";
-import { courses } from "@ec2u/data-shared/courses/index.js";
 import { Datasets as DatasetsShape } from "@ec2u/data-shared/datasets/index.js";
-import { documents } from "@ec2u/data-shared/documents/index.js";
-import { events } from "@ec2u/data-shared/events/index.js";
-import { programs } from "@ec2u/data-shared/programs/index.js";
-import { units } from "@ec2u/data-shared/units/index.js";
-import { universities } from "@ec2u/data-shared/universities/index.js";
 import { isNumber, isObject, isOptional, isString, opt } from "@metreeca/core";
-import { by } from "@metreeca/core/order";
-import { internalize, type IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -39,7 +30,7 @@ import { integer } from "@metreeca/tile-type/integer";
 import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
 import { Search } from "../_/search.js";
-import { ec2u, FacetSize } from "../index.core.js";
+import { byDataset, ec2u, FacetSize, published } from "../index.core.js";
 import { Failure } from "../tiles/failure.js";
 import { Page } from "../tiles/page.js";
 import { DatasetLink } from "./datasets/dataset.js";
@@ -193,29 +184,3 @@ export function isDatasetRow(value: unknown): value is DatasetRow {
 
 	});
 }
-
-
-//// !!! ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Root-relative ids of the datasets published on the hub, in display order.
- *
- * Ids are root-relative as the store resolves them against the serving origin rather than the hub id space.
- */
-export const published: readonly IRI[] = [
-	universities,
-	units,
-	programs,
-	courses,
-	documents,
-	events
-].map(({ id }) =>
-	internalize(base, id)
-);
-
-/**
- * Orders published dataset rows as the hub lists them.
- */
-export const byDataset = by(({ dataset }: { readonly dataset: { readonly id: IRI } }) =>
-	published.indexOf(internalize(location.href, dataset.id))
-);

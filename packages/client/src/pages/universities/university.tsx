@@ -28,12 +28,12 @@ import { Info } from "@metreeca/tile-hive/info";
 import { integer } from "@metreeca/tile-type/integer";
 import { year } from "@metreeca/tile-type/year";
 import { useEffect } from "preact/hooks";
-import { ec2u, site } from "../../index.core.js";
+import { byDataset, ec2u, published, site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
-import { byDataset, isDatasetRow, published } from "../index.js";
+import { isDatasetRow } from "../index.js";
 import { universities } from "./index.js";
 
 

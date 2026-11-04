@@ -29,7 +29,7 @@ import { Stack } from "@metreeca/tile-hive/stack";
 import { decimal } from "@metreeca/tile-type/decimal";
 import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { site, toUniversity, UniversityModel } from "../../index.core.js";
+import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Credential, CredentialModel } from "../../tiles/credential.js";
 import { Failure } from "../../tiles/failure.js";
@@ -69,7 +69,7 @@ const model = immutable({
 	educationalCredentialAwarded: CredentialModel,
 	occupationalCredentialAwarded: CredentialModel,
 
-	university: UniversityModel,
+	university: { id: {}, altLabel: {} },
 	provider: { id: {}, label: {} },
 
 	hasCourse: { id: {}, label: {} },
@@ -126,7 +126,7 @@ export function ProgramPage() {
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, value => <Link href={value.id}>{toUniversity(value)}</Link>)
+					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>)
 
 				}}</Info>
 

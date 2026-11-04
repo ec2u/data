@@ -30,7 +30,7 @@ import { Count } from "@metreeca/tile-lens/count";
 import { Tally } from "@metreeca/tile-lens/tally";
 import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { FacetSize, named, toUniversity, UniversityModel } from "../../index.core.js";
+import { FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
@@ -44,7 +44,7 @@ const model = immutable({
 	label: {},
 	comment: {},
 
-	university: UniversityModel
+	university: { altLabel: {} }
 
 });
 
@@ -96,7 +96,7 @@ export function ProgramsPage() {
 
 			<Tally name={"University"} compact={false} tally={university}/>
 			<Tally name={"Level"} compact tally={educationalLevel}/>
-			<Tally name={"Duration"} compact tally={timeToComplete}>{named(value => duration.format(value))}</Tally>
+			<Tally name={"Duration"} compact tally={timeToComplete}>{({ label }) => duration.format(label)}</Tally>
 			<Tally name={"Subjects"} compact tally={about}/>
 			<Tally name={"Provider"} compact tally={provider}/>
 
@@ -117,7 +117,7 @@ export function ProgramsPage() {
 			{state.map(({ id, label, comment, university }) => <Card key={id}
 
 				title={<Link href={id}>{label}</Link>}
-				tags={opt(university, toUniversity)}
+				tags={university?.altLabel}
 
 			>{comment}</Card>)}
 

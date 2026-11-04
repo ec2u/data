@@ -16,6 +16,7 @@
 
 import { Course } from "@ec2u/data-shared/courses/index.js";
 import { opt } from "@metreeca/core";
+import { nameTag } from "@metreeca/core/language";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -28,7 +29,7 @@ import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { site, toCourseMode, toCourseTerm, toLanguage, toUniversity, UniversityModel } from "../../index.core.js";
+import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Credential, CredentialModel } from "../../tiles/credential.js";
 import { Failure } from "../../tiles/failure.js";
@@ -38,6 +39,7 @@ import { blocks, sections } from "../../tiles/sections.js";
 import { Title } from "../../tiles/title.js";
 import { credits } from "../programs/program.js";
 import { DatasetLink } from "../datasets/dataset.js";
+import { toCourseMode, toCourseTerm } from "./index.core.js";
 import { courses } from "./index.js";
 
 
@@ -70,7 +72,7 @@ const model = immutable({
 	educationalCredentialAwarded: CredentialModel,
 	occupationalCredentialAwarded: CredentialModel,
 
-	university: UniversityModel,
+	university: { id: {}, altLabel: {} },
 	provider: { id: {}, label: {} },
 	instructor: { id: {}, label: {} },
 
@@ -152,7 +154,7 @@ export function CoursePage() {
 
 				<Info place={"spread"}>{{
 
-					University: opt(university, value => <Link href={value.id}>{toUniversity(value)}</Link>),
+					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>),
 					Year: year,
 					Term: list(term.map(toCourseTerm))
 
@@ -169,7 +171,7 @@ export function CoursePage() {
 
 					Code: courseCode,
 					Attendance: opt(courseMode, toCourseMode),
-					Language: list(inLanguage.map(toLanguage)),
+					Language: list(inLanguage.map(tag => nameTag(tag, navigator.language))),
 					"Fees for Externals": opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
 					Credits: opt(numberOfCredits, value => credits.format(value)),
 					Duration: opt(timeRequired, value => duration.format(value)),

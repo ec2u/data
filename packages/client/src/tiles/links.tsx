@@ -17,7 +17,6 @@
 import { by, locale } from "@metreeca/core/order";
 import { Link } from "@metreeca/tile-cell/link";
 import type { ComponentChildren } from "preact";
-import { local } from "../index.core.js";
 
 
 /**
@@ -43,7 +42,7 @@ export function links(entries: readonly { readonly id: string, readonly label: s
  *
  * @param entries The resources to be listed, each with its identifier and label
  * @param catalogue The route of the catalogue the links lead to
- * @param query The criteria each link narrows the catalogue by, given the root-relative identifier of its resource
+ * @param query The criteria each link narrows the catalogue by, given the identifier of its resource
  *
  * @returns A list of links sorted by label, or `undefined` if `entries` is empty, so that the panel omits the entry
  */
@@ -58,7 +57,7 @@ export function filters(
 	return entries.length > 0 ? <ul>{[...entries] // copy, as entries are shared
 
 		.sort(by(({ label }) => label, locale()))
-		.map(({ id, label }) => <li key={id}><Link href={catalogue} query={query(local(id))}>{label}</Link></li>)
+		.map(({ id, label }) => <li key={id}><Link href={catalogue} query={query(id)}>{label}</Link></li>)
 
 	}</ul> : undefined;
 

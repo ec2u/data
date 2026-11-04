@@ -15,6 +15,7 @@
  */
 
 import { Documents } from "@ec2u/data-shared/documents/index.js";
+import { nameTag } from "@metreeca/core/language";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -28,7 +29,7 @@ import { Clear } from "@metreeca/tile-lens/clear";
 import { Count } from "@metreeca/tile-lens/count";
 import { Tally } from "@metreeca/tile-lens/tally";
 import { useEffect } from "preact/hooks";
-import { FacetSize, named, toLanguage, toUniversity, UniversityModel } from "../../index.core.js";
+import { FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
@@ -42,7 +43,7 @@ const model = immutable({
 	label: {},
 	comment: {},
 
-	university: UniversityModel
+	university: { altLabel: {} }
 
 });
 
@@ -97,7 +98,7 @@ export function DocumentsPage() {
 			<Tally name={"Type"} compact tally={type}/>
 			<Tally name={"Audience"} compact tally={audience}/>
 			<Tally name={"Topic"} compact tally={subject}/>
-			<Tally name={"Language"} compact tally={language}>{named(toLanguage)}</Tally>
+			<Tally name={"Language"} compact tally={language}>{({ label }) => nameTag(label, navigator.language)}</Tally>
 			<Tally name={"License"} compact tally={license}/>
 
 		</>}
@@ -117,7 +118,7 @@ export function DocumentsPage() {
 			{state.map(({ id, label, comment, university }) => <Card key={id}
 
 				title={<Link href={id}>{label}</Link>}
-				tags={university ? toUniversity(university) : "EC2U Alliance"}
+				tags={university?.altLabel ?? "EC2U Alliance"}
 
 			>{comment}</Card>)}
 
