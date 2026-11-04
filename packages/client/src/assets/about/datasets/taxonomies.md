@@ -35,7 +35,7 @@ the  [Simple Knowledge Organization System (SKOS)](https://www.w3.org/TR/skos-re
 
 [ec2u:Dataset]: ./index.md#dataset
 
-[skos:ConceptScheme]: ../about/vocabularies/skos.md#concept-scheme
+[skos:ConceptScheme]: ../vocabularies/skos.md#concept-scheme
 
 [skos:hasTopConcept]: https://www.w3.org/TR/skos-reference/#L2457
 
@@ -51,7 +51,7 @@ the  [Simple Knowledge Organization System (SKOS)](https://www.w3.org/TR/skos-re
 
 [ec2u:Resource]: ./index.md#resource
 
-[skos:Concept]: ../about/vocabularies/skos.md#concept
+[skos:Concept]: ../vocabularies/skos.md#concept
 
 [skos:broader]: https://www.w3.org/TR/skos-reference/#L2010
 

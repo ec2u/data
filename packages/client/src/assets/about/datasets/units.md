@@ -1,5 +1,5 @@
 EC2U research units and facilities are described using a controlled subset of
-the [W3C Organization Ontology](../about/vocabularies/org.md) data model, extended
+the [W3C Organization Ontology](../vocabularies/org.md) data model, extended
 with [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/) properties.
 
 | prefix | namespace                   | description                      |
@@ -30,7 +30,7 @@ with [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-te
 
 [ec2u:Organization]: organizations.md#organization
 
-[org:OrganizationalUnit]: ../about/vocabularies/org.md#organizational-unit
+[org:OrganizationalUnit]: ../vocabularies/org.md#organizational-unit
 
 [university]: universities.md#university
 

@@ -1,5 +1,5 @@
 EC2U organizations are described using a controlled subset of
-the  [W3C Organization Ontology](../about/vocabularies/org.md) and [Schema.org](../about/vocabularies/schema.md)
+the  [W3C Organization Ontology](../vocabularies/org.md) and [Schema.org](../vocabularies/schema.md)
 data models.
 
 | prefix  | namespace                   | description                   |
@@ -28,9 +28,9 @@ data models.
 
 [ec2u:Resource]: ./index.md#resource
 
-[org:Organization]: ../about/vocabularies/org.md#organization
+[org:Organization]: ../vocabularies/org.md#organization
 
-[schema:Organization]: ../about/vocabularies/schema.md#organization
+[schema:Organization]: ../vocabularies/schema.md#organization
 
 [org:classification]: https://www.w3.org/TR/vocab-org/#org:classification
 

@@ -1,4 +1,4 @@
-EC2U courses are described using a controlled subset of the [Schema.org](../about/vocabularies/schema-resource.md) data
+EC2U courses are described using a controlled subset of the [Schema.org](../vocabularies/schema-resource.md) data
 model.
 
 | prefix  | namespace                   | description                   |
@@ -32,9 +32,9 @@ Academic term in which a course is offered.
 
 [ec2u:Offering]: ./index.md#offering
 
-[schema:Course]: ../about/vocabularies/schema-resource.md#course
+[schema:Course]: ../vocabularies/schema-resource.md#course
 
-[schema:CourseInstance]: ../about/vocabularies/schema-resource.md#course-instance
+[schema:CourseInstance]: ../vocabularies/schema-resource.md#course-instance
 
 [schema:instructor]: https://schema.org/instructor
 

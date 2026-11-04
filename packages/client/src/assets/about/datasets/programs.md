@@ -1,4 +1,4 @@
-EC2U programs are described using a controlled subset of the [Schema.org](../about/vocabularies/schema-resource.md) data
+EC2U programs are described using a controlled subset of the [Schema.org](../vocabularies/schema-resource.md) data
 model.
 
 | prefix  | namespace                   | description                   |
@@ -18,4 +18,4 @@ model.
 
 [ec2u:Offering]: ./index.md#offering
 
-[schema:EducationalOccupationalProgram]: ../about/vocabularies/schema-resource.md#educational-occupational-program
+[schema:EducationalOccupationalProgram]: ../vocabularies/schema-resource.md#educational-occupational-program

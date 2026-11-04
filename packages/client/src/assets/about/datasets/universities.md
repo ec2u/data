@@ -1,5 +1,5 @@
 EC2U allied universities are described using a controlled subset of
-the [W3C Organization Ontology](../about/vocabularies/org.md) data model, extended with some specialised properties.
+the [W3C Organization Ontology](../vocabularies/org.md) data model, extended with some specialised properties.
 
 | prefix | namespace                            | description                                              |
 |--------|--------------------------------------|----------------------------------------------------------|
@@ -32,7 +32,7 @@ the [W3C Organization Ontology](../about/vocabularies/org.md) data model, extend
 
 [ec2u:Organization]: organizations.md#organization
 
-[org:FormalOrganization]: ../about/vocabularies/org.md#formal-organization
+[org:FormalOrganization]: ../vocabularies/org.md#formal-organization
 
 [*GeoReference*]: ./index.md#geo-reference
 

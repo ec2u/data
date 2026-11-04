@@ -23,11 +23,12 @@ import { Store } from "@metreeca/tile-data/store";
 import { host } from "@metreeca/tile-hive";
 import { Toast } from "@metreeca/tile-hive/toast";
 import { render } from "preact";
+import { about } from "./pages/about/about.js";
+import { About } from "./pages/about/index.js";
 import { courses } from "./pages/courses/courses.js";
 import { Courses } from "./pages/courses/index.js";
 import { datasets, DatasetsMeta } from "./pages/datasets/datasets.js";
 import { Datasets } from "./pages/datasets/index.js";
-import { Docs, docs } from "./pages/docs/index.js";
 import { documents } from "./pages/documents/documents.js";
 import { Documents } from "./pages/documents/index.js";
 import { events } from "./pages/events/events.js";
@@ -74,9 +75,7 @@ function Hub() {
 						[documents.route]: <Documents/>,
 						[events.route]: <Events/>,
 						[taxonomies.route]: <Taxonomies/>,
-
-						[docs.routes.about]: <Docs/>,
-						[docs.routes.datasets]: <Docs/>,
+						[about.route]: <About/>,
 
 						[unknown.route]: <Unknown/>
 

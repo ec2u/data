@@ -37,7 +37,7 @@ housekeeping properties.
 
 > [!WARNING]
 > The `ec2u:Resource` data model is not intended to be used in isolation but only to provide base
-> definitions factoring generic properties shared by the specialised [models](../about/index.md#data-models) defined
+> definitions factoring generic properties shared by the specialised [models](../index.md#data-models) defined
 > by each dataset.
 
 | term              | type              | #    | definition                                                  |
@@ -56,7 +56,7 @@ housekeeping properties.
 
 > [!WARNING]
 > The `ec2u:Dataset` data model is not intended to be used in isolation but only to provide base
-> definitions factoring generic properties shared by the specialised [models](../about/index.md#data-models) defined
+> definitions factoring generic properties shared by the specialised [models](../index.md#data-models) defined
 > by each dataset.
 
 | term                        | type                | #    | definition                                                             |
@@ -80,7 +80,7 @@ housekeeping properties.
 
 > [!WARNING]
 > The `ec2u:Offering` data model is not intended to be used in isolation but only to provide base
-> definitions factoring generic properties shared by the specialised [models](../about/index.md#data-models) defined
+> definitions factoring generic properties shared by the specialised [models](../index.md#data-models) defined
 > by each dataset.
 
 | term                      | type                                       | #    | definition                                                                       |
@@ -153,7 +153,7 @@ housekeeping properties.
 
 [Schema.org]: https://schema.org/
 
-[schema:LearningResource]: ../about/vocabularies/schema-resource.md#learning-resource
+[schema:LearningResource]: ../vocabularies/schema-resource.md#learning-resource
 
 [schema:provider]: https://schema.org/provider
 

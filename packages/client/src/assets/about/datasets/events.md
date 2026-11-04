@@ -2,7 +2,7 @@ This dataset is mainly intended to support event search on the [My Mobile Tutor]
 developed by WP2 of the EC2U project under the coordination of the University of Turku, but can be searched and
 integrated by third-party tools as any other EC2U dataset.
 
-EC2U events are described using a controlled subset of [Schema.org](../about/vocabularies/schema-event.md) data model.
+EC2U events are described using a controlled subset of [Schema.org](../vocabularies/schema-event.md) data model.
 
 | prefix  | namespace                   | definition                    |
 |---------|-----------------------------|-------------------------------|
@@ -23,7 +23,7 @@ EC2U events are described using a controlled subset of [Schema.org](../about/voc
 
 [Schema.org]: https://schema.org/
 [ec2u:Resource]: ./index.md#resource
-[schema:Event]: ../about/vocabularies/schema-event.md
+[schema:Event]: ../vocabularies/schema-event.md
 [schema:name]: https://schema.org/name
 [schema:disambiguatingDescription]: https://schema.org/disambiguatingDescription
 [schema:publisher]: https://schema.org/publisher

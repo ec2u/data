@@ -1,5 +1,5 @@
-EC2U persons are described using a controlled subset of the [W3C Organization Ontology](../about/vocabularies/org.md)
-and  [FOAF](../about/vocabularies/foaf.md) data models.
+EC2U persons are described using a controlled subset of the [W3C Organization Ontology](../vocabularies/org.md)
+and  [FOAF](../vocabularies/foaf.md) data models.
 
 | prefix | namespace                   | description                            |
 |--------|-----------------------------|----------------------------------------|
@@ -23,7 +23,7 @@ and  [FOAF](../about/vocabularies/foaf.md) data models.
 
 [ec2u:Resource]: ./index.md#resource
 
-[foaf:Person]: ../about/vocabularies/foaf.md#person
+[foaf:Person]: ../vocabularies/foaf.md#person
 
 [org:hasHead]: https://www.w3.org/TR/vocab-org/#org:hasHead
 

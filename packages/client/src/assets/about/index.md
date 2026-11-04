@@ -7,16 +7,16 @@
 
 Data models for resource datasets published on the EC2U Knowledge Hub.
 
-- [Datasets](../datasets/index.md)
-  - [Taxonomies](../datasets/taxonomies.md)
-  - [Organizations](../datasets/organizations.md)
-    - [Universities](../datasets/universities.md)
-    - [Units](../datasets/units.md)
-  - [Persons](../datasets/persons.md)
-  - [Programs](../datasets/programs.md)
-  - [Courses](../datasets/courses.md)
-  - [Documents](../datasets/documents.md)
-  - [Events](../datasets/events.md)
+- [Datasets](datasets/index.md)
+  - [Taxonomies](datasets/taxonomies.md)
+  - [Organizations](datasets/organizations.md)
+    - [Universities](datasets/universities.md)
+    - [Units](datasets/units.md)
+  - [Persons](datasets/persons.md)
+  - [Programs](datasets/programs.md)
+  - [Courses](datasets/courses.md)
+  - [Documents](datasets/documents.md)
+  - [Events](datasets/events.md)
 
 # Vocabularies
 
