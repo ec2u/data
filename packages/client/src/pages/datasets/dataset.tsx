@@ -27,6 +27,7 @@ import { Path } from "@metreeca/tile-cell/path";
 import { useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useResource } from "@metreeca/tile-data/store";
 import { Info } from "@metreeca/tile-hive/info";
+import { Stack } from "@metreeca/tile-hive/stack";
 import { date } from "@metreeca/tile-type/date";
 import { integer } from "@metreeca/tile-type/integer";
 import type { ComponentChildren } from "preact";
@@ -35,6 +36,7 @@ import { Failure } from "../../tiles/failure.js";
 import { address, links } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { getShapeHref, getShapeName } from "../../tiles/shape.core.js";
+import "../../tiles/shape.css";
 import { about } from "../about/index.js";
 
 
@@ -194,19 +196,33 @@ export function DatasetPage({
 
 		tray={resource({
 
-			ready: ({ state: { created, issued, modified } }) => <Info place={"spread"}>{{
+			ready: ({ state: { created, issued, modified } }) => <Stack space={"spacing100"}>
 
-				Created: opt(created, value => date.format(value)),
-				Published: opt(issued, value => date.format(value)),
-				Modified: opt(modified, value => date.format(value)),
+				<Info place={"spread"}>{{
 
-				Resources: resources({
+					Created: opt(created, value => date.format(value)),
+					Published: opt(issued, value => date.format(value)),
+					Modified: opt(modified, value => date.format(value))
 
-					ready: ({ state }) => integer.format(state)
+				}}</Info>
 
-				})
+				<Info place={"spread"}>{{
 
-			}}</Info>
+					Resources: resources({
+
+						ready: ({ state }) => integer.format(state)
+
+					}),
+
+					"Data Models": opt(shapes, shapes => <ul class={"ec2u-shape-links"}>{some(shapes).map(shape =>
+						<li key={getShapeName(shape)}>
+							{opt(getShapeHref(shape), href => <Link href={href}>{getShapeName(shape)}</Link>) ?? getShapeName(shape)}
+						</li>
+					)}</ul>)
+
+				}}</Info>
+
+			</Stack>
 
 		})}
 
@@ -225,10 +241,7 @@ export function DatasetPage({
 				Copyright: rights,
 				License: links(license),
 				Source: opt(source, ({ id }) => address(id)),
-				Access: opt(accessRights, text => <Markdown>{text}</Markdown>),
-				Models: opt(shapes, shapes => <ul>{some(shapes).map(shape => <li key={getShapeName(shape)}>
-					{opt(getShapeHref(shape), href => <Link href={href}>{getShapeName(shape)}</Link>) ?? getShapeName(shape)}
-				</li>)}</ul>)
+				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
 
 			}}</Info>
 
