@@ -24,7 +24,7 @@ ec2u-ai {
     width: 100%;
 
     font-weight: var(--tile--font-weight-strong);
-    color: var(--tile--color-warn);
+    color: var(--tile--color-fail-stroke);
 
     & > tile-link,
     & > a {
