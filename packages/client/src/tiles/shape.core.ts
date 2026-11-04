@@ -316,6 +316,27 @@ export function getShapeReferrers(lazy: Lazy<ResourceShape>, universe: Some<Lazy
 }
 
 /**
+ * Lists the shapes a resource shape refers to.
+ *
+ * Collects the shapes linked or embedded by the visible properties `lazy` declares or inherits, matched as by
+ * {@link getShapeReferrers}, so that a property ranging over an unkeyed refinement refers to its keyed ancestor.
+ *
+ * @param lazy The shape whose references are to be listed, possibly deferred
+ *
+ * @returns The referenced shapes in alphabetical order, each listed once and linked to its documentation, leaving out
+ *     `lazy` itself; empty if no property of `lazy` refers to another shape
+ */
+export function getShapeReferences(lazy: Lazy<ResourceShape>): readonly ShapeLink[] {
+
+	const target = eager(lazy);
+
+	return [...others(target, Object.values(target.members).flatMap(member =>
+		member.kind === "property" && !member.hidden ? targets(member.range.shape) : []
+	))].sort((x, y) => x.name.localeCompare(y.name, "en", { sensitivity: "base" })); // fresh array from spread
+
+}
+
+/**
  * Lists the shapes extending a resource shape.
  *
  * Scans the shapes reachable from `universe`, as collected by {@link @metreeca/blue!model model}, for the ones

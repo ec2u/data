@@ -21,15 +21,15 @@ import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { Text } from "../_/text.js";
-import { getShapeAncestors, getShapeExtenders, getShapeReferrers, type ShapeLink, type ShapeRow, type ShapeTable, tabulate } from "./shape.core.js";
+import { getShapeAncestors, getShapeExtenders, getShapeReferences, getShapeReferrers, type ShapeLink, type ShapeRow, type ShapeTable, tabulate } from "./shape.core.js";
 import "./shape.css";
 
 
 /**
  * Creates the property sheet of a resource shape.
  *
- * Locates the shape in the model, stating its endpoint, its whole lineage of extended shapes, the shapes extending it
- * and the shapes referring to it, each linked to its documentation; entries with nothing to state are left out.
+ * Locates the shape in the model, stating its endpoint, its whole lineage of extended shapes, the shapes extending it,
+ * the shapes it refers to and the ones referring to it, each linked to its documentation; empty entries are left out.
  *
  * @param options The widget configuration
  *
@@ -58,12 +58,14 @@ export function ShapeInfo({
 	const ancestors = getShapeAncestors(shape);
 	const extenders = getShapeExtenders(shape, universe);
 	const referrers = getShapeReferrers(shape, universe);
+	const references = getShapeReferences(shape);
 
 	const stated = Object.entries({
 
 		Endpoint: opt(endpoint, endpoint => <code>{endpoint}</code>),
 		Extends: ancestors.length > 0 ? <List links={ancestors}/> : undefined,
 		"Extended by": extenders.length > 0 ? <List links={extenders}/> : undefined,
+		References: references.length > 0 ? <List links={references}/> : undefined,
 		"Referenced by": referrers.length > 0 ? <List links={referrers}/> : undefined
 
 	}).flatMap(([label, content]) => content !== undefined ? [{ label, content }] : []);
