@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-import { base, partners } from "@ec2u/data-shared";
 import { Resources } from "@ec2u/data-shared/resources/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { Button } from "@metreeca/tile-cell/button";
-import { resolve } from "@metreeca/core/resource";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
@@ -31,7 +29,7 @@ import { year } from "@metreeca/tile-type/year";
 import { useEffect } from "preact/hooks";
 import { byDataset, ec2u, PublicDatasets } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
-import { address } from "../../tiles/links.js";
+import { address, local } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
@@ -130,7 +128,7 @@ export function UniversityPage() {
 
 				<Info place={"spread"}>{{
 
-					Home: <ul>{homepage.map(url => <li key={url}>{address(url, partners[resolve(base, route)]?.locale)}
+					Home: <ul>{homepage.map(url => <li key={url}>{address(url, local(route))}
 					</li>)}</ul>
 
 				}}</Info>

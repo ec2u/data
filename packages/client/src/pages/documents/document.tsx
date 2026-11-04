@@ -155,7 +155,7 @@ export function DocumentPage() {
 
 					Code: identifier,
 					Web: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}>{address(url)}</li>
+						<li key={url}>{address(url, language.length === 1 ? language[0] : undefined)}</li>
 					)}</ul> : undefined,
 					Language: list(language.map(tag => nameTag(tag, navigator.language)))
 

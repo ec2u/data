@@ -31,7 +31,7 @@ import { useEffect } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
 import { Credential, CredentialModel } from "../../tiles/credential.js";
 import { Failure } from "../../tiles/failure.js";
-import { address, links } from "../../tiles/links.js";
+import { address, links, local } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { blocks, sections } from "../../tiles/sections.js";
 import { Title } from "../../tiles/title.js";
@@ -146,7 +146,7 @@ export function ProgramPage() {
 				<Info place={"spread"}>{{
 
 					Info: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}>{address(url)}</li>
+						<li key={url}>{address(url, local(university?.id))}</li>
 					)}</ul> : undefined
 
 				}}</Info>

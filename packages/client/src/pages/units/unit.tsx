@@ -31,7 +31,7 @@ import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
-import { address, links, list } from "../../tiles/links.js";
+import { address, links, list, local } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { blocks } from "../../tiles/sections.js";
 import { Title } from "../../tiles/title.js";
@@ -141,7 +141,7 @@ export function UnitPage() {
 				<Info place={"spread"}>{{
 
 					Info: homepage.length > 0 ? <ul>{homepage.map(url =>
-						<li key={url}>{address(url)}</li>
+						<li key={url}>{address(url, local(university?.id))}</li>
 					)}</ul> : undefined
 
 				}}</Info>

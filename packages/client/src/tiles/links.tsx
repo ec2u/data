@@ -14,15 +14,28 @@
  * limitations under the License.
  */
 
-import { opt } from "@metreeca/core";
+import { base, partners } from "@ec2u/data-shared";
+import { opt, type Optional } from "@metreeca/core";
 import { nameTag, type Tag } from "@metreeca/core/language";
 import { by, locale } from "@metreeca/core/order";
+import { resolve } from "@metreeca/core/resource";
 import { Link } from "@metreeca/tile-cell/link";
 import { tagIRI } from "@metreeca/work/core/language.js";
 import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { type ComponentChildren, createElement } from "preact";
 import "./links.css";
 
+
+/**
+ * Identifies the local language of a partner university, to be assumed for its pages stating no language of their own.
+ *
+ * @param university The identifier of the university, as resolved by the store against the serving origin
+ *
+ * @returns The tag of the local language of `university`, or `undefined` if `university` is not a partner
+ */
+export function local(university: Optional<string>): Optional<Tag> {
+	return opt(university, id => partners[resolve(base, id)]?.locale);
+}
 
 /**
  * Renders an outbound link to a web address.
