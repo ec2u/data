@@ -16,7 +16,6 @@
 
 import { LabelLength, Place } from "@ec2u/data-shared";
 import { universities, University } from "@ec2u/data-shared/universities/index.js";
-import seeds from "@ec2u/data-shared/universities/index.json" with { type: "json" };
 import { opt, type Optional } from "@metreeca/core";
 import { clip, fill } from "@metreeca/core/strings";
 import { pipe, type Task } from "@metreeca/flow";
@@ -35,6 +34,7 @@ import { Wikidata as WikidataVocabulary } from "@metreeca/work/open/wikidata.js"
 import { select } from "@metreeca/pipe-sparql";
 import { delta, type Delta, settle } from "@metreeca/pipe-store";
 import { execute } from "../../index.core.js";
+import seeds from "../index.json" with { type: "json" };
 
 
 const wikidata = createHTTPRepository({
