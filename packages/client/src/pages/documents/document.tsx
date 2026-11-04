@@ -28,11 +28,10 @@ import { useResource } from "@metreeca/tile-data/store";
 import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { date } from "@metreeca/tile-type/date";
-import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
-import { filters, links, list } from "../../tiles/links.js";
+import { address, filters, links, list } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { blocks } from "../../tiles/sections.js";
 import { Title } from "../../tiles/title.js";
@@ -156,7 +155,7 @@ export function DocumentPage() {
 
 					Code: identifier,
 					Web: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link></li>
+						<li key={url}><Link href={url}>{address(url)}</Link></li>
 					)}</ul> : undefined,
 					Language: list(language.map(tag => nameTag(tag, navigator.language)))
 

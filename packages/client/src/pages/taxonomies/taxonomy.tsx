@@ -27,10 +27,10 @@ import { useCollection, useCount, useMembers, useResource } from "@metreeca/tile
 import { Info } from "@metreeca/tile-hive/info";
 import { date } from "@metreeca/tile-type/date";
 import { integer } from "@metreeca/tile-type/integer";
-import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { useEffect, useState } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
+import { address } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { Title } from "../../tiles/title.js";
 import { Search } from "../../_/search.js";
@@ -166,7 +166,7 @@ export function TaxonomyPage() {
 				License: opt(license, license => license.length > 0 ? <ul>{license.map(({ id, label }) =>
 					<li key={id}><Link href={id}>{label}</Link></li>
 				)}</ul> : undefined), // a boolean would read as its name
-				Source: opt(source, ({ id }) => <Link href={id}>{getIRIHost(id) ?? id}</Link>),
+				Source: opt(source, ({ id }) => <Link href={id}>{address(id)}</Link>),
 				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
 
 			}}</Info>

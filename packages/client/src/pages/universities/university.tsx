@@ -26,10 +26,10 @@ import { useCollection, useMembers, useResource } from "@metreeca/tile-data/stor
 import { Info } from "@metreeca/tile-hive/info";
 import { integer } from "@metreeca/tile-type/integer";
 import { year } from "@metreeca/tile-type/year";
-import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { useEffect } from "preact/hooks";
 import { byDataset, ec2u, PublicDatasets } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
+import { address } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
@@ -128,7 +128,7 @@ export function UniversityPage() {
 
 				<Info place={"spread"}>{{
 
-					Home: <ul>{homepage.map(url => <li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link>
+					Home: <ul>{homepage.map(url => <li key={url}><Link href={url}>{address(url)}</Link>
 					</li>)}</ul>
 
 				}}</Info>

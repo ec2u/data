@@ -16,6 +16,7 @@
 
 import { lazy, memo, opt, type Optional } from "@metreeca/core";
 import type { Tag } from "@metreeca/core/language";
+import { immutable } from "@metreeca/core/values";
 
 
 const letters = [..."abcdefghijklmnopqrstuvwxyz"];
@@ -51,8 +52,64 @@ export function tagName(name: string): Optional<Tag> {
 	return resolve(normalize(name));
 }
 
+/**
+ * Infers the language of a web page from its address.
+ *
+ * Tells apart the localised versions of a page published on the same site, as `https://www.uc.pt/en/` and
+ * `https://www.uc.pt/pt`, where the host alone gives them the same label. The language is read from the first of:
+ *
+ * - a `lang`, `language`, `locale`, `lng` or `hl` query parameter, as in `detail.php?lang=en`
+ * - a path segment naming a language, as in `/en/` or `/courses/EN/course/2301`
+ * - a file name naming a language, as in `home_en.htm`, `GEP_eng.pdf` or `Codice Etico – Versione Inglese.pdf`
+ *
+ * A language counts only when stated by a whole segment, query value or underscore- or space-separated file name word:
+ * the host and the words of hyphenated slugs are never read, so that `/universite-de-poitiers` is not taken as German.
+ * Path segments count only with two-letter codes other than `id` and `my`, as `/iii/` or `/mal/` and `/id/` or `/my/`
+ * name research centres, records and personal areas far more often than Sichuan Yi, Malayalam, Indonesian or Burmese.
+ *
+ * @param iri The address of the page
+ *
+ * @returns The ISO 639-1 tag of the language `iri` states, without region, or `undefined` if `iri` states none
+ *
+ * @example
+ *
+ * ```typescript
+ * tagIRI("https://www.uc.pt/en/");                        // "en"
+ * tagIRI("https://studienhandbuch.jku.at/a.php?lang=de"); // "de"
+ * tagIRI("http://www.ag.jku.at/home_en.htm");             // "en"
+ * tagIRI("https://www.uni-jena.de/");                     // undefined
+ * ```
+ */
+export function tagIRI(iri: string): Optional<Tag> {
+
+	const url = URL.canParse(iri) ? new URL(iri) : undefined;
+
+	return url === undefined || !/^https?:$/.test(url.protocol) ? undefined : [
+
+		...parameters.map(name => url.searchParams.get(name) ?? ""),
+		...url.pathname.split("/").map(decode).filter(segment => /^[a-z]{2}(?:[-_][a-z]{2})?$/i.test(segment)
+			&& !reserved.includes(segment.slice(0, 2).toLowerCase())
+		),
+		...words(url)
+
+	].map(code).find(tag => tag !== undefined);
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * The query parameters stating the language of a page.
+ */
+const parameters = immutable(["lang", "language", "locale", "lng", "hl"]);
+
+/**
+ * The language codes that path segments far more often use for other purposes, as `/id/` for record identifiers and
+ * `/my/` for personal areas, rather than for Indonesian and Burmese, and are therefore never read as languages there.
+ */
+const reserved = immutable(["id", "my"]);
+
 
 /**
  * Resolves a normalised language name to the single tag it names in any locale.
@@ -67,6 +124,45 @@ const resolve = memo((key: string): Optional<Tag> => {
 
 });
 
+
+/**
+ * Resolves a language code, possibly ISO 639-2 and qualified by a region, as `en`, `eng`, `en-GB` or `pt_PT`, to the
+ * ISO 639-1 tag of its language, or to nothing if the code names no language Intl can display.
+ */
+function code(value: string): Optional<Tag> {
+
+	const language = value.match(/^([a-z]{2,3})(?:[-_][a-z]{2})?$/i)?.[1];
+
+	return opt(language, language => opt(Intl.getCanonicalLocales(language.toLowerCase())[0], tag =>
+		tags().includes(tag) ? tag : undefined
+	));
+
+}
+
+/**
+ * Lists the words of the file name an address ends with, resolving those spelling a language name to its tag, so that
+ * both `home_en.htm` and `Versione Inglese.pdf` yield a code; addresses not ending with a file name list none.
+ */
+function words(url: URL): readonly string[] {
+
+	const name = decode(url.pathname.split("/").at(-1) ?? "").match(/^(.+)\.[a-z0-9]+$/i)?.[1];
+
+	return name === undefined ? [] : name.split(/[_\s]+/).map(word =>
+		code(word) === undefined && word.length > 3 ? tagName(word) ?? "" : word
+	);
+
+}
+
+/**
+ * Decodes a percent-encoded address component, keeping it as it stands if malformed.
+ */
+function decode(component: string): string {
+	try {
+		return decodeURIComponent(component);
+	} catch {
+		return component;
+	}
+}
 
 /**
  * Normalises a language name for lookup, ignoring case and Latin accents.

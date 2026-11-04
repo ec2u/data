@@ -29,12 +29,11 @@ import { Info } from "@metreeca/tile-hive/info";
 import { date } from "@metreeca/tile-type/date";
 import { instant } from "@metreeca/tile-type/instant";
 import { time } from "@metreeca/tile-type/time";
-import { getIRIHost } from "@metreeca/work/core/resources.js";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
-import { filters } from "../../tiles/links.js";
+import { address, filters } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
@@ -206,7 +205,7 @@ export function EventPage() {
 
 				<Info place={"spread"}>{{
 
-					Info: <ul>{url.map(url => <li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link>
+					Info: <ul>{url.map(url => <li key={url}><Link href={url}>{address(url)}</Link>
 					</li>)}</ul>,
 					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link href={url[0] ?? id}>{label}</Link>)
 
@@ -283,7 +282,7 @@ export function schedule(start: string, end?: string): string {
  * @returns The venue text, the name and address of a place or postal address, or the link to a virtual location
  */
 function venue(location: unknown): ComponentChildren {
-	return isVirtual(location) ? <Link href={location.url[0]}>{getIRIHost(location.url[0]) ?? location.url[0]}</Link>
+	return isVirtual(location) ? <Link href={location.url[0]}>{address(location.url[0])}</Link>
 		: lines(parts(location));
 }
 
