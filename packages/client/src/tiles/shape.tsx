@@ -84,7 +84,7 @@ export function ShapeInfo({
  * Creates the documentation of a resource shape.
  *
  * Sets out a table of the properties the shape declares, each with the predicate it maps to, the type and number of
- * its values, and its definition. Heading, describing and locating the shape is left to the page, as is linking to
+ * its values, and its description. Heading, describing and locating the shape is left to the page, as is linking to
  * it; see {@link ShapeInfo} for its property sheet.
  *
  * @param options The widget configuration
@@ -122,7 +122,7 @@ function Table({ rows }: ShapeTable) {
 					<th>property</th>
 					<th>type</th>
 					<th>#</th>
-					<th>definition</th>
+					<th>description</th>
 				</tr>
 			</thead>
 

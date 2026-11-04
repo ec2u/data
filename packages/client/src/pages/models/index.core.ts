@@ -105,32 +105,46 @@ export function getModels(universe: Some<Lazy<ResourceShape>>): readonly Model[]
 }
 
 /**
- * Arranges the documented shapes of a model by inheritance.
- *
- * The documented entry shapes come first, in the order given, followed by the other documented shapes extending no
- * documented shape; each shape other than an entry is nested under every documented shape it extends, directly or
- * through undocumented ones, so a shape with several documented parents is listed under each.
+ * Lists the documented entry shapes of a model.
  *
  * @param universe The entry shapes of the model, possibly deferred
  *
- * @returns The roots of the inheritance hierarchy of the documented shapes, entries first; other roots and the
- *     children of each node sorted by name
+ * @returns The documented entry shapes, each with the location of its page, in the order given
+ */
+export function getModelEntries(universe: Some<Lazy<ResourceShape>>): readonly Model[] {
+	return some(universe).flatMap(lazy => {
+
+		const shape = eager(lazy);
+
+		return opt(getShapeHref(shape), href => [{ href, shape }]) ?? [];
+
+	});
+}
+
+/**
+ * Arranges the documented shapes of a model by inheritance, leaving out the entry shapes.
+ *
+ * Roots are the documented shapes extending no documented shape; each shape is nested under every documented shape it
+ * extends, directly or through undocumented ones, so a shape with several documented parents is listed under each.
+ * Entry shapes are listed apart by {@link getModelEntries}.
+ *
+ * @param universe The entry shapes of the model, possibly deferred
+ *
+ * @returns The roots of the inheritance hierarchy of the documented shapes other than entries, each node and its
+ *     children sorted by name
  */
 export function getModelTree(universe: Some<Lazy<ResourceShape>>): readonly ModelNode[] {
 
 	const models = getModels(universe);
 	const hrefs = new Set(models.map(({ href }) => href));
 
-	const entries = some(universe).flatMap(entry => opt(getShapeHref(entry), href => [href]) ?? []);
+	const entries = getModelEntries(universe).map(({ href }) => href);
 
 	const parents = new Map(models.map(({ href, shape }) => [href, ancestors(shape).filter(parent =>
 		hrefs.has(parent) && parent !== href // !!! a parent sharing the page of its child is an artefact of stub keys
 	)]));
 
-	return [
-		...entries.flatMap(entry => nodes(href => href === entry)),
-		...nodes(href => !entries.includes(href) && parents.get(href)?.length === 0)
-	];
+	return nodes(href => !entries.includes(href) && parents.get(href)?.length === 0);
 
 
 	function nodes(selected: (href: string) => boolean): readonly ModelNode[] {

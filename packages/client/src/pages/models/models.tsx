@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
+import { opt, type Optional } from "@metreeca/core";
 import { Link } from "@metreeca/tile-cell/link";
 import { useRouter } from "@metreeca/tile-data/router";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../tiles/page.js";
 import { getShapeKey, getShapeName, getShapeSummary } from "../../tiles/shape.core.js";
-import { getModelTree, type Model, type ModelNode, universe } from "./index.core.js";
+import { getModelEntries, getModelTree, type Model, type ModelNode, universe } from "./index.core.js";
 import { models } from "./index.js";
 import "./models.css";
 
 
 /**
- * A row of the models table: a documented shape at its place in the inheritance hierarchy.
+ * A row of the models table: a documented shape at its place in the hierarchy, or a grouping heading it.
  */
 type Row = {
 
 	/**
-	 * The path of pages leading to the row from its root, identifying a shape listed under several parents once each.
+	 * The path leading to the row from its root, identifying a shape listed under several parents once each.
 	 */
 	readonly path: string
 
@@ -40,9 +41,19 @@ type Row = {
 	readonly depth: number
 
 	/**
-	 * The documented shape.
+	 * The label of a grouping row; ignored for a shape row, labelled by its key.
 	 */
-	readonly model: Model
+	readonly label?: string
+
+	/**
+	 * The description of a grouping row; ignored for a shape row, described by its summary.
+	 */
+	readonly description?: string
+
+	/**
+	 * The documented shape; none for a grouping row.
+	 */
+	readonly model?: Optional<Model>
 
 };
 
@@ -52,8 +63,8 @@ type Row = {
 /**
  * Creates the index of the data model served by the hub.
  *
- * Lists every documented shape in inheritance order, each nested under the shapes it extends, linked to its own page
- * and followed by the summary of its description.
+ * Lists the documented shapes under two groups: the published datasets, and the resources they hold in inheritance
+ * order, each nested under the shapes it extends; every shape links to its page beside its summary.
  *
  * @returns The models page
  */
@@ -72,13 +83,32 @@ export function ModelsPage() {
 			<thead>
 				<tr>
 					<th>model</th>
-					<th>definition</th>
+					<th>description</th>
 				</tr>
 			</thead>
 
-			<tbody>{rows(getModelTree(universe)).map(({ path, depth, model: { href, shape } }) => <tr key={path}>
-				<td><span style={{ "--ec2u-models-depth": depth }}><Link href={href}>{getShapeKey(shape) ?? getShapeName(shape)}</Link></span></td>
-				<td>{getShapeSummary(shape)}</td>
+			<tbody>{[
+
+				...group(
+					"Collections",
+					"Published datasets, each listing its resources.",
+					getModelEntries(universe).map(model => ({ model, children: [] }))
+				),
+
+				...group(
+					"Resources",
+					"Resource types, each nested under the types it extends.",
+					getModelTree(universe)
+				)
+
+			].map(({ path, depth, label, description, model }) => <tr key={path}>
+
+				<td><span style={{ "--ec2u-models-depth": depth }}>{opt(model, ({ href, shape }) =>
+					<Link href={href}>{getShapeKey(shape) ?? getShapeName(shape)}</Link>
+				) ?? <strong>{label}</strong>}</span></td>
+
+				<td>{opt(model, ({ shape }) => getShapeSummary(shape)) ?? description}</td>
+
 			</tr>)}</tbody>
 
 		</table>
@@ -89,9 +119,16 @@ export function ModelsPage() {
 
 
 /**
+ * Sets out a hierarchy of shapes under a virtual root labelling and describing the group.
+ */
+function group(label: string, description: string, nodes: readonly ModelNode[]): readonly Row[] {
+	return [{ path: label, depth: 0, label, description }, ...rows(nodes, 1, `${label} `)];
+}
+
+/**
  * Flattens an inheritance hierarchy into table rows, each node followed by its descendants.
  */
-function rows(nodes: readonly ModelNode[], depth = 0, prefix = ""): readonly Row[] {
+function rows(nodes: readonly ModelNode[], depth: number, prefix: string): readonly Row[] {
 	return nodes.flatMap(({ model, children }) => {
 
 		const path = `${prefix}${model.href}`;
