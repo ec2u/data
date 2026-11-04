@@ -37,24 +37,24 @@ export function isHTTP(value: unknown): value is IRI {
 /**
  * Extracts the host from an IRI.
  *
- * Provides a compact label for a web address wherever the full IRI is too long to show, for instance as the text of an
- * outbound link. The host keeps the port if `iri` states one, as in `example.org:8080`.
+ * Provides a compact label for a web address where the full IRI is too long to show, as in outbound link text.
  *
  * @param iri The IRI to extract the host from
  *
- * @returns The host of `iri`, or `undefined` if `iri` names no host, as for opaque IRIs such as `mailto:` addresses and
- *   `urn:` names, for relative references, and for text that is not an IRI at all
+ * @returns The host of `iri`, without port or user info, or `undefined` if `iri` names no host, as for opaque IRIs such
+ *   as `mailto:` addresses and `urn:` names, for relative references, and for text that is not an IRI at all
  *
  * @example
  *
  * ```typescript
  * getIRIHost("https://www.uc.pt/en/");          // "www.uc.pt"
- * getIRIHost("http://example.org:8080/a");      // "example.org:8080"
+ * getIRIHost("http://example.org:8080/a");      // "example.org"
+ * getIRIHost("http://[::1]:8080/a");            // "[::1]"
  * getIRIHost("mailto:user@example.org");        // undefined
  * ```
  */
 export function getIRIHost(iri: string | IRI): Optional<string> {
 
-	return URL.parse(iri)?.host || undefined;
+	return iri.match(/^[a-z][-+.a-z0-9]*:\/\/(?:[^/?#@]*@)?(\[[^\]/?#@]*]|[^/?#:@[\]]+)/i)?.[1];
 
 }

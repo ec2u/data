@@ -60,7 +60,18 @@ describe("getIRIHost()", () => {
 
 	it("should return the host of hierarchical IRIs", async () => {
 		expect(getIRIHost("https://www.uc.pt/en/")).toBe("www.uc.pt");
-		expect(getIRIHost("http://example.org:8080/path?query#fragment")).toBe("example.org:8080");
+		expect(getIRIHost("http://example.org/path?query#fragment")).toBe("example.org");
+	});
+
+	it("should drop port and user info", async () => {
+		expect(getIRIHost("http://example.org:8080/path")).toBe("example.org");
+		expect(getIRIHost("https://user:secret@example.org/")).toBe("example.org");
+	});
+
+	it("should return bracketed IPv6 literals whole", async () => {
+		expect(getIRIHost("http://[::1]/path")).toBe("[::1]");
+		expect(getIRIHost("http://[2001:db8::1]:8080/path")).toBe("[2001:db8::1]");
+		expect(getIRIHost("https://user@[::1]:443/")).toBe("[::1]");
 	});
 
 	it("should return undefined for IRIs naming no host", async () => {
