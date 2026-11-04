@@ -27,11 +27,11 @@ import "./links.css";
  * Renders an outbound link to a web address.
  *
  * Keeps the localised versions of a page on the same site apart, setting the tag of the language the address states in
- * dimmed type after the link and outside it, as in `www.uc.pt en`, and leaving addresses stating none to their link.
+ * dimmed type before the link and outside it, as in `en www.uc.pt`, and leaving addresses stating none to their link.
  *
  * @param url The web address to be linked
  *
- * @returns A link to `url` labelled by its host, or by `url` itself if it names no host, followed by the tag of the
+ * @returns A link to `url` labelled by its host, or by `url` itself if it names no host, preceded by the tag of the
  *   language `url` states, if any, so that the tag reads as a remark on the link rather than as part of its text
  */
 export function address(url: string): ComponentChildren {
@@ -39,7 +39,7 @@ export function address(url: string): ComponentChildren {
 	const link = <Link href={url}>{getIRIHost(url) ?? url}</Link>;
 
 	return opt(tagIRI(url), tag => createElement("ec2u-address", {},
-		link, <span>{tag}</span>
+		<span>{tag}</span>, link
 	)) ?? link;
 
 }
