@@ -200,8 +200,8 @@ export function DatasetPage({
 
 				ready: ({ state: { created, issued, modified } }) => <Info place={"spread"}>{{
 
-					Published: opt(issued, value => date.format(value)),
 					Created: opt(created, value => date.format(value)),
+					Published: opt(issued, value => date.format(value)),
 					Modified: opt(modified, value => date.format(value)),
 
 					Resources: resources({
