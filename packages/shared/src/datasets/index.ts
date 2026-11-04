@@ -34,12 +34,11 @@ export const datasets = immutable({
 
 	dataset: base, // the catalogue lists itself among the datasets it publishes
 
+	label: "EC2U Datasets",
 
-	label: "EC2U Knowledge Hub",
-
-	title: { en: "EC2U Knowledge Hub" },
+	title: { en: "EC2U Dataset Catalogue" },
 	alternative: { en: "EC2U Datasets" },
-	description: { en: "Catalogue of the datasets published by the EC2U Alliance on the EC2U Knowledge Hub." },
+	description: { en: "Descriptions and licensing terms of the datasets published on the EC2U Knowledge Hub." },
 
 	publisher: EC2U,
 
