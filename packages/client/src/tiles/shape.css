@@ -28,12 +28,6 @@
         white-space: nowrap;
     }
 
-    /* !!! rows are told apart by their rules alone; drop once tile tables can opt out of striping */
-
-    & > tbody > tr > td {
-        background-color: transparent;
-    }
-
     /* inherited groups open with a label row naming the ancestor they come from, set apart from the group above */
 
     & > .ec2u-shape-inherited > tr:first-child > th {
