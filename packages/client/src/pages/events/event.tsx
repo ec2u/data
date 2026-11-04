@@ -15,8 +15,7 @@
  */
 
 import { Event } from "@ec2u/data-shared/events/index.js";
-import type { Match } from "@metreeca/blue/value";
-import { isString, opt } from "@metreeca/core";
+import { isArray, isNumber, isObject, isString, opt } from "@metreeca/core";
 import { nameTag } from "@metreeca/core/language";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -77,6 +76,8 @@ const model = immutable({
 		"1": { // a place, a postal address or a virtual location
 			name: {},
 			url: {},
+			latitude: {},
+			longitude: {},
 			addressLocality: {},
 			streetAddress: {},
 			postalCode: {},
@@ -271,20 +272,15 @@ export function schedule(start: string, end?: string): string {
 }
 
 /**
- * The location of an event, as retrieved for its page.
- */
-type Location = NonNullable<Match<typeof Event, typeof model>["location"]>;
-
-/**
  * Renders the location of an event.
  *
  * @param location The location to be rendered
  *
  * @returns The venue text, the name and address of a place or postal address, or the link to a virtual location
  */
-function venue(location: Location): ComponentChildren {
-	return isString(location) || "latitude" in location || "addressLocality" in location ? lines(parts(location))
-			: <Link href={location.url[0]}>{getIRIHost(location.url[0]) ?? location.url[0]}</Link>;
+function venue(location: unknown): ComponentChildren {
+	return isVirtual(location) ? <Link href={location.url[0]}>{getIRIHost(location.url[0]) ?? location.url[0]}</Link>
+		: lines(parts(location));
 }
 
 /**
@@ -293,16 +289,29 @@ function venue(location: Location): ComponentChildren {
  * @param location The location to be listed
  *
  * @returns The comma-separated segments of a venue text, or the name of a place or postal address followed by its
- *     address parts, leaving out the ones not stated
+ *     address parts, leaving out the ones not stated; nothing for any other value
  */
-function parts(location: Location): readonly string[] {
+function parts(location: unknown): readonly string[] {
 	return isString(location) ? location.split(",").map(part => part.trim()).filter(part => part.length > 0)
-		: "latitude" in location ? [location.name, ...opt(location.address, parts) ?? []].filter(isString)
-			: "addressLocality" in location ? [
+		: isPlace(location) ? [location.name, ...parts(location.address)].filter(isString)
+			: isAddress(location) ? [
 					location.name,
 					location.streetAddress, location.postalCode, location.addressLocality, location.addressCountry
 				].filter(isString)
 				: [];
+}
+
+function isPlace(value: unknown): value is Record<PropertyKey, unknown> {
+	return isObject(value) && isNumber(value.latitude) && isNumber(value.longitude);
+}
+
+function isAddress(value: unknown): value is Record<PropertyKey, unknown> {
+	return isObject(value) && isString(value.addressLocality);
+}
+
+function isVirtual(value: unknown): value is { readonly url: readonly [string, ...string[]] } {
+	return isObject(value) && value.latitude === undefined && value.addressLocality === undefined
+		&& isArray(value.url, isString) && value.url.length > 0;
 }
 
 /**
