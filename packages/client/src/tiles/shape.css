@@ -52,6 +52,10 @@
 
     position: relative;
 
+    /* declarations run long, so they are set small to keep more of each line in view */
+
+    font-size: var(--tile--font-size-small);
+
     & > tile-button > button { /* the wrapper lays out no box of its own, so the control is placed */
         position: absolute;
         top: var(--tile--spacing-050);
