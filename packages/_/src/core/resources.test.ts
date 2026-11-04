@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { isHTTP } from "./resources.js";
+import { getIRIHost, isHTTP } from "./resources.js";
 
 
 describe("isHTTP()", () => {
@@ -52,6 +52,26 @@ describe("isHTTP()", () => {
 		expect(isHTTP(null)).toBe(false);
 		expect(isHTTP(42)).toBe(false);
 		expect(isHTTP(new URL("https://example.org/"))).toBe(false);
+	});
+
+});
+
+describe("getIRIHost()", () => {
+
+	it("should return the host of hierarchical IRIs", async () => {
+		expect(getIRIHost("https://www.uc.pt/en/")).toBe("www.uc.pt");
+		expect(getIRIHost("http://example.org:8080/path?query#fragment")).toBe("example.org:8080");
+	});
+
+	it("should return undefined for IRIs naming no host", async () => {
+		expect(getIRIHost("mailto:user@example.org")).toBeUndefined();
+		expect(getIRIHost("urn:isbn:0451450523")).toBeUndefined();
+	});
+
+	it("should return undefined for text that is no IRI", async () => {
+		expect(getIRIHost("")).toBeUndefined();
+		expect(getIRIHost("not a url")).toBeUndefined();
+		expect(getIRIHost("/path")).toBeUndefined();
 	});
 
 });
