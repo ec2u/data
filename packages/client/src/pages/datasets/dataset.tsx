@@ -108,7 +108,7 @@ export function DatasetLink({
 
 }) {
 
-	return <Link href={`${href.replace(/\/$/, "")}/~`} title={"Info"}><Icon.Info/></Link>;
+	return <Link href={`${href.replace(/\/$/, "")}/#`} title={"Info"}><Icon.Info/></Link>;
 
 }
 
