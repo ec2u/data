@@ -22,20 +22,6 @@ import { Router } from "express";
 export function resources(): Router {
 
 	return Router()
-		.use("/", driver(Resources, {
-
-			virtual: true
-
-		}).lookup({
-
-			model: {
-				resources: {
-
-					">=dataset.issued": "0001-01-01" // !!! "!dataset.issued": [null] (metreeca/qest#26)
-
-				}
-			}
-
-		}));
+		.use("/", driver(Resources, { virtual: true }).lookup());
 
 }

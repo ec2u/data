@@ -15,15 +15,16 @@
  */
 
 import * as ec2u from "@ec2u/data-shared";
+import { Datasets } from "@ec2u/data-shared/datasets/index.js";
 import { server } from "@metreeca/gate";
 import { client } from "@metreeca/gate/client";
+import { driver } from "@metreeca/gate/driver";
 import { service } from "@metreeca/gear";
 import { gcp } from "@metreeca/gear-gcp";
 import { createStore } from "@metreeca/pipe-store";
 import { second } from "@metreeca/work/core/temporal.js";
 import { resolve } from "node:path";
 import { courses } from "./courses/index.js";
-import { datasets } from "./datasets/index.js";
 import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
 import { execute } from "./index.core.js";
@@ -38,7 +39,8 @@ await execute(() => server(service(createStore), { depth: 3, limit: 100 })
 
 	.use(client(resolve(import.meta.dirname, "static")))
 
-	.use("/", datasets())
+	.use("/", driver(Datasets).lookup())
+
 	.use("/universities/", universities())
 	.use("/units/", units())
 	.use("/programs/", programs())
