@@ -20,7 +20,7 @@ import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { iscedf2013 } from "@ec2u/data-shared/taxonomies/isced-f-2013.js";
 import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
-import { type University, universities } from "@ec2u/data-shared/universities/index.core.js";
+import { type Partner, partners } from "@ec2u/data-shared/index.core.js";
 import { opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
@@ -96,7 +96,7 @@ const logger = log(import.meta.url);
  */
 export function row(row: { readonly [column: string]: Optional<string> }): readonly Draft[] {
 
-	const university = opt(value("University"), name => universities[resolve(base, `/universities/${name.toLowerCase()}`)]);
+	const university = opt(value("University"), name => partners[resolve(base, `/universities/${name.toLowerCase()}`)]);
 	const title = value("Title (English)") ?? value("Title (Local)");
 	const year = value("Year");
 
@@ -123,7 +123,7 @@ export function row(row: { readonly [column: string]: Optional<string> }): reado
 	}
 
 
-	function drafts(university: University, key: string, year: Optional<string>): readonly Draft[] {
+	function drafts(university: Partner, key: string, year: Optional<string>): readonly Draft[] {
 
 		const program: Optional<ProgramDraft> = opt(named("Program", university), name => immutable({
 
@@ -220,7 +220,7 @@ export function row(row: { readonly [column: string]: Optional<string> }): reado
 
 	}
 
-	function named(column: string, { locale }: University): Optional<Dictionary> {
+	function named(column: string, { locale }: Partner): Optional<Dictionary> {
 
 		const name: Dictionary = {
 			...opt(value(`${column} (English)`), en => ({ en })),

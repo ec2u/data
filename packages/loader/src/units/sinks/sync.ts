@@ -17,7 +17,7 @@
 import { CommentLength, LabelLength } from "@ec2u/data-shared";
 import { getPersonId, Person, persons } from "@ec2u/data-shared/persons/index.js";
 import { getUnitId, Unit, units, Units } from "@ec2u/data-shared/units/index.js";
-import type { University } from "@ec2u/data-shared/universities/index.core.js";
+import type { Partner } from "@ec2u/data-shared/index.core.js";
 import type { State } from "@metreeca/blue/value";
 import { opt } from "@metreeca/core";
 import { clip } from "@metreeca/core/strings";
@@ -147,7 +147,7 @@ export type Staffed = Classified & {
  * @throws {@link !RangeError RangeError} While the feed is consumed, if the run would leave in place less than three
  * quarters of the stored units, or if the store rejects a unit as invalid, with the units already stated kept
  */
-export function sync(university: University, {
+export function sync(university: Partner, {
 
 	force = false
 
@@ -191,7 +191,7 @@ export function sync(university: University, {
  *
  * @returns A promise resolving to the digests recorded with the stored units of `university`
  */
-export function stated(university: University): Promise<ReadonlySet<string>> {
+export function stated(university: Partner): Promise<ReadonlySet<string>> {
 	return pipe(
 		(lookup({
 
@@ -225,7 +225,7 @@ export function stated(university: University): Promise<ReadonlySet<string>> {
  *
  * @returns A task converting a feed of entries into a feed of deltas stating their units and heads
  */
-export function complete(university: University): Task<Entry, Delta> {
+export function complete(university: Partner): Task<Entry, Delta> {
 
 	return entries => pipe(
 		(items(entries))
@@ -377,7 +377,7 @@ export function complete(university: University): Task<Entry, Delta> {
  * @throws {@link !RangeError RangeError} While the feed is consumed, if the run would leave in place less than three
  * quarters of the stored units of `university`, with nothing retracted by the run
  */
-export function retract(university: University): Task<string, Delta> {
+export function retract(university: Partner): Task<string, Delta> {
 
 	return keys => {
 

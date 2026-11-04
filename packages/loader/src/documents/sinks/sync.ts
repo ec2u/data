@@ -18,7 +18,7 @@ import { CommentLength, Entity, LabelLength } from "@ec2u/data-shared";
 import { Document, documents, Documents, getDocumentId } from "@ec2u/data-shared/documents/index.js";
 import { getOrganizationId, Organization, organizations } from "@ec2u/data-shared/organizations/index.js";
 import { getPersonId, Person, persons } from "@ec2u/data-shared/persons/index.js";
-import type { University } from "@ec2u/data-shared/universities/index.core.js";
+import type { Partner } from "@ec2u/data-shared/index.core.js";
 import type { State } from "@metreeca/blue/value";
 import { opt } from "@metreeca/core";
 import { multiple, required } from "@metreeca/core/arrays";
@@ -158,7 +158,7 @@ type Attached = Classified & {
  *
  * @throws {@link !Error Error} While the feed is consumed, if any write fails, with nothing committed
  */
-export function sync(university: University, {
+export function sync(university: Partner, {
 
 	force = false
 

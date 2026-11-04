@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { umea } from "@ec2u/data-shared/universities/index.core.js";
+import { umea } from "@ec2u/data-shared/index.core.js";
 import { immutable } from "@metreeca/core/values";
 import { isHTTP } from "@metreeca/work/core/resources.js";
 import type { Lead } from "../sinks/crawl.js";

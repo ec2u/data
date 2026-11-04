@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { pavia } from "@ec2u/data-shared/universities/index.core.js";
+import { pavia } from "@ec2u/data-shared/index.core.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { distinct, filter, flat, map } from "@metreeca/flow/tasks";

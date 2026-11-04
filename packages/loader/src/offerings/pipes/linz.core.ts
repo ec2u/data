@@ -17,7 +17,7 @@
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
-import { linz } from "@ec2u/data-shared/universities/index.core.js";
+import { linz } from "@ec2u/data-shared/index.core.js";
 import { opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { immutable } from "@metreeca/core/values";

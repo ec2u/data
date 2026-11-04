@@ -19,16 +19,13 @@ import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { OrgFormalOrganization } from "@ec2u/data-shared/vocabularies/org.js";
 import { skos } from "@ec2u/data-shared/vocabularies/skos.js";
-import { universities as partners } from "@ec2u/data-shared/universities/index.core.js";
 import { int } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, required, resource } from "@metreeca/blue/resource";
 import { iri, text, year } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
-import { assert, isDefined } from "@metreeca/core";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
-import type { Reference } from "@metreeca/qest/state";
 
 
 export const universities = immutable({
@@ -115,13 +112,4 @@ export function University() {
 		})
 
 	});
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function getUniversity(id: Reference) {
-
-	return assert(partners[id], isDefined, `unknown university <${id}>`);
-
 }

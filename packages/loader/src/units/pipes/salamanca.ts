@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { salamanca } from "@ec2u/data-shared/universities/index.core.js";
+import { salamanca } from "@ec2u/data-shared/index.core.js";
 import { isAny, isArray, isNumber, isObject, isString, key, opt } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { immutable } from "@metreeca/core/values";

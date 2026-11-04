@@ -15,25 +15,24 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { pavia, universities } from "./index.core.js";
-import { getUniversity } from "./index.js";
+import { getPartner, partners, pavia } from "./index.core.js";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-describe("getUniversity", () => {
+describe("getPartner", () => {
 
-	it("returns the university named by a partner identifier", async () => {
-		expect(getUniversity(pavia.id)).toBe(pavia);
+	it("returns the partner named by its identifier", async () => {
+		expect(getPartner(pavia.id)).toBe(pavia);
 	});
 
-	it("returns every partner university under its own identifier", async () => {
-		expect(Object.values(universities).map(university => getUniversity(university.id)))
-			.toEqual(Object.values(universities));
+	it("returns every partner under its own identifier", async () => {
+		expect(Object.values(partners).map(partner => getPartner(partner.id)))
+			.toEqual(Object.values(partners));
 	});
 
-	it("rejects identifiers naming no partner university", async () => {
-		expect(() => getUniversity("https://data.ec2u.eu/universities/unknown")).toThrow("unknown university");
+	it("rejects identifiers naming no partner", async () => {
+		expect(() => getPartner("https://data.ec2u.eu/universities/unknown")).toThrow("unknown university");
 	});
 
 });

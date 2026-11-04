@@ -16,7 +16,7 @@
 
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { pavia } from "@ec2u/data-shared/universities/index.core.js";
+import { pavia } from "@ec2u/data-shared/index.core.js";
 import { schema } from "@metreeca/blue";
 import { multiple, required, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";

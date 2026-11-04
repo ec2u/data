@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { University } from "@ec2u/data-shared/universities/index.core.js";
+import type { Partner } from "@ec2u/data-shared/index.core.js";
 import { isDefined, opt, type URLLike } from "@metreeca/core";
 import { multiple, required } from "@metreeca/core/arrays";
 import { immutable } from "@metreeca/core/values";
@@ -71,7 +71,7 @@ const CSVFormat = immutable({
  *
  * @returns A task converting a feed of CSV sheet URLs into a feed of document drafts
  */
-export function csv(university: University): Task<URLLike, Draft> {
+export function csv(university: Partner): Task<URLLike, Draft> {
 
 	const { locale } = university;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { umea } from "@ec2u/data-shared/universities/index.core.js";
+import { umea } from "@ec2u/data-shared/index.core.js";
 import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";

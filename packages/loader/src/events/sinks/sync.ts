@@ -17,7 +17,8 @@
 import { LabelLength } from "@ec2u/data-shared";
 import { Event, Events, events, getEventId, isStaleEvent, Publisher } from "@ec2u/data-shared/events/index.js";
 import { Page, pages as directory, Pages } from "@ec2u/data-shared/pages/index.js";
-import { getUniversity, University } from "@ec2u/data-shared/universities/index.js";
+import { getPartner } from "@ec2u/data-shared/index.core.js";
+import { University } from "@ec2u/data-shared/universities/index.js";
 import { isString, type URLLike } from "@metreeca/core";
 import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
@@ -86,7 +87,7 @@ export function sync({
 
 		// a city is named as it is known locally, the way documents name the cities they place venues in
 
-		const { locale } = getUniversity(publisher.university);
+		const { locale } = getPartner(publisher.university);
 
 		const city = pipe(
 			(lookup({

@@ -20,7 +20,7 @@ import { getAcademicYear } from "@ec2u/data-shared/offerings/index.js";
 import { getOrganizationId, Organization, organizations, Organizations } from "@ec2u/data-shared/organizations/index.js";
 import { getPersonId, Person, persons, Persons } from "@ec2u/data-shared/persons/index.js";
 import { getProgramId, Program, programs, Programs } from "@ec2u/data-shared/programs/index.js";
-import type { University } from "@ec2u/data-shared/universities/index.core.js";
+import type { Partner } from "@ec2u/data-shared/index.core.js";
 import type { State } from "@metreeca/blue/value";
 import { opt, type Optional } from "@metreeca/core";
 import { multiple, required } from "@metreeca/core/arrays";
@@ -91,7 +91,7 @@ type Drafted = {
 	/**
 	 * The university delivering the offering, supplying the language its local texts are written in.
 	 */
-	readonly university: University
+	readonly university: Partner
 
 	readonly key: string
 
@@ -694,7 +694,7 @@ export function state(source: Reference, {
  *
  * @returns The state of the organisation, ready to be validated
  */
-export function organization(source: Reference, university: University, {
+export function organization(source: Reference, university: Partner, {
 
 	name,
 	homepage
@@ -727,7 +727,7 @@ export function organization(source: Reference, university: University, {
  *
  * @returns The state of the person, ready to be validated
  */
-export function person(source: Reference, university: University, name: Name): State<typeof Person> {
+export function person(source: Reference, university: Partner, name: Name): State<typeof Person> {
 	return immutable({
 
 		...name,

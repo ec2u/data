@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { poitiers } from "@ec2u/data-shared/universities/index.core.js";
+import { poitiers } from "@ec2u/data-shared/index.core.js";
 import { isAny, isArray, isObject, isString, key, opt, type URLLike } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { immutable } from "@metreeca/core/values";

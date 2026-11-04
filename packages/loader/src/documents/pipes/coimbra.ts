@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { coimbra } from "@ec2u/data-shared/universities/index.core.js";
+import { coimbra } from "@ec2u/data-shared/index.core.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { service } from "@metreeca/gear";

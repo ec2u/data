@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { University } from "@ec2u/data-shared/universities/index.core.js";
+import type { Partner } from "@ec2u/data-shared/index.core.js";
 import type { Markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Sink } from "@metreeca/flow";
@@ -74,7 +74,7 @@ export type Page = {
  * @throws {@link !RangeError RangeError} While the feed is consumed, if the run would leave in place less than three
  * quarters of the stored units, or if the store rejects a unit as invalid, with the units already stated kept
  */
-export function crawl(university: University, {
+export function crawl(university: Partner, {
 
 	force = false
 

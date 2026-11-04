@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { umea } from "@ec2u/data-shared/universities/index.core.js";
+import { umea } from "@ec2u/data-shared/index.core.js";
 import { describe, expect, it } from "vitest";
 import { fingerprint } from "./crawl.js";
 import type { ProgramDraft } from "./sync.js";

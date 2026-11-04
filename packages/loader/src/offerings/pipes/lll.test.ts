@@ -19,7 +19,7 @@ import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { iscedf2013 } from "@ec2u/data-shared/taxonomies/isced-f-2013.js";
 import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
-import { coimbra } from "@ec2u/data-shared/universities/index.core.js";
+import { coimbra } from "@ec2u/data-shared/index.core.js";
 import { describe, expect, it } from "vitest";
 import { row } from "./lll.core.js";
 

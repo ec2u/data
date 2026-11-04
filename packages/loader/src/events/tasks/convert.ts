@@ -16,7 +16,7 @@
 
 import { LabelLength } from "@ec2u/data-shared";
 import { Event, events, getEventId, type Publisher } from "@ec2u/data-shared/events/index.js";
-import { getUniversity } from "@ec2u/data-shared/universities/index.js";
+import { getPartner } from "@ec2u/data-shared/index.core.js";
 import { SchemaEventAttendanceModeEnumeration } from "@ec2u/data-shared/vocabularies/schema/event.js";
 import { SchemaLocation } from "@ec2u/data-shared/vocabularies/schema/location.js";
 import type { State } from "@metreeca/blue/value";
@@ -36,7 +36,7 @@ export function convert(
 	city?: Awaitable<Optional<string>>
 ): Task<State<typeof Classified>, State<typeof Event>> {
 
-	const university = getUniversity(publisher.university);
+	const university = getPartner(publisher.university);
 
 	return payloads => pipe(
 		(items(payloads))

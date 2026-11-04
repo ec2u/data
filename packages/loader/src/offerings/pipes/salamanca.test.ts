@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { salamanca } from "@ec2u/data-shared/universities/index.core.js";
+import { salamanca } from "@ec2u/data-shared/index.core.js";
 import { describe, expect, it } from "vitest";
 import { course, program } from "./salamanca.core.js";
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { University } from "@ec2u/data-shared/universities/index.core.js";
+import type { Partner } from "@ec2u/data-shared/index.core.js";
 import { schema } from "@metreeca/blue";
 import { optional, required, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
@@ -88,7 +88,7 @@ function Reported() {
  *
  * @returns A task converting a feed of unit pages into a feed of draft entries
  */
-export function extract(university: University): Task<Page, Entry> {
+export function extract(university: Partner): Task<Page, Entry> {
 
 	const ai = service(createGoogleAI);
 

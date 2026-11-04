@@ -17,7 +17,7 @@
 import { sync } from "../sinks/sync.js";
 import { execute } from "../../index.core.js";
 import { organizations } from "@ec2u/data-shared/organizations/index.js";
-import { salamanca } from "@ec2u/data-shared/universities/index.core.js";
+import { salamanca } from "@ec2u/data-shared/index.core.js";
 import { isString } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
