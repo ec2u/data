@@ -22,6 +22,12 @@ ec2u-search {
     grid-template-columns: min-content 1fr min-content;
     align-items: center;
 
+    /* in the body of a page, the field is set a block step apart from the results it filters beneath it */
+
+    main &:not(:last-child) {
+        margin-bottom: var(--tile--spacing-100);
+    }
+
     & > svg,
     & > input,
     & > tile-button > button { /* the button wrapper stands aside, leaving the control a grid item of its own */
