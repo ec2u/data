@@ -1,5 +1,5 @@
 The EC2U Knowledge Hub is the central knowledge sharing and semantic search facility of the
-[EC2U Alliance](https://www.ec2u.eu/). It gathers content from partner universities and external sources, and publishes
+[EC2U Alliance](https://www.ec2u.eu/). It gathers content from EC2U universities and external sources, and publishes
 it as cross-linked datasets about skills, courses, research, local events and other areas of common interest.
 
 Each dataset is available through this interactive semantic search tool and through a machine-readable REST/JSON-LD API.

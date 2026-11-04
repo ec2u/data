@@ -33,7 +33,7 @@ export const services = immutable({ // !!! sync from `taxonomies-ec2u-services`
 	title: { en: "EC2U Service Types" },
 	alternative: { en: "EC2U Services" },
 	description: { en: dedent`
-		Standardised terminology for categorising services provided by partner universities and third parties to
+		Standardised terminology for categorising services provided by EC2U universities and third parties to
 		students, faculty and staff within the EC2U Alliance, with a special focus on ESC cardholders on mobility.
 	` },
 

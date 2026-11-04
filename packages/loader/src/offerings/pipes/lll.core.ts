@@ -74,7 +74,7 @@ const logger = log(import.meta.url);
 /**
  * Reads a row of the cross-alliance lifelong learning sheet.
  *
- * A row states one course delivered by the partner university named in `University`, keyed by its `Code` or, failing
+ * A row states one course delivered by the EC2U university named in `University`, keyed by its `Code` or, failing
  * that, by its English or local title, prefixed with `LLL/` so that it never names the same course as another source
  * listing the same code. `Year` and the comma-separated `Term` place the course in its academic period, an `each
  * semester` year standing for a course stating no year, whose year the sink then infers from the retrieval date.
@@ -92,7 +92,7 @@ const logger = log(import.meta.url);
  * @param row The row as read from the sheet, keyed by column name
  *
  * @returns The drafts of the course and of the program it names, if any; empty if the row is disabled by a non-blank
- * `-` column, names no partner university, states no title or states a year other than `YYYY/YYYY` or `each semester`
+ * `-` column, names no EC2U university, states no title or states a year other than `YYYY/YYYY` or `each semester`
  */
 export function row(row: { readonly [column: string]: Optional<string> }): readonly Draft[] {
 

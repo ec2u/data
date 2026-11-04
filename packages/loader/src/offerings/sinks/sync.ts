@@ -48,7 +48,7 @@ const logger = log(import.meta.url);
 
 
 /**
- * An offering as read from a source, attributed to the partner university delivering it.
+ * An offering as read from a source, attributed to the EC2U university delivering it.
  *
  * The key is the one the source lists the offering under; along with the university, the academic year and, for
  * courses, the terms it is delivered in, it names the offering. Provider, instructors and programs are stated as the

@@ -41,7 +41,7 @@ export const courses = immutable({
 
 	title: { en: "EC2U Academic and Occupational Courses" },
 	alternative: { en: "EC2U Courses" },
-	description: { en: "Degree, vocational and personal development courses offered by EC2U partner universities." },
+	description: { en: "Degree, vocational and personal development courses offered by EC2U universities." },
 
 	publisher: EC2U,
 
@@ -64,7 +64,7 @@ export function Courses() {
 	return resource(Dataset, {
 
 		name: "Courses",
-		description: "Degree, vocational and personal development courses offered by EC2U partner universities."
+		description: "Degree, vocational and personal development courses offered by EC2U universities."
 
 	}, {
 
@@ -80,7 +80,7 @@ export function Course() {
 		class: ec2u.Course,
 
 		name: "Course",
-		description: "A degree, vocational or personal development course offered by an EC2U partner university."
+		description: "A degree, vocational or personal development course offered by an EC2U university."
 
 	}, {
 
@@ -126,7 +126,7 @@ export function Term() {
 
 
 /**
- * Identifies a course listed by a partner university.
+ * Identifies a course listed by an EC2U university.
  *
  * A course is named by the key the source lists it under together with the academic year and terms it is delivered
  * in, so that the same key delivered in different years or terms names distinct courses; a missing year or term never

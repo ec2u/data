@@ -14,7 +14,7 @@ data model, extended with some [schema.org](https://schema.org/) properties.
 
 | term               | type                | #    | description                                                                                       |
 |--------------------|---------------------|------|---------------------------------------------------------------------------------------------------|
-| **ec2u:Document**  | [ec2u:Resource]     |      | A regulation, policy or other governance document shared by an EC2U partner university            |
+| **ec2u:Document**  | [ec2u:Resource]     |      | A regulation, policy or other governance document shared by an EC2U university            |
 | [schema:url]       | uri                 | *    | web addresses of the online versions of the document                                              |
 | [dct:identifier]   | text                | 0..1 | the formal identifier assigned to the document by its publisher                                   |
 | [dct:language]     | tag                 | *    | languages the document is written in                                                              |

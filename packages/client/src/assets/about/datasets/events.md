@@ -15,7 +15,7 @@ EC2U events are described using a controlled subset of [Schema.org](../vocabular
 
 | term                               | type                            | #    | description                                                                |
 |------------------------------------|---------------------------------|------|----------------------------------------------------------------------------|
-| **ec2u:Event**                     | [ec2u:Resource], [schema:Event] |      | An event at an EC2U partner university or an associated local organisation |
+| **ec2u:Event**                     | [ec2u:Resource], [schema:Event] |      | An event at an EC2U university or an associated local organisation |
 | [schema:name]                      | text {maxLength(100)}           | 0..1 | the human-readable name of the resource                                    |
 | [schema:disambiguatingDescription] | text {maxLength(500)}           | 0..1 | the short account telling the resource apart from similar ones             |
 | [schema:publisher]                 | [ec2u:Organization]             | 0..1 | the organization publishing the event                                      |

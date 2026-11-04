@@ -12,7 +12,7 @@ model.
 
 | term             | type                                                     | # | description                                                                               |
 |------------------|----------------------------------------------------------|---|-------------------------------------------------------------------------------------------|
-| **ec2u:Program** | [ec2u:Offering], [schema:EducationalOccupationalProgram] |   | A formal degree or vocational qualification program offered by an EC2U partner university |
+| **ec2u:Program** | [ec2u:Offering], [schema:EducationalOccupationalProgram] |   | A formal degree or vocational qualification program offered by an EC2U university |
 
 [Schema.org]: https://schema.org/
 

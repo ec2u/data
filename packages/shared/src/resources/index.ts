@@ -57,7 +57,7 @@ export function Resource() {
 
 			> [!NOTE]
 			> Human-readable labels and descriptions are localised either in English or in one of the local languages
-			> of the EC2U partner universities.
+			> of the EC2U universities.
 		`
 
 	}, {
@@ -78,7 +78,7 @@ export function Resource() {
 		}),
 
 		university: optional(reference(University), {
-			description: "EC2U partner university the resource is associated with."
+			description: "EC2U university the resource is associated with."
 		})
 
 	});

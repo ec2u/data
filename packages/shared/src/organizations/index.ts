@@ -40,7 +40,7 @@ export const organizations = immutable({
 
 	title: { en: "EC2U Related Organisations" },
 	alternative: { en: "EC2U Organisations" },
-	description: { en: "Organisations related to EC2U partner universities." },
+	description: { en: "Organisations related to EC2U universities." },
 
 	publisher: EC2U,
 
@@ -70,7 +70,7 @@ export function Organizations() {
 	return resource(Dataset, {
 
 		name: "Organisations",
-		description: "Organisations related to EC2U partner universities."
+		description: "Organisations related to EC2U universities."
 
 	}, {
 
@@ -86,7 +86,7 @@ export function Organization() {
 		class: ec2u.Organization,
 
 		name: "Organisation",
-		description: "An organisation related to EC2U partner universities."
+		description: "An organisation related to EC2U universities."
 
 	}, {
 
@@ -116,7 +116,7 @@ export function Organization() {
 
 
 /**
- * Identifies an organisation named by a partner university.
+ * Identifies an organisation named by an EC2U university.
  *
  * The same key always names the same organisation within a university, so that every source of the university naming
  * it states the same organisation, while equal keys at different universities never do. Keys are matched regardless

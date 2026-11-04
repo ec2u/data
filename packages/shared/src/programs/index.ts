@@ -35,7 +35,7 @@ export const programs = immutable({
 
 	title: { en: "EC2U Degree and Occupational Programs" },
 	alternative: { en: "EC2U Programs" },
-	description: { en: "Formal degree and vocational qualification programs offered by EC2U partner universities." },
+	description: { en: "Formal degree and vocational qualification programs offered by EC2U universities." },
 
 	publisher: EC2U,
 
@@ -58,7 +58,7 @@ export function Programs() {
 	return resource(Dataset, {
 
 		name: "Programs",
-		description: "Formal degree and vocational qualification programs offered by EC2U partner universities."
+		description: "Formal degree and vocational qualification programs offered by EC2U universities."
 
 	}, {
 
@@ -74,14 +74,14 @@ export function Program() {
 		class: ec2u.Program,
 
 		name: "Program",
-		description: "A formal degree or vocational qualification program offered by an EC2U partner university."
+		description: "A formal degree or vocational qualification program offered by an EC2U university."
 
 	});
 }
 
 
 /**
- * Identifies a program listed by a partner university.
+ * Identifies a program listed by an EC2U university.
  *
  * A program is named by the key the source lists it under together with the academic year it is delivered in, so that
  * the same key delivered in different years names distinct programs; a program with no stated year never shares its

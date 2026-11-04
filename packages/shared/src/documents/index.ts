@@ -45,7 +45,7 @@ export const documents = immutable({
 
 	title: { en: "EC2U Institutional Documents" },
 	alternative: { en: "EC2U Documents" },
-	description: { en: "Regulations, policies and other governance documents shared by EC2U partner universities." },
+	description: { en: "Regulations, policies and other governance documents shared by EC2U universities." },
 
 	publisher: EC2U,
 
@@ -70,7 +70,7 @@ export function Documents() {
 	return resource(Dataset, {
 
 		name: "Documents",
-		description: "Regulations, policies and other governance documents shared by EC2U partner universities."
+		description: "Regulations, policies and other governance documents shared by EC2U universities."
 
 	}, {
 
@@ -86,7 +86,7 @@ export function Document() {
 		class: ec2u.Document,
 
 		name: "Document",
-		description: "A regulation, policy or other governance document shared by an EC2U partner university."
+		description: "A regulation, policy or other governance document shared by an EC2U university."
 
 	}, {
 
@@ -204,7 +204,7 @@ export function Document() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Identifies a document listed by a partner university.
+ * Identifies a document listed by an EC2U university.
  *
  * The same key always names the same document within a university, so that a listing re-read on a later run restates
  * the documents it already stood for, while equal keys listed by different universities never name the same document.

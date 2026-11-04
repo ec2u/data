@@ -1,11 +1,11 @@
 ---
 title: Universities › Wikidata
-summary: Integration status for the Wikidata enrichment of the partner universities
-description: Integration status for the Wikidata enrichment of the EC2U partner universities, not yet integrated.
+summary: Integration status for the Wikidata enrichment of the EC2U universities
+description: Integration status for the Wikidata enrichment of the EC2U universities, not yet integrated.
 status: planned
 ---
 
-Authoritative integration status for the Wikidata enrichment of the nine EC2U partner universities.
+Authoritative integration status for the Wikidata enrichment of the nine EC2U universities.
 
 # 2025-09-26 – Entity enrichment
 
@@ -14,7 +14,7 @@ Planned: background and statistical data drawn from the Wikidata entity each uni
 
 | Source                    | Description            | Notes                                                                              |
 |---------------------------|------------------------|------------------------------------------------------------------------------------|
-| https://www.wikidata.org/ | Wikidata entities [en] | One entity per partner university, named by `seeAlso` in `universities/index.json` |
+| https://www.wikidata.org/ | Wikidata entities [en] | One entity per EC2U university, named by `seeAlso` in `universities/index.json` |
 
 - **2026-11-04** – seed descriptions in `universities/index.json` rewritten from the EC2U partner pages
   (`https://www.ec2u.eu/organisations/<slug>`) and the EC2U/2 work plan, with each university's work package roles,

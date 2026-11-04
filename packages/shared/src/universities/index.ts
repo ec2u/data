@@ -37,7 +37,7 @@ export const universities = immutable({
 
 	title: { en: "EC2U Partner Universities" },
 	alternative: { en: "EC2U Universities" },
-	description: { en: "Background, historical context and statistical data about EC2U partner universities." },
+	description: { en: "Background, historical context and statistical data about EC2U universities." },
 
 	publisher: EC2U,
 
@@ -61,7 +61,7 @@ export function Universities() {
 	return resource(Dataset, {
 
 		name: "Universities",
-		description: "Background, historical context and statistical data about EC2U partner universities."
+		description: "Background, historical context and statistical data about EC2U universities."
 
 	}, {
 
@@ -77,7 +77,7 @@ export function University() {
 		class: ec2u.University,
 
 		name: "University",
-		description: "An EC2U partner university."
+		description: "An EC2U university."
 
 	}, {
 

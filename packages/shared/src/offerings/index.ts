@@ -45,7 +45,7 @@ export const offerings = immutable({
 
 	title: { en: "EC2U Educational Offerings" },
 	alternative: { en: "EC2U Offerings" },
-	description: { en: "Degree and vocational programs and courses offered by EC2U partner universities." },
+	description: { en: "Degree and vocational programs and courses offered by EC2U universities." },
 
 	publisher: EC2U,
 
@@ -68,7 +68,7 @@ export function Offering() {
 
 		name: "Offering",
 		description: markdown`
-			An educational offering of an EC2U partner university.
+			An educational offering of an EC2U university.
 
 			> [!IMPORTANT]
 			> Not intended for use in isolation: it factors the generic properties shared by the specialised models
@@ -118,7 +118,7 @@ export function Offering() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Identifies an offering listed by a partner university.
+ * Identifies an offering listed by an EC2U university.
  *
  * An offering is named by the key the source lists it under together with the academic year and terms it is delivered
  * in, so that the same key delivered in different years or terms names distinct offerings, while a listing re-read on

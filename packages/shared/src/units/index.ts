@@ -40,7 +40,7 @@ export const units = immutable({
 
 	title: { en: "EC2U Research Units and Facilities" },
 	alternative: { en: "EC2U Units" },
-	description: { en: "Information about research units and supporting structures at EC2U partner universities." },
+	description: { en: "Information about research units and supporting structures at EC2U universities." },
 
 	publisher: EC2U,
 
@@ -59,7 +59,7 @@ export function Units() {
 	return resource(Dataset, {
 
 		name: "Units",
-		description: "Information about research units and supporting structures at EC2U partner universities."
+		description: "Information about research units and supporting structures at EC2U universities."
 
 	}, {
 
@@ -75,7 +75,7 @@ export function Unit() {
 		class: ec2u.Unit,
 
 		name: "Unit",
-		description: "A research unit or supporting structure at an EC2U partner university."
+		description: "A research unit or supporting structure at an EC2U university."
 
 	}, {
 
@@ -119,7 +119,7 @@ export function Unit() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Identifies a unit listed by a partner university.
+ * Identifies a unit listed by an EC2U university.
  *
  * The same key always names the same unit within a university, so that a listing re-read on a later run restates the
  * units it already stood for, while equal keys listed by different universities never name the same unit.

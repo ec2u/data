@@ -41,7 +41,7 @@ export const events = immutable({
 
 	title: { en: "EC2U Academic and Local Events" },
 	alternative: { en: "EC2U Events" },
-	description: { en: "Information about events at EC2U partner universities and associated local organizations." },
+	description: { en: "Information about events at EC2U universities and associated local organizations." },
 
 	publisher: EC2U,
 
@@ -67,7 +67,7 @@ export function Events() {
 	return resource(Dataset, {
 
 		name: "Events",
-		description: "Information about events at EC2U partner universities and associated local organisations."
+		description: "Information about events at EC2U universities and associated local organisations."
 
 	}, {
 
@@ -83,7 +83,7 @@ export function Event() {
 		class: ec2u.Event,
 
 		name: "Event",
-		description: "An event at an EC2U partner university or an associated local organisation."
+		description: "An event at an EC2U university or an associated local organisation."
 
 	}, {
 
@@ -101,7 +101,7 @@ export function Publisher() {
 	return resource(Organization, {
 
 		name: "Publisher",
-		description: "An organisation's event calendar for an EC2U partner university."
+		description: "An organisation's event calendar for an EC2U university."
 
 	}, {
 

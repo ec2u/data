@@ -10,7 +10,7 @@ Authoritative integration status for the cross-alliance Lifelong Learning (LLL) 
 # 2026-07-17 – Curated spreadsheet
 
 Data loaded from a manually curated cross-alliance Google Sheet, one row per course, stated one at a time as courses of
-the partner university each row names, so an interrupted run keeps the courses it stated and the next one carries on;
+the EC2U university each row names, so an interrupted run keeps the courses it stated and the next one carries on;
 unchanged rows are skipped. A sheet naming fewer than three quarters of the stored offerings retracts nothing and fails,
 so pruning it below that share requires a forced reload, once the withdrawal is confirmed with the curators.
 
@@ -22,7 +22,7 @@ A course is keyed by its `Code` or, failing that, by its English or local title,
 names the course another source lists under the same code; `Year` and `Term` place it in its academic period, so the
 same code in another year or term is another course. A year of `each semester` is read as no year, and the course is
 dated with the academic year current at retrieval, switching in August; any other value that
-is not `YYYY/YYYY` drops the row with a warning, as do a row naming no partner
+is not `YYYY/YYYY` drops the row with a warning, as do a row naming no EC2U
 university and one stating no title; a non-blank `-` column disables a row. A program named in `Program (English)` is
 stated as a program of its own, keyed by name and the course year, and the course links to it. Closed-set columns
 (`Term`, `Mode`, `Fee`, `Test`, `Grade`, `Scale`) leave out values they do not recognise rather than guess them.

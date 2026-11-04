@@ -38,7 +38,7 @@ export const persons = immutable({
 
 	title: { en: "EC2U Faculty, Researchers and Staff" },
 	alternative: { en: "EC2U People" },
-	description: { en: "Staff involved in teaching and research activities at EC2U partner universities." },
+	description: { en: "Staff involved in teaching and research activities at EC2U universities." },
 
 	publisher: EC2U,
 
@@ -56,7 +56,7 @@ export function Persons() {
 	return resource(Dataset, {
 
 		name: "People",
-		description: "Staff involved in teaching and research activities at EC2U partner universities."
+		description: "Staff involved in teaching and research activities at EC2U universities."
 
 	}, {
 
@@ -72,7 +72,7 @@ export function Person() {
 		class: ec2u.Person,
 
 		name: "Person",
-		description: "A staff member involved in teaching and research activities at an EC2U partner university."
+		description: "A staff member involved in teaching and research activities at an EC2U university."
 
 	}, {
 
@@ -111,7 +111,7 @@ export function Person() {
 
 
 /**
- * Identifies a person named by a partner university.
+ * Identifies a person named by an EC2U university.
  *
  * The same name always names the same person within a university, so that every source of the university naming them
  * states the same person, while namesakes at different universities never do. A person owned by a single source is

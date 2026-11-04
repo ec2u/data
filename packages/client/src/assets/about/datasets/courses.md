@@ -12,7 +12,7 @@ model.
 
 | term                              | type                                                      | # | description                                                                               |
 |-----------------------------------|-----------------------------------------------------------|---|-------------------------------------------------------------------------------------------|
-| **ec2u:Course**                   | [ec2u:Offering], [schema:Course], [schema:CourseInstance] |   | A degree, vocational or personal development course offered by an EC2U partner university |
+| **ec2u:Course**                   | [ec2u:Offering], [schema:Course], [schema:CourseInstance] |   | A degree, vocational or personal development course offered by an EC2U university |
 | ec2u:term                         | [ec2u:Term]                                               | * | academic terms in which the course is delivered                                           |
 | [schema:instructor]               | [ec2u:Person]                                             | * | persons teaching the course                                                               |
 | [schema:audience]                 | [ec2u:Topic]                                              | * | groups the course is intended for, in the [EC2U Stakeholders] taxonomy                    |

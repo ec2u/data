@@ -15,7 +15,7 @@ with [Dublin Core](https://www.dublincore.org/specifications/dublin-core/dcmi-te
 
 | term           | type                                          | #    | definition                                                               |
 |----------------|-----------------------------------------------|------|--------------------------------------------------------------------------|
-| **ec2u:Unit**  | [ec2u:Organization], [org:OrganizationalUnit] |      | a research unit or supporting structure at an EC2U partner [university]  |
+| **ec2u:Unit**  | [ec2u:Organization], [org:OrganizationalUnit] |      | a research unit or supporting structure at an EC2U [university]  |
 | [dct:subject]  | [ec2u:Topic]                                  | *    | research topics the unit is concerned with, in the [EuroSciVoc] taxonomy |
 | [dcat:keyword] | text                                          | *    | free-text terms characterising the activities of the unit                |
 | [org:unitOf]   | [ec2u:Organization]                           | 1..* | organizations the unit belongs to                                        |

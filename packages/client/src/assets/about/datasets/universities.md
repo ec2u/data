@@ -14,7 +14,7 @@ the [W3C Organization Ontology](../vocabularies/org.md) data model, extended wit
 
 | term                | type                                                            | #    | definition                                                                 |
 |---------------------|-----------------------------------------------------------------|------|----------------------------------------------------------------------------|
-| **ec2u:University** | [ec2u:Organization], [*GeoReference*], [org:FormalOrganization] |      | An EC2U partner university                                                 |
+| **ec2u:University** | [ec2u:Organization], [*GeoReference*], [org:FormalOrganization] |      | An EC2U university                                                 |
 | ec2u:dataset        | [ec2u:Dataset]                                                  | 1    | the dataset the resource is published in                                   |
 | [skos:altLabel]     | text                                                            | 1    | the short name the university is known by across the alliance, as its city |
 | [foaf:depiction]    | uri                                                             | 1..* | images depicting the agent                                                 |

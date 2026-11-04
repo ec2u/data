@@ -231,7 +231,7 @@ describe("row", () => {
 			expect(row({ ...record, "-": "-" })).toEqual([]);
 		});
 
-		it("reads nothing from a row naming no partner university", async () => {
+		it("reads nothing from a row naming no EC2U university", async () => {
 			expect(row({ ...record, "University": "Bologna" })).toEqual([]);
 			expect(row({ ...record, "University": "" })).toEqual([]);
 		});
