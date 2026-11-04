@@ -63,8 +63,8 @@ type Row = {
 /**
  * Creates the index of the data model served by the hub.
  *
- * Lists the documented shapes under two groups: the published datasets, and the resources they hold in inheritance
- * order, each nested under the shapes it extends; every shape links to its page beside its summary.
+ * Lists the documented shapes under two groups: the cross-linked collections the hub organises its data into, and the
+ * resources they hold, each nested under the shapes it extends; every shape links to its page beside its summary.
  *
  * @returns The models page
  */
@@ -91,7 +91,7 @@ export function ModelsPage() {
 
 				...group(
 					"Collections",
-					"Published datasets, each listing its resources.",
+					"Searchable, cross-linked collections of Knowledge Hub resources.",
 					getModelEntries(universe).map(model => ({ model, children: [] }))
 				),
 

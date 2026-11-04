@@ -20,7 +20,6 @@ import type { Some } from "@metreeca/core/arrays";
 import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Stack } from "@metreeca/tile-hive/stack";
-import { Fragment } from "preact";
 import { Text } from "../_/text.js";
 import { getShapeAncestors, getShapeExtenders, getShapeReferrers, type ShapeLink, type ShapeRow, type ShapeTable, tabulate } from "./shape.core.js";
 import "./shape.css";
@@ -110,12 +109,12 @@ export function Shape({
 
 
 /**
- * Sets out the table of the properties of a shape.
+ * Sets out the table of the properties of a shape, the inherited ones grouped under the ancestor documenting them.
  */
-function Table({ rows }: ShapeTable) {
+function Table({ rows, inherited }: ShapeTable) {
 	return <>
 
-		{rows.length > 0 && <table class={"ec2u-shape"}>
+		{(rows.length > 0 || inherited.length > 0) && <table class={"ec2u-shape"}>
 
 			<thead>
 				<tr>
@@ -126,7 +125,16 @@ function Table({ rows }: ShapeTable) {
 				</tr>
 			</thead>
 
-			<tbody>{rows.map(row => <Row key={row.term} {...row}/>)}</tbody>
+			{rows.length > 0 && <tbody>{rows.map(row => <Row key={row.term} {...row}/>)}</tbody>}
+
+			{inherited.map(({ parent, rows }) => <tbody key={parent.name} class={"ec2u-shape-inherited"}>
+				<tr>
+					<th colSpan={4}>
+						properties from {parent.href === undefined ? parent.name : <Link href={parent.href}>{parent.name}</Link>}
+					</th>
+				</tr>
+				{rows.map(row => <Row key={row.term} {...row}/>)}
+			</tbody>)}
 
 		</table>}
 
@@ -139,7 +147,7 @@ function Table({ rows }: ShapeTable) {
 function Row({ term, predicate, types, cardinality, description }: ShapeRow) {
 	return <tr>
 		<td>{predicate === undefined ? term : <Link href={predicate}>{term}</Link>}</td>
-		<td><Links separator={" | "} links={types}/></td>
+		<td><Union links={types}/></td>
 		<td>{cardinality}</td>
 		<td>{opt(description, description => <Markdown>{description}</Markdown>)}</td>
 	</tr>;
@@ -155,11 +163,12 @@ function List({ links }: { links: readonly ShapeLink[] }) {
 }
 
 /**
- * Sets out a list of types inline, each linked to its documentation where located.
+ * Sets out the alternative types of a union one per line, each prefixed by `|` and linked to its documentation where
+ * located; a single type is set out alone, with no prefix.
  */
-function Links({ separator, links }: { separator: string, links: readonly ShapeLink[] }) {
-	return <>{links.map(({ name, href }, index) => <Fragment key={index}>
-		{index > 0 && separator}
+function Union({ links }: { links: readonly ShapeLink[] }) {
+	return <>{links.map(({ name, href }, index) => <div key={index} class={"ec2u-shape-branch"}>
+		{links.length > 1 && "| "}
 		{href === undefined ? name : <Link href={href}>{name}</Link>}
-	</Fragment>)}</>;
+	</div>)}</>;
 }

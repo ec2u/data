@@ -22,6 +22,20 @@
         margin-bottom: 0;
     }
 
+    /* union branches keep each type on its own unbroken line */
+
+    & .ec2u-shape-branch {
+        white-space: nowrap;
+    }
+
+    /* inherited groups open with a heading row naming the ancestor they come from */
+
+    & > .ec2u-shape-inherited > tr:first-child > th {
+        padding-top: 1.5em;
+        text-align: start;
+        font-weight: bold;
+    }
+
 }
 
 /* shape lists name one shape per line, so they are set as tight as running lines */

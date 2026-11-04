@@ -79,6 +79,29 @@ export type ShapeTable = {
 	 */
 	readonly rows: readonly ShapeRow[]
 
+	/**
+	 * The properties the shape inherits from its keyed ancestors, grouped by the ancestor documenting them, from the
+	 * nearest to the most general; each property is listed once, as narrowed by the shape.
+	 */
+	readonly inherited: readonly ShapeGroup[]
+
+};
+
+/**
+ * The documentation of the properties a resource shape inherits from one of its keyed ancestors.
+ */
+export type ShapeGroup = {
+
+	/**
+	 * The ancestor documenting the properties, linked to its documentation.
+	 */
+	readonly parent: ShapeLink
+
+	/**
+	 * The inherited properties the ancestor documents, in its declaration order.
+	 */
+	readonly rows: readonly ShapeRow[]
+
 };
 
 /**
@@ -156,7 +179,48 @@ export function tabulate(lazy: Lazy<ResourceShape>): ShapeTable {
 		endpoint: opt(shape.pattern, pattern => pattern.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]*/i, "")),
 		parents: shape.parents.map(linked).filter(({ name }) => name !== ""), // unnamed mixins add no documented type
 
-		rows: declared(shape).map(([term, property]) => row(term, property))
+		rows: declared(shape).map(([term, property]) => row(term, property)),
+
+		inherited: ancestry(shape)
+			.map((ancestor, index, ancestors) => group(shape, ancestor, ancestors.slice(0, index)))
+			.filter(({ rows }) => rows.length > 0)
+
+	};
+
+}
+
+/**
+ * Lists the keyed ancestors of a shape, from the nearest to the most general, each listed once.
+ */
+function ancestry(shape: ResourceShape): readonly ResourceShape[] {
+
+	const nearest = documented(shape);
+
+	return [...nearest, ...nearest.flatMap(ancestry)].filter((ancestor, index, ancestors) =>
+		ancestors.indexOf(ancestor) === index
+	);
+
+}
+
+/**
+ * Groups the properties a shape inherits from a keyed ancestor, as narrowed by the shape, leaving out the ones already
+ * grouped under nearer ancestors.
+ */
+function group(shape: ResourceShape, ancestor: ResourceShape, nearer: readonly ResourceShape[]): ShapeGroup {
+
+	const grouped = nearer.flatMap(declared).map(([term]) => term);
+
+	return {
+
+		parent: linked(ancestor),
+
+		rows: declared(ancestor).flatMap(([term]) => {
+
+			const member = shape.members[term];
+
+			return !grouped.includes(term) && member?.kind === "property" && !member.hidden ? [row(term, member)] : [];
+
+		})
 
 	};
 
