@@ -24,19 +24,17 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Path } from "@metreeca/tile-cell/path";
-import { Toc } from "@metreeca/tile-cell/toc";
 import { useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useResource } from "@metreeca/tile-data/store";
 import { Info } from "@metreeca/tile-hive/info";
 import { date } from "@metreeca/tile-type/date";
 import { integer } from "@metreeca/tile-type/integer";
-import { type ComponentChildren, Fragment } from "preact";
+import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { Failure } from "../../tiles/failure.js";
 import { address, links } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
-import { getShapeDescription, getShapeName } from "../../tiles/shape.core.js";
-import { Shape } from "../../tiles/shape.js";
+import { getShapeHref, getShapeName } from "../../tiles/shape.core.js";
 import { about } from "../about/index.js";
 
 
@@ -95,7 +93,8 @@ export function DatasetLink({
 /**
  * Creates the introduction to the dataset listed by a catalogue.
  *
- * Shows what the dataset holds and the terms it is published under, at the route the about section declares for it:
+ * Shows what the dataset holds, the terms it is published under and links to the models describing its resources, at
+ * the route the about section declares for it:
  * `/about/datasets/universities` for the catalogue at `/universities/`, `/about/datasets` for the hub catalogue.
  *
  * @param options The view configuration
@@ -120,7 +119,7 @@ export function DatasetPage({
 	about: About
 
 	/**
-	 * The shapes describing the resources the dataset holds; none if omitted.
+	 * The shapes describing the resources the dataset holds, linked to the pages documenting them; none if omitted.
 	 */
 	shapes?: Some<Lazy<ResourceShape>>
 
@@ -193,32 +192,23 @@ export function DatasetPage({
 
 		})}
 
-		tray={<>
+		tray={resource({
 
-			{resource({
+			ready: ({ state: { created, issued, modified } }) => <Info place={"spread"}>{{
 
-				ready: ({ state: { created, issued, modified } }) => <Info place={"spread"}>{{
+				Created: opt(created, value => date.format(value)),
+				Published: opt(issued, value => date.format(value)),
+				Modified: opt(modified, value => date.format(value)),
 
-					Created: opt(created, value => date.format(value)),
-					Published: opt(issued, value => date.format(value)),
-					Modified: opt(modified, value => date.format(value)),
+				Resources: resources({
 
-					Resources: resources({
+					ready: ({ state }) => integer.format(state)
 
-						ready: ({ state }) => integer.format(state)
+				})
 
-					})
+			}}</Info>
 
-				}}</Info>
-
-			})}
-
-			{opt(shapes, shapes => <Toc entries={some(shapes).map(getShapeName).map(name => ({
-				label: name,
-				href: `#${name}`
-			}))}/>)}
-
-		</>}
+		})}
 
 	>{resource({
 
@@ -235,15 +225,12 @@ export function DatasetPage({
 				Copyright: rights,
 				License: links(license),
 				Source: opt(source, ({ id }) => address(id)),
-				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
+				Access: opt(accessRights, text => <Markdown>{text}</Markdown>),
+				Models: opt(shapes, shapes => <ul>{some(shapes).map(shape => <li key={getShapeName(shape)}>
+					{opt(getShapeHref(shape), href => <Link href={href}>{getShapeName(shape)}</Link>) ?? getShapeName(shape)}
+				</li>)}</ul>)
 
 			}}</Info>
-
-			{opt(shapes, shapes => some(shapes).map(shape => <Fragment key={getShapeName(shape)}>
-				<h1 id={getShapeName(shape)}>{getShapeName(shape)}</h1>
-				{opt(getShapeDescription(shape), description => <p>{description}</p>)}
-				<Shape shape={shape} universe={shapes}/>
-			</Fragment>))}
 
 		</>
 

@@ -18,23 +18,25 @@ import type { ResourceShape } from "@metreeca/blue/resource";
 import { type Lazy, opt } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
 import { Link } from "@metreeca/tile-cell/link";
-import { Info } from "@metreeca/tile-hive/info";
+import { Markdown } from "@metreeca/tile-cell/markdown";
+import { Stack } from "@metreeca/tile-hive/stack";
 import { Fragment } from "preact";
-import { getShapeReferrers, type ShapeLink, type ShapeRow, type ShapeTable, tabulate } from "./shape.core.js";
+import { Text } from "../_/text.js";
+import { getShapeAncestors, getShapeExtenders, getShapeReferrers, type ShapeLink, type ShapeRow, type ShapeTable, tabulate } from "./shape.core.js";
+import "./shape.css";
 
 
 /**
- * Creates the documentation of a resource shape.
+ * Creates the property sheet of a resource shape.
  *
- * Opens with a panel stating its endpoint, the shapes it extends and the properties referring to it, followed by a
- * table of the properties it declares, each with the predicate it maps to, the type and number of its values, and its
- * definition. Heading and describing the shape is left to the page, as is linking to it.
+ * Locates the shape in the model, stating its endpoint, its whole lineage of extended shapes, the shapes extending it
+ * and the shapes referring to it, each linked to its documentation; entries with nothing to state are left out.
  *
  * @param options The widget configuration
  *
- * @returns The shape documentation
+ * @returns A stack of sections, each its label over its content, or nothing if no entry states any content
  */
-export function Shape({
+export function ShapeInfo({
 
 	shape,
 	universe
@@ -42,7 +44,7 @@ export function Shape({
 }: {
 
 	/**
-	 * The shape to be documented, possibly deferred.
+	 * The shape to be located, possibly deferred.
 	 */
 	shape: Lazy<ResourceShape>
 
@@ -53,26 +55,67 @@ export function Shape({
 
 }) {
 
-	return <Table {...tabulate(shape)} referrers={getShapeReferrers(shape, universe)}/>;
+	const { endpoint } = tabulate(shape);
+	const ancestors = getShapeAncestors(shape);
+	const extenders = getShapeExtenders(shape, universe);
+	const referrers = getShapeReferrers(shape, universe);
+
+	const stated = Object.entries({
+
+		Endpoint: opt(endpoint, endpoint => <code>{endpoint}</code>),
+		Extends: ancestors.length > 0 ? <List links={ancestors}/> : undefined,
+		"Extended by": extenders.length > 0 ? <List links={extenders}/> : undefined,
+		"Referenced by": referrers.length > 0 ? <List links={referrers}/> : undefined
+
+	}).flatMap(([label, content]) => content !== undefined ? [{ label, content }] : []);
+
+	return stated.length > 0 ? <Stack space={"spacing100"}>{stated.map(({ label, content }) =>
+
+		<Stack key={label} space={"spacing050"}>
+			<div><Text look={"label"}>{label}</Text></div>{/* body-sized line, sharing the baseline of the page text */}
+			{content}
+		</Stack>
+
+	)}</Stack> : undefined;
+
+}
+
+/**
+ * Creates the documentation of a resource shape.
+ *
+ * Sets out a table of the properties the shape declares, each with the predicate it maps to, the type and number of
+ * its values, and its definition. Heading, describing and locating the shape is left to the page, as is linking to
+ * it; see {@link ShapeInfo} for its property sheet.
+ *
+ * @param options The widget configuration
+ *
+ * @returns The shape documentation
+ */
+export function Shape({
+
+	shape
+
+}: {
+
+	/**
+	 * The shape to be documented, possibly deferred.
+	 */
+	shape: Lazy<ResourceShape>
+
+}) {
+
+	return <Table {...tabulate(shape)}/>;
 
 }
 
 
 /**
- * Sets out a shape as a panel locating it in the model, and the table of its properties.
+ * Sets out the table of the properties of a shape.
  */
-function Table({ endpoint, parents, rows, referrers }: ShapeTable & { referrers: readonly ShapeLink[] }) {
+function Table({ rows }: ShapeTable) {
 	return <>
 
-		<Info>{{
-
-			Endpoint: opt(endpoint, endpoint => <code>{endpoint}</code>),
-			Extends: parents.length > 0 ? <Links separator={", "} links={parents}/> : undefined,
-			"Referenced by": referrers.length > 0 ? <Links separator={", "} links={referrers}/> : undefined
-
-		}}</Info>
-
-		{rows.length > 0 && <table>
+		{rows.length > 0 && <table class={"ec2u-shape"}>
 
 			<thead>
 				<tr>
@@ -98,12 +141,21 @@ function Row({ term, predicate, types, cardinality, description }: ShapeRow) {
 		<td>{predicate === undefined ? term : <Link href={predicate}>{term}</Link>}</td>
 		<td><Links separator={" | "} links={types}/></td>
 		<td>{cardinality}</td>
-		<td>{description}</td>
+		<td>{opt(description, description => <Markdown>{description}</Markdown>)}</td>
 	</tr>;
 }
 
 /**
- * Sets out a list of types, each linked to its documentation where located.
+ * Sets out a list of shapes as a bulleted list, each linked to its documentation where located.
+ */
+function List({ links }: { links: readonly ShapeLink[] }) {
+	return <ul>{links.map(({ name, href }, index) => <li key={index}>
+		{href === undefined ? name : <Link href={href}>{name}</Link>}
+	</li>)}</ul>;
+}
+
+/**
+ * Sets out a list of types inline, each linked to its documentation where located.
  */
 function Links({ separator, links }: { separator: string, links: readonly ShapeLink[] }) {
 	return <>{links.map(({ name, href }, index) => <Fragment key={index}>

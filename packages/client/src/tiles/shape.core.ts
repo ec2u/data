@@ -19,6 +19,32 @@ import type { Property, ResourceShape } from "@metreeca/blue/resource";
 import { eager, type Shape } from "@metreeca/blue/value";
 import { isString, type Lazy, opt, type Optional } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
+import { dedent } from "@metreeca/core/strings";
+import { ec2u, rdfs } from "@ec2u/data-shared";
+import { dcat } from "@ec2u/data-shared/vocabularies/dcat.js";
+import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
+import { foaf } from "@ec2u/data-shared/vocabularies/foaf.js";
+import { org } from "@ec2u/data-shared/vocabularies/org.js";
+import { schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
+import { skos } from "@ec2u/data-shared/vocabularies/skos.js";
+import { getNamespaceIRI } from "@metreeca/core/resource";
+import { wgs } from "@metreeca/work/open/wgs.js";
+
+
+/**
+ * The prefixes abbreviating the namespaces of the data model, as used in its documentation.
+ */
+const prefixes: Readonly<Record<string, string>> = {
+	ec2u: getNamespaceIRI(ec2u),
+	rdfs: getNamespaceIRI(rdfs),
+	dcat: getNamespaceIRI(dcat),
+	dct: getNamespaceIRI(dct),
+	foaf: getNamespaceIRI(foaf),
+	org: getNamespaceIRI(org),
+	schema: getNamespaceIRI(schema),
+	skos: getNamespaceIRI(skos),
+	geo: getNamespaceIRI(wgs)
+};
 
 
 /**
@@ -84,7 +110,7 @@ export type ShapeRow = {
 	readonly cardinality: string
 
 	/**
-	 * The description of the property, as stated in English, with its whitespace collapsed; none if not stated in
+	 * The description of the property, as English markdown realigned to the left margin; none if not stated in
 	 * English.
 	 */
 	readonly description: Optional<string>
@@ -97,7 +123,7 @@ export type ShapeRow = {
 export type ShapeLink = {
 
 	/**
-	 * The name of the type.
+	 * The name of the type: the {@link getShapeKey | key} of a keyed shape, as `schema:Organization`, or else its name.
 	 */
 	readonly name: string
 
@@ -161,7 +187,7 @@ function row(term: string, { forward, reverse, range, description }: Property): 
 		predicate: forward ?? reverse,
 		types: typed(range.shape),
 		cardinality: bounded(range.minCount, range.maxCount),
-		description: english(description)
+		description: markup(description)
 
 	};
 }
@@ -184,26 +210,108 @@ export function getShapeName(lazy: Lazy<ResourceShape>): string {
 }
 
 /**
- * Lists the properties referring to a resource shape.
+ * Lists the shapes referring to a resource shape.
  *
- * Scans the shapes reachable from `universe`, as collected by {@link @metreeca/blue!model model}, for the properties
- * they declare in their own right whose values link to or embed `lazy`, leaving out hidden ones.
+ * Scans the shapes reachable from `universe`, as collected by {@link @metreeca/blue!model model}, for the ones
+ * declaring in their own right a visible property whose values link to or embed `lazy`, leaving out `lazy` itself.
+ * Shapes are matched by {@link getShapeKey | key}, a value shape stating none taking the keys of its nearest keyed
+ * ancestors, so that a property ranging over an unkeyed refinement of `lazy` still refers to it; an unkeyed `lazy`
+ * is matched by identity.
  *
  * @param lazy The shape to be referred to, possibly deferred
  * @param universe The entry shapes of the model to be scanned, possibly deferred
  *
- * @returns The referring properties in model order, each named as `Shape.property` and linked to the documentation of
- *     the shape declaring it; empty if no property refers to `lazy`
+ * @returns The referring shapes in model order, each listed once and linked to its documentation; empty if no other
+ *     shape refers to `lazy`
  */
 export function getShapeReferrers(lazy: Lazy<ResourceShape>, universe: Some<Lazy<ResourceShape>>): readonly ShapeLink[] {
 
 	const target = eager(lazy);
+	const key = getShapeKey(target);
 
-	return model(universe).flatMap(shape => declared(shape)
-		.filter(([, { range }]) => targets(range.shape).includes(target))
-		.map(([term]) => ({ name: `${getShapeName(shape)}.${term}`, href: getShapeHref(shape) }))
+	return others(target, model(universe)
+		.filter(shape => declared(shape).some(([, { range }]) => targets(range.shape).some(value =>
+			key === undefined ? value === target : keys(value).includes(key)
+		)))
 	);
 
+}
+
+/**
+ * Lists the shapes extending a resource shape.
+ *
+ * Scans the shapes reachable from `universe`, as collected by {@link @metreeca/blue!model model}, for the ones
+ * extending `lazy` directly or through shapes stating no {@link getShapeKey | key}, matched as by
+ * {@link getShapeReferrers}; an unkeyed refinement of `lazy` is not listed, as it shares its documentation.
+ *
+ * @param lazy The shape to be extended, possibly deferred
+ * @param universe The entry shapes of the model to be scanned, possibly deferred
+ *
+ * @returns The extending shapes in model order, each listed once and linked to its documentation; empty if no other
+ *     shape extends `lazy`
+ */
+export function getShapeExtenders(lazy: Lazy<ResourceShape>, universe: Some<Lazy<ResourceShape>>): readonly ShapeLink[] {
+
+	const target = eager(lazy);
+	const key = getShapeKey(target);
+
+	return others(target, model(universe)
+		.filter(shape => shape.parents.some(parent =>
+			key === undefined ? eager(parent) === target : keys(eager(parent)).includes(key)
+		))
+	);
+
+}
+
+/**
+ * Lists the lineage of a resource shape.
+ *
+ * Collects every shape `lazy` extends, directly or transitively, linking each to its documentation, an unkeyed one to
+ * the documentation of its nearest keyed ancestor; unnamed mixins are left out.
+ *
+ * @param lazy The shape whose ancestors are to be listed, possibly deferred
+ *
+ * @returns The ancestors of `lazy`, nearest first, each listed once; empty if `lazy` extends no named shape
+ */
+export function getShapeAncestors(lazy: Lazy<ResourceShape>): readonly ShapeLink[] {
+
+	const target = eager(lazy);
+
+	return others(target, lineage(target)).filter(({ name }) => name !== "");
+
+
+	function lineage(shape: ResourceShape): readonly ResourceShape[] {
+
+		const parents = shape.parents.map(parent => eager(parent));
+
+		return [...parents, ...parents.flatMap(lineage)];
+
+	}
+
+}
+
+/**
+ * Links a list of shapes to their documentation, leaving out the ones sharing the documentation of a target shape and
+ * listing each documentation once.
+ */
+function others(target: ResourceShape, shapes: readonly ResourceShape[]): readonly ShapeLink[] {
+
+	const self = linked(target);
+
+	return shapes
+		.map(linked)
+		.filter(({ name, href }) => href === undefined ? name !== self.name : href !== self.href)
+		.filter(({ name, href }, index, links) => links.findIndex(link =>
+			link.href === href && link.name === name
+		) === index);
+
+}
+
+/**
+ * Lists the keys a shape is matched by: its own, or else the ones of its nearest keyed ancestors.
+ */
+function keys(shape: ResourceShape): readonly string[] {
+	return opt(getShapeKey(shape), key => [key]) ?? shape.parents.flatMap(parent => keys(eager(parent)));
 }
 
 /**
@@ -225,44 +333,78 @@ function targets(lazy: Lazy<Shape>): readonly ResourceShape[] {
  *
  * @param lazy The shape to be described, possibly deferred
  *
- * @returns The English description `lazy` states, with its whitespace collapsed; none if it states none in English
+ * @returns The English description `lazy` states, as markdown realigned to the left margin; none if it states none in
+ *     English
  */
 export function getShapeDescription(lazy: Lazy<ResourceShape>): Optional<string> {
-	return english(eager(lazy).description);
+	return markup(eager(lazy).description);
+}
+
+/**
+ * Summarises a resource shape.
+ *
+ * Following the TSDoc convention, the summary is the first paragraph of the {@link getShapeDescription | description}.
+ *
+ * @param lazy The shape to be summarised, possibly deferred
+ *
+ * @returns The first paragraph of the English description `lazy` states, with its whitespace collapsed; none if it
+ *     states none in English
+ */
+export function getShapeSummary(lazy: Lazy<ResourceShape>): Optional<string> {
+	return opt(getShapeDescription(lazy), summarize);
+}
+
+/**
+ * Keys a resource shape.
+ *
+ * The key identifies the shape within the model, stays the same across releases, and names the page documenting the
+ * shape under `/models/`, so it may be bookmarked and linked to.
+ *
+ * @param lazy The shape to be keyed, possibly deferred
+ *
+ * @returns The key of `lazy`: the prefixed name of the class it states in its own right, as `schema:Organization`, or
+ *     else the English name it states in its own right, as `Universities`; none if it states neither
+ */
+export function getShapeKey(lazy: Lazy<ResourceShape>): Optional<string> {
+
+	// !!! stub: keyed by class or name pending a stable and robust shape identity
+
+	const shape = eager(lazy);
+
+	return opt(shape.class, prefixed) ?? english(shape.name);
+
 }
 
 /**
  * Locates the documentation of a resource shape.
  *
- * A shape is documented on the introduction page of the catalogue serving its resources, under a heading named
- * after the shape: the catalogue is the first path segment of the identifier pattern the shape states, or the root
- * catalogue if the pattern states no path segment.
+ * A shape is documented on a page of its own under `/models/`, named after its {@link getShapeKey | key}.
  *
  * @param lazy The shape to be located, possibly deferred
  *
- * @returns The root-relative location of the documentation of `lazy`, as `/about/datasets/universities#University`;
- *     none if `lazy` states no identifier pattern
+ * @returns The root-relative location of the documentation of `lazy`, as `/models/schema:Organization`; none if
+ *     `lazy` is not keyed
  */
 export function getShapeHref(lazy: Lazy<ResourceShape>): Optional<string> {
-
-	const shape = eager(lazy);
-
-	return opt(shape.pattern, pattern => {
-
-		const [segment] = new URL(pattern, "https://example.org/").pathname.split("/").filter(Boolean);
-		const catalogue = segment === undefined || /^(%7B|\*)/i.test(segment) ? "" : `/${segment}`;
-
-		return `/about/datasets${catalogue}#${encodeURIComponent(getShapeName(shape))}`;
-
-	});
-
+	return opt(getShapeKey(lazy), located);
 }
 
 /**
- * Links a resource shape to its documentation.
+ * Locates the documentation of the shape with a key.
+ */
+function located(key: string): string {
+	return `/models/${encodeURIComponent(key).replace(/%3A/g, ":")}`;
+}
+
+/**
+ * Links a resource shape to its documentation, an unkeyed shape to the one of its nearest keyed ancestor.
  */
 function linked(lazy: Lazy<ResourceShape>): ShapeLink {
-	return { name: getShapeName(lazy), href: getShapeHref(lazy) };
+
+	const key = keys(eager(lazy)).at(0);
+
+	return { name: key ?? getShapeName(lazy), href: opt(key, located) };
+
 }
 
 /**
@@ -307,11 +449,41 @@ function bounded(min: Optional<number>, max: Optional<number>): string {
  * Retrieves the English text of a label, with its whitespace collapsed.
  */
 function english(text: ResourceShape["name"]): Optional<string> {
+	return opt(markup(text), collapse);
+}
+
+/**
+ * Retrieves the English markdown of a description, realigned to the left margin.
+ */
+function markup(text: ResourceShape["description"]): Optional<string> {
 
 	const value = isString(text) ? text : text?.en;
 
-	return isString(value) ? value.trim().replace(/\s+/g, " ") : undefined;
+	return isString(value) ? dedent(value) : undefined;
 
+}
+
+/**
+ * Extracts the summary of a markdown description: its first paragraph, with whitespace collapsed.
+ */
+function summarize(markdown: string): string {
+	return collapse(markdown.split(/\n\s*\n/)[0] ?? "");
+}
+
+/**
+ * Collapses runs of whitespace into single spaces, trimming the ends.
+ */
+function collapse(text: string): string {
+	return text.trim().replace(/\s+/g, " ");
+}
+
+/**
+ * Abbreviates an IRI as a prefixed name, falling back to the whole IRI where no known namespace includes it.
+ */
+function prefixed(iri: string): string {
+	return Object.entries(prefixes)
+		.flatMap(([prefix, namespace]) => iri.startsWith(namespace) ? [`${prefix}:${iri.slice(namespace.length)}`] : [])
+		.at(0) ?? iri;
 }
 
 /**
