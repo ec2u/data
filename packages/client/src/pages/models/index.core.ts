@@ -14,37 +14,13 @@
  * limitations under the License.
  */
 
-import { Datasets } from "@ec2u/data-shared";
-import { Courses } from "@ec2u/data-shared/courses/index.js";
-import { Documents } from "@ec2u/data-shared/documents/index.js";
-import { Events } from "@ec2u/data-shared/events/index.js";
-import { Programs } from "@ec2u/data-shared/programs/index.js";
-import { Taxonomies } from "@ec2u/data-shared/taxonomies/index.js";
-import { Units } from "@ec2u/data-shared/units/index.js";
-import { Universities } from "@ec2u/data-shared/universities/index.js";
 import { model } from "@metreeca/blue";
 import type { ResourceShape } from "@metreeca/blue/resource";
 import { eager } from "@metreeca/blue/value";
 import { type Lazy, opt, type Optional } from "@metreeca/core";
 import { some, type Some } from "@metreeca/core/arrays";
 import { by, locale } from "@metreeca/core/order";
-import { getShapeHref, getShapeKey, getShapeName } from "../../tiles/shape.core.js";
-
-
-/**
- * The entry shapes of the model the hub serves: the catalogue of each dataset, from which every other documented
- * shape is reached.
- */
-export const universe: Some<Lazy<ResourceShape>> = [
-	Datasets,
-	Universities,
-	Units,
-	Programs,
-	Courses,
-	Documents,
-	Events,
-	Taxonomies
-];
+import { getShapeHref, getShapeId, getShapeName } from "../../tiles/shape.core.js";
 
 
 /**
@@ -53,7 +29,7 @@ export const universe: Some<Lazy<ResourceShape>> = [
 export type Model = {
 
 	/**
-	 * The root-relative location of the page documenting the shape, as returned by {@link getShapeHref}.
+	 * The location of the page documenting the shape, as returned by {@link getShapeHref}.
 	 */
 	readonly href: string
 
@@ -87,20 +63,18 @@ export type ModelNode = {
 /**
  * Lists the documented shapes of a model.
  *
- * Covers the entry shapes and every shape they depend on, as collected by {@link @metreeca/blue!model model}, leaving
- * out the shapes with no {@link getShapeKey | key}, which have no page of their own.
+ * Covers the entry shapes and every shape they depend on, as collected by {@link @metreeca/blue!model model}.
  *
  * @param universe The entry shapes of the model, possibly deferred
  *
- * @returns The keyed shapes of the model, each with the location of its page, sorted by name; where several shapes
- *     share a page, only the first in model order is listed
+ * @returns The shapes of the model, each with the location of its page, sorted by name; shapes with no page
+ *     located by {@link getShapeHref}, as outside the model the hub serves, are left out
  */
 export function getModels(universe: Some<Lazy<ResourceShape>>): readonly Model[] {
 
 	return model(universe)
 		.flatMap(shape => opt(getShapeHref(shape), href => [{ href, shape }]) ?? [])
-		.filter(({ href }, index, models) => models.findIndex(model => model.href === href) === index)
-		.sort(by(({ shape }) => getShapeName(shape), locale())); // fresh array from filter
+		.sort(by(({ shape }) => getShapeName(shape), locale())); // fresh array from flatMap
 
 }
 
@@ -141,7 +115,7 @@ export function getModelTree(universe: Some<Lazy<ResourceShape>>): readonly Mode
 	const entries = getModelEntries(universe).map(({ href }) => href);
 
 	const parents = new Map(models.map(({ href, shape }) => [href, ancestors(shape).filter(parent =>
-		hrefs.has(parent) && parent !== href // !!! a parent sharing the page of its child is an artefact of stub keys
+		hrefs.has(parent)
 	)]));
 
 	return nodes(href => !entries.includes(href) && parents.get(href)?.length === 0);
@@ -170,13 +144,13 @@ function ancestors(shape: ResourceShape): readonly string[] {
 }
 
 /**
- * Retrieves a documented shape of a model by its key.
+ * Retrieves a documented shape of a model by its identifier.
  *
  * @param universe The entry shapes of the model, possibly deferred
- * @param key The {@link getShapeKey | key} of the shape to be retrieved
+ * @param id The {@link getShapeId | identifier} of the shape to be retrieved
  *
- * @returns The first shape of the model keyed by `key`, in model order; none if no shape is keyed by `key`
+ * @returns The shape of the model identified by `id`; none if no shape is identified by `id`
  */
-export function getModel(universe: Some<Lazy<ResourceShape>>, key: string): Optional<ResourceShape> {
-	return model(universe).find(shape => getShapeKey(shape) === key);
+export function getModel(universe: Some<Lazy<ResourceShape>>, id: string): Optional<ResourceShape> {
+	return model(universe).find(shape => getShapeId(shape) === id);
 }

@@ -14,14 +14,49 @@
  * limitations under the License.
  */
 
+import { Datasets } from "@ec2u/data-shared";
+import { Courses } from "@ec2u/data-shared/courses/index.js";
+import { Documents } from "@ec2u/data-shared/documents/index.js";
+import { Events } from "@ec2u/data-shared/events/index.js";
+import { Programs } from "@ec2u/data-shared/programs/index.js";
+import { Taxonomies } from "@ec2u/data-shared/taxonomies/index.js";
+import { Units } from "@ec2u/data-shared/units/index.js";
+import { Universities } from "@ec2u/data-shared/universities/index.js";
+import { lexicon } from "@ec2u/data-shared/vocabularies/index.js";
 import { model } from "@metreeca/blue";
 import type { Property, ResourceShape } from "@metreeca/blue/resource";
 import { eager, type Shape } from "@metreeca/blue/value";
 import { isString, type Lazy, opt, type Optional } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
-import { dedent } from "@metreeca/core/strings";
-import { lexicon } from "@ec2u/data-shared/vocabularies/index.js";
 import { compact } from "@metreeca/core/resource";
+import { dedent } from "@metreeca/core/strings";
+
+
+/**
+ * The entry shapes of the model the hub serves: the catalogue of each dataset, from which every other documented shape
+ * of the model is reached through the shapes they extend and the properties they declare.
+ */
+export const universe: Some<Lazy<ResourceShape>> = [
+	Datasets,
+	Universities,
+	Units,
+	Programs,
+	Courses,
+	Documents,
+	Events,
+	Taxonomies
+];
+
+/**
+ * The base name of shapes stating neither a name nor a class.
+ */
+const anonymous = "Shape";
+
+/**
+ * The unique name and identifier of each shape reachable from {@link universe}, as listed by its
+ * {@link @metreeca/blue!model model}, computed once, as shapes keep their identity for the lifetime of the page.
+ */
+const identities: ReadonlyMap<ResourceShape, Identity> = identify(model(universe));
 
 
 /**
@@ -30,7 +65,7 @@ import { compact } from "@metreeca/core/resource";
 export type ShapeTable = {
 
 	/**
-	 * The name of the shape, as stated in English; the class local name if the shape states no English name.
+	 * The {@link getShapeName | name} of the shape.
 	 */
 	readonly name: string
 
@@ -51,13 +86,13 @@ export type ShapeTable = {
 	readonly parents: readonly ShapeLink[]
 
 	/**
-	 * The properties the shape declares in its own right or inherits from unkeyed shapes, in declaration order, leaving
-	 * out hidden ones and the ones its nearest keyed ancestors declare, even where the shape narrows them.
+	 * The properties the shape declares in its own right or inherits from shapes outside the model, in declaration
+	 * order, leaving out hidden ones and the ones its nearest documented ancestors declare, even where narrowed.
 	 */
 	readonly rows: readonly ShapeRow[]
 
 	/**
-	 * The properties the shape inherits from its keyed ancestors, grouped by the ancestor documenting them, from the
+	 * The properties the shape inherits from its documented ancestors, grouped by the ancestor declaring them, from the
 	 * nearest to the most general; each property is listed once, as narrowed by the shape.
 	 */
 	readonly inherited: readonly ShapeGroup[]
@@ -65,7 +100,7 @@ export type ShapeTable = {
 };
 
 /**
- * The documentation of the properties a resource shape inherits from one of its keyed ancestors.
+ * The documentation of the properties a resource shape inherits from one of its documented ancestors.
  */
 export type ShapeGroup = {
 
@@ -123,13 +158,14 @@ export type ShapeRow = {
 export type ShapeLink = {
 
 	/**
-	 * The name of the type: the {@link getShapeKey | key} of a keyed shape, as `Schema Organization`, or else its name.
+	 * The name of the type: the {@link getShapeName | name} of a shape, as `Schema Organization`, or else the name of
+	 * the type of plain values, as `text` for localised text or the local name of a datatype such as `dateTime`.
 	 */
 	readonly name: string
 
 	/**
-	 * The root-relative location of the documentation of the type, as returned by {@link getShapeHref}; none if the
-	 * type is not a shape or its documentation is not located.
+	 * The location of the documentation of the type, relative to the models section, as returned by
+	 * {@link getShapeHref}; none if the type is not a shape or its documentation is not located.
 	 */
 	readonly href: Optional<string>
 
@@ -154,7 +190,7 @@ export function tabulate(lazy: Lazy<ResourceShape>): ShapeTable {
 		name: getShapeName(shape),
 		class: shape.class,
 		endpoint: opt(shape.pattern, pattern => pattern.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]*/i, "")),
-		parents: shape.parents.map(linked).filter(({ name }) => name !== ""), // unnamed mixins add no documented type
+		parents: shape.parents.map(linked),
 
 		rows: declared(shape).map(([term, property]) => row(term, property)),
 
@@ -167,7 +203,7 @@ export function tabulate(lazy: Lazy<ResourceShape>): ShapeTable {
 }
 
 /**
- * Lists the keyed ancestors of a shape, from the nearest to the most general, each listed once.
+ * Lists the documented ancestors of a shape, from the nearest to the most general, each listed once.
  */
 function ancestry(shape: ResourceShape): readonly ResourceShape[] {
 
@@ -180,8 +216,8 @@ function ancestry(shape: ResourceShape): readonly ResourceShape[] {
 }
 
 /**
- * Groups the properties a shape inherits from a keyed ancestor, as narrowed by the shape, leaving out the ones already
- * grouped under nearer ancestors.
+ * Groups the properties a shape inherits from a documented ancestor, as narrowed by the shape, leaving out the ones
+ * already grouped under nearer ancestors, so that each inherited property is listed once.
  */
 function group(shape: ResourceShape, ancestor: ResourceShape, nearer: readonly ResourceShape[]): ShapeGroup {
 
@@ -204,8 +240,8 @@ function group(shape: ResourceShape, ancestor: ResourceShape, nearer: readonly R
 }
 
 /**
- * Lists the visible properties a shape documents: the ones it declares in its own right or inherits from unkeyed
- * shapes, which have no documentation of their own, leaving out the ones its nearest keyed ancestors declare.
+ * Lists the visible properties a shape documents: the ones it declares in its own right or inherits from shapes
+ * outside the model, which have no documentation of their own, leaving out the ones its documented ancestors declare.
  */
 function declared(shape: ResourceShape): readonly (readonly [string, Property])[] {
 
@@ -220,14 +256,14 @@ function declared(shape: ResourceShape): readonly (readonly [string, Property])[
 }
 
 /**
- * Lists the nearest keyed ancestors of a shape, looking through the unkeyed shapes it extends.
+ * Lists the nearest documented ancestors of a shape, looking through the shapes outside the model it extends.
  */
 function documented(shape: ResourceShape): readonly ResourceShape[] {
 	return shape.parents.flatMap(lazy => {
 
 		const parent = eager(lazy);
 
-		return getShapeKey(parent) !== undefined ? [parent] : documented(parent);
+		return identities.has(parent) ? [parent] : documented(parent);
 
 	});
 }
@@ -251,17 +287,37 @@ function row(term: string, { forward, reverse, range, description }: Property): 
 /**
  * Names a resource shape.
  *
+ * Every shape of the model reachable from {@link universe}, as listed by {@link @metreeca/blue!model model}, is named
+ * uniquely within the model: by the English name it states in its own right, or else by the local name of the class
+ * it states, as `Schema Organization`; a shape stating neither is named `Shape (n)`, and shapes whose names would
+ * share an {@link getShapeId | identifier} are named `Name (n)`, numbered from 1 in model order.
+ *
  * @param lazy The shape to be named, possibly deferred
  *
- * @returns The English name `lazy` states, the local name of its class if it states no English name, or else the name
- *     of its nearest named ancestor, searched depth-first in the order the shapes are extended; empty if none is named
+ * @returns The unique name of `lazy` within the model; for a shape outside the model, the English name it states,
+ *     the local name of its class if it states no English name, or else `Shape` if it states neither of them
  */
 export function getShapeName(lazy: Lazy<ResourceShape>): string {
 
 	const shape = eager(lazy);
 
-	return english(shape.name) ?? opt(shape.class, local) ?? (shape.parents.map(getShapeName).find(Boolean) ?? "");
+	return identities.get(shape)?.name ?? stated(shape) ?? anonymous;
 
+}
+
+/**
+ * Identifies a resource shape.
+ *
+ * The identifier names the page documenting the shape in the models section and stays the same while the model is
+ * unchanged; numbered identifiers may shift when shapes are added to or removed from the model.
+ *
+ * @param lazy The shape to be identified, possibly deferred
+ *
+ * @returns The identifier of `lazy`: its unique {@link getShapeName | name} as a lowercase kebab-case slug stripped of
+ *     diacritics and punctuation, as `schema-organization` or `shape-3`; none if `lazy` is outside the model
+ */
+export function getShapeId(lazy: Lazy<ResourceShape>): Optional<string> {
+	return identities.get(eager(lazy))?.id;
 }
 
 /**
@@ -269,9 +325,7 @@ export function getShapeName(lazy: Lazy<ResourceShape>): string {
  *
  * Scans the shapes reachable from `universe`, as collected by {@link @metreeca/blue!model model}, for the ones
  * declaring in their own right a visible property whose values link to or embed `lazy`, leaving out `lazy` itself.
- * Shapes are matched by {@link getShapeKey | key}, a value shape stating none taking the keys of its nearest keyed
- * ancestors, so that a property ranging over an unkeyed refinement of `lazy` still refers to it; an unkeyed `lazy`
- * is matched by identity.
+ * Shapes are matched by identity, so a property ranging over a refinement of `lazy` refers to the refinement alone.
  *
  * @param lazy The shape to be referred to, possibly deferred
  * @param universe The entry shapes of the model to be scanned, possibly deferred
@@ -282,12 +336,11 @@ export function getShapeName(lazy: Lazy<ResourceShape>): string {
 export function getShapeReferrers(lazy: Lazy<ResourceShape>, universe: Some<Lazy<ResourceShape>>): readonly ShapeLink[] {
 
 	const target = eager(lazy);
-	const key = getShapeKey(target);
 
 	return others(target, model(universe)
-		.filter(shape => declared(shape).some(([, { range }]) => targets(range.shape).some(value =>
-			key === undefined ? value === target : keys(value).includes(key)
-		)))
+		.filter(shape => declared(shape).some(([, { range }]) =>
+			targets(range.shape).includes(target)
+		))
 	);
 
 }
@@ -295,8 +348,7 @@ export function getShapeReferrers(lazy: Lazy<ResourceShape>, universe: Some<Lazy
 /**
  * Lists the shapes a resource shape refers to.
  *
- * Collects the shapes linked or embedded by the visible properties `lazy` declares or inherits, matched as by
- * {@link getShapeReferrers}, so that a property ranging over an unkeyed refinement refers to its keyed ancestor.
+ * Collects the shapes linked or embedded by the visible properties `lazy` declares or inherits, matched by identity.
  *
  * @param lazy The shape whose references are to be listed, possibly deferred
  *
@@ -317,8 +369,7 @@ export function getShapeReferences(lazy: Lazy<ResourceShape>): readonly ShapeLin
  * Lists the shapes extending a resource shape.
  *
  * Scans the shapes reachable from `universe`, as collected by {@link @metreeca/blue!model model}, for the ones
- * extending `lazy` directly or through shapes stating no {@link getShapeKey | key}, matched as by
- * {@link getShapeReferrers}; an unkeyed refinement of `lazy` is not listed, as it shares its documentation.
+ * extending `lazy` directly, matched by identity; the shapes extending them in turn are listed on their own pages.
  *
  * @param lazy The shape to be extended, possibly deferred
  * @param universe The entry shapes of the model to be scanned, possibly deferred
@@ -329,11 +380,10 @@ export function getShapeReferences(lazy: Lazy<ResourceShape>): readonly ShapeLin
 export function getShapeExtenders(lazy: Lazy<ResourceShape>, universe: Some<Lazy<ResourceShape>>): readonly ShapeLink[] {
 
 	const target = eager(lazy);
-	const key = getShapeKey(target);
 
 	return others(target, model(universe)
 		.filter(shape => shape.parents.some(parent =>
-			key === undefined ? eager(parent) === target : keys(eager(parent)).includes(key)
+			eager(parent) === target
 		))
 	);
 
@@ -342,19 +392,18 @@ export function getShapeExtenders(lazy: Lazy<ResourceShape>, universe: Some<Lazy
 /**
  * Lists the lineage of a resource shape.
  *
- * Collects every shape `lazy` extends, directly or transitively, linking each to its documentation, an unkeyed one to
- * the documentation of its nearest keyed ancestor; unnamed mixins are left out.
+ * Collects every shape `lazy` extends, directly or transitively, unnamed mixins included, each linked to its page.
  *
  * @param lazy The shape whose ancestors are to be listed, possibly deferred
  *
- * @returns The ancestors of `lazy`, from the most general down to the nearest, each listed once; empty if `lazy`
- *     extends no named shape
+ * @returns The ancestors of `lazy`, from the most general down to the nearest, each listed once; empty if `lazy` is a
+ *     root of the model hierarchy, extending no other shape directly or transitively
  */
 export function getShapeAncestors(lazy: Lazy<ResourceShape>): readonly ShapeLink[] {
 
 	const target = eager(lazy);
 
-	return others(target, lineage(target)).filter(({ name }) => name !== "").reverse(); // fresh array from filter
+	return [...others(target, lineage(target))].reverse(); // fresh array from spread
 
 }
 
@@ -408,13 +457,6 @@ function others(target: ResourceShape, shapes: readonly ResourceShape[]): readon
 }
 
 /**
- * Lists the keys a shape is matched by: its own, or else the ones of its nearest keyed ancestors.
- */
-function keys(shape: ResourceShape): readonly string[] {
-	return opt(getShapeKey(shape), key => [key]) ?? shape.parents.flatMap(parent => keys(eager(parent)));
-}
-
-/**
  * Lists the resource shapes the values of a shape link to or embed, one for each alternative.
  */
 function targets(lazy: Lazy<Shape>): readonly ResourceShape[] {
@@ -455,54 +497,26 @@ export function getShapeSummary(lazy: Lazy<ResourceShape>): Optional<string> {
 }
 
 /**
- * Keys a resource shape.
- *
- * The key identifies the shape within the model, stays the same across releases, and names the page documenting the
- * shape under `/models/`, so it may be bookmarked and linked to.
- *
- * @param lazy The shape to be keyed, possibly deferred
- *
- * @returns The key of `lazy`: the English name it states in its own right, unique within the model and prefixed by
- *     its vocabulary where it states a class, as `Schema Organization` or `Universities`; none if it states no name
- */
-export function getShapeKey(lazy: Lazy<ResourceShape>): Optional<string> {
-
-	// !!! stub: keyed by name pending a stable and robust shape identity
-
-	return english(eager(lazy).name);
-
-}
-
-/**
  * Locates the documentation of a resource shape.
  *
- * A shape is documented on a page of its own under `/models/`, named after its {@link getShapeKey | key}.
+ * A shape is documented on a page of its own in the models section, named after its {@link getShapeId | identifier}.
+ * The location is relative to the section, so it resolves as is from any page of the section and must be prefixed by
+ * the route of the section when linked from a page elsewhere, as the dataset pages do.
  *
  * @param lazy The shape to be located, possibly deferred
  *
- * @returns The root-relative location of the documentation of `lazy`, with its key URI-encoded, as
- *     `/models/Schema%20Organization`; none if `lazy` states no key, as an unnamed mixin or refinement
+ * @returns The location of the documentation of `lazy` relative to the models section, as `schema-organization`; none
+ *     if `lazy` is outside the model reachable from {@link universe}, and so has no page of its own
  */
 export function getShapeHref(lazy: Lazy<ResourceShape>): Optional<string> {
-	return opt(getShapeKey(lazy), located);
+	return getShapeId(lazy);
 }
 
 /**
- * Locates the documentation of the shape with a key.
- */
-function located(key: string): string {
-	return `/models/${encodeURIComponent(key)}`;
-}
-
-/**
- * Links a resource shape to its documentation, an unkeyed shape to the one of its nearest keyed ancestor.
+ * Links a resource shape to its documentation.
  */
 function linked(lazy: Lazy<ResourceShape>): ShapeLink {
-
-	const key = keys(eager(lazy)).at(0);
-
-	return { name: key ?? getShapeName(lazy), href: opt(key, located) };
-
+	return { name: getShapeName(lazy), href: getShapeHref(lazy) };
 }
 
 /**
@@ -592,4 +606,54 @@ export function prefixed(iri: string): string {
  */
 function local(iri: string): string {
 	return iri.replace(/^.*[#/]/, "");
+}
+
+
+/**
+ * The unique name and identifier of a shape within the model.
+ */
+type Identity = {
+
+	readonly name: string
+	readonly id: string
+
+};
+
+/**
+ * Names and identifies each shape of a model uniquely, numbering from 1 in model order the anonymous shapes and the
+ * shapes whose names would otherwise share an identifier, so that no two shapes share a page.
+ */
+function identify(shapes: readonly ResourceShape[]): ReadonlyMap<ResourceShape, Identity> {
+
+	const bases = shapes.map(shape => ({ shape, base: stated(shape) }));
+
+	return new Map(bases.map(({ shape, base }) => {
+
+		const label = base ?? anonymous;
+		const peers = bases.filter(peer => slug(peer.base ?? anonymous) === slug(label)).map(peer => peer.shape);
+		const name = base !== undefined && peers.length === 1 ? label : `${label} (${peers.indexOf(shape) + 1})`;
+
+		return [shape, { name, id: slug(name) }];
+
+	}));
+
+}
+
+/**
+ * Retrieves the name a shape states in its own right: its English name, or else the local name of its class.
+ */
+function stated(shape: ResourceShape): Optional<string> {
+	return english(shape.name) ?? opt(shape.class, local);
+}
+
+/**
+ * Converts a name into a lowercase kebab-case slug, stripped of diacritics and punctuation.
+ */
+function slug(name: string): string {
+	return name
+		.normalize("NFD")
+		.replace(/\p{M}/gu, "")
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-|-$/g, "");
 }

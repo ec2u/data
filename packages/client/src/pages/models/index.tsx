@@ -35,7 +35,7 @@ export const models = immutable({
 /**
  * Creates the documentation of the data model served by the hub.
  *
- * Lists the documented shapes at `/models/` and documents each one on a page of its own at `/models/{key}`.
+ * Lists the documented shapes at `/models/` and documents each one on a page of its own at `/models/{id}`.
  *
  * @returns The models section
  */
@@ -44,7 +44,7 @@ export function Models() {
 	return <Routes>{{
 
 		"/": <ModelsPage/>,
-		"/:key": <ModelPage/>
+		"/:id": <ModelPage/>
 
 	}}</Routes>;
 

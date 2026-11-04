@@ -19,8 +19,8 @@ import { Link } from "@metreeca/tile-cell/link";
 import { useRouter } from "@metreeca/tile-data/router";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../tiles/page.js";
-import { getShapeKey, getShapeName, getShapeSummary } from "../../tiles/shape.core.js";
-import { getModelEntries, getModelTree, type Model, type ModelNode, universe } from "./index.core.js";
+import { getShapeName, getShapeSummary, universe } from "../../tiles/shape.core.js";
+import { getModelEntries, getModelTree, type Model, type ModelNode } from "./index.core.js";
 import { models } from "./index.js";
 import "./models.css";
 
@@ -41,7 +41,7 @@ type Row = {
 	readonly depth: number
 
 	/**
-	 * The label of a grouping row; ignored for a shape row, labelled by its key.
+	 * The label of a grouping row; ignored for a shape row, labelled by its name.
 	 */
 	readonly label?: string
 
@@ -104,7 +104,7 @@ export function ModelsPage() {
 			].map(({ path, depth, label, description, model }) => <tr key={path}>
 
 				<td><span style={{ "--ec2u-models-depth": depth }}>{opt(model, ({ href, shape }) =>
-					<Link href={href}>{getShapeKey(shape) ?? getShapeName(shape)}</Link>
+					<Link href={href}>{getShapeName(shape)}</Link>
 				) ?? <strong>{label}</strong>}</span></td>
 
 				<td>{opt(model, ({ shape }) => getShapeSummary(shape)) ?? description}</td>

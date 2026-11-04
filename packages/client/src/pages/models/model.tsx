@@ -21,18 +21,18 @@ import { Path } from "@metreeca/tile-cell/path";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../tiles/page.js";
-import { getShapeDescription, getShapeKey, getShapeName } from "../../tiles/shape.core.js";
+import { getShapeDescription, getShapeName, universe } from "../../tiles/shape.core.js";
 import { Shape, ShapeInfo } from "../../tiles/shape.js";
 import { Unknown } from "../unknown.js";
-import { getModel, universe } from "./index.core.js";
+import { getModel } from "./index.core.js";
 import { models } from "./index.js";
 
 
 /**
  * Creates the documentation of a shape of the data model served by the hub.
  *
- * Documents the shape keyed by the last step of the current route, as `/models/University`, falling back to the
- * not-found view if no shape of the model is keyed by it.
+ * Documents the shape identified by the last step of the current route, as `/models/ec2u-university`, falling back
+ * to the not-found view if no shape of the model is identified by that step of the route.
  *
  * @returns The model page
  */
@@ -41,8 +41,8 @@ export function ModelPage() {
 	const route = useRoute();
 	const router = useRouter();
 
-	const shape = getModel(universe, decodeURIComponent(route.replace(/^.*\//, "")));
-	const name = opt(shape, shape => getShapeKey(shape) ?? getShapeName(shape));
+	const shape = getModel(universe, route.replace(/^.*\//, ""));
+	const name = opt(shape, getShapeName);
 
 
 	useEffect(() => router({ title: name }), [name]);

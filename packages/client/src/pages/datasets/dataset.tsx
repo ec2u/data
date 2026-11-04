@@ -39,6 +39,7 @@ import { Page } from "../../tiles/page.js";
 import { getShapeHref, getShapeName } from "../../tiles/shape.core.js";
 import "../../tiles/shape.css";
 import { about } from "../about/index.js";
+import { models } from "../models/index.js";
 
 
 /**
@@ -233,7 +234,9 @@ export function DatasetPage({
 
 					"Data Model": opt(shapes, shapes => <ul class={"ec2u-shape-links"}>{some(shapes).map(shape =>
 						<li key={getShapeName(shape)}>
-							{opt(getShapeHref(shape), href => <Link href={href}>{getShapeName(shape)}</Link>) ?? getShapeName(shape)}
+							{opt(getShapeHref(shape), href =>
+								<Link href={`${models.route}${href}`}>{getShapeName(shape)}</Link>
+							) ?? getShapeName(shape)}
 						</li>
 					)}</ul>)
 
