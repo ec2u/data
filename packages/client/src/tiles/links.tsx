@@ -15,7 +15,6 @@
  */
 
 import { opt } from "@metreeca/core";
-import { nameTag } from "@metreeca/core/language";
 import { by, locale } from "@metreeca/core/order";
 import { Link } from "@metreeca/tile-cell/link";
 import { tagIRI } from "@metreeca/work/core/language.js";
@@ -27,19 +26,19 @@ import "./links.css";
 /**
  * Labels a web address for outbound link text.
  *
- * Keeps the localised versions of a page on the same site apart, naming the language the address states in the reader
- * locale and dimmed after the host, as in `www.uc.pt (English)`, and leaving addresses stating none to their host.
+ * Keeps the localised versions of a page on the same site apart, setting the tag of the language the address states in
+ * dimmed type after the host, as in `www.uc.pt en` and `www.uc.pt pt`, and leaving addresses stating none to their host.
  *
  * @param url The web address to be labelled
  *
- * @returns The host of `url`, followed by the name of the language it states, if any; `url` itself if it names no host
+ * @returns The host of `url`, followed by the tag of the language it states, if any; `url` itself if it names no host
  */
 export function address(url: string): ComponentChildren {
 
 	const host = getIRIHost(url) ?? url;
 
 	return opt(tagIRI(url), tag => createElement("ec2u-address", {},
-		host, " ", <span>({nameTag(tag, navigator.language)})</span>
+		host, <span>{tag}</span>
 	)) ?? host;
 
 }

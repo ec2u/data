@@ -15,6 +15,7 @@
  */
 
 ec2u-address > span {
+    margin-left: var(--tile--spacing-050);
     font-weight: var(--tile--font-weight);
     color: var(--tile--color-label);
 }
