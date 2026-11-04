@@ -24,7 +24,7 @@ import { useRoute } from "@metreeca/tile-data/router";
 import type { ComponentChildren } from "preact";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { Unknown } from "../index.js";
+import { Unknown } from "../unknown.js";
 import { about } from "./index.js";
 
 

@@ -62,7 +62,7 @@ export function ProgramsPage() {
 		entry: route,
 		shape: Programs,
 		field: "resources",
-		criteria: query,
+		query,
 		onChange: setQuery
 	});
 

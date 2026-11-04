@@ -206,7 +206,7 @@ function TaxonomySearch({
 		entry: route,
 		shape: Taxonomy,
 		field: "hasConcept",
-		criteria: { "~label": keywords }
+		query: { "~label": keywords }
 	});
 
 	useEffect(() => { collection.filter({ "~label": keywords }); }, [collection, keywords]);

@@ -48,7 +48,7 @@ export function TaxonomiesPage() {
 		entry: route,
 		shape: Taxonomies,
 		field: "resources",
-		criteria: query,
+		query,
 		onChange: setQuery
 	});
 

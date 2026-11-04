@@ -64,7 +64,7 @@ export function CoursesPage() {
 		entry: route,
 		shape: Courses,
 		field: "resources",
-		criteria: query,
+		query,
 		onChange: setQuery
 	});
 

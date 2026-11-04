@@ -60,7 +60,7 @@ export function DocumentsPage() {
 		entry: route,
 		shape: Documents,
 		field: "resources",
-		criteria: query,
+		query,
 		onChange: setQuery
 	});
 

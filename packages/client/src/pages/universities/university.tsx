@@ -33,7 +33,7 @@ import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Title } from "../../tiles/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
-import { byDataset, isDatasetRow } from "../datasets/datasets.core.js";
+import { byDataset, isDatasetRow, published } from "../index.js";
 import { universities } from "./index.js";
 
 
@@ -85,7 +85,7 @@ export function UniversityPage() {
 	const collection = useCollection({
 		entry: "/resources/",
 		shape: Resources,
-		criteria: { "?university": [route] }
+		scope: { "?university": [route], "?dataset": published }
 	});
 
 	const members = useMembers(collection, { model: stats });

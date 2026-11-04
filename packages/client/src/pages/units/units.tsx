@@ -60,7 +60,7 @@ export function UnitsPage() {
 		entry: route,
 		shape: Units,
 		field: "resources",
-		criteria: query,
+		query,
 		onChange: setQuery
 	});
 

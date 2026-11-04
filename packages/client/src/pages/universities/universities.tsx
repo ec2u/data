@@ -62,7 +62,7 @@ export function UniversitiesPage() {
 		entry: route,
 		shape: Universities,
 		field: "resources",
-		criteria: query,
+		query,
 		onChange: setQuery
 	});
 

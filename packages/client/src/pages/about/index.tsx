@@ -27,7 +27,7 @@ import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
 import { courses } from "../courses/index.js";
 import { DatasetPage } from "../datasets/dataset.js";
-import { datasets } from "../datasets/index.js";
+import { datasets } from "../index.js";
 import { documents } from "../documents/index.js";
 import { events } from "../events/index.js";
 import { programs } from "../programs/index.js";

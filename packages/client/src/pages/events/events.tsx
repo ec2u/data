@@ -68,7 +68,7 @@ export function EventsPage() {
 		entry: route,
 		shape: Events,
 		field: "resources",
-		criteria: query,
+		query,
 		onChange: setQuery
 	});
 
