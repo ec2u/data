@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { base, EC2U, ec2u, licenses } from "@ec2u/data-shared";
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { base, Dataset, EC2U, ec2u, licenses } from "@ec2u/data-shared";
 import { getOfferingId, Offering } from "@ec2u/data-shared/offerings/index.js";
 import { SchemaEducationalOccupationalProgram } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";

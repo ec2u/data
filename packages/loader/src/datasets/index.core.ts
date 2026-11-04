@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { datasets, Datasets } from "@ec2u/data-shared/datasets/index.js";
+import { datasets, Datasets } from "@ec2u/data-shared";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { map } from "@metreeca/flow/tasks";

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { base, EC2U, ec2u, licenses } from "@ec2u/data-shared";
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { base, Dataset, EC2U, ec2u, licenses } from "@ec2u/data-shared";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, required, resource } from "@metreeca/blue/resource";

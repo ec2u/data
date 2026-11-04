@@ -15,7 +15,7 @@
  */
 
 import { Course, Courses as CoursesShape } from "@ec2u/data-shared/courses/index.js";
-import { Dataset, Datasets as DatasetsShape } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset, Datasets as DatasetsShape } from "@ec2u/data-shared";
 import { Document, Documents as DocumentsShape } from "@ec2u/data-shared/documents/index.js";
 import { Event, Events as EventsShape } from "@ec2u/data-shared/events/index.js";
 import { Program, Programs as ProgramsShape } from "@ec2u/data-shared/programs/index.js";

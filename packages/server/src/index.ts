@@ -15,7 +15,7 @@
  */
 
 import * as ec2u from "@ec2u/data-shared";
-import { Datasets } from "@ec2u/data-shared/datasets/index.js";
+import { Datasets } from "@ec2u/data-shared";
 import { server } from "@metreeca/gate";
 import { client } from "@metreeca/gate/client";
 import { driver } from "@metreeca/gate/driver";

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Datasets as DatasetsShape } from "@ec2u/data-shared/datasets/index.js";
+import { Datasets as DatasetsShape } from "@ec2u/data-shared";
 import { isNumber, isObject, isOptional, isString, opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";

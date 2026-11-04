@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { base, CommentLength, EC2U, ec2u, LabelLength, licenses } from "@ec2u/data-shared";
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { base, CommentLength, Dataset, EC2U, ec2u, LabelLength, licenses } from "@ec2u/data-shared";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { EventTopic } from "@ec2u/data-shared/taxonomies/events.js";

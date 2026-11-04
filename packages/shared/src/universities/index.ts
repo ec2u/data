@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { base, EC2U, ec2u, licenses, Place } from "@ec2u/data-shared";
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { base, Dataset, EC2U, ec2u, licenses, Place } from "@ec2u/data-shared";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { OrgFormalOrganization } from "@ec2u/data-shared/vocabularies/org.js";
 import { skos } from "@ec2u/data-shared/vocabularies/skos.js";

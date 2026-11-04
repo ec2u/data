@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset } from "@ec2u/data-shared";
 import { EuroSciVocTopic } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { dictionary } from "@metreeca/blue/dictionary";

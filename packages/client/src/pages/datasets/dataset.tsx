@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Dataset } from "@ec2u/data-shared/datasets/index.js";
+import { Dataset } from "@ec2u/data-shared";
 import type { ResourceShape } from "@metreeca/blue/resource";
 import { type Lazy, opt } from "@metreeca/core";
 import { some, type Some } from "@metreeca/core/arrays";
