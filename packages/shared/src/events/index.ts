@@ -49,6 +49,7 @@ export const events = immutable({
 	rights: "Copyright © 2022-2025 EC2U Alliance",
 	license: [licenses.CCBYNCND40.id],
 
+	created: "2021-07-05",
 	issued: "2022-01-01"
 
 });

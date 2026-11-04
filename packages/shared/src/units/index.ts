@@ -47,7 +47,8 @@ export const units = immutable({
 	rights: "Copyright © 2022-2025 EC2U Alliance",
 	license: [licenses.CCBYNCND40.id],
 
-	issued: "2022-01-01"
+	created: "2022-06-24",
+	issued: "2022-06-24"
 
 });
 

@@ -41,6 +41,7 @@ export const documents = immutable({ // !!! sync from `taxonomies-ec2u-documents
 	rights: "Copyright © 2022-2025 EC2U Alliance",
 	license: [licenses.CCBYNCND40.id],
 
+	created: "2023-07-12",
 	issued: "2025-05-01"
 
 });

@@ -45,6 +45,7 @@ export const universities = immutable({
 	rights: "Copyright © 2022-2025 EC2U Alliance",
 	license: [licenses.CCBYNCND40.id],
 
+	created: "2021-02-20",
 	issued: "2022-01-01"
 
 });

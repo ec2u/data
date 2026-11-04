@@ -18,7 +18,7 @@ import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { ISCED2011Topic } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
-import { base, ec2u } from "@ec2u/data-shared";
+import { base, EC2U, ec2u, licenses } from "@ec2u/data-shared";
 import { SchemaLearningResource } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
@@ -36,7 +36,23 @@ const YearPattern = "^\\d{4}/\\d{4}$";
 
 export const offerings = immutable({
 
-	id: resolve(base, "/offerings/")
+	id: resolve(base, "/offerings/"),
+
+	dataset: base,
+
+	label: "EC2U Offerings",
+
+	title: { en: "EC2U Educational Offerings" },
+	alternative: { en: "EC2U Offerings" },
+	description: { en: "Degree and vocational programs and courses offered by EC2U partner universities." },
+
+	publisher: EC2U,
+
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id],
+
+	created: "2022-09-26",
+	issued: "2022-09-26"
 
 });
 

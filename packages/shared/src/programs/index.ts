@@ -43,7 +43,8 @@ export const programs = immutable({
 	rights: "Copyright © 2022-2025 EC2U Alliance",
 	license: [licenses.CCBYNCND40.id],
 
-	issued: "2022-03-10"
+	created: "2023-01-19",
+	issued: "2023-01-19"
 
 });
 

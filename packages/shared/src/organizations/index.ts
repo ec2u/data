@@ -46,7 +46,9 @@ export const organizations = immutable({
 	publisher: EC2U,
 
 	rights: "Copyright © 2022-2025 EC2U Alliance",
-	license: [licenses.CCBYNCND40.id]
+	license: [licenses.CCBYNCND40.id],
+
+	created: "2023-01-04"
 
 });
 

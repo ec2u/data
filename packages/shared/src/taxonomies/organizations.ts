@@ -41,7 +41,8 @@ export const organizations = immutable({ // !!! sync from `taxonomies-ec2u-organ
 	rights: "Copyright © 2022-2025 EC2U Alliance",
 	license: [licenses.CCBYNCND40.id],
 
-	issued: "2024-01-01"
+	created: "2024-03-27",
+	issued: "2024-03-27"
 
 });
 

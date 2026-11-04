@@ -44,7 +44,10 @@ export const taxonomies = immutable({
 	publisher: EC2U,
 
 	rights: "Copyright © 2022-2025 EC2U Alliance",
-	license: [licenses.CCBYNCND40.id]
+	license: [licenses.CCBYNCND40.id],
+
+	created: "2021-09-06",
+	issued: "2021-09-06"
 
 });
 

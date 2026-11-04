@@ -41,6 +41,7 @@ export const stakeholders = immutable({ // !!! sync from `taxonomies-ec2u-stakeh
 	rights: "Copyright © 2022-2025 EC2U Alliance",
 	license: [licenses.CCBYNCND40.id],
 
+	created: "2025-02-11",
 	issued: "2025-05-01"
 
 });
