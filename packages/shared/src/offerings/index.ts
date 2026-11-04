@@ -24,6 +24,7 @@ import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
 import { iri, string } from "@metreeca/blue/string";
 import { resolve } from "@metreeca/core/resource";
+import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import type { Reference } from "@metreeca/qest/state";
 import * as uuid from "uuid";
@@ -66,7 +67,13 @@ export function Offering() {
 		class: ec2u.Offering,
 
 		name: "Offering",
-		description: "An educational offering of an EC2U partner university."
+		description: markdown`
+			An educational offering of an EC2U partner university.
+
+			> [!IMPORTANT]
+			> Not intended for use in isolation: it factors the generic properties shared by the specialised models
+			> defined by each dataset.
+		`
 
 	}, {
 

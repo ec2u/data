@@ -53,7 +53,9 @@ export const org = createNamespace("http://www.w3.org/ns/org#", [
 export function OrgOrganizationalUnit() {
 	return resource(OrgOrganization, {
 
-		class: org.OrganizationalUnit
+		class: org.OrganizationalUnit,
+
+		description: "An organization that is part of a larger organization."
 
 	}, {
 
@@ -73,7 +75,9 @@ export function OrgOrganization() {
 	return resource(FOAFOrganization, {
 
 		space: org,
-		class: org.Organization
+		class: org.Organization,
+
+		description: "A collection of people organized into a social, commercial or political structure."
 
 	}, {
 
@@ -143,7 +147,9 @@ export function OrgOrganization() {
 export function OrgFormalOrganization() {
 	return resource(OrgOrganization, {
 
-		class: org.FormalOrganization
+		class: org.FormalOrganization,
+
+		description: "An organization recognized in legal jurisdictions."
 
 	});
 }
@@ -151,7 +157,9 @@ export function OrgFormalOrganization() {
 export function OrgOrganizationalCollaboration() {
 	return resource(OrgOrganization, {
 
-		class: org.OrganizationalCollaboration
+		class: org.OrganizationalCollaboration,
+
+		description: "A collaboration between two or more organizations."
 
 	});
 }

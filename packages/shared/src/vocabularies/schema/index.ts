@@ -19,10 +19,12 @@ import { multiple, nonempty, optional, resource } from "@metreeca/blue/resource"
 import { iri, string, text } from "@metreeca/blue/string";
 import { union } from "@metreeca/blue/union";
 import { createNamespace } from "@metreeca/core/resource";
+import { markdown } from "@metreeca/core/strings";
 
 
 export const schema = createNamespace("https://schema.org/", [
 
+	"Thing",
 	"ImageObject",
 
 	"Place",
@@ -31,6 +33,12 @@ export const schema = createNamespace("https://schema.org/", [
 
 	"Organization",
 
+	"Event",
+
+	"LearningResource",
+	"EducationalOccupationalProgram",
+	"Course",
+	"CourseInstance",
 	"EducationalOccupationalCredential",
 
 	"url",
@@ -133,6 +141,23 @@ export function SchemaBase() {
 export function SchemaThing() {
 	return resource(SchemaBase, {
 
+		class: schema.Thing,
+
+		description: markdown`
+			An item of any kind.
+
+			> [!IMPORTANT]
+			> Not intended for use in isolation: it factors the generic properties shared by the specialised models
+			> defined by each dataset.
+
+			> [!WARNING]
+			> Deviates from Schema.org to simplify interoperation with other vocabularies:
+			>
+			> - \`identifier\` values are stated as plain strings rather than as \`PropertyValue\` resources or URLs
+		`
+
+	}, {
+
 		image: optional(SchemaImageObject, {
 			description: "Image depicting the resource."
 		})
@@ -143,7 +168,21 @@ export function SchemaThing() {
 export function SchemaImageObject() {
 	return resource(SchemaBase, {
 
-		class: schema.ImageObject
+		class: schema.ImageObject,
+
+		description: markdown`
+			An image file.
+
+			> [!TIP]
+			> The \`description\` of the image may provide the text alternative accessibility support requires, such
+			> as the \`alt\` attribute of HTML \`img\` elements.
+
+			> [!WARNING]
+			> Deviates from Schema.org:
+			>
+			> - \`author\` values are stated as plain strings rather than as \`schema:Person\` or \`schema:Organization\`
+			>   resources
+		`
 
 	}, { // ;( extends Base, not Thing: the inherited `image` would nest ImageObject endlessly
 

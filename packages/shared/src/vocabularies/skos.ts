@@ -19,6 +19,7 @@ import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
 import { createNamespace } from "@metreeca/core/resource";
+import { markdown } from "@metreeca/core/strings";
 
 
 export const skos = createNamespace("http://www.w3.org/2004/02/skos/core#", [
@@ -52,7 +53,9 @@ export function SKOSConceptScheme() {
 	return resource({
 
 		space: skos,
-		class: skos.ConceptScheme
+		class: skos.ConceptScheme,
+
+		description: "A set of concepts, optionally with statements of the semantic relationships between them."
 
 	}, {
 
@@ -82,7 +85,17 @@ export function SKOSConcept() {
 	return resource({
 
 		space: skos,
-		class: skos.Concept
+		class: skos.Concept,
+
+		description: markdown`
+			An idea or notion; a unit of thought.
+
+			> [!WARNING]
+			> Deviates from SKOS best practices to simplify use in frontend applications:
+			>
+			> - \`notation\` values are stated as plain strings rather than as the typed literals SKOS best practices
+			>   recommend
+		`
 
 	}, {
 

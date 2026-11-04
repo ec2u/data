@@ -24,6 +24,7 @@ import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, optional, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
 import { resolve } from "@metreeca/core/resource";
+import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import type { Reference } from "@metreeca/qest/state";
 import * as uuid from "uuid";
@@ -84,7 +85,11 @@ export function Unit() {
 
 			forward: dct,
 
-			description: "Research topics the unit is concerned with."
+			description: markdown`
+				Research topics the unit is concerned with.
+
+				Drawn from the [EuroSciVoc](/taxonomies/euroscivoc/) taxonomy.
+			`
 
 		}),
 

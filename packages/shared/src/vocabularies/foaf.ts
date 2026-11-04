@@ -17,6 +17,7 @@
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { email, iri, phone, text } from "@metreeca/blue/string";
 import { createNamespace } from "@metreeca/core/resource";
+import { markdown } from "@metreeca/core/strings";
 
 
 export const foaf = createNamespace("http://xmlns.com/foaf/0.1/", [
@@ -44,7 +45,17 @@ export function FOAFAgent() {
 	return resource({
 
 		space: foaf,
-		class: foaf.Agent
+		class: foaf.Agent,
+
+		description: markdown`
+			A person, group or other entity able to act.
+
+			> [!WARNING]
+			> Deviates from the FOAF specification to simplify use in frontend applications:
+			>
+			> - \`mbox\` values are stated as plain strings rather than as \`mailto:\` IRIs
+			> - \`phone\` values are stated as plain strings rather than as \`tel:\` IRIs
+		`
 
 	}, {
 
@@ -70,7 +81,9 @@ export function FOAFAgent() {
 export function FOAFOrganization() {
 	return resource(FOAFAgent, {
 
-		class: foaf.Organization
+		class: foaf.Organization,
+
+		description: "A group of people acting together as a single agent."
 
 	});
 }
@@ -78,7 +91,9 @@ export function FOAFOrganization() {
 export function FOAFPerson() {
 	return resource(FOAFAgent, {
 
-		class: foaf.Person
+		class: foaf.Person,
+
+		description: "An individual person."
 
 	}, {
 

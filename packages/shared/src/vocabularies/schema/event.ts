@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SchemaThing } from "@ec2u/data-shared/vocabularies/schema/index.js";
+import { schema, SchemaThing } from "@ec2u/data-shared/vocabularies/schema/index.js";
 import { SchemaLocation } from "@ec2u/data-shared/vocabularies/schema/location.js";
 import { SchemaOrganization } from "@ec2u/data-shared/vocabularies/schema/organization.js";
 import { SKOSConcept } from "@ec2u/data-shared/vocabularies/skos.js";
@@ -51,6 +51,12 @@ export function SchemaEventAttendanceModeEnumeration() {
 
 export function SchemaEvent() {
 	return resource(SchemaThing, {
+
+		class: schema.Event,
+
+		description: "An event happening at a certain time and location."
+
+	}, {
 
 		url: nonempty(iri),
 

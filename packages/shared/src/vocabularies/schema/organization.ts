@@ -23,7 +23,9 @@ import { email, phone, text } from "@metreeca/blue/string";
 export function SchemaOrganization() {
 	return resource(SchemaThing, {
 
-		class: schema.Organization
+		class: schema.Organization,
+
+		description: "An organized group of people with a shared purpose."
 
 	}, {
 

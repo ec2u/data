@@ -19,6 +19,7 @@ import { Dataset, ec2u, Entity, rdfs } from "@ec2u/data-shared";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
 import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
+import { markdown } from "@metreeca/core/strings";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +48,17 @@ export function Resource() {
 		class: ec2u.Resource,
 
 		name: "Resource",
-		description: "A resource published in a dataset on the EC2U Knowledge Hub."
+		description: markdown`
+			A resource published in a dataset on the EC2U Knowledge Hub.
+
+			> [!IMPORTANT]
+			> Not intended for use in isolation: it factors the generic properties shared by the specialised models
+			> defined by each dataset.
+
+			> [!NOTE]
+			> Human-readable labels and descriptions are localised either in English or in one of the local languages
+			> of the EC2U partner universities.
+		`
 
 	}, {
 

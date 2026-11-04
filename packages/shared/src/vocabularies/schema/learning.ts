@@ -26,6 +26,7 @@ import { decimal } from "@metreeca/blue/number";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { duration, string, tag, text } from "@metreeca/blue/string";
+import { markdown } from "@metreeca/core/strings";
 
 
 export function SchemaCredentialCategory() {
@@ -43,6 +44,12 @@ export function SchemaCredentialCategory() {
 
 export function SchemaLearningResource() {
 	return resource(SchemaThing, {
+
+		class: schema.LearningResource,
+
+		description: "A creative work providing educational value."
+
+	}, {
 
 		numberOfCredits: optional(decimal({ minInclusive: 0 }), {
 			description: "Number of academic credits awarded for the learning resource."
@@ -86,6 +93,12 @@ export function SchemaLearningResource() {
 export function SchemaEducationalOccupationalProgram() {
 	return resource(SchemaLearningResource, {
 
+		class: schema.EducationalOccupationalProgram,
+
+		description: "A program offered by an institution, setting the learning progress required to achieve an outcome."
+
+	}, {
+
 		timeToComplete: optional(duration, {
 			description: "Expected time to complete the program."
 		}),
@@ -108,6 +121,12 @@ export function SchemaEducationalOccupationalProgram() {
 export function SchemaCourse() {
 	return resource(SchemaLearningResource, {
 
+		class: schema.Course,
+
+		description: "An educational course, which may be offered as distinct instances."
+
+	}, {
+
 		courseCode: optional(text, {
 			description: "Code identifying the course within the offering of its provider."
 		}),
@@ -129,6 +148,12 @@ export function SchemaCourse() {
 
 export function SchemaCourseInstance() {
 	return resource(SchemaThing, {
+
+		class: schema.CourseInstance,
+
+		description: "An offering of a course, distinct from other offerings by its time or location."
+
+	}, {
 
 		isAccessibleForFree: optional(boolean, {
 			description: "Flags courses accessible free of charge."
@@ -158,12 +183,22 @@ export function SchemaCourseInstance() {
 export function SchemaEducationalOccupationalCredential() {
 	return resource(SchemaThing, {
 
-		class: schema.EducationalOccupationalCredential
+		class: schema.EducationalOccupationalCredential,
+
+		description: "A credential awarded on completion of an educational or occupational course or program."
 
 	}, {
 
 		credentialCategory: required(SchemaCredentialCategory, {
-			description: "Kind of qualification the credential represents."
+			description: markdown`
+				Kind of qualification the credential represents.
+
+				| value         | description                                |
+				|---------------|--------------------------------------------|
+				| \`Degree\`      | an academic degree                         |
+				| \`Certificate\` | a certificate of attendance or achievement |
+				| \`Badge\`       | an Open Badge digital certification        |
+			`
 		})
 
 	});

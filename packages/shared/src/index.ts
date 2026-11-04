@@ -26,6 +26,7 @@ import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { date, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
+import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 
 
@@ -79,7 +80,13 @@ export function Dataset() {
 		class: ec2u.Dataset,
 
 		name: "Dataset",
-		description: "A dataset published on the EC2U Knowledge Hub."
+		description: markdown`
+			A dataset published on the EC2U Knowledge Hub.
+
+			> [!IMPORTANT]
+			> Not intended for use in isolation: it factors the generic properties shared by the specialised models
+			> defined by each dataset.
+		`
 
 	}, {
 
@@ -128,7 +135,11 @@ export function Dataset() {
 		}),
 
 		subject: multiple(reference(EuroSciVocTopic), {
-			description: "Topics the dataset is about."
+			description: markdown`
+				Topics the dataset is about.
+
+				Drawn from the [EuroSciVoc](/taxonomies/euroscivoc/) taxonomy.
+			`
 		}),
 
 		resources: multiple(reference(Resource), {

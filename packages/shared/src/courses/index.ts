@@ -26,6 +26,7 @@ import { multiple, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
 import { resolve } from "@metreeca/core/resource";
+import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import type { Reference } from "@metreeca/qest/state";
 
@@ -84,7 +85,17 @@ export function Course() {
 	}, {
 
 		term: multiple(Term, {
-			description: "Academic terms in which the course is delivered."
+			description: markdown`
+				Academic terms in which the course is delivered.
+
+				| value    | description                  |
+				|----------|------------------------------|
+				| \`Annual\` | the full academic year       |
+				| \`First\`  | the first (autumn) semester  |
+				| \`Second\` | the second (spring) semester |
+				| \`Summer\` | a summer school              |
+				| \`Open\`   | open enrolment               |
+			`
 		}),
 
 		audience: multiple(reference(StakeholderTopic)),

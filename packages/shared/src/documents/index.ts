@@ -29,6 +29,7 @@ import { multiple, optional, required, resource } from "@metreeca/blue/resource"
 import { date, iri, string, tag, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
 import { resolve } from "@metreeca/core/resource";
+import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import type { Reference } from "@metreeca/qest/state";
 import * as uuid from "uuid";
@@ -157,16 +158,28 @@ export function Document() {
 
 			forward: dct.type,
 
-			description: "Categories of governance document the document falls under."
+			description: markdown`
+				Categories of governance document the document falls under.
+
+				Drawn from the [EC2U Document Types](/taxonomies/documents/) taxonomy.
+			`
 
 		}),
 
 		subject: multiple(reference(EuroSciVocTopic), {
-			description: "Topics the document is about."
+			description: markdown`
+				Topics the document is about.
+
+				Drawn from the [EuroSciVoc](/taxonomies/euroscivoc/) taxonomy.
+			`
 		}),
 
 		audience: multiple(reference(StakeholderTopic), {
-			description: "Stakeholder groups the document is intended for."
+			description: markdown`
+				Stakeholder groups the document is intended for.
+
+				Drawn from the [EC2U Stakeholders](/taxonomies/stakeholders/) taxonomy.
+			`
 		}),
 
 		relation: multiple(reference(Document), {
