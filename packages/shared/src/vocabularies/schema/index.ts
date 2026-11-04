@@ -108,7 +108,7 @@ export const schema = createNamespace("https://schema.org/", [
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function SchemaBase() {
+export function SchemaEntity() {
 	return resource({
 
 		space: schema,
@@ -122,8 +122,8 @@ export function SchemaBase() {
 			> Not intended for use in isolation: it states the properties shared by every Schema.org model.
 
 			> [!WARNING]
-			> Deviates from Schema.org, where \`ImageObject\` extends \`Thing\` and so inherits the \`image\` property,
-			> making the model recursive. Here, image objects and similar types extend this model instead.
+			> Deviates from Schema.org, where \`Schema Image Object\` extends \`Schema Thing\`. Here it extends this
+			> model instead, as inheriting \`image\` from \`Schema Thing\` would make images embed themselves endlessly.
 		`
 
 	}, {
@@ -152,7 +152,7 @@ export function SchemaBase() {
 }
 
 export function SchemaThing() {
-	return resource(SchemaBase, {
+	return resource(SchemaEntity, {
 
 		class: schema.Thing,
 
@@ -181,7 +181,7 @@ export function SchemaThing() {
 }
 
 export function SchemaImageObject() {
-	return resource(SchemaBase, {
+	return resource(SchemaEntity, {
 
 		class: schema.ImageObject,
 
