@@ -39,7 +39,7 @@ export function Taxonomies() {
 
 		"/": <TaxonomiesPage/>,
 		"/:taxonomy": <TaxonomyPage/>,
-		"/:taxonomy/": <TopicPage/> // topic routes nest along the taxonomy hierarchy
+		"/:taxonomy/": <TopicPage/>
 
 	}}</Routes>;
 
