@@ -69,8 +69,8 @@ export type Document = State<typeof Document>;
 export function Documents() {
 	return resource(Dataset, {
 
-		name: "Documents",
-		description: "Regulations, policies and other governance documents shared by EC2U universities."
+		name: documents.alternative,
+		description: documents.description
 
 	}, {
 

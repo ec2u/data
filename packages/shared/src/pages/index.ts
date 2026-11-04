@@ -50,8 +50,8 @@ export const pages = immutable({
 export function Pages() {
 	return resource(Dataset, {
 
-		name: "Pages",
-		description: "Web pages from which EC2U Knowledge Hub content is derived."
+		name: pages.alternative,
+		description: pages.description
 
 	}, {
 

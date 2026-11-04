@@ -55,8 +55,8 @@ export const persons = immutable({
 export function Persons() {
 	return resource(Dataset, {
 
-		name: "People",
-		description: "Staff involved in teaching and research activities at EC2U universities."
+		name: persons.alternative,
+		description: persons.description
 
 	}, {
 

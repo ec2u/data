@@ -60,8 +60,8 @@ export type University = State<typeof University>;
 export function Universities() {
 	return resource(Dataset, {
 
-		name: "Universities",
-		description: "Background, historical context and statistical data about EC2U universities."
+		name: universities.alternative,
+		description: universities.description
 
 	}, {
 

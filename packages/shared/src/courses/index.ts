@@ -63,8 +63,8 @@ export type Course = State<typeof Course>;
 export function Courses() {
 	return resource(Dataset, {
 
-		name: "Courses",
-		description: "Degree, vocational and personal development courses offered by EC2U universities."
+		name: courses.alternative,
+		description: courses.description
 
 	}, {
 

@@ -63,8 +63,8 @@ export type Dataset = State<typeof Dataset>;
 export function Datasets() {
 	return resource(Dataset, {
 
-		name: "Datasets",
-		description: "Datasets published on the EC2U Knowledge Hub."
+		name: datasets.alternative,
+		description: datasets.description
 
 	}, {
 

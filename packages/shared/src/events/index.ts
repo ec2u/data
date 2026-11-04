@@ -66,8 +66,8 @@ export type Publisher = State<typeof Publisher>;
 export function Events() {
 	return resource(Dataset, {
 
-		name: "Events",
-		description: "Information about events at EC2U universities and associated local organisations."
+		name: events.alternative,
+		description: events.description
 
 	}, {
 

@@ -64,8 +64,8 @@ export function Taxonomies() {
 
 		pattern: taxonomies.id,
 
-		name: "Taxonomies",
-		description: "Standardised topic taxonomies and other concept schemes for classifying resources."
+		name: taxonomies.alternative,
+		description: taxonomies.description
 
 	}, {
 

@@ -58,8 +58,8 @@ export const units = immutable({
 export function Units() {
 	return resource(Dataset, {
 
-		name: "Units",
-		description: "Information about research units and supporting structures at EC2U universities."
+		name: units.alternative,
+		description: units.description
 
 	}, {
 

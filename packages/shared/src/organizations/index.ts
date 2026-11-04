@@ -69,8 +69,8 @@ export const alliance = immutable({
 export function Organizations() {
 	return resource(Dataset, {
 
-		name: "Organisations",
-		description: "Organisations related to EC2U universities."
+		name: organizations.alternative,
+		description: organizations.description
 
 	}, {
 

@@ -57,8 +57,8 @@ export type Program = State<typeof Program>;
 export function Programs() {
 	return resource(Dataset, {
 
-		name: "Programs",
-		description: "Formal degree and vocational qualification programs offered by EC2U universities."
+		name: programs.alternative,
+		description: programs.description
 
 	}, {
 
