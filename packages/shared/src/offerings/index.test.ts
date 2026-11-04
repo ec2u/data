@@ -29,26 +29,6 @@ const year = "2025/2026";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-describe("getAcademicYear", () => {
-
-	it("starts the academic year in August", async () => {
-		expect(getAcademicYear(new Date("2026-08-01T00:00:00Z"))).toBe("2026/2027");
-		expect(getAcademicYear(new Date("2026-10-29T12:00:00Z"))).toBe("2026/2027");
-		expect(getAcademicYear(new Date("2026-12-31T23:59:59Z"))).toBe("2026/2027");
-	});
-
-	it("keeps the academic year until the end of July", async () => {
-		expect(getAcademicYear(new Date("2027-01-01T00:00:00Z"))).toBe("2026/2027");
-		expect(getAcademicYear(new Date("2027-07-31T23:59:59Z"))).toBe("2026/2027");
-	});
-
-	it("names a year a valid offering identity accepts", async () => {
-		expect(() => getOfferingId(dataset, university, key, { year: getAcademicYear(new Date()) })).not.toThrow();
-	});
-
-});
-
-
 describe("getOfferingId", () => {
 
 	describe("identity", () => {
@@ -128,6 +108,25 @@ describe("getOfferingId", () => {
 			expect(() => getOfferingId(dataset, university, " \t\n")).toThrow(RangeError);
 		});
 
+	});
+
+});
+
+describe("getAcademicYear", () => {
+
+	it("starts the academic year in August", async () => {
+		expect(getAcademicYear(new Date("2026-08-01T00:00:00Z"))).toBe("2026/2027");
+		expect(getAcademicYear(new Date("2026-10-29T12:00:00Z"))).toBe("2026/2027");
+		expect(getAcademicYear(new Date("2026-12-31T23:59:59Z"))).toBe("2026/2027");
+	});
+
+	it("keeps the academic year until the end of July", async () => {
+		expect(getAcademicYear(new Date("2027-01-01T00:00:00Z"))).toBe("2026/2027");
+		expect(getAcademicYear(new Date("2027-07-31T23:59:59Z"))).toBe("2026/2027");
+	});
+
+	it("names a year a valid offering identity accepts", async () => {
+		expect(() => getOfferingId(dataset, university, key, { year: getAcademicYear(new Date()) })).not.toThrow();
 	});
 
 });

@@ -54,7 +54,6 @@ describe("isStaleEvent", () => {
 
 });
 
-
 describe("getEventId", () => {
 
 	it("names the same event for the same address", () => {
