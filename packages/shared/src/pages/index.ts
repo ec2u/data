@@ -66,7 +66,7 @@ export function Page() {
 		space: ec2u,
 		class: ec2u.Page,
 
-		name: "Page",
+		name: "EC2U Page",
 		description: "A web page from which EC2U Knowledge Hub content is derived."
 
 	}, {

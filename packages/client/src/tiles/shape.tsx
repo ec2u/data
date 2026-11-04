@@ -21,15 +21,16 @@ import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { Text } from "../_/text.js";
-import { getShapeAncestors, getShapeExtenders, getShapeReferences, getShapeReferrers, type ShapeLink, type ShapeRow, type ShapeTable, tabulate } from "./shape.core.js";
+import { getShapeAncestors, getShapeClasses, getShapeExtenders, getShapeReferences, getShapeReferrers, prefixed, type ShapeLink, type ShapeRow, type ShapeTable, tabulate } from "./shape.core.js";
 import "./shape.css";
 
 
 /**
  * Creates the property sheet of a resource shape.
  *
- * Locates the shape in the model, stating its endpoint, its whole lineage of extended shapes, the shapes extending it,
- * the shapes it refers to and the ones referring to it, each linked to its documentation; empty entries are left out.
+ * Locates the shape in the model, stating its own and inherited classes as prefixed names, its endpoint, its whole
+ * lineage of extended shapes, the shapes extending it, the shapes it refers to and the ones referring to it, each
+ * class linked to its definition and each shape to its documentation; entries with no content are left out.
  *
  * @param options The widget configuration
  *
@@ -55,6 +56,7 @@ export function ShapeInfo({
 }) {
 
 	const { endpoint } = tabulate(shape);
+	const classes = getShapeClasses(shape);
 	const ancestors = getShapeAncestors(shape);
 	const extenders = getShapeExtenders(shape, universe);
 	const referrers = getShapeReferrers(shape, universe);
@@ -62,6 +64,7 @@ export function ShapeInfo({
 
 	const stated = Object.entries({
 
+		Classes: classes.length > 0 ? <List links={classes.map(type => ({ name: prefixed(type), href: type }))}/> : undefined,
 		Endpoint: opt(endpoint, endpoint => <code>{endpoint}</code>),
 		Extends: ancestors.length > 0 ? <List links={ancestors}/> : undefined,
 		"Extended by": extenders.length > 0 ? <List links={extenders}/> : undefined,
@@ -74,7 +77,7 @@ export function ShapeInfo({
 
 		<Stack key={label} space={"spacing050"}>
 			<div><Text look={"label"}>{label}</Text></div>{/* body-sized line, sharing the baseline of the page text */}
-			{content}
+			<div class={"ec2u-shape-info"}>{content}</div>
 		</Stack>
 
 	)}</Stack> : undefined;

@@ -85,7 +85,7 @@ export function Organization() {
 		space: ec2u,
 		class: ec2u.Organization,
 
-		name: "Organisation",
+		name: "EC2U Organisation",
 		description: "An organisation related to EC2U universities."
 
 	}, {

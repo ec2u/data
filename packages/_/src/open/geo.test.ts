@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { WGSPoint } from "./wgs.js";
+import { WGSPoint } from "./geo.js";
 
 
 describe("WGSPoint.from()", () => {

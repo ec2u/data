@@ -71,7 +71,7 @@ export function Person() {
 		space: ec2u,
 		class: ec2u.Person,
 
-		name: "Person",
+		name: "EC2U Person",
 		description: "A staff member involved in teaching and research activities at an EC2U university."
 
 	}, {

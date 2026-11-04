@@ -54,7 +54,7 @@ export function SchemaEvent() {
 
 		class: schema.Event,
 
-		name: "Event",
+		name: "Schema Event",
 
 		description: "An event happening at a certain time and location."
 

@@ -79,7 +79,7 @@ export function Course() {
 		space: ec2u,
 		class: ec2u.Course,
 
-		name: "Course",
+		name: "EC2U Course",
 		description: "A degree, vocational or personal development course offered by an EC2U university."
 
 	}, {

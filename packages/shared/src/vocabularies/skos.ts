@@ -55,7 +55,7 @@ export function SKOSConceptScheme() {
 		space: skos,
 		class: skos.ConceptScheme,
 
-		name: "ConceptScheme",
+		name: "SKOS Concept Scheme",
 
 		description: "A set of concepts, optionally with statements of the semantic relationships between them."
 
@@ -89,7 +89,7 @@ export function SKOSConcept() {
 		space: skos,
 		class: skos.Concept,
 
-		name: "Concept",
+		name: "SKOS Concept",
 
 		description: markdown`
 			An idea or notion; a unit of thought.

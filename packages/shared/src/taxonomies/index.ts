@@ -81,7 +81,7 @@ export function Taxonomy() {
 		class: ec2u.Taxonomy,
 		pattern: `${taxonomies.id}{taxonomy}`,
 
-		name: "Taxonomy",
+		name: "EC2U Taxonomy",
 		description: "A standardised topic taxonomy or other concept scheme for classifying resources."
 
 	}, {
@@ -108,7 +108,7 @@ export function Topic() {
 		class: ec2u.Topic,
 		pattern: `${taxonomies.id}*`,
 
-		name: "Topic",
+		name: "EC2U Topic",
 		description: "A topic for classifying resources, as defined by a taxonomy."
 
 	}, {

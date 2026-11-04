@@ -74,7 +74,7 @@ export function Unit() {
 		space: ec2u,
 		class: ec2u.Unit,
 
-		name: "Unit",
+		name: "EC2U Unit",
 		description: "A research unit or supporting structure at an EC2U university."
 
 	}, {

@@ -85,7 +85,7 @@ export function Document() {
 		space: dct,
 		class: ec2u.Document,
 
-		name: "Document",
+		name: "EC2U Document",
 		description: "A regulation, policy or other governance document shared by an EC2U university."
 
 	}, {

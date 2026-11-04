@@ -76,7 +76,7 @@ export function University() {
 		space: ec2u,
 		class: ec2u.University,
 
-		name: "University",
+		name: "EC2U University",
 		description: "An EC2U partner university."
 
 	}, {

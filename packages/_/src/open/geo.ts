@@ -17,7 +17,7 @@
 /**
  * W3C WGS84 geographic points and OGC Well-Known Text point literals.
  *
- * Provides the {@link wgs} vocabulary namespace and the {@link WGSPoint} shape for storing and validating points on the
+ * Provides the {@link geo} vocabulary namespace and the {@link WGSPoint} shape for storing and validating points on the
  * Earth surface, and reads points from the Well-Known Text literals published by geospatial sources such as GeoSPARQL
  * endpoints and Wikidata.
  *
@@ -88,7 +88,7 @@ export const LongitudeLimit = 180;
  *
  * @see {@link https://www.w3.org/2003/01/geo/ W3C Basic Geo (WGS84 lat/long) Vocabulary}
  */
-export const wgs = createNamespace("http://www.w3.org/2003/01/geo/wgs84_pos#", [
+export const geo = createNamespace("http://www.w3.org/2003/01/geo/wgs84_pos#", [
 
 	"long",
 	"lat",
@@ -122,7 +122,7 @@ export type WGSPoint = State<typeof WGSPoint>;
 export function WGSPoint() {
 	return resource({
 
-		space: wgs
+		space: geo
 
 	}, {
 
@@ -131,7 +131,7 @@ export function WGSPoint() {
 			maxInclusive: LongitudeLimit
 		}), {
 
-			forward: wgs.long
+			forward: geo.long
 
 		}),
 
@@ -140,13 +140,13 @@ export function WGSPoint() {
 			maxInclusive: LatitudeLimit
 		}), {
 
-			forward: wgs.lat
+			forward: geo.lat
 
 		}),
 
 		altitude: optional(decimal(), {
 
-			forward: wgs.alt
+			forward: geo.alt
 
 		})
 

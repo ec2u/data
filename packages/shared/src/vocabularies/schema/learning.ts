@@ -47,7 +47,7 @@ export function SchemaLearningResource() {
 
 		class: schema.LearningResource,
 
-		name: "LearningResource",
+		name: "Schema Learning Resource",
 
 		description: "A creative work providing educational value."
 
@@ -97,7 +97,7 @@ export function SchemaEducationalOccupationalProgram() {
 
 		class: schema.EducationalOccupationalProgram,
 
-		name: "EducationalOccupationalProgram",
+		name: "Schema Educational Program",
 
 		description: "A program offered by an institution, setting the learning progress required to achieve an outcome."
 
@@ -127,7 +127,7 @@ export function SchemaCourse() {
 
 		class: schema.Course,
 
-		name: "Course",
+		name: "Schema Course",
 
 		description: "An educational course, which may be offered as distinct instances."
 
@@ -157,7 +157,7 @@ export function SchemaCourseInstance() {
 
 		class: schema.CourseInstance,
 
-		name: "CourseInstance",
+		name: "Schema Course Instance",
 
 		description: "An offering of a course, distinct from other offerings by its time or location."
 
@@ -193,7 +193,7 @@ export function SchemaEducationalOccupationalCredential() {
 
 		class: schema.EducationalOccupationalCredential,
 
-		name: "EducationalOccupationalCredential",
+		name: "Schema Educational Credential",
 
 		description: "A credential awarded on completion of an educational or occupational course or program."
 

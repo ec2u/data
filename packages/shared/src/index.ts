@@ -79,7 +79,7 @@ export function Dataset() {
 		space: dct,
 		class: ec2u.Dataset,
 
-		name: "Dataset",
+		name: "EC2U Dataset",
 		description: markdown`
 			A dataset published on the EC2U Knowledge Hub.
 

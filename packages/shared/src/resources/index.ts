@@ -47,7 +47,7 @@ export function Resource() {
 		space: ec2u,
 		class: ec2u.Resource,
 
-		name: "Resource",
+		name: "EC2U Resource",
 		description: markdown`
 			A resource published in a dataset on the EC2U Knowledge Hub.
 

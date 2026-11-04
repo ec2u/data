@@ -82,7 +82,7 @@ export function Event() {
 		space: ec2u,
 		class: ec2u.Event,
 
-		name: "Event",
+		name: "EC2U Event",
 		description: "An event at an EC2U university or an associated local organisation."
 
 	}, {

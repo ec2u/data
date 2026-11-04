@@ -38,6 +38,14 @@
 
 }
 
+/* property sheet entries keep each value on its own unbroken line, clipping the ones overflowing the sidebar */
+
+.ec2u-shape-info {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 /* shape lists name one shape per line, so they are set as tight as running lines */
 
 .ec2u-shape-links > li + li {

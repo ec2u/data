@@ -24,7 +24,7 @@ import type { Tag } from "@metreeca/core/language";
 import { createNamespace, resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import type { Reference } from "@metreeca/qest/state";
-import { wgs, WGSPoint } from "@metreeca/work/open/wgs.js";
+import { geo, WGSPoint } from "@metreeca/work/open/geo.js";
 
 
 export const LabelLength = 100;
@@ -195,8 +195,8 @@ export function Entity() {
 
 		space: rdfs,
 
-		name: "Entity",
-		description: "An entity described on the EC2U Knowledge Hub."
+		name: "RDFS Entity",
+		description: "A resource annotated with the RDF Schema properties for labels, comments and related resources."
 
 	}, {
 
@@ -235,9 +235,9 @@ export function Entity() {
 export function Place() {
 	return resource(Entity, WGSPoint, {
 
-		space: wgs,
+		space: geo,
 
-		name: "Place",
+		name: "Geo Place",
 		description: "A geographic location identified by its WGS84 coordinates."
 
 	});

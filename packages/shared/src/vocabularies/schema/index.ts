@@ -143,7 +143,7 @@ export function SchemaThing() {
 
 		class: schema.Thing,
 
-		name: "Thing",
+		name: "Schema Thing",
 
 		description: markdown`
 			An item of any kind.
@@ -172,7 +172,7 @@ export function SchemaImageObject() {
 
 		class: schema.ImageObject,
 
-		name: "ImageObject",
+		name: "Schema Image Object",
 
 		description: markdown`
 			An image file.

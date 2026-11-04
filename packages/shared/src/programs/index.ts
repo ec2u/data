@@ -73,7 +73,7 @@ export function Program() {
 		space: ec2u,
 		class: ec2u.Program,
 
-		name: "Program",
+		name: "EC2U Program",
 		description: "A formal degree or vocational qualification program offered by an EC2U university."
 
 	});

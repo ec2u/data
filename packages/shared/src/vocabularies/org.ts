@@ -55,7 +55,7 @@ export function OrgOrganizationalUnit() {
 
 		class: org.OrganizationalUnit,
 
-		name: "OrganizationalUnit",
+		name: "Org Organizational Unit",
 
 		description: "An organization that is part of a larger organization."
 
@@ -79,7 +79,7 @@ export function OrgOrganization() {
 		space: org,
 		class: org.Organization,
 
-		name: "Organization",
+		name: "Org Organization",
 
 		description: "A collection of people organized into a social, commercial or political structure."
 
@@ -153,7 +153,7 @@ export function OrgFormalOrganization() {
 
 		class: org.FormalOrganization,
 
-		name: "FormalOrganization",
+		name: "Org Formal Organization",
 
 		description: "An organization recognized in legal jurisdictions."
 
@@ -165,7 +165,7 @@ export function OrgOrganizationalCollaboration() {
 
 		class: org.OrganizationalCollaboration,
 
-		name: "OrganizationalCollaboration",
+		name: "Org Organizational Collaboration",
 
 		description: "A collaboration between two or more organizations."
 

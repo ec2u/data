@@ -35,7 +35,7 @@ export function SchemaPlace() {
 
 		class: schema.Place,
 
-		name: "Place",
+		name: "Schema Place",
 
 		description: "A location with a fixed physical extension."
 
@@ -61,7 +61,7 @@ export function SchemaPostalAddress() {
 
 		class: schema.PostalAddress,
 
-		name: "PostalAddress",
+		name: "Schema Postal Address",
 
 		description: "A mailing address."
 
@@ -106,7 +106,7 @@ export function SchemaVirtualLocation() {
 
 		class: schema.VirtualLocation,
 
-		name: "VirtualLocation",
+		name: "Schema Virtual Location",
 
 		description: "An online location for events and organizations."
 

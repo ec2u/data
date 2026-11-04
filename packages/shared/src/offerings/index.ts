@@ -66,7 +66,7 @@ export function Offering() {
 		space: ec2u,
 		class: ec2u.Offering,
 
-		name: "Offering",
+		name: "EC2U Offering",
 		description: markdown`
 			An educational offering of an EC2U university.
 

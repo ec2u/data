@@ -20,31 +20,8 @@ import { eager, type Shape } from "@metreeca/blue/value";
 import { isString, type Lazy, opt, type Optional } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
 import { dedent } from "@metreeca/core/strings";
-import { ec2u, rdfs } from "@ec2u/data-shared";
-import { dcat } from "@ec2u/data-shared/vocabularies/dcat.js";
-import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
-import { foaf } from "@ec2u/data-shared/vocabularies/foaf.js";
-import { org } from "@ec2u/data-shared/vocabularies/org.js";
-import { schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
-import { skos } from "@ec2u/data-shared/vocabularies/skos.js";
-import { getNamespaceIRI } from "@metreeca/core/resource";
-import { wgs } from "@metreeca/work/open/wgs.js";
-
-
-/**
- * The prefixes abbreviating the namespaces of the data model, as used in its documentation.
- */
-const prefixes: Readonly<Record<string, string>> = {
-	ec2u: getNamespaceIRI(ec2u),
-	rdfs: getNamespaceIRI(rdfs),
-	dcat: getNamespaceIRI(dcat),
-	dct: getNamespaceIRI(dct),
-	foaf: getNamespaceIRI(foaf),
-	org: getNamespaceIRI(org),
-	schema: getNamespaceIRI(schema),
-	skos: getNamespaceIRI(skos),
-	geo: getNamespaceIRI(wgs)
-};
+import { lexicon } from "@ec2u/data-shared/vocabularies/index.js";
+import { compact } from "@metreeca/core/resource";
 
 
 /**
@@ -146,7 +123,7 @@ export type ShapeRow = {
 export type ShapeLink = {
 
 	/**
-	 * The name of the type: the {@link getShapeKey | key} of a keyed shape, as `schema:Organization`, or else its name.
+	 * The name of the type: the {@link getShapeKey | key} of a keyed shape, as `Schema Organization`, or else its name.
 	 */
 	readonly name: string
 
@@ -379,14 +356,37 @@ export function getShapeAncestors(lazy: Lazy<ResourceShape>): readonly ShapeLink
 
 	return others(target, lineage(target)).filter(({ name }) => name !== "").reverse(); // fresh array from filter
 
+}
 
-	function lineage(shape: ResourceShape): readonly ResourceShape[] {
+/**
+ * Lists the classes of a resource shape.
+ *
+ * Collects the class `lazy` states in its own right and the ones stated by every shape it extends, directly or
+ * transitively, in the reverse order of {@link getShapeAncestors}, so the most specific class comes first.
+ *
+ * @param lazy The shape whose classes are to be listed, possibly deferred
+ *
+ * @returns The class IRIs of `lazy`, from its own down to the most general inherited one, each listed once; empty if
+ *     neither `lazy` nor any shape it extends, directly or transitively, states a class of its own
+ */
+export function getShapeClasses(lazy: Lazy<ResourceShape>): readonly string[] {
 
-		const parents = shape.parents.map(parent => eager(parent));
+	const target = eager(lazy);
 
-		return [...parents, ...parents.flatMap(lineage)];
+	return [target, ...lineage(target)]
+		.flatMap(shape => opt(shape.class, type => [type]) ?? [])
+		.filter((type, index, types) => types.indexOf(type) === index);
 
-	}
+}
+
+/**
+ * Lists the shapes a resource shape extends, directly or transitively, from the nearest to the most general.
+ */
+function lineage(shape: ResourceShape): readonly ResourceShape[] {
+
+	const parents = shape.parents.map(parent => eager(parent));
+
+	return [...parents, ...parents.flatMap(lineage)];
 
 }
 
@@ -462,16 +462,14 @@ export function getShapeSummary(lazy: Lazy<ResourceShape>): Optional<string> {
  *
  * @param lazy The shape to be keyed, possibly deferred
  *
- * @returns The key of `lazy`: the prefixed name of the class it states in its own right, as `schema:Organization`, or
- *     else the English name it states in its own right, as `Universities`; none if it states neither
+ * @returns The key of `lazy`: the English name it states in its own right, unique within the model and prefixed by
+ *     its vocabulary where it states a class, as `Schema Organization` or `Universities`; none if it states no name
  */
 export function getShapeKey(lazy: Lazy<ResourceShape>): Optional<string> {
 
-	// !!! stub: keyed by class or name pending a stable and robust shape identity
+	// !!! stub: keyed by name pending a stable and robust shape identity
 
-	const shape = eager(lazy);
-
-	return opt(shape.class, prefixed) ?? english(shape.name);
+	return english(eager(lazy).name);
 
 }
 
@@ -482,8 +480,8 @@ export function getShapeKey(lazy: Lazy<ResourceShape>): Optional<string> {
  *
  * @param lazy The shape to be located, possibly deferred
  *
- * @returns The root-relative location of the documentation of `lazy`, as `/models/schema:Organization`; none if
- *     `lazy` is not keyed
+ * @returns The root-relative location of the documentation of `lazy`, with its key URI-encoded, as
+ *     `/models/Schema%20Organization`; none if `lazy` states no key, as an unnamed mixin or refinement
  */
 export function getShapeHref(lazy: Lazy<ResourceShape>): Optional<string> {
 	return opt(getShapeKey(lazy), located);
@@ -493,7 +491,7 @@ export function getShapeHref(lazy: Lazy<ResourceShape>): Optional<string> {
  * Locates the documentation of the shape with a key.
  */
 function located(key: string): string {
-	return `/models/${encodeURIComponent(key).replace(/%3A/g, ":")}`;
+	return `/models/${encodeURIComponent(key)}`;
 }
 
 /**
@@ -578,12 +576,15 @@ function collapse(text: string): string {
 }
 
 /**
- * Abbreviates an IRI as a prefixed name, falling back to the whole IRI where no known namespace includes it.
+ * Abbreviates an IRI of the data model as a prefixed name.
+ *
+ * @param iri The IRI to be abbreviated
+ *
+ * @returns The prefixed name of `iri` under the shared {@link lexicon}, as `ec2u:Course` for
+ *     `https://data.ec2u.eu/terms#Course`; the whole `iri`, left unabbreviated, where no prefix of the lexicon applies
  */
-function prefixed(iri: string): string {
-	return Object.entries(prefixes)
-		.flatMap(([prefix, namespace]) => iri.startsWith(namespace) ? [`${prefix}:${iri.slice(namespace.length)}`] : [])
-		.at(0) ?? iri;
+export function prefixed(iri: string): string {
+	return compact(lexicon, iri) ?? iri;
 }
 
 /**
