@@ -24,22 +24,23 @@ import "./links.css";
 
 
 /**
- * Labels a web address for outbound link text.
+ * Renders an outbound link to a web address.
  *
  * Keeps the localised versions of a page on the same site apart, setting the tag of the language the address states in
- * dimmed type after the host, as in `www.uc.pt en` and `www.uc.pt pt`, and leaving addresses stating none to their host.
+ * dimmed type after the link and outside it, as in `www.uc.pt en`, and leaving addresses stating none to their link.
  *
- * @param url The web address to be labelled
+ * @param url The web address to be linked
  *
- * @returns The host of `url`, followed by the tag of the language it states, if any; `url` itself if it names no host
+ * @returns A link to `url` labelled by its host, or by `url` itself if it names no host, followed by the tag of the
+ *   language `url` states, if any, so that the tag reads as a remark on the link rather than as part of its text
  */
 export function address(url: string): ComponentChildren {
 
-	const host = getIRIHost(url) ?? url;
+	const link = <Link href={url}>{getIRIHost(url) ?? url}</Link>;
 
 	return opt(tagIRI(url), tag => createElement("ec2u-address", {},
-		host, <span>{tag}</span>
-	)) ?? host;
+		link, <span>{tag}</span>
+	)) ?? link;
 
 }
 

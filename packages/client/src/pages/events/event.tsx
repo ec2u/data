@@ -205,7 +205,7 @@ export function EventPage() {
 
 				<Info place={"spread"}>{{
 
-					Info: <ul>{url.map(url => <li key={url}><Link href={url}>{address(url)}</Link>
+					Info: <ul>{url.map(url => <li key={url}>{address(url)}
 					</li>)}</ul>,
 					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link href={url[0] ?? id}>{label}</Link>)
 
@@ -282,7 +282,7 @@ export function schedule(start: string, end?: string): string {
  * @returns The venue text, the name and address of a place or postal address, or the link to a virtual location
  */
 function venue(location: unknown): ComponentChildren {
-	return isVirtual(location) ? <Link href={location.url[0]}>{address(location.url[0])}</Link>
+	return isVirtual(location) ? address(location.url[0])
 		: lines(parts(location));
 }
 

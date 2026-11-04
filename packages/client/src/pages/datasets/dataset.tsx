@@ -234,7 +234,7 @@ export function DatasetPage({
 				Publisher: opt(publisher, ({ id, label }) => <Link href={id}>{label}</Link>),
 				Copyright: rights,
 				License: links(license),
-				Source: opt(source, ({ id }) => <Link href={id}>{address(id)}</Link>),
+				Source: opt(source, ({ id }) => address(id)),
 				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
 
 			}}</Info>

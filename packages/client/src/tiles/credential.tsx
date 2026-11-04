@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { address } from "./links.js";
@@ -65,7 +64,7 @@ export function Credential({
 
 			...(name ? [<span key={"name"}> · {name}</span>] : []),
 
-			...url.map(href => <span key={href}> · <Link href={href}>{address(href)}</Link></span>)
+			...url.map(href => <span key={href}> · {address(href)}</span>)
 
 		]}</span>
 

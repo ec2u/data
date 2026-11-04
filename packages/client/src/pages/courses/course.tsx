@@ -179,7 +179,7 @@ export function CoursePage() {
 				<Info place={"spread"}>{{
 
 					Info: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}><Link href={url}>{address(url)}</Link></li>
+						<li key={url}>{address(url)}</li>
 					)}</ul> : undefined
 
 				}}</Info>
