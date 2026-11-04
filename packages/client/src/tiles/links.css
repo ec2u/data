@@ -15,7 +15,12 @@
  */
 
 ec2u-address > span {
-    margin-right: var(--tile--spacing-050);
+    position: relative;
+    top: -0.5em;
+    margin-left: var(--tile--spacing-050);
+    font-size: 0.7em;
     font-weight: var(--tile--font-weight);
+    line-height: 0;
     color: var(--tile--color-label);
+    cursor: default;
 }

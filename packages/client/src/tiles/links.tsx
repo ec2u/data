@@ -15,6 +15,7 @@
  */
 
 import { opt } from "@metreeca/core";
+import { nameTag, type Tag } from "@metreeca/core/language";
 import { by, locale } from "@metreeca/core/order";
 import { Link } from "@metreeca/tile-cell/link";
 import { tagIRI } from "@metreeca/work/core/language.js";
@@ -26,20 +27,22 @@ import "./links.css";
 /**
  * Renders an outbound link to a web address.
  *
- * Keeps the localised versions of a page on the same site apart, setting the tag of the language the address states in
- * dimmed type before the link and outside it, as in `en www.uc.pt`, and leaving addresses stating none to their link.
+ * Keeps the localised versions of a page on the same site apart, setting the tag of the language the address states
+ * as a small raised remark after the link and outside it, as in `www.uc.pt ᵉⁿ`, naming the language in full on hover.
  *
  * @param url The web address to be linked
+ * @param fallback The tag of the language assumed for `url` if it states none, for instance the local language of the
+ *   site; if omitted, addresses stating no language are left to their link alone
  *
- * @returns A link to `url` labelled by its host, or by `url` itself if it names no host, preceded by the tag of the
- *   language `url` states, if any, so that the tag reads as a remark on the link rather than as part of its text
+ * @returns A link to `url` labelled by its host, or by `url` itself if it names no host, followed by the tag of the
+ *   language `url` states or else by `fallback`, if any, so that the tag reads as a remark on the link
  */
-export function address(url: string): ComponentChildren {
+export function address(url: string, fallback?: Tag): ComponentChildren {
 
 	const link = <Link href={url}>{getIRIHost(url) ?? url}</Link>;
 
-	return opt(tagIRI(url), tag => createElement("ec2u-address", {},
-		<span>{tag}</span>, link
+	return opt(tagIRI(url) ?? fallback, tag => createElement("ec2u-address", {},
+		link, <span title={nameTag(tag, navigator.language)}>{tag}</span>
 	)) ?? link;
 
 }

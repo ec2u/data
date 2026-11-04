@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import { base, partners } from "@ec2u/data-shared";
 import { Resources } from "@ec2u/data-shared/resources/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { Button } from "@metreeca/tile-cell/button";
+import { resolve } from "@metreeca/core/resource";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
@@ -128,7 +130,7 @@ export function UniversityPage() {
 
 				<Info place={"spread"}>{{
 
-					Home: <ul>{homepage.map(url => <li key={url}>{address(url)}
+					Home: <ul>{homepage.map(url => <li key={url}>{address(url, partners[resolve(base, route)]?.locale)}
 					</li>)}</ul>
 
 				}}</Info>
