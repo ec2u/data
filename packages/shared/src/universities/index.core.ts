@@ -15,7 +15,6 @@
  */
 
 import { base } from "@ec2u/data-shared";
-import { assert, isDefined } from "@metreeca/core";
 import type { Tag } from "@metreeca/core/language";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
@@ -101,12 +100,3 @@ export const universities = immutable(Object.fromEntries([
 ].map(university =>
 	[university.id, university]
 )));
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function getUniversity(id: Reference) {
-
-	return assert(universities[id], isDefined, `unknown university <${id}>`);
-
-}
