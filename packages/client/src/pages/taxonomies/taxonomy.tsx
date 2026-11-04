@@ -123,20 +123,28 @@ export function TaxonomyPage() {
 
 		tray={resource({
 
-			ready: ({ state: { version, created, issued, modified } }) => <Info place={"spread"}>{{
+			ready: ({ state: { version, created, issued, modified } }) => <>
 
-				Concepts: concepts({
+				<Info place={"spread"}>{{
 
-					ready: ({ state }) => integer.format(state)
+					Version: version,
+					Created: opt(created, value => date.format(value)),
+					Published: opt(issued, value => date.format(value)),
+					Modified: opt(modified, value => date.format(value))
 
-				}),
+				}}</Info>
 
-				Version: version,
-				Created: opt(created, value => date.format(value)),
-				Published: opt(issued, value => date.format(value)),
-				Modified: opt(modified, value => date.format(value))
+				<Info place={"spread"}>{{
 
-			}}</Info>
+					Concepts: concepts({
+
+						ready: ({ state }) => integer.format(state)
+
+					})
+
+				}}</Info>
+
+			</>
 
 		})}
 
