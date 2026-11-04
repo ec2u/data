@@ -149,7 +149,7 @@ function Row({ term, predicate, types, cardinality, description }: ShapeRow) {
  * Sets out a list of shapes as a bulleted list, each linked to its documentation where located.
  */
 function List({ links }: { links: readonly ShapeLink[] }) {
-	return <ul>{links.map(({ name, href }, index) => <li key={index}>
+	return <ul class={"ec2u-shape-links"}>{links.map(({ name, href }, index) => <li key={index}>
 		{href === undefined ? name : <Link href={href}>{name}</Link>}
 	</li>)}</ul>;
 }

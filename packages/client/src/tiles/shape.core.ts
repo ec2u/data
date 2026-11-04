@@ -74,8 +74,8 @@ export type ShapeTable = {
 	readonly parents: readonly ShapeLink[]
 
 	/**
-	 * The properties the shape declares in its own right, in declaration order, leaving out hidden ones and the ones the
-	 * shapes it extends declare, even where the shape narrows them.
+	 * The properties the shape declares in its own right or inherits from unkeyed shapes, in declaration order, leaving
+	 * out hidden ones and the ones its nearest keyed ancestors declare, even where the shape narrows them.
 	 */
 	readonly rows: readonly ShapeRow[]
 
@@ -163,18 +163,32 @@ export function tabulate(lazy: Lazy<ResourceShape>): ShapeTable {
 }
 
 /**
- * Lists the visible properties a shape declares in its own right, leaving out the ones the shapes it extends declare.
+ * Lists the visible properties a shape documents: the ones it declares in its own right or inherits from unkeyed
+ * shapes, which have no documentation of their own, leaving out the ones its nearest keyed ancestors declare.
  */
 function declared(shape: ResourceShape): readonly (readonly [string, Property])[] {
 
-	const parents = shape.parents.map(parent => eager(parent));
+	const ancestors = documented(shape);
 
 	return Object.entries(shape.members).flatMap(([term, member]) =>
-		member.kind === "property" && !member.hidden && !parents.some(({ members }) => term in members)
+		member.kind === "property" && !member.hidden && !ancestors.some(({ members }) => term in members)
 			? [[term, member] as const]
 			: []
 	);
 
+}
+
+/**
+ * Lists the nearest keyed ancestors of a shape, looking through the unkeyed shapes it extends.
+ */
+function documented(shape: ResourceShape): readonly ResourceShape[] {
+	return shape.parents.flatMap(lazy => {
+
+		const parent = eager(lazy);
+
+		return getShapeKey(parent) !== undefined ? [parent] : documented(parent);
+
+	});
 }
 
 /**
@@ -271,13 +285,14 @@ export function getShapeExtenders(lazy: Lazy<ResourceShape>, universe: Some<Lazy
  *
  * @param lazy The shape whose ancestors are to be listed, possibly deferred
  *
- * @returns The ancestors of `lazy`, nearest first, each listed once; empty if `lazy` extends no named shape
+ * @returns The ancestors of `lazy`, from the most general down to the nearest, each listed once; empty if `lazy`
+ *     extends no named shape
  */
 export function getShapeAncestors(lazy: Lazy<ResourceShape>): readonly ShapeLink[] {
 
 	const target = eager(lazy);
 
-	return others(target, lineage(target)).filter(({ name }) => name !== "");
+	return others(target, lineage(target)).filter(({ name }) => name !== "").reverse(); // fresh array from filter
 
 
 	function lineage(shape: ResourceShape): readonly ResourceShape[] {

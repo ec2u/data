@@ -23,3 +23,9 @@
     }
 
 }
+
+/* shape lists name one shape per line, so they are set as tight as running lines */
+
+.ec2u-shape-links > li + li {
+    margin-top: 0;
+}
