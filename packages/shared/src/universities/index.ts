@@ -60,8 +60,6 @@ export type University = State<typeof University>;
 export function Universities() {
 	return resource(Dataset, {
 
-		pattern: universities.id,
-
 		name: "Universities",
 		description: "Background, historical context and statistical data about EC2U partner universities."
 
@@ -77,7 +75,6 @@ export function University() {
 
 		space: ec2u,
 		class: ec2u.University,
-		pattern: `${universities.id}{code}`,
 
 		name: "University",
 		description: "An EC2U partner university."

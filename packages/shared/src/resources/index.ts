@@ -16,19 +16,16 @@
 
 import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
-import { base, ec2u, Entity, rdfs } from "@ec2u/data-shared";
+import { ec2u, Entity, rdfs } from "@ec2u/data-shared";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
 import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { resolve } from "@metreeca/core/resource";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Resources() {
 	return resource({
-
-		pattern: resolve(base, "/resources/"),
 
 		name: "Resources",
 		description: "Resources published in issued datasets on the EC2U Knowledge Hub."

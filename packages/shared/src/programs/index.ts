@@ -57,8 +57,6 @@ export type Program = State<typeof Program>;
 export function Programs() {
 	return resource(Dataset, {
 
-		pattern: programs.id,
-
 		name: "Programs",
 		description: "Formal degree and vocational qualification programs offered by EC2U partner universities."
 
@@ -74,7 +72,6 @@ export function Program() {
 
 		space: ec2u,
 		class: ec2u.Program,
-		pattern: `${programs.id}{code}`,
 
 		name: "Program",
 		description: "A formal degree or vocational qualification program offered by an EC2U partner university."

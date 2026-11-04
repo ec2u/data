@@ -60,8 +60,6 @@ export type Dataset = State<typeof Dataset>;
 export function Datasets() {
 	return resource(Dataset, {
 
-		pattern: datasets.id,
-
 		name: "Datasets",
 		description: "Datasets published on the EC2U Knowledge Hub."
 
@@ -77,7 +75,6 @@ export function Dataset() {
 
 		space: dct,
 		class: ec2u.Dataset,
-		pattern: `${datasets.id}*`, // narrowed by each dataset to the root of its catalogue
 
 		name: "Dataset",
 		description: "A dataset published on the EC2U Knowledge Hub."

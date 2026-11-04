@@ -66,8 +66,6 @@ export type Publisher = State<typeof Publisher>;
 export function Events() {
 	return resource(Dataset, {
 
-		pattern: events.id,
-
 		name: "Events",
 		description: "Information about events at EC2U partner universities and associated local organisations."
 
@@ -83,7 +81,6 @@ export function Event() {
 
 		space: ec2u,
 		class: ec2u.Event,
-		pattern: `${events.id}{code}`,
 
 		name: "Event",
 		description: "An event at an EC2U partner university or an associated local organisation."

@@ -68,8 +68,6 @@ export type Document = State<typeof Document>;
 export function Documents() {
 	return resource(Dataset, {
 
-		pattern: documents.id,
-
 		name: "Documents",
 		description: "Regulations, policies and other governance documents shared by EC2U partner universities."
 
@@ -85,7 +83,6 @@ export function Document() {
 
 		space: dct,
 		class: ec2u.Document,
-		pattern: `${documents.id}{code}`,
 
 		name: "Document",
 		description: "A regulation, policy or other governance document shared by an EC2U partner university."
