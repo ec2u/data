@@ -108,23 +108,22 @@ export function DatasetLink({
 
 }) {
 
-	return <Link href={`${href.replace(/\/$/, "")}/#`} title={"Info"}><Icon.Info/></Link>;
+	return <Link href={`/about/datasets${href.replace(/\/$/, "")}`} title={"Info"}><Icon.Info/></Link>;
 
 }
-
 
 
 /**
  * Creates the introduction to the dataset listed by a catalogue.
  *
- * Shows what the dataset holds and the terms it is published under, at the `/~` route nested under the route of the
- * catalogue, which the route table of the catalogue declares ahead of the routes of its resources.
+ * Shows what the dataset holds and the terms it is published under, at the route the about section declares for it:
+ * `/about/datasets/universities` for the catalogue at `/universities/`, `/about/datasets` for the hub catalogue.
  *
  * @param options The view configuration
  *
  * @returns The dataset page
  */
-export function DatasetMeta({
+export function DatasetPage({
 
 	about: {
 		route: href,

@@ -15,32 +15,20 @@
  */
 
 import { isNumber, isString } from "@metreeca/core";
-import { immutable } from "@metreeca/core/values";
 import { NotFound } from "@metreeca/http";
-import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Path } from "@metreeca/tile-cell/path";
 import { useAsset } from "@metreeca/tile-data/asset";
 import { useRoute } from "@metreeca/tile-data/router";
 import type { ComponentChildren } from "preact";
-import { Failure } from "../tiles/failure.js";
-import { Page } from "../tiles/page.js";
-import { Unknown } from "./unknown.js";
+import { Failure } from "../../tiles/failure.js";
+import { Page } from "../../tiles/page.js";
+import { Unknown } from "../index.js";
+import { about } from "./index.js";
 
 
-export const about = immutable({
-
-	route: "/about/",
-	label: "About",
-	glyph: <Icon.Help/>
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function About() {
+export function DocumentPage() {
 
 	const route = useRoute();
 	const asset = useAsset(route.endsWith("/") ? `${route}index.md` : `${route}.md`);

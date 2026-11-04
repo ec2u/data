@@ -240,8 +240,8 @@ export function getShapeDescription(lazy: Lazy<ResourceShape>): Optional<string>
  *
  * @param lazy The shape to be located, possibly deferred
  *
- * @returns The root-relative location of the documentation of `lazy`, as `/universities/~#University`; none if `lazy`
- *     states no identifier pattern
+ * @returns The root-relative location of the documentation of `lazy`, as `/about/datasets/universities#University`;
+ *     none if `lazy` states no identifier pattern
  */
 export function getShapeHref(lazy: Lazy<ResourceShape>): Optional<string> {
 
@@ -252,7 +252,7 @@ export function getShapeHref(lazy: Lazy<ResourceShape>): Optional<string> {
 		const [segment] = new URL(pattern, "https://example.org/").pathname.split("/").filter(Boolean);
 		const catalogue = segment === undefined || /^(%7B|\*)/i.test(segment) ? "" : `/${segment}`;
 
-		return `${catalogue}/~#${encodeURIComponent(getShapeName(shape))}`;
+		return `/about/datasets${catalogue}#${encodeURIComponent(getShapeName(shape))}`;
 
 	});
 

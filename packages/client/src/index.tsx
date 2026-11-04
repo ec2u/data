@@ -24,7 +24,7 @@ import { Store } from "@metreeca/tile-data/store";
 import { host } from "@metreeca/tile-hive";
 import { Toast } from "@metreeca/tile-hive/toast";
 import { render } from "preact";
-import { About, about } from "./pages/about.js";
+import { About, about } from "./pages/about/index.js";
 import { Courses, courses } from "./pages/courses/index.js";
 import { Datasets, datasets } from "./pages/datasets/index.js";
 import { Documents, documents } from "./pages/documents/index.js";
@@ -33,7 +33,7 @@ import { Programs, programs } from "./pages/programs/index.js";
 import { Taxonomies, taxonomies } from "./pages/taxonomies/index.js";
 import { Units, units } from "./pages/units/index.js";
 import { Universities, universities } from "./pages/universities/index.js";
-import { Unknown, unknown } from "./pages/unknown.js";
+import { Unknown, unknown } from "./pages/index.js";
 
 
 render(<Hub/>, host("ec2u-hub"));

@@ -132,15 +132,15 @@ describe("getShapeDescription()", () => {
 describe("getShapeHref()", () => {
 
 	it("locates a shape on the introduction of the catalogue its pattern is rooted in", () => {
-		expect(getShapeHref(Thing)).toBe("/things/~#Thing");
+		expect(getShapeHref(Thing)).toBe("/about/datasets/things#Thing");
 	});
 
 	it("locates a shape inheriting its pattern under its own name", () => {
-		expect(getShapeHref(Item)).toBe("/things/~#Item");
+		expect(getShapeHref(Item)).toBe("/about/datasets/things#Item");
 	});
 
 	it("locates a shape whose pattern states no path segment on the root catalogue", () => {
-		expect(getShapeHref(Part)).toBe("/~#Part");
+		expect(getShapeHref(Part)).toBe("/about/datasets#Part");
 	});
 
 	it("locates no shape stating no pattern", () => {
@@ -153,18 +153,18 @@ describe("getShapeReferrers()", () => {
 
 	it("lists the properties linking to a shape across the model, where they are declared", () => {
 		expect(getShapeReferrers(Part, Item)).toEqual([
-			{ name: "Item.parts", href: "/things/~#Item" },
-			{ name: "Item.either", href: "/things/~#Item" },
-			{ name: "Thing.peer", href: "/things/~#Thing" }
+			{ name: "Item.parts", href: "/about/datasets/things#Item" },
+			{ name: "Item.either", href: "/about/datasets/things#Item" },
+			{ name: "Thing.peer", href: "/about/datasets/things#Thing" }
 		]);
 	});
 
 	it("lists properties declared by shapes reached through the model", () => {
-		expect(getShapeReferrers(Item, Item)).toEqual([{ name: "Part.item", href: "/~#Part" }]);
+		expect(getShapeReferrers(Item, Item)).toEqual([{ name: "Part.item", href: "/about/datasets#Part" }]);
 	});
 
 	it("lists properties linking to an extended shape", () => {
-		expect(getShapeReferrers(Thing, Item)).toEqual([{ name: "Item.owner", href: "/things/~#Item" }]);
+		expect(getShapeReferrers(Thing, Item)).toEqual([{ name: "Item.owner", href: "/about/datasets/things#Item" }]);
 	});
 
 	it("lists nothing for a shape no property links to", () => {
@@ -192,7 +192,7 @@ describe("tabulate()", () => {
 		});
 
 		it("names the extended shapes", () => {
-			expect(tabulate(Item).parents).toEqual([{ name: "Thing", href: "/things/~#Thing" }]);
+			expect(tabulate(Item).parents).toEqual([{ name: "Thing", href: "/about/datasets/things#Thing" }]);
 		});
 
 		it("names a shape stating no English name by its class", () => {
@@ -247,11 +247,11 @@ describe("tabulate()", () => {
 		});
 
 		it("links shape types to their documentation", () => {
-			expect(rows().parts?.types).toEqual([{ name: "Part", href: "/~#Part" }]);
+			expect(rows().parts?.types).toEqual([{ name: "Part", href: "/about/datasets#Part" }]);
 		});
 
 		it("lists one type for each alternative", () => {
-			expect(rows().either?.types).toEqual([{ name: "string", href: undefined }, { name: "Part", href: "/~#Part" }]);
+			expect(rows().either?.types).toEqual([{ name: "string", href: undefined }, { name: "Part", href: "/about/datasets#Part" }]);
 		});
 
 		it("bounds values", () => {
