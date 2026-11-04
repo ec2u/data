@@ -47,6 +47,8 @@ export function FOAFAgent() {
 		space: foaf,
 		class: foaf.Agent,
 
+		name: "Agent",
+
 		description: markdown`
 			A person, group or other entity able to act.
 
@@ -83,6 +85,8 @@ export function FOAFOrganization() {
 
 		class: foaf.Organization,
 
+		name: "Organization",
+
 		description: "A group of people acting together as a single agent."
 
 	});
@@ -92,6 +96,8 @@ export function FOAFPerson() {
 	return resource(FOAFAgent, {
 
 		class: foaf.Person,
+
+		name: "Person",
 
 		description: "An individual person."
 

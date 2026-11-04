@@ -143,6 +143,8 @@ export function SchemaThing() {
 
 		class: schema.Thing,
 
+		name: "Thing",
+
 		description: markdown`
 			An item of any kind.
 
@@ -169,6 +171,8 @@ export function SchemaImageObject() {
 	return resource(SchemaBase, {
 
 		class: schema.ImageObject,
+
+		name: "ImageObject",
 
 		description: markdown`
 			An image file.

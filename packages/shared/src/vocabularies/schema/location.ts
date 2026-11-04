@@ -35,6 +35,8 @@ export function SchemaPlace() {
 
 		class: schema.Place,
 
+		name: "Place",
+
 		description: "A location with a fixed physical extension."
 
 	}, {
@@ -58,6 +60,8 @@ export function SchemaPostalAddress() {
 	return resource(SchemaThing, {
 
 		class: schema.PostalAddress,
+
+		name: "PostalAddress",
 
 		description: "A mailing address."
 
@@ -101,6 +105,8 @@ export function SchemaVirtualLocation() {
 	return resource(SchemaThing, {
 
 		class: schema.VirtualLocation,
+
+		name: "VirtualLocation",
 
 		description: "An online location for events and organizations."
 

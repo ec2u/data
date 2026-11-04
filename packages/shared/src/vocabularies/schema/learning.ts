@@ -47,6 +47,8 @@ export function SchemaLearningResource() {
 
 		class: schema.LearningResource,
 
+		name: "LearningResource",
+
 		description: "A creative work providing educational value."
 
 	}, {
@@ -95,6 +97,8 @@ export function SchemaEducationalOccupationalProgram() {
 
 		class: schema.EducationalOccupationalProgram,
 
+		name: "EducationalOccupationalProgram",
+
 		description: "A program offered by an institution, setting the learning progress required to achieve an outcome."
 
 	}, {
@@ -123,6 +127,8 @@ export function SchemaCourse() {
 
 		class: schema.Course,
 
+		name: "Course",
+
 		description: "An educational course, which may be offered as distinct instances."
 
 	}, {
@@ -150,6 +156,8 @@ export function SchemaCourseInstance() {
 	return resource(SchemaThing, {
 
 		class: schema.CourseInstance,
+
+		name: "CourseInstance",
 
 		description: "An offering of a course, distinct from other offerings by its time or location."
 
@@ -184,6 +192,8 @@ export function SchemaEducationalOccupationalCredential() {
 	return resource(SchemaThing, {
 
 		class: schema.EducationalOccupationalCredential,
+
+		name: "EducationalOccupationalCredential",
 
 		description: "A credential awarded on completion of an educational or occupational course or program."
 

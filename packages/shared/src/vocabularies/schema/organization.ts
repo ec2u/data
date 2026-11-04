@@ -25,6 +25,8 @@ export function SchemaOrganization() {
 
 		class: schema.Organization,
 
+		name: "Organization",
+
 		description: "An organized group of people with a shared purpose."
 
 	}, {
