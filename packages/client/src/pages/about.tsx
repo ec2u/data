@@ -24,9 +24,9 @@ import { Path } from "@metreeca/tile-cell/path";
 import { useAsset } from "@metreeca/tile-data/asset";
 import { useRoute } from "@metreeca/tile-data/router";
 import type { ComponentChildren } from "preact";
-import { Failure } from "../../tiles/failure.js";
-import { Page } from "../../tiles/page.js";
-import { Unknown } from "../index.js";
+import { Failure } from "../tiles/failure.js";
+import { Page } from "../tiles/page.js";
+import { Unknown } from "./unknown.js";
 
 
 export const about = immutable({
@@ -40,7 +40,7 @@ export const about = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function AboutDocument() {
+export function About() {
 
 	const route = useRoute();
 	const asset = useAsset(route.endsWith("/") ? `${route}index.md` : `${route}.md`);

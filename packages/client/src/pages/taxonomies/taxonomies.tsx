@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Taxonomies, Taxonomy, Topic } from "@ec2u/data-shared/taxonomies/index.js";
+import { Taxonomies } from "@ec2u/data-shared/taxonomies/index.js";
 import { by, locale } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -33,7 +33,7 @@ import { FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
-import { DatasetLink, DatasetMeta } from "../datasets/dataset.js";
+import { DatasetLink } from "../datasets/dataset.js";
 import { isTaxonomyRow, type TaxonomyRow } from "./taxonomies.core.js";
 
 
@@ -48,17 +48,7 @@ export const taxonomies = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function TaxonomiesMeta() {
-
-	return <DatasetMeta about={taxonomies} shapes={[
-		Taxonomies,
-		Taxonomy,
-		Topic
-	]}/>;
-
-}
-
-export function TaxonomiesData() {
+export function TaxonomiesPage() {
 
 	const route = useRoute();
 	const router = useRouter();

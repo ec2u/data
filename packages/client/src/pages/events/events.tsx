@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Event, Events } from "@ec2u/data-shared/events/index.js";
+import { Events } from "@ec2u/data-shared/events/index.js";
 import { opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -35,7 +35,7 @@ import { FacetSize, named, toEventAttendanceMode, toUniversity, UniversityModel 
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
-import { DatasetLink, DatasetMeta } from "../datasets/dataset.js";
+import { DatasetLink } from "../datasets/dataset.js";
 import { schedule } from "./event.js";
 
 
@@ -64,16 +64,7 @@ export const events = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function EventsMeta() {
-
-	return <DatasetMeta about={events} shapes={[
-		Events,
-		Event
-	]}/>;
-
-}
-
-export function EventsData() {
+export function EventsPage() {
 
 	const route = useRoute();
 	const router = useRouter();

@@ -15,19 +15,18 @@
  */
 
 import { Routes } from "@metreeca/tile-data/router";
-import { TaxonomiesData, TaxonomiesMeta } from "./taxonomies.js";
-import { TaxonomyData } from "./taxonomy.js";
-import { TopicData } from "./topic.js";
+import { TaxonomiesPage } from "./taxonomies.js";
+import { TaxonomyPage } from "./taxonomy.js";
+import { TopicPage } from "./topic.js";
 
 
 export function Taxonomies() {
 
 	return <Routes>{{
 
-		"/": <TaxonomiesData/>,
-		"/~": <TaxonomiesMeta/>,
-		"/:taxonomy": <TaxonomyData/>,
-		"/:taxonomy/": <TopicData/> // topic routes nest along the taxonomy hierarchy
+		"/": <TaxonomiesPage/>,
+		"/:taxonomy": <TaxonomyPage/>,
+		"/:taxonomy/": <TopicPage/> // topic routes nest along the taxonomy hierarchy
 
 	}}</Routes>;
 

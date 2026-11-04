@@ -15,14 +15,14 @@
  */
 
 import { Routes } from "@metreeca/tile-data/router";
-import { DatasetsData } from "./datasets.js";
+import { DatasetsPage } from "./datasets.js";
 
 
 export function Datasets() {
 
 	return <Routes>{{
 
-		"/": <DatasetsData/>
+		"/": <DatasetsPage/>
 
 	}}</Routes>;
 

@@ -79,7 +79,7 @@ export const university = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function UniversityData() {
+export function UniversityPage() {
 
 	const route = useRoute();
 	const router = useRouter();

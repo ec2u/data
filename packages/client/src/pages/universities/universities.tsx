@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Universities, University } from "@ec2u/data-shared/universities/index.js";
+import { Universities } from "@ec2u/data-shared/universities/index.js";
 import { by, locale } from "@metreeca/core/order";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -33,7 +33,7 @@ import { useEffect } from "preact/hooks";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
-import { DatasetLink, DatasetMeta } from "../datasets/dataset.js";
+import { DatasetLink } from "../datasets/dataset.js";
 
 
 export const universities = immutable({
@@ -58,16 +58,7 @@ export const universities = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function UniversitiesMeta() {
-
-	return <DatasetMeta about={universities} shapes={[
-		Universities,
-		University
-	]}/>;
-
-}
-
-export function UniversitiesData() {
+export function UniversitiesPage() {
 
 	const route = useRoute();
 	const router = useRouter();

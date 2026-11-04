@@ -89,7 +89,7 @@ export const program = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function ProgramData() {
+export function ProgramPage() {
 
 	const route = useRoute();
 	const router = useRouter();

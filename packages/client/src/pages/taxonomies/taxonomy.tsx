@@ -76,7 +76,7 @@ export const taxonomy = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function TaxonomyData() {
+export function TaxonomyPage() {
 
 	const route = useRoute();
 	const router = useRouter();

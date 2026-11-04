@@ -15,8 +15,8 @@
  */
 
 import { Routes } from "@metreeca/tile-data/router";
-import { UniversitiesData, UniversitiesMeta } from "./universities.js";
-import { UniversityData } from "./university.js";
+import { UniversitiesPage } from "./universities.js";
+import { UniversityPage } from "./university.js";
 
 
 
@@ -24,9 +24,8 @@ export function Universities() {
 
 	return <Routes>{{
 
-		"/": <UniversitiesData/>,
-		"/~": <UniversitiesMeta/>,
-		"/:name": <UniversityData/>
+		"/": <UniversitiesPage/>,
+		"/:name": <UniversityPage/>
 
 	}}</Routes>;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Course, Courses } from "@ec2u/data-shared/courses/index.js";
+import { Courses } from "@ec2u/data-shared/courses/index.js";
 import { opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -36,7 +36,7 @@ import { FacetSize, named, toCourseMode, toCourseTerm, toLanguage, toUniversity,
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
-import { DatasetLink, DatasetMeta } from "../datasets/dataset.js";
+import { DatasetLink } from "../datasets/dataset.js";
 
 
 export const courses = immutable({
@@ -60,16 +60,7 @@ export const courses = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function CoursesMeta() {
-
-	return <DatasetMeta about={courses} shapes={[
-		Courses,
-		Course
-	]}/>;
-
-}
-
-export function CoursesData() {
+export function CoursesPage() {
 
 	const route = useRoute();
 	const router = useRouter();

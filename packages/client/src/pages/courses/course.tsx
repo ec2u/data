@@ -92,7 +92,7 @@ export const course = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function CourseData() {
+export function CoursePage() {
 
 	const route = useRoute();
 	const router = useRouter();

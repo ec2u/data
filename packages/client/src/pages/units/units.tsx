@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Unit, Units } from "@ec2u/data-shared/units/index.js";
+import { Units } from "@ec2u/data-shared/units/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -32,7 +32,7 @@ import { FacetSize, toUniversity, UniversityModel } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
-import { DatasetLink, DatasetMeta } from "../datasets/dataset.js";
+import { DatasetLink } from "../datasets/dataset.js";
 
 
 export const units = immutable({
@@ -56,16 +56,7 @@ export const units = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function UnitsMeta() {
-
-	return <DatasetMeta about={units} shapes={[
-		Units,
-		Unit
-	]}/>;
-
-}
-
-export function UnitsData() {
+export function UnitsPage() {
 
 	const route = useRoute();
 	const router = useRouter();

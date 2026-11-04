@@ -15,17 +15,16 @@
  */
 
 import { Routes } from "@metreeca/tile-data/router";
-import { DocumentData } from "./document.js";
-import { DocumentsData, DocumentsMeta } from "./documents.js";
+import { DocumentPage } from "./document.js";
+import { DocumentsPage } from "./documents.js";
 
 
 export function Documents() {
 
 	return <Routes>{{
 
-		"/": <DocumentsData/>,
-		"/~": <DocumentsMeta/>,
-		"/:document": <DocumentData/>
+		"/": <DocumentsPage/>,
+		"/:document": <DocumentPage/>
 
 	}}</Routes>;
 

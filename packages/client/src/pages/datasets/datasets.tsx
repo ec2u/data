@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Dataset, Datasets } from "@ec2u/data-shared/datasets/index.js";
+import { Datasets } from "@ec2u/data-shared/datasets/index.js";
 import { opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
@@ -33,7 +33,7 @@ import { ec2u, FacetSize } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
-import { DatasetLink, DatasetMeta } from "./dataset.js";
+import { DatasetLink } from "./dataset.js";
 import { byDataset, type DatasetRow, isDatasetRow } from "./datasets.core.js";
 import "./datasets.css";
 
@@ -65,16 +65,7 @@ export const datasets = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function DatasetsMeta() {
-
-	return <DatasetMeta about={datasets} shapes={[
-		Datasets,
-		Dataset
-	]}/>;
-
-}
-
-export function DatasetsData() {
+export function DatasetsPage() {
 
 	const route = useRoute();
 	const router = useRouter();

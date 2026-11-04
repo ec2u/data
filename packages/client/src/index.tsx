@@ -23,17 +23,16 @@ import { Store } from "@metreeca/tile-data/store";
 import { host } from "@metreeca/tile-hive";
 import { Toast } from "@metreeca/tile-hive/toast";
 import { render } from "preact";
-import { about } from "./pages/about/about.js";
-import { About } from "./pages/about/index.js";
+import { About, about } from "./pages/about.js";
 import { courses } from "./pages/courses/courses.js";
 import { Courses } from "./pages/courses/index.js";
-import { datasets, DatasetsMeta } from "./pages/datasets/datasets.js";
+import { datasets } from "./pages/datasets/datasets.js";
 import { Datasets } from "./pages/datasets/index.js";
 import { documents } from "./pages/documents/documents.js";
 import { Documents } from "./pages/documents/index.js";
 import { events } from "./pages/events/events.js";
 import { Events } from "./pages/events/index.js";
-import { Unknown, unknown } from "./pages/index.js";
+import { Unknown, unknown } from "./pages/unknown.js";
 import { Programs } from "./pages/programs/index.js";
 import { programs } from "./pages/programs/programs.js";
 import { Taxonomies } from "./pages/taxonomies/index.js";
@@ -67,7 +66,6 @@ function Hub() {
 					<Routes>{{
 
 						[datasets.route]: <Datasets/>,
-						"/~": <DatasetsMeta/>, // the hub catalogue sits at the root, whose pattern routes nothing below it
 						[universities.route]: <Universities/>,
 						[units.route]: <Units/>,
 						[programs.route]: <Programs/>,
@@ -75,8 +73,8 @@ function Hub() {
 						[documents.route]: <Documents/>,
 						[events.route]: <Events/>,
 						[taxonomies.route]: <Taxonomies/>,
-						[about.route]: <About/>,
 
+						[about.route]: <About/>,
 						[unknown.route]: <Unknown/>
 
 					}}</Routes>
