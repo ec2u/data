@@ -15,8 +15,9 @@
  */
 
 import { Dataset } from "@ec2u/data-shared";
+import { Resources } from "@ec2u/data-shared/resources/index.js";
 import type { ResourceShape } from "@metreeca/blue/resource";
-import { type Lazy, opt } from "@metreeca/core";
+import { isNumber, isObject, isString, type Lazy, opt } from "@metreeca/core";
 import { some, type Some } from "@metreeca/core/arrays";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
@@ -25,7 +26,7 @@ import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Path } from "@metreeca/tile-cell/path";
 import { useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useResource } from "@metreeca/tile-data/store";
+import { useCollection, useCount, useMembers, useResource } from "@metreeca/tile-data/store";
 import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { date } from "@metreeca/tile-type/date";
@@ -162,6 +163,28 @@ export function DatasetPage({
 
 	}));
 
+	const breakdown = useMembers(useCollection({
+
+		entry: "/resources/",
+		shape: Resources,
+
+		scope: { "?dataset": [href] }
+
+	}), {
+
+		model: {
+
+			"university=university": {
+				id: {},
+				altLabel: {}
+			},
+
+			"size=count:": {}
+
+		}
+
+	});
+
 
 	const title = resource({
 
@@ -208,19 +231,33 @@ export function DatasetPage({
 
 				<Info place={"spread"}>{{
 
-					Resources: resources({
-
-						ready: ({ state }) => integer.format(state)
-
-					}),
-
-					"Data Models": opt(shapes, shapes => <ul class={"ec2u-shape-links"}>{some(shapes).map(shape =>
+					"Data Model": opt(shapes, shapes => <ul class={"ec2u-shape-links"}>{some(shapes).map(shape =>
 						<li key={getShapeName(shape)}>
 							{opt(getShapeHref(shape), href => <Link href={href}>{getShapeName(shape)}</Link>) ?? getShapeName(shape)}
 						</li>
 					)}</ul>)
 
 				}}</Info>
+
+				<Info place={"spread"}>{[
+
+					{
+						label: <strong>Resources</strong>,
+						value: resources({ ready: ({ state }) => integer.format(state) })
+					},
+
+					...breakdown({
+
+						ready: ({ state }) => [...state.filter(isUniversityRow)] // copy, as rows are shared
+							.sort((x, y) => x.university.altLabel.localeCompare(y.university.altLabel))
+							.map(({ university, size }) => ({
+								label: <Link href={href} query={{ university: university.id }}>{university.altLabel}</Link>,
+								value: integer.format(size)
+							}))
+
+					}) ?? []
+
+				]}</Info>
 
 			</Stack>
 
@@ -249,4 +286,36 @@ export function DatasetPage({
 
 	})}</Page>;
 
+}
+
+
+/**
+ * A row of the breakdown of the resources of a dataset, counting the ones associated with a university.
+ */
+type UniversityRow = {
+
+	readonly university: {
+		readonly id: string
+		readonly altLabel: string
+	}
+
+	readonly size: number
+
+};
+
+/**
+ * Checks if a value is a breakdown row naming the university it counts, as opposed to the one counting the resources
+ * associated with no university.
+ */
+function isUniversityRow(value: unknown): value is UniversityRow {
+	return isObject(value, {
+
+		university: university => isObject(university, {
+			id: isString,
+			altLabel: isString
+		}),
+
+		size: isNumber
+
+	});
 }
