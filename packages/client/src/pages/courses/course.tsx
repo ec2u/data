@@ -182,7 +182,7 @@ export function CoursePage() {
 				<Info place={"spread"}>{{
 
 					Info: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}><Link href={url}>{getIRIHost(url)}</Link></li>
+						<li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link></li>
 					)}</ul> : undefined
 
 				}}</Info>

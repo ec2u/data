@@ -202,7 +202,7 @@ export function EventPage() {
 
 				<Info place={"spread"}>{{
 
-					Info: <ul>{url.map(url => <li key={url}><Link href={url}>{getIRIHost(url)}</Link></li>)}</ul>,
+					Info: <ul>{url.map(url => <li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link></li>)}</ul>,
 					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link href={url[0] ?? id}>{label}</Link>)
 
 				}}</Info>
@@ -284,7 +284,7 @@ type Location = NonNullable<Match<typeof Event, typeof model>["location"]>;
  */
 function venue(location: Location): ComponentChildren {
 	return isString(location) || "latitude" in location || "addressLocality" in location ? lines(parts(location))
-			: <Link href={location.url[0]}>{getIRIHost(location.url[0])}</Link>;
+			: <Link href={location.url[0]}>{getIRIHost(location.url[0]) ?? location.url[0]}</Link>;
 }
 
 /**

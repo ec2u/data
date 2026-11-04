@@ -158,7 +158,7 @@ export function DocumentPage() {
 
 					Code: identifier,
 					Web: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}><Link href={url}>{getIRIHost(url)}</Link></li>
+						<li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link></li>
 					)}</ul> : undefined,
 					Language: list(language.map(tag => nameTag(tag, navigator.language)))
 

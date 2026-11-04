@@ -65,7 +65,7 @@ export function Credential({
 
 			...(name ? [<span key={"name"}> · {name}</span>] : []),
 
-			...url.map(href => <span key={href}> · <Link href={href}>{getIRIHost(href)}</Link></span>)
+			...url.map(href => <span key={href}> · <Link href={href}>{getIRIHost(href) ?? href}</Link></span>)
 
 		]}</span>
 

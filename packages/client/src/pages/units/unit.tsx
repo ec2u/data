@@ -135,7 +135,7 @@ export function UnitPage() {
 				<Info place={"spread"}>{{
 
 					Info: homepage.length > 0 ? <ul>{homepage.map(url =>
-						<li key={url}><Link href={url}>{getIRIHost(url)}</Link></li>
+						<li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link></li>
 					)}</ul> : undefined
 
 				}}</Info>

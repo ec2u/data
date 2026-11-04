@@ -166,7 +166,7 @@ export function TaxonomyPage() {
 				License: opt(license, license => license.length > 0 ? <ul>{license.map(({ id, label }) =>
 					<li key={id}><Link href={id}>{label}</Link></li>
 				)}</ul> : undefined), // a boolean would read as its name
-				Source: opt(source, ({ id }) => <Link href={id}>{getIRIHost(id)}</Link>),
+				Source: opt(source, ({ id }) => <Link href={id}>{getIRIHost(id) ?? id}</Link>),
 				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
 
 			}}</Info>

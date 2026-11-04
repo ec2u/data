@@ -125,7 +125,7 @@ export function UniversityPage() {
 
 				<Info place={"spread"}>{{
 
-					Home: <ul>{homepage.map(url => <li key={url}><Link href={url}>{getIRIHost(url)}</Link></li>)}</ul>
+					Home: <ul>{homepage.map(url => <li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link></li>)}</ul>
 
 				}}</Info>
 
