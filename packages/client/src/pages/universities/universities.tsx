@@ -66,7 +66,7 @@ export function UniversitiesPage() {
 
 			id: {},
 			label: {},
-			definition: {},
+			comment: {},
 			depiction: {},
 			country: { id: {}, label: {} },
 			city: { id: {}, label: {} }
@@ -113,13 +113,13 @@ export function UniversitiesPage() {
 
 			.sort(by(({ city }) => city.label, locale())) // copy, as state is shared
 
-			.map(({ id, label, definition, depiction, country }) => <Card key={id}
+			.map(({ id, label, comment, depiction, country }) => <Card key={id}
 
 				title={<Link href={id}>{label}</Link>}
 				tags={country.label}
 				image={depiction[0]}
 
-			>{definition}</Card>)
+			>{comment}</Card>)
 
 		}</>
 
