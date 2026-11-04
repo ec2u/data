@@ -25,6 +25,7 @@ import type { ComponentChildren } from "preact";
 const Looks = {
 
 	strong: { fontWeight: "fontWeightStrong" },
+	muted: { color: "colorLabel" },
 	label: { color: "colorLabel", fontSize: "fontSizeSmall" }
 
 } satisfies Readonly<Record<string, Tokens>>;
@@ -48,7 +49,8 @@ export function Text({
 }: {
 
 	/**
-	 * How the text reads: `strong` for emphasis, `label` for guidance introducing the content it precedes.
+	 * How the text reads: `strong` for emphasis, `muted` for secondary text at body size, `label` for guidance
+	 * introducing the content it precedes, in the muted colour at a smaller size.
 	 */
 	look: keyof typeof Looks
 

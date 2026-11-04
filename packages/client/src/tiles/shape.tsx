@@ -26,16 +26,15 @@ import { Stack } from "@metreeca/tile-hive/stack";
 import { type ComponentChildren, Fragment } from "preact";
 import { useRef } from "preact/hooks";
 import { Text } from "../_/text.js";
-import { getShapeExtenders, getShapeInterface, getShapeParents, getShapeReferences, getShapeReferrers, getShapeSchema, prefixed, type ShapeLink, type ShapeRow, type ShapeSchemaValue, type ShapeTable, tabulate } from "./shape.core.js";
+import { getShapeExtenders, getShapeInterface, getShapeParents, getShapeReferrers, getShapeSchema, prefixed, type ShapeLink, type ShapeRow, type ShapeSchemaValue, type ShapeTable, tabulate } from "./shape.core.js";
 import "./shape.css";
 
 
 /**
  * Creates the property sheet of a resource shape.
  *
- * Locates the shape in the model, stating its target class as a prefixed name, its endpoint, the shapes it extends and
- * the ones extending it directly, the shapes it refers to and the ones referring to it, the class linked to its
- * definition and each shape to its documentation; entries with no content are left out.
+ * Locates the shape in the model: its target class as a prefixed name linked to its definition, its endpoint, and the
+ * shapes it extends, extending it directly or referring to it, linked to their documentation, omitting empty entries.
  *
  * @param options The widget configuration
  *
@@ -64,7 +63,6 @@ export function ShapeInfo({
 	const parents = getShapeParents(shape);
 	const extenders = getShapeExtenders(shape, universe);
 	const referrers = getShapeReferrers(shape, universe);
-	const references = getShapeReferences(shape);
 
 	const stated = Object.entries({
 
@@ -72,7 +70,6 @@ export function ShapeInfo({
 		Endpoint: opt(endpoint, endpoint => <code>{endpoint}</code>),
 		Extends: parents.length > 0 ? <List links={parents}/> : undefined,
 		"Extended by": extenders.length > 0 ? <List links={extenders}/> : undefined,
-		References: references.length > 0 ? <List links={references}/> : undefined,
 		"Referenced by": referrers.length > 0 ? <List links={referrers}/> : undefined
 
 	}).flatMap(([label, content]) => content !== undefined ? [{ label, content }] : []);
@@ -207,9 +204,9 @@ function Table({ rows, inherited }: ShapeTable) {
 
 			{inherited.map(({ parent, rows }) => <tbody key={parent.name} class={"ec2u-shape-inherited"}>
 				<tr>
-					<th colSpan={4}>
+					<th colSpan={4}><Text look={"muted"}>
 						properties from {parent.href === undefined ? parent.name : <Link href={parent.href}>{parent.name}</Link>}
-					</th>
+					</Text></th>
 				</tr>
 				{rows.map(row => <Row key={row.term} {...row}/>)}
 			</tbody>)}
