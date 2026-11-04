@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import { datasets, Datasets } from "@ec2u/data-shared";
+import { pipe } from "@metreeca/flow";
+import { items } from "@metreeca/flow/feeds";
+import { map } from "@metreeca/flow/tasks";
 import { bind, executor, service } from "@metreeca/gear";
 import { createCache, createFileCache } from "@metreeca/gear/cache";
 import { getPackage, getPath } from "@metreeca/gear/space";
@@ -27,9 +31,9 @@ import { minute } from "@metreeca/work/core/temporal.js";
 import { gcp } from "@metreeca/gear-gcp";
 import { createGCPVault } from "@metreeca/gear-gcp/secrets";
 import { createGoogleAI } from "@metreeca/llms-google";
-import { createStore } from "@metreeca/pipe-store";
+import { validate } from "@metreeca/mime-jsonld";
+import { createStore, delta, settle } from "@metreeca/pipe-store";
 import { Metadata as courses } from "./courses/index.core.js";
-import { Metadata as datasets } from "./datasets/index.core.js";
 import { Metadata as documents } from "./documents/index.core.js";
 import { Metadata as events } from "./events/index.core.js";
 import { Metadata as organizations } from "./organizations/index.core.js";
@@ -77,7 +81,7 @@ export const execute = executor(
 
 if ( import.meta.main ) {
 	await execute(() => Promise.all([
-		datasets(),
+		Metadata(),
 		organizations(),
 		persons(),
 		universities(),
@@ -89,4 +93,18 @@ if ( import.meta.main ) {
 		taxonomies(),
 		pages()
 	]));
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export async function Metadata() {
+
+	return pipe(
+		(items([datasets]))
+		(validate(Datasets))
+		(map(dataset => delta(datasets.id, Datasets, dataset)))
+		(settle({ atomic: true }))
+	);
+
 }
