@@ -18,7 +18,6 @@ import { Dataset } from "@ec2u/data-shared/datasets/index.js";
 import type { ResourceShape } from "@metreeca/blue/resource";
 import { type Lazy, opt } from "@metreeca/core";
 import { some, type Some } from "@metreeca/core/arrays";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -41,27 +40,6 @@ import { getShapeDescription, getShapeName } from "../../tiles/shape.core.js";
 import { Shape } from "../../tiles/shape.js";
 import { about } from "../about/index.js";
 
-
-const model = immutable({
-
-	title: {},
-	description: {},
-
-	created: {},
-	issued: {},
-	modified: {},
-
-	publisher: { id: {}, label: {} },
-	source: { id: {} },
-
-	rights: {},
-	license: { id: {}, label: {} },
-	accessRights: {}
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * The dataset metadata the client presents a dataset with, as exported by the module of each dataset catalogue.
@@ -152,15 +130,36 @@ export function DatasetPage({
 	const router = useRouter();
 
 	const resource = useResource({
+
 		entry: href,
 		shape: Dataset,
-		model
+
+		model: {
+
+			title: {},
+			description: {},
+
+			created: {},
+			issued: {},
+			modified: {},
+
+			publisher: { id: {}, label: {} },
+			source: { id: {} },
+
+			rights: {},
+			license: { id: {}, label: {} },
+			accessRights: {}
+
+		}
+
 	});
 
 	const resources = useCount(useCollection({
+
 		entry: href,
 		shape: Dataset,
 		field: "resources"
+
 	}));
 
 
@@ -172,6 +171,7 @@ export function DatasetPage({
 		ready: ({ state }) => state.title
 
 	});
+
 
 	useEffect(() => router({ title }), [title]);
 
@@ -208,7 +208,7 @@ export function DatasetPage({
 
 						ready: ({ state }) => integer.format(state)
 
-					}),
+					})
 
 				}}</Info>
 

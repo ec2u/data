@@ -104,9 +104,12 @@ function SKOSNarrower({
 }) {
 
 	const resource = useResource({
+
 		entry: id,
 		shape: Topic,
+
 		model: narrower
+
 	});
 
 	return resource({

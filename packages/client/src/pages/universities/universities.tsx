@@ -16,7 +16,6 @@
 
 import { Universities } from "@ec2u/data-shared/universities/index.js";
 import { by, locale } from "@metreeca/core/order";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -37,20 +36,6 @@ import { DatasetLink } from "../datasets/dataset.js";
 import { universities } from "./index.js";
 
 
-const model = immutable({
-
-	id: {},
-	label: {},
-	definition: {},
-	depiction: {},
-	country: { id: {}, label: {} },
-	city: { id: {}, label: {} }
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function UniversitiesPage() {
 
 	const route = useRoute();
@@ -59,11 +44,15 @@ export function UniversitiesPage() {
 	const [query, setQuery] = useQuery();
 
 	const collection = useCollection({
+
 		entry: route,
 		shape: Universities,
 		field: "resources",
+
 		query,
+
 		onChange: setQuery
+
 	});
 
 	const keywords = useKeywords(collection, "prefLabel");
@@ -71,7 +60,20 @@ export function UniversitiesPage() {
 	const students = useRange(collection, "students");
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model });
+	const members = useMembers(collection, {
+
+		model: {
+
+			id: {},
+			label: {},
+			definition: {},
+			depiction: {},
+			country: { id: {}, label: {} },
+			city: { id: {}, label: {} }
+
+		}
+
+	});
 
 
 	useEffect(() => router({ title: universities.label }), []);

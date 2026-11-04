@@ -45,11 +45,15 @@ export function TaxonomiesPage() {
 	const [query, setQuery] = useQuery();
 
 	const collection = useCollection({
+
 		entry: route,
 		shape: Taxonomies,
 		field: "resources",
+
 		query,
+
 		onChange: setQuery
+
 	});
 
 
@@ -59,11 +63,14 @@ export function TaxonomiesPage() {
 	const count = useCount(collection);
 
 	const members = useMembers(collection, {
+
 		model: {
 			"taxonomy=": { id: {}, label: {}, title: {}, alternative: {}, description: {} },
 			"size=count:resources": {}
 		}
+
 	});
+
 
 	useEffect(() => router({ title: taxonomies.label }), []);
 

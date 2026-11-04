@@ -16,14 +16,21 @@
 
 import { Events } from "@ec2u/data-shared/events/index.js";
 import { opt } from "@metreeca/core";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { More } from "@metreeca/tile-cell/more";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useKeywords, useMembers, useQuery, useRange, useTally } from "@metreeca/tile-data/store";
+import {
+	useCollection,
+	useCount,
+	useKeywords,
+	useMembers,
+	useQuery,
+	useRange,
+	useTally
+} from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Clear } from "@metreeca/tile-lens/clear";
 import { Count } from "@metreeca/tile-lens/count";
@@ -41,23 +48,6 @@ import { toEventAttendanceMode } from "./index.core.js";
 import { events } from "./index.js";
 
 
-const model = immutable({
-
-	id: {},
-	label: {},
-	disambiguatingDescription: {}, // the summary events state in place of a comment
-
-	startDate: {},
-	endDate: {},
-
-	image: { url: {} },
-	university: { altLabel: {} }
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function EventsPage() {
 
 	const route = useRoute();
@@ -66,11 +56,15 @@ export function EventsPage() {
 	const [query, setQuery] = useQuery();
 
 	const collection = useCollection({
+
 		entry: route,
 		shape: Events,
 		field: "resources",
+
 		query,
+
 		onChange: setQuery
+
 	});
 
 	const keywords = useKeywords(collection, "label");
@@ -81,7 +75,26 @@ export function EventsPage() {
 	const topics = useTally(collection, "keywords", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model, order: { startDate: "asc", label: "asc" } });
+	const members = useMembers(collection, {
+
+		model: {
+
+			id: {},
+			label: {},
+			disambiguatingDescription: {}, // the summary events state in place of a comment
+
+			startDate: {},
+			endDate: {},
+
+			image: { url: {} },
+			university: { altLabel: {} }
+
+		},
+
+		order: { startDate: "asc", label: "asc" }
+
+	});
+
 
 	useEffect(() => router({ title: events.label }), []);
 
@@ -121,13 +134,14 @@ export function EventsPage() {
 
 		ready: ({ state, load }) => state.length === 0 ? <Hint>{events.glyph}</Hint> : <>
 
-			{state.map(({ id, label, disambiguatingDescription, startDate, endDate, image, university }) => <Card key={id}
+			{state.map(({ id, label, disambiguatingDescription, startDate, endDate, image, university }) =>
+				<Card key={id}
 
-				title={<Link href={id}>{`${schedule(startDate, endDate)} / ${label}`}</Link>}
-				tags={university?.altLabel}
-				image={opt(image, ({ url }) => url[0])}
+					title={<Link href={id}>{`${schedule(startDate, endDate)} / ${label}`}</Link>}
+					tags={university?.altLabel}
+					image={opt(image, ({ url }) => url[0])}
 
-			>{disambiguatingDescription}</Card>)}
+				>{disambiguatingDescription}</Card>)}
 
 			{load && <More onLoad={load}/>}
 

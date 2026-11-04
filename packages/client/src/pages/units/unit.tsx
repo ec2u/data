@@ -17,7 +17,6 @@
 import { Unit } from "@ec2u/data-shared/units/index.js";
 import { opt } from "@metreeca/core";
 import { by, compound, locale } from "@metreeca/core/order";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -41,43 +40,41 @@ import { DatasetLink } from "../datasets/dataset.js";
 import { units } from "./index.js";
 
 
-const model = immutable({
-
-	id: {},
-	generated: {},
-
-	label: {},
-	prefLabel: {},
-	altLabel: {},
-	definition: {},
-
-	identifier: {},
-	homepage: {},
-
-	university: { id: {}, altLabel: {} },
-	classification: { id: {}, label: {} },
-	hasHead: { id: {}, label: {} },
-
-	unitOf: { id: {}, label: {} },
-	hasUnit: { id: {}, label: {} },
-
-	subject: { id: {}, label: {}, broaderTransitive: {} },
-	keyword: {}
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function UnitPage() {
 
 	const route = useRoute();
 	const router = useRouter();
 
 	const resource = useResource({
+
 		entry: route,
 		shape: Unit,
-		model
+
+		model: {
+
+			id: {},
+			generated: {},
+
+			label: {},
+			prefLabel: {},
+			altLabel: {},
+			definition: {},
+
+			identifier: {},
+			homepage: {},
+
+			university: { id: {}, altLabel: {} },
+			classification: { id: {}, label: {} },
+			hasHead: { id: {}, label: {} },
+
+			unitOf: { id: {}, label: {} },
+			hasUnit: { id: {}, label: {} },
+
+			subject: { id: {}, label: {}, broaderTransitive: {} },
+			keyword: {}
+
+		}
+
 	});
 
 	const title = resource({
@@ -88,6 +85,7 @@ export function UnitPage() {
 		ready: ({ state }) => state.label
 
 	});
+
 
 	useEffect(() => router({ title }), [title]);
 
@@ -110,7 +108,16 @@ export function UnitPage() {
 
 		tray={resource({
 
-			ready: ({ state: { altLabel, identifier, homepage = [], university, classification = [], hasHead = [] } }) => <>
+			ready: ({
+				state: {
+					altLabel,
+					identifier,
+					homepage = [],
+					university,
+					classification = [],
+					hasHead = []
+				}
+			}) => <>
 
 				<Info place={"spread"}>{{
 
@@ -155,21 +162,22 @@ export function UnitPage() {
 		blank: () => <Hint>{units.glyph}</Hint>,
 		error: ({ state }) => <Failure problem={state}><Hint>{units.glyph}</Hint></Failure>,
 
-		ready: ({ state: { prefLabel, definition, university, unitOf, hasUnit = [], subject = [], keyword = [] } }) => <Stack space={"spacing100"}>
+		ready: ({ state: { prefLabel, definition, university, unitOf, hasUnit = [], subject = [], keyword = [] } }) =>
+			<Stack space={"spacing100"}>
 
-			<Title title={prefLabel}>{opt(definition, text => <Markdown>{text}</Markdown>)}</Title>
+				<Title title={prefLabel}>{opt(definition, text => <Markdown>{text}</Markdown>)}</Title>
 
-			{blocks({
+				{blocks({
 
-				Topics: topics(subject),
-				Keywords: list(keyword),
+					Topics: topics(subject),
+					Keywords: list(keyword),
 
-				"Parent Organizations": links(unitOf.filter(({ id }) => id !== university?.id)),
-				"Organizational Units": links(hasUnit)
+					"Parent Organizations": links(unitOf.filter(({ id }) => id !== university?.id)),
+					"Organizational Units": links(hasUnit)
 
-			})}
+				})}
 
-		</Stack>
+			</Stack>
 
 	})}</Page>;
 

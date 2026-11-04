@@ -16,7 +16,6 @@
 
 import { Program } from "@ec2u/data-shared/programs/index.js";
 import { opt } from "@metreeca/core";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -47,38 +46,6 @@ import { programs } from "./index.js";
 export const credits = decimal({ fractionDigits: 1 });
 
 
-const model = immutable({
-
-	id: {},
-	generated: {},
-
-	label: {},
-	description: {},
-
-	identifier: {},
-	url: {},
-
-	numberOfCredits: {},
-	timeToComplete: {},
-
-	teaches: {},
-	programPrerequisites: {},
-	assesses: {},
-	competencyRequired: {},
-
-	educationalCredentialAwarded: CredentialModel,
-	occupationalCredentialAwarded: CredentialModel,
-
-	university: { id: {}, altLabel: {} },
-	provider: { id: {}, label: {} },
-
-	hasCourse: { id: {}, label: {} },
-	educationalLevel: { id: {}, label: {} },
-	about: { id: {}, label: {} }
-
-});
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function ProgramPage() {
@@ -87,9 +54,41 @@ export function ProgramPage() {
 	const router = useRouter();
 
 	const resource = useResource({
+
 		entry: route,
 		shape: Program,
-		model
+
+		model: {
+
+			id: {},
+			generated: {},
+
+			label: {},
+			description: {},
+
+			identifier: {},
+			url: {},
+
+			numberOfCredits: {},
+			timeToComplete: {},
+
+			teaches: {},
+			programPrerequisites: {},
+			assesses: {},
+			competencyRequired: {},
+
+			educationalCredentialAwarded: CredentialModel,
+			occupationalCredentialAwarded: CredentialModel,
+
+			university: { id: {}, altLabel: {} },
+			provider: { id: {}, label: {} },
+
+			hasCourse: { id: {}, label: {} },
+			educationalLevel: { id: {}, label: {} },
+			about: { id: {}, label: {} }
+
+		}
+
 	});
 
 	const title = resource({
@@ -100,6 +99,7 @@ export function ProgramPage() {
 		ready: ({ state }) => state.label
 
 	});
+
 
 	useEffect(() => router({ title }), [title]);
 
@@ -194,8 +194,10 @@ export function ProgramPage() {
 
 			{blocks({
 
-				"Educational Credential Awarded": opt(educationalCredentialAwarded, value => <Credential credential={value}/>),
-				"Occupational Credential Awarded": opt(occupationalCredentialAwarded, value => <Credential credential={value}/>),
+				"Educational Credential Awarded": opt(educationalCredentialAwarded, value =>
+					<Credential credential={value}/>),
+				"Occupational Credential Awarded": opt(occupationalCredentialAwarded, value =>
+					<Credential credential={value}/>),
 
 				Courses: links(hasCourse),
 				Level: links(educationalLevel),

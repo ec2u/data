@@ -30,7 +30,7 @@ import { integer } from "@metreeca/tile-type/integer";
 import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
 import { Search } from "../_/search.js";
-import { byDataset, ec2u, TallyOptions, PublicDatasets } from "../index.core.js";
+import { byDataset, ec2u, PublicDatasets, TallyOptions } from "../index.core.js";
 import { Failure } from "../tiles/failure.js";
 import { Page } from "../tiles/page.js";
 import { DatasetLink } from "./datasets/dataset.js";
@@ -46,20 +46,6 @@ export const datasets = immutable({
 });
 
 
-const model = immutable({
-
-	"dataset=": {
-		id: {},
-		title: {},
-		alternative: {},
-		description: {}
-	},
-
-	"size=count:resources": {}
-
-});
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Datasets() {
@@ -70,19 +56,38 @@ export function Datasets() {
 	const [query, setQuery] = useQuery();
 
 	const collection = useCollection({
+
 		entry: route,
 		shape: DatasetsShape,
 		field: "resources",
+
 		scope: { "?": PublicDatasets },
 		query,
+
 		onChange: setQuery
+
 	});
 
 	const keywords = useKeywords(collection, "label");
 	const license = useTally(collection, "license", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model });
+	const members = useMembers(collection, {
+
+		model: {
+
+			"dataset=": {
+				id: {},
+				title: {},
+				alternative: {},
+				description: {}
+			},
+
+			"size=count:resources": {}
+
+		}
+
+	});
 
 
 	useEffect(() => router({ title: "" }), []);

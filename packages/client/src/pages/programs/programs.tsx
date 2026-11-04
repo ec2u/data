@@ -16,7 +16,6 @@
 
 import { Programs } from "@ec2u/data-shared/programs/index.js";
 import { opt } from "@metreeca/core";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -38,19 +37,6 @@ import { DatasetLink } from "../datasets/dataset.js";
 import { programs } from "./index.js";
 
 
-const model = immutable({
-
-	id: {},
-	label: {},
-	comment: {},
-
-	university: { altLabel: {} }
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function ProgramsPage() {
 
 	const route = useRoute();
@@ -59,11 +45,15 @@ export function ProgramsPage() {
 	const [query, setQuery] = useQuery();
 
 	const collection = useCollection({
+
 		entry: route,
 		shape: Programs,
 		field: "resources",
+
 		query,
+
 		onChange: setQuery
+
 	});
 
 	const keywords = useKeywords(collection, "label");
@@ -74,7 +64,20 @@ export function ProgramsPage() {
 	const provider = useTally(collection, "provider", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model });
+	const members = useMembers(collection, {
+
+		model: {
+
+			id: {},
+			label: {},
+			comment: {},
+
+			university: { altLabel: {} }
+
+		}
+
+	});
+
 
 	useEffect(() => router({ title: programs.label }), []);
 

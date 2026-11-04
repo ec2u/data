@@ -17,7 +17,6 @@
 import { Course } from "@ec2u/data-shared/courses/index.js";
 import { opt } from "@metreeca/core";
 import { nameTag } from "@metreeca/core/language";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -43,58 +42,56 @@ import { toCourseMode, toCourseTerm } from "./index.core.js";
 import { courses } from "./index.js";
 
 
-const model = immutable({
-
-	id: {},
-	generated: {},
-
-	label: {},
-	description: {},
-
-	url: {},
-
-	year: {},
-	term: {},
-
-	courseCode: {},
-	inLanguage: {},
-	numberOfCredits: {},
-	timeRequired: {},
-	courseWorkload: {},
-	courseMode: {},
-	isAccessibleForFree: {},
-
-	teaches: {},
-	coursePrerequisites: {},
-	assesses: {},
-	competencyRequired: {},
-
-	educationalCredentialAwarded: CredentialModel,
-	occupationalCredentialAwarded: CredentialModel,
-
-	university: { id: {}, altLabel: {} },
-	provider: { id: {}, label: {} },
-	instructor: { id: {}, label: {} },
-
-	inProgram: { id: {}, label: {} },
-	audience: { id: {}, label: {} },
-	educationalLevel: { id: {}, label: {} },
-	about: { id: {}, label: {} }
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function CoursePage() {
 
 	const route = useRoute();
 	const router = useRouter();
 
 	const resource = useResource({
+
 		entry: route,
 		shape: Course,
-		model
+
+		model: {
+
+			id: {},
+			generated: {},
+
+			label: {},
+			description: {},
+
+			url: {},
+
+			year: {},
+			term: {},
+
+			courseCode: {},
+			inLanguage: {},
+			numberOfCredits: {},
+			timeRequired: {},
+			courseWorkload: {},
+			courseMode: {},
+			isAccessibleForFree: {},
+
+			teaches: {},
+			coursePrerequisites: {},
+			assesses: {},
+			competencyRequired: {},
+
+			educationalCredentialAwarded: CredentialModel,
+			occupationalCredentialAwarded: CredentialModel,
+
+			university: { id: {}, altLabel: {} },
+			provider: { id: {}, label: {} },
+			instructor: { id: {}, label: {} },
+
+			inProgram: { id: {}, label: {} },
+			audience: { id: {}, label: {} },
+			educationalLevel: { id: {}, label: {} },
+			about: { id: {}, label: {} }
+
+		}
+
 	});
 
 	const title = resource({
@@ -105,6 +102,7 @@ export function CoursePage() {
 		ready: ({ state }) => state.label
 
 	});
+
 
 	useEffect(() => router({ title }), [title]);
 
@@ -230,8 +228,10 @@ export function CoursePage() {
 
 			{blocks({
 
-				"Educational Credential Awarded": opt(educationalCredentialAwarded, value => <Credential credential={value}/>),
-				"Occupational Credential Awarded": opt(occupationalCredentialAwarded, value => <Credential credential={value}/>),
+				"Educational Credential Awarded": opt(educationalCredentialAwarded, value =>
+					<Credential credential={value}/>),
+				"Occupational Credential Awarded": opt(occupationalCredentialAwarded, value =>
+					<Credential credential={value}/>),
 
 				Programs: links(inProgram),
 				Audience: links(audience),

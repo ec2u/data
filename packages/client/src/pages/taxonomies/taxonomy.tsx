@@ -16,7 +16,6 @@
 
 import { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
 import { opt } from "@metreeca/core";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -40,34 +39,6 @@ import { DatasetLink } from "../datasets/dataset.js";
 import { taxonomies } from "./index.js";
 
 
-const model = immutable({
-
-	id: {},
-	generated: {},
-
-	title: {},
-	alternative: {},
-	description: {},
-
-	version: {},
-	created: {},
-	issued: {},
-	modified: {},
-
-	publisher: { id: {}, label: {} },
-	source: { id: {} },
-
-	rights: {},
-	license: { id: {}, label: {} },
-	accessRights: {},
-
-	hasTopConcept: { id: {}, notation: {}, prefLabel: {}, narrower: {} }
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function TaxonomyPage() {
 
 	const route = useRoute();
@@ -76,15 +47,43 @@ export function TaxonomyPage() {
 	const [keywords, setKeywords] = useState("");
 
 	const resource = useResource({
+
 		entry: route,
 		shape: Taxonomy,
-		model
+
+		model: {
+
+			id: {},
+			generated: {},
+
+			title: {},
+			alternative: {},
+			description: {},
+
+			version: {},
+			created: {},
+			issued: {},
+			modified: {},
+
+			publisher: { id: {}, label: {} },
+			source: { id: {} },
+
+			rights: {},
+			license: { id: {}, label: {} },
+			accessRights: {},
+
+			hasTopConcept: { id: {}, notation: {}, prefLabel: {}, narrower: {} }
+
+		}
+
 	});
 
 	const concepts = useCount(useCollection({
+
 		entry: route,
 		shape: Taxonomy,
 		field: "hasConcept"
+
 	}));
 
 	const title = resource({
@@ -95,6 +94,7 @@ export function TaxonomyPage() {
 		ready: ({ state: { title, alternative } }) => alternative ?? title
 
 	});
+
 
 	useEffect(() => router({ title }), [title]);
 
@@ -172,7 +172,7 @@ export function TaxonomyPage() {
 			}}</Info>
 
 			{(keywords || hasTopConcept.some(({ narrower }) => narrower?.length)) && // flat schemes are browsed whole
-				<Search placeholder={"Concepts"} value={keywords} onChange={setKeywords}/>
+                <Search placeholder={"Concepts"} value={keywords} onChange={setKeywords}/>
 			}
 
 			{keywords
@@ -203,16 +203,22 @@ function TaxonomySearch({
 	const route = useRoute();
 
 	const collection = useCollection({
+
 		entry: route,
 		shape: Taxonomy,
 		field: "hasConcept",
+
 		query: { "~label": keywords }
+
 	});
+
 
 	useEffect(() => { collection.filter({ "~label": keywords }); }, [collection, keywords]);
 
 	const members = useMembers(collection, {
+
 		model: { id: {}, notation: {}, prefLabel: {}, narrower: {} }
+
 	});
 
 	return members({

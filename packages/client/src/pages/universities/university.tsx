@@ -16,7 +16,6 @@
 
 import { Resources } from "@ec2u/data-shared/resources/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -38,58 +37,61 @@ import { isDatasetRow } from "../index.js";
 import { universities } from "./index.js";
 
 
-const model = immutable({
-
-	id: {},
-	label: {},
-
-	depiction: {},
-	homepage: {},
-
-	prefLabel: {},
-	definition: {},
-
-	inception: {},
-	students: {},
-
-	country: { id: {}, label: {} },
-	city: { id: {}, label: {} }
-
-});
-
-const stats = immutable({
-
-	"dataset=dataset": {
-		id: {},
-		title: {},
-		alternative: {}
-	},
-
-	"size=count:": {}
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function UniversityPage() {
 
 	const route = useRoute();
 	const router = useRouter();
 
 	const resource = useResource({
+
 		entry: route,
 		shape: University,
-		model
+
+		model: {
+
+			id: {},
+			label: {},
+
+			depiction: {},
+			homepage: {},
+
+			prefLabel: {},
+			definition: {},
+
+			inception: {},
+			students: {},
+
+			country: { id: {}, label: {} },
+			city: { id: {}, label: {} }
+
+		}
+
 	});
 
 	const collection = useCollection({
+
 		entry: "/resources/",
 		shape: Resources,
+
 		scope: { "?university": [route], "?dataset": PublicDatasets }
+
 	});
 
-	const members = useMembers(collection, { model: stats });
+	const members = useMembers(collection, {
+
+		model: {
+
+			"dataset=dataset": {
+				id: {},
+				title: {},
+				alternative: {}
+			},
+
+			"size=count:": {}
+
+		}
+
+	});
 
 	const title = resource({
 
@@ -99,6 +101,7 @@ export function UniversityPage() {
 		ready: ({ state }) => state.label
 
 	});
+
 
 	useEffect(() => router({ title }), [title]);
 
@@ -125,7 +128,8 @@ export function UniversityPage() {
 
 				<Info place={"spread"}>{{
 
-					Home: <ul>{homepage.map(url => <li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link></li>)}</ul>
+					Home: <ul>{homepage.map(url => <li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link>
+					</li>)}</ul>
 
 				}}</Info>
 
@@ -145,18 +149,20 @@ export function UniversityPage() {
 
 				{members({
 
-					ready: ({ state }) => <Info place={"spread"}>{[...state.filter(isDatasetRow)] // copy, as rows are shared
+					ready: ({ state }) =>
+						<Info place={"spread"}>{[...state.filter(isDatasetRow)] // copy, as rows are shared
 
-						.sort(byDataset)
+							.sort(byDataset)
 
-						.map(({ dataset, size }) => ({
+							.map(({ dataset, size }) => ({
 
-							label: <Link href={dataset.id} query={{ university: route }}>{ec2u(dataset.alternative ?? dataset.title)}</Link>,
-							value: integer.format(size)
+								label:
+									<Link href={dataset.id} query={{ university: route }}>{ec2u(dataset.alternative ?? dataset.title)}</Link>,
+								value: integer.format(size)
 
-						}))
+							}))
 
-					}</Info>
+						}</Info>
 
 				})}
 

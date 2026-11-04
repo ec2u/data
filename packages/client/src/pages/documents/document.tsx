@@ -17,7 +17,6 @@
 import { Document } from "@ec2u/data-shared/documents/index.js";
 import { opt } from "@metreeca/core";
 import { nameTag } from "@metreeca/core/language";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -41,52 +40,50 @@ import { DatasetLink } from "../datasets/dataset.js";
 import { documents } from "./index.js";
 
 
-const model = immutable({
-
-	id: {},
-	generated: {},
-
-	label: {},
-	title: {},
-	description: {},
-
-	url: {},
-
-	identifier: {},
-	language: {},
-
-	issued: {},
-	modified: {},
-	valid: {},
-
-	rights: {},
-	license: { id: {}, label: {} },
-
-	university: { id: {}, altLabel: {} },
-	publisher: { id: {}, label: {}, url: {} },
-	creator: { id: {}, label: {} },
-	contributor: { id: {}, label: {} },
-
-	type: { id: {}, label: {} },
-	subject: { id: {}, label: {} },
-	audience: { id: {}, label: {} },
-
-	relation: { id: {}, label: {} }
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function DocumentPage() {
 
 	const route = useRoute();
 	const router = useRouter();
 
 	const resource = useResource({
+
 		entry: route,
 		shape: Document,
-		model
+
+		model: {
+
+			id: {},
+			generated: {},
+
+			label: {},
+			title: {},
+			description: {},
+
+			url: {},
+
+			identifier: {},
+			language: {},
+
+			issued: {},
+			modified: {},
+			valid: {},
+
+			rights: {},
+			license: { id: {}, label: {} },
+
+			university: { id: {}, altLabel: {} },
+			publisher: { id: {}, label: {}, url: {} },
+			creator: { id: {}, label: {} },
+			contributor: { id: {}, label: {} },
+
+			type: { id: {}, label: {} },
+			subject: { id: {}, label: {} },
+			audience: { id: {}, label: {} },
+
+			relation: { id: {}, label: {} }
+
+		}
+
 	});
 
 	const title = resource({
@@ -97,6 +94,7 @@ export function DocumentPage() {
 		ready: ({ state }) => state.label
 
 	});
+
 
 	useEffect(() => router({ title }), [title]);
 
@@ -166,9 +164,18 @@ export function DocumentPage() {
 
 				<Info place={"spread"}>{{
 
-					Type: filters(type, documents.route, type => ({ ...opt(university, ({ id }) => ({ university: id })), type })),
-					Audience: filters(audience, documents.route, audience => ({ ...opt(university, ({ id }) => ({ university: id })), audience })),
-					Topics: filters(subject, documents.route, subject => ({ ...opt(university, ({ id }) => ({ university: id })), subject }))
+					Type: filters(type, documents.route, type => ({
+						...opt(university, ({ id }) => ({ university: id })),
+						type
+					})),
+					Audience: filters(audience, documents.route, audience => ({
+						...opt(university, ({ id }) => ({ university: id })),
+						audience
+					})),
+					Topics: filters(subject, documents.route, subject => ({
+						...opt(university, ({ id }) => ({ university: id })),
+						subject
+					}))
 
 				}}</Info>
 

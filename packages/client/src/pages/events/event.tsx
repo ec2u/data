@@ -17,7 +17,6 @@
 import { Event } from "@ec2u/data-shared/events/index.js";
 import { isArray, isNumber, isObject, isString, opt } from "@metreeca/core";
 import { nameTag } from "@metreeca/core/language";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -49,56 +48,6 @@ import { events } from "./index.js";
 const day = date({ instant: true });
 
 
-const model = immutable({
-
-	id: {},
-	generated: {},
-
-	label: {},
-	description: {},
-	disambiguatingDescription: {},
-
-	url: {},
-	image: { url: {}, description: {}, copyrightNotice: {} },
-
-	startDate: {},
-	endDate: {},
-
-	inLanguage: {},
-	isAccessibleForFree: {},
-	eventStatus: {},
-	eventAttendanceMode: {},
-
-	location: {
-
-		"0": {}, // a venue stated as plain text
-
-		"1": { // a place, a postal address or a virtual location
-			name: {},
-			url: {},
-			latitude: {},
-			longitude: {},
-			addressLocality: {},
-			streetAddress: {},
-			postalCode: {},
-			addressCountry: {},
-			address: {
-				addressLocality: {},
-				streetAddress: {},
-				postalCode: {},
-				addressCountry: {}
-			}
-		}
-
-	},
-
-	university: { id: {}, altLabel: {} },
-	publisher: { id: {}, label: {}, url: {} },
-	keywords: { id: {}, label: {} }
-
-});
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function EventPage() {
@@ -107,9 +56,59 @@ export function EventPage() {
 	const router = useRouter();
 
 	const resource = useResource({
+
 		entry: route,
 		shape: Event,
-		model
+
+		model: {
+
+			id: {},
+			generated: {},
+
+			label: {},
+			description: {},
+			disambiguatingDescription: {},
+
+			url: {},
+			image: { url: {}, description: {}, copyrightNotice: {} },
+
+			startDate: {},
+			endDate: {},
+
+			inLanguage: {},
+			isAccessibleForFree: {},
+			eventStatus: {},
+			eventAttendanceMode: {},
+
+			location: {
+
+				"0": {}, // a venue stated as plain text
+
+				"1": { // a place, a postal address or a virtual location
+					name: {},
+					url: {},
+					latitude: {},
+					longitude: {},
+					addressLocality: {},
+					streetAddress: {},
+					postalCode: {},
+					addressCountry: {},
+					address: {
+						addressLocality: {},
+						streetAddress: {},
+						postalCode: {},
+						addressCountry: {}
+					}
+				}
+
+			},
+
+			university: { id: {}, altLabel: {} },
+			publisher: { id: {}, label: {}, url: {} },
+			keywords: { id: {}, label: {} }
+
+		}
+
 	});
 
 	const title = resource({
@@ -120,6 +119,7 @@ export function EventPage() {
 		ready: ({ state }) => state.label
 
 	});
+
 
 	useEffect(() => router({ title }), [title]);
 
@@ -175,7 +175,10 @@ export function EventPage() {
 
 				<Info place={"spread"}>{{
 
-					Topics: filters(keywords, events.route, keywords => ({ ...opt(university, ({ id }) => ({ university: id })), keywords }))
+					Topics: filters(keywords, events.route, keywords => ({
+						...opt(university, ({ id }) => ({ university: id })),
+						keywords
+					}))
 
 				}}</Info>
 
@@ -203,7 +206,8 @@ export function EventPage() {
 
 				<Info place={"spread"}>{{
 
-					Info: <ul>{url.map(url => <li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link></li>)}</ul>,
+					Info: <ul>{url.map(url => <li key={url}><Link href={url}>{getIRIHost(url) ?? url}</Link>
+					</li>)}</ul>,
 					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link href={url[0] ?? id}>{label}</Link>)
 
 				}}</Info>
@@ -323,5 +327,6 @@ function isVirtual(value: unknown): value is { readonly url: readonly [string, .
  *     is stated, so the panel leaves the location out rather than showing it as an empty entry
  */
 function lines(values: readonly string[]): ComponentChildren {
-	return values.length === 0 ? undefined : values.flatMap((value, index) => index === 0 ? [value] : [<br key={index}/>, value]);
+	return values.length === 0 ? undefined : values.flatMap((value, index) => index === 0 ? [value] : [
+		<br key={index}/>, value]);
 }

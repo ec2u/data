@@ -17,7 +17,6 @@
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { opt } from "@metreeca/core";
 import { by, locale } from "@metreeca/core/order";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
@@ -39,38 +38,36 @@ import { DatasetLink } from "../datasets/dataset.js";
 import { taxonomies } from "./index.js";
 
 
-const model = immutable({
-
-	id: {},
-	generated: {},
-
-	notation: {},
-	prefLabel: {},
-	definition: {},
-
-	isDefinedBy: {},
-
-	inScheme: { id: {}, label: {} },
-
-	broaderTransitive: { id: {}, notation: {}, prefLabel: {}, broader: {} },
-	narrower: { id: {}, notation: {}, prefLabel: {}, narrower: {} },
-	related: { id: {}, label: {} },
-	exactMatch: { id: {}, label: {} }
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function TopicPage() {
 
 	const route = useRoute();
 	const router = useRouter();
 
 	const resource = useResource({
+
 		entry: route,
 		shape: Topic,
-		model
+
+		model: {
+
+			id: {},
+			generated: {},
+
+			notation: {},
+			prefLabel: {},
+			definition: {},
+
+			isDefinedBy: {},
+
+			inScheme: { id: {}, label: {} },
+
+			broaderTransitive: { id: {}, notation: {}, prefLabel: {}, broader: {} },
+			narrower: { id: {}, notation: {}, prefLabel: {}, narrower: {} },
+			related: { id: {}, label: {} },
+			exactMatch: { id: {}, label: {} }
+
+		}
+
 	});
 
 	const title = resource({
@@ -81,6 +78,7 @@ export function TopicPage() {
 		ready: ({ state }) => state.prefLabel
 
 	});
+
 
 	useEffect(() => router({ title }), [title]);
 

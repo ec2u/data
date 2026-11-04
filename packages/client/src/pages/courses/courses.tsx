@@ -17,14 +17,21 @@
 import { Courses } from "@ec2u/data-shared/courses/index.js";
 import { opt } from "@metreeca/core";
 import { nameTag } from "@metreeca/core/language";
-import { immutable } from "@metreeca/core/values";
 import { Button } from "@metreeca/tile-cell/button";
 import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { More } from "@metreeca/tile-cell/more";
 import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useKeywords, useMembers, useQuery, useRange, useTally } from "@metreeca/tile-data/store";
+import {
+	useCollection,
+	useCount,
+	useKeywords,
+	useMembers,
+	useQuery,
+	useRange,
+	useTally
+} from "@metreeca/tile-data/store";
 import { Card } from "@metreeca/tile-hive/card";
 import { Clear } from "@metreeca/tile-lens/clear";
 import { Count } from "@metreeca/tile-lens/count";
@@ -42,19 +49,6 @@ import { toCourseMode, toCourseTerm } from "./index.core.js";
 import { courses } from "./index.js";
 
 
-const model = immutable({
-
-	id: {},
-	label: {},
-	comment: {},
-
-	university: { altLabel: {} }
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function CoursesPage() {
 
 	const route = useRoute();
@@ -63,11 +57,15 @@ export function CoursesPage() {
 	const [query, setQuery] = useQuery();
 
 	const collection = useCollection({
+
 		entry: route,
 		shape: Courses,
 		field: "resources",
+
 		query,
+
 		onChange: setQuery
+
 	});
 
 	const keywords = useKeywords(collection, "label");
@@ -85,7 +83,20 @@ export function CoursesPage() {
 	const audience = useTally(collection, "audience", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
-	const members = useMembers(collection, { model });
+	const members = useMembers(collection, {
+
+		model: {
+
+			id: {},
+			label: {},
+			comment: {},
+
+			university: { altLabel: {} }
+
+		}
+
+	});
+
 
 	useEffect(() => router({ title: courses.label }), []);
 
