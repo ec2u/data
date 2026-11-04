@@ -30,7 +30,7 @@ import { Count } from "@metreeca/tile-lens/count";
 import { Tally } from "@metreeca/tile-lens/tally";
 import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { FacetSize } from "../../index.core.js";
+import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
@@ -67,11 +67,11 @@ export function ProgramsPage() {
 	});
 
 	const keywords = useKeywords(collection, "label");
-	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
-	const educationalLevel = useTally(collection, "educationalLevel", { label: "label", size: FacetSize });
-	const timeToComplete = useTally(collection, "timeToComplete", { size: FacetSize });
-	const about = useTally(collection, "about", { label: "label", size: FacetSize });
-	const provider = useTally(collection, "provider", { label: "label", size: FacetSize });
+	const university = useTally(collection, "university", { label: "altLabel", size: TallyOptions });
+	const educationalLevel = useTally(collection, "educationalLevel", { label: "label", size: TallyOptions });
+	const timeToComplete = useTally(collection, "timeToComplete", { size: TallyOptions });
+	const about = useTally(collection, "about", { label: "label", size: TallyOptions });
+	const provider = useTally(collection, "provider", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
 	const members = useMembers(collection, { model });

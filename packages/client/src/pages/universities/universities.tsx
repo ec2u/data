@@ -30,9 +30,9 @@ import { Range } from "@metreeca/tile-lens/range";
 import { integer } from "@metreeca/tile-type/integer";
 import { year } from "@metreeca/tile-type/year";
 import { useEffect } from "preact/hooks";
+import { Search } from "../../_/search.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { Search } from "../../_/search.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { universities } from "./index.js";
 

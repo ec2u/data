@@ -33,7 +33,7 @@ import { Tally } from "@metreeca/tile-lens/tally";
 import { decimal } from "@metreeca/tile-type/decimal";
 import { duration } from "@metreeca/tile-type/duration";
 import { useEffect } from "preact/hooks";
-import { FacetSize } from "../../index.core.js";
+import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
@@ -71,18 +71,18 @@ export function CoursesPage() {
 	});
 
 	const keywords = useKeywords(collection, "label");
-	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
-	const year = useTally(collection, "year", { size: FacetSize });
-	const term = useTally(collection, "term", { size: FacetSize });
-	const courseMode = useTally(collection, "courseMode", { size: FacetSize });
-	const inLanguage = useTally(collection, "inLanguage", { size: FacetSize });
-	const isAccessibleForFree = useTally(collection, "isAccessibleForFree", { size: FacetSize });
+	const university = useTally(collection, "university", { label: "altLabel", size: TallyOptions });
+	const year = useTally(collection, "year", { size: TallyOptions });
+	const term = useTally(collection, "term", { size: TallyOptions });
+	const courseMode = useTally(collection, "courseMode", { size: TallyOptions });
+	const inLanguage = useTally(collection, "inLanguage", { size: TallyOptions });
+	const isAccessibleForFree = useTally(collection, "isAccessibleForFree", { size: TallyOptions });
 	const numberOfCredits = useRange(collection, "numberOfCredits");
-	const timeRequired = useTally(collection, "timeRequired", { size: FacetSize });
-	const educationalLevel = useTally(collection, "educationalLevel", { label: "label", size: FacetSize });
-	const credentialCategory = useTally(collection, "educationalCredentialAwarded.credentialCategory", { size: FacetSize });
-	const about = useTally(collection, "about", { label: "label", size: FacetSize });
-	const audience = useTally(collection, "audience", { label: "label", size: FacetSize });
+	const timeRequired = useTally(collection, "timeRequired", { size: TallyOptions });
+	const educationalLevel = useTally(collection, "educationalLevel", { label: "label", size: TallyOptions });
+	const credentialCategory = useTally(collection, "educationalCredentialAwarded.credentialCategory", { size: TallyOptions });
+	const about = useTally(collection, "about", { label: "label", size: TallyOptions });
+	const audience = useTally(collection, "audience", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
 	const members = useMembers(collection, { model });

@@ -17,7 +17,7 @@
 import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
 import { Stack } from "@metreeca/tile-hive/stack";
-import { site } from "../index.core.js";
+import { getIRIHost } from "@metreeca/work/core/resources.js";
 
 
 /**
@@ -65,7 +65,7 @@ export function Credential({
 
 			...(name ? [<span key={"name"}> · {name}</span>] : []),
 
-			...url.map(href => <span key={href}> · <Link href={href}>{site(href)}</Link></span>)
+			...url.map(href => <span key={href}> · <Link href={href}>{getIRIHost(href)}</Link></span>)
 
 		]}</span>
 

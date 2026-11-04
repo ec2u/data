@@ -28,9 +28,9 @@ import { useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useResource } from "@metreeca/tile-data/store";
 import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
+import { getIRIHost } from "@metreeca/work/core/resources.js";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { links, list } from "../../tiles/links.js";
@@ -135,7 +135,7 @@ export function UnitPage() {
 				<Info place={"spread"}>{{
 
 					Info: homepage.length > 0 ? <ul>{homepage.map(url =>
-						<li key={url}><Link href={url}>{site(url)}</Link></li>
+						<li key={url}><Link href={url}>{getIRIHost(url)}</Link></li>
 					)}</ul> : undefined
 
 				}}</Info>

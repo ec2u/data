@@ -31,9 +31,9 @@ import { useCollection, useCount, useResource } from "@metreeca/tile-data/store"
 import { Info } from "@metreeca/tile-hive/info";
 import { date } from "@metreeca/tile-type/date";
 import { integer } from "@metreeca/tile-type/integer";
+import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { type ComponentChildren, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
-import { site } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { links } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
@@ -235,7 +235,7 @@ export function DatasetPage({
 				Publisher: opt(publisher, ({ id, label }) => <Link href={id}>{label}</Link>),
 				Copyright: rights,
 				License: links(license),
-				Source: opt(source, ({ id }) => <Link href={id}>{site(id)}</Link>),
+				Source: opt(source, ({ id }) => <Link href={id}>{getIRIHost(id)}</Link>),
 				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
 
 			}}</Info>

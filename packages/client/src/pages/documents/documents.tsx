@@ -29,7 +29,7 @@ import { Clear } from "@metreeca/tile-lens/clear";
 import { Count } from "@metreeca/tile-lens/count";
 import { Tally } from "@metreeca/tile-lens/tally";
 import { useEffect } from "preact/hooks";
-import { FacetSize } from "../../index.core.js";
+import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
@@ -66,12 +66,12 @@ export function DocumentsPage() {
 	});
 
 	const keywords = useKeywords(collection, "label");
-	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
-	const type = useTally(collection, "type", { label: "label", size: FacetSize });
-	const audience = useTally(collection, "audience", { label: "label", size: FacetSize });
-	const subject = useTally(collection, "subject", { label: "label", size: FacetSize });
-	const language = useTally(collection, "language", { size: FacetSize });
-	const license = useTally(collection, "license", { label: "label", size: FacetSize });
+	const university = useTally(collection, "university", { label: "altLabel", size: TallyOptions });
+	const type = useTally(collection, "type", { label: "label", size: TallyOptions });
+	const audience = useTally(collection, "audience", { label: "label", size: TallyOptions });
+	const subject = useTally(collection, "subject", { label: "label", size: TallyOptions });
+	const language = useTally(collection, "language", { size: TallyOptions });
+	const license = useTally(collection, "license", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
 	const members = useMembers(collection, { model });

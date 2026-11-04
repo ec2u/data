@@ -31,7 +31,7 @@ import { Range } from "@metreeca/tile-lens/range";
 import { Tally } from "@metreeca/tile-lens/tally";
 import { date } from "@metreeca/tile-type/date";
 import { useEffect } from "preact/hooks";
-import { FacetSize } from "../../index.core.js";
+import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
@@ -74,11 +74,11 @@ export function EventsPage() {
 	});
 
 	const keywords = useKeywords(collection, "label");
-	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
+	const university = useTally(collection, "university", { label: "altLabel", size: TallyOptions });
 	const startDate = useRange(collection, "startDate");
-	const isAccessibleForFree = useTally(collection, "isAccessibleForFree", { size: FacetSize });
-	const eventAttendanceMode = useTally(collection, "eventAttendanceMode", { size: FacetSize });
-	const topics = useTally(collection, "keywords", { label: "label", size: FacetSize });
+	const isAccessibleForFree = useTally(collection, "isAccessibleForFree", { size: TallyOptions });
+	const eventAttendanceMode = useTally(collection, "eventAttendanceMode", { size: TallyOptions });
+	const topics = useTally(collection, "keywords", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
 	const members = useMembers(collection, { model, order: { startDate: "asc", label: "asc" } });

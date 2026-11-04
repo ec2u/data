@@ -30,7 +30,7 @@ import { integer } from "@metreeca/tile-type/integer";
 import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
 import { Search } from "../_/search.js";
-import { byDataset, ec2u, FacetSize, published } from "../index.core.js";
+import { byDataset, ec2u, TallyOptions, PublicDatasets } from "../index.core.js";
 import { Failure } from "../tiles/failure.js";
 import { Page } from "../tiles/page.js";
 import { DatasetLink } from "./datasets/dataset.js";
@@ -73,13 +73,13 @@ export function Datasets() {
 		entry: route,
 		shape: DatasetsShape,
 		field: "resources",
-		scope: { "?": published },
+		scope: { "?": PublicDatasets },
 		query,
 		onChange: setQuery
 	});
 
 	const keywords = useKeywords(collection, "label");
-	const license = useTally(collection, "license", { label: "label", size: FacetSize });
+	const license = useTally(collection, "license", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
 	const members = useMembers(collection, { model });

@@ -28,14 +28,14 @@ import { internalize, type IRI } from "@metreeca/core/resource";
 /**
  * The number of values a tally facet shows at first and fetches with each batch, within the server result set limit.
  */
-export const FacetSize = 10;
+export const TallyOptions = 10;
 
 /**
  * Root-relative ids of the datasets published on the hub, in display order.
  *
  * Ids are root-relative as the store resolves them against the serving origin rather than the hub id space.
  */
-export const published: readonly IRI[] = [
+export const PublicDatasets: readonly IRI[] = [
 	universities,
 	units,
 	programs,
@@ -61,19 +61,8 @@ export function ec2u(label: string): string {
 }
 
 /**
- * Shortens a web address to a compact label.
- *
- * @param url The address to be shortened
- *
- * @returns The host of `url`, as in `www.uc.pt`, or `url` itself if it names no host, as in `mailto:` addresses
- */
-export function site(url: string): string {
-	return URL.parse(url)?.host || url;
-}
-
-/**
- * Orders published dataset rows as the hub lists them.
+ * Orders dataset rows as the hub lists them, following the display order of {@link PublicDatasets}.
  */
 export const byDataset = by(({ dataset }: { readonly dataset: { readonly id: IRI } }) =>
-	published.indexOf(internalize(location.href, dataset.id))
+	PublicDatasets.indexOf(internalize(location.href, dataset.id))
 );

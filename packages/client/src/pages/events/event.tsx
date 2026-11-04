@@ -31,9 +31,9 @@ import { Info } from "@metreeca/tile-hive/info";
 import { date } from "@metreeca/tile-type/date";
 import { instant } from "@metreeca/tile-type/instant";
 import { time } from "@metreeca/tile-type/time";
+import { getIRIHost } from "@metreeca/work/core/resources.js";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { filters } from "../../tiles/links.js";
@@ -202,7 +202,7 @@ export function EventPage() {
 
 				<Info place={"spread"}>{{
 
-					Info: <ul>{url.map(url => <li key={url}><Link href={url}>{site(url)}</Link></li>)}</ul>,
+					Info: <ul>{url.map(url => <li key={url}><Link href={url}>{getIRIHost(url)}</Link></li>)}</ul>,
 					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link href={url[0] ?? id}>{label}</Link>)
 
 				}}</Info>
@@ -284,7 +284,7 @@ type Location = NonNullable<Match<typeof Event, typeof model>["location"]>;
  */
 function venue(location: Location): ComponentChildren {
 	return isString(location) || "latitude" in location || "addressLocality" in location ? lines(parts(location))
-			: <Link href={location.url[0]}>{site(location.url[0])}</Link>;
+			: <Link href={location.url[0]}>{getIRIHost(location.url[0])}</Link>;
 }
 
 /**

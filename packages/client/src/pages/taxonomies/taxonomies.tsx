@@ -28,7 +28,7 @@ import { Count } from "@metreeca/tile-lens/count";
 import { Tally } from "@metreeca/tile-lens/tally";
 import { integer } from "@metreeca/tile-type/integer";
 import { useEffect } from "preact/hooks";
-import { FacetSize } from "../../index.core.js";
+import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
@@ -54,8 +54,8 @@ export function TaxonomiesPage() {
 
 
 	const keywords = useKeywords(collection, "label");
-	const license = useTally(collection, "license", { label: "label", size: FacetSize });
-	const publisher = useTally(collection, "publisher", { label: "label", size: FacetSize });
+	const license = useTally(collection, "license", { label: "label", size: TallyOptions });
+	const publisher = useTally(collection, "publisher", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
 	const members = useMembers(collection, {

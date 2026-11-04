@@ -28,7 +28,7 @@ import { Clear } from "@metreeca/tile-lens/clear";
 import { Count } from "@metreeca/tile-lens/count";
 import { Tally } from "@metreeca/tile-lens/tally";
 import { useEffect } from "preact/hooks";
-import { FacetSize } from "../../index.core.js";
+import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
@@ -65,9 +65,9 @@ export function UnitsPage() {
 	});
 
 	const keywords = useKeywords(collection, "label");
-	const university = useTally(collection, "university", { label: "altLabel", size: FacetSize });
-	const classification = useTally(collection, "classification", { label: "label", size: FacetSize });
-	const subject = useTally(collection, "subject", { label: "label", size: FacetSize });
+	const university = useTally(collection, "university", { label: "altLabel", size: TallyOptions });
+	const classification = useTally(collection, "classification", { label: "label", size: TallyOptions });
+	const subject = useTally(collection, "subject", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
 	const members = useMembers(collection, { model });

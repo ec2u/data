@@ -28,8 +28,8 @@ import { useResource } from "@metreeca/tile-data/store";
 import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
 import { duration } from "@metreeca/tile-type/duration";
+import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { useEffect } from "preact/hooks";
-import { site } from "../../index.core.js";
 import { AI } from "../../tiles/ai.js";
 import { Credential, CredentialModel } from "../../tiles/credential.js";
 import { Failure } from "../../tiles/failure.js";
@@ -182,7 +182,7 @@ export function CoursePage() {
 				<Info place={"spread"}>{{
 
 					Info: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}><Link href={url}>{site(url)}</Link></li>
+						<li key={url}><Link href={url}>{getIRIHost(url)}</Link></li>
 					)}</ul> : undefined
 
 				}}</Info>
