@@ -22,6 +22,7 @@ import { Shell } from "@metreeca/tile-hive/shell";
 import { Strip } from "@metreeca/tile-hive/strip";
 import { type ComponentChildren, h } from "preact";
 import "./page.css";
+import { ec2u } from "../index.core.js";
 
 export function Page({
 
@@ -52,7 +53,7 @@ export function Page({
 
 	return <Shell
 
-		logo={<Link look="subtle" href={"/"}><Logo/><span>{app.name}</span></Link>}
+		logo={<Link look="subtle" href={"/"}><Logo/><span>{ec2u(app.name??"")}</span></Link>}
 
 		tray={tray}
 		info={info}
