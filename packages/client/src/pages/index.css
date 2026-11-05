@@ -24,14 +24,14 @@ datasets-grid {
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: baseline;
-    gap: var(--tile--spacing-050) var(--tile--spacing-100);
-    padding-left: var(--tile--spacing-200);
+    gap: var(--skin--spacing-050) var(--skin--spacing-100);
+    padding-left: var(--skin--spacing-200);
 
     & > .size,
     & > .alternative {
         justify-self: end;
         text-align: end;
-        color: var(--tile--color-label);
+        color: var(--skin--color-label);
     }
 
     /*
@@ -41,7 +41,7 @@ datasets-grid {
 
     & > .size:not(:first-child),
     & > .title:not(:nth-child(2)) {
-        margin-top: var(--tile--spacing-050);
+        margin-top: var(--skin--spacing-050);
     }
 
 }

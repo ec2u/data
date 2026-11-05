@@ -20,8 +20,8 @@
 
 			:root {
 
-				--tile--color-subtle: light-dark(#1C275D, #8899AA);
-				--tile--color-strong: light-dark(#AC931A, #D4BC4E);
+				--skin--color-subtle: light-dark(#1C275D, #8899AA);
+				--skin--color-strong: light-dark(#AC931A, #D4BC4E);
 
 			}
 
@@ -59,12 +59,12 @@
 
 			body:not(:has(*))::before {
 				top: 0;
-				background-color: var(--tile--color-subtle);
+				background-color: var(--skin--color-subtle);
 			}
 
 			body:not(:has(*))::after {
 				bottom: 0;
-				background-color: var(--tile--color-strong);
+				background-color: var(--skin--color-strong);
 				animation-delay: -1s;
 			}
 

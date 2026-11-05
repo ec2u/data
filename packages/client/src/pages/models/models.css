@@ -24,7 +24,7 @@
 
         & > span {
             display: inline-block;
-            margin-inline-start: calc(var(--ec2u-models-depth, 0) * var(--tile--spacing-100));
+            margin-inline-start: calc(var(--ec2u-models-depth, 0) * var(--skin--spacing-100));
         }
 
     }

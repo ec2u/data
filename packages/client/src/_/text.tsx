@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Tokens } from "@metreeca/tile";
+import type { Tokens } from "@metreeca/skin";
 import { Style } from "@metreeca/tile-hive/style";
 import type { ComponentChildren } from "preact";
 

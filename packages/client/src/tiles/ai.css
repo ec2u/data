@@ -19,12 +19,12 @@ ec2u-ai {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: var(--tile--spacing-050);
+    gap: var(--skin--spacing-050);
 
     width: 100%;
 
-    font-weight: var(--tile--font-weight-strong);
-    color: var(--tile--color-fail-stroke);
+    font-weight: var(--skin--font-weight-strong);
+    color: var(--skin--color-fail-stroke);
 
     & > tile-link,
     & > a {

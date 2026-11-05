@@ -24,12 +24,12 @@
  */
 
 tile-link {
-    --tile--look: strong;
+    --skin--look: strong;
 }
 
 tile-shell {
 
-    --tile-shell-head-font-size: var(--tile--scaling-150);
+    --tile-shell-head-font-size: var(--skin--scaling-150);
 
     /* the tray carries labelled property panels and facets, so it takes the width of the legacy hub sidebar */
 
@@ -37,7 +37,7 @@ tile-shell {
 
     /* the tray stacks boxed facets and info panels, set apart rather than run together */
 
-    --tile-shell-tray-gap: var(--tile--spacing-075);
+    --tile-shell-tray-gap: var(--skin--spacing-075);
 
     /* the page name reads a tad higher than the app name in the tray header, though their baselines match */
 
@@ -48,8 +48,8 @@ tile-shell {
     /* the repository icon in the footer stands a tad larger than the copyright notice beside it */
 
     & .repo {
-        width: var(--tile--scaling-125);
-        height: var(--tile--scaling-125);
+        width: var(--skin--scaling-125);
+        height: var(--skin--scaling-125);
     }
 
 }

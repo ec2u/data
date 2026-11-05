@@ -25,7 +25,7 @@ ec2u-search {
     /* in the body of a page, the field is set a block step apart from the results it filters beneath it */
 
     main &:not(:last-child) {
-        margin-bottom: var(--tile--spacing-100);
+        margin-bottom: var(--skin--spacing-100);
     }
 
     & > svg,
@@ -37,8 +37,8 @@ ec2u-search {
 
     & > svg {
         grid-column: 1;
-        margin-left: var(--tile--spacing-050);
-        color: var(--tile--color-placeholder);
+        margin-left: var(--skin--spacing-050);
+        color: var(--skin--color-placeholder);
         background-color: transparent; /* the glyph lets the field show through rather than masking it */
         pointer-events: none;
     }
@@ -50,16 +50,16 @@ ec2u-search {
 
         /* the field is painted in the page colour, standing out from the sunken tray as the facets below it do */
 
-        background-color: var(--tile--background-color);
+        background-color: var(--skin--background-color);
 
-        padding-block: var(--tile--spacing-025);
-        padding-inline: var(--tile--scaling-150);
+        padding-block: var(--skin--spacing-025);
+        padding-inline: var(--skin--scaling-150);
 
         /* the text clears the glyph by the inset the glyph keeps from the edge */
 
-        padding-inline-start: calc(2 * var(--tile--spacing-050) + var(--tile--scaling-100));
+        padding-inline-start: calc(2 * var(--skin--spacing-050) + var(--skin--scaling-100));
 
-        border-radius: var(--tile--border-radius-100);
+        border-radius: var(--skin--border-radius-100);
 
         /* the platform cancel button is replaced by the clear control */
 
@@ -71,7 +71,7 @@ ec2u-search {
 
     & > tile-button > button {
         grid-column: 3;
-        margin-right: calc(var(--tile--spacing-025) / 2); /* the fill lines up with the clear controls of the facets */
+        margin-right: calc(var(--skin--spacing-025) / 2); /* the fill lines up with the clear controls of the facets */
     }
 
     /*
@@ -83,15 +83,15 @@ ec2u-search {
 
         /* the button gives up part of its padding to the fill, which leaves the glyph more air within it */
 
-        padding: calc(var(--tile--spacing-025) * 0.75);
+        padding: calc(var(--skin--spacing-025) * 0.75);
         align-items: center;
 
         background-clip: content-box;
         border-radius: 50%;
 
         & > .clear {
-            width: var(--tile--scaling-075);
-            height: var(--tile--scaling-075);
+            width: var(--skin--scaling-075);
+            height: var(--skin--scaling-075);
         }
 
     }

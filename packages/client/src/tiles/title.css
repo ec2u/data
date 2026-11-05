@@ -43,7 +43,7 @@ ec2u-title {
 
         float: right;
         max-width: var(--title-image-max-width);
-        margin: 0 0 var(--tile--spacing-100) var(--tile--spacing-200);
+        margin: 0 0 var(--skin--spacing-100) var(--skin--spacing-200);
 
         /* An enlarged picture is left alone, so the design system rule showing it over the viewport still applies. */
 
@@ -54,11 +54,11 @@ ec2u-title {
         }
 
         & > figcaption {
-            margin-top: var(--tile--spacing-050);
+            margin-top: var(--skin--spacing-050);
             text-align: end;
             font-style: italic;
-            font-size: var(--tile--font-size-small);
-            color: var(--tile--color-label);
+            font-size: var(--skin--font-size-small);
+            color: var(--skin--color-label);
         }
 
     }

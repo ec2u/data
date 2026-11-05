@@ -16,7 +16,7 @@
 
 import { Dataset, Datasets as DatasetsShape } from "@ec2u/data-shared";
 import { createRESTStore } from "@metreeca/keep-rest";
-import "@metreeca/tile/index.css";
+import "@metreeca/skin/index.css";
 import { createCachingStore } from "@metreeca/keep/caching";
 import { Board } from "@metreeca/tile-data/board";
 import { Fetch } from "@metreeca/tile-data/fetch";

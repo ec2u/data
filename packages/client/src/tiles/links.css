@@ -17,10 +17,10 @@
 ec2u-address > span {
     position: relative;
     top: -0.5em;
-    margin-left: var(--tile--spacing-050);
+    margin-left: var(--skin--spacing-050);
     font-size: 0.7em;
-    font-weight: var(--tile--font-weight);
+    font-weight: var(--skin--font-weight);
     line-height: 0;
-    color: var(--tile--color-label);
+    color: var(--skin--color-label);
     cursor: default;
 }

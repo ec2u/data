@@ -31,7 +31,7 @@
     /* inherited groups open with a label row naming the ancestor they come from, set apart from the group above */
 
     & > .ec2u-shape-inherited > tr:first-child > th {
-        padding-top: var(--tile--spacing-250);
+        padding-top: var(--skin--spacing-250);
     }
 
 }
@@ -54,24 +54,24 @@
 
     /* declarations run long, so they are set small to keep more of each line in view */
 
-    font-size: var(--tile--font-size-small);
+    font-size: var(--skin--font-size-small);
 
     & > tile-button > button { /* the wrapper lays out no box of its own, so the control is placed */
         position: absolute;
-        top: var(--tile--spacing-050);
-        right: var(--tile--spacing-050);
+        top: var(--skin--spacing-050);
+        right: var(--skin--spacing-050);
     }
 
     & .ec2u-shape-keyword {
-        color: var(--tile--color-info-stroke);
+        color: var(--skin--color-info-stroke);
     }
 
     & .ec2u-shape-string {
-        color: var(--tile--color-pass-stroke);
+        color: var(--skin--color-pass-stroke);
     }
 
     & .ec2u-shape-attr {
-        color: var(--tile--color-warn-stroke);
+        color: var(--skin--color-warn-stroke);
     }
 
 }

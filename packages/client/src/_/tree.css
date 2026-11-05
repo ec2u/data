@@ -23,7 +23,7 @@ ec2u-tree {
     /* an open node is set apart from the sibling below it, so its subtree reads as one block */
 
     &[expanded]:not(:last-child) {
-        margin-bottom: var(--tile--spacing-025);
+        margin-bottom: var(--skin--spacing-025);
     }
 
     & > header {
@@ -31,7 +31,7 @@ ec2u-tree {
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: var(--tile--spacing-025);
+        gap: var(--skin--spacing-025);
 
         & > span {
             flex-grow: 1;
@@ -48,7 +48,7 @@ ec2u-tree {
         flex-direction: column;
         align-items: stretch;
 
-        margin-left: var(--tile--spacing-100);
+        margin-left: var(--skin--spacing-100);
 
     }
 
