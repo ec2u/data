@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import { Event, Events as EventsShape } from "@ec2u/data-shared/events/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
+import { DatasetPage } from "../datasets/dataset.js";
 import { EventPage } from "./event.js";
 import { EventsPage } from "./events.js";
 
@@ -35,6 +37,8 @@ export const events = immutable({
 export function Events() {
 
 	return <Routes>{{
+
+		"/;info": <DatasetPage about={events} shapes={[EventsShape, Event]}/>,
 
 		"/": <EventsPage/>,
 		"/:event": <EventPage/>

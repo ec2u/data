@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Dataset, Datasets as DatasetsShape } from "@ec2u/data-shared";
 import { createRESTStore } from "@metreeca/keep-rest";
 import "@metreeca/tile/index.css";
 import { createCachingStore } from "@metreeca/keep/caching";
@@ -26,6 +27,7 @@ import { Toast } from "@metreeca/tile-hive/toast";
 import { render } from "preact";
 import { About, about } from "./pages/about/index.js";
 import { Courses, courses } from "./pages/courses/index.js";
+import { DatasetPage } from "./pages/datasets/dataset.js";
 import { Datasets, datasets } from "./pages/index.js";
 import { Documents, documents } from "./pages/documents/index.js";
 import { Events, events } from "./pages/events/index.js";
@@ -57,6 +59,8 @@ function Hub() {
 					<Toast/>
 
 					<Routes>{{
+
+						[`${datasets.route};info`]: <DatasetPage about={datasets} shapes={[DatasetsShape, Dataset]}/>,
 
 						[datasets.route]: <Datasets/>,
 						[universities.route]: <Universities/>,

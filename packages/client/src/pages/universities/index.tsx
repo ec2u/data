@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import { Universities as UniversitiesShape, University } from "@ec2u/data-shared/universities/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
+import { DatasetPage } from "../datasets/dataset.js";
 import { UniversitiesPage } from "./universities.js";
 import { UniversityPage } from "./university.js";
 
@@ -35,6 +37,8 @@ export const universities = immutable({
 export function Universities() {
 
 	return <Routes>{{
+
+		"/;info": <DatasetPage about={universities} shapes={[UniversitiesShape, University]}/>,
 
 		"/": <UniversitiesPage/>,
 		"/:name": <UniversityPage/>

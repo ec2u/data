@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import { Course, Courses as CoursesShape } from "@ec2u/data-shared/courses/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
+import { DatasetPage } from "../datasets/dataset.js";
 import { CoursePage } from "./course.js";
 import { CoursesPage } from "./courses.js";
 
@@ -35,6 +37,8 @@ export const courses = immutable({
 export function Courses() {
 
 	return <Routes>{{
+
+		"/;info": <DatasetPage about={courses} shapes={[CoursesShape, Course]}/>,
 
 		"/": <CoursesPage/>,
 		"/:course": <CoursePage/>

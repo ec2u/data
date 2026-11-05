@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import { Document, Documents as DocumentsShape } from "@ec2u/data-shared/documents/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
+import { DatasetPage } from "../datasets/dataset.js";
 import { DocumentPage } from "./document.js";
 import { DocumentsPage } from "./documents.js";
 
@@ -35,6 +37,8 @@ export const documents = immutable({
 export function Documents() {
 
 	return <Routes>{{
+
+		"/;info": <DatasetPage about={documents} shapes={[DocumentsShape, Document]}/>,
 
 		"/": <DocumentsPage/>,
 		"/:document": <DocumentPage/>

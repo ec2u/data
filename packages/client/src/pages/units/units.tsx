@@ -31,7 +31,7 @@ import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
-import { DatasetLink } from "../datasets/dataset.js";
+import { DatasetToggle } from "../datasets/dataset.js";
 import { units } from "./index.js";
 
 
@@ -81,7 +81,7 @@ export function UnitsPage() {
 	return <Page
 
 		head={units.label}
-		menu={<DatasetLink href={units.route}/>}
+		menu={<DatasetToggle/>}
 
 		back={members({
 

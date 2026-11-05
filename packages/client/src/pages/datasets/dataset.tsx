@@ -24,8 +24,7 @@ import { Hint } from "@metreeca/tile-cell/hint";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Link } from "@metreeca/tile-cell/link";
 import { Markdown } from "@metreeca/tile-cell/markdown";
-import { Path } from "@metreeca/tile-cell/path";
-import { useRouter } from "@metreeca/tile-data/router";
+import { useAnnex, useRoute, useRouter } from "@metreeca/tile-data/router";
 import { useCollection, useCount, useMembers, useResource } from "@metreeca/tile-data/store";
 import { Info } from "@metreeca/tile-hive/info";
 import { Stack } from "@metreeca/tile-hive/stack";
@@ -33,13 +32,16 @@ import { date } from "@metreeca/tile-type/date";
 import { integer } from "@metreeca/tile-type/integer";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
+import { ec2u } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { address, links } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { getShapeHref, getShapeName } from "../../tiles/shape.core.js";
 import "../../tiles/shape.css";
-import { about } from "../about/index.js";
 import { models } from "../models/index.js";
+
+
+const InfoAnnex = "info";
 
 
 /**
@@ -70,7 +72,8 @@ export type About = {
 /**
  * Creates a link to the introduction to a dataset.
  *
- * Leads to the page introducing the dataset listed by a catalogue, at an address of its own the reader may bookmark.
+ * Leads to the page introducing the dataset listed by a catalogue, at the catalogue route carrying the `;info` annex,
+ * as `/universities/;info` or `/;info` for the hub catalogue, an address of its own the reader may bookmark.
  *
  * @param options The link configuration
  *
@@ -89,7 +92,27 @@ export function DatasetLink({
 
 }) {
 
-	return <Link href={`/about/datasets${href.replace(/\/$/, "")}`} title={"Info"}><Icon.Info/></Link>;
+	return <Link href={`${href};${InfoAnnex}`} title={"Info"}><Icon.Info/></Link>;
+
+}
+
+
+/**
+ * Creates a link toggling a catalogue between its data and the introduction to its dataset.
+ *
+ * Leads from the data to the same route with the `;info` annex, and back to the plain route, where the catalogue
+ * recovers from its stored state the filters it showed before the switch, as the annexed route leaves them behind.
+ *
+ * @returns The toggle link
+ */
+export function DatasetToggle() {
+
+	const route = useRoute();
+	const annex = useAnnex();
+
+	return annex === InfoAnnex
+		? <Link href={route} title={"Data"}><Icon.Eye/></Link>
+		: <Link href={`${route};${InfoAnnex}`} title={"Info"}><Icon.Info/></Link>;
 
 }
 
@@ -98,8 +121,7 @@ export function DatasetLink({
  * Creates the introduction to the dataset listed by a catalogue.
  *
  * Shows what the dataset holds, the terms it is published under and links to the models describing its resources, at
- * the route the about section declares for it:
- * `/about/datasets/universities` for the catalogue at `/universities/`, `/about/datasets` for the hub catalogue.
+ * the catalogue route carrying the `;info` annex, where {@link DatasetToggle} switches back to the listed data.
  *
  * @param options The view configuration
  *
@@ -197,20 +219,25 @@ export function DatasetPage({
 	});
 
 
+	const universities = breakdown({
+
+		ready: ({ state }) => [...state.filter(isUniversityRow)] // copy, as rows are shared
+			.sort((x, y) => x.university.altLabel.localeCompare(y.university.altLabel))
+			.map(({ university, size }) => ({
+				label: <Link href={href} query={{ university: university.id }}>{university.altLabel}</Link>,
+				value: integer.format(size)
+			}))
+
+	}) ?? [];
+
+
 	useEffect(() => router({ title }), [title]);
 
 
 	return <Page
 
-		head={<Path>
-
-			<Link href={about.route}>{about.label}</Link>
-
-			{title}
-
-		</Path>}
-
-		menu={<Link href={href} title={"Data"}><Icon.Eye/></Link>}
+		head={title}
+		menu={<DatasetToggle/>}
 
 		back={resource({
 
@@ -235,8 +262,8 @@ export function DatasetPage({
 					"Data Model": opt(shapes, shapes => <ul class={"ec2u-shape-links"}>{some(shapes).map(shape =>
 						<li key={getShapeName(shape)}>
 							{opt(getShapeHref(shape), href =>
-								<Link href={`${models.route}${href}`}>{getShapeName(shape)}</Link>
-							) ?? getShapeName(shape)}
+								<Link href={`${models.route}${href}`}>{ec2u(getShapeName(shape))}</Link>
+							) ?? ec2u(getShapeName(shape))}
 						</li>
 					)}</ul>)
 
@@ -245,20 +272,11 @@ export function DatasetPage({
 				<Info place={"spread"}>{[
 
 					{
-						label: <strong>Resources</strong>,
+						label: universities.length > 0 ? <strong>Resources</strong> : "Resources",
 						value: resources({ ready: ({ state }) => integer.format(state) })
 					},
 
-					...breakdown({
-
-						ready: ({ state }) => [...state.filter(isUniversityRow)] // copy, as rows are shared
-							.sort((x, y) => x.university.altLabel.localeCompare(y.university.altLabel))
-							.map(({ university, size }) => ({
-								label: <Link href={href} query={{ university: university.id }}>{university.altLabel}</Link>,
-								value: integer.format(size)
-							}))
-
-					}) ?? []
+					...universities
 
 				]}</Info>
 

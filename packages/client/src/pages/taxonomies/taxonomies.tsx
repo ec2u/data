@@ -32,7 +32,7 @@ import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { Search } from "../../_/search.js";
-import { DatasetLink } from "../datasets/dataset.js";
+import { DatasetToggle } from "../datasets/dataset.js";
 import { isTaxonomyRow, type TaxonomyRow } from "./taxonomies.core.js";
 import { taxonomies } from "./index.js";
 
@@ -78,7 +78,7 @@ export function TaxonomiesPage() {
 	return <Page
 
 		head={taxonomies.label}
-		menu={<DatasetLink href={taxonomies.route}/>}
+		menu={<DatasetToggle/>}
 
 		back={members({
 

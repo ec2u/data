@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import { Program, Programs as ProgramsShape } from "@ec2u/data-shared/programs/index.js";
 import { immutable } from "@metreeca/core/values";
 import { Icon } from "@metreeca/tile-cell/icon";
 import { Routes } from "@metreeca/tile-data/router";
+import { DatasetPage } from "../datasets/dataset.js";
 import { ProgramPage } from "./program.js";
 import { ProgramsPage } from "./programs.js";
 
@@ -35,6 +37,8 @@ export const programs = immutable({
 export function Programs() {
 
 	return <Routes>{{
+
+		"/;info": <DatasetPage about={programs} shapes={[ProgramsShape, Program]}/>,
 
 		"/": <ProgramsPage/>,
 		"/:program": <ProgramPage/>
