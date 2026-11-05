@@ -265,7 +265,7 @@ function Json({ value, depth, link = false }: { value: ShapeSchemaValue, depth: 
 			? <Link href={value}>{JSON.stringify(value)}</Link>
 			: <span class={"ec2u-shape-string"}>{JSON.stringify(value)}</span>
 		: typeof value === "number" || typeof value === "boolean" ? <Keyword>{JSON.stringify(value)}</Keyword>
-			: isArray(value) ? <>[{value.map((item, index) => <Fragment key={index}>
+			: isArray<ShapeSchemaValue>(value) ? <>[{value.map((item, index) => <Fragment key={index}>
 				{index > 0 ? ",\n" : "\n"}{indent}{"\t"}<Json value={item} depth={depth+1}/>
 			</Fragment>)}{value.length > 0 && `\n${indent}`}]</>
 				: <>{"{"}{Object.entries(value).map(([key, item], index) => <Fragment key={key}>
