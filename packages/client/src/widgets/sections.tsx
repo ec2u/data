@@ -16,10 +16,7 @@
 
 import { Markdown } from "@metreeca/clay-markdown/markdown";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
-import { Stack } from "@metreeca/clay-widgets/stack";
-import { Style } from "@metreeca/clay-widgets/style";
-import { Text } from "@metreeca/clay-widgets/text";
-import type { ComponentChildren } from "preact";
+import { type ComponentChildren, Fragment } from "preact";
 import "./sections.css";
 
 
@@ -40,19 +37,15 @@ export function blocks(contents: Readonly<Record<string, ComponentChildren>>): C
  *
  * @param texts The Markdown text of each section, keyed by section label; sections with no text are left out
  *
- * @returns A stack of sections, each its label over its rendered text, in the order `texts` lists them, or nothing if
- *     no section states any text
+ * @returns The sections as a description list, in `texts` order, each label over its text; nothing if none has text
  */
 export function sections(texts: Readonly<Record<string, undefined | string>>): ComponentChildren {
 
 	const stated = Object.entries(texts).flatMap(([label, text]) => text ? [{ label, text }] : []);
 
-	return stated.length > 0 ? <Stack space={"spacing100"}>{stated.map(({ label, text }) =>
-
-		<Stack key={label} space={"spacing050"}>
-			<Style css={{ textLook: "subtle", fontFamily: "fontFamilyHeading" }}><Text>{label}</Text></Style>
-			<Markdown>{text}</Markdown>
-		</Stack>
-	)}</Stack> : undefined;
+	return stated.length > 0 ? <dl>{stated.map(({ label, text }) => <Fragment key={label}>
+		<dt>{label}</dt>
+		<dd><Markdown>{text}</Markdown></dd>
+	</Fragment>)}</dl> : undefined;
 
 }

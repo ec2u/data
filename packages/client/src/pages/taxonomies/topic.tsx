@@ -22,7 +22,6 @@ import { Icon } from "@metreeca/clay-widgets/icon";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
-import { Stack } from "@metreeca/clay-widgets/stack";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
 import { by, locale } from "@metreeca/core/order";
@@ -131,7 +130,7 @@ export function TopicPage() {
 			state: {
 				prefLabel, definition, isDefinedBy, broaderTransitive = [], narrower = [], related, exactMatch
 			}
-		}) => <Stack space={"spacing100"}>
+		}) => <>
 
 			<Title title={prefLabel}>{opt(definition, text => <Markdown>{text}</Markdown>)}</Title>
 
@@ -152,7 +151,7 @@ export function TopicPage() {
 
 			})}
 
-		</Stack>
+		</>
 
 	})}</Page>;
 

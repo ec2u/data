@@ -22,7 +22,6 @@ import { Icon } from "@metreeca/clay-widgets/icon";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
-import { Stack } from "@metreeca/clay-widgets/stack";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
 import { by, compound, locale } from "@metreeca/core/order";
@@ -154,7 +153,7 @@ export function UnitPage() {
 		error: ({ state }) => <Failure problem={state}><Empty>{units.glyph}</Empty></Failure>,
 
 		ready: ({ state: { prefLabel, definition, university, unitOf, hasUnit = [], subject = [], keyword = [] } }) =>
-			<Stack space={"spacing100"}>
+			<>
 
 				<Title title={prefLabel}>{opt(definition, text => <Markdown>{text}</Markdown>)}</Title>
 
@@ -168,7 +167,7 @@ export function UnitPage() {
 
 				})}
 
-			</Stack>
+			</>
 
 	})}</Page>;
 

@@ -15,8 +15,8 @@
  */
 
 /*
- * A Markdown text is set apart from what follows by the stack holding it, so the block it closes with drops the
- * trailing margin that would otherwise widen the gap after it beyond the spacing the stack sets.
+ * A Markdown text is set apart from what follows by the layout holding it, so the block it closes with drops the
+ * trailing margin that would otherwise widen the gap after it beyond the spacing that layout sets.
  */
 
 clay-markdown > :last-child {

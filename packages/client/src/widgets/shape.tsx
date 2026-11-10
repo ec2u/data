@@ -20,7 +20,6 @@ import { Markdown } from "@metreeca/clay-markdown/markdown";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
-import { Stack } from "@metreeca/clay-widgets/stack";
 import { Style } from "@metreeca/clay-widgets/style";
 import { Text } from "@metreeca/clay-widgets/text";
 import { isArray, isString, type Lazy, opt } from "@metreeca/core";
@@ -51,7 +50,7 @@ import "./shape.css";
  *
  * @param options The widget configuration
  *
- * @returns A stack of sections, each its label over its content, or nothing if no entry states any content
+ * @returns A description list of entries, each its label over its content, or nothing if no entry states any content
  */
 export function ShapeInfo({
 
@@ -87,14 +86,10 @@ export function ShapeInfo({
 
 	}).flatMap(([label, content]) => content !== undefined ? [{ label, content }] : []);
 
-	return stated.length > 0 ? <Stack space={"spacing100"}>{stated.map(({ label, content }) =>
-
-		<Stack key={label} space={"spacing050"}>
-			<div><Style css={{ textLook: "subtle", fontSize: "fontSizeSmall" }}><Text>{label}</Text></Style></div>
-			{/* body-sized line, sharing the baseline of the page text */}
-			<div class={"ec2u-shape-info"}>{content}</div>
-		</Stack>
-	)}</Stack> : undefined;
+	return stated.length > 0 ? <dl>{stated.map(({ label, content }) => <Fragment key={label}>
+		<dt>{label}</dt>
+		<dd class={"ec2u-shape-info"}>{content}</dd>
+	</Fragment>)}</dl> : undefined;
 
 }
 

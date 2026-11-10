@@ -22,7 +22,6 @@ import { Icon } from "@metreeca/clay-widgets/icon";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
-import { Stack } from "@metreeca/clay-widgets/stack";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
 import { nameTag } from "@metreeca/core/language";
@@ -207,7 +206,7 @@ export function DocumentPage() {
 		blank: () => <Empty look={"subtle"}>{documents.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{documents.glyph}</Empty></Failure>,
 
-		ready: ({ state: { title, description, relation = [] } }) => <Stack space={"spacing100"}>
+		ready: ({ state: { title, description, relation = [] } }) => <>
 
 			<Title title={title}>{opt(description, text => <Markdown>{text}</Markdown>)}</Title>
 
@@ -217,7 +216,7 @@ export function DocumentPage() {
 
 			})}
 
-		</Stack>
+		</>
 
 	})}</Page>;
 
