@@ -102,13 +102,18 @@ export function Datasets() {
 			{createElement("datasets-identity", {}, <Link href={"/"}>{ec2u(app.name ?? "")}</Link>)}
 			{datasets.label}
 		</>}
+
 		menu={members({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
 		}, <DatasetLinks/>)}
 
-		tray={<p style={{ maxWidth: "15rem" }}>
+		tray={<p style={{
+
+			maxWidth: "15rem",
+
+		}}>
 
 			Open data on the universities of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European University
 			alliance and their local partners, harmonised and cross-linked for search and reuse.
