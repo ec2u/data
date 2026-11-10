@@ -35,3 +35,11 @@ Well-known RDF vocabularies used in the definition of [data models](#data-models
 - [Schema.org](vocabularies/schema.md)
 	- [Learning Resource](vocabularies/schema-resource.md)
 	- [Event](vocabularies/schema-event.md)
+
+# Legal
+
+Who publishes the hub, the terms for reusing its data and software, and how it handles personal data.
+
+- [Legal Notice](legal)
+- [Privacy Notice](privacy)
+- [AI-Generated Content](ai)
