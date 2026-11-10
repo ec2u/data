@@ -17,16 +17,9 @@
 clay-tool {
 
     --clay-tool-head-font-size: var(--skin--scaling-125);
-
-    /* the tray carries labelled property panels and facets, so it takes the width of the legacy hub sidebar */
-
     --clay-tool-side-width: 20rem;
 
-    /* card images stay thumbnails, so the summaries beside them keep the larger share of a list entry at any width */
-
-    --clay-card-side-max-width: min(calc(4 * var(--skin--spacing-200)), 33%);
-
-    /* the tray stacks boxed facets and info panels, set apart rather than run together */
+    --clay-card-side-max-width: min(10rem, 33%);
 
     & > aside > div > div {
         display: flex;
@@ -34,66 +27,45 @@ clay-tool {
         row-gap: var(--skin--spacing-075);
     }
 
-    /*
-     * the reset beside the logo matches the facet resets below it: body-sized rather than head-sized, and drawn in from
-     * the edge by the border and header padding of a facet box, so its glyph lines up with theirs down the column
-     */
-
     & tile-clear {
-        font-size: var(--skin--font-size);
-        margin-inline-end: calc(
-            var(--skin--border-width) + var(--skin--spacing-025) - (var(--skin--scaling-110) - var(--skin--scaling-100)) / 2
-        );
 
-        /*
-         * the glyph stands a tad larger than the facet ones, as it resets the whole collection rather than one facet,
-         * and the edge inset gives back half the growth, so the larger glyph stays centred on the facet glyphs below
-         */
+        font-size: var(--skin--font-size);
+
+        margin-inline-end: 0.25em;
 
         & .lucide {
             width: var(--skin--scaling-110);
             height: var(--skin--scaling-110);
         }
+
     }
-
-    /*
-     * the EC2U flag stands a little over twice the capitals of the app name beside it and is centred on the line, so
-     * it spills evenly into the head padding and the row grows no taller; the gap after it matches the padding before
-     * the divider, so the flag and the app name sit at the same distance from the rule set between them; the sizing
-     * lets go of the flag while it is enlarged, so the zoomed image fills the window as any other image does
-     */
-
-    & .logo:not([active]) {
-        display: block;
-        height: 2.25cap;
-        margin-block: calc(-1.125cap + .5lh);
-        margin-inline-end: .85cap;
-    }
-
-    /* the row holding the flag still clips along the line, as every head item does, but lets the flag spill across it */
 
     & header > clay-strip:has(.logo) {
+
         overflow-x: clip;
         overflow-y: visible;
-    }
 
-    /*
-     * the app name beside the flag takes the navy of the flag rather than the link slate, so the two read as one mark;
-     * the dark scheme lifts the same hue to a light tint (12.11:1 on #FFF, 10.02:1 on #111)
-     *
-     * a hairline in a faded tint of the same navy sets the name apart from the flag, and the strong heading face gives
-     * the name the presence of a wordmark rather than of a plain navigation link, matching the trail heading each page
-     */
-
-    & clay-link:has(.logo) + clay-link {
-        --skin--color-link: light-dark(#283169, oklch(from #283169 0.8 0.08 h));
-        padding-inline-start: .85cap;
-        border-inline-start: 1px solid color-mix(in srgb, var(--skin--color-link) 35%, transparent);
-
-        & a {
-            font-family: var(--skin--font-family-heading);
-            font-weight: var(--skin--font-weight-strong);
+        & .logo:not([active]) {
+            display: block;
+            height: 2.25cap;
+            margin-block: calc(.5lh - 1.125cap);
+            margin-inline-end: .85cap;
         }
+
+        & clay-link:has(.logo) + clay-link {
+
+            --skin--color-link: light-dark(#283169, oklch(from #283169 0.8 0.08 h));
+
+            padding-inline-start: .85cap;
+            border-inline-start: 1px solid color-mix(in srgb, var(--skin--color-link) 35%, transparent);
+
+            & a {
+                font-family: var(--skin--font-family-heading);
+                font-weight: var(--skin--font-weight-strong);
+            }
+
+        }
+
     }
 
 }
