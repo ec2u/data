@@ -29,7 +29,7 @@ import { useResource } from "@metreeca/tile/resource";
 import { date } from "@metreeca/tile/types/date";
 import { instant } from "@metreeca/tile/types/instant";
 import { time } from "@metreeca/tile/types/time";
-import type { ComponentChildren } from "preact";
+import { type ComponentChildren, createElement } from "preact";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
@@ -37,6 +37,7 @@ import { address, filters, local } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
 import { Title } from "../../widgets/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
+import "./event.css";
 import { toEventAttendanceMode, toEventStatus } from "./index.core.js";
 import { events } from "./index.js";
 
@@ -177,15 +178,7 @@ export function EventPage() {
 					}))
 				},
 
-				{
-					"Start Date": day.format(startDate),
-					"Start Time": clock(startDate),
-
-					...(endDate === undefined || endDate === startDate ? {} : {
-						"End Date": day.format(endDate) === day.format(startDate) ? undefined : day.format(endDate),
-						"End Time": clock(endDate)
-					})
-				},
+				period(startDate, endDate),
 
 				{
 					Entry: opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
@@ -230,6 +223,29 @@ export function EventPage() {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Lists the panel entries stating when an event takes place.
+ *
+ * @param start The instant the event starts at
+ * @param end The instant the event ends at, if stated
+ *
+ * @returns A `Starts` entry with the day and time the event starts at, followed by an `Ends` entry with the day and
+ *     time it ends at, where an end other than the start is stated; the end day is greyed out on a same-day event
+ */
+function period(start: string, end?: string): Readonly<Record<string, ComponentChildren>> {
+
+	const from = day.format(start);
+	const to = opt(end, value => day.format(value));
+
+	return {
+		Starts: `${from} ${clock(start)}`,
+		Ends: end === undefined || end === start ? undefined
+			: to === from ? <>{createElement("ec2u-same-day", {}, to)} {clock(end)}</>
+				: `${to} ${clock(end)}`
+	};
+
+}
 
 /**
  * Formats the time of day an instant falls on for display.
