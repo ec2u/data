@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { base } from "@ec2u/data-shared";
+import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
@@ -43,11 +43,13 @@ export const euroscivoc = immutable({ // !!! sync from the EU vocabularies RDF d
 
 	title: { en: "European Science Vocabulary" },
 	alternative: { en: "EuroSciVoc" },
-	description: { en: dedent`
+	description: {
+		en: dedent`
 		European Science Vocabulary (EuroSciVoc) is the taxonomy of fields of science based on OECD's 2015 Frascati
 		Manual taxonomy. It was extended with fields of science categories extracted from CORDIS content through a
 		semi-automatic process developed with Natural Language Processing (NLP) techniques.
-	` },
+	`
+	},
 
 	publisher: publicationsOffice.id,
 	rights: "Copyright © 2023 Publications Office of the European Union",

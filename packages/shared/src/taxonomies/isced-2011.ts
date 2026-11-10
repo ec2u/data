@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { base } from "@ec2u/data-shared";
+import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
@@ -43,11 +43,13 @@ export const isced2011 = immutable({ // !!! persist
 
 	title: { en: "International Standard Classification of Education 2011" },
 	alternative: { en: "ISCED 2011" },
-	description: { en: dedent`
+	description: {
+		en: dedent`
 		The ISCED 2011 classification was adopted by the UNESCO General Conference at its 36th session in November 2011.
 		Initially developed by UNESCO in the 1970s, and first revised in 1997, the ISCED classification serves as an
 		instrument to compile and present education statistics both nationally and internationally.
-	` },
+	`
+	},
 
 	publisher: unescoStatistics.id,
 	rights: "Copyright © 2012 UNESCO Institute for Statistics",

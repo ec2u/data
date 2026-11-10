@@ -15,16 +15,16 @@
  */
 
 import { Publisher } from "@ec2u/data-shared/events/index.js";
-import { sync } from "../sinks/sync.js";
-import { execute } from "../../index.core.js";
-import { organizations } from "@ec2u/data-shared/organizations/index.js";
 import { jena } from "@ec2u/data-shared/index.core.js";
+import { organizations } from "@ec2u/data-shared/organizations/index.js";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { fork, map } from "@metreeca/flow/tasks";
-import { crawl, fetch } from "@metreeca/pipe-url";
 import { html, link, string, xpath } from "@metreeca/mime-xml";
+import { crawl, fetch } from "@metreeca/pipe-url";
+import { execute } from "../../index.core.js";
+import { sync } from "../sinks/sync.js";
 
 
 const concurrency = 10; // the number of index pages read at the same time from the source site

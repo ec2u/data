@@ -26,14 +26,14 @@ Translate every given text to English.
 # Requirements
 
 - You MUST state a translated property only where the matching input was given. NEVER state a property for an empty
-  input.
-- You MUST translate faithfully: NEVER summarise, expand, explain or comment on the text, and NEVER add anything the text
-  does not say.
+	input.
+- You MUST translate faithfully: NEVER summarise, expand, explain or comment on the text, and NEVER add anything the
+  text does not say.
 - You MUST translate the name as the offering would be called in English, with its degree or course type spelled out
-  (`Laurea Magistrale in Fisica` is `Master's Degree in Physics`), keeping proper names, eponyms, acronyms, course codes
-  and identifiers as written.
+	(`Laurea Magistrale in Fisica` is `Master's Degree in Physics`), keeping proper names, eponyms, acronyms, course codes
+	and identifiers as written.
 - You MUST keep the Markdown structure of the texts as it is: line breaks, paragraph breaks, headings, lists, emphasis
-  and links.
+	and links.
 - A text already written in English is stated unchanged.
 
 # Output

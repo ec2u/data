@@ -25,11 +25,11 @@ stored units retracts nothing and fails the run, so a broken index costs a run r
 | https://www.umu.se/forskning/forskningsgrupper/                                         | research groups [sv]                          |
 | https://www.umu.se/forskning/forskningsinfrastruktur/                                   | research infrastructure [sv]                  |
 
-The crawl follows the links under the `maincontent` section of the organisation pages (only list items for faculties
-and schools, only paragraph links for centres), the `navpuff` category tiles and then the `item` links of the research
-group pages, and the `/forskning/infrastruktur/` links of the infrastructure page. External links are followed too,
-as some centres keep their own sites. Each linked page is a unit, keyed by its address and linked as its homepage; its
-main content is handed to the model, which states the official name, the acronym where the page defines one and the
+The crawl follows the links under the `maincontent` section of the organisation pages (only list items for faculties and
+schools, only paragraph links for centres), the `navpuff` category tiles and then the `item` links of the research group
+pages, and the `/forskning/infrastruktur/` links of the infrastructure page. External links are followed too, as some
+centres keep their own sites. Each linked page is a unit, keyed by its address and linked as its homepage; its main
+content is handed to the model, which states the official name, the acronym where the page defines one and the
 description in the language of the page, translated to English where it isn't English. A page that fails to be read
 stays in the crawl, so its unit is not retracted, and is left as it was until the page can be read again. Every unit
 stands directly under the university and is classified against the EC2U organisation taxonomy and EuroSciVoc.

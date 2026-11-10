@@ -3,23 +3,22 @@ title: Linked Data Data Models
 ---
 
 - Linked data structures are defined by *ontologies*, that is by high-level *data models* describing relevant entities,
-  related properties and entity relationships
-  within a specific business or technical domain.
+	related properties and entity relationships within a specific business or technical domain.
 - Ontologies differentiate themselves from *relational* data models by adopting a *graph-based* representation and
-  extensively leveraging *taxonomies*, that is tree-like hierarchical classification schemes.
+	extensively leveraging *taxonomies*, that is tree-like hierarchical classification schemes.
 - Domain entities are represented as nodes whose connections graphically and concisely depict extensive relationship
-  networks; connectivity details and entity properties may vary across classification taxonomies, flexibly capturing the
-  specificity of each entity type.
+	networks; connectivity details and entity properties may vary across classification taxonomies, flexibly capturing the
+	specificity of each entity type.
 
 ![Sample Ontology Graph](index/graph.png#50)
 
 - This modelling approach makes it possible to express complex connectivity patterns, typical of many real-world
-  processes, in a simpler yet more expressive and richer graphical language.
+	processes, in a simpler yet more expressive and richer graphical language.
 - Free from the technical constraints of relational models, ontology-based graphs can more accurately capture complex
-  domain structures, closely aligning with the high‑level descriptions provided by subject-matter experts.
+	domain structures, closely aligning with the high‑level descriptions provided by subject-matter experts.
 - At the same time, ontologies provide a formal, machine‑readable description of domain data structures, which can
-  support advanced model-driven technical processes, such as data validation and extraction of tacit knowledge through
-  logical inference.
+	support advanced model-driven technical processes, such as data validation and extraction of tacit knowledge through
+	logical inference.
 
 # Standards
 
@@ -131,10 +130,10 @@ IRI prefixes in use in UML diagrams are detailed in a companion prefix table.
 
 Class specifications are detailed in tabular format, according to the following template.
 
-| term         | type                                                                                                                             | #              | definition                                                                                                                                                                                                                   |
-|--------------|----------------------------------------------------------------------------------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| term         | type                                                                                                                   | #              | definition                                                                                                                                                                                                                   |
+|--------------|------------------------------------------------------------------------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **ex:Class** | [ex:BaseClass] *inherited class membership specified as cross-links to the specification of the relevant base classes* |                | *class definition*                                                                                                                                                                                                           |
-| ex:property  | datatype {constraint}                                                                                                            | {multiplicity} | *literal property specification with expected datatype, multiplicity and additional constraints*                                                                                                                             |
+| ex:property  | datatype {constraint}                                                                                                  | {multiplicity} | *literal property specification with expected datatype, multiplicity and additional constraints*                                                                                                                             |
 | ex:property  | [ex:RelatedClass]&#10;{constraint}                                                                                     | {multiplicity} | *entity property specification with expected instance class, multiplicity and additional constraints; class membership for related entities is specified as a cross-links to the specification of the relevant target class* |
 
 Additional property constraints are specified
@@ -154,30 +153,29 @@ Ancillary usage or explanatory notes are highlighted in the following formats:
 
 # Datatypes
 
-To improve modelling robustness and interoperability, values are limited to a controlled set of
-standard datatypes, mainly derived from [XML Schema (XSD) 2 Datatypes](https://www.w3.org/TR/xmlschema-2/). This
-datatype set is properly supported by compliant SPARQL 1.1
-query engines and easily mapped to native datatypes in most programming languages.
+To improve modelling robustness and interoperability, values are limited to a controlled set of standard datatypes,
+mainly derived from [XML Schema (XSD) 2 Datatypes](https://www.w3.org/TR/xmlschema-2/). This datatype set is properly
+supported by compliant SPARQL 1.1 query engines and easily mapped to native datatypes in most programming languages.
 
-| datatype | description                                                                                 | RDF                                                               | JSON                             | Java                         |
-|----------|---------------------------------------------------------------------------------------------|:------------------------------------------------------------------|:---------------------------------|------------------------------|
-| boolean  | `true` / `false` flag                                                                       | [xsd:boolean]         | `boolean`                        | `Boolean`                    |
-| integer  | arbitrary precision integer number (for instance,  `123` )                                  | [xsd:integer]         | `integral number`                | `BigInteger`                 |
-| decimal  | arbitrary precision decimal number (for instance, `123.456`)                                | [xsd:decimal]         | `decimal number`                 | `BigDecimal`                 |
-| string   | textual content                                                                             | [xsd:string]           | `string`                         | `String`                     |
-| uri      | absolute URI                                                                                | [xsd:anyURI]           | `“http://example.net/”`          | `URI`                        |
-|          | relative URI                                                                                | [xsd:anyURI]           | `"/path"`                        | `URI`                        |
-| year     | [ISO 8601] year                                     | [xsd:gYear]             | `“yyyy”`                         | `Year`                       |
-| date     | [ISO 8601] date                                     | [xsd:date]               | `"yyyy-MM-dd"`                   | `LocalDate`                  |
-| time     | local  [ISO 8601] date                              | [xsd:time]               | `"hh:mm:ss"`                     | `LocalTime`                  |
-|          | offset  [ISO 8601] date                             | [xsd:time]               | `"hh:mm:ss+hh:mm"`               | `OffsetTime`                 |
-| dateTime | local [ISO 8601] date-time                          | [xsd:dateTime]       | `"yyyy-MM-ddThh:mm:s.sss"`       | `LocalDateTime`              |
-|          | offset [ISO 8601] date-time                         | [xsd:dateTime]       | `"yyyy-MM-ddThh:mm:s.sss+hh:mm"` | `OffsetDateTime`             |
-| instant  | UTC [ISO 8601] date-time with millisecond precision | [xsd:dateTime]       | `"yyyy-MM-ddThh:mm:s.sssZ"`      | `Instant`                    |
-| period   | date-based  [ISO 8601] duration                     | [xsd:duration]       | `"PyYMMdD"`                      | `Period`                     |
-| duration | time-based  [ISO 8601] duration                     | [xsd:duration]       | `"PdDThHmMs.sssS"`               | `Duration`                   |
-| text     | localised human-readable textual content                                                    | [rdf:langString] | `{ "locale": "text" }`           | ``Map<Locale, String>``      |
-|          |                                                                                             |                                                                   | `{ "locale": ["text", …] }`      | ``Map<Locale, Set<String>>`` |
+| datatype | description                                                  | RDF              | JSON                             | Java                         |
+|----------|--------------------------------------------------------------|:-----------------|:---------------------------------|------------------------------|
+| boolean  | `true` / `false` flag                                        | [xsd:boolean]    | `boolean`                        | `Boolean`                    |
+| integer  | arbitrary precision integer number (for instance,  `123` )   | [xsd:integer]    | `integral number`                | `BigInteger`                 |
+| decimal  | arbitrary precision decimal number (for instance, `123.456`) | [xsd:decimal]    | `decimal number`                 | `BigDecimal`                 |
+| string   | textual content                                              | [xsd:string]     | `string`                         | `String`                     |
+| uri      | absolute URI                                                 | [xsd:anyURI]     | `“http://example.net/”`          | `URI`                        |
+|          | relative URI                                                 | [xsd:anyURI]     | `"/path"`                        | `URI`                        |
+| year     | [ISO 8601] year                                              | [xsd:gYear]      | `“yyyy”`                         | `Year`                       |
+| date     | [ISO 8601] date                                              | [xsd:date]       | `"yyyy-MM-dd"`                   | `LocalDate`                  |
+| time     | local  [ISO 8601] date                                       | [xsd:time]       | `"hh:mm:ss"`                     | `LocalTime`                  |
+|          | offset  [ISO 8601] date                                      | [xsd:time]       | `"hh:mm:ss+hh:mm"`               | `OffsetTime`                 |
+| dateTime | local [ISO 8601] date-time                                   | [xsd:dateTime]   | `"yyyy-MM-ddThh:mm:s.sss"`       | `LocalDateTime`              |
+|          | offset [ISO 8601] date-time                                  | [xsd:dateTime]   | `"yyyy-MM-ddThh:mm:s.sss+hh:mm"` | `OffsetDateTime`             |
+| instant  | UTC [ISO 8601] date-time with millisecond precision          | [xsd:dateTime]   | `"yyyy-MM-ddThh:mm:s.sssZ"`      | `Instant`                    |
+| period   | date-based  [ISO 8601] duration                              | [xsd:duration]   | `"PyYMMdD"`                      | `Period`                     |
+| duration | time-based  [ISO 8601] duration                              | [xsd:duration]   | `"PdDThHmMs.sssS"`               | `Duration`                   |
+| text     | localised human-readable textual content                     | [rdf:langString] | `{ "locale": "text" }`           | ``Map<Locale, String>``      |
+|          |                                                              |                  | `{ "locale": ["text", …] }`      | ``Map<Locale, Set<String>>`` |
 
 > [!WARNING]
 > Due to the limitations of SPARQL 1.1 calendrical functions, `xsd:dateTime` is the preferred temporal

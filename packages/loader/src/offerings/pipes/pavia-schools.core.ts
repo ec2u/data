@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { pavia } from "@ec2u/data-shared/index.core.js";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { pavia } from "@ec2u/data-shared/index.core.js";
 import { opt, type Optional } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import type { Lead } from "../sinks/crawl.js";
@@ -57,7 +57,10 @@ export function lead({ url, name, notes }: Card): Optional<Lead> {
 			...opt(period(notes), timeToComplete => ({ timeToComplete })),
 
 			educationalLevel: [getTopicId(isced2011, "8")],
-			educationalCredentialAwarded: { credentialCategory: "Degree", name: { [pavia.locale]: "Diploma di Specializzazione" } }
+			educationalCredentialAwarded: {
+				credentialCategory: "Degree",
+				name: { [pavia.locale]: "Diploma di Specializzazione" }
+			}
 
 		})
 

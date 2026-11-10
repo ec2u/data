@@ -121,7 +121,14 @@ export function classify(): Task<Entry, Classified> {
 	);
 
 
-	async function tag({ draft: { id, prefLabel, definition, cues } }: Entry): Promise<readonly State<typeof Reported>[]> {
+	async function tag({
+		draft: {
+			id,
+			prefLabel,
+			definition,
+			cues
+		}
+	}: Entry): Promise<readonly State<typeof Reported>[]> {
 		try {
 
 			return [json<State<typeof Reported>>(await ai.models.generateContent({

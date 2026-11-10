@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { base, Dataset, EC2U, ec2u, licenses } from "@ec2u/data-shared";
+import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { SKOSConcept, SKOSConceptScheme } from "@ec2u/data-shared/vocabularies/skos.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, required, resource } from "@metreeca/blue/resource";
 import { string } from "@metreeca/blue/string";
-import type { Reference } from "@metreeca/qest/state";
 import type { State } from "@metreeca/blue/value";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
+import type { Reference } from "@metreeca/qest/state";
 
 
 // never read from taxonomy modules at load time: they are imported cyclically by the shapes below

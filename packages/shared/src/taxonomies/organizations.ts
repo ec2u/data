@@ -32,9 +32,11 @@ export const organizations = immutable({ // !!! sync from `taxonomies-ec2u-organ
 
 	title: { en: "EC2U Organisation Types" },
 	alternative: { en: "EC2U Organisations" },
-	description: { en: dedent`
+	description: {
+		en: dedent`
 		Standardised terminology for categorising organisations and their units within the EC2U Alliance.
-	` },
+	`
+	},
 
 	publisher: EC2U,
 

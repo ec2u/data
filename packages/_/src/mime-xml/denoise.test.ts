@@ -115,8 +115,8 @@ describe("cfemail", () => {
 		it("restores both target and label of a link wrapping obfuscated text", async () => {
 
 			expect(await rendered(cfemail(await page(`<p><a href="/cdn-cgi/l/email-protection#${Alpha}">`
-				+ `<span class="__cf_email__" data-cfemail="${AlphaAgain}">[email&#160;protected]</span>`
-				+ `</a></p>`
+				+`<span class="__cf_email__" data-cfemail="${AlphaAgain}">[email&#160;protected]</span>`
+				+`</a></p>`
 			)))).toBe("[alpha@example.com](mailto:alpha@example.com)");
 
 		});
@@ -170,7 +170,7 @@ describe("cfemail", () => {
 		it("leaves the input tree untouched", async () => {
 
 			const document = await page(`<p><span class="__cf_email__" data-cfemail="${Alpha}">[email&#160;protected]</span>`
-				+ ` <a href="/cdn-cgi/l/email-protection#${Alpha}">mail us</a></p>`
+				+` <a href="/cdn-cgi/l/email-protection#${Alpha}">mail us</a></p>`
 			);
 
 			const before = await rendered(document);

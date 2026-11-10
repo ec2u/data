@@ -29,19 +29,19 @@ still read as that text, and yields an event stated by its title and categories 
 `301` to the same path without the `event_detail` segment; the listed address stays the identity of the event.
 
 - **2026-10-27** – embedded events stating a malformed fact rejected as a whole; venue addresses stated as text and
-  images stated as schema.org `ImageObject` accepted
+	images stated as schema.org `ImageObject` accepted
 - **2026-10-26** – event pages read from their embedded schema.org description, as the markup renders client-side and
-  eight pages in nine yielded nothing
+	eight pages in nine yielded nothing
 - **2026-09-14** – migrated from the iCal calendar to search crawling, as the calendar carried only the events of one
-  location and stated the event page as the description of an entry
+	location and stated the event page as the description of an entry
 
 # 2025-05-09 – iCal calendar
 
 Event catalogue retrieved from the iCal calendar published per location; event info extracted by AI from event pages.
 
-| Source                                          | Description                                    |
-|-------------------------------------------------|------------------------------------------------|
-| https://eventum.usal.es/ics/location/spain/lo-1.ics | Eventum calendar, Spanish location [es]     |
-| https://eventum.usal.es/kml.html                | index of the locations calendars are published for |
+| Source                                              | Description                                        |
+|-----------------------------------------------------|----------------------------------------------------|
+| https://eventum.usal.es/ics/location/spain/lo-1.ics | Eventum calendar, Spanish location [es]            |
+| https://eventum.usal.es/kml.html                    | index of the locations calendars are published for |
 
 - **2025-05-09** – initial integration

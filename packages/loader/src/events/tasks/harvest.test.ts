@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { harvest } from "./harvest.js";
 import type { Optional } from "@metreeca/core";
 import type { Markdown } from "@metreeca/core/strings";
 import { pipe } from "@metreeca/flow";
@@ -23,6 +22,7 @@ import { toArray } from "@metreeca/flow/sinks";
 import { bind, executor } from "@metreeca/gear";
 import { createFetch, type Fetch } from "@metreeca/http";
 import { describe, expect, it } from "vitest";
+import { harvest } from "./harvest.js";
 
 
 function page(...scripts: readonly string[]): string {
@@ -90,9 +90,9 @@ describe("harvest()", () => {
 		it("decodes e-mail addresses obfuscated by Cloudflare in the main content", async () => {
 
 			const document = await render(`<html><body><main><p>Contact: `
-				+ `<a href="/cdn-cgi/l/email-protection#42232e322a2302273a232f322e276c212d2f">`
-				+ `<span class="__cf_email__" data-cfemail="7a1b160a121b3a1f021b170a161f54191517">[email&#160;protected]</span>`
-				+ `</a></p></main></body></html>`
+				+`<a href="/cdn-cgi/l/email-protection#42232e322a2302273a232f322e276c212d2f">`
+				+`<span class="__cf_email__" data-cfemail="7a1b160a121b3a1f021b170a161f54191517">[email&#160;protected]</span>`
+				+`</a></p></main></body></html>`
 			);
 
 			expect(document).toContain("[alpha@example.com](mailto:alpha@example.com)");
@@ -104,132 +104,156 @@ describe("harvest()", () => {
 
 	describe("structured data", () => {
 
-	it("renders an embedded schema.org event as a document", async () => {
+		it("renders an embedded schema.org event as a document", async () => {
 
-		const document = await render(page(JSON.stringify({
-			"@context": "https://schema.org",
-			"@type": "Event",
-			name: "Curso de \"cocina\"",
-			description: "Aprende nociones básicas de cocina.\n\nInscripción abierta.",
-			url: "https://eventum.usal.es/160908/detail/curso.html",
-			startDate: "2026-11-07T10:00:00+01:00",
-			endDate: "2026-11-28T14:00:00+01:00",
-			eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-			location: {
-				"@type": "Place",
-				name: "Escuela Municipal de Hostelería",
-				address: { "@type": "PostalAddress", addressLocality: "Santa Marta de Tormes", addressCountry: "España" }
-			},
-			image: ["https://eventum.usal.es/_files/header.jpg"]
-		})));
+			const document = await render(page(JSON.stringify({
+				"@context": "https://schema.org",
+				"@type": "Event",
+				name: "Curso de \"cocina\"",
+				description: "Aprende nociones básicas de cocina.\n\nInscripción abierta.",
+				url: "https://eventum.usal.es/160908/detail/curso.html",
+				startDate: "2026-11-07T10:00:00+01:00",
+				endDate: "2026-11-28T14:00:00+01:00",
+				eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+				location: {
+					"@type": "Place",
+					name: "Escuela Municipal de Hostelería",
+					address: {
+						"@type": "PostalAddress",
+						addressLocality: "Santa Marta de Tormes",
+						addressCountry: "España"
+					}
+				},
+				image: ["https://eventum.usal.es/_files/header.jpg"]
+			})));
 
-		expect(document).toMatch(/^---\ntitle: "Curso de \\"cocina\\""\nurl: "https:\/\/eventum\.usal\.es\/160908\/detail\/curso\.html"\n---\n/);
-		expect(document).toContain("# Curso de \"cocina\"");
-		expect(document).toContain("Aprende nociones básicas de cocina.\n\nInscripción abierta.");
-		expect(document).toContain("- Start: 2026-11-07T10:00:00+01:00");
-		expect(document).toContain("- End: 2026-11-28T14:00:00+01:00");
-		expect(document).toContain("- Attendance: https://schema.org/OfflineEventAttendanceMode");
-		expect(document).toContain("- Location: Escuela Municipal de Hostelería, Santa Marta de Tormes, España");
-		expect(document).toContain("- Image: https://eventum.usal.es/_files/header.jpg");
+			expect(document).toMatch(/^---\ntitle: "Curso de \\"cocina\\""\nurl: "https:\/\/eventum\.usal\.es\/160908\/detail\/curso\.html"\n---\n/);
+			expect(document).toContain("# Curso de \"cocina\"");
+			expect(document).toContain("Aprende nociones básicas de cocina.\n\nInscripción abierta.");
+			expect(document).toContain("- Start: 2026-11-07T10:00:00+01:00");
+			expect(document).toContain("- End: 2026-11-28T14:00:00+01:00");
+			expect(document).toContain("- Attendance: https://schema.org/OfflineEventAttendanceMode");
+			expect(document).toContain("- Location: Escuela Municipal de Hostelería, Santa Marta de Tormes, España");
+			expect(document).toContain("- Image: https://eventum.usal.es/_files/header.jpg");
 
-	});
+		});
 
-	it("leaves out the facts an event does not state", async () => {
+		it("leaves out the facts an event does not state", async () => {
 
-		const document = await render(page(JSON.stringify({
-			"@type": "Event",
-			name: "Seminar",
-			description: "A seminar.",
-			url: "https://example.org/seminar",
-			startDate: "2026-11-07"
-		})));
+			const document = await render(page(JSON.stringify({
+				"@type": "Event",
+				name: "Seminar",
+				description: "A seminar.",
+				url: "https://example.org/seminar",
+				startDate: "2026-11-07"
+			})));
 
-		expect(document).toContain("- Start: 2026-11-07");
-		expect(document).not.toContain("- End:");
-		expect(document).not.toContain("- Attendance:");
-		expect(document).not.toContain("- Location:");
-		expect(document).not.toContain("- Image:");
+			expect(document).toContain("- Start: 2026-11-07");
+			expect(document).not.toContain("- End:");
+			expect(document).not.toContain("- Attendance:");
+			expect(document).not.toContain("- Location:");
+			expect(document).not.toContain("- Image:");
 
-	});
+		});
 
-	it("renders a place address stated as text", async () => {
+		it("renders a place address stated as text", async () => {
 
-		const document = await render(page(JSON.stringify({
-			"@type": "Event",
-			name: "Seminar",
-			description: "A seminar.",
-			url: "https://example.org/seminar",
-			location: { "@type": "Place", name: "Aula Magna", address: "Strada Nuova 65, Pavia" }
-		})));
+			const document = await render(page(JSON.stringify({
+				"@type": "Event",
+				name: "Seminar",
+				description: "A seminar.",
+				url: "https://example.org/seminar",
+				location: { "@type": "Place", name: "Aula Magna", address: "Strada Nuova 65, Pavia" }
+			})));
 
-		expect(document).toContain("- Location: Aula Magna, Strada Nuova 65, Pavia");
+			expect(document).toContain("- Location: Aula Magna, Strada Nuova 65, Pavia");
 
-	});
+		});
 
-	it.each([
-		{ image: { "@type": "ImageObject", url: "https://example.org/seminar.jpg" } },
-		{ image: [{ "@type": "ImageObject", url: "https://example.org/seminar.jpg" }, "https://example.org/other.jpg"] }
-	])("renders an image stated as a schema.org ImageObject %j", async fact => {
+		it.each([
+			{ image: { "@type": "ImageObject", url: "https://example.org/seminar.jpg" } },
+			{
+				image: [{
+					"@type": "ImageObject",
+					url: "https://example.org/seminar.jpg"
+				}, "https://example.org/other.jpg"]
+			}
+		])("renders an image stated as a schema.org ImageObject %j", async fact => {
 
-		expect(await render(page(JSON.stringify({
-			"@type": "Event",
-			name: "Seminar",
-			description: "A seminar.",
-			url: "https://example.org/seminar",
-			...fact
-		})))).toContain("- Image: https://example.org/seminar.jpg");
+			expect(await render(page(JSON.stringify({
+				"@type": "Event",
+				name: "Seminar",
+				description: "A seminar.",
+				url: "https://example.org/seminar",
+				...fact
+			})))).toContain("- Image: https://example.org/seminar.jpg");
 
-	});
+		});
 
-	it.each([
-		{ startDate: 20261107 },
-		{ endDate: true },
-		{ eventAttendanceMode: ["offline"] },
-		{ location: "Aula Magna" },
-		{ location: { name: 1 } },
-		{ location: { address: { addressLocality: 1 } } },
-		{ image: { "@type": "ImageObject" } },
-		{ image: [{ "@type": "ImageObject", url: 1 }] },
-		{ image: [1] }
-	])("rejects an event stating a malformed fact %j", async fact => {
+		it.each([
+			{ startDate: 20261107 },
+			{ endDate: true },
+			{ eventAttendanceMode: ["offline"] },
+			{ location: "Aula Magna" },
+			{ location: { name: 1 } },
+			{ location: { address: { addressLocality: 1 } } },
+			{ image: { "@type": "ImageObject" } },
+			{ image: [{ "@type": "ImageObject", url: 1 }] },
+			{ image: [1] }
+		])("rejects an event stating a malformed fact %j", async fact => {
 
-		expect(await render(page(JSON.stringify({
-			"@type": "Event",
-			name: "Seminar",
-			description: "A seminar.",
-			url: "https://example.org/seminar",
-			...fact
-		})))).toBeUndefined();
+			expect(await render(page(JSON.stringify({
+				"@type": "Event",
+				name: "Seminar",
+				description: "A seminar.",
+				url: "https://example.org/seminar",
+				...fact
+			})))).toBeUndefined();
 
-	});
+		});
 
-	it("skips blocks describing no event", async () => {
+		it("skips blocks describing no event", async () => {
 
-		expect(await render(page(
-			JSON.stringify({ "@type": "Organization", name: "Universidad de Salamanca" }),
-			"{ not json",
-			JSON.stringify({ "@type": "Event", name: "Kept", description: "Kept.", url: "https://example.org/kept" })
-		))).toContain("# Kept");
+			expect(await render(page(
+				JSON.stringify({ "@type": "Organization", name: "Universidad de Salamanca" }),
+				"{ not json",
+				JSON.stringify({
+					"@type": "Event",
+					name: "Kept",
+					description: "Kept.",
+					url: "https://example.org/kept"
+				})
+			))).toContain("# Kept");
 
-	});
+		});
 
-	it("renders only the first of several embedded events", async () => {
+		it("renders only the first of several embedded events", async () => {
 
-		const document = await render(page(
-			JSON.stringify({ "@type": "Event", name: "First", description: "First.", url: "https://example.org/first" }),
-			JSON.stringify({ "@type": "Event", name: "Second", description: "Second.", url: "https://example.org/second" })
-		));
+			const document = await render(page(
+				JSON.stringify({
+					"@type": "Event",
+					name: "First",
+					description: "First.",
+					url: "https://example.org/first"
+				}),
+				JSON.stringify({
+					"@type": "Event",
+					name: "Second",
+					description: "Second.",
+					url: "https://example.org/second"
+				})
+			));
 
-		expect(document).toContain("# First");
-		expect(document).not.toContain("Second");
+			expect(document).toContain("# First");
+			expect(document).not.toContain("Second");
 
-	});
+		});
 
-	it("renders nothing for a page embedding no event", async () => {
+		it("renders nothing for a page embedding no event", async () => {
 
-		expect(await render(page())).toBeUndefined();
+			expect(await render(page())).toBeUndefined();
 
-	});
+		});
 
 	});
 

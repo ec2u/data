@@ -18,11 +18,11 @@ Translate the title and the description to English.
 # Requirements
 
 - You MUST state a translated `title` only where a title was given, and a translated `description` only where a
-  description was given. NEVER state a property for an empty input.
-- You MUST translate faithfully: NEVER summarise, expand, explain or comment on the text, and NEVER add anything the text
-  does not say.
+	description was given. NEVER state a property for an empty input.
+- You MUST translate faithfully: NEVER summarise, expand, explain or comment on the text, and NEVER add anything the
+  text does not say.
 - You MUST keep proper names, acronyms, legal references and identifiers as written (`NOR : MENU8802296A`, `UAIC`,
-  `CUG`), translating the name of an institution or body only where it has an established English name.
+	`CUG`), translating the name of an institution or body only where it has an established English name.
 - You MUST keep line breaks and paragraph breaks of the description as they are.
 - A text already written in English is stated unchanged.
 

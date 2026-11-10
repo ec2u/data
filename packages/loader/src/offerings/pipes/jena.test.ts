@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { jena } from "@ec2u/data-shared/index.core.js";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { jena } from "@ec2u/data-shared/index.core.js";
 import { describe, expect, it } from "vitest";
 import { program } from "./jena.core.js";
 
@@ -72,7 +72,10 @@ describe("program", () => {
 	});
 
 	it("keys the program by the address the catalogue links", async () => {
-		expect(program([{ ...page, url: "https://www.uni-jena.de/en/other" }], url)).toMatchObject({ key: url, url: [url] });
+		expect(program([{ ...page, url: "https://www.uni-jena.de/en/other" }], url)).toMatchObject({
+			key: url,
+			url: [url]
+		});
 	});
 
 	it("reads texts in the language the page states", async () => {

@@ -13,8 +13,8 @@ superseded versions kept below for the record of how the source was harvested be
 Units are drawn from the JSON export of the French national register of research structures (RNSR), filtered to the
 structures Université de Poitiers is a supervising body (`tutelle`) of, and stated one at a time, so an interrupted run
 keeps the units it stated and the next one carries on; unchanged structures are skipped. An export naming fewer than
-three quarters of the stored units retracts nothing and fails the run, as does an export that fails to be retrieved;
-the source pointers below were provided by Poitiers University on 2024-04-09, when the register replaced the sheet.
+three quarters of the stored units retracts nothing and fails the run, as does an export that fails to be retrieved; the
+source pointers below were provided by Poitiers University on 2024-04-09, when the register replaced the sheet.
 
 | Source                                                                   | Description                           | Notes                                        |
 |--------------------------------------------------------------------------|---------------------------------------|----------------------------------------------|

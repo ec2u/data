@@ -14,8 +14,8 @@ time, so an interrupted run keeps the offerings it stated and the next one carri
 run naming fewer than three quarters of the stored offerings retracts nothing and fails, so a listing that fails to load
 costs a run rather than the catalogue, and pruning below that share requires a forced reload.
 
-| Source                 | Description     | Notes                                                                                                         |
-|------------------------|-----------------|---------------------------------------------------------------------------------------------------------------|
+| Source                 | Description     | Notes                                                                                                                         |
+|------------------------|-----------------|-------------------------------------------------------------------------------------------------------------------------------|
 | https://guias.usal.es/ | guías USAL [es] | programs, courses and memberships held in GCP Secret Manager as `offerings-salamanca-{programs,courses,programs-courses}-url` |
 
 A program is keyed by its `programCode` and named in Spanish; a course is keyed by its `code`, named in English and

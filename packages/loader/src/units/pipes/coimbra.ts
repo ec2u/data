@@ -197,7 +197,10 @@ function records(): Task<Request, Draft> {
 			unitOf: [],
 			institutes: [],
 
-			heads: opt(text(givenName), givenName => opt(text(familyName), familyName => [{ givenName, familyName }])) ?? [],
+			heads: opt(text(givenName), givenName => opt(text(familyName), familyName => [{
+				givenName,
+				familyName
+			}])) ?? [],
 
 			cues: {
 				type: text(type_en),
@@ -252,7 +255,10 @@ function records(): Task<Request, Draft> {
 
 	function url(value: string): undefined | string {
 		return opt(text(value), value => URL.canParse(value)
-			? opt(new URL(value), ({ protocol, href }) => protocol === "http:" || protocol === "https:" ? href : undefined)
+			? opt(new URL(value), ({
+				protocol,
+				href
+			}) => protocol === "http:" || protocol === "https:" ? href : undefined)
 			: undefined
 		);
 	}

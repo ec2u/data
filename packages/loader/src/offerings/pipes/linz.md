@@ -12,17 +12,18 @@ Authoritative integration status for the Linz University programs and courses.
 Programs and courses are drawn from two REST/JSON APIs and stated one at a time, so an interrupted run keeps the
 offerings it stated and the next one carries on; unchanged records are skipped. A run naming fewer than three quarters
 of the stored programs and courses retracts nothing and fails, so a listing that fails to load costs a run rather than
-the catalogue: a pruning below that share requires a forced reload, once the withdrawal is confirmed with the university.
+the catalogue: a pruning below that share requires a forced reload, once the withdrawal is confirmed with the
+university.
 
-| Source                                     | Description          | Notes                                                      |
-|--------------------------------------------|----------------------|------------------------------------------------------------|
-| https://ec2u.datahub.jku.at/api/1/programs | degree programs [de] | held in GCP Secret Manager as `programs-linz-url`          |
+| Source                                     | Description          | Notes                                                             |
+|--------------------------------------------|----------------------|-------------------------------------------------------------------|
+| https://ec2u.datahub.jku.at/api/1/programs | degree programs [de] | held in GCP Secret Manager as `programs-linz-url`                 |
 | https://ec2u.datahub.jku.at/api/1/courses  | courses [de, en]     | held in GCP Secret Manager as `courses-linz-url`; no descriptions |
 
 A program is keyed by its first `identifier`, a course by its `courseCode`; the APIs state no academic year or term, so
-offerings are dated with the academic year current at retrieval, switching in August, while
-terms are left unstated; a course listed more than once is stated once. Names and descriptions keep the
-languages the records tag them with, a German-only text being translated to English. `educationalLevel` states a legacy
+offerings are dated with the academic year current at retrieval, switching in August, while terms are left unstated; a
+course listed more than once is stated once. Names and descriptions keep the languages the records tag them with, a
+German-only text being translated to English. `educationalLevel` states a legacy
 `/concepts/isced-2011/{level}` address, mapped to the ISCED 2011 taxonomy, and a field of education is classified from
 the texts against ISCED-F 2013. A course names its programs by their first `identifier` in `inProgram`, and a
 `Lifelong Learning` audience tags it as addressed to continuing education students.

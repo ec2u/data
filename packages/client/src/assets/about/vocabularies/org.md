@@ -33,7 +33,7 @@ relationships between people and organizations.
 > Known deviation from standard:
 >
 > - `org:identifier` should be a typed literal; it is specified as string to ease interoperability with frontend
-    applications
+		applications
 
 # Formal Organization
 

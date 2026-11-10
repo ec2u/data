@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-import { getDate } from "@metreeca/work/core/temporal.js";
-import { digest } from "@metreeca/work/core/digest.js";
-import { validate } from "@metreeca/mime-jsonld";
-import { getResource } from "@metreeca/gear/space";
-import { schema } from "@metreeca/blue";
-import { createGoogleAI, json } from "@metreeca/llms-google";
 import { isStaleEvent } from "@ec2u/data-shared/events/index.js";
+import { FinishReason, type GenerateContentResponse } from "@google/genai";
+import { schema } from "@metreeca/blue";
 import { boolean } from "@metreeca/blue/boolean";
 import { optional, required, resource } from "@metreeca/blue/resource";
 import { date, string, tag, time, url } from "@metreeca/blue/string";
@@ -30,8 +26,12 @@ import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, flat, map, when } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
+import { getResource } from "@metreeca/gear/space";
+import { createGoogleAI, json } from "@metreeca/llms-google";
+import { validate } from "@metreeca/mime-jsonld";
 import { log } from "@metreeca/tape";
-import { FinishReason, type GenerateContentResponse } from "@google/genai";
+import { digest } from "@metreeca/work/core/digest.js";
+import { getDate } from "@metreeca/work/core/temporal.js";
 
 
 const logger = log(import.meta.url);

@@ -19,5 +19,6 @@
     "src",
     "vite.config.ts"
   ],
-  "exclude": [] // override the root exclusion of this package
+  "exclude": []
+  // override the root exclusion of this package
 }

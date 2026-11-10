@@ -16,15 +16,15 @@ Extract the facts the page states about the offering it describes.
 
 - You MUST respond in the language the page is written in. NEVER translate.
 - You MUST state only facts the page states explicitly. NEVER infer, guess or complete a fact the page leaves out:
-  leave the property out instead.
+	leave the property out instead.
 - You MUST include full descriptions verbatim from the page, in markdown format, removing H1 headings that state the
-  name of the offering, any account of ongoing or upcoming events, and personal email addresses.
+	name of the offering, any account of ongoing or upcoming events, and personal email addresses.
 - You MUST state the `summary` as plain text of about 500 characters, drawn from the description.
 - You MUST state the `level` only where the page leaves no doubt about it, as an ISCED 2011 level from 6 to 8: 6 for
-  bachelor's or equivalent, 7 for master's or equivalent, 8 for doctoral or equivalent.
+	bachelor's or equivalent, 7 for master's or equivalent, 8 for doctoral or equivalent.
 - You MUST state `duration` and `workload` as ISO 8601 durations (`P3Y`, `P6M`, `PT40H`).
-- You MUST state the `language` of the page and the `teaching` language of a course as lowercase ISO 639-1 tags
-  (`sv`, `en`).
+- You MUST state the `language` of the page and the `teaching` language of a course as lowercase ISO 639-1 tags (`sv`,
+  `en`).
 
 # Output
 

@@ -16,10 +16,10 @@
 
 import { CommentLength, LabelLength } from "@ec2u/data-shared";
 import { courses, getCourseId } from "@ec2u/data-shared/courses/index.js";
+import { pavia, turku } from "@ec2u/data-shared/index.core.js";
 import { getOrganizationId, organizations } from "@ec2u/data-shared/organizations/index.js";
 import { getPersonId, persons } from "@ec2u/data-shared/persons/index.js";
 import { getProgramId, programs } from "@ec2u/data-shared/programs/index.js";
-import { pavia, turku } from "@ec2u/data-shared/index.core.js";
 import { describe, expect, it } from "vitest";
 import {
 	type Attached,
@@ -222,7 +222,12 @@ describe("state", () => {
 		const teaches = { en: "Some contents." };
 
 		it("comments the offering with its summary first", async () => {
-			expect(state(source, attached({ ...program, disambiguatingDescription: summary, description, teaches }))?.comment)
+			expect(state(source, attached({
+				...program,
+				disambiguatingDescription: summary,
+				description,
+				teaches
+			}))?.comment)
 				.toEqual(summary);
 		});
 
@@ -334,7 +339,10 @@ describe("organization", () => {
 	});
 
 	it("states the organisation owned by the source under its names", async () => {
-		expect(organization(source, pavia, { name: { it: "Ingegneria" }, homepage: "https://example.org/" })).toMatchObject({
+		expect(organization(source, pavia, {
+			name: { it: "Ingegneria" },
+			homepage: "https://example.org/"
+		})).toMatchObject({
 			dataset: organizations.id,
 			university: pavia.id,
 			source,

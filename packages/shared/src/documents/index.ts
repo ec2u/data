@@ -16,8 +16,8 @@
 
 import { base, Dataset, EC2U, ec2u, Entity, licenses } from "@ec2u/data-shared";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
-import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { Person } from "@ec2u/data-shared/persons/index.js";
+import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { DocumentTopic } from "@ec2u/data-shared/taxonomies/documents.js";
 import { EuroSciVocTopic } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
 import { StakeholderTopic } from "@ec2u/data-shared/taxonomies/stakeholders.js";

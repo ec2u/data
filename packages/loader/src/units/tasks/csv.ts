@@ -108,7 +108,8 @@ export function csv(university: Partner): Task<URLLike, Draft> {
 				logger.warning`ignored repeated rows for units <${duplicated.join("; ")}>`;
 			}
 
-			// parents often name faculties the sheet doesn't list, so they're reported once per sheet rather than per row
+			// parents often name faculties the sheet doesn't list, so they're reported once per sheet rather than per
+			// row
 
 			const unmatched = [...new Set(records.flatMap(record => values(record["Parent"])))]
 				.filter(parent => !records.some(candidate => named(candidate, parent)));
@@ -228,7 +229,10 @@ export function csv(university: Partner): Task<URLLike, Draft> {
 
 	function url(value: undefined | string): undefined | string {
 		return opt(value, value => URL.canParse(value)
-			? opt(new URL(value), ({ protocol, href }) => protocol === "http:" || protocol === "https:" ? href : undefined)
+			? opt(new URL(value), ({
+				protocol,
+				href
+			}) => protocol === "http:" || protocol === "https:" ? href : undefined)
 			: undefined
 		);
 	}

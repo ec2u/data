@@ -15,13 +15,13 @@
  */
 
 import { bind, executor, service } from "@metreeca/gear";
+import { createGCPVault } from "@metreeca/gear-gcp/secrets";
 import { createVault } from "@metreeca/gear/vault";
 import { createFetch } from "@metreeca/http";
 import { basic } from "@metreeca/http/basic";
 import { createSPARQLStore } from "@metreeca/keep-sparql";
-import { createHTTPRepository } from "@metreeca/wire-sparql-http";
-import { createGCPVault } from "@metreeca/gear-gcp/secrets";
 import { createStore } from "@metreeca/pipe-store";
+import { createHTTPRepository } from "@metreeca/wire-sparql-http";
 
 
 const environment = process.env.DATA_ENVIRONMENT || "edge"; // !!! align default to branch

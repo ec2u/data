@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { execute } from "../../index.core.js";
 import { isced2011, unescoStatistics } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { sync } from "../sinks/sync.js";
-import { csv } from "../tasks/csv.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { service } from "@metreeca/gear";
 import { createVault } from "@metreeca/gear/vault";
+import { execute } from "../../index.core.js";
+import { sync } from "../sinks/sync.js";
+import { csv } from "../tasks/csv.js";
 
 
 const DataURL = "taxonomies-ec2u-isced-2011";

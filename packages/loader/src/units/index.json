@@ -1,116 +1,116 @@
 [
-	{
-		"id": "glade",
-		"label": {
-			"en": "GLADE - Virtual Institute for Good Health and Well‑Being"
-		},
-		"comment": {
-			"en": "GLADE is the EC2U Alliance’s Virtual Institute developing approaches in education, research, innovation and service transfer to the community for the third UN Sustainable Development Goal, Good Health and Well-being for All. It hosts the GLADE Literacy LAB for itinerant conferences, summer schools and short video trainings, the GLADE Transformative Research HUB for studies, guidelines and policy papers, and the GLADE Healthy Campus Services, fostering health and well-being in EC2U cities."
-		},
-		"prefLabel": {
-			"en": "Virtual Institute for Good Health and Well‑Being"
-		},
-		"altLabel": "GLADE",
-		"definition": {
-			"en": "GLADE is the EC2U Alliance’s Virtual Institute aimed to develop specific approaches in education,\nresearch, innovation and service transfer to the community in areas of the third UNSDG: Good Health\nand Well-being for All.\n\nThe Virtual Institute GLADE is the headquarter for:\n\n- EC2U Glade Literacy LAB that encourages itinerant conferences of EC2U specialists, Summer Schools\n  and short video trainings in the area of good health and well-being for all;\n- EC2U GLADE Transformative Research HUB that initiates and supports studies, guidelines for local\n  authorities, policy papers on Good Health and Well-being;\n- EC2U GLADE Healthy Campus Services that focuses on a brand new approach of Health in Campuses.\n\nThe main objective of the GLADE Virtual Institute is to develop cooperation’s contexts for promoting\nhealth and well-being in the 7 EC2U universities and their cities."
-		},
-		"homepage": [
-			"https://ec2u.eu/work-packages/sdg-3-good-health-and-well-being"
-		]
-	},
-	{
-		"id": "viqe",
-		"label": {
-			"en": "VIQE - Virtual Institute for Quality Education"
-		},
-		"comment": {
-			"en": "The Virtual Institute for Quality Education (VIQE) is a completely new way of approaching and solving a given challenge, combining education, research and innovation for advanced studies in quality education. Its activities include a Language Policy Research Project, a Research Seed Mobility Programme on Language and Cultural Diversity, and joint PhD training activities for the existing PhD programmes on European languages and cultures."
-		},
-		"prefLabel": {
-			"en": "Virtual Institute for Quality Education"
-		},
-		"altLabel": "VIQE",
-		"definition": {
-			"en": "Virtual Institutes are a completely new way of approaching and solving a given challenge. The VIQE,\nVirtual Institute for Quality Education combines education, research and innovation for advanced\nstudies in quality education.\n\nIn practice, VIQE will carry out the following activities:\n\n- Language Policy Research Project\n- Research Seed Mobility Programme on Language and Cultural Diversity\n- Joint PhD training activities for the existing PhD programmes on European languages and cultures."
-		},
-		"homepage": [
-			"https://ec2u.eu/work-packages/sdg-4-quality-education"
-		]
-	},
-	{
-		"id": "viscc",
-		"label": {
-			"en": "VISCC - Virtual Institute for Sustainable Cities and Communities"
-		},
-		"comment": {
-			"en": "The Virtual Institute for Sustainable Cities and Communities (VISCC) brings together research, education, innovation and outreach in the field of UN Sustainable Development Goal 11, promoting interdisciplinarity, collaborative work and mobility between the EC2U universities, their cities and citizens. It offers a Joint Master Degree in Sustainable Cities and Communities, PhD training and co-supervised theses, online courses, winter and summer schools, and research projects."
-		},
-		"prefLabel": {
-			"en": "Virtual Institute for Sustainable Cities and Communities"
-		},
-		"altLabel": "VISCC",
-		"definition": {
-			"en": "The Virtual Institute for Sustainable Cities and Communities (VISCC) aims at bringing together\nresearch, education and innovation, and outreaching in the field of the United Nation’s sustainable\ndevelopment goal n°11: “Sustainable Cities and Communities”.\n\nThe VISCC carries out scientific activities that promote interdisciplinarity, collaborative work and\nmobility between the EC2U Universities, the cities and the citizens.\n\nWhat does the VISCC offer?\n\n- A Joint Master Degree in Sustainable Cities and Communities\n- PhD training activities and thesis projects in co-supervision\n- Online courses\n- Winter and Summer Schools\n- Research projects"
-		},
-		"homepage": [
-			"https://ec2u.eu/work-packages/sdg-11-sustainable-cities-and-communities"
-		]
-	},
-	{
-		"id": "vipjsi",
-		"label": {
-			"en": "VIPJSI - Virtual Institute for Peace, Justice and Strong Institutions"
-		},
-		"comment": {
-			"en": "The Virtual Institute for Peace, Justice and Strong Institutions (VIPJSI) brings together interdisciplinary research, education, innovation and outreach on UN Sustainable Development Goal 16, addressing these questions in Europe from the viewpoints of law, politics, history and ethics. It offers a Joint Master Program in Peace, Justice and Good Governance (from 2027), PhD training and co-supervised theses (from 2025), online courses, winter and summer schools, and think tanks."
-		},
-		"prefLabel": {
-			"en": "Virtual Institute for Peace, Justice and Strong Institutions"
-		},
-		"altLabel": "VIPJSI",
-		"definition": {
-			"en": "The Virtual Institute for Peace, Justice and Strong Institutions (VIPJSI) carries out scientific\nactivities that promote interdisciplinarity, collaborative work and mobility between the EC2U\nUniversities, the cities and the citizens.\n\nThe VIPJSI aims at bringing together interdisciplinary research, education and innovation, and\noutreaching in the field of the United Nation’s Sustainable Development Goal #16: Promote peaceful and\ninclusive societies for sustainable development, provide access to justice for all and build\neffective, accountable and inclusive institutions at all levels.\n\nOur research deals with current questions regarding Peace, Justice and Strong Institutions in Europe\nfrom different points of view: law, politics, history and ethics.\n\nThe VIPJSI offers:\n\n- A Joint Master Program in Peace, Justice and Good Governance (starting 2027)\n- PhD training activities and thesis projects in co-supervision (starting 2025)\n- Online courses\n- Winter and Summer Schools\n- Thinktanks & Conferences"
-		},
-		"homepage": [
-			"https://ec2u.eu/work-packages/sdg-16-peace-justice-and-strong-institutions"
-		]
-	},
-	{
-		"id": "vill",
-		"label": {
-			"en": "VILL - Virtual Institute for Life on Land"
-		},
-		"comment": {
-			"en": "The Virtual Institute for Life on Land (VILL) offers research opportunities within the EC2U Alliance, from joint research projects and training activities to webinars, seminars and collaborative studies. It connects students, researchers and innovators across Europe to explore sustainable food production, improve water management and protect biodiversity for healthier and more resilient ecosystems."
-		},
-		"prefLabel": {
-			"en": "Virtual Institute for Life on Land"
-		},
-		"altLabel": "VILL",
-		"definition": {
-			"en": "The Virtual Institute for Life on Land (VILL) offers research opportunities within the EC2U Alliance,\nfrom joint research projects and training activities to webinars, seminars, and collaborative studies.\n\nThe VILL connects students, researchers, and innovators across Europe to explore sustainable food\nproduction, improve water management, and protect biodiversity for healthier and more resilient\necosystems."
-		},
-		"homepage": [
-			"https://ec2u.eu/researchers/elevate-your-research/research-opportunities-life-land"
-		]
-	},
-	{
-		"id": "vimmsf",
-		"label": {
-			"en": "VIMMSF - Virtual Institute for Materials & Methods for a Sustainable Future"
-		},
-		"comment": {
-			"en": "The Virtual Institute for Materials & Methods for a Sustainable Future (VIMMSF) offers research opportunities within the EC2U Alliance, from joint research projects and training activities to webinars and seminars. It connects students, researchers and innovators across Europe to explore advanced materials for energy saving and storage, develop additive manufacturing technologies and design computer-based or nature-inspired methods for the materials of the future."
-		},
-		"prefLabel": {
-			"en": "Virtual Institute for Materials & Methods for a Sustainable Future"
-		},
-		"altLabel": "VIMMSF",
-		"definition": {
-			"en": "The Virtual Institute for Materials & Methods for a Sustainable Future (VIMMSF) offers research\nopportunities within the EC2U Alliance, from joint research projects and training activities to\nwebinars, seminars, and collaborative studies.\n\nThe VIMMSF connects students, researchers, and innovators across Europe to explore advanced materials\nfor energy saving and storage, develop additive manufacturing technologies, and design computer-based\nor nature-inspired methods for the materials of the future."
-		},
-		"homepage": [
-			"https://ec2u.eu/researchers/elevate-your-research/research-opportunities-materials-methods-sustainable-future"
-		]
-	}
+  {
+    "id": "glade",
+    "label": {
+      "en": "GLADE - Virtual Institute for Good Health and Well‑Being"
+    },
+    "comment": {
+      "en": "GLADE is the EC2U Alliance’s Virtual Institute developing approaches in education, research, innovation and service transfer to the community for the third UN Sustainable Development Goal, Good Health and Well-being for All. It hosts the GLADE Literacy LAB for itinerant conferences, summer schools and short video trainings, the GLADE Transformative Research HUB for studies, guidelines and policy papers, and the GLADE Healthy Campus Services, fostering health and well-being in EC2U cities."
+    },
+    "prefLabel": {
+      "en": "Virtual Institute for Good Health and Well‑Being"
+    },
+    "altLabel": "GLADE",
+    "definition": {
+      "en": "GLADE is the EC2U Alliance’s Virtual Institute aimed to develop specific approaches in education,\nresearch, innovation and service transfer to the community in areas of the third UNSDG: Good Health\nand Well-being for All.\n\nThe Virtual Institute GLADE is the headquarter for:\n\n- EC2U Glade Literacy LAB that encourages itinerant conferences of EC2U specialists, Summer Schools\n  and short video trainings in the area of good health and well-being for all;\n- EC2U GLADE Transformative Research HUB that initiates and supports studies, guidelines for local\n  authorities, policy papers on Good Health and Well-being;\n- EC2U GLADE Healthy Campus Services that focuses on a brand new approach of Health in Campuses.\n\nThe main objective of the GLADE Virtual Institute is to develop cooperation’s contexts for promoting\nhealth and well-being in the 7 EC2U universities and their cities."
+    },
+    "homepage": [
+      "https://ec2u.eu/work-packages/sdg-3-good-health-and-well-being"
+    ]
+  },
+  {
+    "id": "viqe",
+    "label": {
+      "en": "VIQE - Virtual Institute for Quality Education"
+    },
+    "comment": {
+      "en": "The Virtual Institute for Quality Education (VIQE) is a completely new way of approaching and solving a given challenge, combining education, research and innovation for advanced studies in quality education. Its activities include a Language Policy Research Project, a Research Seed Mobility Programme on Language and Cultural Diversity, and joint PhD training activities for the existing PhD programmes on European languages and cultures."
+    },
+    "prefLabel": {
+      "en": "Virtual Institute for Quality Education"
+    },
+    "altLabel": "VIQE",
+    "definition": {
+      "en": "Virtual Institutes are a completely new way of approaching and solving a given challenge. The VIQE,\nVirtual Institute for Quality Education combines education, research and innovation for advanced\nstudies in quality education.\n\nIn practice, VIQE will carry out the following activities:\n\n- Language Policy Research Project\n- Research Seed Mobility Programme on Language and Cultural Diversity\n- Joint PhD training activities for the existing PhD programmes on European languages and cultures."
+    },
+    "homepage": [
+      "https://ec2u.eu/work-packages/sdg-4-quality-education"
+    ]
+  },
+  {
+    "id": "viscc",
+    "label": {
+      "en": "VISCC - Virtual Institute for Sustainable Cities and Communities"
+    },
+    "comment": {
+      "en": "The Virtual Institute for Sustainable Cities and Communities (VISCC) brings together research, education, innovation and outreach in the field of UN Sustainable Development Goal 11, promoting interdisciplinarity, collaborative work and mobility between the EC2U universities, their cities and citizens. It offers a Joint Master Degree in Sustainable Cities and Communities, PhD training and co-supervised theses, online courses, winter and summer schools, and research projects."
+    },
+    "prefLabel": {
+      "en": "Virtual Institute for Sustainable Cities and Communities"
+    },
+    "altLabel": "VISCC",
+    "definition": {
+      "en": "The Virtual Institute for Sustainable Cities and Communities (VISCC) aims at bringing together\nresearch, education and innovation, and outreaching in the field of the United Nation’s sustainable\ndevelopment goal n°11: “Sustainable Cities and Communities”.\n\nThe VISCC carries out scientific activities that promote interdisciplinarity, collaborative work and\nmobility between the EC2U Universities, the cities and the citizens.\n\nWhat does the VISCC offer?\n\n- A Joint Master Degree in Sustainable Cities and Communities\n- PhD training activities and thesis projects in co-supervision\n- Online courses\n- Winter and Summer Schools\n- Research projects"
+    },
+    "homepage": [
+      "https://ec2u.eu/work-packages/sdg-11-sustainable-cities-and-communities"
+    ]
+  },
+  {
+    "id": "vipjsi",
+    "label": {
+      "en": "VIPJSI - Virtual Institute for Peace, Justice and Strong Institutions"
+    },
+    "comment": {
+      "en": "The Virtual Institute for Peace, Justice and Strong Institutions (VIPJSI) brings together interdisciplinary research, education, innovation and outreach on UN Sustainable Development Goal 16, addressing these questions in Europe from the viewpoints of law, politics, history and ethics. It offers a Joint Master Program in Peace, Justice and Good Governance (from 2027), PhD training and co-supervised theses (from 2025), online courses, winter and summer schools, and think tanks."
+    },
+    "prefLabel": {
+      "en": "Virtual Institute for Peace, Justice and Strong Institutions"
+    },
+    "altLabel": "VIPJSI",
+    "definition": {
+      "en": "The Virtual Institute for Peace, Justice and Strong Institutions (VIPJSI) carries out scientific\nactivities that promote interdisciplinarity, collaborative work and mobility between the EC2U\nUniversities, the cities and the citizens.\n\nThe VIPJSI aims at bringing together interdisciplinary research, education and innovation, and\noutreaching in the field of the United Nation’s Sustainable Development Goal #16: Promote peaceful and\ninclusive societies for sustainable development, provide access to justice for all and build\neffective, accountable and inclusive institutions at all levels.\n\nOur research deals with current questions regarding Peace, Justice and Strong Institutions in Europe\nfrom different points of view: law, politics, history and ethics.\n\nThe VIPJSI offers:\n\n- A Joint Master Program in Peace, Justice and Good Governance (starting 2027)\n- PhD training activities and thesis projects in co-supervision (starting 2025)\n- Online courses\n- Winter and Summer Schools\n- Thinktanks & Conferences"
+    },
+    "homepage": [
+      "https://ec2u.eu/work-packages/sdg-16-peace-justice-and-strong-institutions"
+    ]
+  },
+  {
+    "id": "vill",
+    "label": {
+      "en": "VILL - Virtual Institute for Life on Land"
+    },
+    "comment": {
+      "en": "The Virtual Institute for Life on Land (VILL) offers research opportunities within the EC2U Alliance, from joint research projects and training activities to webinars, seminars and collaborative studies. It connects students, researchers and innovators across Europe to explore sustainable food production, improve water management and protect biodiversity for healthier and more resilient ecosystems."
+    },
+    "prefLabel": {
+      "en": "Virtual Institute for Life on Land"
+    },
+    "altLabel": "VILL",
+    "definition": {
+      "en": "The Virtual Institute for Life on Land (VILL) offers research opportunities within the EC2U Alliance,\nfrom joint research projects and training activities to webinars, seminars, and collaborative studies.\n\nThe VILL connects students, researchers, and innovators across Europe to explore sustainable food\nproduction, improve water management, and protect biodiversity for healthier and more resilient\necosystems."
+    },
+    "homepage": [
+      "https://ec2u.eu/researchers/elevate-your-research/research-opportunities-life-land"
+    ]
+  },
+  {
+    "id": "vimmsf",
+    "label": {
+      "en": "VIMMSF - Virtual Institute for Materials & Methods for a Sustainable Future"
+    },
+    "comment": {
+      "en": "The Virtual Institute for Materials & Methods for a Sustainable Future (VIMMSF) offers research opportunities within the EC2U Alliance, from joint research projects and training activities to webinars and seminars. It connects students, researchers and innovators across Europe to explore advanced materials for energy saving and storage, develop additive manufacturing technologies and design computer-based or nature-inspired methods for the materials of the future."
+    },
+    "prefLabel": {
+      "en": "Virtual Institute for Materials & Methods for a Sustainable Future"
+    },
+    "altLabel": "VIMMSF",
+    "definition": {
+      "en": "The Virtual Institute for Materials & Methods for a Sustainable Future (VIMMSF) offers research\nopportunities within the EC2U Alliance, from joint research projects and training activities to\nwebinars, seminars, and collaborative studies.\n\nThe VIMMSF connects students, researchers, and innovators across Europe to explore advanced materials\nfor energy saving and storage, develop additive manufacturing technologies, and design computer-based\nor nature-inspired methods for the materials of the future."
+    },
+    "homepage": [
+      "https://ec2u.eu/researchers/elevate-your-research/research-opportunities-materials-methods-sustainable-future"
+    ]
+  }
 ]

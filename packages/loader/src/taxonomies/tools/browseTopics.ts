@@ -41,12 +41,11 @@
  * @module
  */
 
-import { getTopicEntries } from "../index.core.js";
 import type { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
-import type { searchTopics } from "./searchTopics.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import { dedent } from "@metreeca/core/strings";
 import { log, report } from "@metreeca/tape";
+import { getTopicEntries } from "../index.core.js";
 
 
 const logger = log(import.meta.url);
@@ -153,7 +152,7 @@ export function browseTopics(...taxonomies: readonly Taxonomy[]): CallableTool {
 					// apart from the others is stated
 
 					logger.info`browsing ${requested?.map(id => id.replace(`${taxonomy}/`, "")).join(", ")
-						?? "top topics"}`;
+					?? "top topics"}`;
 
 					try {
 

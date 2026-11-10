@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import { sync } from "../sinks/sync.js";
-import { execute } from "../../index.core.js";
-import { organizations } from "@ec2u/data-shared/organizations/index.js";
 import { coimbra } from "@ec2u/data-shared/index.core.js";
+import { organizations } from "@ec2u/data-shared/organizations/index.js";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items, range } from "@metreeca/flow/feeds";
 import { flat, fork, map } from "@metreeca/flow/tasks";
 import { jpath, json, number, string } from "@metreeca/mime-json";
 import { crawl, fetch } from "@metreeca/pipe-url";
+import { execute } from "../../index.core.js";
+import { sync } from "../sinks/sync.js";
 
 
 const Search = "https://content.fw.uc.pt/v1/agenda/events/search";

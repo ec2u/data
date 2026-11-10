@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-import { service } from "@metreeca/gear";
-import { delta, lookup, settle } from "@metreeca/pipe-store";
-import { createGoogleAI, embedding } from "@metreeca/llms-google";
-import { cosine, decompress, type Distance, type Vector } from "@metreeca/llms";
 import { taxonomies, Taxonomies, Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
 import { memo } from "@metreeca/core";
 import { by } from "@metreeca/core/order";
@@ -26,7 +22,11 @@ import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
 import { map } from "@metreeca/flow/tasks";
+import { service } from "@metreeca/gear";
+import { cosine, decompress, type Distance, type Vector } from "@metreeca/llms";
+import { createGoogleAI, embedding } from "@metreeca/llms-google";
 import { validate } from "@metreeca/mime-jsonld";
+import { delta, lookup, settle } from "@metreeca/pipe-store";
 import type { Reference } from "@metreeca/qest/state";
 import { log, report, time } from "@metreeca/tape";
 import { execute } from "../index.core.js";
@@ -39,23 +39,23 @@ const topics = memo(async (id: Reference) => {
 	const stored = await pipe(
 		(lookup({
 
-		entry: id,
-		shape: Taxonomy,
+			entry: id,
+			shape: Taxonomy,
 
-		model: {
+			model: {
 
-			resources: {
-				id: {},
-				prefLabel: { en: {} },
-				altLabel: { en: {} },
-				definition: { en: {} },
-				broader: {},
-				narrower: {},
-				related: {},
-				embedding: {}
+				resources: {
+					id: {},
+					prefLabel: { en: {} },
+					altLabel: { en: {} },
+					definition: { en: {} },
+					broader: {},
+					narrower: {},
+					related: {},
+					embedding: {}
+				}
+
 			}
-
-		}
 
 		}))
 		(toArray())

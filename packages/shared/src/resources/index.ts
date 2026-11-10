@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { University } from "@ec2u/data-shared/universities/index.js";
 import { Dataset, ec2u, Entity, rdfs } from "@ec2u/data-shared";
+import { University } from "@ec2u/data-shared/universities/index.js";
 import { boolean } from "@metreeca/blue/boolean";
 import { reference } from "@metreeca/blue/reference";
 import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";

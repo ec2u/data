@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Resource } from "@ec2u/data-shared/resources/index.js";
-import { Organization } from "@ec2u/data-shared/organizations/index.js";
-import { ISCED2011Topic } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { base, EC2U, ec2u, licenses } from "@ec2u/data-shared";
+import { Organization } from "@ec2u/data-shared/organizations/index.js";
+import { Resource } from "@ec2u/data-shared/resources/index.js";
+import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
+import { ISCED2011Topic } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { SchemaLearningResource } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, optional, resource } from "@metreeca/blue/resource";
@@ -161,7 +161,8 @@ export function getOfferingId(dataset: Reference, university: Reference, key: st
 
 		// a JSON tuple keeps the fields apart whatever they hold, and null states a missing year in a slot of its own
 
-		const name = JSON.stringify([key, year ?? null, [...new Set(term)].sort()]); // ;( no es2023 toSorted(): sorts a copy
+		const name = JSON.stringify([key, year ?? null, [...new Set(term)].sort()]); // ;( no es2023 toSorted(): sorts
+																					 // a copy
 
 		return resolve(dataset, uuid.v3(name, uuid.v3(university, uuid.v3.URL)));
 

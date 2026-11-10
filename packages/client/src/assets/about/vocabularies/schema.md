@@ -33,7 +33,7 @@ products, and actions in a format understood by major search engines and other a
 > Known deviation from standard:
 >
 > - `schema:identifier` should be a PropertyValue or URL; it is specified as string to ease interoperability with other
-    vocabularies
+		vocabularies
 
 # Organization
 

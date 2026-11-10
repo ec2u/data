@@ -77,7 +77,8 @@ export function getSKOSLineage<T extends SKOSEntry & { readonly broader?: readon
 	function depth({ id, broader = [] }: T, trail: readonly string[]): number {
 		return Math.max(0, ...broader
 			.filter(parent => parent !== id && !trail.includes(parent))
-			.flatMap(parent => opt(index.get(parent), concept => [concept]) ?? []) // concepts outside the set are skipped
+			.flatMap(parent => opt(index.get(parent), concept => [concept]) ?? []) // concepts outside the set are
+																				   // skipped
 			.map(concept => 1+depth(concept, [...trail, id]))
 		);
 	}

@@ -208,7 +208,10 @@ function structures(): Task<URLLike, Draft> {
 
 	function url(value: undefined | null | string): undefined | string {
 		return isAbsent(value) || !URL.canParse(value) ? undefined
-			: opt(new URL(value), ({ protocol, href }) => protocol === "http:" || protocol === "https:" ? href : undefined);
+			: opt(new URL(value), ({
+				protocol,
+				href
+			}) => protocol === "http:" || protocol === "https:" ? href : undefined);
 	}
 
 }

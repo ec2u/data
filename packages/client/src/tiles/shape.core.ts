@@ -815,7 +815,7 @@ function identify(shapes: readonly ResourceShape[]): ReadonlyMap<ResourceShape, 
 
 		const label = base ?? anonymous;
 		const peers = bases.filter(peer => slug(peer.base ?? anonymous) === slug(label)).map(peer => peer.shape);
-		const name = base !== undefined && peers.length === 1 ? label : `${label} (${peers.indexOf(shape) + 1})`;
+		const name = base !== undefined && peers.length === 1 ? label : `${label} (${peers.indexOf(shape)+1})`;
 
 		return [shape, { name, id: slug(name) }];
 

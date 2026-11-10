@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { sync } from "../sinks/sync.js";
-import { execute } from "../../index.core.js";
-import { organizations } from "@ec2u/data-shared/organizations/index.js";
 import { salamanca } from "@ec2u/data-shared/index.core.js";
+import { organizations } from "@ec2u/data-shared/organizations/index.js";
 import { isString } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { filter, fork, map } from "@metreeca/flow/tasks";
-import { crawl, fetch } from "@metreeca/pipe-url";
 import { html, link, string, xpath } from "@metreeca/mime-xml";
+import { crawl, fetch } from "@metreeca/pipe-url";
+import { execute } from "../../index.core.js";
+import { sync } from "../sinks/sync.js";
 
 
 const concurrency = 10; // the number of index pages read at the same time from the source site
@@ -80,8 +80,8 @@ export async function SalamancaUniversity() {
 				items(path("//ul[@class='pagination']/li/a/@href"))
 				(map(string))
 				(map(href => PagePattern.exec(href)?.[1])) // the next and previous links state no page of their own
-				(filter(isString))
-				(map(page => `${Search}/${page}`))
+					(filter(isString))
+					(map(page => `${Search}/${page}`))
 			),
 			path => pipe( // a card links its event from its image too, so only the title link is followed
 				items(path("//p[@class='main']/a/@href"))

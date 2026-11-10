@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import { execute } from "../../index.core.js";
-import { services } from "@ec2u/data-shared/taxonomies/services.js";
 import { licenses } from "@ec2u/data-shared";
 import { alliance } from "@ec2u/data-shared/organizations/index.js";
-import { sync } from "../sinks/sync.js";
-import { csv } from "../tasks/csv.js";
+import { services } from "@ec2u/data-shared/taxonomies/services.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { service } from "@metreeca/gear";
 import { createVault } from "@metreeca/gear/vault";
+import { execute } from "../../index.core.js";
+import { sync } from "../sinks/sync.js";
+import { csv } from "../tasks/csv.js";
 
 
 const DataURL = "taxonomies-ec2u-services";

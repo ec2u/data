@@ -17,7 +17,7 @@
 import { Course } from "@ec2u/data-shared/courses/index.js";
 import { FOAFPerson } from "@ec2u/data-shared/vocabularies/foaf.js";
 import { SchemaEventAttendanceModeEnumeration } from "@ec2u/data-shared/vocabularies/schema/event.js";
-import { SchemaThing, schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
+import { schema, SchemaThing } from "@ec2u/data-shared/vocabularies/schema/index.js";
 import { SchemaOrganization } from "@ec2u/data-shared/vocabularies/schema/organization.js";
 import { SKOSConcept } from "@ec2u/data-shared/vocabularies/skos.js";
 import { boolean } from "@metreeca/blue/boolean";

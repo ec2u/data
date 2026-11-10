@@ -9,7 +9,7 @@ You will be provided with:
 
 - **date**: a line stating the current date in ISO format, as the reference point for resolving relative dates
 - **document**: a markdown document describing a single academic event, opening with a YAML frontmatter block stating as
-  `url` the address the document was retrieved from
+	`url` the address the document was retrieved from
 
 # Task
 
@@ -17,25 +17,25 @@ Extract the following properties from the provided document:
 
 - event: whether the document describes a single event (see Error Handling)
 - title of the event alone, stripped of the page furniture the document builds its heading out of: a site name, a
-  publication or section name, a tagline and a breadcrumb trail are NEVER carried over, however the document joins them
-  to the title (`… | unipv.news | The University of Pavia Magazine`, `… - Agenda de Coimbra`, `Events :: Faculty of
+	publication or section name, a tagline and a breadcrumb trail are NEVER carried over, however the document joins them
+	to the title (`… | unipv.news | The University of Pavia Magazine`, `… - Agenda de Coimbra`, `Events :: Faculty of
   Law`); where stripping them would leave nothing, draw the title from the heading the body gives the event. The title
-  is stated in English whichever heading it is drawn from: stripping settles what to state, NEVER whether to translate
-  it, and a title left part in the document's own language is wrong however faithfully it quotes the page
+	is stated in English whichever heading it is drawn from: stripping settles what to state, NEVER whether to translate
+	it, and a title left part in the document's own language is wrong however faithfully it quotes the page
 - plain text summary of less than 500 characters with strictly no markdown formatting
 - complete descriptive text as included in the document in markdown format; make absolutely sure not to include in the
-  description H1 (#) headings with the document title; NEVER carry over navigation, listings of other events, or the
-  page as a whole
+	description H1 (#) headings with the document title; NEVER carry over navigation, listings of other events, or the
+	page as a whole
 - start date in ISO format (yyyy-mm-dd), resolving relative dates against the current date
 - start time in ISO format (hh:mm:ss), the local time a clock at the venue reads, converting whatever notation the
-  document states it in (18h30, 18.30, 6.30pm) into that form; NEVER leave the time out because the document states it
-  in another notation, and NEVER append a zone designator (`z`, `Z`, `+01:00`): `18:30:00` is the whole value
+	document states it in (18h30, 18.30, 6.30pm) into that form; NEVER leave the time out because the document states it
+	in another notation, and NEVER append a zone designator (`z`, `Z`, `+01:00`): `18:30:00` is the whole value
 - end date in ISO format (yyyy-mm-dd), resolving relative dates against the current date
 - end time in ISO format (hh:mm:ss), the local time a clock at the venue reads, converting whatever notation the
-  document states it in (18h30, 18.30, 6.30pm) into that form; NEVER leave the time out because the document states it
-  in another notation, and NEVER append a zone designator (`z`, `Z`, `+01:00`): `18:30:00` is the whole value
+	document states it in (18h30, 18.30, 6.30pm) into that form; NEVER leave the time out because the document states it
+	in another notation, and NEVER append a zone designator (`z`, `Z`, `+01:00`): `18:30:00` is the whole value
 - entry fees (free, paid); include only if absolutely confident; make sure not to mix up registration required with paid
-  entry fees
+	entry fees
 - attendance mode (offline, online, mixed)
 - attendance URL (make absolutely sure to include it only if attendance is online or mixed)
 - venue name
@@ -44,19 +44,18 @@ Extract the following properties from the provided document:
 - image URL (may include a query component), only if reasonably sure
 - image credits or copyright
 - language of the document, as a 2-letter ISO tag
-- original title, summary and description (`localTitle`, `localSummary`, `localDescription`), only where the document
-  is written in a language other than English
+- original title, summary and description (`localTitle`, `localSummary`, `localDescription`), only where the document is
+  written in a language other than English
 
-**CRITICAL: state the title, the summary and the description in English, translating them where
-the document is written in another language.** Translate the prose alone: a venue name, a street address,
-a city name and an image credit are stated as the document has them, and a proper name carried by a title keeps its
-original form.
-The `language` property states the language the document is written in, NEVER the English the properties are stated in.
+**CRITICAL: state the title, the summary and the description in English, translating them where the document is written
+in another language.** Translate the prose alone: a venue name, a street address, a city name and an image credit are
+stated as the document has them, and a proper name carried by a title keeps its original form. The `language` property
+states the language the document is written in, NEVER the English the properties are stated in.
 
-**A `description` that reads in the document's own language is a failure, not a partial answer.** Where the document
-is written in another language, `description` and `localDescription` MUST differ: the first is the English translation,
-the second the text as written. Before stating `description`, check that it reads as English from its first sentence to
-its last; a description copied from the document and left untranslated, however complete, is wrong.
+**A `description` that reads in the document's own language is a failure, not a partial answer.** Where the document is
+written in another language, `description` and `localDescription` MUST differ: the first is the English translation, the
+second the text as written. Before stating `description`, check that it reads as English from its first sentence to its
+last; a description copied from the document and left untranslated, however complete, is wrong.
 
 **A translation is complete and faithful. STRICTLY FORBIDDEN: abridging, summarising, condensing, paraphrasing, or
 leaving out any part of the text you are translating.** Every sentence of it is carried over, in the order it is written

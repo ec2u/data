@@ -15,7 +15,7 @@
  */
 
 import { FOAFOrganization, FOAFPerson } from "@ec2u/data-shared/vocabularies/foaf.js";
-import { SKOSConcept, skos } from "@ec2u/data-shared/vocabularies/skos.js";
+import { skos, SKOSConcept } from "@ec2u/data-shared/vocabularies/skos.js";
 import { dictionary } from "@metreeca/blue/dictionary";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, nonempty, optional, required, resource } from "@metreeca/blue/resource";

@@ -1,5 +1,4 @@
-EC2U courses are described using a controlled subset of the [Schema.org](../vocabularies/schema-resource.md) data
-model.
+EC2U courses are described using a controlled subset of the [Schema.org](../vocabularies/schema-resource.md) data model.
 
 | prefix  | namespace                   | description                   |
 |---------|-----------------------------|-------------------------------|
@@ -10,13 +9,13 @@ model.
 
 # Course
 
-| term                              | type                                                      | # | description                                                                               |
-|-----------------------------------|-----------------------------------------------------------|---|-------------------------------------------------------------------------------------------|
+| term                              | type                                                      | # | description                                                                       |
+|-----------------------------------|-----------------------------------------------------------|---|-----------------------------------------------------------------------------------|
 | **ec2u:Course**                   | [ec2u:Offering], [schema:Course], [schema:CourseInstance] |   | A degree, vocational or personal development course offered by an EC2U university |
-| ec2u:term                         | [ec2u:Term]                                               | * | academic terms in which the course is delivered                                           |
-| [schema:instructor]               | [ec2u:Person]                                             | * | persons teaching the course                                                               |
-| [schema:audience]                 | [ec2u:Topic]                                              | * | groups the course is intended for, in the [EC2U Stakeholders] taxonomy                    |
-| ‹inProgram› = ^[schema:hasCourse] | [ec2u:Program]                                            | * | programs the course is part of                                                            |
+| ec2u:term                         | [ec2u:Term]                                               | * | academic terms in which the course is delivered                                   |
+| [schema:instructor]               | [ec2u:Person]                                             | * | persons teaching the course                                                       |
+| [schema:audience]                 | [ec2u:Topic]                                              | * | groups the course is intended for, in the [EC2U Stakeholders] taxonomy            |
+| ‹inProgram› = ^[schema:hasCourse] | [ec2u:Program]                                            | * | programs the course is part of                                                    |
 
 # Term
 

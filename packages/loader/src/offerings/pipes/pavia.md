@@ -16,12 +16,12 @@ carries on; unchanged ones are skipped. A teaching plan that fails to load is lo
 naming fewer than three quarters of the stored offerings retracts nothing and fails, so failed plans never empty the
 dataset; the courses of a program whose plan failed are retracted and restated once the plan loads again.
 
-| Source                                                        | Description           | Notes                                                                  |
-|---------------------------------------------------------------|-----------------------|------------------------------------------------------------------------|
-| https://studentionline.unipv.it/e3rest/api/offerta-service-v1 | ESSE3 API [it]        | programs, read in pages of 100 until a short page                      |
-| [studentionline.unipv.it/e3rest/docs/…][esse3-docs]           | ESSE3 API docs [it]   | API documentation                                                      |
+| Source                                                        | Description           | Notes                                                                                                  |
+|---------------------------------------------------------------|-----------------------|--------------------------------------------------------------------------------------------------------|
+| https://studentionline.unipv.it/e3rest/api/offerta-service-v1 | ESSE3 API [it]        | programs, read in pages of 100 until a short page                                                      |
+| [studentionline.unipv.it/e3rest/docs/…][esse3-docs]           | ESSE3 API docs [it]   | API documentation                                                                                      |
 | internal UGov APIs                                            | UGov API [it]         | teaching plans; endpoint and credentials held in GCP Secret Manager as `offerings-pavia-{url,usr,pwd}` |
-| https://unipv.coursecatalogue.cineca.it                       | course catalogue [it] | program and course page links                                          |
+| https://unipv.coursecatalogue.cineca.it                       | course catalogue [it] | program and course page links                                                                          |
 
 Programs are those ESSE3 offers in the academic year current at retrieval, switching in August, keyed by `cdsCod` and
 delivered in the year starting in their `aaOffId`; `tipoCorsoCod` is mapped to an ISCED 2011 level and the department
@@ -36,12 +36,12 @@ cohort of their catalogue page, names shared by several courses with the name of
 - **2026-10-29** – ported to the TypeScript loader: offerings stated one at a time with unchanged ones skipped and a
 	retraction floor; the offer year switches in August; a teaching plan failing to load is logged like any other failure
 - **2026-09-21** – link programs and courses to their pages on the CINECA course catalogue, composing the address from
-  codes the sources already carry and keeping it only once the catalogue confirms it; identify a course by program as
-  well as by code, so that each entry stands for one published page, and qualify a course name with its program and a
-  program name with its cohort where they would otherwise be ambiguous; map an activity listed under several
-  regulations once, from the newest
+	codes the sources already carry and keeping it only once the catalogue confirms it; identify a course by program as
+	well as by code, so that each entry stands for one published page, and qualify a course name with its program and a
+	program name with its cohort where they would otherwise be ambiguous; map an activity listed under several regulations
+  once, from the newest
 - **2026-07-21** – map the UGov `MOD_VER_APPR` text section to the examination requirements
-  (`schema:competencyRequired`) and append `METODI_DID` and `TESTI_RIF` to the course contents (`schema:teaches`)
+	(`schema:competencyRequired`) and append `METODI_DID` and `TESTI_RIF` to the course contents (`schema:teaches`)
 - **2026-07-17** – map academic year (`ec2u:year`) and term (`ec2u:term`) from the UGov `aaOffId` and `tipoCicloCod`
 - **2024-10-31** – UGov integration
 - **2024-10-30** – migration to ESSE3; initial integration
@@ -76,12 +76,12 @@ Three readings are not what they look like, each of them settled against a live 
 page that does not exist:
 
 - the ordinamento year keying a course page comes from UGov `ns2:cdsordCod`, `01400-08` giving 2008, **not** from
-  `ns2:aaRegdidId`, which carries the regulation year
+	`ns2:aaRegdidId`, which carries the regulation year
 - the track keying a course page is the program's (`corso_percorso_cod`), while UGov nests an activity under its own
-  (`af_percorso_cod`); `00` marks an activity common to the whole program and resolves only under one of the program's
-  real tracks
+	(`af_percorso_cod`); `00` marks an activity common to the whole program and resolves only under one of the program's
+	real tracks
 - a program page is served under the enrolment year of the most recent cohort still taught, which is the offer year only
-  for programs still open to new enrolment
+	for programs still open to new enrolment
 
 `ricercaInsegnamenti` takes the search form's control names, `anno_off`, `anno_imm`, `cdsCod`, `attive` among them, and
 **ignores** an unrecognised key rather than rejecting it, so a plausible but wrong name such as `anno` silently returns

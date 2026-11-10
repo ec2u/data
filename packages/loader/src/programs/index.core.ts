@@ -18,8 +18,8 @@ import { programs, Programs } from "@ec2u/data-shared/programs/index.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { map } from "@metreeca/flow/tasks";
-import { delta, settle } from "@metreeca/pipe-store";
 import { validate } from "@metreeca/mime-jsonld";
+import { delta, settle } from "@metreeca/pipe-store";
 import { execute } from "../index.core.js";
 
 

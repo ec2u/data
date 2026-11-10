@@ -16,9 +16,9 @@
 
 import { CommentLength, Entity, LabelLength } from "@ec2u/data-shared";
 import { Document, documents, Documents, getDocumentId } from "@ec2u/data-shared/documents/index.js";
+import type { Partner } from "@ec2u/data-shared/index.core.js";
 import { getOrganizationId, Organization, organizations } from "@ec2u/data-shared/organizations/index.js";
 import { getPersonId, Person, persons } from "@ec2u/data-shared/persons/index.js";
-import type { Partner } from "@ec2u/data-shared/index.core.js";
 import type { State } from "@metreeca/blue/value";
 import { opt } from "@metreeca/core";
 import { multiple, required } from "@metreeca/core/arrays";
@@ -31,7 +31,7 @@ import { distinct, filter, flat, fork, map, tee, trim } from "@metreeca/flow/tas
 import { validate } from "@metreeca/mime-jsonld";
 import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
 import { digest } from "@metreeca/work/core/digest.js";
-import { classify, type Classified } from "../tasks/classify.js";
+import { type Classified, classify } from "../tasks/classify.js";
 import { translate } from "../tasks/translate.js";
 
 

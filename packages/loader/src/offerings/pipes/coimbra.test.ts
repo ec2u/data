@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { coimbra } from "@ec2u/data-shared/index.core.js";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { coimbra } from "@ec2u/data-shared/index.core.js";
 import { opt } from "@metreeca/core";
 import { describe, expect, it } from "vitest";
 import { offering } from "./coimbra.core.js";

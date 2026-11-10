@@ -11,11 +11,11 @@ and  [FOAF](../vocabularies/foaf.md) data models.
 
 # Person
 
-| term                      | type                           | # | description                                                                               |
-|---------------------------|--------------------------------|---|-------------------------------------------------------------------------------------------|
+| term                      | type                           | # | description                                                                       |
+|---------------------------|--------------------------------|---|-----------------------------------------------------------------------------------|
 | **ec2u:Person**           | [ec2u:Resource], [foaf:Person] |   | A staff member involved in teaching and research activities at an EC2U university |
-| ‹headOf› = ^[org:hasHead] | [ec2u:Organization]            | * | organizations headed by the person                                                        |
-| [org:memberOf]            | [ec2u:Organization]            | * | organizations the person is a member of                                                   |
+| ‹headOf› = ^[org:hasHead] | [ec2u:Organization]            | * | organizations headed by the person                                                |
+| [org:memberOf]            | [ec2u:Organization]            | * | organizations the person is a member of                                           |
 
 [The Organization Ontology]: https://www.w3.org/TR/vocab-org/
 

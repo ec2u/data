@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { pavia } from "@ec2u/data-shared/index.core.js";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
-import { pavia } from "@ec2u/data-shared/index.core.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
@@ -246,7 +246,12 @@ describe("courses", () => {
 
 describe("programs", () => {
 
-	const draft = (key: string, name: string): ProgramDraft => ({ kind: "program", university: pavia, key, name: { it: name } });
+	const draft = (key: string, name: string): ProgramDraft => ({
+		kind: "program",
+		university: pavia,
+		key,
+		name: { it: name }
+	});
 
 	it("qualifies shared names with the cohort", async () => {
 		expect(programs([
@@ -277,7 +282,12 @@ describe("qualify", () => {
 	});
 
 	const course = (key: string, name: { readonly [tag: string]: string }, inProgram: string): CourseDraft => ({
-		kind: "course", university: pavia, key, year: "2026/2027", name, inProgram: [{ key: inProgram, year: "2026/2027" }]
+		kind: "course",
+		university: pavia,
+		key,
+		year: "2026/2027",
+		name,
+		inProgram: [{ key: inProgram, year: "2026/2027" }]
 	});
 
 	it("qualifies shared names with the program name in the same language", async () => {

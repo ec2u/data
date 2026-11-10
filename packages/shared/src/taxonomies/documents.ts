@@ -32,9 +32,11 @@ export const documents = immutable({ // !!! sync from `taxonomies-ec2u-documents
 
 	title: { en: "EC2U Document Types" },
 	alternative: { en: "EC2U Documents" },
-	description: { en: dedent`
+	description: {
+		en: dedent`
 		Standardised terminology for categorising institutional documents shared within the EC2U Alliance.
-	` },
+	`
+	},
 
 	publisher: EC2U,
 

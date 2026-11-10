@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+import { unescoStatistics } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { iscedf2013 } from "@ec2u/data-shared/taxonomies/isced-f-2013.js";
 import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { execute } from "../../index.core.js";
-import { unescoStatistics } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { sync } from "../sinks/sync.js";
 import { fill } from "../tasks/fill.js";
 import { xml } from "../tasks/xml.js";

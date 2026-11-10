@@ -10,8 +10,8 @@ model.
 
 # Program
 
-| term             | type                                                     | # | description                                                                               |
-|------------------|----------------------------------------------------------|---|-------------------------------------------------------------------------------------------|
+| term             | type                                                     | # | description                                                                       |
+|------------------|----------------------------------------------------------|---|-----------------------------------------------------------------------------------|
 | **ec2u:Program** | [ec2u:Offering], [schema:EducationalOccupationalProgram] |   | A formal degree or vocational qualification program offered by an EC2U university |
 
 [Schema.org]: https://schema.org/

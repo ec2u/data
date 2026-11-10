@@ -15,13 +15,13 @@ below are still under consideration. The platform Web Services export works in p
 API on the Knowledge Hub side; OAI-PMH still awaits enabling by UniPoitiers, while the public site itself can be crawled
 with no help from them, as it is open to crawlers and lists every page of the offer in its sitemap.
 
-The sitemap lists about 37,000 pages, nested by path as degree type › program › track › course › teaching element.
-Every page address ends in a stable eight-character code shared across the paths a pooled course appears under, which
-can key the offering: about 260 programs, 2,000 tracks and 14,000 courses. Program pages render their presentation,
-objectives, skills, admission, outcomes, assessment rules, ERASMUS-CITE fields and contacts server side; course pages
-state ECTS credits, department, semester, teaching hours, teaching language, mode and the degrees that include them.
-Pages are in French only (`/en/` answers `404`), carry no structured data and no modification dates, and are served
-slowly, about 140 KB each, so a crawl has to run at low concurrency and carry on across runs from what is stored.
+The sitemap lists about 37,000 pages, nested by path as degree type › program › track › course › teaching element. Every
+page address ends in a stable eight-character code shared across the paths a pooled course appears under, which can key
+the offering: about 260 programs, 2,000 tracks and 14,000 courses. Program pages render their presentation, objectives,
+skills, admission, outcomes, assessment rules, ERASMUS-CITE fields and contacts server side; course pages state ECTS
+credits, department, semester, teaching hours, teaching language, mode and the degrees that include them. Pages are in
+French only (`/en/` answers `404`), carry no structured data and no modification dates, and are served slowly, about 140
+KB each, so a crawl has to run at low concurrency and carry on across runs from what is stored.
 
 | Source                                                                           | Description                                     | Notes                                                             |
 |----------------------------------------------------------------------------------|-------------------------------------------------|-------------------------------------------------------------------|
@@ -55,7 +55,7 @@ academic year current at retrieval, switching in August. The `options` and the p
 read.
 
 - **2026-10-29** – ported to the TypeScript loader, with the snapshot moved into the loader sources; programs dated with
-  the academic year current at retrieval and fields of education classified from the stated discipline
+	the academic year current at retrieval and fields of education classified from the stated discipline
 - **2022-11-18** – reshape the snapshot to the program/course data model, adding options and pedagogical elements
 - **2022-10-21** – initial integration
 

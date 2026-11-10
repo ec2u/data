@@ -16,11 +16,16 @@
 
 import { CommentLength, LabelLength } from "@ec2u/data-shared";
 import { Course, courses, Courses, getCourseId } from "@ec2u/data-shared/courses/index.js";
+import type { Partner } from "@ec2u/data-shared/index.core.js";
 import { getAcademicYear } from "@ec2u/data-shared/offerings/index.js";
-import { getOrganizationId, Organization, organizations, Organizations } from "@ec2u/data-shared/organizations/index.js";
+import {
+	getOrganizationId,
+	Organization,
+	organizations,
+	Organizations
+} from "@ec2u/data-shared/organizations/index.js";
 import { getPersonId, Person, persons, Persons } from "@ec2u/data-shared/persons/index.js";
 import { getProgramId, Program, programs, Programs } from "@ec2u/data-shared/programs/index.js";
-import type { Partner } from "@ec2u/data-shared/index.core.js";
 import type { State } from "@metreeca/blue/value";
 import { opt, type Optional } from "@metreeca/core";
 import { multiple, required } from "@metreeca/core/arrays";
@@ -654,7 +659,16 @@ export function state(source: Reference, {
 
 		} else {
 
-			const { kind, university: delivering, key, provider: agency, cues, instructor = [], inProgram = [], ...course } = draft;
+			const {
+				kind,
+				university: delivering,
+				key,
+				provider: agency,
+				cues,
+				instructor = [],
+				inProgram = [],
+				...course
+			} = draft;
 
 			const valid = new Set(people.map(({ id }) => id));
 

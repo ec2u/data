@@ -16,7 +16,6 @@
 
 export * from "./index.core.js"; // ;( ahead of the imports below, which reach back here through import cycles
 
-import { base, EC2U, ec2u, Entity, licenses } from "./index.core.js";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { EuroSciVocTopic } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
@@ -28,6 +27,7 @@ import { date, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
 import { markdown } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
+import { base, EC2U, ec2u, Entity, licenses } from "./index.core.js";
 
 
 export const datasets = immutable({

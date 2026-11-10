@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { poitiers } from "@ec2u/data-shared/index.core.js";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { poitiers } from "@ec2u/data-shared/index.core.js";
 import { opt, type Optional } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import type { ProgramDraft } from "../sinks/sync.js";

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+import { coimbra } from "@ec2u/data-shared/index.core.js";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { iscedf2013 } from "@ec2u/data-shared/taxonomies/isced-f-2013.js";
 import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
-import { coimbra } from "@ec2u/data-shared/index.core.js";
 import { describe, expect, it } from "vitest";
 import { row } from "./lll.core.js";
 
@@ -128,7 +128,11 @@ describe("row", () => {
 		});
 
 		it("keys a course without a code or English title by its local title", async () => {
-			expect(row({ ...record, "Code": "", "Title (English)": "" })[0]).toMatchObject({ key: "LLL/Latim Elementar II" });
+			expect(row({
+				...record,
+				"Code": "",
+				"Title (English)": ""
+			})[0]).toMatchObject({ key: "LLL/Latim Elementar II" });
 		});
 
 		it("keys by a code it cannot state as a course code", async () => {

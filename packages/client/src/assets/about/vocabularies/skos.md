@@ -42,7 +42,7 @@ enabling the publication and use of vocabularies in a linked data environment.
 > Known deviation from standard:
 >
 > - according to SKOS best practices, `skos:notation `should be a typed literal; it is specified as string to ease
-    interoperability with frontend applications.
+		interoperability with frontend applications.
 
 [Simple Knowledge Organization System (SKOS)]: https://www.w3.org/TR/skos-reference/
 

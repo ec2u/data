@@ -40,11 +40,11 @@
  * @module
  */
 
-import { getTopicMatches } from "../index.core.js";
 import type { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
 import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import { clip, dedent } from "@metreeca/core/strings";
 import { log, report } from "@metreeca/tape";
+import { getTopicMatches } from "../index.core.js";
 
 
 const logger = log(import.meta.url);

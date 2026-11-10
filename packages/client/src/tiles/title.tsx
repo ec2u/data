@@ -45,8 +45,8 @@ export function Title({
 	title: ComponentChildren
 
 	/**
-	 * The image standing for the resource, set beside the heading and the description; a string is taken as the URL of a decorative
-	 * picture, left out of the accessibility tree; none if omitted.
+	 * The image standing for the resource, set beside the heading and the description; a string is taken as the URL of
+	 * a decorative picture, left out of the accessibility tree; none if omitted.
 	 */
 	image?: ComponentChildren
 
@@ -68,7 +68,7 @@ export function Title({
 		{image && <figure>
 			{isString(image) ? <img alt="" src={image}/> : image}
 			{caption && <figcaption>{caption}</figcaption>}
-		</figure>}
+        </figure>}
 
 		<h1>{title}</h1>
 

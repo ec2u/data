@@ -15,9 +15,9 @@
  */
 
 import { CommentLength, LabelLength } from "@ec2u/data-shared";
+import type { Partner } from "@ec2u/data-shared/index.core.js";
 import { getPersonId, Person, persons } from "@ec2u/data-shared/persons/index.js";
 import { getUnitId, Unit, units, Units } from "@ec2u/data-shared/units/index.js";
-import type { Partner } from "@ec2u/data-shared/index.core.js";
 import type { State } from "@metreeca/blue/value";
 import { opt } from "@metreeca/core";
 import { clip } from "@metreeca/core/strings";
@@ -30,7 +30,7 @@ import { validate } from "@metreeca/mime-jsonld";
 import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
 import type { Reference } from "@metreeca/qest/state";
 import { digest } from "@metreeca/work/core/digest.js";
-import { classify, type Classified } from "../tasks/classify.js";
+import { type Classified, classify } from "../tasks/classify.js";
 import { translate } from "../tasks/translate.js";
 
 

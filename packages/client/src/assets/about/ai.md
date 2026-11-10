@@ -34,9 +34,9 @@ We're always working to improve our automated systems through regular updates, q
 catch obvious mistakes. Your feedback helps us know what needs fixing and makes the site better for everyone.
 
 - **General questions or feedback**: Start a discussion
-  at [github.com/ec2u/data/discussions](https://github.com/ec2u/data/discussions)
+	at [github.com/ec2u/data/discussions](https://github.com/ec2u/data/discussions)
 - **Sensitive security issues**: Report privately
-  at [github.com/ec2u/data/security](https://github.com/ec2u/data/security)
+	at [github.com/ec2u/data/security](https://github.com/ec2u/data/security)
 
 ---
 

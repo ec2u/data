@@ -32,9 +32,11 @@ export const events = immutable({ // !!! sync from `taxonomies-ec2u-events`
 
 	title: { en: "EC2U Event Types" },
 	alternative: { en: "EC2U Events" },
-	description: { en: dedent`
+	description: {
+		en: dedent`
 		Standardised terminology for categorising academic and community events within the EC2U Alliance.
-	` },
+	`
+	},
 
 	publisher: EC2U,
 

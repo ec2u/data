@@ -27,7 +27,7 @@ organizations, and their social relationships on the web.
 > Known deviations from standard:
 >
 > * `foaf:mbox` and `foaf:phone` should be IRIs; they are represented as strings to ease interoperability with frontend
-    applications
+		applications
 
 # Organization
 

@@ -1,5 +1,5 @@
-EC2U organizations are described using a controlled subset of
-the  [W3C Organization Ontology](../vocabularies/org.md) and [Schema.org](../vocabularies/schema.md)
+EC2U organizations are described using a controlled subset of the  [W3C Organization Ontology](../vocabularies/org.md)
+and [Schema.org](../vocabularies/schema.md)
 data models.
 
 | prefix  | namespace                   | description                   |
@@ -14,7 +14,7 @@ data models.
 
 | term                     | type                                                       | # | description                                                                        |
 |--------------------------|------------------------------------------------------------|---|------------------------------------------------------------------------------------|
-| **ec2u:Organization**    | [ec2u:Resource], [org:Organization], [schema:Organization] |   | An organisation related to EC2U universities                               |
+| **ec2u:Organization**    | [ec2u:Resource], [org:Organization], [schema:Organization] |   | An organisation related to EC2U universities                                       |
 | [org:classification]     | [ec2u:Topic]                                               | * | categories classifying the organization, in the [EC2U Organization Types] taxonomy |
 | [org:subOrganizationOf]  | [ec2u:Organization]                                        | * | organizations the organization is part of                                          |
 | [org:hasSubOrganization] | [ec2u:Organization]                                        | * | organizations that are part of the organization                                    |

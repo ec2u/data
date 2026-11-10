@@ -15,8 +15,8 @@
  */
 
 import { base } from "@ec2u/data-shared";
-import { unescoStatistics } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
+import { unescoStatistics } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { resource } from "@metreeca/blue/resource";
 import { resolve } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
@@ -33,11 +33,13 @@ export const iscedf2013 = immutable({ // !!! sync from the EU vocabularies SKOS 
 
 	title: { en: "International Standard Classification of Education: Fields of Education and Training 2013" },
 	alternative: { en: "ISCED-F 2013" },
-	description: { en: dedent`
+	description: {
+		en: dedent`
 		International Standard Classification of Education: Fields of Education and Training 2013 (ISCED-F 2013) is a
 		classification of fields of education, which accompanies ISCED 2011. ISCED-F 2013 contains 11 broad fields
 		(2 digits), 29 narrow fields (3 digits) and about 80 detailed fields (4 digits).
-	` },
+	`
+	},
 
 	publisher: unescoStatistics.id,
 	rights: "Copyright © 2015 UNESCO Institute for Statistics",

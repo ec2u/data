@@ -173,7 +173,7 @@ export function cfemail(document: Document): Document {
 
 			try {
 
-				return new TextDecoder("utf-8", { fatal: true }).decode(Uint8Array.from(bytes, byte => byte ^ key));
+				return new TextDecoder("utf-8", { fatal: true }).decode(Uint8Array.from(bytes, byte => byte^key));
 
 			} catch { // a payload decoding into malformed UTF-8 is not an address
 

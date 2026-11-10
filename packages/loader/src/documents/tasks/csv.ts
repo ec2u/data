@@ -123,7 +123,8 @@ export function csv(university: Partner): Task<URLLike, Draft> {
 			valid: opt(record["Valid"], valid => ValidPattern.test(valid) ? valid : undefined),
 
 			rights: record["Rights"],
-			accessRights: licenseURL === undefined ? opt(license, license => ({ en: license })) : undefined, // !!! language
+			accessRights: licenseURL === undefined ? opt(license, license => ({ en: license })) : undefined, // !!!
+																											 // language
 			license: licenseURL,
 
 			relation: [...new Set(values(record["Related"]).map(related).flatMap(multiple))],
@@ -218,7 +219,10 @@ export function csv(university: Partner): Task<URLLike, Draft> {
 
 	function url(value: undefined | string): undefined | string {
 		return opt(value, value => URL.canParse(value)
-			? opt(new URL(value), ({ protocol, href }) => protocol === "http:" || protocol === "https:" ? href : undefined)
+			? opt(new URL(value), ({
+				protocol,
+				href
+			}) => protocol === "http:" || protocol === "https:" ? href : undefined)
 			: undefined
 		);
 	}

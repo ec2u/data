@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import type { Classified } from "./classify.js";
-import { convert } from "./convert.js";
 import type { Event } from "@ec2u/data-shared/events/index.js";
 import { universities } from "@ec2u/data-shared/universities/index.js";
 import type { State } from "@metreeca/blue/value";
@@ -24,6 +22,8 @@ import { pipe } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
 import { describe, expect, it } from "vitest";
+import type { Classified } from "./classify.js";
+import { convert } from "./convert.js";
 
 
 // a publisher names the university its events are attributed to, and the zone is recovered from that

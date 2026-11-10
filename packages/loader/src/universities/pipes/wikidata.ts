@@ -24,15 +24,15 @@ import { distinct, flat, map, tee, trim } from "@metreeca/flow/tasks";
 import { getResource } from "@metreeca/gear/space";
 import { createFetch } from "@metreeca/http";
 import { headers } from "@metreeca/http/headers";
+import { validate } from "@metreeca/mime-jsonld";
+import { select } from "@metreeca/pipe-sparql";
+import { delta, type Delta, settle } from "@metreeca/pipe-store";
 import { lexical } from "@metreeca/trio";
 import { type SPARQL, type Tuple, variable } from "@metreeca/wire-sparql";
 import { createHTTPRepository } from "@metreeca/wire-sparql-http";
 import { reference } from "@metreeca/wire-sparql/builder";
-import { validate } from "@metreeca/mime-jsonld";
 import { WGSPoint } from "@metreeca/work/open/geo.js";
 import { Wikidata as WikidataVocabulary } from "@metreeca/work/open/wikidata.js";
-import { select } from "@metreeca/pipe-sparql";
-import { delta, type Delta, settle } from "@metreeca/pipe-store";
 import { execute } from "../../index.core.js";
 import seeds from "../index.json" with { type: "json" };
 

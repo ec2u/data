@@ -16,8 +16,8 @@
 
 import { LabelLength } from "@ec2u/data-shared";
 import { Event, Events, events, getEventId, isStaleEvent, Publisher } from "@ec2u/data-shared/events/index.js";
-import { Page, pages as directory, Pages } from "@ec2u/data-shared/pages/index.js";
 import { getPartner } from "@ec2u/data-shared/index.core.js";
+import { Page, pages as directory, Pages } from "@ec2u/data-shared/pages/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { isString, type URLLike } from "@metreeca/core";
 import { clip } from "@metreeca/core/strings";
@@ -26,9 +26,9 @@ import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { find, toSet } from "@metreeca/flow/sinks";
 import { filter, flat, fork, map, mix, tee, when } from "@metreeca/flow/tasks";
-import { digest } from "@metreeca/work/core/digest.js";
-import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
 import { validate } from "@metreeca/mime-jsonld";
+import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
+import { digest } from "@metreeca/work/core/digest.js";
 import { classify } from "../tasks/classify.js";
 import { convert } from "../tasks/convert.js";
 import { extract, type Retrieved } from "../tasks/extract.js";
@@ -140,38 +140,38 @@ export function sync({
 					(items(retrieved))
 					(extract())
 					(classify()) // a payload the classifier drops records no digest, so its page is read again
-					(tee(
-						payloads => pipe( // every page states its digest, so the crawl won't offer it again
-							(items(payloads))
-							(map(({ url, digest }): Delta =>
-								delta(url, Page, immutable({
-									id: url,
-									label: clip(url, LabelLength),
-									dataset: directory.id,
-									source: publisher.id,
-									digest
-								}))
-							))
-						),
-						payloads => pipe(
-							(items(payloads))
-							(when(payload => payload.publishable,
-								publishable => pipe(
-									(items(publishable))
-									(convert(publisher, city))
-									(map(event =>
-										delta(event.id, Event, event)
-									))
-								),
-								withdrawn => pipe( // a page not worth publishing withdraws the event it once stated
-									(items(withdrawn))
-									(map(({ url }) =>
-										delta(getEventId(url), Event, null)
-									))
+						(tee(
+							payloads => pipe( // every page states its digest, so the crawl won't offer it again
+								(items(payloads))
+								(map(({ url, digest }): Delta =>
+									delta(url, Page, immutable({
+										id: url,
+										label: clip(url, LabelLength),
+										dataset: directory.id,
+										source: publisher.id,
+										digest
+									}))
 								))
+							),
+							payloads => pipe(
+								(items(payloads))
+								(when(payload => payload.publishable,
+									publishable => pipe(
+										(items(publishable))
+										(convert(publisher, city))
+										(map(event =>
+											delta(event.id, Event, event)
+										))
+									),
+									withdrawn => pipe( // a page not worth publishing withdraws the event it once stated
+										(items(withdrawn))
+										(map(({ url }) =>
+											delta(getEventId(url), Event, null)
+										))
+									))
+								)
 							)
-						)
-					))
+						))
 				)))
 			);
 

@@ -13,17 +13,17 @@ human-readable documentation, not an automated test suite; see the `prompt-engin
 The prompt replaces the nearest-neighbour classifier of the legacy Java loader, which stated the three document types
 and the single stakeholder closest to an embedding of the title and description at a cosine distance of at most 0.6.
 That classifier ignored the `Type` and `Audience` columns the curated sheets state and could not abstain. The model now
-reads the EC2U Documents and EC2U Stakeholders schemes through `searchTopics` and `browseTopics`, takes the sheet columns
-as cues, and states nothing where neither the cues nor the text give ground.
+reads the EC2U Documents and EC2U Stakeholders schemes through `searchTopics` and `browseTopics`, takes the sheet
+columns as cues, and states nothing where neither the cues nor the text give ground.
 
 # Inbox
 
 - `Personnel` (Turku) names no stakeholder: the scheme has no general staff topic outside research and teaching, so
-  staff-wide documents carry no audience. A fix belongs in the stakeholder taxonomy, not in the prompt.
+	staff-wide documents carry no audience. A fix belongs in the stakeholder taxonomy, not in the prompt.
 - Rows listing web pages, workshops or programmes rather than documents (Salamanca, Jena, Poitiers `website page`) get
-  no type, which is correct for the scheme; whether such rows belong in the dataset at all is a curation decision.
+	no type, which is correct for the scheme; whether such rows belong in the dataset at all is a curation decision.
 - Jena guidelines addressed to `graduate students` are tagged both `students/phd` and `teaching-staff`: the supervisors
-  are read off the description. Untested whether this is wanted.
+	are read off the description. Untested whether this is wanted.
 
 # Measurements
 

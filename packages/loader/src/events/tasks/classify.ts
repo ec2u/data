@@ -116,7 +116,11 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 	);
 
 
-	async function tag({ url, title, description }: State<typeof Extracted>): Promise<readonly State<typeof Reported>[]> {
+	async function tag({
+		url,
+		title,
+		description
+	}: State<typeof Extracted>): Promise<readonly State<typeof Reported>[]> {
 		try {
 
 			return [await generate()];
@@ -133,30 +137,30 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 		async function generate(): Promise<State<typeof Reported>> {
 			return json<State<typeof Reported>>(await ai.models.generateContent({
 
-			model: "gemini-3.6-flash",
+				model: "gemini-3.6-flash",
 
-			contents: markdown`
+				contents: markdown`
 				title: ${title ?? ""}
 				description: ${description ?? ""}
 			`,
 
-			config: {
+				config: {
 
-				seed: 0,
-				temperature: 0,
+					seed: 0,
+					temperature: 0,
 
-				systemInstruction: await getResource(".sys.md", import.meta.url),
+					systemInstruction: await getResource(".sys.md", import.meta.url),
 
-				tools,
+					tools,
 
-				automaticFunctionCalling: {
-					maximumRemoteCalls: 50
-				},
+					automaticFunctionCalling: {
+						maximumRemoteCalls: 50
+					},
 
-				responseMimeType: "application/json",
-				responseJsonSchema: schema(Reported)
+					responseMimeType: "application/json",
+					responseJsonSchema: schema(Reported)
 
-			}
+				}
 
 			}));
 		}

@@ -15,11 +15,11 @@
  */
 
 import * as ec2u from "@ec2u/data-shared";
-import { second } from "@metreeca/work/core/temporal.js";
 import { server } from "@metreeca/gate";
-import { gcp } from "@metreeca/gear-gcp";
 import { service } from "@metreeca/gear";
+import { gcp } from "@metreeca/gear-gcp";
 import { createStore } from "@metreeca/pipe-store";
+import { second } from "@metreeca/work/core/temporal.js";
 import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
 import { execute } from "./index.core.js";

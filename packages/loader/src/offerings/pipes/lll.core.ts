@@ -15,19 +15,19 @@
  */
 
 import { base } from "@ec2u/data-shared";
+import { type Partner, partners } from "@ec2u/data-shared/index.core.js";
 import { getTopicId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { iscedf2013 } from "@ec2u/data-shared/taxonomies/isced-f-2013.js";
 import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
-import { type Partner, partners } from "@ec2u/data-shared/index.core.js";
 import { opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import { log } from "@metreeca/tape";
-import { hours } from "@metreeca/work/core/temporal.js";
 import { isHTTP } from "@metreeca/work/core/resources.js";
+import { hours } from "@metreeca/work/core/temporal.js";
 import type { CourseDraft, Dictionary, Draft, ProgramDraft } from "../sinks/sync.js";
 
 
