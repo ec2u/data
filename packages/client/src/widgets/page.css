@@ -22,6 +22,10 @@ clay-tool {
 
     --clay-tool-side-width: 20rem;
 
+    /* card images stay thumbnails, so the summaries beside them keep the larger share of a list entry at any width */
+
+    --clay-card-side-max-width: min(calc(4 * var(--skin--spacing-200)), 33%);
+
     /* the tray stacks boxed facets and info panels, set apart rather than run together */
 
     & > aside > div > div {
