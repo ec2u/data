@@ -19,6 +19,7 @@ import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Logo } from "@metreeca/clay-widgets/logo";
 import { Strip } from "@metreeca/clay-widgets/strip";
+import { Style } from "@metreeca/clay-widgets/style";
 import { Tool } from "@metreeca/clay-widgets/tool";
 import { type ComponentChildren, h } from "preact";
 import "./page.css";
@@ -48,23 +49,31 @@ export function Page({
 
 }) {
 
-	return <Tool
+	return <Style css={{
 
-		meta={<Link href={"/"}><Logo/><span>{ec2u(app.name ?? "")}</span></Link>}
+		linkLook: "strong"
 
-		tray={tray}
-		more={info}
+	}}>
 
-		head={head}
-		menu={back ?? menu}
+		<Tool
 
-		copy={<Strip grow place={"head"}>
+			meta={<Link href={"/"}><Logo/><span>{ec2u(app.name ?? "")}</span></Link>}
 
-			<small>{app.copy}</small>
-			<Link href={"https://github.com/ec2u/data"} title={"GitHub Repository"}><Icon.GitHub class={"repo"}/></Link>
+			tray={tray}
+			more={info}
 
-		</Strip>}
+			head={head}
+			menu={back ?? menu}
 
-	>{children}</Tool>;
+			copy={<Strip grow place={"head"}>
+
+				<small>{app.copy}</small>
+				<Link href={"https://github.com/ec2u/data"} title={"GitHub Repository"}><Icon.GitHub class={"repo"}/></Link>
+
+			</Strip>}
+
+		>{children}</Tool>
+
+	</Style>;
 
 }
