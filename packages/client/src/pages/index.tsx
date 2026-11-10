@@ -22,19 +22,26 @@ import { Link } from "@metreeca/clay-widgets/link";
 import { app } from "@metreeca/clay";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { isNumber, isObject, isOptional, isString, opt } from "@metreeca/core";
+import { internalize } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 import { useCollection } from "@metreeca/tile/collection";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
 import { integer } from "@metreeca/tile/types/integer";
-import { createElement, Fragment } from "preact";
+import { type ComponentChildren, createElement } from "preact";
 import { useEffect } from "preact/hooks";
 import { byDataset, ec2u, PublicDatasets } from "../index.core.js";
 import { Failure } from "../widgets/failure.js";
 import { Funding } from "../widgets/funding.js";
 import { Page } from "../widgets/page.js";
+import { courses } from "./courses/index.js";
 import { DatasetLinks } from "./datasets/dataset.js";
+import { documents } from "./documents/index.js";
+import { events } from "./events/index.js";
 import "./index.css";
+import { programs } from "./programs/index.js";
+import { units } from "./units/index.js";
+import { universities } from "./universities/index.js";
 
 
 export const datasets = immutable({
@@ -44,6 +51,8 @@ export const datasets = immutable({
 	glyph: <Icon.Package/>
 
 });
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,15 +133,20 @@ export function Datasets() {
 			return rows.length === 0 ? <Empty>{datasets.glyph}</Empty> : createElement("datasets-grid", {}, rows.map(({
 				dataset: { id, title, alternative, description },
 				size
-			}) => <Fragment key={id}>
+			}) => createElement("datasets-entry", { key: id }, <>
+
+				<Glyph id={id}/>
+
+				<span class="title">
+					<Link href={id}>{ec2u(title)}</Link>
+					<span class="alternative">{opt(alternative, ec2u)}</span>
+				</span>
 
 				<span class="size">{integer.format(size)}</span>
-				<span class="title"><Link href={id}>{ec2u(title)}</Link></span>
 
-				<span class="alternative">{opt(alternative, ec2u)}</span>
 				<span class="description">{opt(description, ec2u)}</span>
 
-			</Fragment>));
+			</>)));
 
 		}
 
@@ -183,4 +197,31 @@ export function isDatasetRow(value: unknown): value is DatasetRow {
 		size: isNumber
 
 	});
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates the tile standing for a dataset in the home page listing.
+ *
+ * Shows the glyph of the catalogue page of the dataset, set more or less boldly according to how central the dataset
+ * is to the alliance: universities first, then units, programs and courses, then everything else; an unknown dataset
+ * takes an empty tile at the lowest priority.
+ */
+function Glyph({ id }: { id: string }) {
+
+	const route = internalize(location.href, id);
+
+	const [glyph, priority]: readonly [ComponentChildren, 1 | 2 | 3]
+		= route === universities.route ? [universities.glyph, 3]
+		: route === units.route ? [units.glyph, 2]
+			: route === programs.route ? [programs.glyph, 2]
+				: route === courses.route ? [courses.glyph, 2]
+					: route === documents.route ? [documents.glyph, 1]
+						: route === events.route ? [events.glyph, 1]
+							: [undefined, 1];
+
+	return <span class="glyph" data-priority={priority}>{glyph}</span>;
+
 }

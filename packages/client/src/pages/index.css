@@ -15,33 +15,91 @@
  */
 
 /*
- * Datasets are laid out on a single grid, so the side column holding sizes and short names is as wide as the widest
- * of them across every entry: each dataset fills two rows, its size and title over its short name and description.
+ * Datasets are laid out on a single grid flush with the start of the page, so their tiles stand in one column above
+ * the EU emblem closing it: each entry fills two rows, its tile beside its title and size over its description, and
+ * shares the columns of the grid, so titles, sizes and descriptions line up across entries.
  */
 
 datasets-grid {
 
     display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: baseline;
-    gap: var(--skin--spacing-050) var(--skin--spacing-100);
-    padding-left: var(--skin--spacing-200);
+    grid-template-columns: auto 1fr auto;
+    gap: var(--skin--spacing-150) var(--skin--spacing-100);
 
-    & > .size,
-    & > .alternative {
-        justify-self: end;
-        text-align: end;
-        color: var(--skin--color-label);
+}
+
+datasets-entry {
+
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    grid-template-rows: auto auto;
+    align-items: baseline;
+    row-gap: var(--skin--spacing-025);
+
+    /*
+     * The tile echoes the flag of the EU emblem closing the page: the same 3:2 proportions, and the same height, as
+     * it is set in the type of the emblem, 0.75 of the foot type, and takes the share of the three lines of the emblem
+     * its flag covers, 382 of its 446 pixels; the glyph sits centred, a little over half the height of the tile.
+     */
+
+    & > .glyph {
+
+        grid-row: 1 / span 2;
+        align-self: center;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: calc(var(--skin--font-size-small) * 0.75);
+        block-size: calc(3lh * 382 / 446);
+        aspect-ratio: 3 / 2;
+        border-radius: var(--skin--border-radius-050);
+
+        & > svg {
+            inline-size: 55%;
+            block-size: 55%;
+        }
+
     }
 
     /*
-     * Consecutive datasets are set a step apart, so the grid reads as a list of entries. Spacing is left to gaps and
-     * margins: cells paint the background they inherit, and a padded cell would cover the underline of a title link.
+     * Priority sets how strongly a tile stands out, on the scale of the subtle accent, the slate of the EC2U site:
+     * the core dataset takes the solid accent with the glyph in the page colour, the datasets central to teaching
+     * and research a mid step, and the supporting ones a faint wash with the glyph in the accent itself.
      */
 
-    & > .size:not(:first-child),
-    & > .title:not(:nth-child(2)) {
-        margin-top: var(--skin--spacing-050);
+    & > .glyph[data-priority="3"] {
+        color: var(--skin--background-color);
+        background-color: var(--skin--color-subtle);
+    }
+
+    & > .glyph[data-priority="2"] {
+        color: var(--skin--background-color);
+        background-color: var(--skin--color-subtle-060);
+    }
+
+    & > .glyph[data-priority="1"] {
+        color: var(--skin--color-subtle);
+        background-color: var(--skin--color-subtle-010);
+    }
+
+    & > .title > .alternative {
+        margin-inline-start: var(--skin--spacing-050);
+        font-size: var(--skin--font-size-small);
+        color: var(--skin--color-label);
+    }
+
+    & > .size {
+        justify-self: end;
+        font-variant-numeric: tabular-nums;
+        color: var(--skin--color-label);
+    }
+
+    & > .description {
+        grid-column: 2 / -1;
+        color: var(--skin--color-label);
     }
 
 }
