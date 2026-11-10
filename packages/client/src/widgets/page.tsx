@@ -17,7 +17,6 @@
 import { app } from "@metreeca/clay";
 import { useFetching } from "@metreeca/clay/fetch";
 import { Link } from "@metreeca/clay-widgets/link";
-import { Logo } from "@metreeca/clay-widgets/logo";
 import { Strip } from "@metreeca/clay-widgets/strip";
 import { Style } from "@metreeca/clay-widgets/style";
 import { Tool } from "@metreeca/clay-widgets/tool";
@@ -25,6 +24,8 @@ import { type ComponentChildren, h } from "preact";
 import "./page.css";
 import { ec2u } from "../index.core.js";
 import { GitHub } from "./github.js";
+
+const brand=new URL("../index.svg", import.meta.url).href;
 
 export function Page({
 
@@ -64,9 +65,10 @@ export function Page({
 
 			busy={busy}
 
-			meta={<Strip grow place={"head"}>
+			meta={<Strip grow place={reset ? "tail" : "start"} align={"center"}>
 
-				<Link href={"/"}><Logo/><span>{ec2u(app.name ?? "")}</span></Link>
+				<img class={"brand"} alt={""} src={brand}/>
+				<Link href={"/"}>{ec2u(app.name ?? "")}</Link>
 				{reset}
 
 			</Strip>}

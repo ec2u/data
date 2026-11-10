@@ -56,6 +56,46 @@ clay-tool {
         }
     }
 
+    /*
+     * the EC2U flag stands a little over twice the capitals of the app name beside it and is centred on the line, so
+     * it spills evenly into the head padding and the row grows no taller; the gap after it matches the padding before
+     * the divider, so the flag and the app name sit at the same distance from the rule set between them; the sizing
+     * lets go of the flag while it is enlarged, so the zoomed image fills the window as any other image does
+     */
+
+    & .brand:not([active]) {
+        display: block;
+        height: 2.25cap;
+        margin-block: calc(-1.125cap + .5lh);
+        margin-inline-end: .85cap;
+    }
+
+    /* the row holding the flag still clips along the line, as every head item does, but lets the flag spill across it */
+
+    & header > clay-strip:has(> .brand) {
+        overflow-x: clip;
+        overflow-y: visible;
+    }
+
+    /*
+     * the app name beside the flag takes the navy of the flag rather than the link slate, so the two read as one mark;
+     * the dark scheme lifts the same hue to a light tint (12.11:1 on #FFF, 10.02:1 on #111)
+     *
+     * a hairline in a faded tint of the same navy sets the name apart from the flag, and a medium weight with slightly
+     * tightened tracking gives the name the compact presence of a wordmark rather than of a plain navigation link
+     */
+
+    & .brand + clay-link {
+        --skin--color-link: light-dark(#283169, oklch(from #283169 0.8 0.08 h));
+        padding-inline-start: .85cap;
+        border-inline-start: 1px solid color-mix(in srgb, var(--skin--color-link) 35%, transparent);
+
+        & a {
+            font-weight: 500;
+            letter-spacing: -.01em;
+        }
+    }
+
     /* the repository icon in the footer stands a tad larger than the copyright notice beside it */
 
     & .repo {
