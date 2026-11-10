@@ -16,7 +16,6 @@
 
 import { app } from "@metreeca/clay";
 import { useFetching } from "@metreeca/clay/fetch";
-import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Logo } from "@metreeca/clay-widgets/logo";
 import { Strip } from "@metreeca/clay-widgets/strip";
@@ -25,6 +24,7 @@ import { Tool } from "@metreeca/clay-widgets/tool";
 import { type ComponentChildren, h } from "preact";
 import "./page.css";
 import { ec2u } from "../index.core.js";
+import { GitHub } from "./github.js";
 
 export function Page({
 
@@ -80,7 +80,7 @@ export function Page({
 			copy={<Strip grow place={"head"}>
 
 				<small>{app.copy}</small>
-				<Link href={"https://github.com/ec2u/data"} title={"GitHub Repository"}><Icon.GitHub class={"repo"}/></Link>
+				<Link href={"https://github.com/ec2u/data"} title={"GitHub Repository"}><GitHub class={"repo"}/></Link>
 
 			</Strip>}
 
