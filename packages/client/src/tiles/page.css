@@ -14,35 +14,29 @@
  * limitations under the License.
  */
 
-:root {
-    --page-head-nudge: 0.05em;
-}
-
 /*
- * Links stating no look of their own read as strong across the hub. The token is set on the links alone: set on the
- * root, it would make every button stating no look of its own strong as well, bordered and set in bold type.
+ * Links stating no look of their own read as strong across the hub. The look is assigned to links alone, so buttons
+ * stating no look of their own keep the ordinary one.
  */
 
-tile-link {
-    --skin--look: strong;
+:root {
+    --clay-link-look: strong;
 }
 
-tile-shell {
+clay-tool {
 
-    --tile-shell-head-font-size: var(--skin--scaling-150);
+    --clay-tool-head-font-size: var(--skin--scaling-150);
 
     /* the tray carries labelled property panels and facets, so it takes the width of the legacy hub sidebar */
 
-    --tile-shell-tray-width: 20rem;
+    --clay-tool-side-width: 20rem;
 
     /* the tray stacks boxed facets and info panels, set apart rather than run together */
 
-    --tile-shell-tray-gap: var(--skin--spacing-075);
-
-    /* the page name reads a tad higher than the app name in the tray header, though their baselines match */
-
-    & > main > header > span:first-child {
-        translate: 0 var(--page-head-nudge);
+    & > aside > div > div {
+        display: flex;
+        flex-direction: column;
+        row-gap: var(--skin--spacing-075);
     }
 
     /* the repository icon in the footer stands a tad larger than the copyright notice beside it */

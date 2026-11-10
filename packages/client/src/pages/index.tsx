@@ -15,18 +15,23 @@
  */
 
 import { Datasets as DatasetsShape } from "@ec2u/data-shared";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Link } from "@metreeca/clay-widgets/link";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { isNumber, isObject, isOptional, isString, opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useKeywords, useMembers, useQuery, useTally } from "@metreeca/tile-data/store";
-import { Clear } from "@metreeca/tile-lens/clear";
-import { Count } from "@metreeca/tile-lens/count";
-import { Tally } from "@metreeca/tile-lens/tally";
-import { integer } from "@metreeca/tile-type/integer";
+import { Clear } from "@metreeca/tile-widgets/filters/clear";
+import { Tally } from "@metreeca/tile-widgets/filters/tally";
+import { Count } from "@metreeca/tile-widgets/viewers/count";
+import { useCollection } from "@metreeca/tile/collection";
+import { useCount } from "@metreeca/tile/count";
+import { useKeywords } from "@metreeca/tile/keywords";
+import { useMembers } from "@metreeca/tile/members";
+import { useQuery } from "@metreeca/tile/query";
+import { useTally } from "@metreeca/tile/tally";
+import { integer } from "@metreeca/tile/types/integer";
 import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
 import { Search } from "../_/search.js";
@@ -119,14 +124,14 @@ export function Datasets() {
 
 	>{members({
 
-		blank: () => <Hint>{datasets.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{datasets.glyph}</Hint></Failure>,
+		blank: () => <Empty>{datasets.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{datasets.glyph}</Empty></Failure>,
 
 		ready: ({ state }) => {
 
 			const rows = state.filter(isDatasetRow).sort(byDataset);
 
-			return rows.length === 0 ? <Hint>{datasets.glyph}</Hint> : createElement("datasets-grid", {}, rows.map(({
+			return rows.length === 0 ? <Empty>{datasets.glyph}</Empty> : createElement("datasets-grid", {}, rows.map(({
 				dataset: { id, title, alternative, description },
 				size
 			}) => <Fragment key={id}>

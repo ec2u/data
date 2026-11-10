@@ -15,18 +15,18 @@
  */
 
 import { Program } from "@ec2u/data-shared/programs/index.js";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Infobox } from "@metreeca/clay-widgets/infobox";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Path } from "@metreeca/clay-widgets/path";
+import { Stack } from "@metreeca/clay-widgets/stack";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { Path } from "@metreeca/tile-cell/path";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useResource } from "@metreeca/tile-data/store";
-import { Info } from "@metreeca/tile-hive/info";
-import { Stack } from "@metreeca/tile-hive/stack";
-import { decimal } from "@metreeca/tile-type/decimal";
-import { duration } from "@metreeca/tile-type/duration";
+import { useResource } from "@metreeca/tile/resource";
+import { decimal } from "@metreeca/tile/types/decimal";
+import { duration } from "@metreeca/tile/types/duration";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
 import { Credential, CredentialModel } from "../../tiles/credential.js";
@@ -40,9 +40,15 @@ import { programs } from "./index.js";
 
 
 /**
- * The presentation of credits, with one fractional digit.
+ * Formats a number of credits for display, with one fractional digit.
+ *
+ * @param value The number of credits to be formatted
+ *
+ * @returns The localised number, rounded or padded to one fractional digit
  */
-export const credits = decimal({ fractionDigits: 1 });
+export function credits(value: number): string {
+	return decimal.format(value, { fractionDigits: 1 });
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,33 +129,33 @@ export function ProgramPage() {
 
 			ready: ({ state: { url = [], university, provider, identifier, numberOfCredits, timeToComplete } }) => <>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>)
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Provider: opt(provider, ({ label }) => label)
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Code: identifier,
-					Credits: opt(numberOfCredits, value => credits.format(value)),
+					Credits: opt(numberOfCredits, credits),
 					Duration: opt(timeToComplete, value => duration.format(value))
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Info: url.length > 0 ? <ul>{url.map(url =>
 						<li key={url}>{address(url, local(university?.id))}</li>
 					)}</ul> : undefined
 
-				}}</Info>
+				}}</Infobox>
 
 			</>
 
@@ -163,8 +169,8 @@ export function ProgramPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{programs.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{programs.glyph}</Hint></Failure>,
+		blank: () => <Empty>{programs.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{programs.glyph}</Empty></Failure>,
 
 		ready: ({
 

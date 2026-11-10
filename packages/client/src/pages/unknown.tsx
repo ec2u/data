@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
+import { Button } from "@metreeca/clay-widgets/button";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { useRouter } from "@metreeca/clay/router";
+import { immutable } from "@metreeca/core/values";
 import { NotFound } from "@metreeca/http";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { useRouter } from "@metreeca/tile-data/router";
 import { Failure } from "../tiles/failure.js";
 import { Page } from "../tiles/page.js";
 import { datasets } from "./index.js";
-import { immutable } from "@metreeca/core/values";
 
 
 export const unknown = immutable({
@@ -59,7 +59,7 @@ export function Unknown() {
 
 	>
 
-		<Failure problem={unknown.problem}><Hint>{unknown.glyph}</Hint></Failure>
+		<Failure problem={unknown.problem}><Empty>{unknown.glyph}</Empty></Failure>
 
 	</Page>;
 

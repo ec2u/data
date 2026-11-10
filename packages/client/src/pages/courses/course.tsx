@@ -15,18 +15,18 @@
  */
 
 import { Course } from "@ec2u/data-shared/courses/index.js";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Infobox } from "@metreeca/clay-widgets/infobox";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Path } from "@metreeca/clay-widgets/path";
+import { Stack } from "@metreeca/clay-widgets/stack";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
 import { nameTag } from "@metreeca/core/language";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { Path } from "@metreeca/tile-cell/path";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useResource } from "@metreeca/tile-data/store";
-import { Info } from "@metreeca/tile-hive/info";
-import { Stack } from "@metreeca/tile-hive/stack";
-import { duration } from "@metreeca/tile-type/duration";
+import { useResource } from "@metreeca/tile/resource";
+import { duration } from "@metreeca/tile/types/duration";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
 import { Credential, CredentialModel } from "../../tiles/credential.js";
@@ -35,8 +35,8 @@ import { address, links, list, local } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { blocks, sections } from "../../tiles/sections.js";
 import { Title } from "../../tiles/title.js";
-import { credits } from "../programs/program.js";
 import { DatasetLink } from "../datasets/dataset.js";
+import { credits } from "../programs/program.js";
 import { toCourseMode, toCourseTerm } from "./index.core.js";
 import { courses } from "./index.js";
 
@@ -149,40 +149,40 @@ export function CoursePage() {
 
 			}) => <>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>),
 					Year: year,
 					Term: list(term.map(toCourseTerm))
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Provider: opt(provider, ({ label }) => label),
 					Instructor: list(instructor.map(({ label }) => label))
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Code: courseCode,
 					Attendance: opt(courseMode, toCourseMode),
 					Language: list(inLanguage.map(tag => nameTag(tag, navigator.language))),
 					"Fees for Externals": opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
-					Credits: opt(numberOfCredits, value => credits.format(value)),
+					Credits: opt(numberOfCredits, credits),
 					Duration: opt(timeRequired, value => duration.format(value)),
 					Workload: opt(courseWorkload, value => duration.format(value))
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Info: url.length > 0 ? <ul>{url.map(url =>
 						<li key={url}>{address(url, local(university?.id))}</li>
 					)}</ul> : undefined
 
-				}}</Info>
+				}}</Infobox>
 
 			</>
 
@@ -196,8 +196,8 @@ export function CoursePage() {
 
 	>{resource({
 
-		blank: () => <Hint>{courses.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{courses.glyph}</Hint></Failure>,
+		blank: () => <Empty>{courses.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{courses.glyph}</Empty></Failure>,
 
 		ready: ({
 

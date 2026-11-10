@@ -15,11 +15,11 @@
  */
 
 import { base, partners } from "@ec2u/data-shared";
+import { Link } from "@metreeca/clay-widgets/link";
 import { opt, type Optional } from "@metreeca/core";
 import { nameTag, type Tag } from "@metreeca/core/language";
 import { by, locale } from "@metreeca/core/order";
 import { resolve } from "@metreeca/core/resource";
-import { Link } from "@metreeca/tile-cell/link";
 import { tagIRI } from "@metreeca/work/core/language.js";
 import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { type ComponentChildren, createElement } from "preact";
@@ -88,11 +88,9 @@ export function links(entries: readonly { readonly id: string, readonly label: s
  * @returns A list of links sorted by label, or `undefined` if `entries` is empty, so that the panel omits the entry
  */
 export function filters(
-
 	entries: readonly { readonly id: string, readonly label: string }[],
 	catalogue: string,
 	query: (id: string) => Readonly<Record<string, string>>
-
 ): ComponentChildren {
 
 	return entries.length > 0 ? <ul>{[...entries] // copy, as entries are shared

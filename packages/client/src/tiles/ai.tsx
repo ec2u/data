@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Link } from "@metreeca/clay-widgets/link";
 import { createElement } from "preact";
 import "./ai.css";
 

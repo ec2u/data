@@ -19,6 +19,6 @@
  * trailing margin that would otherwise widen the gap after it beyond the spacing the stack sets.
  */
 
-tile-mark > :last-child {
+clay-markdown > :last-child {
     margin-bottom: 0;
 }

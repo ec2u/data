@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Button } from "@metreeca/tile-cell/button";
-import { Icon } from "@metreeca/tile-cell/icon";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Icon } from "@metreeca/clay-widgets/icon";
 import { type ComponentChildren, createElement } from "preact";
 import { useState } from "preact/hooks";
 import "./tree.css";

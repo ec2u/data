@@ -15,9 +15,9 @@
  */
 
 import { Program, Programs as ProgramsShape } from "@ec2u/data-shared/programs/index.js";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Routes } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Routes } from "@metreeca/tile-data/router";
 import { DatasetPage } from "../datasets/dataset.js";
 import { ProgramPage } from "./program.js";
 import { ProgramsPage } from "./programs.js";

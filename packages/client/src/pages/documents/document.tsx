@@ -15,19 +15,19 @@
  */
 
 import { Document } from "@ec2u/data-shared/documents/index.js";
+import { Markdown } from "@metreeca/clay-markdown/markdown";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Infobox } from "@metreeca/clay-widgets/infobox";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Path } from "@metreeca/clay-widgets/path";
+import { Stack } from "@metreeca/clay-widgets/stack";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
 import { nameTag } from "@metreeca/core/language";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { Markdown } from "@metreeca/tile-cell/markdown";
-import { Path } from "@metreeca/tile-cell/path";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useResource } from "@metreeca/tile-data/store";
-import { Info } from "@metreeca/tile-hive/info";
-import { Stack } from "@metreeca/tile-hive/stack";
-import { date } from "@metreeca/tile-type/date";
+import { useResource } from "@metreeca/tile/resource";
+import { date } from "@metreeca/tile/types/date";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
@@ -145,13 +145,13 @@ export function DocumentPage() {
 
 			}) => <>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>)
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Code: identifier,
 					Web: url.length > 0 ? <ul>{url.map(url =>
@@ -159,9 +159,9 @@ export function DocumentPage() {
 					)}</ul> : undefined,
 					Language: list(language.map(tag => nameTag(tag, navigator.language)))
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Type: filters(type, documents.route, type => ({
 						...opt(university, ({ id }) => ({ university: id })),
@@ -176,17 +176,17 @@ export function DocumentPage() {
 						subject
 					}))
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Issued: opt(issued, value => date.format(value)),
 					Updated: opt(modified, value => date.format(value)),
 					Valid: valid
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Publisher: opt(publisher, ({ label, url = [] }) => url.length > 0
 						? <Link href={url[0]}>{label}</Link>
@@ -195,14 +195,14 @@ export function DocumentPage() {
 					Contact: opt(creator, ({ label }) => label),
 					Contributor: list(contributor.map(({ label }) => label))
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					License: opt(license, ({ id, label }) => <Link href={id}>{label}</Link>),
 					Rights: rights
 
-				}}</Info>
+				}}</Infobox>
 
 			</>
 
@@ -216,8 +216,8 @@ export function DocumentPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{documents.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{documents.glyph}</Hint></Failure>,
+		blank: () => <Empty>{documents.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{documents.glyph}</Empty></Failure>,
 
 		ready: ({ state: { title, description, relation = [] } }) => <Stack space={"spacing100"}>
 

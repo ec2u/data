@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { useBoard } from "@metreeca/clay/board";
 import type { Problem } from "@metreeca/http/success";
-import { useBoard } from "@metreeca/tile-data/board";
 import { type ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 

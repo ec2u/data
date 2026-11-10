@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { Logo } from "@metreeca/tile-cell/logo";
-import { app } from "@metreeca/tile-data";
-import { Shell } from "@metreeca/tile-hive/shell";
-import { Strip } from "@metreeca/tile-hive/strip";
+import { app } from "@metreeca/clay";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Logo } from "@metreeca/clay-widgets/logo";
+import { Strip } from "@metreeca/clay-widgets/strip";
+import { Tool } from "@metreeca/clay-widgets/tool";
 import { type ComponentChildren, h } from "preact";
 import "./page.css";
 import { ec2u } from "../index.core.js";
@@ -31,7 +31,6 @@ export function Page({
 
 	head,
 	menu,
-	done,
 	back,
 
 	children
@@ -43,26 +42,21 @@ export function Page({
 
 	head?: ComponentChildren
 	menu?: ComponentChildren
-
-	done?: ComponentChildren
 	back?: ComponentChildren
 
 	children?: ComponentChildren
 
 }) {
 
-	return <Shell
+	return <Tool
 
-		logo={<Link look="subtle" href={"/"}><Logo/><span>{ec2u(app.name??"")}</span></Link>}
+		meta={<Link look="subtle" href={"/"}><Logo/><span>{ec2u(app.name ?? "")}</span></Link>}
 
 		tray={tray}
-		info={info}
+		more={info}
 
 		head={head}
-		menu={menu}
-
-		done={done}
-		back={back}
+		menu={back ?? menu}
 
 		copy={<Strip grow place={"head"}>
 
@@ -71,6 +65,6 @@ export function Page({
 
 		</Strip>}
 
-	>{children}</Shell>;
+	>{children}</Tool>;
 
 }

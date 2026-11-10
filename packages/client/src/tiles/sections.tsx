@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { Markdown } from "@metreeca/tile-cell/markdown";
-import { Info } from "@metreeca/tile-hive/info";
-import { Stack } from "@metreeca/tile-hive/stack";
+import { Markdown } from "@metreeca/clay-markdown/markdown";
+import { Infobox } from "@metreeca/clay-widgets/infobox";
+import { Stack } from "@metreeca/clay-widgets/stack";
+import { Style } from "@metreeca/clay-widgets/style";
+import { Text } from "@metreeca/clay-widgets/text";
 import type { ComponentChildren } from "preact";
 import "./sections.css";
-import { Text } from "../_/text.js";
 
 
 /**
@@ -31,7 +32,7 @@ import { Text } from "../_/text.js";
  *     `contents` lists them, or nothing if no property states any content
  */
 export function blocks(contents: Readonly<Record<string, ComponentChildren>>): ComponentChildren {
-	return <Info>{Object.fromEntries(Object.entries(contents).filter(([, content]) => content))}</Info>;
+	return <Infobox wrap align={"end"}>{Object.fromEntries(Object.entries(contents).filter(([, content]) => content))}</Infobox>;
 }
 
 /**
@@ -49,10 +50,9 @@ export function sections(texts: Readonly<Record<string, undefined | string>>): C
 	return stated.length > 0 ? <Stack space={"spacing100"}>{stated.map(({ label, text }) =>
 
 		<Stack key={label} space={"spacing050"}>
-			<Text look={"label"}>{label}</Text>
+			<Style css={{ textLook: "subtle", fontSize: "fontSizeSmall" }}><Text>{label}</Text></Style>
 			<Markdown>{text}</Markdown>
 		</Stack>
-
 	)}</Stack> : undefined;
 
 }

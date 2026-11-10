@@ -15,9 +15,9 @@
  */
 
 import { Unit, Units as UnitsShape } from "@ec2u/data-shared/units/index.js";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Routes } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Routes } from "@metreeca/tile-data/router";
 import { DatasetPage } from "../datasets/dataset.js";
 import { UnitPage } from "./unit.js";
 import { UnitsPage } from "./units.js";

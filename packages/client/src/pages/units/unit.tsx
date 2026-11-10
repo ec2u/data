@@ -15,18 +15,18 @@
  */
 
 import { Unit } from "@ec2u/data-shared/units/index.js";
+import { Markdown } from "@metreeca/clay-markdown/markdown";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Infobox } from "@metreeca/clay-widgets/infobox";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Path } from "@metreeca/clay-widgets/path";
+import { Stack } from "@metreeca/clay-widgets/stack";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
 import { by, compound, locale } from "@metreeca/core/order";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { Markdown } from "@metreeca/tile-cell/markdown";
-import { Path } from "@metreeca/tile-cell/path";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useResource } from "@metreeca/tile-data/store";
-import { Info } from "@metreeca/tile-hive/info";
-import { Stack } from "@metreeca/tile-hive/stack";
+import { useResource } from "@metreeca/tile/resource";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
@@ -118,33 +118,33 @@ export function UnitPage() {
 				}
 			}) => <>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Short: altLabel,
 					Code: identifier
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>),
 					Type: links(classification)
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Head: list(hasHead.map(({ label }) => label))
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Info: homepage.length > 0 ? <ul>{homepage.map(url =>
 						<li key={url}>{address(url, local(university?.id))}</li>
 					)}</ul> : undefined
 
-				}}</Info>
+				}}</Infobox>
 
 			</>
 
@@ -158,8 +158,8 @@ export function UnitPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{units.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{units.glyph}</Hint></Failure>,
+		blank: () => <Empty>{units.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{units.glyph}</Empty></Failure>,
 
 		ready: ({ state: { prefLabel, definition, university, unitOf, hasUnit = [], subject = [], keyword = [] } }) =>
 			<Stack space={"spacing100"}>

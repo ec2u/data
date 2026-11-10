@@ -15,26 +15,29 @@
  */
 
 import { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
+import { Markdown } from "@metreeca/clay-markdown/markdown";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Infobox } from "@metreeca/clay-widgets/infobox";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Path } from "@metreeca/clay-widgets/path";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { Markdown } from "@metreeca/tile-cell/markdown";
-import { Path } from "@metreeca/tile-cell/path";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useMembers, useResource } from "@metreeca/tile-data/store";
-import { Info } from "@metreeca/tile-hive/info";
-import { date } from "@metreeca/tile-type/date";
-import { integer } from "@metreeca/tile-type/integer";
+import { useCollection } from "@metreeca/tile/collection";
+import { useCount } from "@metreeca/tile/count";
+import { useMembers } from "@metreeca/tile/members";
+import { useResource } from "@metreeca/tile/resource";
+import { date } from "@metreeca/tile/types/date";
+import { integer } from "@metreeca/tile/types/integer";
 import { useEffect, useState } from "preact/hooks";
+import { Search } from "../../_/search.js";
+import { SKOSConcepts } from "../../_/skos/concepts.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { address } from "../../tiles/links.js";
 import { Page } from "../../tiles/page.js";
 import { Title } from "../../tiles/title.js";
-import { Search } from "../../_/search.js";
-import { SKOSConcepts } from "../../_/skos/concepts.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { taxonomies } from "./index.js";
 
@@ -125,16 +128,16 @@ export function TaxonomyPage() {
 
 			ready: ({ state: { version, created, issued, modified } }) => <>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Version: version,
 					Created: opt(created, value => date.format(value)),
 					Published: opt(issued, value => date.format(value)),
 					Modified: opt(modified, value => date.format(value))
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Concepts: concepts({
 
@@ -142,7 +145,7 @@ export function TaxonomyPage() {
 
 					})
 
-				}}</Info>
+				}}</Infobox>
 
 			</>
 
@@ -156,8 +159,8 @@ export function TaxonomyPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{taxonomies.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{taxonomies.glyph}</Hint></Failure>,
+		blank: () => <Empty>{taxonomies.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{taxonomies.glyph}</Empty></Failure>,
 
 		ready: ({
 			state: {
@@ -167,7 +170,7 @@ export function TaxonomyPage() {
 
 			<Title title={title}>{opt(description, text => <Markdown>{text}</Markdown>)}</Title>
 
-			<Info>{{
+			<Infobox wrap align={"end"}>{{
 
 				Publisher: opt(publisher, ({ id, label }) => <Link href={id}>{label}</Link>),
 				Copyright: rights,
@@ -177,7 +180,7 @@ export function TaxonomyPage() {
 				Source: opt(source, ({ id }) => address(id)),
 				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
 
-			}}</Info>
+			}}</Infobox>
 
 			{(keywords || hasTopConcept.some(({ narrower }) => narrower?.length)) && // flat schemes are browsed whole
                 <Search placeholder={"Concepts"} value={keywords} onChange={setKeywords}/>
@@ -231,11 +234,11 @@ function TaxonomySearch({
 
 	return members({
 
-		error: ({ state }) => <Failure problem={state}><Hint>{taxonomies.glyph}</Hint></Failure>,
+		error: ({ state }) => <Failure problem={state}><Empty>{taxonomies.glyph}</Empty></Failure>,
 
 		ready: ({ state }) => state.length > 0
 			? <SKOSConcepts concepts={state}/>
-			: <Hint>{taxonomies.glyph} No Matches</Hint>
+			: <Empty>{taxonomies.glyph} No Matches</Empty>
 
 	});
 

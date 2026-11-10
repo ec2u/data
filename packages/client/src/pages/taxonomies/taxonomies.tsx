@@ -15,26 +15,31 @@
  */
 
 import { Taxonomies } from "@ec2u/data-shared/taxonomies/index.js";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Card } from "@metreeca/clay-widgets/card";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Link } from "@metreeca/clay-widgets/link";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { by, locale } from "@metreeca/core/order";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useKeywords, useMembers, useQuery, useTally } from "@metreeca/tile-data/store";
-import { Card } from "@metreeca/tile-hive/card";
-import { Clear } from "@metreeca/tile-lens/clear";
-import { Count } from "@metreeca/tile-lens/count";
-import { Tally } from "@metreeca/tile-lens/tally";
-import { integer } from "@metreeca/tile-type/integer";
+import { Clear } from "@metreeca/tile-widgets/filters/clear";
+import { Tally } from "@metreeca/tile-widgets/filters/tally";
+import { Count } from "@metreeca/tile-widgets/viewers/count";
+import { useCollection } from "@metreeca/tile/collection";
+import { useCount } from "@metreeca/tile/count";
+import { useKeywords } from "@metreeca/tile/keywords";
+import { useMembers } from "@metreeca/tile/members";
+import { useQuery } from "@metreeca/tile/query";
+import { useTally } from "@metreeca/tile/tally";
+import { integer } from "@metreeca/tile/types/integer";
 import { useEffect } from "preact/hooks";
+import { Search } from "../../_/search.js";
 import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { Search } from "../../_/search.js";
 import { DatasetToggle } from "../datasets/dataset.js";
-import { isTaxonomyRow, type TaxonomyRow } from "./taxonomies.core.js";
 import { taxonomies } from "./index.js";
+import { isTaxonomyRow, type TaxonomyRow } from "./taxonomies.core.js";
 
 
 export function TaxonomiesPage() {
@@ -102,8 +107,8 @@ export function TaxonomiesPage() {
 
 	>{members({
 
-		blank: () => <Hint>{taxonomies.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{taxonomies.glyph}</Hint></Failure>,
+		blank: () => <Empty>{taxonomies.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{taxonomies.glyph}</Empty></Failure>,
 
 		ready: ({ state }) => cards(state.filter(isTaxonomyRow))
 
@@ -120,7 +125,7 @@ export function TaxonomiesPage() {
  * @returns A card for each taxonomy, sorted by label, or the collection glyph if `rows` is empty
  */
 function cards(rows: readonly TaxonomyRow[]) {
-	return rows.length === 0 ? <Hint>{taxonomies.glyph}</Hint> : <>{[...rows] // copy, as rows are shared
+	return rows.length === 0 ? <Empty>{taxonomies.glyph}</Empty> : <>{[...rows] // copy, as rows are shared
 
 		.sort(by(({ taxonomy }) => taxonomy.label, locale()))
 
@@ -131,7 +136,7 @@ function cards(rows: readonly TaxonomyRow[]) {
 				: title
 			}</Link>}
 
-			tags={`${integer.format(size)} concepts`}
+			badge={`${integer.format(size)} concepts`}
 
 		>{description}</Card>)
 

@@ -16,16 +16,18 @@
 
 import { Resources } from "@ec2u/data-shared/resources/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { Path } from "@metreeca/tile-cell/path";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useMembers, useResource } from "@metreeca/tile-data/store";
-import { Info } from "@metreeca/tile-hive/info";
-import { integer } from "@metreeca/tile-type/integer";
-import { year } from "@metreeca/tile-type/year";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Infobox } from "@metreeca/clay-widgets/infobox";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Path } from "@metreeca/clay-widgets/path";
+import { useRoute, useRouter } from "@metreeca/clay/router";
+import { useCollection } from "@metreeca/tile/collection";
+import { useMembers } from "@metreeca/tile/members";
+import { useResource } from "@metreeca/tile/resource";
+import { integer } from "@metreeca/tile/types/integer";
+import { year } from "@metreeca/tile/types/year";
 import { useEffect } from "preact/hooks";
 import { byDataset, ec2u, PublicDatasets } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
@@ -126,31 +128,31 @@ export function UniversityPage() {
 
 			ready: ({ state: { homepage, country, city, inception, students } }) => <>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Home: <ul>{homepage.map(url => <li key={url}>{address(url, local(route))}
 					</li>)}</ul>
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Country: <Link href={country.id}>{country.label}</Link>,
 					City: <Link href={city.id}>{city.label}</Link>
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Inception: year.format(inception),
 					Students: integer.format(students)
 
-				}}</Info>
+				}}</Infobox>
 
 				{members({
 
 					ready: ({ state }) =>
-						<Info place={"spread"}>{[...state.filter(isDatasetRow)] // copy, as rows are shared
+						<Infobox>{[...state.filter(isDatasetRow)] // copy, as rows are shared
 
 							.sort(byDataset)
 
@@ -162,7 +164,7 @@ export function UniversityPage() {
 
 							}))
 
-						}</Info>
+						}</Infobox>
 
 				})}
 
@@ -172,8 +174,8 @@ export function UniversityPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{universities.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{universities.glyph}</Hint></Failure>,
+		blank: () => <Empty>{universities.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{universities.glyph}</Empty></Failure>,
 
 		ready: ({ state: { depiction, prefLabel, definition } }) => <Title
 

@@ -15,25 +15,25 @@
  */
 
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
+import { Markdown } from "@metreeca/clay-markdown/markdown";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Infobox } from "@metreeca/clay-widgets/infobox";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Path } from "@metreeca/clay-widgets/path";
+import { Stack } from "@metreeca/clay-widgets/stack";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
 import { by, locale } from "@metreeca/core/order";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { Markdown } from "@metreeca/tile-cell/markdown";
-import { Path } from "@metreeca/tile-cell/path";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useResource } from "@metreeca/tile-data/store";
-import { Info } from "@metreeca/tile-hive/info";
-import { Stack } from "@metreeca/tile-hive/stack";
+import { useResource } from "@metreeca/tile/resource";
 import { useEffect } from "preact/hooks";
+import { SKOSConcepts, SKOSLineage } from "../../_/skos/concepts.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { blocks } from "../../tiles/sections.js";
 import { Title } from "../../tiles/title.js";
-import { SKOSConcepts, SKOSLineage } from "../../_/skos/concepts.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { taxonomies } from "./index.js";
 
@@ -108,11 +108,11 @@ export function TopicPage() {
 
 		tray={resource({
 
-			ready: ({ state: { notation } }) => <Info place={"spread"}>{{
+			ready: ({ state: { notation } }) => <Infobox>{{
 
 				Code: notation
 
-			}}</Info>
+			}}</Infobox>
 
 		})}
 
@@ -124,8 +124,8 @@ export function TopicPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{taxonomies.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{taxonomies.glyph}</Hint></Failure>,
+		blank: () => <Empty>{taxonomies.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{taxonomies.glyph}</Empty></Failure>,
 
 		ready: ({
 			state: {

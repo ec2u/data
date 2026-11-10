@@ -15,33 +15,32 @@
  */
 
 import { Events } from "@ec2u/data-shared/events/index.js";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Card } from "@metreeca/clay-widgets/card";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Link } from "@metreeca/clay-widgets/link";
+import { More } from "@metreeca/clay-widgets/more";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { More } from "@metreeca/tile-cell/more";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import {
-	useCollection,
-	useCount,
-	useKeywords,
-	useMembers,
-	useQuery,
-	useRange,
-	useTally
-} from "@metreeca/tile-data/store";
-import { Card } from "@metreeca/tile-hive/card";
-import { Clear } from "@metreeca/tile-lens/clear";
-import { Count } from "@metreeca/tile-lens/count";
-import { Range } from "@metreeca/tile-lens/range";
-import { Tally } from "@metreeca/tile-lens/tally";
-import { date } from "@metreeca/tile-type/date";
+import { Clear } from "@metreeca/tile-widgets/filters/clear";
+import { Range } from "@metreeca/tile-widgets/filters/range";
+import { Tally } from "@metreeca/tile-widgets/filters/tally";
+import { Count } from "@metreeca/tile-widgets/viewers/count";
+import { useCollection } from "@metreeca/tile/collection";
+import { useCount } from "@metreeca/tile/count";
+import { useKeywords } from "@metreeca/tile/keywords";
+import { useMembers } from "@metreeca/tile/members";
+import { useQuery } from "@metreeca/tile/query";
+import { useRange } from "@metreeca/tile/range";
+import { useTally } from "@metreeca/tile/tally";
+import { date } from "@metreeca/tile/types/date";
+import { instant } from "@metreeca/tile/types/instant";
 import { useEffect } from "preact/hooks";
+import { Search } from "../../_/search.js";
 import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { Search } from "../../_/search.js";
 import { DatasetToggle } from "../datasets/dataset.js";
 import { schedule } from "./event.js";
 import { toEventAttendanceMode } from "./index.core.js";
@@ -115,7 +114,7 @@ export function EventsPage() {
 			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
 
 			<Tally name={"University"} compact={false} tally={university}/>
-			<Range name={"Date"} compact type={date({ instant: true })} range={startDate}/>
+			<Range name={"Date"} compact type={instant.as(date)} range={startDate}/>
 			<Tally name={"Free"} compact tally={isAccessibleForFree}>{({ label }) => label === "true" ? "Yes" : "No"}</Tally>
 			<Tally name={"Attendance"} compact tally={eventAttendanceMode}>{({ label }) => toEventAttendanceMode(label)}</Tally>
 			<Tally name={"Topic"} compact tally={topics}/>
@@ -129,16 +128,16 @@ export function EventsPage() {
 
 	>{members({
 
-		blank: () => <Hint>{events.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{events.glyph}</Hint></Failure>,
+		blank: () => <Empty>{events.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{events.glyph}</Empty></Failure>,
 
-		ready: ({ state, load }) => state.length === 0 ? <Hint>{events.glyph}</Hint> : <>
+		ready: ({ state, load }) => state.length === 0 ? <Empty>{events.glyph}</Empty> : <>
 
 			{state.map(({ id, label, disambiguatingDescription, startDate, endDate, image, university }) =>
 				<Card key={id}
 
 					title={<Link href={id}>{`${schedule(startDate, endDate)} / ${label}`}</Link>}
-					tags={university?.altLabel}
+					badge={university?.altLabel}
 					image={opt(image, ({ url }) => url[0])}
 
 				>{disambiguatingDescription}</Card>)}

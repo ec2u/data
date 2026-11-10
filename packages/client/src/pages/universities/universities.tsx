@@ -15,19 +15,24 @@
  */
 
 import { Universities } from "@ec2u/data-shared/universities/index.js";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Card } from "@metreeca/clay-widgets/card";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Link } from "@metreeca/clay-widgets/link";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { by, locale } from "@metreeca/core/order";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useKeywords, useMembers, useQuery, useRange } from "@metreeca/tile-data/store";
-import { Card } from "@metreeca/tile-hive/card";
-import { Clear } from "@metreeca/tile-lens/clear";
-import { Count } from "@metreeca/tile-lens/count";
-import { Range } from "@metreeca/tile-lens/range";
-import { integer } from "@metreeca/tile-type/integer";
-import { year } from "@metreeca/tile-type/year";
+import { Clear } from "@metreeca/tile-widgets/filters/clear";
+import { Range } from "@metreeca/tile-widgets/filters/range";
+import { Count } from "@metreeca/tile-widgets/viewers/count";
+import { useCollection } from "@metreeca/tile/collection";
+import { useCount } from "@metreeca/tile/count";
+import { useKeywords } from "@metreeca/tile/keywords";
+import { useMembers } from "@metreeca/tile/members";
+import { useQuery } from "@metreeca/tile/query";
+import { useRange } from "@metreeca/tile/range";
+import { integer } from "@metreeca/tile/types/integer";
+import { year } from "@metreeca/tile/types/year";
 import { useEffect } from "preact/hooks";
 import { Search } from "../../_/search.js";
 import { Failure } from "../../tiles/failure.js";
@@ -106,17 +111,17 @@ export function UniversitiesPage() {
 
 	>{members({
 
-		blank: () => <Hint>{universities.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{universities.glyph}</Hint></Failure>,
+		blank: () => <Empty>{universities.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{universities.glyph}</Empty></Failure>,
 
-		ready: ({ state }) => state.length === 0 ? <Hint>{universities.glyph}</Hint> : <>{[...state]
+		ready: ({ state }) => state.length === 0 ? <Empty>{universities.glyph}</Empty> : <>{[...state]
 
 			.sort(by(({ city }) => city.label, locale())) // copy, as state is shared
 
 			.map(({ id, label, comment, depiction, country }) => <Card key={id}
 
 				title={<Link href={id}>{label}</Link>}
-				tags={country.label}
+				badge={country.label}
 				image={depiction[0]}
 
 			>{comment}</Card>)

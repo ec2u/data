@@ -15,22 +15,22 @@
  */
 
 import { Dataset, Datasets as DatasetsShape } from "@ec2u/data-shared";
+import { host } from "@metreeca/clay";
+import { Toasts } from "@metreeca/clay-widgets/toasts";
+import { Board } from "@metreeca/clay/board";
+import { Fetch } from "@metreeca/clay/fetch";
+import { Router, Routes } from "@metreeca/clay/router";
 import { createRESTStore } from "@metreeca/keep-rest";
 import "@metreeca/skin/index.css";
 import { createCachingStore } from "@metreeca/keep/caching";
-import { Board } from "@metreeca/tile-data/board";
-import { Fetch } from "@metreeca/tile-data/fetch";
-import { Router, Routes } from "@metreeca/tile-data/router";
-import { Store } from "@metreeca/tile-data/store";
-import { host } from "@metreeca/tile-hive";
-import { Toast } from "@metreeca/tile-hive/toast";
+import { Store } from "@metreeca/tile";
 import { render } from "preact";
 import { About, about } from "./pages/about/index.js";
 import { Courses, courses } from "./pages/courses/index.js";
 import { DatasetPage } from "./pages/datasets/dataset.js";
-import { Datasets, datasets } from "./pages/index.js";
 import { Documents, documents } from "./pages/documents/index.js";
 import { Events, events } from "./pages/events/index.js";
+import { Datasets, datasets } from "./pages/index.js";
 import { Models, models } from "./pages/models/index.js";
 import { Programs, programs } from "./pages/programs/index.js";
 import { Taxonomies, taxonomies } from "./pages/taxonomies/index.js";
@@ -56,7 +56,7 @@ function Hub() {
 
 				<Router>
 
-					<Toast/>
+					<Toasts/>
 
 					<Routes>{{
 

@@ -15,35 +15,32 @@
  */
 
 import { Courses } from "@ec2u/data-shared/courses/index.js";
-import { opt } from "@metreeca/core";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Card } from "@metreeca/clay-widgets/card";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Link } from "@metreeca/clay-widgets/link";
+import { More } from "@metreeca/clay-widgets/more";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { nameTag } from "@metreeca/core/language";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { More } from "@metreeca/tile-cell/more";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import {
-	useCollection,
-	useCount,
-	useKeywords,
-	useMembers,
-	useQuery,
-	useRange,
-	useTally
-} from "@metreeca/tile-data/store";
-import { Card } from "@metreeca/tile-hive/card";
-import { Clear } from "@metreeca/tile-lens/clear";
-import { Count } from "@metreeca/tile-lens/count";
-import { Range } from "@metreeca/tile-lens/range";
-import { Tally } from "@metreeca/tile-lens/tally";
-import { decimal } from "@metreeca/tile-type/decimal";
-import { duration } from "@metreeca/tile-type/duration";
+import { Clear } from "@metreeca/tile-widgets/filters/clear";
+import { Range } from "@metreeca/tile-widgets/filters/range";
+import { Tally } from "@metreeca/tile-widgets/filters/tally";
+import { Count } from "@metreeca/tile-widgets/viewers/count";
+import { useCollection } from "@metreeca/tile/collection";
+import { useCount } from "@metreeca/tile/count";
+import { useKeywords } from "@metreeca/tile/keywords";
+import { useMembers } from "@metreeca/tile/members";
+import { useQuery } from "@metreeca/tile/query";
+import { useRange } from "@metreeca/tile/range";
+import { useTally } from "@metreeca/tile/tally";
+import { decimal } from "@metreeca/tile/types/decimal";
+import { duration } from "@metreeca/tile/types/duration";
 import { useEffect } from "preact/hooks";
+import { Search } from "../../_/search.js";
 import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { Search } from "../../_/search.js";
 import { DatasetToggle } from "../datasets/dataset.js";
 import { toCourseMode, toCourseTerm } from "./index.core.js";
 import { courses } from "./index.js";
@@ -138,15 +135,15 @@ export function CoursesPage() {
 
 	>{members({
 
-		blank: () => <Hint>{courses.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{courses.glyph}</Hint></Failure>,
+		blank: () => <Empty>{courses.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{courses.glyph}</Empty></Failure>,
 
-		ready: ({ state, load }) => state.length === 0 ? <Hint>{courses.glyph}</Hint> : <>
+		ready: ({ state, load }) => state.length === 0 ? <Empty>{courses.glyph}</Empty> : <>
 
 			{state.map(({ id, label, comment, university }) => <Card key={id}
 
 				title={<Link href={id}>{label}</Link>}
-				tags={university?.altLabel}
+				badge={university?.altLabel}
 
 			>{comment}</Card>)}
 

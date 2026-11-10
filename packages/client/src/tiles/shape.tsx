@@ -16,17 +16,30 @@
 
 import type { ResourceShape } from "@metreeca/blue/resource";
 import { eager } from "@metreeca/blue/value";
+import { Markdown } from "@metreeca/clay-markdown/markdown";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Stack } from "@metreeca/clay-widgets/stack";
+import { Style } from "@metreeca/clay-widgets/style";
+import { Text } from "@metreeca/clay-widgets/text";
 import { isArray, isString, type Lazy, opt } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
-import { Button } from "@metreeca/tile-cell/button";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { Markdown } from "@metreeca/tile-cell/markdown";
-import { Stack } from "@metreeca/tile-hive/stack";
 import { type ComponentChildren, Fragment } from "preact";
 import { useRef } from "preact/hooks";
-import { Text } from "../_/text.js";
-import { getShapeExtenders, getShapeInterface, getShapeParents, getShapeReferrers, getShapeSchema, prefixed, type ShapeLink, type ShapeRow, type ShapeSchemaValue, type ShapeTable, tabulate } from "./shape.core.js";
+import {
+	getShapeExtenders,
+	getShapeInterface,
+	getShapeParents,
+	getShapeReferrers,
+	getShapeSchema,
+	prefixed,
+	type ShapeLink,
+	type ShapeRow,
+	type ShapeSchemaValue,
+	type ShapeTable,
+	tabulate
+} from "./shape.core.js";
 import "./shape.css";
 
 
@@ -77,10 +90,10 @@ export function ShapeInfo({
 	return stated.length > 0 ? <Stack space={"spacing100"}>{stated.map(({ label, content }) =>
 
 		<Stack key={label} space={"spacing050"}>
-			<div><Text look={"label"}>{label}</Text></div>{/* body-sized line, sharing the baseline of the page text */}
+			<div><Style css={{ textLook: "subtle", fontSize: "fontSizeSmall" }}><Text>{label}</Text></Style></div>
+			{/* body-sized line, sharing the baseline of the page text */}
 			<div class={"ec2u-shape-info"}>{content}</div>
 		</Stack>
-
 	)}</Stack> : undefined;
 
 }
@@ -191,27 +204,28 @@ function Table({ rows, inherited }: ShapeTable) {
 
 		{(rows.length > 0 || inherited.length > 0) && <table class={"ec2u-shape"}>
 
-			<thead>
-				<tr>
-					<th>property</th>
-					<th>type</th>
-					<th>#</th>
-					<th>description</th>
-				</tr>
-			</thead>
+            <thead>
+                <tr>
+                    <th>property</th>
+                    <th>type</th>
+                    <th>#</th>
+                    <th>description</th>
+                </tr>
+            </thead>
 
 			{rows.length > 0 && <tbody>{rows.map(row => <Row key={row.term} {...row}/>)}</tbody>}
 
 			{inherited.map(({ parent, rows }) => <tbody key={parent.name} class={"ec2u-shape-inherited"}>
 				<tr>
-					<th colSpan={4}><Text look={"muted"}>
-						properties from {parent.href === undefined ? parent.name : <Link href={parent.href}>{parent.name}</Link>}
-					</Text></th>
+					<th colSpan={4}><Style css={{ textLook: "subtle" }}><Text>
+						properties from {parent.href === undefined ? parent.name :
+						<Link href={parent.href}>{parent.name}</Link>}
+					</Text></Style></th>
 				</tr>
 				{rows.map(row => <Row key={row.term} {...row}/>)}
 			</tbody>)}
 
-		</table>}
+        </table>}
 
 	</>;
 }
@@ -237,7 +251,8 @@ function Code({ children }: { children: ComponentChildren }) {
 
 	return <pre class={"ec2u-shape-code"}>
 
-		<Button look={"subtle"} icon={<Icon.Copy/>} title={"Copy"} onClick={() => opt(code.current?.textContent ?? undefined,
+		<Button look={"subtle"} icon={
+			<Icon.Copy/>} title={"Copy"} onClick={() => opt(code.current?.textContent ?? undefined,
 			text => navigator.clipboard.writeText(text)
 		)}/>
 
@@ -266,8 +281,8 @@ function Json({ value, depth, link = false }: { value: ShapeSchemaValue, depth: 
 			: <span class={"ec2u-shape-string"}>{JSON.stringify(value)}</span>
 		: typeof value === "number" || typeof value === "boolean" ? <Keyword>{JSON.stringify(value)}</Keyword>
 			: isArray<ShapeSchemaValue>(value) ? <>[{value.map((item, index) => <Fragment key={index}>
-				{index > 0 ? ",\n" : "\n"}{indent}{"\t"}<Json value={item} depth={depth+1}/>
-			</Fragment>)}{value.length > 0 && `\n${indent}`}]</>
+					{index > 0 ? ",\n" : "\n"}{indent}{"\t"}<Json value={item} depth={depth+1}/>
+				</Fragment>)}{value.length > 0 && `\n${indent}`}]</>
 				: <>{"{"}{Object.entries(value).map(([key, item], index) => <Fragment key={key}>
 					{index > 0 ? ",\n" : "\n"}{indent}{"\t"}<span class={"ec2u-shape-attr"}>{JSON.stringify(key)}</span>: <Json
 					value={item} depth={depth+1} link={key === "$ref"}

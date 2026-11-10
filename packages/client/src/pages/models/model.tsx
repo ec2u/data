@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+import { Markdown } from "@metreeca/clay-markdown/markdown";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Path } from "@metreeca/clay-widgets/path";
+import { Tabs } from "@metreeca/clay-widgets/tabs";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
-import { Link } from "@metreeca/tile-cell/link";
-import { Markdown } from "@metreeca/tile-cell/markdown";
-import { Path } from "@metreeca/tile-cell/path";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { Tabs } from "@metreeca/tile-hive/tabs";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../tiles/page.js";
 import { getShapeDescription, getShapeName, universe } from "../../tiles/shape.core.js";

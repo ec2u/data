@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { Link } from "@metreeca/clay-widgets/link";
+import { useRouter } from "@metreeca/clay/router";
 import { opt, type Optional } from "@metreeca/core";
-import { Link } from "@metreeca/tile-cell/link";
-import { useRouter } from "@metreeca/tile-data/router";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../tiles/page.js";
 import { getShapeName, getShapeSummary, universe } from "../../tiles/shape.core.js";
@@ -133,7 +133,7 @@ function rows(nodes: readonly ModelNode[], depth: number, prefix: string): reado
 
 		const path = `${prefix}${model.href}`;
 
-		return [{ path, depth, model }, ...rows(children, depth + 1, `${path} `)];
+		return [{ path, depth, model }, ...rows(children, depth+1, `${path} `)];
 
 	});
 }

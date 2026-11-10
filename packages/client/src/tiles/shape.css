@@ -18,7 +18,7 @@
 
     /* markdown definitions keep the spacing between their blocks, but not after the last one */
 
-    & td > tile-markdown > :last-child {
+    & td > clay-markdown > :last-child {
         margin-bottom: 0;
     }
 
@@ -56,7 +56,7 @@
 
     font-size: var(--skin--font-size-small);
 
-    & > tile-button > button { /* the wrapper lays out no box of its own, so the control is placed */
+    & > clay-button > button { /* the wrapper lays out no box of its own, so the control is placed */
         position: absolute;
         top: var(--skin--spacing-050);
         right: var(--skin--spacing-050);

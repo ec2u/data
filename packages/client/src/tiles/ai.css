@@ -26,7 +26,7 @@ ec2u-ai {
     font-weight: var(--skin--font-weight-strong);
     color: var(--skin--color-fail-stroke);
 
-    & > tile-link,
+    & > clay-link,
     & > a {
         display: flex;
         margin-left: auto;

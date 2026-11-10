@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Routes } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Routes } from "@metreeca/tile-data/router";
 import { ModelPage } from "./model.js";
 import { ModelsPage } from "./models.js";
 

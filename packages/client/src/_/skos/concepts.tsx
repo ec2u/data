@@ -15,9 +15,9 @@
  */
 
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
+import { Link } from "@metreeca/clay-widgets/link";
 import { immutable } from "@metreeca/core/values";
-import { Link } from "@metreeca/tile-cell/link";
-import { useResource } from "@metreeca/tile-data/store";
+import { useResource } from "@metreeca/tile/resource";
 import { Failure } from "../../tiles/failure.js";
 import { Tree } from "../tree.js";
 import { getSKOSLabel, getSKOSLineage, type SKOSEntry, SKOSOrder } from "./concepts.core.js";
@@ -61,7 +61,6 @@ export function SKOSConcepts({
 		<Tree key={concept.id} label={<Link href={concept.id}>{getSKOSLabel(concept)}</Link>}>{
 			concept.narrower?.length ? <SKOSNarrower id={concept.id}/> : undefined
 		}</Tree>
-
 	)}</>;
 
 }
@@ -87,7 +86,6 @@ export function SKOSLineage({
 	return <>{getSKOSLineage(concepts).map(concept =>
 
 		<Tree key={concept.id} label={<Link href={concept.id}>{getSKOSLabel(concept)}</Link>}/>
-
 	)}</>;
 
 }

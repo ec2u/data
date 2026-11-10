@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+import { Markdown } from "@metreeca/clay-markdown/markdown";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Path } from "@metreeca/clay-widgets/path";
+import { useAsset } from "@metreeca/clay/asset";
+import { useRoute } from "@metreeca/clay/router";
 import { isNumber, isString } from "@metreeca/core";
 import { NotFound } from "@metreeca/http";
-import { Link } from "@metreeca/tile-cell/link";
-import { Markdown } from "@metreeca/tile-cell/markdown";
-import { Path } from "@metreeca/tile-cell/path";
-import { useAsset } from "@metreeca/tile-data/asset";
-import { useRoute } from "@metreeca/tile-data/router";
 import type { ComponentChildren } from "preact";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";

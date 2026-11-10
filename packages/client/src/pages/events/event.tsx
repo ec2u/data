@@ -15,20 +15,20 @@
  */
 
 import { Event } from "@ec2u/data-shared/events/index.js";
+import { Markdown } from "@metreeca/clay-markdown/markdown";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Infobox } from "@metreeca/clay-widgets/infobox";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Path } from "@metreeca/clay-widgets/path";
+import { useRoute, useRouter } from "@metreeca/clay/router";
 import { isArray, isNumber, isObject, isString, opt } from "@metreeca/core";
 import { nameTag } from "@metreeca/core/language";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { Markdown } from "@metreeca/tile-cell/markdown";
-import { Path } from "@metreeca/tile-cell/path";
-import { useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useResource } from "@metreeca/tile-data/store";
-import { Info } from "@metreeca/tile-hive/info";
-import { date } from "@metreeca/tile-type/date";
-import { instant } from "@metreeca/tile-type/instant";
-import { time } from "@metreeca/tile-type/time";
+import { useResource } from "@metreeca/tile/resource";
+import { date } from "@metreeca/tile/types/date";
+import { instant } from "@metreeca/tile/types/instant";
+import { time } from "@metreeca/tile/types/time";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../tiles/ai.js";
@@ -44,7 +44,7 @@ import { events } from "./index.js";
 /**
  * The day an instant falls on.
  */
-const day = date({ instant: true });
+const day = instant.as(date);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,22 +166,22 @@ export function EventPage() {
 
 			}) => <>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>)
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Topics: filters(keywords, events.route, keywords => ({
 						...opt(university, ({ id }) => ({ university: id })),
 						keywords
 					}))
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					"Start Date": day.format(startDate),
 					"Start Time": clock(startDate),
@@ -191,9 +191,9 @@ export function EventPage() {
 						"End Time": clock(endDate)
 					})
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Entry: opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
 					Language: opt(inLanguage, tag => nameTag(tag, navigator.language)),
@@ -201,15 +201,15 @@ export function EventPage() {
 					Status: opt(eventStatus, toEventStatus),
 					Location: opt(location, venue)
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Info: <ul>{url.map(url => <li key={url}>{address(url, local(university?.id))}
 					</li>)}</ul>,
 					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link href={url[0] ?? id}>{label}</Link>)
 
-				}}</Info>
+				}}</Infobox>
 
 			</>
 
@@ -223,8 +223,8 @@ export function EventPage() {
 
 	>{resource({
 
-		blank: () => <Hint>{events.glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{events.glyph}</Hint></Failure>,
+		blank: () => <Empty>{events.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{events.glyph}</Empty></Failure>,
 
 		ready: ({ state: { label, description, disambiguatingDescription, image } }) => <Title
 

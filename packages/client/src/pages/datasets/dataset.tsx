@@ -17,19 +17,22 @@
 import { Dataset } from "@ec2u/data-shared";
 import { Resources } from "@ec2u/data-shared/resources/index.js";
 import type { ResourceShape } from "@metreeca/blue/resource";
+import { Markdown } from "@metreeca/clay-markdown/markdown";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Infobox } from "@metreeca/clay-widgets/infobox";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Stack } from "@metreeca/clay-widgets/stack";
+import { useAnnex, useRoute, useRouter } from "@metreeca/clay/router";
 import { isNumber, isObject, isString, type Lazy, opt } from "@metreeca/core";
 import { some, type Some } from "@metreeca/core/arrays";
-import { Button } from "@metreeca/tile-cell/button";
-import { Hint } from "@metreeca/tile-cell/hint";
-import { Icon } from "@metreeca/tile-cell/icon";
-import { Link } from "@metreeca/tile-cell/link";
-import { Markdown } from "@metreeca/tile-cell/markdown";
-import { useAnnex, useRoute, useRouter } from "@metreeca/tile-data/router";
-import { useCollection, useCount, useMembers, useResource } from "@metreeca/tile-data/store";
-import { Info } from "@metreeca/tile-hive/info";
-import { Stack } from "@metreeca/tile-hive/stack";
-import { date } from "@metreeca/tile-type/date";
-import { integer } from "@metreeca/tile-type/integer";
+import { useCollection } from "@metreeca/tile/collection";
+import { useCount } from "@metreeca/tile/count";
+import { useMembers } from "@metreeca/tile/members";
+import { useResource } from "@metreeca/tile/resource";
+import { date } from "@metreeca/tile/types/date";
+import { integer } from "@metreeca/tile/types/integer";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { ec2u } from "../../index.core.js";
@@ -249,15 +252,15 @@ export function DatasetPage({
 
 			ready: ({ state: { created, issued, modified } }) => <Stack space={"spacing100"}>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					Created: opt(created, value => date.format(value)),
 					Published: opt(issued, value => date.format(value)),
 					Modified: opt(modified, value => date.format(value))
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{{
+				<Infobox>{{
 
 					"Data Model": opt(shapes, shapes => <ul class={"ec2u-shape-links"}>{some(shapes).map(shape =>
 						<li key={getShapeName(shape)}>
@@ -267,9 +270,9 @@ export function DatasetPage({
 						</li>
 					)}</ul>)
 
-				}}</Info>
+				}}</Infobox>
 
-				<Info place={"spread"}>{[
+				<Infobox>{[
 
 					{
 						label: universities.length > 0 ? <strong>Resources</strong> : "Resources",
@@ -278,7 +281,7 @@ export function DatasetPage({
 
 					...universities
 
-				]}</Info>
+				]}</Infobox>
 
 			</Stack>
 
@@ -286,14 +289,14 @@ export function DatasetPage({
 
 	>{resource({
 
-		blank: () => <Hint>{glyph}</Hint>,
-		error: ({ state }) => <Failure problem={state}><Hint>{glyph}</Hint></Failure>,
+		blank: () => <Empty>{glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{glyph}</Empty></Failure>,
 
 		ready: ({ state: { description, publisher, source, rights, license = [], accessRights } }) => <>
 
 			<Markdown>{description}</Markdown>
 
-			<Info>{{
+			<Infobox wrap align={"end"}>{{
 
 				Publisher: opt(publisher, ({ id, label }) => <Link href={id}>{label}</Link>),
 				Copyright: rights,
@@ -301,7 +304,7 @@ export function DatasetPage({
 				Source: opt(source, ({ id }) => address(id)),
 				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
 
-			}}</Info>
+			}}</Infobox>
 
 		</>
 
