@@ -40,9 +40,10 @@ export function Title({
 }: {
 
 	/**
-	 * The name of the resource, set as the heading of the page body.
+	 * The name of the resource, set as the heading of the page body; none if omitted, as when the page path already
+	 * names the resource.
 	 */
-	title: ComponentChildren
+	title?: ComponentChildren
 
 	/**
 	 * The image standing for the resource, set beside the heading and the description; a string is taken as the URL of
@@ -70,7 +71,7 @@ export function Title({
 			{caption && <figcaption>{caption}</figcaption>}
         </figure>}
 
-		<h1>{title}</h1>
+		{title && <h1>{title}</h1>}
 
 		{children}
 

@@ -22,6 +22,7 @@ import { Icon } from "@metreeca/clay-widgets/icon";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
+import { Style } from "@metreeca/clay-widgets/style";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { useCollection } from "@metreeca/tile/collection";
 import { useMembers } from "@metreeca/tile/members";
@@ -110,11 +111,17 @@ export function UniversityPage() {
 
 	return <Page
 
-		head={<Path>
+		head={<Style css={{ fontFamily: "fontFamilyHeading", fontWeight: "fontWeightStrong" }}><Path>
 
 			<Link href={universities.route}>{universities.label}</Link>
 
-		</Path>}
+			{resource({
+
+				ready: ({ state: { prefLabel } }) => prefLabel
+
+			})}
+
+		</Path></Style>}
 
 		menu={<DatasetLink href={universities.route}/>}
 
@@ -177,9 +184,8 @@ export function UniversityPage() {
 		blank: () => <Empty look={"subtle"}>{universities.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{universities.glyph}</Empty></Failure>,
 
-		ready: ({ state: { depiction, prefLabel, definition } }) => <Title
+		ready: ({ state: { depiction, definition } }) => <Title
 
-			title={prefLabel}
 			image={depiction[0]}
 
 		>{definition}</Title>
