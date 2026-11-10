@@ -21,7 +21,7 @@ import { Board } from "@metreeca/clay/board";
 import { Fetch } from "@metreeca/clay/fetch";
 import { Router, Routes } from "@metreeca/clay/router";
 import { createRESTStore } from "@metreeca/keep-rest";
-import "@metreeca/skin/index.css";
+import "@metreeca/skin/presets/roboto.css";
 import { createCachingStore } from "@metreeca/keep/caching";
 import { Store } from "@metreeca/tile";
 import { render } from "preact";
