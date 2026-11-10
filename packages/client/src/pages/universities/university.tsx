@@ -18,12 +18,14 @@ import { Resources } from "@ec2u/data-shared/resources/index.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
+import { Heading } from "@metreeca/clay-widgets/heading";
 import { Icon } from "@metreeca/clay-widgets/icon";
+import { Image } from "@metreeca/clay-widgets/image";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
-import { Style } from "@metreeca/clay-widgets/style";
 import { useRoute, useRouter } from "@metreeca/clay/router";
+import { opt } from "@metreeca/core";
 import { useCollection } from "@metreeca/tile/collection";
 import { useMembers } from "@metreeca/tile/members";
 import { useResource } from "@metreeca/tile/resource";
@@ -34,7 +36,6 @@ import { byDataset, ec2u, PublicDatasets } from "../../index.core.js";
 import { Failure } from "../../widgets/failure.js";
 import { address, local } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
-import { Title } from "../../widgets/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { isDatasetRow } from "../index.js";
 import { universities } from "./index.js";
@@ -111,25 +112,17 @@ export function UniversityPage() {
 
 	return <Page
 
-		head={<Style css={{ fontFamily: "fontFamilyHeading", fontWeight: "fontWeightStrong" }}><Path>
+		head={<Path>
 
 			<Link href={universities.route}>{universities.label}</Link>
 
-			{resource({
+		</Path>}
 
-				ready: ({ state: { prefLabel } }) => prefLabel
-
-			})}
-
-		</Path></Style>}
-
-		menu={<DatasetLink href={universities.route}/>}
-
-		back={resource({
+		menu={resource({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLink href={universities.route}/>)}
 
 		tray={resource({
 
@@ -174,11 +167,15 @@ export function UniversityPage() {
 		blank: () => <Empty look={"subtle"}>{universities.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{universities.glyph}</Empty></Failure>,
 
-		ready: ({ state: { depiction, definition } }) => <Title
+		ready: ({ state: { prefLabel, depiction, definition } }) => <>
 
-			image={depiction[0]}
+			{opt(depiction[0], src => <Image look={"subtle"} float={"end"} within={"20rem"} src={src}/>)}
 
-		>{definition}</Title>
+			<Heading>{prefLabel}</Heading>
+
+			{definition}
+
+		</>
 
 	})}</Page>;
 

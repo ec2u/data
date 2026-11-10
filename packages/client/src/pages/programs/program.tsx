@@ -17,6 +17,7 @@
 import { Program } from "@ec2u/data-shared/programs/index.js";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
+import { Heading } from "@metreeca/clay-widgets/heading";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
@@ -33,7 +34,6 @@ import { Failure } from "../../widgets/failure.js";
 import { address, links, local } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
 import { blocks, sections } from "../../widgets/sections.js";
-import { Title } from "../../widgets/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { programs } from "./index.js";
 
@@ -116,13 +116,11 @@ export function ProgramPage() {
 
 		</Path>}
 
-		menu={<DatasetLink href={programs.route}/>}
-
-		back={resource({
+		menu={resource({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLink href={programs.route}/>)}
 
 		tray={resource({
 
@@ -186,7 +184,9 @@ export function ProgramPage() {
 
 		}) => <>
 
-			<Title title={label}>{description !== teaches ? description : undefined}</Title>
+			<Heading>{label}</Heading>
+
+			{description !== teaches ? description : undefined}
 
 			{blocks({
 

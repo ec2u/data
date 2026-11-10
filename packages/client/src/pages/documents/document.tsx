@@ -18,6 +18,7 @@ import { Document } from "@ec2u/data-shared/documents/index.js";
 import { Markdown } from "@metreeca/clay-markdown/markdown";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
+import { Heading } from "@metreeca/clay-widgets/heading";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
@@ -33,7 +34,6 @@ import { Failure } from "../../widgets/failure.js";
 import { address, filters, links, list } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
 import { blocks } from "../../widgets/sections.js";
-import { Title } from "../../widgets/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { documents } from "./index.js";
 
@@ -105,13 +105,11 @@ export function DocumentPage() {
 
 		</Path>}
 
-		menu={<DatasetLink href={documents.route}/>}
-
-		back={resource({
+		menu={resource({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLink href={documents.route}/>)}
 
 		tray={resource({
 
@@ -208,7 +206,9 @@ export function DocumentPage() {
 
 		ready: ({ state: { title, description, relation = [] } }) => <>
 
-			<Title title={title}>{opt(description, text => <Markdown>{text}</Markdown>)}</Title>
+			<Heading>{title}</Heading>
+
+			{opt(description, text => <Markdown>{text}</Markdown>)}
 
 			{blocks({
 

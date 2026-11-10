@@ -84,13 +84,11 @@ export function UnitsPage() {
 	return <Page
 
 		head={<Size label={units.label} collection={collection}/>}
-		menu={<DatasetLinks/>}
-
-		back={members({
+		menu={members({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLinks/>)}
 
 		tray={<>
 
@@ -102,7 +100,7 @@ export function UnitsPage() {
 
 		</>}
 
-		reset={<Clear collection={collection}/>}
+		meta={<Clear collection={collection}/>}
 
 	>{members({
 

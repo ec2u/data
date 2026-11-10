@@ -15,46 +15,47 @@
  */
 
 import { app } from "@metreeca/clay";
-import { useFetching } from "@metreeca/clay/fetch";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Strip } from "@metreeca/clay-widgets/strip";
 import { Style } from "@metreeca/clay-widgets/style";
 import { Tool } from "@metreeca/clay-widgets/tool";
+import { useFetching } from "@metreeca/clay/fetch";
 import { type ComponentChildren, h } from "preact";
 import "./page.css";
 import { ec2u } from "../index.core.js";
 
-const brand=new URL("../index.svg", import.meta.url).href;
+const logo = new URL("../index.svg", import.meta.url).href;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function Page({
 
-	tray,
 	info,
-	reset,
+	tray,
+	meta,
 
 	head,
 	menu,
-	back,
 	copy,
 
 	children
 
 }: {
 
+	meta?: ComponentChildren
 	tray?: ComponentChildren
 	info?: ComponentChildren
-	reset?: ComponentChildren
 
 	head?: ComponentChildren
 	menu?: ComponentChildren
-	back?: ComponentChildren
 	copy?: ComponentChildren
 
 	children?: ComponentChildren
 
 }) {
 
-	const busy=useFetching();
+	const busy = useFetching();
 
 	return <Style css={{
 
@@ -66,22 +67,37 @@ export function Page({
 
 			busy={busy}
 
-			meta={<Strip grow place={reset ? "tail" : "start"} align={"center"}>
+			meta={<Strip grow place={meta ? "tail" : "start"} align={"center"}>
 
-				<img class={"brand"} alt={""} src={brand}/>
+				<Link href={"https://ec2u.eu/"}><img class={"logo"} alt={"EC2U Alliance"} src={logo}/></Link>
 				<Link href={"/"}>{ec2u(app.name ?? "")}</Link>
-				{reset}
+
+				{meta}
 
 			</Strip>}
 
 			tray={tray}
 			more={info}
 
-			head={head}
-			menu={back ?? menu}
+			head={<Style css={{
+
+				fontFamily: "fontFamilyHeading",
+				fontWeight: "fontWeightStrong"
+
+			}}>
+
+				{head}
+
+			</Style>}
+
+			menu={menu}
 			copy={copy}
 
-		>{children}</Tool>
+		>
+
+			{children}
+
+		</Tool>
 
 	</Style>;
 

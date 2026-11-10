@@ -239,13 +239,11 @@ export function DatasetPage({
 	return <Page
 
 		head={title}
-		menu={<DatasetLinks/>}
-
-		back={resource({
+		menu={resource({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLinks/>)}
 
 		tray={resource({
 

@@ -87,13 +87,11 @@ export function UniversitiesPage() {
 	return <Page
 
 		head={<Size label={universities.label} collection={collection}/>}
-		menu={<DatasetLinks/>}
-
-		back={members({
+		menu={members({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLinks/>)}
 
 		tray={<>
 
@@ -104,7 +102,7 @@ export function UniversitiesPage() {
 
 		</>}
 
-		reset={<Clear collection={collection}/>}
+		meta={<Clear collection={collection}/>}
 
 	>{members({
 

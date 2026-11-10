@@ -99,13 +99,11 @@ export function CoursesPage() {
 	return <Page
 
 		head={<Size label={courses.label} collection={collection}/>}
-		menu={<DatasetLinks/>}
-
-		back={members({
+		menu={members({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLinks/>)}
 
 		tray={<>
 
@@ -126,7 +124,7 @@ export function CoursesPage() {
 
 		</>}
 
-		reset={<Clear collection={collection}/>}
+		meta={<Clear collection={collection}/>}
 
 	>{members({
 

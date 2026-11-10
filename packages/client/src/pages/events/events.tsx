@@ -100,13 +100,11 @@ export function EventsPage() {
 	return <Page
 
 		head={<Size label={events.label} collection={collection}/>}
-		menu={<DatasetLinks/>}
-
-		back={members({
+		menu={members({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLinks/>)}
 
 		tray={<>
 
@@ -120,7 +118,7 @@ export function EventsPage() {
 
 		</>}
 
-		reset={<Clear collection={collection}/>}
+		meta={<Clear collection={collection}/>}
 
 	>{members({
 

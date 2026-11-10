@@ -87,13 +87,11 @@ export function ProgramsPage() {
 	return <Page
 
 		head={<Size label={programs.label} collection={collection}/>}
-		menu={<DatasetLinks/>}
-
-		back={members({
+		menu={members({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLinks/>)}
 
 		tray={<>
 
@@ -107,7 +105,7 @@ export function ProgramsPage() {
 
 		</>}
 
-		reset={<Clear collection={collection}/>}
+		meta={<Clear collection={collection}/>}
 
 	>{members({
 

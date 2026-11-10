@@ -18,7 +18,9 @@ import { Event } from "@ec2u/data-shared/events/index.js";
 import { Markdown } from "@metreeca/clay-markdown/markdown";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
+import { Heading } from "@metreeca/clay-widgets/heading";
 import { Icon } from "@metreeca/clay-widgets/icon";
+import { Image } from "@metreeca/clay-widgets/image";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
@@ -35,7 +37,6 @@ import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { address, filters, local } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
-import { Title } from "../../widgets/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import "./event.css";
 import { toEventAttendanceMode, toEventStatus } from "./index.core.js";
@@ -132,13 +133,11 @@ export function EventPage() {
 
 		</Path>}
 
-		menu={<DatasetLink href={events.route}/>}
-
-		back={resource({
+		menu={resource({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLink href={events.route}/>)}
 
 		tray={resource({
 
@@ -208,14 +207,19 @@ export function EventPage() {
 		blank: () => <Empty look={"subtle"}>{events.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{events.glyph}</Empty></Failure>,
 
-		ready: ({ state: { label, description, disambiguatingDescription, image } }) => <Title
+		ready: ({ state: { label, description, disambiguatingDescription, image } }) => <>
 
-			title={label}
+			{opt(image, ({ url, description, copyrightNotice }) => <Image look={"subtle"} float={"end"} within={"20rem"}
+				src={url[0]}
+				alt={description ?? `Image of ${label}`}
+				caption={copyrightNotice}
+			/>)}
 
-			image={opt(image, ({ url, description: alt }) => <img src={url[0]} alt={alt ?? `Image of ${label}`}/>)}
-			caption={image?.copyrightNotice}
+			<Heading>{label}</Heading>
 
-		>{opt(description, text => <Markdown>{text}</Markdown>) ?? disambiguatingDescription}</Title>
+			{opt(description, text => <Markdown>{text}</Markdown>) ?? disambiguatingDescription}
+
+		</>
 
 	})}</Page>;
 

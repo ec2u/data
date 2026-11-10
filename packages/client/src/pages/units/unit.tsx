@@ -18,6 +18,7 @@ import { Unit } from "@ec2u/data-shared/units/index.js";
 import { Markdown } from "@metreeca/clay-markdown/markdown";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
+import { Heading } from "@metreeca/clay-widgets/heading";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
@@ -33,7 +34,6 @@ import { Failure } from "../../widgets/failure.js";
 import { address, links, list, local } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
 import { blocks } from "../../widgets/sections.js";
-import { Title } from "../../widgets/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { units } from "./index.js";
 
@@ -96,13 +96,11 @@ export function UnitPage() {
 
 		</Path>}
 
-		menu={<DatasetLink href={units.route}/>}
-
-		back={resource({
+		menu={resource({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLink href={units.route}/>)}
 
 		tray={resource({
 
@@ -155,7 +153,9 @@ export function UnitPage() {
 		ready: ({ state: { prefLabel, definition, university, unitOf, hasUnit = [], subject = [], keyword = [] } }) =>
 			<>
 
-				<Title title={prefLabel}>{opt(definition, text => <Markdown>{text}</Markdown>)}</Title>
+				<Heading>{prefLabel}</Heading>
+
+				{opt(definition, text => <Markdown>{text}</Markdown>)}
 
 				{blocks({
 

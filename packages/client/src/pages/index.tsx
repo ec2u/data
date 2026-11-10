@@ -15,11 +15,11 @@
  */
 
 import { Datasets as DatasetsShape } from "@ec2u/data-shared";
+import { app } from "@metreeca/clay";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
-import { app } from "@metreeca/clay";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { isNumber, isObject, isOptional, isString, opt } from "@metreeca/core";
 import { internalize } from "@metreeca/core/resource";
@@ -51,8 +51,6 @@ export const datasets = immutable({
 	glyph: <Icon.Package/>
 
 });
-
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,18 +102,16 @@ export function Datasets() {
 			{createElement("datasets-identity", {}, <Link href={"/"}>{ec2u(app.name ?? "")}</Link>)}
 			{datasets.label}
 		</>}
-		menu={<DatasetLinks/>}
-
-		back={members({
+		menu={members({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLinks/>)}
 
-		tray={<p>
+		tray={<p style={{ maxWidth: "15rem" }}>
 
-			Open data on the universities of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European University
-			alliance and their local partners, harmonised and cross-linked for search and reuse.
+			Open data on the universities of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European University
+			alliance and their local partners, harmonised and cross-linked for search and reuse.
 
 		</p>}
 

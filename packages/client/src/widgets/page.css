@@ -63,7 +63,7 @@ clay-tool {
      * lets go of the flag while it is enlarged, so the zoomed image fills the window as any other image does
      */
 
-    & .brand:not([active]) {
+    & .logo:not([active]) {
         display: block;
         height: 2.25cap;
         margin-block: calc(-1.125cap + .5lh);
@@ -72,7 +72,7 @@ clay-tool {
 
     /* the row holding the flag still clips along the line, as every head item does, but lets the flag spill across it */
 
-    & header > clay-strip:has(> .brand) {
+    & header > clay-strip:has(.logo) {
         overflow-x: clip;
         overflow-y: visible;
     }
@@ -85,7 +85,7 @@ clay-tool {
      * the name the presence of a wordmark rather than of a plain navigation link, matching the trail heading each page
      */
 
-    & .brand + clay-link {
+    & clay-link:has(.logo) + clay-link {
         --skin--color-link: light-dark(#283169, oklch(from #283169 0.8 0.08 h));
         padding-inline-start: .85cap;
         border-inline-start: 1px solid color-mix(in srgb, var(--skin--color-link) 35%, transparent);

@@ -17,6 +17,7 @@
 import { Course } from "@ec2u/data-shared/courses/index.js";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
+import { Heading } from "@metreeca/clay-widgets/heading";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
@@ -33,7 +34,6 @@ import { Failure } from "../../widgets/failure.js";
 import { address, links, list, local } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
 import { blocks, sections } from "../../widgets/sections.js";
-import { Title } from "../../widgets/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { credits } from "../programs/program.js";
 import { toCourseMode, toCourseTerm } from "./index.core.js";
@@ -113,13 +113,11 @@ export function CoursePage() {
 
 		</Path>}
 
-		menu={<DatasetLink href={courses.route}/>}
-
-		back={resource({
+		menu={resource({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
-		})}
+		}, <DatasetLink href={courses.route}/>)}
 
 		tray={resource({
 
@@ -214,7 +212,9 @@ export function CoursePage() {
 
 		}) => <>
 
-			<Title title={label}>{description}</Title>
+			<Heading>{label}</Heading>
+
+			{description}
 
 			{blocks({
 
