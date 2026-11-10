@@ -81,8 +81,8 @@ clay-tool {
      * the app name beside the flag takes the navy of the flag rather than the link slate, so the two read as one mark;
      * the dark scheme lifts the same hue to a light tint (12.11:1 on #FFF, 10.02:1 on #111)
      *
-     * a hairline in a faded tint of the same navy sets the name apart from the flag, and a medium weight with slightly
-     * tightened tracking gives the name the compact presence of a wordmark rather than of a plain navigation link
+     * a hairline in a faded tint of the same navy sets the name apart from the flag, and the strong heading face gives
+     * the name the presence of a wordmark rather than of a plain navigation link, matching the trail heading each page
      */
 
     & .brand + clay-link {
@@ -91,8 +91,8 @@ clay-tool {
         border-inline-start: 1px solid color-mix(in srgb, var(--skin--color-link) 35%, transparent);
 
         & a {
-            font-weight: 500;
-            letter-spacing: -.01em;
+            font-family: var(--skin--font-family-heading);
+            font-weight: var(--skin--font-weight-strong);
         }
     }
 
