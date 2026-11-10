@@ -23,18 +23,18 @@ import { useRoute, useRouter } from "@metreeca/clay/router";
 import { isNumber, isObject, isOptional, isString, opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
 import { Clear } from "@metreeca/tile-widgets/filters/clear";
+import { Search } from "@metreeca/tile-widgets/filters/search";
 import { Tally } from "@metreeca/tile-widgets/filters/tally";
 import { Count } from "@metreeca/tile-widgets/viewers/count";
 import { useCollection } from "@metreeca/tile/collection";
 import { useCount } from "@metreeca/tile/count";
-import { useKeywords } from "@metreeca/tile/keywords";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
+import { useSearch } from "@metreeca/tile/search";
 import { useTally } from "@metreeca/tile/tally";
 import { integer } from "@metreeca/tile/types/integer";
 import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
-import { Search } from "../_/search.js";
 import { byDataset, ec2u, PublicDatasets, TallyOptions } from "../index.core.js";
 import { Failure } from "../tiles/failure.js";
 import { Page } from "../tiles/page.js";
@@ -73,7 +73,7 @@ export function Datasets() {
 
 	});
 
-	const keywords = useKeywords(collection, "label");
+	const search = useSearch(collection, "label");
 	const license = useTally(collection, "license", { label: "label", size: TallyOptions });
 	const count = useCount(collection);
 
@@ -111,9 +111,9 @@ export function Datasets() {
 
 		tray={<>
 
-			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
+			<Search name={"Name"} search={search}/>
 
-			<Tally name={"License"} compact tally={license}/>
+			<Tally name={"License"} collapsed tally={license}/>
 
 		</>}
 

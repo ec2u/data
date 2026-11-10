@@ -26,19 +26,19 @@ import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
 import { Clear } from "@metreeca/tile-widgets/filters/clear";
 import { Range } from "@metreeca/tile-widgets/filters/range";
+import { Search } from "@metreeca/tile-widgets/filters/search";
 import { Tally } from "@metreeca/tile-widgets/filters/tally";
 import { Count } from "@metreeca/tile-widgets/viewers/count";
 import { useCollection } from "@metreeca/tile/collection";
 import { useCount } from "@metreeca/tile/count";
-import { useKeywords } from "@metreeca/tile/keywords";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
 import { useRange } from "@metreeca/tile/range";
+import { useSearch } from "@metreeca/tile/search";
 import { useTally } from "@metreeca/tile/tally";
 import { date } from "@metreeca/tile/types/date";
 import { instant } from "@metreeca/tile/types/instant";
 import { useEffect } from "preact/hooks";
-import { Search } from "../../_/search.js";
 import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
@@ -67,7 +67,7 @@ export function EventsPage() {
 
 	});
 
-	const keywords = useKeywords(collection, "label");
+	const search = useSearch(collection, "label");
 	const university = useTally(collection, "university", { label: "altLabel", size: TallyOptions });
 	const startDate = useRange(collection, "startDate");
 	const isAccessibleForFree = useTally(collection, "isAccessibleForFree", { size: TallyOptions });
@@ -112,13 +112,13 @@ export function EventsPage() {
 
 		tray={<>
 
-			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
+			<Search name={"Name"} search={search}/>
 
-			<Tally name={"University"} compact={false} tally={university}/>
-			<Range name={"Date"} compact type={instant.as(date)} range={startDate}/>
-			<Tally name={"Free"} compact tally={isAccessibleForFree}>{({ label }) => label === "true" ? "Yes" : "No"}</Tally>
-			<Tally name={"Attendance"} compact tally={eventAttendanceMode}>{({ label }) => toEventAttendanceMode(label)}</Tally>
-			<Tally name={"Topic"} compact tally={topics}/>
+			<Tally name={"University"} tally={university}/>
+			<Range name={"Date"} collapsed type={instant.as(date)} range={startDate}/>
+			<Tally name={"Free"} collapsed tally={isAccessibleForFree}>{({ label }) => label === "true" ? "Yes" : "No"}</Tally>
+			<Tally name={"Attendance"} collapsed tally={eventAttendanceMode}>{({ label }) => toEventAttendanceMode(label)}</Tally>
+			<Tally name={"Topic"} collapsed tally={topics}/>
 
 		</>}
 

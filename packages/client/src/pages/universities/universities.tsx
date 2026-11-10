@@ -26,17 +26,17 @@ import { opt } from "@metreeca/core";
 import { by, locale } from "@metreeca/core/order";
 import { Clear } from "@metreeca/tile-widgets/filters/clear";
 import { Range } from "@metreeca/tile-widgets/filters/range";
+import { Search } from "@metreeca/tile-widgets/filters/search";
 import { Count } from "@metreeca/tile-widgets/viewers/count";
 import { useCollection } from "@metreeca/tile/collection";
 import { useCount } from "@metreeca/tile/count";
-import { useKeywords } from "@metreeca/tile/keywords";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
 import { useRange } from "@metreeca/tile/range";
+import { useSearch } from "@metreeca/tile/search";
 import { integer } from "@metreeca/tile/types/integer";
 import { year } from "@metreeca/tile/types/year";
 import { useEffect } from "preact/hooks";
-import { Search } from "../../_/search.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
 import { DatasetLinks } from "../datasets/dataset.js";
@@ -62,7 +62,7 @@ export function UniversitiesPage() {
 
 	});
 
-	const keywords = useKeywords(collection, "prefLabel");
+	const search = useSearch(collection, "prefLabel");
 	const inception = useRange(collection, "inception");
 	const students = useRange(collection, "students");
 	const count = useCount(collection);
@@ -99,10 +99,10 @@ export function UniversitiesPage() {
 
 		tray={<>
 
-			<Search placeholder={"Name"} value={keywords.text} onChange={keywords.search}/>
+			<Search name={"Name"} search={search}/>
 
-			<Range name={"Inception"} compact type={year} range={inception}/>
-			<Range name={"Students"} compact type={integer} range={students}/>
+			<Range name={"Inception"} collapsed type={year} range={inception}/>
+			<Range name={"Students"} collapsed type={integer} range={students}/>
 
 		</>}
 

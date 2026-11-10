@@ -24,6 +24,7 @@ import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
+import { Search } from "@metreeca/tile-widgets/filters/search";
 import { useCollection } from "@metreeca/tile/collection";
 import { useCount } from "@metreeca/tile/count";
 import { useMembers } from "@metreeca/tile/members";
@@ -31,7 +32,6 @@ import { useResource } from "@metreeca/tile/resource";
 import { date } from "@metreeca/tile/types/date";
 import { integer } from "@metreeca/tile/types/integer";
 import { useEffect, useState } from "preact/hooks";
-import { Search } from "../../_/search.js";
 import { SKOSConcepts } from "../../_/skos/concepts.js";
 import { AI } from "../../tiles/ai.js";
 import { Failure } from "../../tiles/failure.js";
@@ -183,7 +183,7 @@ export function TaxonomyPage() {
 			}}</Infobox>
 
 			{(keywords || hasTopConcept.some(({ narrower }) => narrower?.length)) && // flat schemes are browsed whole
-                <Search placeholder={"Concepts"} value={keywords} onChange={setKeywords}/>
+                <Search name={"Concepts"} search={{ text: keywords, submit: setKeywords }}/>
 			}
 
 			{keywords
