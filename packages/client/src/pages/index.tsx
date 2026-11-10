@@ -111,7 +111,7 @@ export function Datasets() {
 
 		tray={<p style={{
 
-			maxWidth: "15rem",
+			maxWidth: "15em",
 
 		}}>
 
