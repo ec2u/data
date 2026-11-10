@@ -31,7 +31,7 @@ import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
-import { address, links, list, local } from "../../widgets/links.js";
+import { address, filters, links, list, local } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
 import { blocks } from "../../widgets/sections.js";
 import { DatasetLink } from "../datasets/dataset.js";
@@ -106,23 +106,26 @@ export function UnitPage() {
 
 			ready: ({
 				state: {
+					university,
 					altLabel,
 					identifier,
-					homepage = [],
-					university,
 					classification = [],
-					hasHead = []
+					hasHead = [],
+					homepage = []
 				}
 			}) => <Infobox>{[
 
 				{
+					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>),
 					Short: altLabel,
 					Code: identifier
 				},
 
 				{
-					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>),
-					Type: links(classification)
+					Type: filters(classification, units.route, classification => ({
+						...opt(university, ({ id }) => ({ university: id })),
+						classification
+					}))
 				},
 
 				{
@@ -130,7 +133,7 @@ export function UnitPage() {
 				},
 
 				{
-					Info: homepage.length > 0 ? <ul>{homepage.map(url =>
+					Web: homepage.length > 0 ? <ul>{homepage.map(url =>
 						<li key={url}>{address(url, local(university?.id))}</li>
 					)}</ul> : undefined
 				}

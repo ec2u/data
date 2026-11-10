@@ -124,10 +124,18 @@ export function ProgramPage() {
 
 		tray={resource({
 
-			ready: ({ state: { url = [], university, provider, identifier, numberOfCredits, timeToComplete } }) => <Infobox>{[
+			ready: ({
+				state: { url = [], university, identifier, numberOfCredits, timeToComplete, provider }
+			}) => <Infobox>{[
 
 				{
-					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>)
+					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>),
+					Code: identifier
+				},
+
+				{
+					Credits: opt(numberOfCredits, credits),
+					Duration: opt(timeToComplete, value => duration.format(value))
 				},
 
 				{
@@ -135,13 +143,7 @@ export function ProgramPage() {
 				},
 
 				{
-					Code: identifier,
-					Credits: opt(numberOfCredits, credits),
-					Duration: opt(timeToComplete, value => duration.format(value))
-				},
-
-				{
-					Info: url.length > 0 ? <ul>{url.map(url =>
+					Web: url.length > 0 ? <ul>{url.map(url =>
 						<li key={url}>{address(url, local(university?.id))}</li>
 					)}</ul> : undefined
 				}

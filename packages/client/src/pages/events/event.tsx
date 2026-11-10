@@ -145,22 +145,22 @@ export function EventPage() {
 
 				state: {
 
-					url,
+					university,
+
+					keywords = [],
 
 					startDate,
 					endDate,
 
 					inLanguage,
-					isAccessibleForFree,
-
-					eventStatus,
 					eventAttendanceMode,
-
+					isAccessibleForFree,
+					eventStatus,
 					location,
-					university,
+
 					publisher,
 
-					keywords = []
+					url
 
 				}
 
@@ -180,16 +180,21 @@ export function EventPage() {
 				period(startDate, endDate),
 
 				{
-					Entry: opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
 					Language: opt(inLanguage, tag => nameTag(tag, navigator.language)),
 					Attendance: opt(eventAttendanceMode, toEventAttendanceMode),
+					Fees: opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
 					Status: opt(eventStatus, toEventStatus),
 					Location: opt(location, venue)
 				},
 
 				{
-					Info: <ul>{url.map(url => <li key={url}>{address(url, local(university?.id))}</li>)}</ul>,
 					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link href={url[0] ?? id}>{label}</Link>)
+				},
+
+				{
+					Web: url.length > 0 ? <ul>{url.map(url =>
+						<li key={url}>{address(url, local(university?.id))}</li>
+					)}</ul> : undefined
 				}
 
 			]}</Infobox>

@@ -117,24 +117,24 @@ export function DocumentPage() {
 
 				state: {
 
-					url = [],
-
+					university,
 					identifier,
-					language = [],
+
+					type = [],
+					audience = [],
+					subject = [],
 
 					issued,
 					modified,
 					valid,
 
-					university,
+					language = [],
+
 					publisher,
 					creator,
 					contributor = [],
 
-					type = [],
-					subject = [],
-					audience = [],
-
+					url = [],
 					license,
 					rights
 
@@ -143,15 +143,8 @@ export function DocumentPage() {
 			}) => <Infobox>{[
 
 				{
-					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>)
-				},
-
-				{
-					Code: identifier,
-					Web: url.length > 0 ? <ul>{url.map(url =>
-						<li key={url}>{address(url, language.length === 1 ? language[0] : undefined)}</li>
-					)}</ul> : undefined,
-					Language: list(language.map(tag => nameTag(tag, navigator.language)))
+					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>),
+					Code: identifier
 				},
 
 				{
@@ -176,6 +169,10 @@ export function DocumentPage() {
 				},
 
 				{
+					Language: list(language.map(tag => nameTag(tag, navigator.language)))
+				},
+
+				{
 					Publisher: opt(publisher, ({ label, url = [] }) => url.length > 0
 						? <Link href={url[0]}>{label}</Link>
 						: label
@@ -185,8 +182,11 @@ export function DocumentPage() {
 				},
 
 				{
+					Web: url.length > 0 ? <ul>{url.map(url =>
+						<li key={url}>{address(url, language.length === 1 ? language[0] : undefined)}</li>
+					)}</ul> : undefined,
 					License: opt(license, ({ id, label }) => <Link href={id}>{label}</Link>),
-					Rights: rights
+					Copyright: rights
 				}
 
 			]}</Infobox>

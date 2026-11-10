@@ -125,22 +125,23 @@ export function CoursePage() {
 
 				state: {
 
-					url = [],
-
 					university,
+					courseCode,
+
 					year,
 					term = [],
+
+					inLanguage = [],
+					courseMode,
+					isAccessibleForFree,
+					numberOfCredits,
+					timeRequired,
+					courseWorkload,
 
 					provider,
 					instructor = [],
 
-					courseCode,
-					courseMode,
-					inLanguage = [],
-					isAccessibleForFree,
-					numberOfCredits,
-					timeRequired,
-					courseWorkload
+					url = []
 
 				}
 
@@ -148,8 +149,21 @@ export function CoursePage() {
 
 				{
 					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>),
+					Code: courseCode
+				},
+
+				{
 					Year: year,
 					Term: list(term.map(toCourseTerm))
+				},
+
+				{
+					Language: list(inLanguage.map(tag => nameTag(tag, navigator.language))),
+					Attendance: opt(courseMode, toCourseMode),
+					Fees: opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
+					Credits: opt(numberOfCredits, credits),
+					Duration: opt(timeRequired, value => duration.format(value)),
+					Workload: opt(courseWorkload, value => duration.format(value))
 				},
 
 				{
@@ -158,17 +172,7 @@ export function CoursePage() {
 				},
 
 				{
-					Code: courseCode,
-					Attendance: opt(courseMode, toCourseMode),
-					Language: list(inLanguage.map(tag => nameTag(tag, navigator.language))),
-					"Fees for Externals": opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
-					Credits: opt(numberOfCredits, credits),
-					Duration: opt(timeRequired, value => duration.format(value)),
-					Workload: opt(courseWorkload, value => duration.format(value))
-				},
-
-				{
-					Info: url.length > 0 ? <ul>{url.map(url =>
+					Web: url.length > 0 ? <ul>{url.map(url =>
 						<li key={url}>{address(url, local(university?.id))}</li>
 					)}</ul> : undefined
 				}

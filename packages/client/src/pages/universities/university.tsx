@@ -126,11 +126,7 @@ export function UniversityPage() {
 
 		tray={resource({
 
-			ready: ({ state: { homepage, country, city, inception, students } }) => <Infobox>{[
-
-				{
-					Home: <ul>{homepage.map(url => <li key={url}>{address(url, local(route))}</li>)}</ul>
-				},
+			ready: ({ state: { country, city, inception, students, homepage } }) => <Infobox>{[
 
 				{
 					Country: <Link href={country.id}>{country.label}</Link>,
@@ -138,8 +134,15 @@ export function UniversityPage() {
 				},
 
 				{
-					Inception: year.format(inception),
+					Inception: year.format(inception)
+				},
+
+				{
 					Students: integer.format(students)
+				},
+
+				{
+					Web: <ul>{homepage.map(url => <li key={url}>{address(url, local(route))}</li>)}</ul>
 				},
 
 				members({

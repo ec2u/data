@@ -227,3 +227,59 @@ Issues live in `ec2u/data` and belong to the Knowledge Hub project (`github.com/
 Branch issue work off `edge` (the development branch), not `next` or `main`. Issue branches follow the
 `{type}/gh-{number}-{slug}` convention and merge back into `edge`.
 
+## Resource Info Boxes
+
+The tray `Infobox` of every resource detail page under `packages/client/src/pages` follows one layout, so that readers
+find the same kind of fact in the same place on every page. Groups come in a fixed order and a group with nothing to
+state is dropped; within a group, fields keep the order below.
+
+<!-- the layout is a fenced block on purpose: the markdown formatter leaves it alone, keeping its columns aligned -->
+
+```text
+                University    Unit          Program       Course        Document      Event
+--------------  ------------  ------------  ------------  ------------  ------------  ------------
+Context         Country       University    University    University    University    University
+                City          Short         Code          Code          Code
+                              Code
+
+Classification                Type                                      Type          Topics
+                                                                        Audience
+                                                                        Topics
+
+Time            Inception                                 Year          Issued        Starts
+                                                          Term          Updated       Ends
+                                                                        Valid
+
+Attributes      Students                    Credits       Language      Language      Language
+                                            Duration      Attendance                  Attendance
+                                                          Fees                        Fees
+                                                          Credits                     Status
+                                                          Duration                    Location
+                                                          Workload
+
+People                        Head          Provider      Provider      Publisher     Publisher
+                                                          Instructor    Contact
+                                                                        Contributor
+
+Links           Web           Web           Web           Web           Web           Web
+                                                                        License
+                                                                        Copyright
+
+Datasets        <counts>
+```
+
+- **Context** identifies the resource: the owning university first, then its short name and code.
+- **Classification** holds filter links (`filters()` in `widgets/links.tsx`) leading to the catalogue narrowed on the
+  value and on the owning university, never plain links to the term: the tray answers "what else is like this".
+- **Time**, **Attributes** and **People** keep dates, measurable or enumerated properties, and responsible parties
+  apart, so that pages with more fields only grow groups rather than reshuffle them.
+- **Links** closes the box with outbound references; `Web` is guarded on an empty list like every other entry.
+- **Labels** are shared across pages: `Web` (not `Home`/`Info`), `Fees` (not `Fees for Externals`/`Entry`),
+  `Copyright` (not `Rights`), matching the dataset and taxonomy pages.
+- Only the body `blocks()` wrap; tray infoboxes clip each value to one line, so long addresses never break mid-word.
+- The body `blocks()` keep what reads poorly in the tray or belongs with the description: properties with long labels
+  or many values (unit `Topics`, program and course `Subjects`, levels, audiences, keywords) and links to related
+  resources (courses, programs, organisational units). Do not move them into the tray.
+
+Update the table in the same change whenever a page adds, moves or renames a tray entry.
+
