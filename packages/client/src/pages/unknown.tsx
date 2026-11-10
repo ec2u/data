@@ -20,8 +20,8 @@ import { Icon } from "@metreeca/clay-widgets/icon";
 import { useRouter } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
 import { NotFound } from "@metreeca/http";
-import { Failure } from "../tiles/failure.js";
-import { Page } from "../tiles/page.js";
+import { Failure } from "../widgets/failure.js";
+import { Page } from "../widgets/page.js";
 import { datasets } from "./index.js";
 
 

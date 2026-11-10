@@ -29,11 +29,11 @@ import { by, locale } from "@metreeca/core/order";
 import { useResource } from "@metreeca/tile/resource";
 import { useEffect } from "preact/hooks";
 import { SKOSConcepts, SKOSLineage } from "../../_/skos/concepts.js";
-import { AI } from "../../tiles/ai.js";
-import { Failure } from "../../tiles/failure.js";
-import { Page } from "../../tiles/page.js";
-import { blocks } from "../../tiles/sections.js";
-import { Title } from "../../tiles/title.js";
+import { AI } from "../../widgets/ai.js";
+import { Failure } from "../../widgets/failure.js";
+import { Page } from "../../widgets/page.js";
+import { blocks } from "../../widgets/sections.js";
+import { Title } from "../../widgets/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { taxonomies } from "./index.js";
 

@@ -33,11 +33,11 @@ import { date } from "@metreeca/tile/types/date";
 import { integer } from "@metreeca/tile/types/integer";
 import { useEffect, useState } from "preact/hooks";
 import { SKOSConcepts } from "../../_/skos/concepts.js";
-import { AI } from "../../tiles/ai.js";
-import { Failure } from "../../tiles/failure.js";
-import { address } from "../../tiles/links.js";
-import { Page } from "../../tiles/page.js";
-import { Title } from "../../tiles/title.js";
+import { AI } from "../../widgets/ai.js";
+import { Failure } from "../../widgets/failure.js";
+import { address } from "../../widgets/links.js";
+import { Page } from "../../widgets/page.js";
+import { Title } from "../../widgets/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { taxonomies } from "./index.js";
 

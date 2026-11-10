@@ -27,9 +27,7 @@ import { by, locale } from "@metreeca/core/order";
 import { Clear } from "@metreeca/tile-widgets/filters/clear";
 import { Range } from "@metreeca/tile-widgets/filters/range";
 import { Search } from "@metreeca/tile-widgets/filters/search";
-import { Count } from "@metreeca/tile-widgets/viewers/count";
 import { useCollection } from "@metreeca/tile/collection";
-import { useCount } from "@metreeca/tile/count";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
 import { useRange } from "@metreeca/tile/range";
@@ -37,8 +35,9 @@ import { useSearch } from "@metreeca/tile/search";
 import { integer } from "@metreeca/tile/types/integer";
 import { year } from "@metreeca/tile/types/year";
 import { useEffect } from "preact/hooks";
-import { Failure } from "../../tiles/failure.js";
-import { Page } from "../../tiles/page.js";
+import { Failure } from "../../widgets/failure.js";
+import { Page } from "../../widgets/page.js";
+import { Size } from "../../widgets/size.js";
 import { DatasetLinks } from "../datasets/dataset.js";
 import { universities } from "./index.js";
 
@@ -65,7 +64,6 @@ export function UniversitiesPage() {
 	const search = useSearch(collection, "prefLabel");
 	const inception = useRange(collection, "inception");
 	const students = useRange(collection, "students");
-	const count = useCount(collection);
 
 	const members = useMembers(collection, {
 
@@ -88,7 +86,7 @@ export function UniversitiesPage() {
 
 	return <Page
 
-		head={universities.label}
+		head={<Size label={universities.label} collection={collection}/>}
 		menu={<DatasetLinks/>}
 
 		back={members({
@@ -106,10 +104,7 @@ export function UniversitiesPage() {
 
 		</>}
 
-		info={<>
-			<Count collection={collection} count={count}/>
-			<Clear collection={collection}/>
-		</>}
+		reset={<Clear collection={collection}/>}
 
 	>{members({
 

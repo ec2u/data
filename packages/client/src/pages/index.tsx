@@ -25,9 +25,7 @@ import { immutable } from "@metreeca/core/values";
 import { Clear } from "@metreeca/tile-widgets/filters/clear";
 import { Search } from "@metreeca/tile-widgets/filters/search";
 import { Tally } from "@metreeca/tile-widgets/filters/tally";
-import { Count } from "@metreeca/tile-widgets/viewers/count";
 import { useCollection } from "@metreeca/tile/collection";
-import { useCount } from "@metreeca/tile/count";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
 import { useSearch } from "@metreeca/tile/search";
@@ -36,8 +34,9 @@ import { integer } from "@metreeca/tile/types/integer";
 import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
 import { byDataset, ec2u, PublicDatasets, TallyOptions } from "../index.core.js";
-import { Failure } from "../tiles/failure.js";
-import { Page } from "../tiles/page.js";
+import { Failure } from "../widgets/failure.js";
+import { Page } from "../widgets/page.js";
+import { Size } from "../widgets/size.js";
 import { DatasetLinks } from "./datasets/dataset.js";
 import "./index.css";
 
@@ -75,7 +74,6 @@ export function Datasets() {
 
 	const search = useSearch(collection, "label");
 	const license = useTally(collection, "license", { label: "label", size: TallyOptions });
-	const count = useCount(collection);
 
 	const members = useMembers(collection, {
 
@@ -100,7 +98,7 @@ export function Datasets() {
 
 	return <Page
 
-		head={datasets.label}
+		head={<Size label={datasets.label} collection={collection}/>}
 		menu={<DatasetLinks/>}
 
 		back={members({
@@ -117,10 +115,7 @@ export function Datasets() {
 
 		</>}
 
-		info={<>
-			<Count collection={collection} count={count}/>
-			<Clear collection={collection}/>
-		</>}
+		reset={<Clear collection={collection}/>}
 
 	>{members({
 

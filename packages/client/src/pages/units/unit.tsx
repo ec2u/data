@@ -29,12 +29,12 @@ import { by, compound, locale } from "@metreeca/core/order";
 import { useResource } from "@metreeca/tile/resource";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { AI } from "../../tiles/ai.js";
-import { Failure } from "../../tiles/failure.js";
-import { address, links, list, local } from "../../tiles/links.js";
-import { Page } from "../../tiles/page.js";
-import { blocks } from "../../tiles/sections.js";
-import { Title } from "../../tiles/title.js";
+import { AI } from "../../widgets/ai.js";
+import { Failure } from "../../widgets/failure.js";
+import { address, links, list, local } from "../../widgets/links.js";
+import { Page } from "../../widgets/page.js";
+import { blocks } from "../../widgets/sections.js";
+import { Title } from "../../widgets/title.js";
 import { DatasetLink } from "../datasets/dataset.js";
 import { units } from "./index.js";
 

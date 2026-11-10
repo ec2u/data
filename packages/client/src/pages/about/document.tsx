@@ -22,8 +22,8 @@ import { useRoute } from "@metreeca/clay/router";
 import { isNumber, isString } from "@metreeca/core";
 import { NotFound } from "@metreeca/http";
 import type { ComponentChildren } from "preact";
-import { Failure } from "../../tiles/failure.js";
-import { Page } from "../../tiles/page.js";
+import { Failure } from "../../widgets/failure.js";
+import { Page } from "../../widgets/page.js";
 import { Unknown } from "../unknown.js";
 import { about } from "./index.js";
 

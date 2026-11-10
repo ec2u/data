@@ -25,17 +25,16 @@ import { useRoute, useRouter } from "@metreeca/clay/router";
 import { Clear } from "@metreeca/tile-widgets/filters/clear";
 import { Search } from "@metreeca/tile-widgets/filters/search";
 import { Tally } from "@metreeca/tile-widgets/filters/tally";
-import { Count } from "@metreeca/tile-widgets/viewers/count";
 import { useCollection } from "@metreeca/tile/collection";
-import { useCount } from "@metreeca/tile/count";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
 import { useSearch } from "@metreeca/tile/search";
 import { useTally } from "@metreeca/tile/tally";
 import { useEffect } from "preact/hooks";
 import { TallyOptions } from "../../index.core.js";
-import { Failure } from "../../tiles/failure.js";
-import { Page } from "../../tiles/page.js";
+import { Failure } from "../../widgets/failure.js";
+import { Page } from "../../widgets/page.js";
+import { Size } from "../../widgets/size.js";
 import { DatasetLinks } from "../datasets/dataset.js";
 import { units } from "./index.js";
 
@@ -63,7 +62,6 @@ export function UnitsPage() {
 	const university = useTally(collection, "university", { label: "altLabel", size: TallyOptions });
 	const classification = useTally(collection, "classification", { label: "label", size: TallyOptions });
 	const subject = useTally(collection, "subject", { label: "label", size: TallyOptions });
-	const count = useCount(collection);
 
 	const members = useMembers(collection, {
 
@@ -85,7 +83,7 @@ export function UnitsPage() {
 
 	return <Page
 
-		head={units.label}
+		head={<Size label={units.label} collection={collection}/>}
 		menu={<DatasetLinks/>}
 
 		back={members({
@@ -104,10 +102,7 @@ export function UnitsPage() {
 
 		</>}
 
-		info={<>
-			<Count collection={collection} count={count}/>
-			<Clear collection={collection}/>
-		</>}
+		reset={<Clear collection={collection}/>}
 
 	>{members({
 

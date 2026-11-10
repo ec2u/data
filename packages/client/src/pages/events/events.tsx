@@ -28,9 +28,7 @@ import { Clear } from "@metreeca/tile-widgets/filters/clear";
 import { Range } from "@metreeca/tile-widgets/filters/range";
 import { Search } from "@metreeca/tile-widgets/filters/search";
 import { Tally } from "@metreeca/tile-widgets/filters/tally";
-import { Count } from "@metreeca/tile-widgets/viewers/count";
 import { useCollection } from "@metreeca/tile/collection";
-import { useCount } from "@metreeca/tile/count";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
 import { useRange } from "@metreeca/tile/range";
@@ -40,8 +38,9 @@ import { date } from "@metreeca/tile/types/date";
 import { instant } from "@metreeca/tile/types/instant";
 import { useEffect } from "preact/hooks";
 import { TallyOptions } from "../../index.core.js";
-import { Failure } from "../../tiles/failure.js";
-import { Page } from "../../tiles/page.js";
+import { Failure } from "../../widgets/failure.js";
+import { Page } from "../../widgets/page.js";
+import { Size } from "../../widgets/size.js";
 import { DatasetLinks } from "../datasets/dataset.js";
 import { schedule } from "./event.js";
 import { toEventAttendanceMode } from "./index.core.js";
@@ -73,7 +72,6 @@ export function EventsPage() {
 	const isAccessibleForFree = useTally(collection, "isAccessibleForFree", { size: TallyOptions });
 	const eventAttendanceMode = useTally(collection, "eventAttendanceMode", { size: TallyOptions });
 	const topics = useTally(collection, "keywords", { label: "label", size: TallyOptions });
-	const count = useCount(collection);
 
 	const members = useMembers(collection, {
 
@@ -101,7 +99,7 @@ export function EventsPage() {
 
 	return <Page
 
-		head={events.label}
+		head={<Size label={events.label} collection={collection}/>}
 		menu={<DatasetLinks/>}
 
 		back={members({
@@ -122,10 +120,7 @@ export function EventsPage() {
 
 		</>}
 
-		info={<>
-			<Count collection={collection} count={count}/>
-			<Clear collection={collection}/>
-		</>}
+		reset={<Clear collection={collection}/>}
 
 	>{members({
 

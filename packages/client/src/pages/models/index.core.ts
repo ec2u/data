@@ -20,7 +20,7 @@ import { eager } from "@metreeca/blue/value";
 import { type Lazy, opt, type Optional } from "@metreeca/core";
 import { some, type Some } from "@metreeca/core/arrays";
 import { by, locale } from "@metreeca/core/order";
-import { getShapeHref, getShapeId, getShapeName } from "../../tiles/shape.core.js";
+import { getShapeHref, getShapeId, getShapeName } from "../../widgets/shape.core.js";
 
 
 /**

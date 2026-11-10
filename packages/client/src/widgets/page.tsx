@@ -29,6 +29,7 @@ export function Page({
 
 	tray,
 	info,
+	reset,
 
 	head,
 	menu,
@@ -40,6 +41,7 @@ export function Page({
 
 	tray?: ComponentChildren
 	info?: ComponentChildren
+	reset?: ComponentChildren
 
 	head?: ComponentChildren
 	menu?: ComponentChildren
@@ -57,7 +59,12 @@ export function Page({
 
 		<Tool
 
-			meta={<Link href={"/"}><Logo/><span>{ec2u(app.name ?? "")}</span></Link>}
+			meta={<Strip grow place={"head"}>
+
+				<Link href={"/"}><Logo/><span>{ec2u(app.name ?? "")}</span></Link>
+				{reset}
+
+			</Strip>}
 
 			tray={tray}
 			more={info}

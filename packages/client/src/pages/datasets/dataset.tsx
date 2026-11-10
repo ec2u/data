@@ -36,11 +36,11 @@ import { integer } from "@metreeca/tile/types/integer";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { ec2u } from "../../index.core.js";
-import { Failure } from "../../tiles/failure.js";
-import { address, links } from "../../tiles/links.js";
-import { Page } from "../../tiles/page.js";
-import { getShapeHref, getShapeName } from "../../tiles/shape.core.js";
-import "../../tiles/shape.css";
+import { Failure } from "../../widgets/failure.js";
+import { address, links } from "../../widgets/links.js";
+import { Page } from "../../widgets/page.js";
+import { getShapeHref, getShapeName } from "../../widgets/shape.core.js";
+import "../../widgets/shape.css";
 import { models } from "../models/index.js";
 
 

@@ -16,7 +16,7 @@
 
 clay-tool {
 
-    --clay-tool-head-font-size: var(--skin--scaling-150);
+    --clay-tool-head-font-size: var(--skin--scaling-125);
 
     /* the tray carries labelled property panels and facets, so it takes the width of the legacy hub sidebar */
 
@@ -28,6 +28,28 @@ clay-tool {
         display: flex;
         flex-direction: column;
         row-gap: var(--skin--spacing-075);
+    }
+
+    /*
+     * the reset beside the logo matches the facet resets below it: body-sized rather than head-sized, and drawn in from
+     * the edge by the border and header padding of a facet box, so its glyph lines up with theirs down the column
+     */
+
+    & tile-clear {
+        font-size: var(--skin--font-size);
+        margin-inline-end: calc(
+            var(--skin--border-width) + var(--skin--spacing-025) - (var(--skin--scaling-110) - var(--skin--scaling-100)) / 2
+        );
+
+        /*
+         * the glyph stands a tad larger than the facet ones, as it resets the whole collection rather than one facet,
+         * and the edge inset gives back half the growth, so the larger glyph stays centred on the facet glyphs below
+         */
+
+        & .lucide {
+            width: var(--skin--scaling-110);
+            height: var(--skin--scaling-110);
+        }
     }
 
     /* the repository icon in the footer stands a tad larger than the copyright notice beside it */

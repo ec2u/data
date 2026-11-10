@@ -27,9 +27,7 @@ import { Clear } from "@metreeca/tile-widgets/filters/clear";
 import { Range } from "@metreeca/tile-widgets/filters/range";
 import { Search } from "@metreeca/tile-widgets/filters/search";
 import { Tally } from "@metreeca/tile-widgets/filters/tally";
-import { Count } from "@metreeca/tile-widgets/viewers/count";
 import { useCollection } from "@metreeca/tile/collection";
-import { useCount } from "@metreeca/tile/count";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
 import { useRange } from "@metreeca/tile/range";
@@ -39,8 +37,9 @@ import { decimal } from "@metreeca/tile/types/decimal";
 import { duration } from "@metreeca/tile/types/duration";
 import { useEffect } from "preact/hooks";
 import { TallyOptions } from "../../index.core.js";
-import { Failure } from "../../tiles/failure.js";
-import { Page } from "../../tiles/page.js";
+import { Failure } from "../../widgets/failure.js";
+import { Page } from "../../widgets/page.js";
+import { Size } from "../../widgets/size.js";
 import { DatasetLinks } from "../datasets/dataset.js";
 import { toCourseMode, toCourseTerm } from "./index.core.js";
 import { courses } from "./index.js";
@@ -78,7 +77,6 @@ export function CoursesPage() {
 	const credentialCategory = useTally(collection, "educationalCredentialAwarded.credentialCategory", { size: TallyOptions });
 	const about = useTally(collection, "about", { label: "label", size: TallyOptions });
 	const audience = useTally(collection, "audience", { label: "label", size: TallyOptions });
-	const count = useCount(collection);
 
 	const members = useMembers(collection, {
 
@@ -100,7 +98,7 @@ export function CoursesPage() {
 
 	return <Page
 
-		head={courses.label}
+		head={<Size label={courses.label} collection={collection}/>}
 		menu={<DatasetLinks/>}
 
 		back={members({
@@ -128,10 +126,7 @@ export function CoursesPage() {
 
 		</>}
 
-		info={<>
-			<Count collection={collection} count={count}/>
-			<Clear collection={collection}/>
-		</>}
+		reset={<Clear collection={collection}/>}
 
 	>{members({
 
