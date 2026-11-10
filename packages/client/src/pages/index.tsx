@@ -103,18 +103,12 @@ export function Datasets() {
 
 		})}
 
-		tray={<>
+		tray={<p>
 
-			<p>
+			Open data on the universities of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European University
+			alliance and their local partners, harmonised and cross-linked for search and reuse.
 
-				Open data on the universities of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European University
-				alliance and their local partners, harmonised and cross-linked for search and reuse.
-
-			</p>
-
-			<Link href={"https://github.com/ec2u/data"}>GitHub Repository</Link>
-
-		</>}
+		</p>}
 
 		copy={<Funding/>}
 

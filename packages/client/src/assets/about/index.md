@@ -5,6 +5,9 @@ as cross-linked datasets about skills, courses, research, local events and other
 Each dataset is available through this interactive semantic search tool and through a machine-readable REST/JSON-LD API.
 Both support faceted search and linked data navigation across every dataset and its cross-links.
 
+The software running the hub is open source: its code, issue tracker and development history are on
+[GitHub](https://github.com/ec2u/data), where you can also report problems with the hub or with its datasets.
+
 Automated crawlers collect much of this content, and AI enriches it with descriptions, labels and classifications.
 Either step may introduce errors or gaps, so always check important information against official sources before acting
 on it. See [AI-Generated Content](ai) for details on how AI is used and how to use its output responsibly.
