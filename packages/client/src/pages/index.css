@@ -45,3 +45,34 @@ datasets-grid {
     }
 
 }
+
+/*
+ * The app name heading the side column is out of sight on a viewport too narrow for two columns, where the side column
+ * turns into a drawer; there it opens the head of the home page instead, without the flag and in body type, set above
+ * the title in the navy and weight of the wordmark, so a reader landing on the hub knows at once which site it is.
+ */
+
+datasets-identity {
+
+    display: none;
+
+    @container style(--skin--viewport-medium: off) {
+
+        display: block;
+        margin-block-end: var(--skin--spacing-100);
+        font-size: var(--skin--font-size);
+
+        & > clay-link {
+
+            --skin--color-link: light-dark(#283169, oklch(from #283169 0.8 0.08 h));
+
+            & a {
+                font-weight: 500;
+                letter-spacing: -.01em;
+            }
+
+        }
+
+    }
+
+}

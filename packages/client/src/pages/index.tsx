@@ -19,6 +19,7 @@ import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
+import { app } from "@metreeca/clay";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { isNumber, isObject, isOptional, isString, opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
@@ -30,6 +31,7 @@ import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
 import { byDataset, ec2u, PublicDatasets } from "../index.core.js";
 import { Failure } from "../widgets/failure.js";
+import { Funding } from "../widgets/funding.js";
 import { Page } from "../widgets/page.js";
 import { DatasetLinks } from "./datasets/dataset.js";
 import "./index.css";
@@ -38,7 +40,7 @@ import "./index.css";
 export const datasets = immutable({
 
 	route: "/",
-	label: "The European Campus of City-Universities",
+	label: "The European Campus of City-Universities",
 	glyph: <Icon.Package/>
 
 });
@@ -89,7 +91,10 @@ export function Datasets() {
 
 	return <Page
 
-		head={datasets.label}
+		head={<>
+			{createElement("datasets-identity", {}, <Link href={"/"}>{ec2u(app.name ?? "")}</Link>)}
+			{datasets.label}
+		</>}
 		menu={<DatasetLinks/>}
 
 		back={members({
@@ -98,12 +103,20 @@ export function Datasets() {
 
 		})}
 
-		tray={<p>
+		tray={<>
 
-			Open data on the universities of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European University
-			alliance and their local partners, harmonised and cross-linked for search and reuse.
+			<p>
 
-		</p>}
+				Open data on the universities of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European University
+				alliance and their local partners, harmonised and cross-linked for search and reuse.
+
+			</p>
+
+			<Link href={"https://github.com/ec2u/data"}>GitHub Repository</Link>
+
+		</>}
+
+		copy={<Funding/>}
 
 	>{members({
 

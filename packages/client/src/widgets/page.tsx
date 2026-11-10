@@ -23,7 +23,6 @@ import { Tool } from "@metreeca/clay-widgets/tool";
 import { type ComponentChildren, h } from "preact";
 import "./page.css";
 import { ec2u } from "../index.core.js";
-import { GitHub } from "./github.js";
 
 const brand=new URL("../index.svg", import.meta.url).href;
 
@@ -36,6 +35,7 @@ export function Page({
 	head,
 	menu,
 	back,
+	copy,
 
 	children
 
@@ -48,6 +48,7 @@ export function Page({
 	head?: ComponentChildren
 	menu?: ComponentChildren
 	back?: ComponentChildren
+	copy?: ComponentChildren
 
 	children?: ComponentChildren
 
@@ -78,13 +79,7 @@ export function Page({
 
 			head={head}
 			menu={back ?? menu}
-
-			copy={<Strip grow place={"head"}>
-
-				<small>{app.copy}</small>
-				<Link href={"https://github.com/ec2u/data"} title={"GitHub Repository"}><GitHub class={"repo"}/></Link>
-
-			</Strip>}
+			copy={copy}
 
 		>{children}</Tool>
 
