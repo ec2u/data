@@ -36,8 +36,18 @@
 
             :root {
 
-                --skin--color-subtle: light-dark(#3C4156, #A1A7BC);
-                --skin--color-strong: light-dark(#2E63DF, #86ADFD);
+                /*
+                 * The accents pair the EC2U logo colours: the subtle one a slate in the site blue hue, at the lightness
+                 * and chroma of the shipped slate, the strong one the logo yellow, as light as each scheme allows while
+                 * every derived role holds its budget, an ochre on the light page. Contrast against the page:
+                 *
+                 *               light on #FFF   dark on #111
+                 *     subtle    10.09:1         7.90:1
+                 *     strong    5.33:1          8.42:1
+                 */
+
+                --skin--color-subtle: light-dark(#384256, #9EA8BC);
+                --skin--color-strong: light-dark(#856708, #D5A717);
 
             }
 
@@ -102,6 +112,7 @@
         </style>
 
         <script type="module" src="./index.tsx"></script>
+        <link rel="stylesheet" href="../../../../../../../Desktop/ec2u/ec2u.css">
 
     </head>
 
