@@ -21,12 +21,6 @@ clay-tool {
 
     --clay-card-side-max-width: min(10rem, 33%);
 
-    & > aside > div > div {
-        display: flex;
-        flex-direction: column;
-        row-gap: var(--skin--spacing-075);
-    }
-
     & tile-clear {
 
         font-size: var(--skin--font-size);

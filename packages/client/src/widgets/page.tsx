@@ -16,6 +16,7 @@
 
 import { app } from "@metreeca/clay";
 import { Link } from "@metreeca/clay-widgets/link";
+import { Stack } from "@metreeca/clay-widgets/stack";
 import { Strip } from "@metreeca/clay-widgets/strip";
 import { Style } from "@metreeca/clay-widgets/style";
 import { Tool } from "@metreeca/clay-widgets/tool";
@@ -76,7 +77,7 @@ export function Page({
 
 			</Strip>}
 
-			tray={tray}
+			tray={<Stack space={"spacing075"}>{tray}</Stack>}
 			more={info}
 
 			head={<Style css={{
