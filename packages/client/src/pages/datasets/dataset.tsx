@@ -289,7 +289,7 @@ export function DatasetPage({
 
 	>{resource({
 
-		blank: () => <Empty>{glyph}</Empty>,
+		blank: () => <Empty look={"subtle"}>{glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{glyph}</Empty></Failure>,
 
 		ready: ({ state: { description, publisher, source, rights, license = [], accessRights } }) => <>

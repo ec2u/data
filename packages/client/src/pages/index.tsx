@@ -119,7 +119,7 @@ export function Datasets() {
 
 	>{members({
 
-		blank: () => <Empty>{datasets.glyph}</Empty>,
+		blank: () => <Empty look={"subtle"}>{datasets.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{datasets.glyph}</Empty></Failure>,
 
 		ready: ({ state }) => {

@@ -223,7 +223,7 @@ export function EventPage() {
 
 	>{resource({
 
-		blank: () => <Empty>{events.glyph}</Empty>,
+		blank: () => <Empty look={"subtle"}>{events.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{events.glyph}</Empty></Failure>,
 
 		ready: ({ state: { label, description, disambiguatingDescription, image } }) => <Title

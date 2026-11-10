@@ -113,7 +113,7 @@ export function DocumentsPage() {
 
 	>{members({
 
-		blank: () => <Empty>{documents.glyph}</Empty>,
+		blank: () => <Empty look={"subtle"}>{documents.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{documents.glyph}</Empty></Failure>,
 
 		ready: ({ state, load }) => state.length === 0 ? <Empty>{documents.glyph}</Empty> : <>

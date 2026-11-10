@@ -130,7 +130,7 @@ export function CoursesPage() {
 
 	>{members({
 
-		blank: () => <Empty>{courses.glyph}</Empty>,
+		blank: () => <Empty look={"subtle"}>{courses.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{courses.glyph}</Empty></Failure>,
 
 		ready: ({ state, load }) => state.length === 0 ? <Empty>{courses.glyph}</Empty> : <>

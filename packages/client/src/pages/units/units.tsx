@@ -106,7 +106,7 @@ export function UnitsPage() {
 
 	>{members({
 
-		blank: () => <Empty>{units.glyph}</Empty>,
+		blank: () => <Empty look={"subtle"}>{units.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{units.glyph}</Empty></Failure>,
 
 		ready: ({ state, load }) => state.length === 0 ? <Empty>{units.glyph}</Empty> : <>

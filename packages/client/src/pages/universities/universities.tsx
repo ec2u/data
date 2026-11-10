@@ -108,7 +108,7 @@ export function UniversitiesPage() {
 
 	>{members({
 
-		blank: () => <Empty>{universities.glyph}</Empty>,
+		blank: () => <Empty look={"subtle"}>{universities.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{universities.glyph}</Empty></Failure>,
 
 		ready: ({ state }) => state.length === 0 ? <Empty>{universities.glyph}</Empty> : <>{[...state]

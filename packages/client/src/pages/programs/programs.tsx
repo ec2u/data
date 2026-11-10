@@ -111,7 +111,7 @@ export function ProgramsPage() {
 
 	>{members({
 
-		blank: () => <Empty>{programs.glyph}</Empty>,
+		blank: () => <Empty look={"subtle"}>{programs.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{programs.glyph}</Empty></Failure>,
 
 		ready: ({ state, load }) => state.length === 0 ? <Empty>{programs.glyph}</Empty> : <>
