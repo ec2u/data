@@ -15,6 +15,7 @@
  */
 
 import { app } from "@metreeca/clay";
+import { useFetching } from "@metreeca/clay/fetch";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Logo } from "@metreeca/clay-widgets/logo";
@@ -51,6 +52,8 @@ export function Page({
 
 }) {
 
+	const busy=useFetching();
+
 	return <Style css={{
 
 		linkLook: "strong"
@@ -58,6 +61,8 @@ export function Page({
 	}}>
 
 		<Tool
+
+			busy={busy}
 
 			meta={<Strip grow place={"head"}>
 
