@@ -37,7 +37,7 @@ import { useEffect } from "preact/hooks";
 import { Search } from "../../_/search.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { DatasetToggle } from "../datasets/dataset.js";
+import { DatasetLinks } from "../datasets/dataset.js";
 import { universities } from "./index.js";
 
 
@@ -87,7 +87,7 @@ export function UniversitiesPage() {
 	return <Page
 
 		head={universities.label}
-		menu={<DatasetToggle/>}
+		menu={<DatasetLinks/>}
 
 		back={members({
 

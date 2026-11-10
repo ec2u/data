@@ -101,14 +101,14 @@ export function DatasetLink({
 
 
 /**
- * Creates a link toggling a catalogue between its data and the introduction to its dataset.
+ * Creates a link leading a catalogue from its data to the introduction to its dataset, or back.
  *
  * Leads from the data to the same route with the `;info` annex, and back to the plain route, where the catalogue
  * recovers from its stored state the filters it showed before the switch, as the annexed route leaves them behind.
  *
- * @returns The toggle link
+ * @returns The link to the view not shown
  */
-export function DatasetToggle() {
+export function DatasetLinks() {
 
 	const route = useRoute();
 	const annex = useAnnex();
@@ -124,7 +124,7 @@ export function DatasetToggle() {
  * Creates the introduction to the dataset listed by a catalogue.
  *
  * Shows what the dataset holds, the terms it is published under and links to the models describing its resources, at
- * the catalogue route carrying the `;info` annex, where {@link DatasetToggle} switches back to the listed data.
+ * the catalogue route carrying the `;info` annex, where {@link DatasetLinks} leads back to the listed data.
  *
  * @param options The view configuration
  *
@@ -240,7 +240,7 @@ export function DatasetPage({
 	return <Page
 
 		head={title}
-		menu={<DatasetToggle/>}
+		menu={<DatasetLinks/>}
 
 		back={resource({
 

@@ -37,7 +37,7 @@ import { Search } from "../../_/search.js";
 import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { DatasetToggle } from "../datasets/dataset.js";
+import { DatasetLinks } from "../datasets/dataset.js";
 import { programs } from "./index.js";
 
 
@@ -89,7 +89,7 @@ export function ProgramsPage() {
 	return <Page
 
 		head={programs.label}
-		menu={<DatasetToggle/>}
+		menu={<DatasetLinks/>}
 
 		back={members({
 

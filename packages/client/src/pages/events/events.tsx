@@ -41,7 +41,7 @@ import { Search } from "../../_/search.js";
 import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../tiles/failure.js";
 import { Page } from "../../tiles/page.js";
-import { DatasetToggle } from "../datasets/dataset.js";
+import { DatasetLinks } from "../datasets/dataset.js";
 import { schedule } from "./event.js";
 import { toEventAttendanceMode } from "./index.core.js";
 import { events } from "./index.js";
@@ -101,7 +101,7 @@ export function EventsPage() {
 	return <Page
 
 		head={events.label}
-		menu={<DatasetToggle/>}
+		menu={<DatasetLinks/>}
 
 		back={members({
 
