@@ -19,6 +19,7 @@ import { Button } from "@metreeca/clay-widgets/button";
 import { Card } from "@metreeca/clay-widgets/card";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
+import { Image } from "@metreeca/clay-widgets/image";
 import { Link } from "@metreeca/clay-widgets/link";
 import { More } from "@metreeca/clay-widgets/more";
 import { useRoute, useRouter } from "@metreeca/clay/router";
@@ -138,7 +139,7 @@ export function EventsPage() {
 
 					title={<Link href={id}>{`${schedule(startDate, endDate)} / ${label}`}</Link>}
 					badge={university?.altLabel}
-					image={opt(image, ({ url }) => url[0])}
+					image={opt(image, ({ url }) => <Image src={url[0]}/>)}
 
 				>{disambiguatingDescription}</Card>)}
 

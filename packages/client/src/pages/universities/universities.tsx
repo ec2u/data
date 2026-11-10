@@ -19,8 +19,10 @@ import { Button } from "@metreeca/clay-widgets/button";
 import { Card } from "@metreeca/clay-widgets/card";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
+import { Image } from "@metreeca/clay-widgets/image";
 import { Link } from "@metreeca/clay-widgets/link";
 import { useRoute, useRouter } from "@metreeca/clay/router";
+import { opt } from "@metreeca/core";
 import { by, locale } from "@metreeca/core/order";
 import { Clear } from "@metreeca/tile-widgets/filters/clear";
 import { Range } from "@metreeca/tile-widgets/filters/range";
@@ -122,7 +124,7 @@ export function UniversitiesPage() {
 
 				title={<Link href={id}>{label}</Link>}
 				badge={country.label}
-				image={depiction[0]}
+				image={opt(depiction[0], src => <Image src={src}/>)}
 
 			>{comment}</Card>)
 
