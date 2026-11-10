@@ -22,21 +22,15 @@ import { Link } from "@metreeca/clay-widgets/link";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { isNumber, isObject, isOptional, isString, opt } from "@metreeca/core";
 import { immutable } from "@metreeca/core/values";
-import { Clear } from "@metreeca/tile-widgets/filters/clear";
-import { Search } from "@metreeca/tile-widgets/filters/search";
-import { Tally } from "@metreeca/tile-widgets/filters/tally";
 import { useCollection } from "@metreeca/tile/collection";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
-import { useSearch } from "@metreeca/tile/search";
-import { useTally } from "@metreeca/tile/tally";
 import { integer } from "@metreeca/tile/types/integer";
 import { createElement, Fragment } from "preact";
 import { useEffect } from "preact/hooks";
-import { byDataset, ec2u, PublicDatasets, TallyOptions } from "../index.core.js";
+import { byDataset, ec2u, PublicDatasets } from "../index.core.js";
 import { Failure } from "../widgets/failure.js";
 import { Page } from "../widgets/page.js";
-import { Size } from "../widgets/size.js";
 import { DatasetLinks } from "./datasets/dataset.js";
 import "./index.css";
 
@@ -72,9 +66,6 @@ export function Datasets() {
 
 	});
 
-	const search = useSearch(collection, "label");
-	const license = useTally(collection, "license", { label: "label", size: TallyOptions });
-
 	const members = useMembers(collection, {
 
 		model: {
@@ -98,7 +89,7 @@ export function Datasets() {
 
 	return <Page
 
-		head={<Size label={datasets.label} collection={collection}/>}
+		head={datasets.label}
 		menu={<DatasetLinks/>}
 
 		back={members({
@@ -107,15 +98,12 @@ export function Datasets() {
 
 		})}
 
-		tray={<>
+		tray={<p>
 
-			<Search name={"Name"} search={search}/>
+			One place to explore what every university of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European
+			Universities alliance has to offer, without searching site by site.
 
-			<Tally name={"License"} collapsed tally={license}/>
-
-		</>}
-
-		reset={<Clear collection={collection}/>}
+		</p>}
 
 	>{members({
 
