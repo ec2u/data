@@ -45,7 +45,7 @@ import "./index.css";
 export const datasets = immutable({
 
 	route: "/",
-	label: "European Campus of City-Universities",
+	label: "The European Campus of City-Universities",
 	glyph: <Icon.Package/>
 
 });
