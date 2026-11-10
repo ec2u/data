@@ -100,8 +100,8 @@ export function Datasets() {
 
 		tray={<p>
 
-			One place to explore what every university of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European
-			Universities alliance has to offer, without searching site by site.
+			Open data on the universities of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European University
+			alliance and their local partners, harmonised and cross-linked for search and reuse.
 
 		</p>}
 
