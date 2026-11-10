@@ -251,7 +251,7 @@ function Code({ children }: { children: ComponentChildren }) {
 
 	return <pre class={"ec2u-shape-code"}>
 
-		<Button look={"subtle"} icon={
+		<Button icon={
 			<Icon.Copy/>} title={"Copy"} onClick={() => opt(code.current?.textContent ?? undefined,
 			text => navigator.clipboard.writeText(text)
 		)}/>

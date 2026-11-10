@@ -69,7 +69,7 @@ export function Tree({
 
 		<header>
 
-			<Button disabled={!branch} look={"subtle"}
+			<Button disabled={!branch}
 
 				icon={branch && open ? <Icon.Collapse/> : <Icon.Expand/>}
 				title={branch && open ? "Collapse" : "Expand"}

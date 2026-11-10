@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * Links stating no look of their own read as strong across the hub. The look is assigned to links alone, so buttons
- * stating no look of their own keep the ordinary one.
- */
-
-:root {
-    --clay-link-look: strong;
-}
-
 clay-tool {
 
     --clay-tool-head-font-size: var(--skin--scaling-150);

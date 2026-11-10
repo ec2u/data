@@ -111,7 +111,7 @@ export function Search({
 
 		/>
 
-		{input && <Button look={"subtle"} icon={<Icon.Clear class={"clear"}/>} title={"Clear"} onClick={clear}/>}
+		{input && <Button icon={<Icon.Clear class={"clear"}/>} title={"Clear"} onClick={clear}/>}
 
 	</>);
 

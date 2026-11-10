@@ -50,7 +50,7 @@ export function Page({
 
 	return <Tool
 
-		meta={<Link look="subtle" href={"/"}><Logo/><span>{ec2u(app.name ?? "")}</span></Link>}
+		meta={<Link href={"/"}><Logo/><span>{ec2u(app.name ?? "")}</span></Link>}
 
 		tray={tray}
 		more={info}
