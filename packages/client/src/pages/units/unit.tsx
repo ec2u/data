@@ -116,37 +116,29 @@ export function UnitPage() {
 					classification = [],
 					hasHead = []
 				}
-			}) => <>
+			}) => <Infobox>{[
 
-				<Infobox>{{
-
+				{
 					Short: altLabel,
 					Code: identifier
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>),
 					Type: links(classification)
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Head: list(hasHead.map(({ label }) => label))
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Info: homepage.length > 0 ? <ul>{homepage.map(url =>
 						<li key={url}>{address(url, local(university?.id))}</li>
 					)}</ul> : undefined
+				}
 
-				}}</Infobox>
-
-			</>
+			]}</Infobox>
 
 		})}
 

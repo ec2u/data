@@ -127,37 +127,29 @@ export function ProgramPage() {
 
 		tray={resource({
 
-			ready: ({ state: { url = [], university, provider, identifier, numberOfCredits, timeToComplete } }) => <>
+			ready: ({ state: { url = [], university, provider, identifier, numberOfCredits, timeToComplete } }) => <Infobox>{[
 
-				<Infobox>{{
-
+				{
 					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>)
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Provider: opt(provider, ({ label }) => label)
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Code: identifier,
 					Credits: opt(numberOfCredits, credits),
 					Duration: opt(timeToComplete, value => duration.format(value))
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Info: url.length > 0 ? <ul>{url.map(url =>
 						<li key={url}>{address(url, local(university?.id))}</li>
 					)}</ul> : undefined
+				}
 
-				}}</Infobox>
-
-			</>
+			]}</Infobox>
 
 		})}
 
@@ -199,7 +191,7 @@ export function ProgramPage() {
 
 			{blocks({
 
-				"Educational Credential Awarded": opt(educationalCredentialAwarded, value =>
+				Awards: opt(educationalCredentialAwarded, value =>
 					<Credential credential={value}/>),
 				"Occupational Credential Awarded": opt(occupationalCredentialAwarded, value =>
 					<Credential credential={value}/>),

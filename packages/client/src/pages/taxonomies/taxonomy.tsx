@@ -126,28 +126,20 @@ export function TaxonomyPage() {
 
 		tray={resource({
 
-			ready: ({ state: { version, created, issued, modified } }) => <>
+			ready: ({ state: { version, created, issued, modified } }) => <Infobox>{[
 
-				<Infobox>{{
-
+				{
 					Version: version,
 					Created: opt(created, value => date.format(value)),
 					Published: opt(issued, value => date.format(value)),
 					Modified: opt(modified, value => date.format(value))
+				},
 
-				}}</Infobox>
+				{
+					Concepts: concepts({ ready: ({ state }) => integer.format(state) })
+				}
 
-				<Infobox>{{
-
-					Concepts: concepts({
-
-						ready: ({ state }) => integer.format(state)
-
-					})
-
-				}}</Infobox>
-
-			</>
+			]}</Infobox>
 
 		})}
 
@@ -170,7 +162,7 @@ export function TaxonomyPage() {
 
 			<Title title={title}>{opt(description, text => <Markdown>{text}</Markdown>)}</Title>
 
-			<Infobox wrap align={"end"}>{{
+			<Infobox wrap>{{
 
 				Publisher: opt(publisher, ({ id, label }) => <Link href={id}>{label}</Link>),
 				Copyright: rights,

@@ -164,25 +164,20 @@ export function EventPage() {
 
 				}
 
-			}) => <>
+			}) => <Infobox>{[
 
-				<Infobox>{{
-
+				{
 					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>)
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Topics: filters(keywords, events.route, keywords => ({
 						...opt(university, ({ id }) => ({ university: id })),
 						keywords
 					}))
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					"Start Date": day.format(startDate),
 					"Start Time": clock(startDate),
 
@@ -190,28 +185,22 @@ export function EventPage() {
 						"End Date": day.format(endDate) === day.format(startDate) ? undefined : day.format(endDate),
 						"End Time": clock(endDate)
 					})
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Entry: opt(isAccessibleForFree, free => free ? "Free" : "Paid"),
 					Language: opt(inLanguage, tag => nameTag(tag, navigator.language)),
 					Attendance: opt(eventAttendanceMode, toEventAttendanceMode),
 					Status: opt(eventStatus, toEventStatus),
 					Location: opt(location, venue)
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
-					Info: <ul>{url.map(url => <li key={url}>{address(url, local(university?.id))}
-					</li>)}</ul>,
+				{
+					Info: <ul>{url.map(url => <li key={url}>{address(url, local(university?.id))}</li>)}</ul>,
 					Publisher: opt(publisher, ({ id, label, url = [] }) => <Link href={url[0] ?? id}>{label}</Link>)
+				}
 
-				}}</Infobox>
-
-			</>
+			]}</Infobox>
 
 		})}
 

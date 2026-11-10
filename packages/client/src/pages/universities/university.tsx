@@ -133,49 +133,39 @@ export function UniversityPage() {
 
 		tray={resource({
 
-			ready: ({ state: { homepage, country, city, inception, students } }) => <>
+			ready: ({ state: { homepage, country, city, inception, students } }) => <Infobox>{[
 
-				<Infobox>{{
+				{
+					Home: <ul>{homepage.map(url => <li key={url}>{address(url, local(route))}</li>)}</ul>
+				},
 
-					Home: <ul>{homepage.map(url => <li key={url}>{address(url, local(route))}
-					</li>)}</ul>
-
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Country: <Link href={country.id}>{country.label}</Link>,
 					City: <Link href={city.id}>{city.label}</Link>
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Inception: year.format(inception),
 					Students: integer.format(students)
+				},
 
-				}}</Infobox>
+				members({
 
-				{members({
+					ready: ({ state }) => [...state.filter(isDatasetRow)] // copy, as rows are shared
 
-					ready: ({ state }) =>
-						<Infobox>{[...state.filter(isDatasetRow)] // copy, as rows are shared
+						.sort(byDataset)
 
-							.sort(byDataset)
+						.map(({ dataset, size }) => ({
 
-							.map(({ dataset, size }) => ({
+							label:
+								<Link href={dataset.id} query={{ university: route }}>{ec2u(dataset.alternative ?? dataset.title)}</Link>,
+							value: integer.format(size)
 
-								label:
-									<Link href={dataset.id} query={{ university: route }}>{ec2u(dataset.alternative ?? dataset.title)}</Link>,
-								value: integer.format(size)
+						}))
 
-							}))
+				}) ?? []
 
-						}</Infobox>
-
-				})}
-
-			</>
+			]}</Infobox>
 
 		})}
 

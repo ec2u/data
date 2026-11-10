@@ -147,25 +147,20 @@ export function CoursePage() {
 
 				}
 
-			}) => <>
+			}) => <Infobox>{[
 
-				<Infobox>{{
-
+				{
 					University: opt(university, value => <Link href={value.id}>{value.altLabel}</Link>),
 					Year: year,
 					Term: list(term.map(toCourseTerm))
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Provider: opt(provider, ({ label }) => label),
 					Instructor: list(instructor.map(({ label }) => label))
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Code: courseCode,
 					Attendance: opt(courseMode, toCourseMode),
 					Language: list(inLanguage.map(tag => nameTag(tag, navigator.language))),
@@ -173,18 +168,15 @@ export function CoursePage() {
 					Credits: opt(numberOfCredits, credits),
 					Duration: opt(timeRequired, value => duration.format(value)),
 					Workload: opt(courseWorkload, value => duration.format(value))
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					Info: url.length > 0 ? <ul>{url.map(url =>
 						<li key={url}>{address(url, local(university?.id))}</li>
 					)}</ul> : undefined
+				}
 
-				}}</Infobox>
-
-			</>
+			]}</Infobox>
 
 		})}
 
@@ -227,7 +219,7 @@ export function CoursePage() {
 
 			{blocks({
 
-				"Educational Credential Awarded": opt(educationalCredentialAwarded, value =>
+				Awards: opt(educationalCredentialAwarded, value =>
 					<Credential credential={value}/>),
 				"Occupational Credential Awarded": opt(occupationalCredentialAwarded, value =>
 					<Credential credential={value}/>),

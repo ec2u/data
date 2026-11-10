@@ -32,7 +32,7 @@ import "./sections.css";
  *     `contents` lists them, or nothing if no property states any content
  */
 export function blocks(contents: Readonly<Record<string, ComponentChildren>>): ComponentChildren {
-	return <Infobox wrap align={"end"}>{Object.fromEntries(Object.entries(contents).filter(([, content]) => content))}</Infobox>;
+	return <Infobox wrap>{Object.fromEntries(Object.entries(contents).filter(([, content]) => content))}</Infobox>;
 }
 
 /**
@@ -50,7 +50,7 @@ export function sections(texts: Readonly<Record<string, undefined | string>>): C
 	return stated.length > 0 ? <Stack space={"spacing100"}>{stated.map(({ label, text }) =>
 
 		<Stack key={label} space={"spacing050"}>
-			<Style css={{ textLook: "subtle", fontSize: "fontSizeSmall" }}><Text>{label}</Text></Style>
+			<Style css={{ textLook: "subtle", fontFamily: "fontFamilyHeading" }}><Text>{label}</Text></Style>
 			<Markdown>{text}</Markdown>
 		</Stack>
 	)}</Stack> : undefined;

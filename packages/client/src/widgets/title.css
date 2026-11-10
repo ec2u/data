@@ -29,12 +29,13 @@ ec2u-title {
 
     /*
      * The heading opens the section level with the top of the image rather than clearing it, with no rule setting it
-     * apart from the description.
+     * apart from the description and no margin below, so the layout holding the section sets the step that follows.
      */
 
     & > h1 {
         clear: none;
         margin-top: 0;
+        margin-bottom: 0;
         padding-bottom: 0;
         border-bottom-style: none;
     }

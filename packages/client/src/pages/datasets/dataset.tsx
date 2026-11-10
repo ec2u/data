@@ -23,7 +23,6 @@ import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
-import { Stack } from "@metreeca/clay-widgets/stack";
 import { useAnnex, useRoute, useRouter } from "@metreeca/clay/router";
 import { isNumber, isObject, isString, type Lazy, opt } from "@metreeca/core";
 import { some, type Some } from "@metreeca/core/arrays";
@@ -250,18 +249,15 @@ export function DatasetPage({
 
 		tray={resource({
 
-			ready: ({ state: { created, issued, modified } }) => <Stack space={"spacing100"}>
+			ready: ({ state: { created, issued, modified } }) => <Infobox>{[
 
-				<Infobox>{{
-
+				{
 					Created: opt(created, value => date.format(value)),
 					Published: opt(issued, value => date.format(value)),
 					Modified: opt(modified, value => date.format(value))
+				},
 
-				}}</Infobox>
-
-				<Infobox>{{
-
+				{
 					"Data Model": opt(shapes, shapes => <ul class={"ec2u-shape-links"}>{some(shapes).map(shape =>
 						<li key={getShapeName(shape)}>
 							{opt(getShapeHref(shape), href =>
@@ -269,21 +265,18 @@ export function DatasetPage({
 							) ?? ec2u(getShapeName(shape))}
 						</li>
 					)}</ul>)
+				},
 
-				}}</Infobox>
-
-				<Infobox>{[
-
+				[
 					{
 						label: universities.length > 0 ? <strong>Resources</strong> : "Resources",
 						value: resources({ ready: ({ state }) => integer.format(state) })
 					},
 
 					...universities
+				]
 
-				]}</Infobox>
-
-			</Stack>
+			]}</Infobox>
 
 		})}
 
@@ -296,7 +289,7 @@ export function DatasetPage({
 
 			<Markdown>{description}</Markdown>
 
-			<Infobox wrap align={"end"}>{{
+			<Infobox wrap>{{
 
 				Publisher: opt(publisher, ({ id, label }) => <Link href={id}>{label}</Link>),
 				Copyright: rights,
