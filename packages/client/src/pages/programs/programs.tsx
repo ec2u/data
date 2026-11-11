@@ -34,6 +34,7 @@ import { useTally } from "@metreeca/tile/tally";
 import { duration } from "@metreeca/tile/types/duration";
 import { useEffect } from "preact/hooks";
 import { TallyOptions } from "../../index.core.js";
+import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
@@ -105,6 +106,8 @@ export function ProgramsPage() {
 			<Tally name={"Provider"} collapsed tally={provider}/>
 
 		</Facets>}
+
+		more={<AI>{true}</AI>}
 
 		meta={<Clear collection={collection}/>}
 

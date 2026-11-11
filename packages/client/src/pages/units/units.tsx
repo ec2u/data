@@ -33,6 +33,7 @@ import { useSearch } from "@metreeca/tile/search";
 import { useTally } from "@metreeca/tile/tally";
 import { useEffect } from "preact/hooks";
 import { TallyOptions } from "../../index.core.js";
+import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
@@ -100,6 +101,8 @@ export function UnitsPage() {
 			<Tally name={"Topic"} collapsed tally={subject}/>
 
 		</Facets>}
+
+		more={<AI>{true}</AI>}
 
 		meta={<Clear collection={collection}/>}
 

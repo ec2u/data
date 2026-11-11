@@ -39,6 +39,7 @@ import { date } from "@metreeca/tile/types/date";
 import { instant } from "@metreeca/tile/types/instant";
 import { useEffect } from "preact/hooks";
 import { TallyOptions } from "../../index.core.js";
+import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
@@ -118,6 +119,8 @@ export function EventsPage() {
 			<Tally name={"Topic"} collapsed tally={topics}/>
 
 		</Facets>}
+
+		more={<AI>{true}</AI>}
 
 		meta={<Clear collection={collection}/>}
 

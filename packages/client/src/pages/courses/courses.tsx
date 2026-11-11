@@ -38,6 +38,7 @@ import { decimal } from "@metreeca/tile/types/decimal";
 import { duration } from "@metreeca/tile/types/duration";
 import { useEffect } from "preact/hooks";
 import { TallyOptions } from "../../index.core.js";
+import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
@@ -124,6 +125,8 @@ export function CoursesPage() {
 			<Tally name={"Audience"} collapsed tally={audience}/>
 
 		</Facets>}
+
+		more={<AI>{true}</AI>}
 
 		meta={<Clear collection={collection}/>}
 
