@@ -15,90 +15,83 @@
  */
 
 /*
- * Datasets are laid out on a single grid flush with the start of the page, so their tiles stand in one column above
- * the EU emblem closing it: each entry fills two rows, its tile beside its title and size over its description, and
- * shares the columns of the grid, so titles, sizes and descriptions line up across entries.
+ * Datasets are laid out as cards filling the width of the page, one column on a phone and two from a tablet up: each
+ * card sets its size beside its title and its glyph beside its description, and shares the rows of the grid, so
+ * titles and descriptions line up across the cards of a row however their titles and descriptions wrap.
  */
 
 datasets-grid {
 
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: var(--skin--spacing-150) var(--skin--spacing-100);
+    grid-template-columns: 1fr;
+    gap: var(--skin--spacing-100);
+
+    @container style(--skin--viewport-medium: on) {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
 }
 
 datasets-entry {
 
     display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: subgrid;
-    grid-template-rows: auto auto;
+    grid-row: span 2;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: subgrid;
     align-items: baseline;
-    row-gap: var(--skin--spacing-025);
+    gap: var(--skin--spacing-050) var(--skin--spacing-100);
+    padding: var(--skin--spacing-100);
+    border: var(--skin--border-width) var(--skin--border-style) var(--skin--border-color);
+    border-radius: var(--skin--border-radius-075);
 
     /*
-     * The tile echoes the flag of the EU emblem closing the page: the same 3:2 proportions, and the same height, as
-     * it is set in the type of the emblem, the size of small print, and takes the share of the three lines of the emblem
-     * its flag covers, 789 of its 836 pixels; the glyph sits centred, a little over half the height of the tile.
+     * Every size takes the width of the longest one, set on the grid as a character count, so the column holding
+     * sizes and glyphs is equally wide on every card and titles and descriptions start at the same offset throughout.
      */
+
+    & > .size {
+        align-self: center;
+        justify-self: center;
+        inline-size: var(--datasets-size-width);
+        text-align: center;
+        font-size: var(--skin--font-size-small);
+        font-variant-numeric: tabular-nums;
+        font-weight: var(--skin--font-weight-strong);
+        color: var(--skin--color-placeholder);
+    }
 
     & > .glyph {
 
-        grid-row: 1 / span 2;
-        align-self: center;
-
+        align-self: start;
+        justify-self: center;
         display: flex;
-        align-items: center;
-        justify-content: center;
-
-        font-size: calc(var(--skin--font-size-small) * 0.75);
-        block-size: calc(3lh * 789 / 836);
-        aspect-ratio: 3 / 2;
-        border-radius: var(--skin--border-radius-050);
 
         & > svg {
-            inline-size: 55%;
-            block-size: 55%;
+            inline-size: calc(var(--skin--font-size) * 2.5);
+            block-size: calc(var(--skin--font-size) * 2.5);
         }
 
     }
 
     /*
-     * Priority sets how strongly a tile stands out, on the scale of the subtle accent, the slate of the EC2U site:
-     * the core dataset takes the solid accent with the glyph in the page colour, the datasets central to teaching
-     * and research a mid step, and the supporting ones a faint wash with the glyph in the accent itself.
+     * Priority sets how strongly a glyph stands out, on the scale of the subtle accent, the slate of the EC2U site:
+     * the core dataset takes the solid accent, the datasets central to teaching and research a mid step, and the
+     * supporting ones a faint step that recedes behind the description it stands beside.
      */
 
     & > .glyph[data-priority="3"] {
-        color: var(--skin--background-color);
-        background-color: var(--skin--color-subtle);
+        color: var(--skin--color-subtle);
     }
 
     & > .glyph[data-priority="2"] {
-        color: var(--skin--background-color);
-        background-color: var(--skin--color-subtle-060);
+        color: var(--skin--color-subtle-060);
     }
 
     & > .glyph[data-priority="1"] {
-        color: var(--skin--color-subtle);
-        background-color: var(--skin--color-subtle-010);
-    }
-
-    & > .title > .alternative {
-        margin-inline-start: var(--skin--spacing-050);
-        font-size: var(--skin--font-size-small);
-        color: var(--skin--color-label);
-    }
-
-    & > .size {
-        justify-self: end;
-        font-variant-numeric: tabular-nums;
-        color: var(--skin--color-label);
+        color: var(--skin--color-subtle-030);
     }
 
     & > .description {
-        grid-column: 2 / -1;
         color: var(--skin--color-label);
     }
 

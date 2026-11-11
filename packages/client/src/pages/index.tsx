@@ -162,20 +162,20 @@ export function Datasets() {
 		ready: ({ state }) => {
 
 			const rows = state.filter(isDatasetRow).sort(byDataset);
+			const width = Math.max(...rows.map(({ size }) => integer.format(size).length));
 
-			return rows.length === 0 ? <Empty>{datasets.glyph}</Empty> : createElement("datasets-grid", {}, rows.map(({
-				dataset: { id, title, alternative, description },
+			return rows.length === 0 ? <Empty>{datasets.glyph}</Empty> : createElement("datasets-grid", {
+				style: { "--datasets-size-width": `${width}ch` }
+			}, rows.map(({
+				dataset: { id, title, description },
 				size
 			}) => createElement("datasets-entry", { key: id }, <>
 
-				<Glyph id={id}/>
-
-				<span class="title">
-					<Link href={id}>{ec2u(title)}</Link>
-					<span class="alternative">{opt(alternative, ec2u)}</span>
-				</span>
-
 				<span class="size">{integer.format(size)}</span>
+
+				<span class="title"><Link href={id}>{ec2u(title)}</Link></span>
+
+				<Glyph id={id}/>
 
 				<span class="description">{opt(description, ec2u)}</span>
 
@@ -236,11 +236,11 @@ export function isDatasetRow(value: unknown): value is DatasetRow {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Creates the tile standing for a dataset in the home page listing.
+ * Creates the glyph standing for a dataset in the home page listing.
  *
  * Shows the glyph of the catalogue page of the dataset, set more or less boldly according to how central the dataset
  * is to the alliance: universities first, then units, programs and courses, then everything else; an unknown dataset
- * takes an empty tile at the lowest priority.
+ * leaves the space beside its description blank, so its description still lines up with those of the other datasets.
  */
 function Glyph({ id }: { id: string }) {
 
