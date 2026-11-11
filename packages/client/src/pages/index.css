@@ -40,7 +40,7 @@ datasets-entry {
     /*
      * The tile echoes the flag of the EU emblem closing the page: the same 3:2 proportions, and the same height, as
      * it is set in the type of the emblem, the size of small print, and takes the share of the three lines of the emblem
-     * its flag covers, 382 of its 446 pixels; the glyph sits centred, a little over half the height of the tile.
+     * its flag covers, 789 of its 836 pixels; the glyph sits centred, a little over half the height of the tile.
      */
 
     & > .glyph {
@@ -53,7 +53,7 @@ datasets-entry {
         justify-content: center;
 
         font-size: calc(var(--skin--font-size-small) * 0.75);
-        block-size: calc(3lh * 382 / 446);
+        block-size: calc(3lh * 789 / 836);
         aspect-ratio: 3 / 2;
         border-radius: var(--skin--border-radius-050);
 
