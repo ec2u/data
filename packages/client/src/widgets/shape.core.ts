@@ -24,12 +24,13 @@ import { Units } from "@ec2u/data-shared/units/index.js";
 import { Universities } from "@ec2u/data-shared/universities/index.js";
 import { lexicon } from "@ec2u/data-shared/vocabularies/index.js";
 import { model } from "@metreeca/blue";
-import type { Property, ResourceShape } from "@metreeca/blue/resource";
+import type { Member, Property, ResourceShape } from "@metreeca/blue/resource";
 import { eager, type Shape } from "@metreeca/blue/value";
 import { isString, type Lazy, opt, type Optional } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
 import { compact } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
+import { equals } from "@metreeca/core/values";
 
 
 /**
@@ -86,8 +87,9 @@ export type ShapeTable = {
 	readonly parents: readonly ShapeLink[]
 
 	/**
-	 * The properties the shape declares in its own right or inherits from shapes outside the model, in declaration
-	 * order, leaving out hidden ones and the ones its nearest documented ancestors declare, even where narrowed.
+	 * The properties the shape declares in its own right, labels or describes in its own terms, or inherits from shapes
+	 * outside the model, in declaration order, leaving out hidden ones and the ones its nearest documented ancestors
+	 * declare with the same name and description, even where their range is narrowed.
 	 */
 	readonly rows: readonly ShapeRow[]
 
@@ -309,18 +311,29 @@ function group(shape: ResourceShape, ancestor: ResourceShape, nearer: readonly R
 
 /**
  * Lists the visible properties a shape documents: the ones it declares in its own right or inherits from shapes
- * outside the model, which have no documentation of their own, leaving out the ones its documented ancestors declare.
+ * outside the model, which have no documentation of their own, and the ones it labels or describes in its own terms,
+ * leaving out the ones its documented ancestors declare with the same name and description.
  */
 function declared(shape: ResourceShape): readonly (readonly [string, Property])[] {
 
 	const ancestors = documented(shape);
 
 	return Object.entries(shape.members).flatMap(([term, member]) =>
-		member.kind === "property" && !member.hidden && !ancestors.some(({ members }) => term in members)
+		member.kind === "property" && !member.hidden && ancestors.every(({ members }) => refines(member, members[term]))
 			? [[term, member] as const]
 			: []
 	);
 
+}
+
+/**
+ * Checks whether a property is documented apart from an inherited member: the shape declaring it has no member of
+ * the same name to inherit, or labels or describes it differently from the inherited one.
+ */
+function refines(property: Property, inherited: Optional<Member>): boolean {
+	return inherited === undefined || inherited.kind === "property" && (
+		!equals(property.name, inherited.name) || !equals(property.description, inherited.description)
+	);
 }
 
 /**
