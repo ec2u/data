@@ -36,9 +36,8 @@ housekeeping properties.
 # Resource
 
 > [!WARNING]
-> The `ec2u:Resource` data model is not intended to be used in isolation but only to provide base
-> definitions factoring generic properties shared by the specialised [models](../index.md#data-models) defined
-> by each dataset.
+> The `ec2u:Resource` data model is not intended for use in isolation: it factors the properties shared by the
+> specialised [dataset models](../index.md#data-models), which extend it with properties of their own.
 
 | term              | type              | #    | definition                                                  |
 |-------------------|-------------------|------|-------------------------------------------------------------|
@@ -49,14 +48,13 @@ housekeeping properties.
 
 > [!NOTE]
 >
-> Human-readable labels and descriptions are localised either in English or in the local language of an EC2U university.
+> Labels and descriptions are in English or in the local language of an EC2U university.
 
 # Dataset
 
 > [!WARNING]
-> The `ec2u:Dataset` data model is not intended to be used in isolation but only to provide base
-> definitions factoring generic properties shared by the specialised [models](../index.md#data-models) defined
-> by each dataset.
+> The `ec2u:Dataset` data model is not intended for use in isolation: it factors the properties shared by the
+> specialised [dataset models](../index.md#data-models), which extend it with properties of their own.
 
 | term                        | type                | #    | definition                                                             |
 |-----------------------------|---------------------|------|------------------------------------------------------------------------|
@@ -78,9 +76,8 @@ housekeeping properties.
 # Offering
 
 > [!WARNING]
-> The `ec2u:Offering` data model is not intended to be used in isolation but only to provide base
-> definitions factoring generic properties shared by the specialised [models](../index.md#data-models) defined
-> by each dataset.
+> The `ec2u:Offering` data model is not intended for use in isolation: it factors the properties shared by the
+> specialised [dataset models](../index.md#data-models), which extend it with properties of their own.
 
 | term                      | type                                       | #    | definition                                                                       |
 |---------------------------|--------------------------------------------|------|----------------------------------------------------------------------------------|

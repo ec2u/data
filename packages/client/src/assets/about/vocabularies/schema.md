@@ -16,8 +16,8 @@ products, and actions in a format understood by major search engines and other a
 
 > [!IMPORTANT]
 >
-> The `schema:Thing` data model is not intended to be used in isolation but only to provide base
-> definitions factoring generic properties shared by the specialised models defined by each [dataset](./index.md).
+> The `schema:Thing` data model is not intended for use in isolation: it factors the properties shared by the
+> specialised [dataset](./index.md) models, which extend it with properties of their own.
 
 | term                               | type                               | #    | description                                                   |
 |------------------------------------|------------------------------------|------|---------------------------------------------------------------|

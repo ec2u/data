@@ -84,8 +84,7 @@ export function Dataset() {
 			A dataset published on the EC2U Knowledge Hub.
 
 			> [!IMPORTANT]
-			> Not intended for use in isolation: it factors the generic properties shared by the specialised models
-			> defined by each dataset.
+			> Not intended for use in isolation: it factors the properties shared by the specialised dataset models.
 		`
 
 	}, {

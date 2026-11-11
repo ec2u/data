@@ -52,12 +52,10 @@ export function Resource() {
 			A resource published in a dataset on the EC2U Knowledge Hub.
 
 			> [!IMPORTANT]
-			> Not intended for use in isolation: it factors the generic properties shared by the specialised models
-			> defined by each dataset.
+			> Not intended for use in isolation: it factors the properties shared by the specialised dataset models.
 
 			> [!NOTE]
-			> Human-readable labels and descriptions are localised either in English or in one of the local languages
-			> of the EC2U universities.
+			> Labels and descriptions are in English or in the local language of an EC2U university.
 		`
 
 	}, {

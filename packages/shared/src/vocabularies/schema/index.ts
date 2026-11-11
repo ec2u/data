@@ -162,8 +162,7 @@ export function SchemaThing() {
 			An item of any kind.
 
 			> [!IMPORTANT]
-			> Not intended for use in isolation: it factors the generic properties shared by the specialised models
-			> defined by each dataset.
+			> Not intended for use in isolation: it factors the properties shared by the specialised dataset models.
 
 			> [!WARNING]
 			> Deviates from Schema.org to simplify interoperation with other vocabularies:
