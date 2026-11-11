@@ -205,15 +205,51 @@ export function ShapeSchema({
 
 /**
  * Sets out the table of the properties of a shape, the inherited ones grouped under the ancestor documenting them.
+ *
+ * Properties with details or constraints unfold one by one, and the column headings opening the table offer to unfold
+ * or fold all of them at once, unfolding all while any is folded.
  */
 function Table({ rows, inherited }: ShapeTable) {
+
+	const [open, setOpen] = useState<ReadonlySet<string>>(new Set());
+
+	const groups = [
+		{ key: "", rows },
+		...inherited.map(({ parent, rows }) => ({ key: parent.name, rows }))
+	];
+
+	const foldable = groups.flatMap(({ key, rows }) => rows
+		.filter(row => disclose(row).length > 0)
+		.map(({ term }) => `${key}/${term}`)
+	);
+
+	const folded = foldable.some(key => !open.has(key));
+
+	function toggle(key: string) {
+		setOpen(open => open.has(key)
+			? new Set([...open].filter(entry => entry !== key))
+			: new Set([...open, key])
+		);
+	}
+
+	function rendered(key: string, row: ShapeRow) {
+		return <Row key={row.term} {...row}
+			open={open.has(`${key}/${row.term}`)}
+			onToggle={() => toggle(`${key}/${row.term}`)}
+		/>;
+	}
+
 	return <>
 
 		{(rows.length > 0 || inherited.length > 0) && <table class={"ec2u-shape"}>
 
-			<thead><Head/></thead>
+			<thead><Head toggle={foldable.length > 0 && <Button look={"subtle"}
+				icon={folded ? <Icon.UnfoldAll/> : <Icon.FoldAll/>}
+				title={folded ? "Unfold All" : "Fold All"}
+				onClick={() => setOpen(new Set(folded ? foldable : []))}
+			/>}/></thead>
 
-			{rows.length > 0 && <tbody>{rows.map(row => <Row key={row.term} {...row}/>)}</tbody>}
+			{rows.length > 0 && <tbody>{rows.map(row => rendered("", row))}</tbody>}
 
 			{inherited.map(({ parent, rows }) => <tbody key={parent.name} class={"ec2u-shape-inherited"}>
 				<tr>
@@ -223,7 +259,7 @@ function Table({ rows, inherited }: ShapeTable) {
 					</th>
 				</tr>
 				<Head/>
-				{rows.map(row => <Row key={row.term} {...row}/>)}
+				{rows.map(row => rendered(parent.name, row))}
 			</tbody>)}
 
         </table>}
@@ -232,33 +268,65 @@ function Table({ rows, inherited }: ShapeTable) {
 }
 
 /**
- * Sets out the column headings of the property table, opening the table and each group of inherited properties.
+ * Sets out the column headings of the property table, opening the table and each group of inherited properties, with
+ * the control folding the properties at the end, if given.
  */
-function Head() {
+function Head({ toggle }: { toggle?: ComponentChildren }) {
 	return <tr class={"ec2u-shape-head"}>
 		<th>property</th>
 		<th>type</th>
-		<th>#</th>
+		<th><abbr title={"Multiplicity"}>#</abbr></th>
 		<th>description</th>
-		<th class={"ec2u-shape-more"}/>
+		<th class={"ec2u-shape-more"}>{toggle}</th>
 	</tr>;
 }
 
 /**
- * Sets out a property as a table row stating the summary of its description, followed, where the description goes on
- * past its summary, by a row disclosing the details on demand.
+ * Lists what a property discloses once unfolded: the details following the summary of its description, then each of
+ * its constraints, labelled.
  */
-function Row({ term, predicate, types, cardinality, description = "" }: ShapeRow) {
+function disclose({ description = "", constraints }: ShapeRow): readonly { label?: string, value: ComponentChildren }[] {
+
+	const more = details(description);
+
+	return [
+		...(more ? [{ value: <Markdown>{more}</Markdown> }] : []),
+		...constraints.map(({ label, value }) => ({ label, value: <code>{value}</code> }))
+	];
+
+}
+
+/**
+ * Sets out a property as a table row stating the summary of its description, followed, where the description goes on
+ * past its summary or the property constrains its values, by rows disclosing the details and each constraint while
+ * unfolded, with the label of a constraint under the type and its value under the description.
+ */
+function Row({ open, onToggle, ...row }: ShapeRow & {
+
+	/**
+	 * Whether the disclosed rows are on show.
+	 */
+	open: boolean
+
+	/**
+	 * Receives the request to unfold or fold the disclosed rows.
+	 */
+	onToggle: () => void
+
+}) {
+
+	const { term, predicate, types, cardinality, description = "" } = row;
 
 	const id = useId();
-	const [open, setOpen] = useState(false);
 
 	const brief = summary(description);
-	const more = details(description);
+	const disclosed = disclose(row);
+
+	const ids = disclosed.map((_, index) => `${id}-${index}`);
 
 	return <>
 
-		<tr class={more && open ? "ec2u-shape-open" : undefined}>
+		<tr class={disclosed.length > 0 && open ? "ec2u-shape-open" : undefined}>
 			<td class={"ec2u-shape-term"}>
 				{predicate === undefined ? term : <Link look={"subtle"} href={predicate}>{term}</Link>}
 			</td>
@@ -267,20 +335,26 @@ function Row({ term, predicate, types, cardinality, description = "" }: ShapeRow
 				{cardinality}
 			</td>
 			<td>{brief && <Markdown>{brief}</Markdown>}</td>
-			<td class={"ec2u-shape-more"}>{more && <Button look={"subtle"}
-				controls={id}
+			<td class={"ec2u-shape-more"}>{disclosed.length > 0 && <Button look={"subtle"}
+				controls={ids.join(" ")}
 				expanded={open}
 				icon={open ? <Icon.Fold/> : <Icon.Unfold/>}
-				title={open ? "Collapse" : "Expand"}
-				onClick={() => setOpen(open => !open)}
+				title={open ? "Fold" : "Unfold"}
+				onClick={onToggle}
 			/>}</td>
 		</tr>
 
-		{more && <tr id={id} hidden={!open} class={"ec2u-shape-details"}>
-			<td colSpan={3}/>
-			<td><Markdown>{more}</Markdown></td>
+		{disclosed.map(({ label, value }, index) => <tr key={index}
+			id={ids[index]}
+			hidden={!open}
+			class={index < disclosed.length-1 ? "ec2u-shape-details" : "ec2u-shape-details ec2u-shape-end"}
+		>
 			<td/>
-		</tr>}
+			<td class={"ec2u-shape-key"}>{label}</td>
+			<td/>
+			<td class={label === undefined ? undefined : "ec2u-shape-value"}>{value}</td>
+			<td/>
+		</tr>)}
 
 	</>;
 

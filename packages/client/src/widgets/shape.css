@@ -25,8 +25,17 @@
     /* column headings read as labels, set back from the values under them */
 
     & .ec2u-shape-head > th {
+
         font-size: var(--skin--font-size-small);
         color: var(--skin--color-label);
+        vertical-align: middle;
+
+        /* the toggle folding every row is drawn at the size of the toggles in the rows it folds */
+
+        &.ec2u-shape-more {
+            font-size: var(--skin--font-size);
+        }
+
     }
 
     /* property names read as code in the default ink, so the column of linked types beside them stays the only blue one */
@@ -51,20 +60,49 @@
     & .ec2u-shape-more {
         width: 1px;
         white-space: nowrap;
+        text-align: center;
 
         &:empty {
             padding: 0;
         }
     }
 
-    /* an open row reads as one with the details it discloses, with no rule between them */
+    /* an open row reads as one block with the rows it discloses, ruled and padded only below the last of them */
 
-    & .ec2u-shape-open > td {
+    & .ec2u-shape-open > td,
+    & .ec2u-shape-details:not(.ec2u-shape-end) > td {
         border-bottom-style: none;
     }
 
-    & .ec2u-shape-details > td {
+    & .ec2u-shape-end > td {
         padding-bottom: var(--skin--spacing-100);
+    }
+
+    /* disclosed constraints read as label and value, the label under the type and the value under the description */
+
+    & .ec2u-shape-key {
+        font-size: var(--skin--font-size-small);
+        color: var(--skin--color-label);
+        white-space: nowrap;
+    }
+
+    & .ec2u-shape-value {
+
+        font-size: var(--skin--font-size-small);
+
+        /*
+         * Values such as patterns run long without spaces, so they break anywhere and claim no width of their own
+         * when the columns are sized, filling whatever width the description column is given instead.
+         */
+
+        & > code {
+            display: block;
+            width: 0;
+            min-width: 100%;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+
     }
 
     /* counts are quiet, but for the ones requiring a value */
@@ -90,6 +128,7 @@
 
     & > .ec2u-shape-inherited > tr:first-child > th {
         padding-top: var(--skin--spacing-250);
+        padding-bottom: var(--skin--spacing-100);
     }
 
     /* the label names the ancestor as a heading, so each group reads as a section of its own */
@@ -102,12 +141,6 @@
     & .ec2u-shape-from {
         font-weight: var(--skin--font-weight);
         color: var(--skin--color-label);
-    }
-
-    /* inherited properties step back from the ones the shape declares, which keep the strong weight */
-
-    & > .ec2u-shape-inherited .ec2u-shape-term {
-        font-weight: var(--skin--font-weight);
     }
 
 }

@@ -19,6 +19,7 @@ import { Choice } from "@metreeca/clay-widgets/choice";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
+import { Style } from "@metreeca/clay-widgets/style";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { useStorage } from "@metreeca/clay/storage";
 import { opt } from "@metreeca/core";
@@ -63,11 +64,13 @@ export function ModelPage() {
 
 		</Path>}
 
-		menu={<Choice name={"Format"} look={"subtle"} options={{
-			properties: <span title={"Properties"}><Icon.TableProperties style={{ transform: "scaleX(-1)" }}/></span>,
-			typescript: <span title={"TypeScript"}><Icon.Code/></span>,
-			schema: <span title={"JSON Schema"}><Icon.Braces/></span>
-		}} value={format} onChange={setFormat}/>}
+		menu={<Style css={{ fontSize: "fontSizeSmall" }}><Choice name={"Format"} look={"subtle"} options={{
+			properties: <Icon.TableProperties aria-label={"Properties"} style={{ transform: "scaleX(-1)" }}>
+				<title>Properties</title>
+			</Icon.TableProperties>,
+			typescript: <Icon.Code aria-label={"TypeScript"}><title>TypeScript</title></Icon.Code>,
+			schema: <Icon.Braces aria-label={"JSON Schema"}><title>JSON Schema</title></Icon.Braces>
+		}} value={format} onChange={setFormat}/></Style>}
 
 		tray={<ShapeInfo shape={shape} universe={universe}/>}
 

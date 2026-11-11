@@ -24,11 +24,27 @@ import { Units } from "@ec2u/data-shared/units/index.js";
 import { Universities } from "@ec2u/data-shared/universities/index.js";
 import { lexicon } from "@ec2u/data-shared/vocabularies/index.js";
 import { model } from "@metreeca/blue";
+import { byte, decimal, double, float, int, integer, long, short } from "@metreeca/blue/number";
 import type { Member, Property, ResourceShape } from "@metreeca/blue/resource";
+import {
+	date,
+	duration,
+	email,
+	instant,
+	iri,
+	markdown,
+	phone,
+	tag,
+	text,
+	time,
+	timestamp,
+	url,
+	year
+} from "@metreeca/blue/string";
 import { eager, type Shape } from "@metreeca/blue/value";
 import { isString, type Lazy, opt, type Optional } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
-import { compact } from "@metreeca/core/resource";
+import { compact, type Variant } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
 import { equals } from "@metreeca/core/values";
 import { summary } from "@metreeca/work/core/strings.js";
@@ -142,8 +158,8 @@ export type ShapeRow = {
 	readonly types: readonly ShapeLink[]
 
 	/**
-	 * The number of values the property admits: `1`, `0..1`, `*`, `1..*`, or `min..max` for other bounds, with an
-	 * open upper bound stated as `*`.
+	 * The number of values the property admits: `1`, `0‥1`, `*`, `1‥*`, or `min‥max` for other bounds, with an open
+	 * upper bound stated as `*` and the bounds joined by a two dot leader (U+2025) set as a single glyph.
 	 */
 	readonly cardinality: string
 
@@ -152,6 +168,30 @@ export type ShapeRow = {
 	 * English.
 	 */
 	readonly description: Optional<string>
+
+	/**
+	 * The constraints the property states on its values beyond their type and number, in a fixed order per type;
+	 * empty if it states none.
+	 */
+	readonly constraints: readonly ShapeConstraint[]
+
+};
+
+/**
+ * A constraint on the values of a property, beyond their type and number.
+ */
+export type ShapeConstraint = {
+
+	/**
+	 * What the constraint bounds, as `pattern`, `length` or `languages`, prefixed by the type it applies to where the
+	 * property admits values of several types, as `string · pattern`.
+	 */
+	readonly label: string
+
+	/**
+	 * What the constraint admits, as `^[a-z]+$`, `1‥64` or `en, it`.
+	 */
+	readonly value: string
 
 };
 
@@ -370,9 +410,111 @@ function row(term: string, { forward, reverse, range, description }: Property): 
 		predicate: forward ?? reverse,
 		types: typed(range.shape),
 		cardinality: bounded(range.minCount, range.maxCount),
-		description: markup(description)
+		description: markup(description),
+		constraints: constrained(range.shape)
 
 	};
+}
+
+/**
+ * Lists the constraints a shape states on its values beyond those implied by the shorthand it was created with,
+ * labelling those of each alternative of a union by its type.
+ */
+function constrained(lazy: Lazy<Shape>): readonly ShapeConstraint[] {
+
+	const shape = eager(lazy);
+
+	return shape.kind === "union" ? shape.branches.flatMap(branch => {
+
+		const type = typed(branch).map(({ name }) => name).join(" | ");
+
+		return constrained(branch).map(({ label, value }) => ({ label: `${type} · ${label}`, value }));
+
+	}) : differing(restrictions(shape), implied(shape));
+
+}
+
+/**
+ * Lists the constraints stated beyond the implied ones: those stating a value the implied constraints state otherwise
+ * or not at all.
+ */
+function differing(
+	stated: Readonly<Record<string, Optional<string>>>,
+	implied: Readonly<Record<string, Optional<string>>>
+): readonly ShapeConstraint[] {
+
+	return Object.entries(stated).flatMap(([label, value]) =>
+		value === undefined || value === implied[label] ? [] : [{ label, value }]
+	);
+
+}
+
+/**
+ * The subsets of the IRI hierarchy the `iri()` shorthand admits, each under a pattern of its own.
+ */
+const variants: readonly Variant[] = ["hierarchical", "absolute", "internal", "relative"];
+
+/**
+ * The shapes the shorthands of the model language create when given no constraints of their own, stating the
+ * constraints implied by the type of the values they admit.
+ */
+const shorthands: readonly Shape[] = [
+	text(), markdown(), email(), phone(), url(), tag(), year(), date(), time(), instant(), timestamp(), duration(),
+	...variants.map(variant => iri({ variant })),
+	byte(), short(), int(), long(), float(), double(), integer(), decimal()
+];
+
+/**
+ * Spells out the constraints implied by the shorthand a plain shape was created with, if any: the one admitting values
+ * of the same kind and datatype and, for strings, matching the same pattern.
+ */
+function implied(shape: Shape): Readonly<Record<string, Optional<string>>> {
+	return opt(shorthands.find(base => base.kind === "string" && shape.kind === "string"
+		? base.datatype === shape.datatype && base.pattern === shape.pattern
+		: base.kind === "number" && shape.kind === "number" && base.datatype === shape.datatype
+	), restrictions) ?? {};
+}
+
+/**
+ * Spells out the constraints a plain shape states, keyed by friendly labels, leaving the datatype to the type column.
+ */
+function restrictions(shape: Shape): Readonly<Record<string, Optional<string>>> {
+	return shape.kind === "string" ? {
+			pattern: shape.pattern,
+			length: ranged(shape.minLength, shape.maxLength),
+			values: listed(shape.in),
+			includes: listed(shape.hasValue)
+		}
+		: shape.kind === "number" ? {
+			integral: shape.integral && shape.datatype === undefined ? "yes" : undefined,
+			minimum: opt(shape.minInclusive, value => `≥ ${value}`) ?? opt(shape.minExclusive, value => `> ${value}`),
+			maximum: opt(shape.maxInclusive, value => `≤ ${value}`) ?? opt(shape.maxExclusive, value => `< ${value}`),
+			values: listed(shape.in),
+			includes: listed(shape.hasValue)
+		}
+			: shape.kind === "dictionary" ? {
+				languages: listed(shape.languageIn),
+				"per language": shape.uniqueLang ? "one value" : undefined,
+				length: ranged(shape.minLength, shape.maxLength)
+			}
+				: shape.kind === "boolean" ? {
+					value: opt(shape.in, String)
+				}
+					: {};
+}
+
+/**
+ * Spells out a length range, as `1‥64` or `0‥*`; none if neither bound is stated.
+ */
+function ranged(min: Optional<number>, max: Optional<number>): Optional<string> {
+	return min === undefined && max === undefined ? undefined : `${min ?? 0}‥${max ?? "*"}`;
+}
+
+/**
+ * Spells out a list of values, as `en, it`; none if the list is missing or empty.
+ */
+function listed(values: Optional<readonly (string | number)[]>): Optional<string> {
+	return values !== undefined && values.length > 0 ? values.join(", ") : undefined;
 }
 
 
@@ -772,9 +914,9 @@ function bounded(min: Optional<number>, max: Optional<number>): string {
 	const lower = min ?? 0;
 
 	return lower === 1 && max === 1 ? "1"
-		: lower === 0 && max === 1 ? "0..1"
+		: lower === 0 && max === 1 ? "0‥1"
 			: lower === 0 && max === undefined ? "*"
-				: `${lower}..${max ?? "*"}`;
+				: `${lower}‥${max ?? "*"}`;
 
 }
 
