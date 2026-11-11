@@ -20,6 +20,7 @@ import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
+import { TOC } from "@metreeca/clay-widgets/toc";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { isNumber, isObject, isOptional, isString, opt } from "@metreeca/core";
 import { internalize } from "@metreeca/core/resource";
@@ -49,6 +50,26 @@ export const datasets = immutable({
 	route: "/",
 	label: "The European Campus of City-Universities",
 	glyph: <Icon.Package/>
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const resources = immutable({
+
+	"Get Involved": {
+		"Students": "https://ec2u.eu/students",
+		"Researchers": "https://ec2u.eu/researchers",
+		"Staff": "https://ec2u.eu/staff",
+		"Citizens": "https://ec2u.eu/citizens"
+	},
+
+	"References": {
+		"EC2U Alliance": "https://ec2u.eu/about-ec2u",
+		"Events & News": "https://ec2u.eu/events-news",
+		"Contact": "https://ec2u.eu/contact-0"
+	}
 
 });
 
@@ -109,16 +130,22 @@ export function Datasets() {
 
 		}, <DatasetLinks/>)}
 
-		tray={<p style={{
+		tray={<>
 
-			maxWidth: "15em",
+			<p style={{
 
-		}}>
+				maxWidth: "15em"
 
-			Open data on the universities of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European University
-			alliance and their local partners, harmonised and cross-linked for search and reuse.
+			}}>
 
-		</p>}
+				Open data on the universities of{"\u00A0"}the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European
+				University alliance and their local partners, harmonised and cross-linked for{"\u00A0"}search and reuse.
+
+			</p>
+
+			<TOC name={"Resources"} entries={resources}/>
+
+		</>}
 
 		copy={<Funding/>}
 
