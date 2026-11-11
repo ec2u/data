@@ -21,6 +21,8 @@
 
 ec2u-funding {
 
+    --clay-link-inset: var(--skin--spacing-050);
+
     display: block;
     flex: auto;
     container-type: inline-size;

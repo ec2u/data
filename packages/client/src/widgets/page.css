@@ -47,6 +47,8 @@ clay-tool {
 
     & header > clay-strip:has(.logo) {
 
+        --gap: .85cap; /* the room on either side of the bar between the logo and the app name */
+
         & .logo:not([active]) {
             display: block;
             height: 2.25cap;
@@ -54,19 +56,21 @@ clay-tool {
 
         /*
          * The logo overhangs the line without stretching it, and stands apart from the app name, through the margins
-         * of its link rather than its own, so the focus ring wraps the logo alone, clear of the bar beside it.
+         * of its link rather than its own, so the focus ring wraps the logo alone, clear of the bar beside it. The
+         * hover fill and the focus ring reach halfway across the gap, so they always stop short of the bar.
          */
 
         & clay-link:has(.logo) {
+            --clay-link-inset: calc(var(--gap) / 2);
             margin-block: calc(.5lh - 1.125cap);
-            margin-inline-end: .85cap;
+            margin-inline-end: var(--gap);
         }
 
         & clay-link:has(.logo) + clay-link {
 
             --skin--color-link: light-dark(#283169, oklch(from #283169 0.8 0.08 h));
 
-            padding-inline-start: .85cap;
+            padding-inline-start: var(--gap);
             border-inline-start: 1px solid color-mix(in srgb, var(--skin--color-link) 35%, transparent);
 
             & a {

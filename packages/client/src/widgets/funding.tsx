@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Link } from "@metreeca/clay-widgets/link";
 import { dedent } from "@metreeca/core/strings";
 import { createElement } from "preact";
 import "./funding.css";
@@ -33,7 +34,9 @@ export function Funding() {
 
 	return createElement("ec2u-funding", {}, <div>
 
-		<img alt={"Co-funded by the European Union"} src={emblem}/>
+		<Link href={"https://education.ec.europa.eu/education-levels/higher-education/european-universities-initiative"}>
+			<img alt={"Co-funded by the European Union"} src={emblem}/>
+		</Link>
 
 		<small>{dedent`
 			Funded by the European Union. Views and opinions expressed are however
