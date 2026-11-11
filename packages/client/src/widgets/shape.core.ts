@@ -287,11 +287,11 @@ function ancestry(shape: ResourceShape): readonly ResourceShape[] {
 
 /**
  * Groups the properties a shape inherits from a documented ancestor, as narrowed by the shape, leaving out the ones
- * already grouped under nearer ancestors, so that each inherited property is listed once.
+ * the shape documents in its own terms or already grouped under nearer ancestors, so that each is listed once.
  */
 function group(shape: ResourceShape, ancestor: ResourceShape, nearer: readonly ResourceShape[]): ShapeGroup {
 
-	const grouped = nearer.flatMap(declared).map(([term]) => term);
+	const grouped = [shape, ...nearer].flatMap(declared).map(([term]) => term);
 
 	return {
 
