@@ -47,17 +47,6 @@ clay-tool {
 
     & header > clay-strip:has(.logo) {
 
-        /*
-         * The bar clips what it holds, cutting the focus ring of the logo off at the start of the strip: the strip
-         * clips across the row only, and is inset by a padding it takes back with a margin, so the ring shows whole.
-         */
-
-        overflow-x: clip;
-        overflow-y: visible;
-
-        padding-inline-start: var(--skin--spacing-050);
-        margin-inline-start: calc(-1 * var(--skin--spacing-050));
-
         & .logo:not([active]) {
             display: block;
             height: 2.25cap;
