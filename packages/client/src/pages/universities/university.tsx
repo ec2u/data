@@ -172,9 +172,9 @@ export function UniversityPage() {
 
 		ready: ({ state: { prefLabel, depiction, definition } }) => <>
 
-			{opt(depiction[0], src => <Image float={"end"} within={"20rem"} src={src}/>)}
-
 			<Heading>{prefLabel}</Heading>
+
+			{opt(depiction[0], src => <Image float={"end"} within={"25rem"} src={src}/>)}
 
 			{definition}
 

@@ -214,13 +214,13 @@ export function EventPage() {
 
 		ready: ({ state: { label, description, disambiguatingDescription, image } }) => <>
 
+			<Heading>{label}</Heading>
+
 			{opt(image, ({ url, description, copyrightNotice }) => <Image float={"end"} within={"20rem"}
 				src={url[0]}
 				alt={description ?? `Image of ${label}`}
 				caption={copyrightNotice}
 			/>)}
-
-			<Heading>{label}</Heading>
 
 			{opt(description, text => <Markdown>{text}</Markdown>) ?? disambiguatingDescription}
 
