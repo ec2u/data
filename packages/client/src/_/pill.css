@@ -28,16 +28,45 @@ ec2u-pill {
     white-space: nowrap;
     vertical-align: baseline;
     font-size: var(--skin--font-size-small);
+    font-weight: var(--skin--font-weight-strong);
 
-    /* Looks are stubs for now: every look renders as the outline above. */
+    /* The dot is kept concentric with the rounded start cap. */
 
-    &[look="subtle"] {
+    &[color]:not([look]), &[color][look="normal"] {
+
+        padding-inline-start: var(--skin--spacing-010);
+
+        &::before {
+            content: "";
+            display: inline-block;
+            vertical-align: top;
+            width: 1cap;
+            height: 1cap;
+            margin: calc((1lh - 1cap) / 2);
+            margin-inline-end: var(--skin--spacing-050);
+            border-radius: 50%;
+            background-color: var(--ec2u-pill-color);
+        }
+
     }
 
-    &[look="normal"] {
+    &[look="subtle"] {
+
+        font-weight: normal;
+
+        &[color] {
+            border-color: var(--ec2u-pill-color);
+            color: color-mix(in oklab, var(--ec2u-pill-color) 60%, var(--skin--color));
+            background-color: color-mix(in oklab, var(--ec2u-pill-color) 15%, var(--skin--background-color));
+        }
+
     }
 
     &[look="strong"] {
+        padding-inline: var(--skin--spacing-050);
+        border-color: transparent;
+        color: var(--skin--background-color);
+        background-color: var(--ec2u-pill-color, var(--skin--color));
     }
 
 }

@@ -27,15 +27,24 @@ import "./pill.css";
 export function Pill({
 
 	look,
+	color,
 
 	children
 
 }: {
 
 	/**
-	 * How loud the pill appears; reserved for emphasis variants, all rendered as an outline with no fill for now.
+	 * How loud the pill appears; `normal` when omitted.
 	 */
 	look?: "subtle" | "normal" | "strong"
+
+	/**
+	 * The CSS colour accenting the pill: a leading dot in the `normal` look, the label and border over a light tint in
+	 * the `subtle` look, and a solid fill behind the label, set in the page colour, in the `strong` look.
+	 *
+	 * The accent is decorative and never announced to assistive technologies, so it can't carry meaning on its own.
+	 */
+	color?: string
 
 
 	/**
@@ -45,6 +54,10 @@ export function Pill({
 
 }) {
 
-	return createElement("ec2u-pill", { look }, children);
+	return createElement("ec2u-pill", {
+		look,
+		color, // attr() can't yet portably read a colour
+		style: color === undefined ? undefined : { "--ec2u-pill-color": color }
+	}, children);
 
 }
