@@ -43,6 +43,7 @@ import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
+import { color } from "../../widgets/links.js";
 import { DatasetLinks } from "../datasets/dataset.js";
 import { schedule } from "./event.js";
 import { toEventAttendanceMode } from "./index.core.js";
@@ -87,7 +88,7 @@ export function EventsPage() {
 			endDate: {},
 
 			image: { url: {} },
-			university: { altLabel: {} }
+			university: { id: {}, altLabel: {} }
 
 		},
 
@@ -136,6 +137,7 @@ export function EventsPage() {
 
 					title={<Link href={id}>{`${schedule(startDate, endDate)} / ${label}`}</Link>}
 					badge={university?.altLabel}
+					color={color(university?.id)}
 					image={opt(image, ({ url }) => <Image src={url[0]}/>)}
 					glyph={events.glyph}
 

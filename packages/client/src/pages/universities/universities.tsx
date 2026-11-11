@@ -39,6 +39,7 @@ import { Card } from "../../_/card.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
+import { color } from "../../widgets/links.js";
 import { DatasetLinks } from "../datasets/dataset.js";
 import { universities } from "./index.js";
 
@@ -118,6 +119,7 @@ export function UniversitiesPage() {
 
 				title={<Link href={id}>{label}</Link>}
 				badge={country.label}
+				color={color(id)}
 				image={opt(depiction[0], src => <Image src={src}/>)}
 				glyph={universities.glyph}
 

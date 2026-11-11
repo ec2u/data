@@ -42,6 +42,7 @@ import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
+import { color } from "../../widgets/links.js";
 import { DatasetLinks } from "../datasets/dataset.js";
 import { toCourseMode, toCourseTerm } from "./index.core.js";
 import { courses } from "./index.js";
@@ -88,7 +89,7 @@ export function CoursesPage() {
 			label: {},
 			comment: {},
 
-			university: { altLabel: {} }
+			university: { id: {}, altLabel: {} }
 
 		}
 
@@ -141,6 +142,7 @@ export function CoursesPage() {
 
 				title={<Link href={id}>{label}</Link>}
 				badge={university?.altLabel}
+				color={color(university?.id)}
 				glyph={courses.glyph}
 
 			>{comment}</Card>)}

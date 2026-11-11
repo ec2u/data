@@ -37,6 +37,7 @@ import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
+import { color } from "../../widgets/links.js";
 import { DatasetLinks } from "../datasets/dataset.js";
 import { documents } from "./index.js";
 
@@ -76,7 +77,7 @@ export function DocumentsPage() {
 			label: {},
 			comment: {},
 
-			university: { altLabel: {} }
+			university: { id: {}, altLabel: {} }
 
 		}
 
@@ -121,6 +122,7 @@ export function DocumentsPage() {
 
 				title={<Link href={id}>{label}</Link>}
 				badge={university?.altLabel ?? "EC2U Alliance"}
+				color={color(university?.id)}
 				glyph={documents.glyph}
 
 			>{comment}</Card>)}

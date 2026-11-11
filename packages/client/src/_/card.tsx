@@ -39,6 +39,7 @@ export function Card({
 
 	title,
 	badge,
+	color,
 	image,
 	glyph,
 
@@ -61,6 +62,11 @@ export function Card({
 	 * The label classifying the item, set as a pill at the top of the side column across from the title.
 	 */
 	badge?: ComponentChildren
+
+	/**
+	 * The CSS colour accenting the badge pill.
+	 */
+	color?: string
 
 	/**
 	 * The picture standing for the item, under the badge in the side column, held to the height of the description.
@@ -89,7 +95,7 @@ export function Card({
 	}, <>
 
 		{isContent(title) && <span>{title}</span>}
-		{isContent(badge) && <span class="badge"><Pill>{badge}</Pill></span>}
+		{isContent(badge) && <span class="badge"><Pill color={color}>{badge}</Pill></span>}
 
 		{isContent(children) && <div>{children}</div>}
 

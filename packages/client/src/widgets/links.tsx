@@ -19,7 +19,7 @@ import { Link } from "@metreeca/clay-widgets/link";
 import { opt, type Optional } from "@metreeca/core";
 import { nameTag, type Tag } from "@metreeca/core/language";
 import { by, locale } from "@metreeca/core/order";
-import { resolve } from "@metreeca/core/resource";
+import { internalize, resolve } from "@metreeca/core/resource";
 import { tagIRI } from "@metreeca/work/core/language.js";
 import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { type ComponentChildren, createElement } from "preact";
@@ -34,7 +34,18 @@ import "./links.css";
  * @returns The tag of the local language of `university`, or `undefined` if `university` is not a partner
  */
 export function local(university: Optional<string>): Optional<Tag> {
-	return opt(university, id => partners[resolve(base, id)]?.locale);
+	return opt(university, id => partners[resolve(base, internalize(location.href, id))]?.locale);
+}
+
+/**
+ * Identifies the brand colour of a partner university, telling its items apart at a glance in catalogues.
+ *
+ * @param university The identifier of the university, as resolved by the store against the serving origin
+ *
+ * @returns The hex colour of `university`, or `undefined` if `university` is not a partner
+ */
+export function color(university: Optional<string>): Optional<string> {
+	return opt(university, id => partners[resolve(base, internalize(location.href, id))]?.color);
 }
 
 /**

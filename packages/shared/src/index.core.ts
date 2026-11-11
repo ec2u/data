@@ -94,55 +94,64 @@ export const rdfs = createNamespace("http://www.w3.org/2000/01/rdf-schema#", [
 export const coimbra = immutable({
 	id: resolve(base, "/universities/coimbra"),
 	locale: "pt",
-	zone: "Europe/Lisbon"
+	zone: "Europe/Lisbon",
+	color: "#228B22"
 });
 
 export const iasi = immutable({
 	id: resolve(base, "/universities/iasi"),
 	locale: "ro",
-	zone: "Europe/Bucharest"
+	zone: "Europe/Bucharest",
+	color: "#00A1C9"
 });
 
 export const jena = immutable({
 	id: resolve(base, "/universities/jena"),
 	locale: "de",
-	zone: "Europe/Berlin"
+	zone: "Europe/Berlin",
+	color: "#A6935F"
 });
 
 export const linz = immutable({
 	id: resolve(base, "/universities/linz"),
 	locale: "de",
-	zone: "Europe/Vienna"
+	zone: "Europe/Vienna",
+	color: "#7D828C"
 });
 
 export const pavia = immutable({
 	id: resolve(base, "/universities/pavia"),
 	locale: "it",
-	zone: "Europe/Rome"
+	zone: "Europe/Rome",
+	color: "#A6223C"
 });
 
 export const poitiers = immutable({
 	id: resolve(base, "/universities/poitiers"),
 	locale: "fr",
-	zone: "Europe/Paris"
+	zone: "Europe/Paris",
+	color: "#153142"
 });
 
 export const salamanca = immutable({
 	id: resolve(base, "/universities/salamanca"),
 	locale: "es",
-	zone: "Europe/Madrid"
+	zone: "Europe/Madrid",
+	color: "#D22020"
 });
 
 export const turku = immutable({
 	id: resolve(base, "/universities/turku"),
 	locale: "fi",
-	zone: "Europe/Helsinki"
+	zone: "Europe/Helsinki",
+	color: "#004A43"
 });
 
 export const umea = immutable({
 	id: resolve(base, "/universities/umea"),
 	locale: "sv",
-	zone: "Europe/Stockholm"
+	zone: "Europe/Stockholm",
+	color: "#006699"
 });
 
 
@@ -181,6 +190,7 @@ export type Partner = {
 	readonly id: Reference
 	readonly locale: Tag
 	readonly zone: string // !!! type
+	readonly color: string // brand colour, in hex notation
 
 }
 

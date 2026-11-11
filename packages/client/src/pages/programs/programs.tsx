@@ -38,6 +38,7 @@ import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
+import { color } from "../../widgets/links.js";
 import { DatasetLinks } from "../datasets/dataset.js";
 import { programs } from "./index.js";
 
@@ -76,7 +77,7 @@ export function ProgramsPage() {
 			label: {},
 			comment: {},
 
-			university: { altLabel: {} }
+			university: { id: {}, altLabel: {} }
 
 		}
 
@@ -122,6 +123,7 @@ export function ProgramsPage() {
 
 				title={<Link href={id}>{label}</Link>}
 				badge={university?.altLabel}
+				color={color(university?.id)}
 				glyph={programs.glyph}
 
 			>{comment}</Card>)}
