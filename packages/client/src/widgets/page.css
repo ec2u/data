@@ -19,6 +19,13 @@ clay-tool {
     --clay-tool-head-font-size: var(--skin--scaling-125);
     --clay-tool-side-width: 20rem;
 
+    --clay-tool-side-gutter: var(--skin--spacing-100);
+    --clay-tool-main-gutter: var(--skin--spacing-100);
+
+    --clay-tool-head-gutter: var(--skin--spacing-150);
+    --clay-tool-body-gutter: var(--skin--spacing-050);
+    --clay-tool-foot-gutter: var(--skin--spacing-100);
+
     --clay-card-side-max-width: min(10rem, 33%);
 
     & small {
