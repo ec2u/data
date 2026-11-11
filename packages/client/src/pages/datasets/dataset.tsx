@@ -94,7 +94,7 @@ export function DatasetLink({
 
 }) {
 
-	return <Link href={`${href};${InfoAnnex}`} title={"Info"}><Icon.Info/></Link>;
+	return <Link href={`${href};${InfoAnnex}`} title={"Dataset Metadata"}><Icon.Certificate/></Link>;
 
 }
 
@@ -114,7 +114,7 @@ export function DatasetLinks() {
 
 	return annex === InfoAnnex
 		? <Link href={route} title={"Data"}><Icon.Eye/></Link>
-		: <Link href={`${route};${InfoAnnex}`} title={"Info"}><Icon.Info/></Link>;
+		: <Link href={`${route};${InfoAnnex}`} title={"Dataset Metadata"}><Icon.Certificate/></Link>;
 
 }
 
