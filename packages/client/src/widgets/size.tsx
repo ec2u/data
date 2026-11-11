@@ -18,7 +18,7 @@ import type { ResourceShape } from "@metreeca/blue/resource";
 import { Path } from "@metreeca/clay-widgets/path";
 import { Style } from "@metreeca/clay-widgets/style";
 import type { Lazy } from "@metreeca/core";
-import { Count } from "@metreeca/tile-widgets/viewers/count";
+import { Count } from "@metreeca/tile-widgets/count";
 import type { Collection, Collections } from "@metreeca/tile/collection";
 import { useCount } from "@metreeca/tile/count";
 

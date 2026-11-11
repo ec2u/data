@@ -25,7 +25,7 @@ import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
-import { Search } from "@metreeca/tile-widgets/filters/search";
+import { Search } from "@metreeca/tile-widgets/search";
 import { useCollection } from "@metreeca/tile/collection";
 import { useCount } from "@metreeca/tile/count";
 import { useMembers } from "@metreeca/tile/members";
