@@ -87,7 +87,7 @@ export function University() {
 
 			forward: skos,
 
-			description: "The short name the university is known by across the alliance, as its city."
+			description: "Name of the city the university is known by across the alliance."
 
 		}),
 

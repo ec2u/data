@@ -97,7 +97,9 @@ export function OrgOrganization() {
 
 		altLabel: optional(text, {
 
-			forward: skos // no description: extending shapes state their own, and blue rejects a conflicting one
+			forward: skos,
+
+			description: "Alternative name of the organization."
 
 		}),
 
