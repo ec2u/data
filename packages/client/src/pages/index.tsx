@@ -132,7 +132,7 @@ export function Datasets() {
 
 		}, <DatasetLinks/>)}
 
-		tray={<Stack grow place={"tail"} space={"spacing075"}>
+		tray={<Stack space={"spacing075"}>
 
 			<p style={{
 
@@ -146,8 +146,6 @@ export function Datasets() {
 			</p>
 
 			<TOC name={"Resources"} entries={resources}/>
-
-			<small>© 2020–{new Date().getFullYear()} EC2U Alliance</small>
 
 		</Stack>}
 

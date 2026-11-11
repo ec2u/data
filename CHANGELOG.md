@@ -47,7 +47,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   its values and several values one per line, leaving labelled blocks to the Markdown sections
 - Catalogue facets other than the university one open compact, and links across the hub take their strong look from
   the shared page style rather than from each view
-- The GitHub link in the footer is set a step larger than the copyright notice beside it
 - Taxonomy pages gather the concept count, version and dates in a single sidebar panel
 
 - Shape definitions, vocabularies and dataset metadata moved from `@ec2u/data-loader` to `@ec2u/data-shared`, so that
