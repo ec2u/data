@@ -15,6 +15,7 @@
  */
 
 import { Link } from "@metreeca/clay-widgets/link";
+import { Print } from "./print.js";
 
 
 /**
@@ -24,12 +25,12 @@ import { Link } from "@metreeca/clay-widgets/link";
  */
 export function Notices() {
 
-	return <small>
+	return <Print>
 
 		<Link look={"subtle"} href={"/about/ai"}>AI Notice</Link><br/>
 		<Link look={"subtle"} href={"/about/legal"}>Legal Notice</Link><br/>
 		<Link look={"subtle"} href={"/about/privacy"}>Privacy Notice</Link>
 
-	</small>;
+	</Print>;
 
 }

@@ -18,6 +18,7 @@ import { Link } from "@metreeca/clay-widgets/link";
 import { dedent } from "@metreeca/core/strings";
 import { createElement } from "preact";
 import "./funding.css";
+import { Print } from "./print.js";
 
 const positive = new URL("../assets/ec2u/eu-co-funded-positive.png", import.meta.url).href;
 const negative = new URL("../assets/ec2u/eu-co-funded-negative.png", import.meta.url).href;
@@ -34,7 +35,7 @@ const negative = new URL("../assets/ec2u/eu-co-funded-negative.png", import.meta
  */
 export function Funding() {
 
-	return createElement("ec2u-funding", {}, <div>
+	return createElement("ec2u-funding", {}, <Print>
 
 		<Link href={"https://education.ec.europa.eu/education-levels/higher-education/european-universities-initiative"}>
 			<picture>
@@ -43,12 +44,12 @@ export function Funding() {
 			</picture>
 		</Link>
 
-		<small>{dedent`
+		<span>{dedent`
 			Funded by the European Union. Views and opinions expressed are however
 			those of the author(s) only and do not necessarily reflect those of the European Union.
 			Neither the European Union nor the granting authority can be held responsible for them.
-		`}</small>
+		`}</span>
 
-	</div>);
+	</Print>);
 
 }

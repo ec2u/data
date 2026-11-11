@@ -28,10 +28,6 @@ clay-tool {
 
     --clay-card-side-max-width: min(10rem, 33%);
 
-    & small {
-        font-size: calc(var(--skin--font-size-small) * 0.75);
-    }
-
     & tile-clear {
 
         font-size: var(--skin--font-size);
