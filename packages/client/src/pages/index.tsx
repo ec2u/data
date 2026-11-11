@@ -61,16 +61,17 @@ export const datasets = immutable({
 const resources = immutable({
 
 	"Get Involved": {
-		"Students": "https://ec2u.eu/students",
-		"Researchers": "https://ec2u.eu/researchers",
-		"Staff": "https://ec2u.eu/staff",
-		"Citizens": "https://ec2u.eu/citizens"
+		"Publishers": "/about/publishers/",
+		"Webmasters": "/about/webmasters/",
+		"Developers": "/about/developers/"
 	},
 
 	"References": {
-		"EC2U Alliance": "https://ec2u.eu/about-ec2u",
-		"Events & News": "https://ec2u.eu/events-news",
-		"Contact": "https://ec2u.eu/contact-0"
+		"About the Hub": "/about/",
+		"Linked Data": "/about/rdf/",
+		"Models & APIs": "/about/datasets/",
+		"Taxonomies": "/taxonomies/",
+		"Open Source": "https://github.com/ec2u/data"
 	}
 
 });
