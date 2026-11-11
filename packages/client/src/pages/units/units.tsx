@@ -117,7 +117,7 @@ export function UnitsPage() {
 
 				title={<Link href={id}>{label}</Link>}
 				badge={university?.altLabel ?? "EC2U Alliance"}
-				image={comment && <Empty>{units.glyph}</Empty>}
+				glyph={units.glyph}
 
 			>{comment}</Card>)}
 

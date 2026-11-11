@@ -26,8 +26,6 @@ clay-tool {
     --clay-tool-body-gutter: var(--skin--spacing-100);
     --clay-tool-foot-gutter: var(--skin--spacing-100);
 
-    --clay-card-side-max-width: min(10rem, 33%);
-
     & tile-clear {
 
         font-size: var(--skin--font-size);

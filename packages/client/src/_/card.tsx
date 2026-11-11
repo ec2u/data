@@ -15,16 +15,21 @@
  */
 
 import { isContent } from "@metreeca/clay-widgets";
+import { Empty } from "@metreeca/clay-widgets/empty";
 import { type ComponentChildren, createElement } from "preact";
 import "./card.css";
+import { Pill } from "./pill.js";
 
 
 /**
- * Creates a clamped summary card.
+ * Creates a catalogue card.
  *
  * Sets the title over the description in a main column, and the badge over the image in a side column at the end of
- * the card. The description is cut short with an ellipsis past the given number of lines, and the image stretches to
+ * the card. The description is cut short with an ellipsis past the given number of lines, and the image is held to
  * the height of the lines shown, so a run of cards keeps text and image ending together.
+ *
+ * The badge is set as a {@link Pill}, and an item with a description but no image of its own is shown by a tile
+ * holding the glyph of its catalogue, so every catalogue lays its cards out alike from its data alone.
  *
  * Empty parts are left out, and a card left with none renders nothing.
  */
@@ -35,6 +40,7 @@ export function Card({
 	title,
 	badge,
 	image,
+	glyph,
 
 	children
 
@@ -52,14 +58,19 @@ export function Card({
 	title?: ComponentChildren
 
 	/**
-	 * The badge classifying the item, at the top of the side column across from the title, kept to one line.
+	 * The label classifying the item, set as a pill at the top of the side column across from the title.
 	 */
 	badge?: ComponentChildren
 
 	/**
-	 * The image standing for the item, under the badge in the side column, stretched to the height of the description.
+	 * The picture standing for the item, under the badge in the side column, held to the height of the description.
 	 */
 	image?: ComponentChildren
+
+	/**
+	 * The glyph of the catalogue, shown in a tile in place of a missing image beside a stated description.
+	 */
+	glyph?: ComponentChildren
 
 
 	/**
@@ -69,14 +80,20 @@ export function Card({
 
 }) {
 
-	return [title, badge, image, children].some(isContent) ? createElement("ec2u-card", { style: { "--ec2u-card-lines": lines } }, <>
+	const side = isContent(image) ? image
+		: isContent(children) && isContent(glyph) ? <Empty>{glyph}</Empty>
+			: undefined;
+
+	return [title, badge, side, children].some(isContent) ? createElement("ec2u-card", {
+		style: { "--ec2u-card-lines": lines }
+	}, <>
 
 		{isContent(title) && <span>{title}</span>}
-		{isContent(badge) && <span class="badge">{badge}</span>}
+		{isContent(badge) && <span class="badge"><Pill>{badge}</Pill></span>}
 
 		{isContent(children) && <div>{children}</div>}
 
-		{isContent(image) && <i>{image}</i>}
+		{isContent(side) && <i>{side}</i>}
 
 	</>) : null;
 

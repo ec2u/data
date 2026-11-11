@@ -41,7 +41,7 @@ ec2u-card {
     grid-template-columns: 1fr fit-content(var(--ec2u-card-side-max-width));
     grid-template-rows: min-content min-content;
     align-items: start;
-    gap: var(--skin--spacing-050) var(--skin--spacing-100);
+    gap: var(--skin--spacing-025) var(--skin--spacing-100);
 
     & + & {
         margin-top: var(--skin--spacing-100);
@@ -102,6 +102,10 @@ ec2u-card {
     & > i {
 
         --skin--spacing-100: var(--skin--spacing-050);
+
+        /* A picture is scaled down to the same height, inside the border an image draws around it. */
+
+        --clay-image-max-height: calc(var(--ec2u-card-height) - 2 * var(--skin--border-width));
 
         --clay-empty-icon-size: calc(var(--ec2u-card-height) - 2 * var(--skin--spacing-100) - 2 * var(--skin--border-width));
 

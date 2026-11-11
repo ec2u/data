@@ -16,7 +16,6 @@
 
 import { Events } from "@ec2u/data-shared/events/index.js";
 import { Button } from "@metreeca/clay-widgets/button";
-import { Card } from "@metreeca/clay-widgets/card";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Image } from "@metreeca/clay-widgets/image";
@@ -38,6 +37,7 @@ import { useTally } from "@metreeca/tile/tally";
 import { date } from "@metreeca/tile/types/date";
 import { instant } from "@metreeca/tile/types/instant";
 import { useEffect } from "preact/hooks";
+import { Card } from "../../_/card.js";
 import { TallyOptions } from "../../index.core.js";
 import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
@@ -137,6 +137,7 @@ export function EventsPage() {
 					title={<Link href={id}>{`${schedule(startDate, endDate)} / ${label}`}</Link>}
 					badge={university?.altLabel}
 					image={opt(image, ({ url }) => <Image src={url[0]}/>)}
+					glyph={events.glyph}
 
 				>{disambiguatingDescription}</Card>)}
 

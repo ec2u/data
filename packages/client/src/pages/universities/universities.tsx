@@ -16,7 +16,6 @@
 
 import { Universities } from "@ec2u/data-shared/universities/index.js";
 import { Button } from "@metreeca/clay-widgets/button";
-import { Card } from "@metreeca/clay-widgets/card";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Image } from "@metreeca/clay-widgets/image";
@@ -36,6 +35,7 @@ import { useSearch } from "@metreeca/tile/search";
 import { integer } from "@metreeca/tile/types/integer";
 import { year } from "@metreeca/tile/types/year";
 import { useEffect } from "preact/hooks";
+import { Card } from "../../_/card.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
@@ -114,11 +114,12 @@ export function UniversitiesPage() {
 
 			.sort(by(({ city }) => city.label, locale())) // copy, as state is shared
 
-			.map(({ id, label, comment, depiction, country }) => <Card key={id}
+			.map(({ id, label, comment, depiction, country }) => <Card key={id} lines={5}
 
 				title={<Link href={id}>{label}</Link>}
 				badge={country.label}
 				image={opt(depiction[0], src => <Image src={src}/>)}
+				glyph={universities.glyph}
 
 			>{comment}</Card>)
 

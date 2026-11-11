@@ -16,7 +16,6 @@
 
 import { Courses } from "@ec2u/data-shared/courses/index.js";
 import { Button } from "@metreeca/clay-widgets/button";
-import { Card } from "@metreeca/clay-widgets/card";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
@@ -37,6 +36,7 @@ import { useTally } from "@metreeca/tile/tally";
 import { decimal } from "@metreeca/tile/types/decimal";
 import { duration } from "@metreeca/tile/types/duration";
 import { useEffect } from "preact/hooks";
+import { Card } from "../../_/card.js";
 import { TallyOptions } from "../../index.core.js";
 import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
@@ -141,6 +141,7 @@ export function CoursesPage() {
 
 				title={<Link href={id}>{label}</Link>}
 				badge={university?.altLabel}
+				glyph={courses.glyph}
 
 			>{comment}</Card>)}
 

@@ -16,7 +16,6 @@
 
 import { Programs } from "@ec2u/data-shared/programs/index.js";
 import { Button } from "@metreeca/clay-widgets/button";
-import { Card } from "@metreeca/clay-widgets/card";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
@@ -33,6 +32,7 @@ import { useSearch } from "@metreeca/tile/search";
 import { useTally } from "@metreeca/tile/tally";
 import { duration } from "@metreeca/tile/types/duration";
 import { useEffect } from "preact/hooks";
+import { Card } from "../../_/card.js";
 import { TallyOptions } from "../../index.core.js";
 import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
@@ -122,6 +122,7 @@ export function ProgramsPage() {
 
 				title={<Link href={id}>{label}</Link>}
 				badge={university?.altLabel}
+				glyph={programs.glyph}
 
 			>{comment}</Card>)}
 

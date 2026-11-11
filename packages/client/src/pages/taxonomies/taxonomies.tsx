@@ -16,7 +16,6 @@
 
 import { Taxonomies } from "@ec2u/data-shared/taxonomies/index.js";
 import { Button } from "@metreeca/clay-widgets/button";
-import { Card } from "@metreeca/clay-widgets/card";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
@@ -33,6 +32,7 @@ import { useSearch } from "@metreeca/tile/search";
 import { useTally } from "@metreeca/tile/tally";
 import { integer } from "@metreeca/tile/types/integer";
 import { useEffect } from "preact/hooks";
+import { Card } from "../../_/card.js";
 import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
@@ -131,6 +131,7 @@ function cards(rows: readonly TaxonomyRow[]) {
 			}</Link>}
 
 			badge={`${integer.format(size)} concepts`}
+			glyph={taxonomies.glyph}
 
 		>{description}</Card>)
 

@@ -16,7 +16,6 @@
 
 import { Documents } from "@ec2u/data-shared/documents/index.js";
 import { Button } from "@metreeca/clay-widgets/button";
-import { Card } from "@metreeca/clay-widgets/card";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
@@ -33,6 +32,7 @@ import { useQuery } from "@metreeca/tile/query";
 import { useSearch } from "@metreeca/tile/search";
 import { useTally } from "@metreeca/tile/tally";
 import { useEffect } from "preact/hooks";
+import { Card } from "../../_/card.js";
 import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
@@ -121,6 +121,7 @@ export function DocumentsPage() {
 
 				title={<Link href={id}>{label}</Link>}
 				badge={university?.altLabel ?? "EC2U Alliance"}
+				glyph={documents.glyph}
 
 			>{comment}</Card>)}
 
