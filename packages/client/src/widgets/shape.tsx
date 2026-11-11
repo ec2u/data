@@ -350,9 +350,9 @@ function Row({ open, onToggle, ...row }: ShapeRow & {
 			class={index < disclosed.length-1 ? "ec2u-shape-details" : "ec2u-shape-details ec2u-shape-end"}
 		>
 			<td/>
-			<td class={"ec2u-shape-key"}>{label}</td>
+			<td class={"ec2u-shape-key"}><div>{label}</div></td>
 			<td/>
-			<td class={label === undefined ? undefined : "ec2u-shape-value"}>{value}</td>
+			<td class={label === undefined ? undefined : "ec2u-shape-value"}><div>{value}</div></td>
 			<td/>
 		</tr>)}
 

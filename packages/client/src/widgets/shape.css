@@ -24,7 +24,16 @@
 
     /* column headings read as labels, set back from the values under them */
 
+    /*
+     * Column headings stay at the top of the scrolling area while the rows pass under them, as in tile tables; the
+     * headings opening each inherited group take over from the ones above as the group reaches the top.
+     */
+
     & .ec2u-shape-head > th {
+
+        position: sticky;
+        top: 0;
+        z-index: var(--skin--z-index-sticky);
 
         font-size: var(--skin--font-size-small);
         color: var(--skin--color-label);
@@ -80,25 +89,28 @@
 
     /* disclosed constraints read as label and value, the label under the type and the value under the description */
 
+    /*
+     * Disclosed rows claim no width of their own when the columns are sized, filling and wrapping within the widths the
+     * folded rows give them instead, so unfolding a property never reflows the table.
+     */
+
+    & .ec2u-shape-details > td > div {
+        width: 0;
+        min-width: 100%;
+    }
+
     & .ec2u-shape-key {
         font-size: var(--skin--font-size-small);
         color: var(--skin--color-label);
-        white-space: nowrap;
     }
 
     & .ec2u-shape-value {
 
         font-size: var(--skin--font-size-small);
 
-        /*
-         * Values such as patterns run long without spaces, so they break anywhere and claim no width of their own
-         * when the columns are sized, filling whatever width the description column is given instead.
-         */
+        /* values such as patterns run long without spaces, so they break anywhere */
 
-        & > code {
-            display: block;
-            width: 0;
-            min-width: 100%;
+        & code {
             white-space: normal;
             overflow-wrap: anywhere;
         }
