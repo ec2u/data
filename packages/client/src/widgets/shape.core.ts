@@ -31,6 +31,7 @@ import type { Some } from "@metreeca/core/arrays";
 import { compact } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
 import { equals } from "@metreeca/core/values";
+import { summary } from "@metreeca/work/core/strings.js";
 
 
 /**
@@ -800,7 +801,7 @@ function markup(text: ResourceShape["description"]): Optional<string> {
  * Extracts the summary of a markdown description: its first paragraph, with whitespace collapsed.
  */
 function summarize(markdown: string): string {
-	return collapse(markdown.split(/\n\s*\n/)[0] ?? "");
+	return collapse(summary(markdown));
 }
 
 /**
