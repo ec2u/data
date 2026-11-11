@@ -23,8 +23,9 @@ import { Link } from "@metreeca/clay-widgets/link";
 import { TOC, type TOCEntry } from "@metreeca/clay-widgets/toc";
 import { isArray, isString, type Lazy, opt, type Optional } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
+import { details, summary } from "@metreeca/work/core/strings.js";
 import { type ComponentChildren, Fragment } from "preact";
-import { useRef } from "preact/hooks";
+import { useId, useRef, useState } from "preact/hooks";
 import {
 	getShapeExtenders,
 	getShapeInterface,
@@ -217,7 +218,7 @@ function Table({ rows, inherited }: ShapeTable) {
 			{inherited.map(({ parent, rows }) => <tbody key={parent.name} class={"ec2u-shape-inherited"}>
 				<tr>
 					<th class={"ec2u-shape-from"}>inherited from</th>
-					<th colSpan={3} class={"ec2u-shape-group"}>
+					<th colSpan={4} class={"ec2u-shape-group"}>
 						{parent.href === undefined ? parent.name : <Link look={"subtle"} href={parent.href}>{parent.name}</Link>}
 					</th>
 				</tr>
@@ -239,23 +240,50 @@ function Head() {
 		<th>type</th>
 		<th>#</th>
 		<th>description</th>
+		<th class={"ec2u-shape-more"}/>
 	</tr>;
 }
 
 /**
- * Sets out a property as a table row.
+ * Sets out a property as a table row stating the summary of its description, followed, where the description goes on
+ * past its summary, by a row disclosing the details on demand.
  */
-function Row({ term, predicate, types, cardinality, description }: ShapeRow) {
-	return <tr>
-		<td class={"ec2u-shape-term"}>
-			{predicate === undefined ? term : <Link look={"subtle"} href={predicate}>{term}</Link>}
-		</td>
-		<td class={"ec2u-shape-type"}><Union links={types}/></td>
-		<td class={/^[1-9]/.test(cardinality) ? "ec2u-shape-count ec2u-shape-required" : "ec2u-shape-count"}>
-			{cardinality}
-		</td>
-		<td>{opt(description, description => <Markdown>{description}</Markdown>)}</td>
-	</tr>;
+function Row({ term, predicate, types, cardinality, description = "" }: ShapeRow) {
+
+	const id = useId();
+	const [open, setOpen] = useState(false);
+
+	const brief = summary(description);
+	const more = details(description);
+
+	return <>
+
+		<tr class={more && open ? "ec2u-shape-open" : undefined}>
+			<td class={"ec2u-shape-term"}>
+				{predicate === undefined ? term : <Link look={"subtle"} href={predicate}>{term}</Link>}
+			</td>
+			<td class={"ec2u-shape-type"}><Union links={types}/></td>
+			<td class={/^[1-9]/.test(cardinality) ? "ec2u-shape-count ec2u-shape-required" : "ec2u-shape-count"}>
+				{cardinality}
+			</td>
+			<td>{brief && <Markdown>{brief}</Markdown>}</td>
+			<td class={"ec2u-shape-more"}>{more && <Button look={"subtle"}
+				controls={id}
+				expanded={open}
+				icon={open ? <Icon.Fold/> : <Icon.Unfold/>}
+				title={open ? "Collapse" : "Expand"}
+				onClick={() => setOpen(open => !open)}
+			/>}</td>
+		</tr>
+
+		{more && <tr id={id} hidden={!open} class={"ec2u-shape-details"}>
+			<td colSpan={3}/>
+			<td><Markdown>{more}</Markdown></td>
+			<td/>
+		</tr>}
+
+	</>;
+
 }
 
 /**

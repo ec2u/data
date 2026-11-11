@@ -46,6 +46,27 @@
         white-space: nowrap;
     }
 
+    /* the trailing column keeps to its content and takes no room at all while empty */
+
+    & .ec2u-shape-more {
+        width: 1px;
+        white-space: nowrap;
+
+        &:empty {
+            padding: 0;
+        }
+    }
+
+    /* an open row reads as one with the details it discloses, with no rule between them */
+
+    & .ec2u-shape-open > td {
+        border-bottom-style: none;
+    }
+
+    & .ec2u-shape-details > td {
+        padding-bottom: var(--skin--spacing-100);
+    }
+
     /* counts are quiet, but for the ones requiring a value */
 
     & .ec2u-shape-count {
