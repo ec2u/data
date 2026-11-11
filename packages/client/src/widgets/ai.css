@@ -26,11 +26,9 @@ ec2u-ai {
     font-weight: var(--skin--font-weight-strong);
     color: var(--skin--color-fail-stroke);
 
-    & > clay-link,
-    & > a {
+    & > clay-link {
         display: flex;
         margin-left: auto;
-        color: inherit;
     }
 
 }
