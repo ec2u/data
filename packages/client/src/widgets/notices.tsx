@@ -18,17 +18,15 @@ import { Link } from "@metreeca/clay-widgets/link";
 
 
 /**
- * Creates the legal notices of the hub.
+ * Creates the notices of the hub.
  *
- * Shows links to the legal and privacy notices in the small print of the EU funding acknowledgement, so the two read
- * as matching blocks at the foot of a page.
- *
- * @returns The legal notices
+ * @returns The links to the notices, matching the EU funding acknowledgement at the foot of a page
  */
 export function Notices() {
 
 	return <small>
 
+		<Link look={"subtle"} href={"/about/ai"}>AI Notice</Link><br/>
 		<Link look={"subtle"} href={"/about/legal"}>Legal Notice</Link><br/>
 		<Link look={"subtle"} href={"/about/privacy"}>Privacy Notice</Link>
 
