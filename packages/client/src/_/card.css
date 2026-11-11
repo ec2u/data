@@ -1,0 +1,117 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* The widest the side column grows, so the main column keeps at least two thirds of the card at any width. */
+
+@property --ec2u-card-side-max-width {
+    syntax: "*";
+    inherits: true;
+    initial-value: min(10rem, 33%);
+}
+
+/*
+ * The height of the lines a description shows, registered as a length so that it resolves against the line height
+ * of the card rather than against that of the image where it is read.
+ */
+
+@property --ec2u-card-height {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 0px;
+}
+
+ec2u-card {
+
+    --ec2u-card-height: calc(var(--ec2u-card-lines) * 1lh);
+
+    display: grid;
+    grid-template-columns: 1fr fit-content(var(--ec2u-card-side-max-width));
+    grid-template-rows: min-content min-content;
+    align-items: start;
+    gap: var(--skin--spacing-050) var(--skin--spacing-100);
+
+    & + & {
+        margin-top: var(--skin--spacing-100);
+    }
+
+    /* The title and the badge share the first row, sitting on a common baseline. */
+
+    & > span {
+
+        grid-row: 1;
+        align-self: baseline;
+
+        &:not(.badge) {
+            grid-column: 1;
+            font-weight: var(--skin--font-weight-strong);
+        }
+
+    }
+
+    & > .badge {
+        max-width: 100%;
+        grid-column: 2;
+        justify-self: end;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--skin--color-label);
+    }
+
+    /*
+     * The description keeps to the main column beside a badge or an image, and spans the card otherwise, clamped to
+     * the lines the widget sets on the element through `--ec2u-card-lines`.
+     */
+
+    & > div {
+
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: var(--ec2u-card-lines);
+        line-clamp: var(--ec2u-card-lines);
+        overflow: hidden;
+
+        grid-row: 2;
+        grid-column: 1;
+
+        &:last-child:not(.badge + *) {
+            grid-column: 1 / -1;
+        }
+
+    }
+
+    /*
+     * The image spans the height of the lines shown, so text and image end together. An empty state standing in for
+     * the image sizes its glyph to fit that height inside its own padding and border, read where the glyph resolves,
+     * with the padding retuned down a step through the spacing token it reads, so the glyph fills most of the tile.
+     */
+
+    & > i {
+
+        --skin--spacing-100: var(--skin--spacing-050);
+
+        --clay-empty-icon-size: calc(var(--ec2u-card-height) - 2 * var(--skin--spacing-100) - 2 * var(--skin--border-width));
+
+        min-width: 0;
+        grid-row: 2;
+        grid-column: 2;
+        align-self: stretch;
+        justify-self: end;
+        font-style: normal;
+        color: var(--skin--color-label);
+    }
+
+}
