@@ -20,8 +20,6 @@ import { Markdown } from "@metreeca/clay-markdown/markdown";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
-import { Style } from "@metreeca/clay-widgets/style";
-import { Text } from "@metreeca/clay-widgets/text";
 import { TOC, type TOCEntry } from "@metreeca/clay-widgets/toc";
 import { isArray, isString, type Lazy, opt, type Optional } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
@@ -212,24 +210,18 @@ function Table({ rows, inherited }: ShapeTable) {
 
 		{(rows.length > 0 || inherited.length > 0) && <table class={"ec2u-shape"}>
 
-            <thead>
-                <tr>
-                    <th>property</th>
-                    <th>type</th>
-                    <th>#</th>
-                    <th>description</th>
-                </tr>
-            </thead>
+			<thead><Head/></thead>
 
 			{rows.length > 0 && <tbody>{rows.map(row => <Row key={row.term} {...row}/>)}</tbody>}
 
 			{inherited.map(({ parent, rows }) => <tbody key={parent.name} class={"ec2u-shape-inherited"}>
 				<tr>
-					<th colSpan={4}><Style css={{ textLook: "subtle" }}><Text>
-						properties from {parent.href === undefined ? parent.name :
-						<Link href={parent.href}>{parent.name}</Link>}
-					</Text></Style></th>
+					<th class={"ec2u-shape-from"}>inherited from</th>
+					<th colSpan={3} class={"ec2u-shape-group"}>
+						{parent.href === undefined ? parent.name : <Link look={"subtle"} href={parent.href}>{parent.name}</Link>}
+					</th>
 				</tr>
+				<Head/>
 				{rows.map(row => <Row key={row.term} {...row}/>)}
 			</tbody>)}
 
@@ -239,13 +231,29 @@ function Table({ rows, inherited }: ShapeTable) {
 }
 
 /**
+ * Sets out the column headings of the property table, opening the table and each group of inherited properties.
+ */
+function Head() {
+	return <tr class={"ec2u-shape-head"}>
+		<th>property</th>
+		<th>type</th>
+		<th>#</th>
+		<th>description</th>
+	</tr>;
+}
+
+/**
  * Sets out a property as a table row.
  */
 function Row({ term, predicate, types, cardinality, description }: ShapeRow) {
 	return <tr>
-		<td>{predicate === undefined ? term : <Link href={predicate}>{term}</Link>}</td>
-		<td><Union links={types}/></td>
-		<td>{cardinality}</td>
+		<td class={"ec2u-shape-term"}>
+			{predicate === undefined ? term : <Link look={"subtle"} href={predicate}>{term}</Link>}
+		</td>
+		<td class={"ec2u-shape-type"}><Union links={types}/></td>
+		<td class={/^[1-9]/.test(cardinality) ? "ec2u-shape-count ec2u-shape-required" : "ec2u-shape-count"}>
+			{cardinality}
+		</td>
 		<td>{opt(description, description => <Markdown>{description}</Markdown>)}</td>
 	</tr>;
 }

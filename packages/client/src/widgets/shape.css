@@ -22,6 +22,43 @@
         margin-bottom: 0;
     }
 
+    /* column headings read as labels, set back from the values under them */
+
+    & .ec2u-shape-head > th {
+        font-size: var(--skin--font-size-small);
+        color: var(--skin--color-label);
+    }
+
+    /* property names read as code in the default ink, so the column of linked types beside them stays the only blue one */
+
+    & .ec2u-shape-term {
+        font-family: var(--skin--font-family-mono);
+        font-weight: var(--skin--font-weight-strong);
+        white-space: nowrap;
+    }
+
+    /* types and counts keep to their content, leaving the remaining width to descriptions (a 1px width shrinks a
+       table cell to its unbreakable content) */
+
+    & .ec2u-shape-type,
+    & .ec2u-shape-count {
+        width: 1px;
+        white-space: nowrap;
+    }
+
+    /* counts are quiet, but for the ones requiring a value */
+
+    & .ec2u-shape-count {
+        font-family: var(--skin--font-family-mono);
+        font-size: var(--skin--font-size-small);
+        color: var(--skin--color-subtle);
+    }
+
+    & .ec2u-shape-required {
+        font-weight: var(--skin--font-weight-strong);
+        color: inherit;
+    }
+
     /* union branches keep each type on its own unbroken line */
 
     & .ec2u-shape-branch {
@@ -32,6 +69,24 @@
 
     & > .ec2u-shape-inherited > tr:first-child > th {
         padding-top: var(--skin--spacing-250);
+    }
+
+    /* the label names the ancestor as a heading, so each group reads as a section of its own */
+
+    & .ec2u-shape-group {
+        font-family: var(--skin--font-family-heading);
+        font-weight: var(--skin--font-weight-strong);
+    }
+
+    & .ec2u-shape-from {
+        font-weight: var(--skin--font-weight);
+        color: var(--skin--color-label);
+    }
+
+    /* inherited properties step back from the ones the shape declares, which keep the strong weight */
+
+    & > .ec2u-shape-inherited .ec2u-shape-term {
+        font-weight: var(--skin--font-weight);
     }
 
 }
