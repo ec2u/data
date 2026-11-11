@@ -69,7 +69,7 @@ const resources = immutable({
 	"References": {
 		"About the Hub": "/about/",
 		"Linked Data": "/about/rdf/",
-		"Models & APIs": "/about/datasets/",
+		"APIs & Models": "/about/datasets/",
 		"Taxonomies": "/taxonomies/",
 		"Open Source": "https://github.com/ec2u/data"
 	}
