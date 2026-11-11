@@ -16,7 +16,19 @@ France
 Phone: +33 (0)5 49 45 30 00<br>
 Web: [ec2u.eu/contact-0](https://www.ec2u.eu/contact-0)
 
-Legal representative: [to be confirmed]
+Director of publication: [to be confirmed]
+
+# Hosting
+
+The hub is hosted on Google Cloud, in its Belgian region inside the European Union.
+
+Google Cloud EMEA Limited<br>
+70 Sir John Rogerson's Quay<br>
+Dublin 2<br>
+Ireland
+
+Phone: [to be confirmed]<br>
+Web: [cloud.google.com](https://cloud.google.com/)
 
 # Contact
 
@@ -26,8 +38,8 @@ software, open an issue on the [GitHub repository](https://github.com/ec2u/data/
 # EU Funding
 
 Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not
-necessarily reflect those of the European Union or [granting authority to be confirmed]. Neither the European Union
-nor the granting authority can be held responsible for them.
+necessarily reflect those of the European Union or the European Education and Culture Executive Agency (EACEA).
+Neither the European Union nor EACEA can be held responsible for them.
 
 # Data Reuse
 

@@ -21,8 +21,8 @@ To have information about you corrected or removed, write to the contact given b
 
 # Where Data Is Processed
 
-The hub runs on Google Cloud in its Belgian region, inside the European Union. Technical records are deleted after
-[retention period to be confirmed], once they are no longer needed to keep the service secure and running.
+The hub runs on Google Cloud in its Belgian region, inside the European Union. Technical records are deleted
+automatically 30 days after the request they record, once they are no longer needed to keep the service secure.
 
 # Your Rights
 
