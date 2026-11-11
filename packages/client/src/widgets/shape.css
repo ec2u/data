@@ -36,14 +36,6 @@
 
 }
 
-/* property sheet entries keep each value on its own unbroken line, clipping the ones overflowing the sidebar */
-
-.ec2u-shape-info {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
 /* code tokens take the colours markdown highlighting gives the same kinds of tokens in fenced code */
 
 .ec2u-shape-code {
@@ -72,6 +64,10 @@
 
     & .ec2u-shape-attr {
         color: var(--skin--color-warn-stroke);
+    }
+
+    & .ec2u-shape-comment {
+        color: var(--skin--color-subtle);
     }
 
 }

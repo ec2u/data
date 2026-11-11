@@ -22,7 +22,8 @@ import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Style } from "@metreeca/clay-widgets/style";
 import { Text } from "@metreeca/clay-widgets/text";
-import { isArray, isString, type Lazy, opt } from "@metreeca/core";
+import { TOC, type TOCEntry } from "@metreeca/clay-widgets/toc";
+import { isArray, isString, type Lazy, opt, type Optional } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
 import { type ComponentChildren, Fragment } from "preact";
 import { useRef } from "preact/hooks";
@@ -32,6 +33,7 @@ import {
 	getShapeParents,
 	getShapeReferrers,
 	getShapeSchema,
+	getShapeSummary,
 	prefixed,
 	type ShapeLink,
 	type ShapeRow,
@@ -50,7 +52,7 @@ import "./shape.css";
  *
  * @param options The widget configuration
  *
- * @returns A description list of entries, each its label over its content, or nothing if no entry states any content
+ * @returns A table of contents grouping the entries under their labels, or nothing if no entry states any content
  */
 export function ShapeInfo({
 
@@ -76,20 +78,17 @@ export function ShapeInfo({
 	const extenders = getShapeExtenders(shape, universe);
 	const referrers = getShapeReferrers(shape, universe);
 
-	const stated = Object.entries({
+	const groups: readonly { label: string, entries: readonly TOCEntry[] }[] = [
 
-		Classes: opt(eager(shape).class, type => <List links={[{ name: prefixed(type), href: type }]}/>),
-		Endpoint: opt(endpoint, endpoint => <code>{endpoint}</code>),
-		Extends: parents.length > 0 ? <List links={parents}/> : undefined,
-		"Extended by": extenders.length > 0 ? <List links={extenders}/> : undefined,
-		"Referenced by": referrers.length > 0 ? <List links={referrers}/> : undefined
+		{ label: "Classes", entries: opt(eager(shape).class, type => [{ label: prefixed(type), href: type }]) ?? [] },
+		{ label: "Endpoint", entries: opt(endpoint, endpoint => [{ label: <code>{endpoint}</code> }]) ?? [] },
+		{ label: "Extends", entries: parents.map(entry) },
+		{ label: "Extended By", entries: extenders.map(entry) },
+		{ label: "Referenced By", entries: referrers.map(entry) }
 
-	}).flatMap(([label, content]) => content !== undefined ? [{ label, content }] : []);
+	];
 
-	return stated.length > 0 ? <dl>{stated.map(({ label, content }) => <Fragment key={label}>
-		<dt>{label}</dt>
-		<dd class={"ec2u-shape-info"}>{content}</dd>
-	</Fragment>)}</dl> : undefined;
+	return <TOC name={"Model"} entries={groups.filter(({ entries }) => entries.length > 0)}/>;
 
 }
 
@@ -125,7 +124,9 @@ export function Shape({
  * Creates the TypeScript interface describing the resources of a shape.
  *
  * Sets out the interface as a code block, linking the interfaces it extends and the types of its members to the
- * documentation of their shapes; see {@link getShapeInterface} for the members it states.
+ * documentation of their shapes; see {@link getShapeInterface} for the members it states. The interface is preceded
+ * by a doc comment naming the class of the shape, linked to its definition, and stating its summary, and each member
+ * by a doc comment naming its predicate, linked alike, and stating its summary; parts not stated are left out.
  *
  * @param options The widget configuration
  *
@@ -148,11 +149,23 @@ export function ShapeDeclaration({
 
 	return <Code>
 
+		<Comment blocks={[
+			opt(eager(shape).class, type => [<Link href={type}>{prefixed(type)}</Link>]),
+			opt(getShapeSummary(shape), wrap)
+		]}/>
+
 		<Keyword>interface</Keyword> {name}
 		{parents.length > 0 && <> <Keyword>extends</Keyword> <Joined links={parents} separator={", "}/></>}
 		{" {\n"}
 
-		{members.length > 0 && <>{"\n"}{members.map(({ term, optional, plural, types }) => <Fragment key={term}>
+		{members.length > 0 && <>{"\n"}{members.map(({
+			term, optional, plural, types, predicate, summary
+		}, index) => <Fragment key={term}>
+			{index > 0 && "\n"}
+			<Comment indent={"\t"} blocks={[
+				opt(predicate, iri => [<Link href={iri}>{prefixed(iri)}</Link>]),
+				opt(summary, wrap)
+			]}/>
 			{"\t"}<Keyword>readonly</Keyword> {term}{optional ? "?" : ""}: {plural && <><Keyword>readonly</Keyword> </>}
 			{plural && types.length > 1 && "("}<Joined links={types} separator={" | "}/>{plural && types.length > 1 && ")"}
 			{plural && "[]"}{"\n"}
@@ -265,6 +278,35 @@ function Keyword({ children }: { children: string }) {
 }
 
 /**
+ * Sets out an indented doc comment of a code block, its blocks of lines separated by empty lines; nothing if all are
+ * missing, so that a member or an interface stating neither predicate, class nor summary is left uncommented.
+ */
+function Comment({ indent = "", blocks }: {
+	indent?: string
+	blocks: readonly Optional<readonly ComponentChildren[]>[]
+}) {
+
+	const stated = blocks.filter(block => block !== undefined);
+
+	return stated.length > 0 ? <span class={"ec2u-shape-comment"}>
+		{`${indent}/**\n`}
+		{stated.map((lines, index) => <Fragment key={index}>
+			{index > 0 && `${indent} *\n`}
+			{lines.map((line, key) => <Fragment key={key}>{`${indent} * `}{line}{"\n"}</Fragment>)}
+		</Fragment>)}
+		{`${indent} */\n`}
+	</span> : undefined;
+
+}
+
+/**
+ * Breaks a text into lines short enough to keep a doc comment within the width of a code block.
+ */
+function wrap(text: string): readonly string[] {
+	return text.match(/\S.{0,99}(?=\s|$)|\S+/g) ?? [];
+}
+
+/**
  * Sets out a JSON value of a code block, indented by depth, linking the strings keyed by `$ref` to their documentation.
  */
 function Json({ value, depth, link = false }: { value: ShapeSchemaValue, depth: number, link?: boolean }) {
@@ -296,12 +338,10 @@ function Joined({ links, separator }: { links: readonly ShapeLink[], separator: 
 }
 
 /**
- * Sets out a list of shapes as a bulleted list, each linked to its documentation where located.
+ * Lists a shape as a table of contents entry, linked to its documentation where located.
  */
-function List({ links }: { links: readonly ShapeLink[] }) {
-	return <ul class={"ec2u-shape-links"}>{links.map(({ name, href }, index) => <li key={index}>
-		{href === undefined ? name : <Link href={href}>{name}</Link>}
-	</li>)}</ul>;
+function entry({ name, href }: ShapeLink): TOCEntry {
+	return { label: name, href };
 }
 
 /**

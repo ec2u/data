@@ -15,10 +15,12 @@
  */
 
 import { Markdown } from "@metreeca/clay-markdown/markdown";
+import { Choice } from "@metreeca/clay-widgets/choice";
+import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
-import { Tabs } from "@metreeca/clay-widgets/tabs";
 import { useRoute, useRouter } from "@metreeca/clay/router";
+import { useStorage } from "@metreeca/clay/storage";
 import { opt } from "@metreeca/core";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../widgets/page.js";
@@ -42,6 +44,8 @@ export function ModelPage() {
 	const route = useRoute();
 	const router = useRouter();
 
+	const [format, setFormat] = useStorage<Format>(localStorage, "ec2u-model-format", "properties");
+
 	const shape = getModel(universe, route.replace(/^.*\//, ""));
 	const name = opt(shape, getShapeName);
 
@@ -59,18 +63,33 @@ export function ModelPage() {
 
 		</Path>}
 
+		menu={<Choice name={"Format"} look={"subtle"} options={{
+			properties: <span title={"Properties"}><Icon.TableProperties style={{ transform: "scaleX(-1)" }}/></span>,
+			typescript: <span title={"TypeScript"}><Icon.Code/></span>,
+			schema: <span title={"JSON Schema"}><Icon.Braces/></span>
+		}} value={format} onChange={setFormat}/>}
+
 		tray={<ShapeInfo shape={shape} universe={universe}/>}
 
 	>
 
 		{opt(getShapeDescription(shape), description => <Markdown>{description}</Markdown>)}
 
-		<Tabs panels={{
-			Properties: <Shape shape={shape}/>,
-			TypeScript: <ShapeDeclaration shape={shape}/>,
-			"JSON Schema": <ShapeSchema shape={shape}/>
-		}}/>
+		{{
+			properties: <Shape shape={shape}/>,
+			typescript: <ShapeDeclaration shape={shape}/>,
+			schema: <ShapeSchema shape={shape}/>
+		}[format]}
 
 	</Page>;
 
 }
+
+
+/**
+ * The formats a shape is documented in.
+ */
+type Format =
+	| "properties"
+	| "typescript"
+	| "schema"

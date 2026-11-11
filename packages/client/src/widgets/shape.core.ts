@@ -225,6 +225,16 @@ export type ShapeMember = {
 	 */
 	readonly types: readonly ShapeLink[]
 
+	/**
+	 * The IRI of the predicate the property maps to; none if the property states no predicate.
+	 */
+	readonly predicate: Optional<string>
+
+	/**
+	 * The first paragraph of the English description of the property, with whitespace collapsed; none if not stated.
+	 */
+	readonly summary: Optional<string>
+
 };
 
 /**
@@ -530,7 +540,9 @@ export function getShapeInterface(lazy: Lazy<ResourceShape>): ShapeInterface {
  *
  * States the schema of the payloads `lazy` admits, with the members of its {@link getShapeInterface | interface},
  * requiring the schemas of its nearest documented ancestors through `allOf`; shapes are referred to by `$ref` to their
- * documentation, and localised text is admitted as objects mapping language tags to strings.
+ * documentation, and localised text is admitted as objects mapping language tags to strings. The schema is titled
+ * after the shape and annotated with its {@link getShapeSummary | summary} as `description` and the prefixed name of
+ * its class as `$comment`, and each property alike with its own summary and predicate, where stated.
  *
  * @param lazy The shape to be described, possibly deferred
  *
@@ -546,6 +558,9 @@ export function getShapeSchema(lazy: Lazy<ResourceShape>): ShapeSchema {
 
 		title: getShapeName(lazy),
 
+		...opt(getShapeSummary(lazy), description => ({ description })),
+		...opt(eager(lazy).class, type => ({ $comment: prefixed(type) })),
+
 		...(parents.length > 0 ? { allOf: parents.map(referred) } : {}),
 
 		type: "object",
@@ -560,12 +575,19 @@ export function getShapeSchema(lazy: Lazy<ResourceShape>): ShapeSchema {
 /**
  * Describes the values of a member of a TypeScript interface as a JSON Schema.
  */
-function valued({ plural, types }: ShapeMember): ShapeSchema {
+function valued({ plural, types, predicate, summary }: ShapeMember): ShapeSchema {
 
 	const [type] = types;
 	const items = type !== undefined && types.length === 1 ? referred(type) : { anyOf: types.map(referred) };
 
-	return plural ? { type: "array", items } : items;
+	return {
+
+		...opt(summary, description => ({ description })),
+		...opt(predicate, iri => ({ $comment: prefixed(iri) })),
+
+		...(plural ? { type: "array", items } : items)
+
+	};
 
 }
 
@@ -676,13 +698,15 @@ function typed(lazy: Lazy<Shape>): readonly ShapeLink[] {
 /**
  * Describes a property as a member of a TypeScript interface.
  */
-function signed(term: string, { range }: Property): ShapeMember {
+function signed(term: string, { forward, reverse, range, description }: Property): ShapeMember {
 	return {
 
 		term,
 		optional: (range.minCount ?? 0) === 0,
 		plural: range.maxCount === undefined || range.maxCount > 1,
-		types: scripted(range.shape)
+		types: scripted(range.shape),
+		predicate: forward ?? reverse,
+		summary: opt(markup(description), summarize)
 
 	};
 }
