@@ -23,6 +23,7 @@ import { Link } from "@metreeca/clay-widgets/link";
 import { More } from "@metreeca/clay-widgets/more";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { Clear } from "@metreeca/tile-widgets/filters/clear";
+import { Facets } from "@metreeca/tile-widgets/filters/facets";
 import { Search } from "@metreeca/tile-widgets/filters/search";
 import { Tally } from "@metreeca/tile-widgets/filters/tally";
 import { useCollection } from "@metreeca/tile/collection";
@@ -90,7 +91,7 @@ export function UnitsPage() {
 
 		}, <DatasetLinks/>)}
 
-		tray={<>
+		tray={<Facets>
 
 			<Search name={"Name"} search={search}/>
 
@@ -98,7 +99,7 @@ export function UnitsPage() {
 			<Tally name={"Type"} collapsed tally={classification}/>
 			<Tally name={"Topic"} collapsed tally={subject}/>
 
-		</>}
+		</Facets>}
 
 		meta={<Clear collection={collection}/>}
 

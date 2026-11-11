@@ -43,14 +43,12 @@ ec2u-funding {
         block-size: 3lh;
         max-block-size: 3lh;
         inline-size: auto;
-        font-size: var(--skin--scaling-075);
+        font-size: calc(var(--skin--font-size-small) * 0.75); /* the size of small print, set by the page */
     }
 
     & small {
         white-space: pre;
         text-align: end;
-        font-size: var(--skin--scaling-075);
-        color: var(--skin--color-placeholder);
     }
 
     /*
@@ -58,7 +56,7 @@ ec2u-funding {
      * type of the foot: it is tuned to the current wording, and must be tuned again whenever the disclaimer changes.
      */
 
-    @container (width < 50em) {
+    @container (width < 45em) {
 
         & > div {
             flex-direction: column;

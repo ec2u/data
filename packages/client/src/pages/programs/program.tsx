@@ -152,7 +152,7 @@ export function ProgramPage() {
 
 		})}
 
-		info={resource({
+		more={resource({
 
 			ready: ({ state: { generated } }) => <AI>{generated}</AI>
 

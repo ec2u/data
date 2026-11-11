@@ -24,6 +24,7 @@ import { More } from "@metreeca/clay-widgets/more";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { nameTag } from "@metreeca/core/language";
 import { Clear } from "@metreeca/tile-widgets/filters/clear";
+import { Facets } from "@metreeca/tile-widgets/filters/facets";
 import { Range } from "@metreeca/tile-widgets/filters/range";
 import { Search } from "@metreeca/tile-widgets/filters/search";
 import { Tally } from "@metreeca/tile-widgets/filters/tally";
@@ -105,7 +106,7 @@ export function CoursesPage() {
 
 		}, <DatasetLinks/>)}
 
-		tray={<>
+		tray={<Facets>
 
 			<Search name={"Name"} search={search}/>
 
@@ -122,7 +123,7 @@ export function CoursesPage() {
 			<Tally name={"Subjects"} collapsed tally={about}/>
 			<Tally name={"Audience"} collapsed tally={audience}/>
 
-		</>}
+		</Facets>}
 
 		meta={<Clear collection={collection}/>}
 

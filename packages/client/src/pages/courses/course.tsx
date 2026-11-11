@@ -181,7 +181,7 @@ export function CoursePage() {
 
 		})}
 
-		info={resource({
+		more={resource({
 
 			ready: ({ state: { generated } }) => <AI>{generated}</AI>
 

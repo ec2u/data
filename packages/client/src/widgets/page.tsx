@@ -16,7 +16,6 @@
 
 import { app } from "@metreeca/clay";
 import { Link } from "@metreeca/clay-widgets/link";
-import { Stack } from "@metreeca/clay-widgets/stack";
 import { Strip } from "@metreeca/clay-widgets/strip";
 import { Style } from "@metreeca/clay-widgets/style";
 import { Tool } from "@metreeca/clay-widgets/tool";
@@ -32,7 +31,7 @@ const logo = new URL("../index.svg", import.meta.url).href;
 
 export function Page({
 
-	info,
+	more,
 	tray,
 	meta,
 
@@ -46,7 +45,7 @@ export function Page({
 
 	meta?: ComponentChildren
 	tray?: ComponentChildren
-	info?: ComponentChildren
+	more?: ComponentChildren
 
 	head?: ComponentChildren
 	menu?: ComponentChildren
@@ -77,8 +76,8 @@ export function Page({
 
 			</Strip>}
 
-			tray={<Stack space={"spacing075"}>{tray}</Stack>}
-			more={info}
+			tray={tray}
+			more={more}
 
 			head={<Style css={{
 

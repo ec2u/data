@@ -25,6 +25,7 @@ import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
 import { by, locale } from "@metreeca/core/order";
 import { Clear } from "@metreeca/tile-widgets/filters/clear";
+import { Facets } from "@metreeca/tile-widgets/filters/facets";
 import { Range } from "@metreeca/tile-widgets/filters/range";
 import { Search } from "@metreeca/tile-widgets/filters/search";
 import { useCollection } from "@metreeca/tile/collection";
@@ -93,14 +94,14 @@ export function UniversitiesPage() {
 
 		}, <DatasetLinks/>)}
 
-		tray={<>
+		tray={<Facets>
 
 			<Search name={"Name"} search={search}/>
 
 			<Range name={"Inception"} collapsed type={year} range={inception}/>
 			<Range name={"Students"} collapsed type={integer} range={students}/>
 
-		</>}
+		</Facets>}
 
 		meta={<Clear collection={collection}/>}
 

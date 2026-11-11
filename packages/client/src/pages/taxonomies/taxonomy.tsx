@@ -141,7 +141,7 @@ export function TaxonomyPage() {
 
 		})}
 
-		info={resource({
+		more={resource({
 
 			ready: ({ state: { generated } }) => <AI>{generated}</AI>
 

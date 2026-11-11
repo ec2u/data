@@ -24,6 +24,7 @@ import { More } from "@metreeca/clay-widgets/more";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { nameTag } from "@metreeca/core/language";
 import { Clear } from "@metreeca/tile-widgets/filters/clear";
+import { Facets } from "@metreeca/tile-widgets/filters/facets";
 import { Search } from "@metreeca/tile-widgets/filters/search";
 import { Tally } from "@metreeca/tile-widgets/filters/tally";
 import { useCollection } from "@metreeca/tile/collection";
@@ -94,7 +95,7 @@ export function DocumentsPage() {
 
 		}, <DatasetLinks/>)}
 
-		tray={<>
+		tray={<Facets>
 
 			<Search name={"Name"} search={search}/>
 
@@ -105,7 +106,7 @@ export function DocumentsPage() {
 			<Tally name={"Language"} collapsed tally={language}>{({ label }) => nameTag(label, navigator.language)}</Tally>
 			<Tally name={"License"} collapsed tally={license}/>
 
-		</>}
+		</Facets>}
 
 		meta={<Clear collection={collection}/>}
 

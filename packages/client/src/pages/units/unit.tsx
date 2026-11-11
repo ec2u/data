@@ -142,7 +142,7 @@ export function UnitPage() {
 
 		})}
 
-		info={resource({
+		more={resource({
 
 			ready: ({ state: { generated } }) => <AI>{generated}</AI>
 

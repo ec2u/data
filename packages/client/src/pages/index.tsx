@@ -20,6 +20,7 @@ import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
+import { Stack } from "@metreeca/clay-widgets/stack";
 import { TOC } from "@metreeca/clay-widgets/toc";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { isNumber, isObject, isOptional, isString, opt } from "@metreeca/core";
@@ -34,6 +35,7 @@ import { useEffect } from "preact/hooks";
 import { byDataset, ec2u, PublicDatasets } from "../index.core.js";
 import { Failure } from "../widgets/failure.js";
 import { Funding } from "../widgets/funding.js";
+import { Notices } from "../widgets/notices.js";
 import { Page } from "../widgets/page.js";
 import { courses } from "./courses/index.js";
 import { DatasetLinks } from "./datasets/dataset.js";
@@ -130,7 +132,7 @@ export function Datasets() {
 
 		}, <DatasetLinks/>)}
 
-		tray={<>
+		tray={<Stack grow place={"tail"} space={"spacing075"}>
 
 			<p style={{
 
@@ -145,7 +147,11 @@ export function Datasets() {
 
 			<TOC name={"Resources"} entries={resources}/>
 
-		</>}
+			<small>© 2020–{new Date().getFullYear()} EC2U Alliance</small>
+
+		</Stack>}
+
+		more={<Notices/>}
 
 		copy={<Funding/>}
 
