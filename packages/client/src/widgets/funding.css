@@ -39,6 +39,10 @@ ec2u-funding {
      * source; its width follows from its proportions. An enlarged emblem is left to the design system rule.
      */
 
+    & picture {
+        display: contents;
+    }
+
     & img:not([active]) {
         flex: none;
         display: block;

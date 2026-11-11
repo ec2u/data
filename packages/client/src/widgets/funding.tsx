@@ -19,7 +19,8 @@ import { dedent } from "@metreeca/core/strings";
 import { createElement } from "preact";
 import "./funding.css";
 
-const emblem = new URL("../assets/ec2u/co-founded-by-the-eu.png", import.meta.url).href;
+const positive = new URL("../assets/ec2u/eu-co-funded-positive.png", import.meta.url).href;
+const negative = new URL("../assets/ec2u/eu-co-funded-negative.png", import.meta.url).href;
 
 
 /**
@@ -27,6 +28,7 @@ const emblem = new URL("../assets/ec2u/co-founded-by-the-eu.png", import.meta.ur
  *
  * Shows the EU emblem with the disclaimer the grant agreement requires on the communication of a funded action, sized
  * for the foot of a page: the disclaimer faces the emblem where the foot is wide enough, and drops under it otherwise.
+ * The emblem takes its official negative version, with the funding statement set in white, on a dark colour scheme.
  *
  * @returns The funding acknowledgement
  */
@@ -35,7 +37,10 @@ export function Funding() {
 	return createElement("ec2u-funding", {}, <div>
 
 		<Link href={"https://education.ec.europa.eu/education-levels/higher-education/european-universities-initiative"}>
-			<img alt={"Co-funded by the European Union"} src={emblem}/>
+			<picture>
+				<source media={"(prefers-color-scheme: dark)"} srcset={negative}/>
+				<img alt={"Co-funded by the European Union"} src={positive}/>
+			</picture>
 		</Link>
 
 		<small>{dedent`
