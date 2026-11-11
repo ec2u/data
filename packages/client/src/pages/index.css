@@ -15,6 +15,20 @@
  */
 
 /*
+ * The home page fills the body of the shell and closes with the funding acknowledgement the grant agreement requires,
+ * resting at the bottom of a page too short to fill the body and following the datasets otherwise.
+ */
+
+datasets-home {
+
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: var(--skin--spacing-150);
+    min-block-size: 100%;
+
+}
+
+/*
  * Datasets are laid out as cards filling the width of the page, one column up to a tablet and two from a laptop up,
  * where the side column leaves cards wide enough to keep titles on one line: each card sets its size beside its title
  * and its glyph beside its description, and shares the rows of the grid, so that titles and descriptions line up

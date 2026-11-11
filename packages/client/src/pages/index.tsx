@@ -152,9 +152,7 @@ export function Datasets() {
 
 		more={<Notices/>}
 
-		copy={<Funding/>}
-
-	>{members({
+	>{createElement("datasets-home", {}, members({
 
 		blank: () => <Empty look={"subtle"}>{datasets.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{datasets.glyph}</Empty></Failure>,
@@ -183,7 +181,7 @@ export function Datasets() {
 
 		}
 
-	})}</Page>;
+	}), <Funding/>)}</Page>;
 
 }
 
