@@ -33,8 +33,17 @@ Web: [cloud.google.com](https://cloud.google.com/)
 
 # Contact
 
-Write to the address above for questions about the hub and its content. To report an error in a dataset or in the
-software, open an issue on the [GitHub repository](https://github.com/ec2u/data/issues).
+Write to the EC2U Connect Centre for questions about the hub and its content. To report an error in a dataset or in
+the software, open an issue on the [GitHub repository](https://github.com/ec2u/data/issues).
+
+EC2U Connect Centre<br>
+c/o University of Pavia<br>
+Via Ferrata 1<br>
+27100 Pavia<br>
+Italy
+
+Web: [www.ec2u.eu](https://www.ec2u.eu)<br>
+Email: [cc@ml.ec2u.eu](mailto:cc@ml.ec2u.eu)
 
 # EU Funding
 
