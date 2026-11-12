@@ -36,7 +36,7 @@ import { useTally } from "@metreeca/tile/tally";
 import { decimal } from "@metreeca/tile/types/decimal";
 import { duration } from "@metreeca/tile/types/duration";
 import { useEffect } from "preact/hooks";
-import { Card } from "../../_/card.js";
+import { Card } from "../../_/clay-widgets/card.js";
 import { TallyOptions } from "../../index.core.js";
 import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";

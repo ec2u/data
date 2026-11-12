@@ -33,7 +33,7 @@ import { useResource } from "@metreeca/tile/resource";
 import { date } from "@metreeca/tile/types/date";
 import { integer } from "@metreeca/tile/types/integer";
 import { useEffect, useState } from "preact/hooks";
-import { SKOSConcepts } from "../../_/skos/concepts.js";
+import { SKOSConcepts } from "../../_/tile-skos/concepts.js";
 import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { address } from "../../widgets/links.js";

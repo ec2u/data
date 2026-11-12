@@ -32,7 +32,7 @@ import { useQuery } from "@metreeca/tile/query";
 import { useSearch } from "@metreeca/tile/search";
 import { useTally } from "@metreeca/tile/tally";
 import { useEffect } from "preact/hooks";
-import { Card } from "../../_/card.js";
+import { Card } from "../../_/clay-widgets/card.js";
 import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";

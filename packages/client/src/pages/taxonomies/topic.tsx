@@ -28,7 +28,7 @@ import { opt } from "@metreeca/core";
 import { by, locale } from "@metreeca/core/order";
 import { useResource } from "@metreeca/tile/resource";
 import { useEffect } from "preact/hooks";
-import { SKOSConcepts, SKOSLineage } from "../../_/skos/concepts.js";
+import { SKOSConcepts, SKOSLineage } from "../../_/tile-skos/concepts.js";
 import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";

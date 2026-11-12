@@ -35,7 +35,7 @@ import { useSearch } from "@metreeca/tile/search";
 import { integer } from "@metreeca/tile/types/integer";
 import { year } from "@metreeca/tile/types/year";
 import { useEffect } from "preact/hooks";
-import { Card } from "../../_/card.js";
+import { Card } from "../../_/clay-widgets/card.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";

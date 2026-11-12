@@ -37,7 +37,7 @@ import { useTally } from "@metreeca/tile/tally";
 import { date } from "@metreeca/tile/types/date";
 import { instant } from "@metreeca/tile/types/instant";
 import { useEffect } from "preact/hooks";
-import { Card } from "../../_/card.js";
+import { Card } from "../../_/clay-widgets/card.js";
 import { TallyOptions } from "../../index.core.js";
 import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";

@@ -19,7 +19,7 @@ import { Link } from "@metreeca/clay-widgets/link";
 import { immutable } from "@metreeca/core/values";
 import { useResource } from "@metreeca/tile/resource";
 import { Failure } from "../../widgets/failure.js";
-import { Tree } from "../tree.js";
+import { Tree } from "../clay-widgets/tree.js";
 import { getSKOSLabel, getSKOSLineage, type SKOSEntry, SKOSOrder } from "./concepts.core.js";
 
 
