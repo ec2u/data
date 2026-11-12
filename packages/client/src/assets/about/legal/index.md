@@ -64,8 +64,8 @@ you visit, how long they keep it, and how to have data about you corrected or re
 
 # AI Content
 
-The hub gathers much of its content automatically and enriches it with AI. See [AI Use Notice](ai) for which content is
-generated, how far you can rely on it, and what we are not responsible for when it turns out to be wrong.
+The hub gathers much of its content automatically and enriches it with AI. See [AI Content Notice](ai) for which
+content is generated, how far you can rely on it, and what we are not responsible for when it turns out to be wrong.
 
 # Liability
 

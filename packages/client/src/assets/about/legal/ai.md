@@ -1,5 +1,5 @@
 ---
-title: AI Use Notice
+title: AI Content Notice
 ---
 
 # How We Use AI

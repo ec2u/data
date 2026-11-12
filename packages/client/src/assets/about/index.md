@@ -17,4 +17,4 @@ If you are new to linked data, [Linked Data Models](rdf/) introduces the graph-b
 
 Automated crawlers collect much of this content, and AI enriches it with descriptions, labels and classifications.
 Either step may introduce errors or gaps, so always check important information against official sources before acting
-on it. See [AI Use Notice](legal/ai) for details on how AI is used and how to use its output responsibly.
+on it. See [AI Content Notice](legal/ai) for details on how AI is used and how to use its output responsibly.
