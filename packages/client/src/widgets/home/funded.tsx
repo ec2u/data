@@ -16,26 +16,37 @@
 
 import { Link } from "@metreeca/clay-widgets/link";
 import { dedent } from "@metreeca/core/strings";
-import { createElement } from "preact";
-import "./funding.css";
+import { type ComponentChildren, createElement } from "preact";
+import "./funded.css";
 import { Print } from "./print.js";
 
-const positive = new URL("../assets/ec2u/eu-co-funded-positive.png", import.meta.url).href;
-const negative = new URL("../assets/ec2u/eu-co-funded-negative.png", import.meta.url).href;
+const positive = new URL("../../assets/ec2u/eu-co-funded-positive.png", import.meta.url).href;
+const negative = new URL("../../assets/ec2u/eu-co-funded-negative.png", import.meta.url).href;
 
 
 /**
- * Creates the EU funding acknowledgement.
+ * Creates a page body closing with the EU funding acknowledgement.
  *
- * Shows the EU emblem with the disclaimer the grant agreement requires on the communication of a funded action, sized
- * for the foot of a page: the disclaimer faces the emblem where the foot is wide enough, and drops under it otherwise.
- * The emblem takes its official negative version, with the funding statement set in white, on a dark colour scheme.
+ * Fills the body of the page and closes it with the EU emblem and the disclaimer the grant agreement requires on the
+ * communication of a funded action, resting at the bottom of a body too short to fill the page and following the
+ * content otherwise. The disclaimer faces the emblem where the body is wide enough, and drops under it otherwise; the
+ * emblem takes its official negative version, with the funding statement set in white, on a dark colour scheme.
  *
- * @returns The funding acknowledgement
+ * @param children The content of the page body
+ *
+ * @returns The funded page body
  */
-export function Funding() {
+export function Funded({
 
-	return createElement("ec2u-funding", {}, <Print>
+	children
+
+}: {
+
+	children?: ComponentChildren
+
+}) {
+
+	return createElement("ec2u-funded", {}, <div>{children}</div>, <Print>
 
 		<Link href={"https://education.ec.europa.eu/education-levels/higher-education/european-universities-initiative"}>
 			<picture>

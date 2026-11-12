@@ -29,12 +29,11 @@ import { nameTag } from "@metreeca/core/language";
 import { useResource } from "@metreeca/tile/resource";
 import { date } from "@metreeca/tile/types/date";
 import { useEffect } from "preact/hooks";
-import { AI } from "../../widgets/ai.js";
+import { AI } from "../../widgets/datasets/ai.js";
 import { Failure } from "../../widgets/failure.js";
-import { address, filters, links, list } from "../../widgets/links.js";
+import { address, filters, links, list } from "../../widgets/datasets/links.js";
 import { Page } from "../../widgets/page.js";
-import { blocks } from "../../widgets/sections.js";
-import { DatasetLink } from "../../widgets/dataset.js";
+import { DatasetLink } from "../../widgets/datasets/dataset.js";
 import { documents } from "./index.js";
 
 
@@ -210,11 +209,11 @@ export function DocumentPage() {
 
 			{opt(description, text => <Markdown>{text}</Markdown>)}
 
-			{blocks({
+			<Infobox wrap>{{
 
 				"Related Documents": links(relation)
 
-			})}
+			}}</Infobox>
 
 		</>
 

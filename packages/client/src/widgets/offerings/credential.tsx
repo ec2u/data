@@ -16,7 +16,7 @@
 
 import { Markdown } from "@metreeca/clay-markdown/markdown";
 import { Stack } from "@metreeca/clay-widgets/stack";
-import { address } from "./links.js";
+import { address } from "../datasets/links.js";
 
 
 /**

@@ -38,9 +38,9 @@ import { useEffect } from "preact/hooks";
 import { Card } from "../../_/clay-widgets/card.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
-import { Size } from "../../widgets/size.js";
-import { color } from "../../widgets/links.js";
-import { DatasetLinks } from "../../widgets/dataset.js";
+import { Size } from "../../widgets/datasets/size.js";
+import { color } from "../../widgets/datasets/links.js";
+import { DatasetLinks } from "../../widgets/datasets/dataset.js";
 import { universities } from "./index.js";
 
 

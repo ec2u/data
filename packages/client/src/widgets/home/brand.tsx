@@ -17,20 +17,20 @@
 import { app } from "@metreeca/clay";
 import { Link } from "@metreeca/clay-widgets/link";
 import { createElement } from "preact";
-import { ec2u } from "../index.core.js";
-import "./identity.css";
+import { ec2u } from "../../index.core.js";
+import "./brand.css";
 
 
 /**
- * Creates the site identity heading a page on narrow viewports.
+ * Creates the site brand heading a page on narrow viewports.
  *
  * Shows the app name, linked to the home page, above the page title where the side column naming the site turns into
  * a drawer, so a reader landing on the page knows at once which site it is; hidden wherever the side column shows.
  *
- * @returns The site identity
+ * @returns The site brand
  */
-export function Identity() {
+export function Brand() {
 
-	return createElement("ec2u-identity", {}, <Link href={"/"}>{ec2u(app.name ?? "")}</Link>);
+	return createElement("ec2u-brand", {}, <Link href={"/"}>{ec2u(app.name ?? "")}</Link>);
 
 }

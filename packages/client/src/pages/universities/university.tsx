@@ -34,9 +34,9 @@ import { year } from "@metreeca/tile/types/year";
 import { useEffect } from "preact/hooks";
 import { byDataset, ec2u, PublicDatasets } from "../../index.core.js";
 import { Failure } from "../../widgets/failure.js";
-import { address, local } from "../../widgets/links.js";
+import { address, local } from "../../widgets/datasets/links.js";
 import { Page } from "../../widgets/page.js";
-import { DatasetLink } from "../../widgets/dataset.js";
+import { DatasetLink } from "../../widgets/datasets/dataset.js";
 import { isDatasetRow } from "../index.js";
 import { universities } from "./index.js";
 

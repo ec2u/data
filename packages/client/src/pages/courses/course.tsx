@@ -15,6 +15,7 @@
  */
 
 import { Course } from "@ec2u/data-shared/courses/index.js";
+import { Markdown } from "@metreeca/clay-markdown/markdown";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Heading } from "@metreeca/clay-widgets/heading";
@@ -28,13 +29,12 @@ import { nameTag } from "@metreeca/core/language";
 import { useResource } from "@metreeca/tile/resource";
 import { duration } from "@metreeca/tile/types/duration";
 import { useEffect } from "preact/hooks";
-import { AI } from "../../widgets/ai.js";
-import { Credential, CredentialModel } from "../../widgets/credential.js";
+import { AI } from "../../widgets/datasets/ai.js";
+import { Credential, CredentialModel } from "../../widgets/offerings/credential.js";
 import { Failure } from "../../widgets/failure.js";
-import { address, links, list, local } from "../../widgets/links.js";
+import { address, links, list, local } from "../../widgets/datasets/links.js";
 import { Page } from "../../widgets/page.js";
-import { blocks, sections } from "../../widgets/sections.js";
-import { DatasetLink } from "../../widgets/dataset.js";
+import { DatasetLink } from "../../widgets/datasets/dataset.js";
 import { credits } from "../programs/program.js";
 import { toCourseMode, toCourseTerm } from "./index.core.js";
 import { courses } from "./index.js";
@@ -220,7 +220,7 @@ export function CoursePage() {
 
 			{description}
 
-			{blocks({
+			<Infobox wrap>{{
 
 				Awards: opt(educationalCredentialAwarded, value =>
 					<Credential credential={value}/>),
@@ -232,16 +232,27 @@ export function CoursePage() {
 				Level: links(educationalLevel),
 				Subjects: links(about)
 
-			})}
+			}}</Infobox>
 
-			{sections({
+			{opt(teaches, text => <>
+				<Heading>Contents and Structure</Heading>
+				<Markdown>{text}</Markdown>
+			</>)}
 
-				"Contents and Structure": teaches,
-				"Admission Requirements": coursePrerequisites,
-				"Learning Objectives and Intended Skills": assesses,
-				"Examination Requirements": competencyRequired
+			{opt(coursePrerequisites, text => <>
+				<Heading>Admission Requirements</Heading>
+				<Markdown>{text}</Markdown>
+			</>)}
 
-			})}
+			{opt(assesses, text => <>
+				<Heading>Learning Objectives and Intended Skills</Heading>
+				<Markdown>{text}</Markdown>
+			</>)}
+
+			{opt(competencyRequired, text => <>
+				<Heading>Examination Requirements</Heading>
+				<Markdown>{text}</Markdown>
+			</>)}
 
 		</>
 

@@ -35,11 +35,11 @@ import { instant } from "@metreeca/tile/types/instant";
 import { time } from "@metreeca/tile/types/time";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { AI } from "../../widgets/ai.js";
+import { AI } from "../../widgets/datasets/ai.js";
 import { Failure } from "../../widgets/failure.js";
-import { address, filters, local } from "../../widgets/links.js";
+import { address, filters, local } from "../../widgets/datasets/links.js";
 import { Page } from "../../widgets/page.js";
-import { DatasetLink } from "../../widgets/dataset.js";
+import { DatasetLink } from "../../widgets/datasets/dataset.js";
 import { toEventAttendanceMode, toEventStatus } from "./index.core.js";
 import { events } from "./index.js";
 

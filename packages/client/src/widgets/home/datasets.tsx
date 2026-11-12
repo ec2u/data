@@ -25,11 +25,8 @@ import "./datasets.css";
  */
 export type Dataset = {
 
-	/** The address the title of the dataset links to; unique within a grid */
-	readonly href: string
-
-	/** The title of the dataset */
-	readonly title: ComponentChildren
+	/** How strongly the dataset stands out, from `1` (supporting) to `3` (core) */
+	readonly priority: 1 | 2 | 3
 
 	/** The number of resources the dataset holds */
 	readonly size: number
@@ -37,19 +34,26 @@ export type Dataset = {
 	/** The glyph set beside the description; blank if omitted */
 	readonly glyph?: ComponentChildren
 
-	/** How strongly the dataset stands out, from `1` (supporting) to `3` (core) */
-	readonly priority: 1 | 2 | 3
+
+	/** The name of the dataset */
+	readonly name: ComponentChildren
 
 	/** The description of the dataset */
 	readonly description?: ComponentChildren
 
-};
 
+	/** The address the name of the dataset links to; unique within a grid */
+	readonly href: string
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Creates a grid of datasets.
  *
- * Lays the datasets out filling the width of the page, with titles and descriptions lined up across the cells of a
+ * Lays the datasets out filling the width of the page, with names and descriptions lined up across the cells of a
  * row however they wrap, and sizes and glyphs set in a column of the same width in every cell; priority sets how
  * strongly the leading edge and the glyph of each cell stand out, so that the tiers of a grid read apart at a glance.
  *
@@ -57,7 +61,7 @@ export type Dataset = {
  *
  * @returns The dataset grid
  */
-export function DatasetGrid({
+export function Datasets({
 
 	datasets
 
@@ -69,12 +73,14 @@ export function DatasetGrid({
 
 	const width = Math.max(0, ...datasets.map(({ size }) => integer.format(size).length));
 
-	return createElement("ec2u-dataset-grid", {
-		style: { "--ec2u-dataset-grid-size-width": `${width}ch` }
+	return createElement("ec2u-datasets", {
+
+		style: { "--ec2u-datasets-size-width": `${width}ch` }
+
 	}, datasets.map(({
 
 		href,
-		title,
+		name,
 		size,
 		glyph,
 		priority,
@@ -83,7 +89,7 @@ export function DatasetGrid({
 	}) => createElement("ec2u-dataset", { key: href, "data-priority": priority }, <>
 
 		<span class="size">{integer.format(size)}</span>
-		<span class="title"><Link href={href}>{title}</Link></span>
+		<span class="name"><Link href={href}>{name}</Link></span>
 		<span class="glyph">{glyph}</span>
 		<span class="description">{description}</span>
 

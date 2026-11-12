@@ -18,7 +18,7 @@ import { Universities as UniversitiesShape, University } from "@ec2u/data-shared
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Routes } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
-import { DatasetPage } from "../../widgets/dataset.js";
+import { DatasetPage } from "../../widgets/datasets/dataset.js";
 import { models } from "../about/models/index.js";
 import { UniversitiesPage } from "./universities.js";
 import { UniversityPage } from "./university.js";

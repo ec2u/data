@@ -36,8 +36,8 @@ import { Card } from "../../_/clay-widgets/card.js";
 import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
-import { Size } from "../../widgets/size.js";
-import { DatasetLinks } from "../../widgets/dataset.js";
+import { Size } from "../../widgets/datasets/size.js";
+import { DatasetLinks } from "../../widgets/datasets/dataset.js";
 import { taxonomies } from "./index.js";
 import { isTaxonomyRow, type TaxonomyRow } from "./taxonomies.core.js";
 

@@ -29,12 +29,11 @@ import { by, compound, locale } from "@metreeca/core/order";
 import { useResource } from "@metreeca/tile/resource";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { AI } from "../../widgets/ai.js";
+import { AI } from "../../widgets/datasets/ai.js";
 import { Failure } from "../../widgets/failure.js";
-import { address, filters, links, list, local } from "../../widgets/links.js";
+import { address, filters, links, list, local } from "../../widgets/datasets/links.js";
 import { Page } from "../../widgets/page.js";
-import { blocks } from "../../widgets/sections.js";
-import { DatasetLink } from "../../widgets/dataset.js";
+import { DatasetLink } from "../../widgets/datasets/dataset.js";
 import { units } from "./index.js";
 
 
@@ -160,7 +159,7 @@ export function UnitPage() {
 
 				{opt(definition, text => <Markdown>{text}</Markdown>)}
 
-				{blocks({
+				<Infobox wrap>{{
 
 					Topics: topics(subject),
 					Keywords: list(keyword),
@@ -168,7 +167,7 @@ export function UnitPage() {
 					"Parent Organizations": links(unitOf.filter(({ id }) => id !== university?.id)),
 					"Organizational Units": links(hasUnit)
 
-				})}
+				}}</Infobox>
 
 			</>
 

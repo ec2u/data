@@ -34,12 +34,12 @@ import { date } from "@metreeca/tile/types/date";
 import { integer } from "@metreeca/tile/types/integer";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { getShapeHref, getShapeName } from "../_/tile-apis/shape/index.js";
-import { ec2u } from "../index.core.js";
+import { getShapeHref, getShapeName } from "../../_/tile-apis/shape/index.js";
+import { ec2u } from "../../index.core.js";
 import "./dataset.css";
-import { Failure } from "./failure.js";
+import { Failure } from "../failure.js";
 import { address, links } from "./links.js";
-import { Page } from "./page.js";
+import { Page } from "../page.js";
 
 
 const MetaAnnex = "meta";

@@ -29,11 +29,10 @@ import { by, locale } from "@metreeca/core/order";
 import { useResource } from "@metreeca/tile/resource";
 import { useEffect } from "preact/hooks";
 import { SKOSConcepts, SKOSLineage } from "../../_/tile-skos/concepts.js";
-import { AI } from "../../widgets/ai.js";
+import { AI } from "../../widgets/datasets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
-import { blocks } from "../../widgets/sections.js";
-import { DatasetLink } from "../../widgets/dataset.js";
+import { DatasetLink } from "../../widgets/datasets/dataset.js";
 import { taxonomies } from "./index.js";
 
 
@@ -134,7 +133,7 @@ export function TopicPage() {
 
 			{opt(definition, text => <Markdown>{text}</Markdown>)}
 
-			{blocks({
+			<Infobox wrap>{{
 
 				"Source": opt(isDefinedBy, url => <Link href={url}>{url}</Link>),
 
@@ -149,7 +148,7 @@ export function TopicPage() {
 				"Related Concepts": links(related),
 				"Exact Matches": links(exactMatch)
 
-			})}
+			}}</Infobox>
 
 		</>
 

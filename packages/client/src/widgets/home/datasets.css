@@ -16,12 +16,12 @@
 
 /*
  * Datasets fill the width of the page, one column up to a tablet and two from a laptop up, where the side column leaves
- * cells wide enough to keep titles on one line: each cell sets its size beside its title and its glyph beside its
- * description, and shares the rows of the grid, so that titles and descriptions line up across the cells of a row
+ * cells wide enough to keep names on one line: each cell sets its size beside its name and its glyph beside its
+ * description, and shares the rows of the grid, so that names and descriptions line up across the cells of a row
  * however they wrap, and cells in the same row stretch to a common height whatever the length of their descriptions.
  */
 
-ec2u-dataset-grid {
+ec2u-datasets {
 
     display: grid;
     grid-template-columns: 1fr;
@@ -49,13 +49,13 @@ ec2u-dataset {
 
     /*
      * Every size takes the width of the longest one, set on the grid as a character count, so the column holding
-     * sizes and glyphs is equally wide in every cell and titles and descriptions start at the same offset throughout.
+     * sizes and glyphs is equally wide in every cell and names and descriptions start at the same offset throughout.
      */
 
     & > .size {
         align-self: center;
         justify-self: center;
-        inline-size: var(--ec2u-dataset-grid-size-width);
+        inline-size: var(--ec2u-datasets-size-width);
         text-align: center;
         font-size: var(--skin--font-size-small);
         font-variant-numeric: tabular-nums;
@@ -85,7 +85,7 @@ ec2u-dataset {
      * Priority marks the leading edge of the cell, on the scale of the strong accent, the yellow of the EC2U logo, and
      * sets how strongly its glyph stands out, on the scale of the subtle accent, the slate of the EC2U site: the core
      * cell takes the solid accents, central cells a mid step, and supporting ones a neutral or faint step, so the
-     * three tiers read apart at a glance without filling the cell itself or competing with its title.
+     * three tiers read apart at a glance without filling the cell itself or competing with its name.
      *
      * The lower edge steps are mixed apart for each scheme, as the shared steps sink into the dark page, the mid one
      * turning olive and the neutral one fading under the cell border; the dark scheme mixes them stronger, so that

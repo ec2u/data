@@ -32,13 +32,13 @@ import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { byDataset, ec2u, PublicDatasets } from "../index.core.js";
 import { Failure } from "../widgets/failure.js";
-import { Funded } from "../widgets/funded.js";
-import { Identity } from "../widgets/identity.js";
+import { Funded } from "../widgets/home/funded.js";
+import { Brand } from "../widgets/home/brand.js";
 import { Page } from "../widgets/page.js";
-import { Print } from "../widgets/print.js";
+import { Print } from "../widgets/home/print.js";
 import { courses } from "./courses/index.js";
-import { DatasetLinks } from "../widgets/dataset.js";
-import { type Dataset, DatasetGrid } from "../widgets/datasets.js";
+import { DatasetLinks } from "../widgets/datasets/dataset.js";
+import { type Dataset, Datasets as DatasetList } from "../widgets/home/datasets.js";
 import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
 import { programs } from "./programs/index.js";
@@ -122,7 +122,7 @@ export function Datasets() {
 	return <Page
 
 		head={<>
-			<Identity/>
+			<Brand/>
 			{datasets.label}
 		</>}
 
@@ -166,7 +166,7 @@ export function Datasets() {
 
 			const rows = state.filter(isDatasetRow).sort(byDataset);
 
-			return rows.length === 0 ? <Empty>{datasets.glyph}</Empty> : <DatasetGrid datasets={rows.map(dataset)}/>;
+			return rows.length === 0 ? <Empty>{datasets.glyph}</Empty> : <DatasetList datasets={rows.map(dataset)}/>;
 
 		}
 
@@ -244,7 +244,7 @@ function dataset({ dataset: { id, title, description }, size }: DatasetRow): Dat
 
 	return {
 		href: id,
-		title: ec2u(title),
+		name: ec2u(title),
 		size,
 		glyph,
 		priority,

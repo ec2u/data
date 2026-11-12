@@ -27,7 +27,7 @@ import { Store } from "@metreeca/tile";
 import { render } from "preact";
 import { About, about } from "./pages/about/index.js";
 import { Courses, courses } from "./pages/courses/index.js";
-import { DatasetPage } from "./widgets/dataset.js";
+import { DatasetPage } from "./widgets/datasets/dataset.js";
 import { models } from "./pages/about/models/index.js";
 import { Documents, documents } from "./pages/documents/index.js";
 import { Events, events } from "./pages/events/index.js";

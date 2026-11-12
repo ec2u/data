@@ -269,15 +269,15 @@ Datasets        <counts>
 ```
 
 - **Context** identifies the resource: the owning university first, then its short name and code.
-- **Classification** holds filter links (`filters()` in `widgets/links.tsx`) leading to the catalogue narrowed on the
-  value and on the owning university, never plain links to the term: the tray answers "what else is like this".
+- **Classification** holds filter links leading to the catalogue narrowed on the value and on the owning university,
+  never plain links to the term: the tray answers "what else is like this".
 - **Time**, **Attributes** and **People** keep dates, measurable or enumerated properties, and responsible parties
   apart, so that pages with more fields only grow groups rather than reshuffle them.
 - **Links** closes the box with outbound references; `Web` is guarded on an empty list like every other entry.
 - **Labels** are shared across pages: `Web` (not `Home`/`Info`), `Fees` (not `Fees for Externals`/`Entry`),
   `Copyright` (not `Rights`), matching the dataset and taxonomy pages.
-- Only the body `blocks()` wrap; tray infoboxes clip each value to one line, so long addresses never break mid-word.
-- The body `blocks()` keep what reads poorly in the tray or belongs with the description: properties with long labels
+- Only the body infobox wraps; tray infoboxes clip each value to one line, so long addresses never break mid-word.
+- The body infobox keeps what reads poorly in the tray or belongs with the description: properties with long labels
   or many values (unit `Topics`, program and course `Subjects`, levels, audiences, keywords) and links to related
   resources (courses, programs, organisational units). Do not move them into the tray.
 

@@ -15,6 +15,7 @@
  */
 
 import { Program } from "@ec2u/data-shared/programs/index.js";
+import { Markdown } from "@metreeca/clay-markdown/markdown";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Heading } from "@metreeca/clay-widgets/heading";
@@ -28,13 +29,12 @@ import { useResource } from "@metreeca/tile/resource";
 import { decimal } from "@metreeca/tile/types/decimal";
 import { duration } from "@metreeca/tile/types/duration";
 import { useEffect } from "preact/hooks";
-import { AI } from "../../widgets/ai.js";
-import { Credential, CredentialModel } from "../../widgets/credential.js";
+import { AI } from "../../widgets/datasets/ai.js";
+import { Credential, CredentialModel } from "../../widgets/offerings/credential.js";
 import { Failure } from "../../widgets/failure.js";
-import { address, links, local } from "../../widgets/links.js";
+import { address, links, local } from "../../widgets/datasets/links.js";
 import { Page } from "../../widgets/page.js";
-import { blocks, sections } from "../../widgets/sections.js";
-import { DatasetLink } from "../../widgets/dataset.js";
+import { DatasetLink } from "../../widgets/datasets/dataset.js";
 import { programs } from "./index.js";
 
 
@@ -190,7 +190,7 @@ export function ProgramPage() {
 
 			{description !== teaches ? description : undefined}
 
-			{blocks({
+			<Infobox wrap>{{
 
 				Awards: opt(educationalCredentialAwarded, value =>
 					<Credential credential={value}/>),
@@ -201,16 +201,27 @@ export function ProgramPage() {
 				Level: links(educationalLevel),
 				Subjects: links(about)
 
-			})}
+			}}</Infobox>
 
-			{sections({
+			{opt(teaches, text => <>
+				<Heading>Contents and Structure</Heading>
+				<Markdown>{text}</Markdown>
+			</>)}
 
-				"Contents and Structure": teaches,
-				"Admission Requirements": programPrerequisites,
-				"Learning Objectives and Intended Skills": assesses,
-				"Graduation Requirements": competencyRequired
+			{opt(programPrerequisites, text => <>
+				<Heading>Admission Requirements</Heading>
+				<Markdown>{text}</Markdown>
+			</>)}
 
-			})}
+			{opt(assesses, text => <>
+				<Heading>Learning Objectives and Intended Skills</Heading>
+				<Markdown>{text}</Markdown>
+			</>)}
+
+			{opt(competencyRequired, text => <>
+				<Heading>Graduation Requirements</Heading>
+				<Markdown>{text}</Markdown>
+			</>)}
 
 		</>
 

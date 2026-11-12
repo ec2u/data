@@ -16,11 +16,11 @@
 
 /*
  * The app name heading the side column is out of sight on a viewport too narrow for two columns, where the side column
- * turns into a drawer; there the identity opens the head of the page instead, without the flag and in body type, set
+ * turns into a drawer; there the brand opens the head of the page instead, without the flag and in body type, set
  * above the title in the navy and weight of the wordmark, so a reader knows at once which site the page belongs to.
  */
 
-ec2u-identity {
+ec2u-brand {
 
     display: none;
 
