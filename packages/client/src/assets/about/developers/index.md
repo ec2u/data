@@ -14,7 +14,7 @@ through a single interface, without integrating the website of each university o
 
 - [Data Models](/about/models/) define the resources each dataset holds, the properties the API returns and the terms of
   the standard RDF vocabularies that each JSON-LD property maps to, linked to their definitions
-- [Linked Data Models](../rdf/) introduces graph-based models and taxonomies for readers new to linked data
+- [Linked Data Models](../tutorials/linked-data/index) introduces graph-based models and taxonomies for readers new to linked data
 
 # Reusing the Data
 

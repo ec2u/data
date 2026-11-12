@@ -11,7 +11,7 @@ The software running the hub is open source: its code, issue tracker and develop
 # Data Models
 
 The [APIs & Models](/about/models/) pages document the resources each dataset holds and the properties the API returns.
-If you are new to linked data, [Linked Data Models](rdf/) introduces the graph-based models and taxonomies they use.
+If you are new to linked data, [Linked Data Models](tutorials/linked-data/index) introduces the graph-based models and taxonomies they use.
 
 # AI Content
 
