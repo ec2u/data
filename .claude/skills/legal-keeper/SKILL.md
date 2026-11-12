@@ -57,6 +57,8 @@ The Legal Notice must tell readers who answers for the hub and how to reach them
 The [Privacy Notice][privacy] must tell visitors what the hub records about them when they browse it or call its API.
 
 - **Rules**: GDPR art. 13
+- **Template**: the GÉANT Data Protection Code of Conduct privacy notice, its sections kept in order; each section
+  has a short heading for the table of contents, followed by the template heading verbatim as a bold lead line
 - **Required**: controller, data protection officer, purposes, legal basis, recipients, transfers, retention, rights
 - **Open**: legal basis; role of the contact point; processors and transfers outside the EEA
 - **Open**: the complete list of data subject rights; the retention period

@@ -2,17 +2,23 @@
 title: Privacy Notice
 ---
 
-# Name of the Service
+# Service
+
+**Name of the Service**
 
 EC2U Knowledge Hub - University of Pavia
 
-# Description of the Service
+# Description
+
+**Description of the Service**
 
 The EC2U Knowledge Hub is the central knowledge sharing and semantic search facility of the EC2U Alliance. It gathers
 content from EC2U universities and external sources, and publishes it as cross-linked datasets about skills, courses,
 research, local events and other areas of common interest. The hub needs no account and has no authenticated users.
 
-# Data Controller and Contact Point
+# Data Controller
+
+**Data Controller and Contact Point**
 
 University of Pavia, Strada Nuova, 65 - 27100 Pavia
 
@@ -23,9 +29,13 @@ University of Pavia, Strada Nuova, 65 - 27100 Pavia
   - +39 0382 985490
   - [privacy@unipv.it][contact]
 
+# Jurisdiction
+
 Processing is subject to Italian and EU data protection law and supervised by the Italian Data Protection Authority.
 
-# Personal Data Processed
+# Personal Data
+
+**Personal Data Processed**
 
 1. The following data is recorded when you browse the hub or call its API:
 
@@ -46,14 +56,18 @@ Processing is subject to Italian and EU data protection law and supervised by th
 The hub sets no tracking or advertising cookies and uses no analytics service. Your browser may store your language and
 display preferences locally: they never leave your device and stay there until you clear the data of the site.
 
-# Purpose of the Processing
+# Purpose
+
+**Purpose of the Processing of Personal Data**
 
 Technical records of your requests serve only to keep the service secure and running.
 
 Information about people named in datasets supports the search and discovery of the courses, research, events and other
 activities of the EC2U universities, as described by the public pages that the information is gathered from.
 
-# Disclosure to Third Parties
+# Third Parties
+
+**Third Parties to Whom Personal Data Is Disclosed**
 
 We may share your personal data with third parties (or otherwise allow them access to it) in the following cases:
 
@@ -66,10 +80,12 @@ API, as it already is on the public pages of the universities it was gathered fr
 You have a right to contact us for more information about the safeguards we have put in place to ensure the adequate
 protection of your personal data when this is disclosed or transferred as mentioned above.
 
-# Access, Rectification and Deletion
+# Your Rights
+
+**How to Access, Rectify and Delete the Personal Data**
 
 The EC2U Knowledge Hub collects no personal information from its visitors beyond the technical records listed above,
-and it deletes them automatically at the end of the retention period stated under [Data Retention](#data-retention).
+and it deletes them automatically at the end of the retention period stated under [Retention](#retention).
 
 Information about people named in datasets is gathered from public pages by automated tools. These tools never alter it
 on purpose, but they may introduce errors, as explained in the [AI Content Notice](ai). Each resource links back to the
@@ -77,12 +93,14 @@ page it was gathered from, so you can always check it against the original. To r
 source, contact the university or organisation that publishes that page: the hub takes up the change at its next update.
 
 To access, rectify or delete information the hub holds about you, or to restrict or object to its use, write to the
-contact point named under [Data Controller and Contact Point](#data-controller-and-contact-point) above.
+contact point named under [Data Controller](#data-controller) above.
 
 You also have the right to lodge a complaint with the Italian Data Protection Authority, by writing
 to [protocollo@gpdp.it](mailto:protocollo@gpdp.it) or to [protocollo@pec.gpdp.it](mailto:protocollo@pec.gpdp.it).
 
-# Data Retention
+# Retention
+
+**Data Retention**
 
 Technical records are kept for the standard log retention period of our hosting provider, currently 30 days.
 
