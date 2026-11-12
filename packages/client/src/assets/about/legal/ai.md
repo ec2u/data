@@ -25,10 +25,11 @@ notice. A resource without the badge was gathered from its source as published, 
 Treat automated content as a starting point, not as the final word. Check the original source wherever a resource
 links to one, and tell us about any problem you find, so that we can correct it for everyone else.
 
-# Our Responsibility
+# Accuracy and Corrections
 
-We are not responsible for errors, omissions or inaccuracies in automated content. You accept the risks of relying on
-it and must verify it before making decisions. We may update or remove automated content at any time without notice.
+Automated content is published without prior review of each item, so we cannot guarantee that it is accurate, complete
+or up to date. The University of Pavia remains responsible for the operation of the hub: we correct or remove content
+found to be wrong once it is reported to us, and may update or remove automated content at any time.
 
 # Feedback and Questions
 

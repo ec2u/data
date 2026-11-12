@@ -52,7 +52,7 @@ rights in content shown on the hub and want it corrected or removed, write to th
 ## AI Content
 
 The hub gathers much of its content automatically and enriches it with AI. See [AI Content Notice](ai) for which content
-is generated, how it is marked, how far you can rely on it, and where our responsibility for its errors ends.
+is generated, how it is marked, how far you can rely on it, and how we handle its errors.
 
 ## Software
 

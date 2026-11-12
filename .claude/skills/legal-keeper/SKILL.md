@@ -127,6 +127,7 @@ Disclaimers must stay within what the law lets a public body exclude, and must n
 - **Rules**: Civil Code art. 1229, which voids exclusions of liability for wilful misconduct or gross negligence
 - **Rules**: the liability regime of public bodies
 - **Required**: none identified beyond an enforceable wording
+- **Interim**: until the wording is settled, notices state limits and correction commitments, and exclude no liability
 - **Open**: wording of the disclaimer; terms of use for the site and its API; governing law and jurisdiction
 
 # Language and Upkeep
