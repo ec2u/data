@@ -77,7 +77,7 @@ source, contact the university or organisation that publishes that page: the hub
 To access, rectify or delete information the hub holds about you, or to object to its use, write to our contact point.
 
 You have also the right to lodge a complaint with a supervisory authority, by writing
-to [garante@gpdp.it](mailto:garante@gpdp.it), or to [protocol@pec.gpdp.it](mailto:protocol@pec.gpdp.it).
+to [protocollo@gpdp.it](mailto:protocollo@gpdp.it), or to [protocollo@pec.gpdp.it](mailto:protocollo@pec.gpdp.it).
 
 # Data Retention
 

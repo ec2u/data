@@ -154,7 +154,7 @@ export function Datasets() {
 			<Link look={"subtle"} href={"/about/legal/ai"}>AI Content</Link><br/>
 			<Link look={"subtle"} href={"/about/legal/accessibility"}>Accessibility</Link><br/>
 			<Link look={"subtle"} href={"/about/legal/"}>Legal</Link>
-			{" · "}
+			{" & "}
 			<Link look={"subtle"} href={"/about/legal/privacy"}>Privacy</Link>
 
 		</Print>}

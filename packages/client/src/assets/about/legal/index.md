@@ -35,9 +35,9 @@ Email: [cc@ml.ec2u.eu](mailto:cc@ml.ec2u.eu)
 
 ## EU Funding
 
-The EC2U Knowledge Hub is co-funded by the European Union. Views and opinions expressed are however those of the
-author(s) only and do not necessarily reflect those of the European Union or the European Education and Culture
-Executive Agency (EACEA). Neither the European Union nor EACEA can be held responsible for them.
+Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not
+necessarily reflect those of the European Union or the European Education and Culture Executive Agency (EACEA). Neither
+the European Union nor EACEA can be held responsible for them.
 
 # Content
 
