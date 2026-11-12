@@ -12,6 +12,9 @@ and AI generates text, labels and descriptions from it. Automated tools take par
 - **Organising**: AI sorts and tags items to make them easier to find
 - **Languages**: AI helps process content written in different languages
 
+Every resource that AI generated in whole or in part carries an **AI-Generated Content** badge, which links to this
+notice. A resource without the badge was gathered from its source as published, with no text added by AI.
+
 # Using AI Content Responsibly
 
 > [!CAUTION]
@@ -33,9 +36,9 @@ We keep improving our automated tools and checking their output for mistakes. Yo
 helps us decide what to improve first and makes the hub more reliable for everyone.
 
 - **By email**: write to the EC2U Connect Centre at [cc@ml.ec2u.eu](mailto:cc@ml.ec2u.eu)
-- **On GitHub**: start a discussion at [github.com/ec2u/data/discussions](https://github.com/ec2u/data/discussions)
+- **On GitHub**: open an issue at [github.com/ec2u/data/issues](https://github.com/ec2u/data/issues)
 - **Security issues**: report them privately at [github.com/ec2u/data/security](https://github.com/ec2u/data/security)
 
 ---
 
-**Last Updated**: 2026-11-12
+*Last updated on 12 November 2026*

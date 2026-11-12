@@ -4,6 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 |----------------------|-------------------------------------------------------------------------------|
 | `pipe-designer`      | Design and review of source ingestion pipes under `packages/loader`           |
 | `deployment-manager` | Google Cloud and GraphDB resources of each environment, grants, current state |
+| `legal-keeper`       | Rules, required content and open questions of the legal notices of the hub    |
 
 ---
 

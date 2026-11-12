@@ -17,7 +17,7 @@ or the device they browse with. The standard we work towards is level AA of the 
 
 The hub has not yet been formally assessed against the standard, so we cannot say which of its parts already meet it.
 
-# Known Limitations
+# Limitations
 
 Much of the hub's content is gathered automatically from partner universities and other sources, and enriched with AI.
 That content may lack text alternatives for images, or be shown in a language other than the one your browser asks for.
@@ -32,4 +32,4 @@ Mention the browser and any assistive technology you were using, as that helps u
 
 ---
 
-**Last Updated**: 2026-11-12
+*Last updated on 12 November 2026*
