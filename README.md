@@ -1,8 +1,8 @@
 # EC2U Knowledge Hub
 
 The EC2U Knowledge Hub is the central knowledge sharing and semantic search facility of the
-[EC2U Alliance](https://www.ec2u.eu/). This repository holds its AI-based data ingestion pipelines, the data server
-that publishes the datasets and the web UI through which people browse and search them.
+[EC2U Alliance](https://www.ec2u.eu/). This repository holds its AI-based data ingestion pipelines, the data server that
+publishes the datasets and the web UI through which people browse and search them.
 
 The pipelines gather, cleanse and cross-link content from a wide range of internal and external data sources, leveraging
 AI to extract and structure information. The processed data is made available to data consumers like user-facing apps
@@ -26,6 +26,7 @@ This project is licensed under the Apache 2.0 License – see [LICENSE](LICENSE)
 
 # Acknowledgements
 
-Development of the *EC2U Knowledge Hub* is funded by the European Commission under
-the [EC2U](https://education.ec.europa.eu/sites/default/files/document-library-docs/european-universities-factsheet-ec2u.pdf)
-and [RI4C2](https://cordis.europa.eu/project/id/101035803) projects.
+Development of the *EC2U Knowledge Hub* is funded by the European Commission under the [EC2U][] and [RI4C2][] projects.
+
+[EC2U]: https://education.ec.europa.eu/sites/default/files/document-library-docs/european-universities-factsheet-ec2u.pdf
+[RI4C2]: https://cordis.europa.eu/project/id/101035803
