@@ -4,39 +4,38 @@ title: AI Content Notice
 
 # How We Use AI
 
-This website uses AI-generated content (text, labels, and descriptions created by AI) and crawler-based content
-(information automatically gathered from other sources). Here's how we use these tools:
+Much of the content on the EC2U Knowledge Hub is produced automatically. Crawlers gather information from other sources,
+and AI generates text, labels and descriptions from it. Automated tools take part in four activities:
 
-- **Gathering information**: Automated tools collect data from partner institutions and other sources
-- **Enriching content**: AI adds descriptions, labels, and summaries
-- **Organizing**: AI sorts and tags items to make them easier to find
-- **Multiple languages**: AI helps process content in different languages
+- **Gathering**: crawlers collect information from partner universities and other sources
+- **Enriching**: AI adds descriptions, labels and summaries
+- **Organising**: AI sorts and tags items to make them easier to find
+- **Languages**: AI helps process content written in different languages
 
 # Using AI Content Responsibly
 
 > [!CAUTION]
 >
-> **Don't rely only on AI-generated content for important decisions** - it may have errors, be incomplete, out of
-> date, or even made up. Always verify important information with official sources.
+> **Do not rely on AI-generated content alone for important decisions.** It may contain errors, be incomplete or out
+> of date, or even be made up. Always verify important information with official sources before you act on it.
 
-**What we recommend**: verify important information with official sources, use AI content as a starting point (not the
-final word), check original sources when provided, and report any problems you find.
+Treat automated content as a starting point, not as the final word. Check the original source wherever a resource
+links to one, and tell us about any problem you find, so that we can correct it for everyone else.
 
-**Our liability**: We are not responsible for errors, omissions, or inaccuracies in automated content. You accept the
-risks of relying on this information and are responsible for verifying it before making decisions.
+# Our Responsibility
 
-**Content changes**: We may update or remove automated content at any time without notice.
+We are not responsible for errors, omissions or inaccuracies in automated content. You accept the risks of relying on
+it and must verify it before making decisions. We may update or remove automated content at any time without notice.
 
 # Feedback and Questions
 
-We're always working to improve our automated systems through regular updates, quality checks, and sanity checks to
-catch obvious mistakes. Your feedback helps us know what needs fixing and makes the site better for everyone.
+We keep improving our automated tools and checking their output for mistakes. Your feedback tells us what needs fixing,
+helps us decide what to improve first and makes the hub more reliable for everyone.
 
-- **General questions or feedback**: Start a discussion
-	at [github.com/ec2u/data/discussions](https://github.com/ec2u/data/discussions)
-- **Sensitive security issues**: Report privately
-	at [github.com/ec2u/data/security](https://github.com/ec2u/data/security)
+- **By email**: write to the EC2U Connect Centre at [cc@ml.ec2u.eu](mailto:cc@ml.ec2u.eu)
+- **On GitHub**: start a discussion at [github.com/ec2u/data/discussions](https://github.com/ec2u/data/discussions)
+- **Security issues**: report them privately at [github.com/ec2u/data/security](https://github.com/ec2u/data/security)
 
 ---
 
-**Last Updated**: 2025-11-05
+**Last Updated**: 2026-11-12
