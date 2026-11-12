@@ -8,13 +8,27 @@ Both support faceted search and linked data navigation across every dataset and 
 The software running the hub is open source: its code, issue tracker and development history are on
 [GitHub](https://github.com/ec2u/data), where you can also report problems with the hub or with its datasets.
 
-# Data Models
+# Publishers
 
-The [APIs & Models](/about/models/) pages document the resources each dataset holds and the properties the API returns.
-If you are new to linked data, [Linked Data Models](tutorials/linked-data/index) introduces the graph-based models and taxonomies they use.
+EC2U universities and their local partners decide which of their content the hub carries and answer for its accuracy.
+The hub harmonises that content and always links back to the original pages as the authoritative source. A correction
+made at the source reaches the hub on the next scheduled harvest, with no further action needed.
 
-# AI Content
+To propose a new source or change how an existing one is harvested, open an [issue](https://github.com/ec2u/data/issues)
+on GitHub. State the dataset, the address of the content, its languages and how often it is updated, and name a contact.
 
-Automated crawlers collect much of this content, and AI enriches it with descriptions, labels and classifications.
-Either step may introduce errors or gaps, so always check important information against official sources before acting
-on it. See [AI Content Notice](legal/ai) for details on how AI is used and how to use its output responsibly.
+# Webmasters
+
+The hub reads the pages of each source it harvests. Publish each property listed in the data models as a distinct
+element, not inside free text. Give every resource a stable address and keep a listing page or feed linking to them all.
+
+Before you move, redesign or retire a section the hub reads, open an issue on GitHub. The harvest can then be adapted in
+time, so that your content stays on the hub without interruption, gaps or broken links back to your pages.
+
+# Developers
+
+The [API & Models](/about/api/) pages document the resources each dataset holds and the properties the API returns.
+
+Each dataset states its licence on its info page. Reuse it within those terms and credit the EC2U Alliance as its
+publisher. Content gathered from partner universities remains subject to the rights of its original publishers, as set
+out in the [Legal Notice](legal/): check those rights through the source link of each resource before reusing it.

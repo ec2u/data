@@ -38,7 +38,7 @@ import { models } from "./index.js";
 /**
  * Creates the documentation of a shape of the data model served by the hub.
  *
- * Documents the shape identified by the last step of the current route, as `/about/models/ec2u-university`, falling back
+ * Documents the shape identified by the last step of the current route, as `/about/api/ec2u-university`, falling back
  * to the not-found view if no shape of the model is identified by that step of the route.
  *
  * @returns The model page

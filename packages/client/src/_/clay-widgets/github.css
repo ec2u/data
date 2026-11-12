@@ -1,0 +1,40 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * The mark takes the height the widget states, as a step of the design system scaling, and its width from its own
+ * proportions, so it is never stretched or squeezed whatever height it is given.
+ */
+
+clay-github {
+
+    & svg {
+
+        display: block;
+        inline-size: auto;
+
+        /*
+         * The GitHub logo guidelines forbid recolouring the mark: its fill is pinned to black or white by colour
+         * scheme, never to a design system role or to the colour of the link around it.
+         */
+
+        & path {
+            fill: light-dark(#000, #fff);
+        }
+
+    }
+
+}

@@ -2,7 +2,7 @@
 title: Notation
 ---
 
-The [APIs & Models](/about/models/) pages document each type of resource the hub serves. Every page opens with a
+The [API & Models](/about/api/) pages document each type of resource the hub serves. Every page opens with a
 description of the resource type and then lists its properties in the format selected from the page menu:
 
 - **Properties** sets them out as a table, using the notation described below

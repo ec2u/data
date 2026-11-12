@@ -42,7 +42,7 @@ the European Union nor EACEA can be held responsible for them.
 
 ## Data Reuse
 
-Each dataset states its licence on its info page, reached through the info icon in the page menu: taxonomies, for
+Each dataset states its licence on its info page, reached through the info icon in the page menu: categories, for
 instance, use [CC BY-NC-ND 4.0][cc]. Reuse a dataset under its licence, and credit the EC2U Alliance as its publisher.
 
 Content gathered from partner universities and other sources remains subject to the rights of its original publishers.

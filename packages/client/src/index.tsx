@@ -71,7 +71,7 @@ function Hub() {
 						[events.route]: <Events/>,
 						[taxonomies.route]: <Taxonomies/>,
 
-						"/models/": "/about/models/",
+						"/models/": "/about/api/",
 						[about.route]: <About/>,
 						[unknown.route]: <Unknown/>
 

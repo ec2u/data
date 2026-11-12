@@ -20,8 +20,8 @@ import { type ComponentChildren, createElement } from "preact";
 import "./funded.css";
 import { Print } from "./print.js";
 
-const positive = new URL("../../assets/ec2u/eu-co-funded-positive.png", import.meta.url).href;
-const negative = new URL("../../assets/ec2u/eu-co-funded-negative.png", import.meta.url).href;
+const positive = new URL("../../assets/about/legal/eu-co-funded/positive.png", import.meta.url).href;
+const negative = new URL("../../assets/about/legal/eu-co-funded/negative.png", import.meta.url).href;
 
 
 /**
@@ -35,6 +35,10 @@ const negative = new URL("../../assets/ec2u/eu-co-funded-negative.png", import.m
  * @param children The content of the page body
  *
  * @returns The funded page body
+ *
+ * @see {@link https://www.eacea.ec.europa.eu/about-eacea/visual-identity/visual-identity-programming-period-2021-2027/european-flag-emblem-and-multilingual-disclaimer_en
+ *     EACEA – European Flag (Emblem) and Multilingual Disclaimer} for the source of the emblem, the wording of the
+ *     disclaimer and the rules for displaying both
  */
 export function Funded({
 

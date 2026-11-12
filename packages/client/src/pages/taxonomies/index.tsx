@@ -28,7 +28,7 @@ import { TopicPage } from "./topic.js";
 export const taxonomies = immutable({
 
 	route: "/taxonomies/",
-	label: "Taxonomies",
+	label: "Categories",
 	glyph: <Icon.Tags/>
 
 });

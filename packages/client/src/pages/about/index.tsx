@@ -36,7 +36,7 @@ export function About() {
 
 	return <Routes>{{
 
-		"/models/": <Models/>,
+		"/api/": <Models/>,
 		"*": <DocumentPage/>
 
 	}}</Routes>;

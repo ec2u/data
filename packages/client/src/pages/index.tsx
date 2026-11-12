@@ -30,15 +30,16 @@ import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
+import { GitHub } from "../_/clay-widgets/github.js";
 import { byDataset, ec2u, PublicDatasets } from "../index.core.js";
-import { Failure } from "../widgets/failure.js";
-import { Funded } from "../widgets/home/funded.js";
-import { Brand } from "../widgets/home/brand.js";
-import { Page } from "../widgets/page.js";
-import { Print } from "../widgets/home/print.js";
-import { courses } from "./courses/index.js";
 import { DatasetLinks } from "../widgets/datasets/dataset.js";
+import { Failure } from "../widgets/failure.js";
+import { Brand } from "../widgets/home/brand.js";
 import { type Dataset, Datasets as DatasetList } from "../widgets/home/datasets.js";
+import { Funded } from "../widgets/home/funded.js";
+import { Print } from "../widgets/home/print.js";
+import { Page } from "../widgets/page.js";
+import { courses } from "./courses/index.js";
 import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
 import { programs } from "./programs/index.js";
@@ -60,16 +61,15 @@ export const datasets = immutable({
 const resources = immutable({
 
 	"Get Involved": {
-		"Publishers": "/about/publishers/",
-		"Webmasters": "/about/webmasters/",
-		"Developers": "/about/developers/"
+		"Publishers": "/about/#publishers",
+		"Webmasters": "/about/#webmasters",
+		"Developers": "/about/#developers"
 	},
 
 	"References": {
 		"About the Hub": "/about/",
-		"APIs & Models": "/about/models/",
-		"Taxonomies": "/taxonomies/",
-		"Open Source": "https://github.com/ec2u/data"
+		"API & Models": "/about/api/",
+		"Categories": "/taxonomies/"
 	}
 
 });
@@ -150,11 +150,19 @@ export function Datasets() {
 
 		more={<Print>
 
-			<Link look={"subtle"} href={"/about/legal/ai"}>AI Content</Link><br/>
-			<Link look={"subtle"} href={"/about/legal/accessibility"}>Accessibility</Link><br/>
-			<Link look={"subtle"} href={"/about/legal/"}>Legal</Link>
-			{" & "}
-			<Link look={"subtle"} href={"/about/legal/privacy"}>Privacy</Link>
+			<Stack align={"start"} space={"spacing100"}>
+
+				<GitHub href={"https://github.com/ec2u/data"} size={"scaling200"}/>
+
+				<div>
+					<Link look={"subtle"} href={"/about/legal/ai"}>AI Content</Link><br/>
+					<Link look={"subtle"} href={"/about/legal/accessibility"}>Accessibility</Link><br/>
+					<Link look={"subtle"} href={"/about/legal/"}>Legal</Link>
+					{" & "}
+					<Link look={"subtle"} href={"/about/legal/privacy"}>Privacy</Link>
+				</div>
+
+			</Stack>
 
 		</Print>}
 

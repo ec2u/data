@@ -34,11 +34,11 @@ export const taxonomies = immutable({
 
 	dataset: base,
 
-	label: "EC2U Taxonomies",
+	label: "EC2U Categories",
 
-	title: { en: "EC2U Classification Taxonomies" },
-	alternative: { en: "EC2U Taxonomies" },
-	description: { en: "Standardised topic taxonomies and other concept schemes for classifying resources." },
+	title: { en: "EC2U Categories" },
+	alternative: { en: "EC2U Categories" },
+	description: { en: "Standardised category schemes for classifying resources by topic, level or type." },
 
 	publisher: EC2U,
 
@@ -64,8 +64,8 @@ export function Taxonomies() {
 
 		pattern: taxonomies.id,
 
-		name: taxonomies.alternative,
-		description: taxonomies.description
+		name: { en: "EC2U Taxonomies" },
+		description: { en: "Standardised topic taxonomies and other concept schemes for classifying resources." }
 
 	}, {
 
