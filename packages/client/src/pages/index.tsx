@@ -151,9 +151,11 @@ export function Datasets() {
 
 		more={<Print>
 
-			<Link look={"subtle"} href={"/about/legal/"}>Legal</Link><br/>
-			<Link look={"subtle"} href={"/about/legal/privacy"}>Privacy</Link><br/>
-			<Link look={"subtle"} href={"/about/legal/ai"}>AI Content</Link>
+			<Link look={"subtle"} href={"/about/legal/ai"}>AI Content</Link><br/>
+			<Link look={"subtle"} href={"/about/legal/accessibility"}>Accessibility</Link><br/>
+			<Link look={"subtle"} href={"/about/legal/"}>Legal</Link>
+			{" · "}
+			<Link look={"subtle"} href={"/about/legal/privacy"}>Privacy</Link>
 
 		</Print>}
 
