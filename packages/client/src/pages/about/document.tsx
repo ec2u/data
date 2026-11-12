@@ -17,6 +17,8 @@
 import { Markdown } from "@metreeca/clay-markdown/markdown";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
+import { Style } from "@metreeca/clay-widgets/style";
+import { Text } from "@metreeca/clay-widgets/text";
 import { useAsset } from "@metreeca/clay/asset";
 import { useRoute } from "@metreeca/clay/router";
 import { isNumber, isString } from "@metreeca/core";
@@ -46,7 +48,15 @@ export function DocumentPage() {
 
 
 	function head(title?: ComponentChildren) {
-		return route === about.route ? about.label : <Path>
+		return route === about.route ? <Path>
+
+			{about.label}
+
+			<Style css={{ textLook: "subtle", colorLabel: "colorPlaceholder" }}>
+				<Text>Bridging EC2U Campuses</Text>
+			</Style>
+
+		</Path> : <Path>
 
 			<Link href={about.route}>{about.label}</Link>
 

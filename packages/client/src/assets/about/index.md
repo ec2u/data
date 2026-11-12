@@ -1,3 +1,7 @@
+---
+title: About the Hub
+---
+
 The EC2U Knowledge Hub is the central knowledge sharing and semantic search facility of the
 [EC2U Alliance](https://www.ec2u.eu/). It gathers content from EC2U universities and external sources, and publishes it
 as cross-linked datasets about skills, courses, research, local events and other areas of common interest.
@@ -5,30 +9,49 @@ as cross-linked datasets about skills, courses, research, local events and other
 Each dataset is available through this interactive semantic search tool and through a machine-readable REST/JSON-LD API.
 Both support faceted search and linked data navigation across every dataset and its cross-links.
 
-The software running the hub is open source: its code, issue tracker and development history are on
-[GitHub](https://github.com/ec2u/data), where you can also report problems with the hub or with its datasets.
+# Content
 
-# Publishers
+The hub harvests the public pages of EC2U universities and their partners on a regular schedule. It cleanses that
+content, links related resources across datasets and uses AI to extract structured information from free text. Every
+resource links back to the page it came from, which remains the authoritative source.
 
-EC2U universities and their local partners decide which of their content the hub carries and answer for its accuracy.
-The hub harmonises that content and always links back to the original pages as the authoritative source. A correction
-made at the source reaches the hub on the next scheduled harvest, with no further action needed.
+Content generated with AI carries a badge on the pages that show it. The [AI Content Notice](/about/legal/ai) explains
+where AI takes part in producing the hub and how to report an inaccurate or misleading item.
 
-To propose a new source or change how an existing one is harvested, open an [issue](https://github.com/ec2u/data/issues)
-on GitHub. State the dataset, the address of the content, its languages and how often it is updated, and name a contact.
+# Get Involved
 
-# Webmasters
+The hub relies on the people who publish its sources, maintain the websites it reads and reuse its datasets. Each guide
+below tells one of these groups what the hub expects from them and what it offers in return.
 
-The hub reads the pages of each source it harvests. Publish each property listed in the data models as a distinct
-element, not inside free text. Give every resource a stable address and keep a listing page or feed linking to them all.
+- [Publishers](/about/publishers/) — universities and partners choosing which content the hub carries
+- [Webmasters](/about/webmasters/) — people running source websites, who keep their pages readable by the harvest
+- [Developers](/about/developers/) — anyone reusing the datasets through the API, within the terms of their licence
 
-Before you move, redesign or retire a section the hub reads, open an issue on GitHub. The harvest can then be adapted in
-time, so that your content stays on the hub without interruption, gaps or broken links back to your pages.
+# References
 
-# Developers
+The reference pages describe what each dataset holds and how to read its models.
 
-The [API & Models](/about/api/) pages document the resources each dataset holds and the properties the API returns.
+- [API & Models](/about/api/) — the resource types of each dataset and the properties the API returns for them
+- [Categories](/taxonomies/) — the shared taxonomies that classify resources across datasets
 
-Each dataset states its licence on its info page. Reuse it within those terms and credit the EC2U Alliance as its
-publisher. Content gathered from partner universities remains subject to the rights of its original publishers, as set
-out in the [Legal Notice](legal/): check those rights through the source link of each resource before reusing it.
+
+# Support
+
+The software running the hub is open source: its code, issue tracker and development history are public on
+[GitHub](https://github.com/ec2u/data), where you can ask for help or contribute to the hub.
+
+- open an [issue][issues] to report a problem with the hub or its datasets, or to suggest a new feature
+- start a [discussion][discussions] to ask a how-to question or to share an idea
+
+[issues]: https://github.com/ec2u/data/issues
+
+[discussions]: https://github.com/ec2u/data/discussions
+
+# Legal
+
+The legal notices state who answers for the hub, how it treats visitors and what limits apply to its content.
+
+- [Legal Notice](/about/legal/) — the publisher of the hub, its contacts and the terms for reusing its content
+- [Privacy Notice](/about/legal/privacy) — what the hub records about visitors and the rights they hold over that data
+- [Accessibility Notice](/about/legal/accessibility) — the standard the hub works towards and how to report a barrier
+- [AI Content Notice](/about/legal/ai) — where AI produces content on the hub and how to use that content responsibly

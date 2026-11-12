@@ -228,6 +228,13 @@ Issues live in `ec2u/data` and belong to the Knowledge Hub project (`github.com/
 Branch issue work off `edge` (the development branch), not `next` or `main`. Issue branches follow the
 `{type}/gh-{number}-{slug}` convention and merge back into `edge`.
 
+## Home and About Links
+
+The `resources` link groups on the home page (`packages/client/src/pages/index.tsx`) and the matching `Get Involved`
+and `References` sections of the about page (`packages/client/src/assets/about/index.md`) list the same pages, in the
+same order and under the same labels; the home `About the Hub` entry, pointing at the about page itself, is the only
+exception. Update both in the same change whenever a link is added, moved or renamed in either.
+
 ## Resource Info Boxes
 
 The tray `Infobox` of every resource detail page under `packages/client/src/pages` follows one layout, so that readers

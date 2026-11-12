@@ -61,9 +61,9 @@ export const datasets = immutable({
 const resources = immutable({
 
 	"Get Involved": {
-		"Publishers": "/about/#publishers",
-		"Webmasters": "/about/#webmasters",
-		"Developers": "/about/#developers"
+		"Publishers": "/about/publishers/",
+		"Webmasters": "/about/webmasters/",
+		"Developers": "/about/developers/"
 	},
 
 	"References": {
@@ -152,7 +152,7 @@ export function Datasets() {
 
 			<Stack align={"start"} space={"spacing100"}>
 
-				<GitHub href={"https://github.com/ec2u/data"} size={"scaling200"}/>
+				<GitHub href={"https://github.com/ec2u/data"} size={"scaling150"}/>
 
 				<div>
 					<Link look={"subtle"} href={"/about/legal/ai"}>AI Content</Link><br/>
