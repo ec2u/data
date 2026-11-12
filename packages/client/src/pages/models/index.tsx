@@ -24,7 +24,7 @@ import { ModelsPage } from "./models.js";
 export const models = immutable({
 
 	route: "/models/",
-	label: "Models",
+	label: "APIs & Models",
 	glyph: <Icon.Package/>
 
 });

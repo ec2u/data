@@ -8,7 +8,7 @@ and reliably the hub can carry your content to the whole alliance and keep it up
 
 # Structuring Content
 
-The [data models](../datasets/index.md) list the properties each dataset can hold, such as titles, dates, locations,
+The [data models](/models/) list the properties each dataset can hold, such as titles, dates, locations,
 languages and audiences. State each of them as a distinct, consistently placed element on your pages, rather than inside
 free text, so the hub can read each property reliably and show it in the right place.
 

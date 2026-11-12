@@ -24,6 +24,7 @@ import { useStorage } from "@metreeca/clay/storage";
 import { opt } from "@metreeca/core";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../widgets/page.js";
+import { about } from "../about/index.js";
 import { getShapeDescription, getShapeName, universe } from "../../widgets/shape.core.js";
 import { Shape, ShapeDeclaration, ShapeInfo, ShapeSchema } from "../../widgets/shape.js";
 import { Unknown } from "../unknown.js";
@@ -56,6 +57,8 @@ export function ModelPage() {
 	return shape === undefined ? <Unknown/> : <Page
 
 		head={<Path>
+
+			<Link href={about.route}>{about.label}</Link>
 
 			<Link href={models.route}>{models.label}</Link>
 

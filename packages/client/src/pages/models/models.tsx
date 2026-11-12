@@ -15,10 +15,12 @@
  */
 
 import { Link } from "@metreeca/clay-widgets/link";
+import { Path } from "@metreeca/clay-widgets/path";
 import { useRouter } from "@metreeca/clay/router";
 import { opt, type Optional } from "@metreeca/core";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../widgets/page.js";
+import { about } from "../about/index.js";
 import { getShapeName, getShapeSummary, universe } from "../../widgets/shape.core.js";
 import { getModelEntries, getModelTree, type Model, type ModelNode } from "./index.core.js";
 import { models } from "./index.js";
@@ -76,7 +78,13 @@ export function ModelsPage() {
 	useEffect(() => router({ title: models.label }), []);
 
 
-	return <Page head={models.label}>
+	return <Page head={<Path>
+
+		<Link href={about.route}>{about.label}</Link>
+
+		{models.label}
+
+	</Path>}>
 
 		<table class={"ec2u-models"}>
 

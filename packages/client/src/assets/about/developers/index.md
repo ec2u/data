@@ -12,8 +12,8 @@ through a single interface, without integrating the website of each university o
 
 # Understanding the Data
 
-- [Data Models](../datasets/index.md) define the resources each dataset holds and the properties the API returns
-- [Vocabularies](../index.md#vocabularies) list the standard RDF vocabularies behind the JSON-LD terms
+- [Data Models](/models/) define the resources each dataset holds, the properties the API returns and the terms of
+  the standard RDF vocabularies that each JSON-LD property maps to, linked to their definitions
 - [Linked Data Models](../rdf/) introduces graph-based models and taxonomies for readers new to linked data
 
 # Reusing the Data

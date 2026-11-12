@@ -24,8 +24,9 @@ import { Units } from "@ec2u/data-shared/units/index.js";
 import { Universities } from "@ec2u/data-shared/universities/index.js";
 import { lexicon } from "@ec2u/data-shared/vocabularies/index.js";
 import { model } from "@metreeca/blue";
-import { byte, decimal, double, float, int, integer, long, short } from "@metreeca/blue/number";
-import type { Member, Property, ResourceShape } from "@metreeca/blue/resource";
+import { byte, decimal, double, float, int, integer, long, short, type NumberShape } from "@metreeca/blue/number";
+import type { DictionaryShape } from "@metreeca/blue/dictionary";
+import type { Id, Member, Property, ResourceShape, Type } from "@metreeca/blue/resource";
 import {
 	date,
 	duration,
@@ -38,13 +39,14 @@ import {
 	text,
 	time,
 	timestamp,
+	type StringShape,
 	url,
 	year
 } from "@metreeca/blue/string";
 import { eager, type Shape } from "@metreeca/blue/value";
-import { isString, type Lazy, opt, type Optional } from "@metreeca/core";
+import { isArray, isString, type Lazy, opt, type Optional } from "@metreeca/core";
 import type { Some } from "@metreeca/core/arrays";
-import { compact, type Variant } from "@metreeca/core/resource";
+import { base, compact } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
 import { equals } from "@metreeca/core/values";
 import { summary } from "@metreeca/work/core/strings.js";
@@ -104,94 +106,196 @@ export type ShapeTable = {
 	readonly parents: readonly ShapeLink[]
 
 	/**
-	 * The properties the shape declares in its own right, labels or describes in its own terms, or inherits from shapes
+	 * The members the shape declares in its own right, labels or describes in its own terms, or inherits from shapes
 	 * outside the model, in declaration order, leaving out hidden ones and the ones its nearest documented ancestors
 	 * declare with the same name and description, even where their range is narrowed.
 	 */
 	readonly rows: readonly ShapeRow[]
 
 	/**
-	 * The properties the shape inherits from its documented ancestors, grouped by the ancestor declaring them, from the
-	 * nearest to the most general; each property is listed once, as narrowed by the shape.
+	 * The members the shape inherits from its documented ancestors, grouped by the ancestor declaring them, from the
+	 * nearest to the most general; each member is listed once, as narrowed by the shape.
 	 */
 	readonly inherited: readonly ShapeGroup[]
+
+	/**
+	 * The names of the custom checks a resource must pass beyond the declarative constraints, in declaration order,
+	 * inherited ones included; a check stating no name is listed as `check`. Empty if the shape states none.
+	 */
+	readonly checks: readonly string[]
 
 };
 
 /**
- * The documentation of the properties a resource shape inherits from one of its documented ancestors.
+ * The documentation of the members a resource shape inherits from one of its documented ancestors.
  */
 export type ShapeGroup = {
 
 	/**
-	 * The ancestor documenting the properties, linked to its documentation.
+	 * The ancestor documenting the members, linked to its documentation.
 	 */
 	readonly parent: ShapeLink
 
 	/**
-	 * The inherited properties the ancestor documents, in its declaration order.
+	 * The inherited members the ancestor documents, in its declaration order.
 	 */
 	readonly rows: readonly ShapeRow[]
 
 };
 
 /**
- * The documentation row of a property declared by a resource shape.
+ * The documentation row of a member declared by a resource shape: a property, or the member carrying the identifier
+ * (`@id`) or the class (`@type`) of the resource, both assigned by the server and stated once per resource; the class
+ * member is left out on shapes stating no class, which admit no value for it.
  */
 export type ShapeRow = {
 
 	/**
-	 * The name the property is keyed by in resource states.
+	 * The name the member is keyed by in resource states.
 	 */
 	readonly term: string
 
 	/**
-	 * The IRI of the predicate the property maps to; none if the property states no predicate.
+	 * The English label of the property; none if not stated in English, or if the member is not a property.
+	 */
+	readonly label: Optional<string>
+
+	/**
+	 * The IRI of the predicate the property maps to in the forward direction; none if the property states no forward
+	 * mapping, maps to the default namespace, or is not a property at all.
 	 */
 	readonly predicate: Optional<string>
 
 	/**
-	 * The types of the property values, one for each alternative the property admits: the shape of linked or embedded
-	 * resources, `Dictionary` for localised text, the local name of the datatype of plain values, or the value kind
-	 * where no datatype is stated; only the shapes among them are linked to their documentation.
+	 * The IRI of the predicate the property maps to in the inverse direction, linking each value to the resource as its
+	 * subject; none if the property states no inverse mapping, maps to the default namespace, or is not a property.
 	 */
-	readonly types: readonly ShapeLink[]
+	readonly reverse: Optional<string>
 
 	/**
-	 * The number of values the property admits: `1`, `0‥1`, `*`, `1‥*`, or `min‥max` for other bounds, with an open
-	 * upper bound stated as `*` and the bounds joined by a two dot leader (U+2025) set as a single glyph.
+	 * The types of the member values, one for each alternative the member admits, with the restrictions each states:
+	 * the shape of linked or embedded resources, `Dictionary` for localised text, the name of the shorthand plain
+	 * values were defined with, as `email` or `url`, else the local name of their datatype, or the value kind where no
+	 * datatype is stated; `iri` for the identifier and class members. Only the shapes among them are linked to their
+	 * own documentation pages.
 	 */
-	readonly cardinality: string
+	readonly types: readonly ShapeType[]
 
 	/**
-	 * The description of the property, as English markdown realigned to the left margin; none if not stated in
-	 * English.
+	 * The least number of values the member admits.
+	 */
+	readonly minCount: number
+
+	/**
+	 * The greatest number of values the member admits; none if unbounded.
+	 */
+	readonly maxCount: Optional<number>
+
+	/**
+	 * The description of the member, as English markdown realigned to the left margin; none if not stated in English.
 	 */
 	readonly description: Optional<string>
 
 	/**
-	 * The constraints the property states on its values beyond their type and number, in a fixed order per type;
-	 * empty if it states none.
+	 * Whether the member carries the identifier or the class of the resource, both assigned by the server and never
+	 * stated by clients.
 	 */
-	readonly constraints: readonly ShapeConstraint[]
+	readonly managed: boolean
+
+	/**
+	 * Whether the property is written by the resources in its range, and so read-only for the resource exposing it.
+	 */
+	readonly foreign: boolean
+
+	/**
+	 * Whether the resources the property links to are removed together with the resource declaring it.
+	 */
+	readonly captive: boolean
 
 };
 
 /**
- * A constraint on the values of a property, beyond their type and number.
+ * A type of the values of a member, with the restrictions it states on them.
  */
-export type ShapeConstraint = {
+export type ShapeType = ShapeLink & {
 
 	/**
-	 * What the constraint bounds, as `pattern`, `length` or `languages`, prefixed by the type it applies to where the
-	 * property admits values of several types, as `string · pattern`.
+	 * The restrictions the type states on its values beyond the ones implied by the shorthand it was defined with.
 	 */
-	readonly label: string
+	readonly restrictions: ShapeRestrictions
+
+};
+
+/**
+ * The restrictions a type states on its values, named after the constraints of the model language stating them; a
+ * restriction left unstated, or stated as an empty list, does not apply.
+ */
+export type ShapeRestrictions = {
 
 	/**
-	 * What the constraint admits, as `^[a-z]+$`, `1‥64` or `en, it`.
+	 * The regular expression string values must match.
 	 */
-	readonly value: string
+	readonly pattern?: string
+
+	/**
+	 * The IRI template the identifiers of linked or embedded resources, or of the resource itself, must match.
+	 */
+	readonly template?: string
+
+	/**
+	 * The least number of characters of string values, or of each string of localised text.
+	 */
+	readonly minLength?: number
+
+	/**
+	 * The greatest number of characters of string values, or of each string of localised text.
+	 */
+	readonly maxLength?: number
+
+	/**
+	 * The language ranges the tags of localised text must match.
+	 */
+	readonly languageIn?: readonly string[]
+
+	/**
+	 * Whether each language of localised text carries a single string.
+	 */
+	readonly uniqueLang?: boolean
+
+	/**
+	 * Whether number values must be integral, where their datatype does not imply it.
+	 */
+	readonly integral?: boolean
+
+	/**
+	 * The least number values may equal.
+	 */
+	readonly minInclusive?: number
+
+	/**
+	 * The greatest number values may equal.
+	 */
+	readonly maxInclusive?: number
+
+	/**
+	 * The bound number values must exceed.
+	 */
+	readonly minExclusive?: number
+
+	/**
+	 * The bound number values must stay below.
+	 */
+	readonly maxExclusive?: number
+
+	/**
+	 * The values admitted, or the identifiers of the resources admitted.
+	 */
+	readonly in?: readonly (string | number | boolean)[]
+
+	/**
+	 * The values required, or the identifiers of the resources required.
+	 */
+	readonly hasValue?: readonly (string | number)[]
 
 };
 
@@ -232,47 +336,92 @@ export type ShapeInterface = {
 	readonly parents: readonly ShapeLink[]
 
 	/**
-	 * The members of the interface: the properties the shape declares in its own right and the ones it narrows, in
-	 * declaration order.
+	 * The members of the interface, in declaration order: the ones the shape declares in its own right, including the
+	 * identifier and the class of its resources, and the inherited ones it narrows.
 	 */
 	readonly members: readonly ShapeMember[]
 
 };
 
 /**
- * A member of the TypeScript interface describing the resources of a shape.
+ * A member of the TypeScript interface describing the resources of a shape: a property, or the member carrying the
+ * identifier or the class of the resource, typed as `string`.
  */
 export type ShapeMember = {
 
 	/**
-	 * The name the property is keyed by in resource states.
+	 * The name the member is keyed by in resource states.
 	 */
 	readonly term: string
 
 	/**
-	 * Whether the property admits no value.
+	 * Whether the member admits no value.
 	 */
 	readonly optional: boolean
 
 	/**
-	 * Whether the property admits more than one value, typed as an array.
+	 * Whether the member admits more than one value for its {@link types}, typed as an array; localised text is never
+	 * arrayed, being carried as a whole map whatever bounds the member states.
 	 */
 	readonly plural: boolean
 
 	/**
-	 * The TypeScript types of the property values, one for each alternative the property admits: the interfaces of
-	 * linked or embedded resources, linked to their documentation, or `Dictionary`, `string`, `number` and `boolean`
-	 * for plain values.
+	 * The least number of values the member admits for its {@link types}.
 	 */
-	readonly types: readonly ShapeLink[]
+	readonly minCount: number
 
 	/**
-	 * The IRI of the predicate the property maps to; none if the property states no predicate.
+	 * The greatest number of values the member admits for its {@link types}; none if unbounded.
+	 */
+	readonly maxCount: Optional<number>
+
+	/**
+	 * The TypeScript types of the member values other than localised text, one for each distinct alternative the member
+	 * admits, with the restrictions it states: the interfaces of linked or embedded resources, linked to their
+	 * documentation, or `string`, `number` and `boolean` for plain values.
+	 */
+	readonly types: readonly ShapeType[]
+
+	/**
+	 * The localised text the member admits as an alternative, named `Dictionary`, with the restrictions it states,
+	 * whether each language carries a single string among them; none if the member admits no localised text.
+	 */
+	readonly dictionary: Optional<ShapeType>
+
+	/**
+	 * The English label of the property; none if not stated in English, or if the member is not a property.
+	 */
+	readonly label: Optional<string>
+
+	/**
+	 * The IRI of the predicate the property maps to in the forward direction; none if the property states no forward
+	 * mapping, maps to the default namespace, or is not a property at all.
 	 */
 	readonly predicate: Optional<string>
 
 	/**
-	 * The first paragraph of the English description of the property, with whitespace collapsed; none if not stated.
+	 * The IRI of the predicate the property maps to in the inverse direction; none if the property states no inverse
+	 * mapping, maps to the default namespace, or is not a property at all.
+	 */
+	readonly reverse: Optional<string>
+
+	/**
+	 * Whether the member is assigned by the server, as {@link ShapeRow.managed}.
+	 */
+	readonly managed: boolean
+
+	/**
+	 * Whether the property is written by the resources in its range, as {@link ShapeRow.foreign}.
+	 */
+	readonly foreign: boolean
+
+	/**
+	 * Whether the resources the property links to are removed with the resource, as {@link ShapeRow.captive}.
+	 */
+	readonly captive: boolean
+
+	/**
+	 * The first paragraph of the English description of the member, with whitespace collapsed; none if not stated.
 	 */
 	readonly summary: Optional<string>
 
@@ -300,7 +449,7 @@ export type ShapeSchemaValue = string | number | boolean | readonly ShapeSchemaV
  *
  * @param lazy The shape to be tabulated, possibly deferred
  *
- * @returns The table of the properties `lazy` declares
+ * @returns The table of the members `lazy` declares or inherits, with the custom checks its resources must pass
  */
 export function tabulate(lazy: Lazy<ResourceShape>): ShapeTable {
 
@@ -313,14 +462,23 @@ export function tabulate(lazy: Lazy<ResourceShape>): ShapeTable {
 		endpoint: opt(shape.pattern, pattern => pattern.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]*/i, "")),
 		parents: shape.parents.map(linked),
 
-		rows: declared(shape).map(([term, property]) => row(term, property)),
+		rows: declared(shape).map(([term, member]) => row(shape, term, member)),
 
 		inherited: ancestry(shape)
 			.map((ancestor, index, ancestors) => group(shape, ancestor, ancestors.slice(0, index)))
-			.filter(({ rows }) => rows.length > 0)
+			.filter(({ rows }) => rows.length > 0),
+
+		checks: checked(shape)
 
 	};
 
+}
+
+/**
+ * Names the custom checks a shape states, inherited ones included.
+ */
+function checked(shape: ResourceShape): readonly string[] {
+	return (shape.validators ?? []).map(({ name }) => name !== "" ? name : "check");
 }
 
 /**
@@ -337,7 +495,7 @@ function ancestry(shape: ResourceShape): readonly ResourceShape[] {
 }
 
 /**
- * Groups the properties a shape inherits from a documented ancestor, as narrowed by the shape, leaving out the ones
+ * Groups the members a shape inherits from a documented ancestor, as narrowed by the shape, leaving out the ones
  * the shape documents in its own terms or already grouped under nearer ancestors, so that each is listed once.
  */
 function group(shape: ResourceShape, ancestor: ResourceShape, nearer: readonly ResourceShape[]): ShapeGroup {
@@ -350,9 +508,9 @@ function group(shape: ResourceShape, ancestor: ResourceShape, nearer: readonly R
 
 		rows: declared(ancestor).flatMap(([term]) => {
 
-			const member = shape.members[term];
+			const member = shown(shape, term);
 
-			return !grouped.includes(term) && member?.kind === "property" && !member.hidden ? [row(term, member)] : [];
+			return !grouped.includes(term) && member !== undefined ? [row(shape, term, member)] : [];
 
 		})
 
@@ -361,29 +519,41 @@ function group(shape: ResourceShape, ancestor: ResourceShape, nearer: readonly R
 }
 
 /**
- * Lists the visible properties a shape documents: the ones it declares in its own right or inherits from shapes
- * outside the model, which have no documentation of their own, and the ones it labels or describes in its own terms,
+ * Lists the visible members a shape documents: the ones it declares in its own right or inherits from shapes outside
+ * the model, which have no documentation of their own, and the properties it labels or describes in its own terms,
  * leaving out the ones its documented ancestors declare with the same name and description.
  */
-function declared(shape: ResourceShape): readonly (readonly [string, Property])[] {
+function declared(shape: ResourceShape): readonly (readonly [string, Member])[] {
 
 	const ancestors = documented(shape);
 
-	return Object.entries(shape.members).flatMap(([term, member]) =>
-		member.kind === "property" && !member.hidden && ancestors.every(({ members }) => refines(member, members[term]))
-			? [[term, member] as const]
-			: []
-	);
+	return Object.keys(shape.members).flatMap(term => opt(shown(shape, term), member =>
+		ancestors.every(ancestor => refines(member, shown(ancestor, term))) ? [[term, member] as const] : []
+	) ?? []);
 
 }
 
 /**
- * Checks whether a property is documented apart from an inherited member: the shape declaring it has no member of
- * the same name to inherit, or labels or describes it differently from the inherited one.
+ * Retrieves the member a shape shows under a name: none if hidden, or if it carries the class of the resource on a
+ * shape stating no class, which admits no value for it.
  */
-function refines(property: Property, inherited: Optional<Member>): boolean {
-	return inherited === undefined || inherited.kind === "property" && (
-		!equals(property.name, inherited.name) || !equals(property.description, inherited.description)
+function shown(shape: ResourceShape, term: string): Optional<Member> {
+
+	const member = shape.members[term];
+
+	return member === undefined || member.hidden || member.kind === "type" && shape.class === undefined
+		? undefined
+		: member;
+
+}
+
+/**
+ * Checks whether a member is documented apart from an inherited member: the shape declaring it has no member of the
+ * same name to inherit, or labels or describes a property differently from the inherited one.
+ */
+function refines(member: Member, inherited: Optional<Member>): boolean {
+	return inherited === undefined || member.kind === "property" && inherited.kind === "property" && (
+		!equals(member.name, inherited.name) || !equals(member.description, inherited.description)
 	);
 }
 
@@ -401,121 +571,175 @@ function documented(shape: ResourceShape): readonly ResourceShape[] {
 }
 
 /**
- * Tabulates a property.
+ * Tabulates a member of a shape.
  */
-function row(term: string, { forward, reverse, range, description }: Property): ShapeRow {
-	return {
+function row(shape: ResourceShape, term: string, member: Member): ShapeRow {
+	return member.kind === "property" ? {
 
 		term,
-		predicate: forward ?? reverse,
-		types: typed(range.shape),
-		cardinality: bounded(range.minCount, range.maxCount),
-		description: markup(description),
-		constraints: constrained(range.shape)
+		label: english(member.name),
+		predicate: mapped(member.forward),
+		reverse: mapped(member.reverse),
+		types: typed(member.range.shape),
+		minCount: member.range.minCount ?? 0,
+		maxCount: member.range.maxCount,
+		description: markup(member.description),
+		managed: false,
+		foreign: member.foreign ?? false,
+		captive: member.captive ?? false
+
+	} : {
+
+		term,
+		label: undefined,
+		predicate: undefined,
+		reverse: undefined,
+		types: [{ name: "iri", href: undefined, restrictions: keyed(shape, member) }],
+		minCount: 1,
+		maxCount: 1,
+		description: keyword(member),
+		managed: true,
+		foreign: false,
+		captive: false
 
 	};
 }
 
 /**
- * Lists the constraints a shape states on its values beyond those implied by the shorthand it was created with,
- * labelling those of each alternative of a union by its type.
+ * Describes the member carrying the identifier or the class of a resource.
  */
-function constrained(lazy: Lazy<Shape>): readonly ShapeConstraint[] {
-
-	const shape = eager(lazy);
-
-	return shape.kind === "union" ? shape.branches.flatMap(branch => {
-
-		const type = typed(branch).map(({ name }) => name).join(" | ");
-
-		return constrained(branch).map(({ label, value }) => ({ label: `${type} · ${label}`, value }));
-
-	}) : differing(restrictions(shape), implied(shape));
-
+function keyword(member: Id | Type): string {
+	return member.kind === "id"
+		? "IRI identifying the resource, assigned and managed by the server."
+		: "IRI of the class of the resource, set by the server from the class of the shape.";
 }
 
 /**
- * Lists the constraints stated beyond the implied ones: those stating a value the implied constraints state otherwise
- * or not at all.
+ * Retrieves the restrictions on the member carrying the identifier or the class of a resource: the ones the shape
+ * states on its identifiers, or its class as the required value.
  */
-function differing(
-	stated: Readonly<Record<string, Optional<string>>>,
-	implied: Readonly<Record<string, Optional<string>>>
-): readonly ShapeConstraint[] {
-
-	return Object.entries(stated).flatMap(([label, value]) =>
-		value === undefined || value === implied[label] ? [] : [{ label, value }]
-	);
-
+function keyed(shape: ResourceShape, member: Id | Type): ShapeRestrictions {
+	return member.kind === "id" ? restrictions(shape) : opt(shape.class, type => ({ hasValue: [type] })) ?? {};
 }
 
 /**
- * The subsets of the IRI hierarchy the `iri()` shorthand admits, each under a pattern of its own.
+ * A shorthand of the model language, as the shape it creates when given no constraints of its own.
  */
-const variants: readonly Variant[] = ["hierarchical", "absolute", "internal", "relative"];
+type Shorthand = {
+
+	/**
+	 * The name of the shorthand, naming the type of the values it admits.
+	 */
+	readonly name: string
+
+	/**
+	 * The JSON Schema format the values the shorthand admits conform to; none if JSON Schema names no such format.
+	 */
+	readonly format?: string
+
+	/**
+	 * The shape the shorthand creates, stating the constraints implied by the type of the values it admits.
+	 */
+	readonly shape: StringShape | NumberShape
+
+};
 
 /**
- * The shapes the shorthands of the model language create when given no constraints of their own, stating the
- * constraints implied by the type of the values they admit.
+ * The shorthands of the model language, the ones naming a type more specific than another sharing its shape coming
+ * first, so that the IRIs `url()` admits are named `url` rather than `iri`.
  */
-const shorthands: readonly Shape[] = [
-	text(), markdown(), email(), phone(), url(), tag(), year(), date(), time(), instant(), timestamp(), duration(),
-	...variants.map(variant => iri({ variant })),
-	byte(), short(), int(), long(), float(), double(), integer(), decimal()
+const shorthands: readonly Shorthand[] = [
+	{ name: "text", shape: text() },
+	{ name: "markdown", shape: markdown() },
+	{ name: "email", format: "email", shape: email() },
+	{ name: "phone", shape: phone() },
+	{ name: "url", format: "uri", shape: url() },
+	{ name: "iri", format: "iri", shape: iri({ variant: "absolute" }) },
+	{ name: "iri", format: "iri-reference", shape: iri({ variant: "internal" }) },
+	{ name: "iri", format: "iri-reference", shape: iri({ variant: "relative" }) },
+	{ name: "tag", shape: tag() },
+	{ name: "year", shape: year() },
+	{ name: "date", format: "date", shape: date() },
+	{ name: "time", format: "time", shape: time() },
+	{ name: "instant", format: "date-time", shape: instant() },
+	{ name: "timestamp", format: "date-time", shape: timestamp() },
+	{ name: "duration", format: "duration", shape: duration() },
+	...[byte(), short(), int(), long(), float(), double(), integer(), decimal()].map(shape => ({
+		name: opt(shape.datatype, local) ?? shape.kind, shape
+	}))
 ];
 
 /**
- * Spells out the constraints implied by the shorthand a plain shape was created with, if any: the one admitting values
- * of the same kind and datatype and, for strings, matching the same pattern.
+ * Retrieves the shorthand a plain shape was created with, if any: the one admitting values of the same kind and
+ * datatype and, for strings, matching the same pattern.
  */
-function implied(shape: Shape): Readonly<Record<string, Optional<string>>> {
-	return opt(shorthands.find(base => base.kind === "string" && shape.kind === "string"
+function shorthand(shape: Shape): Optional<Shorthand> {
+	return shorthands.find(({ shape: base }) => base.kind === "string" && shape.kind === "string"
 		? base.datatype === shape.datatype && base.pattern === shape.pattern
 		: base.kind === "number" && shape.kind === "number" && base.datatype === shape.datatype
-	), restrictions) ?? {};
+	);
 }
 
 /**
- * Spells out the constraints a plain shape states, keyed by friendly labels, leaving the datatype to the type column.
+ * Retrieves the restrictions implied by the shorthand a shape was created with, if any.
  */
-function restrictions(shape: Shape): Readonly<Record<string, Optional<string>>> {
-	return shape.kind === "string" ? {
-			pattern: shape.pattern,
-			length: ranged(shape.minLength, shape.maxLength),
-			values: listed(shape.in),
-			includes: listed(shape.hasValue)
+function implied(shape: Exclude<Shape, { readonly kind: "union" }>): ShapeRestrictions {
+	return opt(shorthand(shape), ({ shape }) => restrictions(shape, {})) ?? {};
+}
+
+/**
+ * Retrieves the restrictions a shape other than a union states beyond the given ones, by default the ones implied by
+ * the shorthand it was created with: the ones on plain values, or the ones on the identifiers of linked or embedded
+ * resources.
+ */
+function restrictions(
+	shape: Exclude<Shape, { readonly kind: "union" }>,
+	given: ShapeRestrictions = implied(shape)
+): ShapeRestrictions {
+
+	function fresh<K extends keyof ShapeRestrictions>(key: K, value: ShapeRestrictions[K]): ShapeRestrictions {
+		return value === undefined || isArray(value) && value.length === 0 || equals(value, given[key])
+			? {}
+			: { [key]: value };
+	}
+
+	return shape.kind === "reference" ? restrictions(eager(shape.target))
+
+		: shape.kind === "resource" ? {
+			...fresh("template", shape.pattern),
+			...fresh("in", shape.in),
+			...fresh("hasValue", shape.hasValue)
 		}
-		: shape.kind === "number" ? {
-			integral: shape.integral && shape.datatype === undefined ? "yes" : undefined,
-			minimum: opt(shape.minInclusive, value => `≥ ${value}`) ?? opt(shape.minExclusive, value => `> ${value}`),
-			maximum: opt(shape.maxInclusive, value => `≤ ${value}`) ?? opt(shape.maxExclusive, value => `< ${value}`),
-			values: listed(shape.in),
-			includes: listed(shape.hasValue)
-		}
-			: shape.kind === "dictionary" ? {
-				languages: listed(shape.languageIn),
-				"per language": shape.uniqueLang ? "one value" : undefined,
-				length: ranged(shape.minLength, shape.maxLength)
+
+			: shape.kind === "string" ? {
+				...fresh("pattern", shape.pattern),
+				...fresh("minLength", shape.minLength),
+				...fresh("maxLength", shape.maxLength),
+				...fresh("in", shape.in),
+				...fresh("hasValue", shape.hasValue)
 			}
-				: shape.kind === "boolean" ? {
-					value: opt(shape.in, String)
+
+				: shape.kind === "number" ? {
+					...fresh("integral", shape.integral && shape.datatype === undefined ? true : undefined),
+					...fresh("minInclusive", shape.minInclusive),
+					...fresh("maxInclusive", shape.maxInclusive),
+					...fresh("minExclusive", shape.minExclusive),
+					...fresh("maxExclusive", shape.maxExclusive),
+					...fresh("in", shape.in),
+					...fresh("hasValue", shape.hasValue)
 				}
-					: {};
+
+					: shape.kind === "dictionary" ? {
+						...fresh("languageIn", shape.languageIn),
+						...fresh("uniqueLang", shape.uniqueLang),
+						...fresh("minLength", shape.minLength),
+						...fresh("maxLength", shape.maxLength)
+					}
+
+						: fresh("in", opt(shape.in, value => [value]));
+
 }
 
-/**
- * Spells out a length range, as `1‥64` or `0‥*`; none if neither bound is stated.
- */
-function ranged(min: Optional<number>, max: Optional<number>): Optional<string> {
-	return min === undefined && max === undefined ? undefined : `${min ?? 0}‥${max ?? "*"}`;
-}
-
-/**
- * Spells out a list of values, as `en, it`; none if the list is missing or empty.
- */
-function listed(values: Optional<readonly (string | number)[]>): Optional<string> {
-	return values !== undefined && values.length > 0 ? values.join(", ") : undefined;
-}
 
 
 /**
@@ -572,8 +796,8 @@ export function getShapeReferrers(lazy: Lazy<ResourceShape>, universe: Some<Lazy
 	const target = eager(lazy);
 
 	return others(target, model(universe)
-		.filter(shape => declared(shape).some(([, { range }]) =>
-			targets(range.shape).includes(target)
+		.filter(shape => declared(shape).some(([, member]) =>
+			member.kind === "property" && targets(member.range.shape).includes(target)
 		))
 	);
 
@@ -643,8 +867,9 @@ export function getShapeParents(lazy: Lazy<ResourceShape>): readonly ShapeLink[]
 /**
  * Describes a resource shape as a TypeScript interface.
  *
- * States the interface extending the nearest documented ancestors of `lazy`, with the properties it declares in its
- * own right and the inherited ones it narrows, typed differently from at least one ancestor declaring them.
+ * States the interface extending the nearest documented ancestors of `lazy`, with the members it declares in its own
+ * right and the inherited ones it narrows, stating their types, restrictions, bounds or flags differently from at
+ * least one ancestor declaring them.
  *
  * @param lazy The shape to be described, possibly deferred
  *
@@ -660,16 +885,16 @@ export function getShapeInterface(lazy: Lazy<ResourceShape>): ShapeInterface {
 		name: identifier(shape),
 		parents: ancestors.map(scriptable),
 
-		members: Object.entries(shape.members).flatMap(([term, member]) => {
+		members: Object.keys(shape.members).flatMap(term => {
 
-			const signature = member.kind === "property" && !member.hidden ? signed(term, member) : undefined;
+			const signature = opt(shown(shape, term), member => signed(shape, term, member));
 
-			const inherited = ancestors.flatMap(({ members }) => opt(members[term], ancestor =>
-				ancestor.kind === "property" ? [signed(term, ancestor)] : []
+			const inherited = ancestors.flatMap(ancestor => opt(shown(ancestor, term), declaration =>
+				[signed(ancestor, term, declaration)]
 			) ?? []);
 
 			return signature !== undefined && (inherited.length === 0 || inherited.some(ancestor =>
-				spelled(ancestor) !== spelled(signature)
+				!equals(spelled(ancestor), spelled(signature))
 			)) ? [signature] : [];
 
 		})
@@ -683,9 +908,24 @@ export function getShapeInterface(lazy: Lazy<ResourceShape>): ShapeInterface {
  *
  * States the schema of the payloads `lazy` admits, with the members of its {@link getShapeInterface | interface},
  * requiring the schemas of its nearest documented ancestors through `allOf`; shapes are referred to by `$ref` to their
- * documentation, and localised text is admitted as objects mapping language tags to strings. The schema is titled
- * after the shape and annotated with its {@link getShapeSummary | summary} as `description` and the prefixed name of
- * its class as `$comment`, and each property alike with its own summary and predicate, where stated.
+ * documentation. The schema is titled after the shape and annotated with its {@link getShapeSummary | summary} as
+ * `description`, the prefixed name of its class as `$comment` and the names of its custom checks as `x-checks`.
+ *
+ * Each member is annotated alike with its label as `title`, its summary as `description` and its predicate as
+ * `$comment`, an inverse one prefixed by `^`, and states every constraint JSON Schema can express:
+ *
+ * - array bounds as `minItems` and `maxItems`, a foreign property as `readOnly` and `x-foreign`;
+ * - strings by `format` where defined with a shorthand JSON Schema names, as `email` or `uri`, by `pattern` otherwise,
+ *   and by `minLength`, `maxLength`, `enum` and `const`, or `x-includes` where several values are required;
+ * - numbers by `type: integer` where integral, `minimum`, `maximum`, `exclusiveMinimum`, `exclusiveMaximum`, `enum`
+ *   and `const`, or `x-includes` where several values are required, booleans by `const`;
+ * - localised text as an object mapping language tags to a string, or to an array of strings where a tag may carry
+ *   several, never wrapped in an array, with its tags bounded by `propertyNames` and its strings by length;
+ * - the identifier as an `iri` formatted string bounded by the pattern, `enum` and `const` the shape states, the class
+ *   member as the `const` class, both required and marked `readOnly`, as the server assigns them.
+ *
+ * The constraints JSON Schema cannot express on a `$ref` are stated as annotations: `x-id`, `x-values` and
+ * `x-value` on links to resources, `x-lifecycle` on properties whose values are removed with the resource.
  *
  * @param lazy The shape to be described, possibly deferred
  *
@@ -693,21 +933,24 @@ export function getShapeInterface(lazy: Lazy<ResourceShape>): ShapeInterface {
  */
 export function getShapeSchema(lazy: Lazy<ResourceShape>): ShapeSchema {
 
-	const { parents, members } = getShapeInterface(lazy);
+	const shape = eager(lazy);
+	const { parents, members } = getShapeInterface(shape);
 
 	const required = members.filter(({ optional }) => !optional).map(({ term }) => term);
+	const checks = checked(shape);
 
 	return {
 
-		title: getShapeName(lazy),
+		title: getShapeName(shape),
 
-		...opt(getShapeSummary(lazy), description => ({ description })),
-		...opt(eager(lazy).class, type => ({ $comment: prefixed(type) })),
+		...opt(getShapeSummary(shape), description => ({ description })),
+		...opt(shape.class, type => ({ $comment: prefixed(type) })),
+		...(checks.length > 0 ? { "x-checks": checks } : {}),
 
 		...(parents.length > 0 ? { allOf: parents.map(referred) } : {}),
 
 		type: "object",
-		properties: Object.fromEntries(members.map(member => [member.term, valued(member)])),
+		properties: Object.fromEntries(members.map(member => [member.term, valued(shape, member)])),
 
 		...(required.length > 0 ? { required } : {})
 
@@ -716,32 +959,195 @@ export function getShapeSchema(lazy: Lazy<ResourceShape>): ShapeSchema {
 }
 
 /**
- * Describes the values of a member of a TypeScript interface as a JSON Schema.
+ * Describes the values of a member of a TypeScript interface as a JSON Schema, annotated with its label, summary and
+ * predicates.
  */
-function valued({ plural, types, predicate, summary }: ShapeMember): ShapeSchema {
+function valued(shape: ResourceShape, signature: ShapeMember): ShapeSchema {
 
-	const [type] = types;
-	const items = type !== undefined && types.length === 1 ? referred(type) : { anyOf: types.map(referred) };
+	const member = shape.members[signature.term];
+	const { label, summary, predicate, reverse } = signature;
+
+	const comment = [opt(predicate, prefixed), opt(reverse, iri => `^${prefixed(iri)}`)].filter(isString).join(", ");
 
 	return {
 
+		...opt(label, title => ({ title })),
 		...opt(summary, description => ({ description })),
-		...opt(predicate, iri => ({ $comment: prefixed(iri) })),
+		...(comment !== "" ? { $comment: comment } : {}),
 
-		...(plural ? { type: "array", items } : items)
+		...(member?.kind === "property" ? spanned(member, signature) : {
+			readOnly: true,
+			type: "string",
+			...(member?.kind === "id"
+				? { format: "iri", ...identifying(shape, "enum"), ...including(shape.hasValue) }
+				: opt(shape.class, type => ({ const: type })))
+		})
 
 	};
 
 }
 
 /**
- * Describes a TypeScript type as a JSON Schema, referring to shapes by the location of their documentation.
+ * Describes the values of a property as a JSON Schema: its localised text as a whole map, never arrayed, and its
+ * other alternatives as items of an array where it admits several values.
+ */
+function spanned({ range, foreign, captive }: Property, { plural }: ShapeMember): ShapeSchema {
+
+	const alternatives = branches(range.shape);
+
+	const maps = alternatives.flatMap(branch => branch.kind === "dictionary" ? [schematised(branch)] : []);
+
+	const values = alternatives
+		.flatMap(branch => branch.kind === "dictionary" ? [] : [schematised(branch)])
+		.filter((value, index, values) => values.findIndex(other => equals(other, value)) === index);
+
+	const [map] = maps;
+	const [value] = values;
+
+	const items = value !== undefined && values.length === 1 ? value : { anyOf: values };
+	const min = range.minCount ?? 0;
+
+	const arrayed = plural ? {
+		type: "array",
+		items,
+		...(min > 0 ? { minItems: min } : {}),
+		...opt(range.maxCount, maxItems => ({ maxItems }))
+	} : items;
+
+	return {
+
+		...(foreign ? { readOnly: true, "x-foreign": true } : {}),
+		...(captive ? { "x-lifecycle": "bound" } : {}),
+
+		...(values.length === 0 ? map ?? {} : map === undefined ? arrayed : { anyOf: [map, arrayed] })
+
+	};
+
+}
+
+/**
+ * Describes the values of a shape other than a union as a JSON Schema, stating every constraint JSON Schema can
+ * express on them.
+ */
+function schematised(shape: Exclude<Shape, { readonly kind: "union" }>): ShapeSchema {
+	return shape.kind === "reference" ? linking(eager(shape.target))
+		: shape.kind === "resource" ? linking(shape)
+			: shape.kind === "string" ? {
+					type: "string",
+					...opt(shorthand(shape)?.format, format => ({ format }))
+					?? opt(shape.pattern, pattern => ({ pattern })),
+					...opt(shape.minLength, minLength => ({ minLength })),
+					...opt(shape.maxLength, maxLength => ({ maxLength })),
+					...opt(filled(shape.in), values => ({ enum: values })),
+					...including(shape.hasValue)
+				}
+				: shape.kind === "number" ? {
+						type: shape.integral ? "integer" : "number",
+						...opt(shape.minInclusive, minimum => ({ minimum })),
+						...opt(shape.maxInclusive, maximum => ({ maximum })),
+						...opt(shape.minExclusive, exclusiveMinimum => ({ exclusiveMinimum })),
+						...opt(shape.maxExclusive, exclusiveMaximum => ({ exclusiveMaximum })),
+						...opt(filled(shape.in), values => ({ enum: values })),
+						...including(shape.hasValue)
+					}
+					: shape.kind === "boolean" ? {
+							type: "boolean",
+							...opt(shape.in, value => ({ const: value }))
+						}
+						: localising(shape);
+}
+
+/**
+ * Describes localised text as a JSON Schema: an object mapping the language tags it admits to a string, or to an
+ * array of strings where a tag may carry several, each bounded in length.
+ */
+function localising(shape: DictionaryShape): ShapeSchema {
+
+	const text = {
+		type: "string",
+		...opt(shape.minLength, minLength => ({ minLength })),
+		...opt(shape.maxLength, maxLength => ({ maxLength }))
+	};
+
+	const languages = filled(shape.languageIn);
+
+	return {
+
+		type: "object",
+
+		...(languages !== undefined && !languages.includes("*") ? {
+			propertyNames: { pattern: `^(?:${languages.join("|")})(?:-|$)` }
+		} : {}),
+
+		additionalProperties: shape.uniqueLang ? text : { type: "array", items: text }
+
+	};
+
+}
+
+/**
+ * Refers to linked or embedded resources by the location of their documentation, annotated with the constraints the
+ * shape states on their identifiers.
+ */
+function linking(shape: ResourceShape): ShapeSchema {
+
+	const { href, name } = scriptable(shape);
+
+	return {
+		$ref: href ?? name,
+		...identifying(shape, "x-values"),
+		...opt(filled(shape.hasValue), values => ({ "x-value": values }))
+	};
+
+}
+
+/**
+ * States the pattern the identifiers of the resources of a shape match, as the `x-id` annotation, and the
+ * identifiers it lists under the given keyword.
+ */
+function identifying(shape: ResourceShape, listing: string): ShapeSchema {
+	return {
+		...opt(shape.pattern, pattern => ({ "x-id": pattern })),
+		...opt(filled(shape.in), values => ({ [listing]: values }))
+	};
+}
+
+/**
+ * States the values a plain value must equal: as `const` where a single one is required, as the `x-includes`
+ * annotation otherwise.
+ */
+function including(values: Optional<readonly (string | number)[]>): ShapeSchema {
+
+	const [value] = values ?? [];
+
+	return value !== undefined && values?.length === 1 ? { const: value }
+		: opt(filled(values), values => ({ "x-includes": values })) ?? {};
+
+}
+
+/**
+ * Retrieves a list, unless missing or empty.
+ */
+function filled<T>(values: Optional<readonly T[]>): Optional<readonly T[]> {
+	return values !== undefined && values.length > 0 ? values : undefined;
+}
+
+/**
+ * Lists the alternatives of a shape, looking through unions.
+ */
+function branches(lazy: Lazy<Shape>): readonly Exclude<Shape, { readonly kind: "union" }>[] {
+
+	const shape = eager(lazy);
+
+	return shape.kind === "union" ? shape.branches.flatMap(branches) : [shape];
+
+}
+
+/**
+ * Describes a TypeScript interface as a JSON Schema, referring to it by the location of its documentation.
  */
 function referred({ name, href }: ShapeLink): ShapeSchema {
-	return href !== undefined ? { $ref: href }
-		: name === "Dictionary" ? { type: "object", additionalProperties: { type: "string" } }
-			: name === "string" || name === "number" || name === "boolean" ? { type: name }
-				: { $ref: name };
+	return { $ref: href ?? name };
 }
 
 /**
@@ -825,61 +1231,98 @@ function linked(lazy: Lazy<ResourceShape>): ShapeLink {
 }
 
 /**
- * Lists the types of the values a shape admits, one for each alternative.
+ * Lists the types of the values a shape admits, one for each alternative, with the restrictions each states.
  */
-function typed(lazy: Lazy<Shape>): readonly ShapeLink[] {
+function typed(lazy: Lazy<Shape>): readonly ShapeType[] {
+	return branches(lazy).map(shape => ({
+		...shape.kind === "reference" ? linked(shape.target)
+			: shape.kind === "resource" ? linked(shape)
+				: { name: plain(shape), href: undefined },
+		restrictions: restrictions(shape)
+	}));
+}
 
-	const shape = eager(lazy);
+/**
+ * Describes a member of a shape as a member of a TypeScript interface.
+ */
+function signed(shape: ResourceShape, term: string, member: Member): ShapeMember {
 
-	return shape.kind === "union" ? shape.branches.flatMap(typed)
-		: shape.kind === "reference" ? [linked(shape.target)]
-			: shape.kind === "resource" ? [linked(shape)]
-				: [{ name: plain(shape), href: undefined }];
+	if ( member.kind === "property" ) {
+
+		const { name, forward, reverse, range, description, foreign, captive } = member;
+
+		const types = scripted(range.shape);
+		const max = range.maxCount;
+
+		return {
+			term,
+			optional: (range.minCount ?? 0) === 0,
+			plural: types.length > 0 && (max === undefined || max > 1),
+			minCount: range.minCount ?? 0,
+			maxCount: max,
+			types,
+			dictionary: opt(branches(range.shape).find(branch => branch.kind === "dictionary"), dictionary => ({
+				name: "Dictionary", href: undefined, restrictions: restrictions(dictionary)
+			})),
+			label: english(name),
+			predicate: mapped(forward),
+			reverse: mapped(reverse),
+			managed: false,
+			foreign: foreign ?? false,
+			captive: captive ?? false,
+			summary: opt(markup(description), summarize)
+		};
+
+	} else {
+
+		return {
+			term,
+			optional: false,
+			plural: false,
+			minCount: 1,
+			maxCount: 1,
+			types: [{ name: "string", href: undefined, restrictions: keyed(shape, member) }],
+			dictionary: undefined,
+			label: undefined,
+			predicate: undefined,
+			reverse: undefined,
+			managed: true,
+			foreign: false,
+			captive: false,
+			summary: keyword(member)
+		};
+
+	}
 
 }
 
 /**
- * Describes a property as a member of a TypeScript interface.
+ * Retrieves what a member of a TypeScript interface states about its values, for comparison: their types and the
+ * restrictions on them, their number, and the flags on the member, leaving out how it is labelled and described.
  */
-function signed(term: string, { forward, reverse, range, description }: Property): ShapeMember {
-	return {
-
-		term,
-		optional: (range.minCount ?? 0) === 0,
-		plural: range.maxCount === undefined || range.maxCount > 1,
-		types: scripted(range.shape),
-		predicate: forward ?? reverse,
-		summary: opt(markup(description), summarize)
-
-	};
+function spelled({
+	optional, plural, minCount, maxCount, types, dictionary, managed, foreign, captive
+}: ShapeMember): Readonly<Record<string, unknown>> {
+	return { optional, plural, minCount, maxCount, types, dictionary, managed, foreign, captive };
 }
 
 /**
- * Spells out the signature of a member of a TypeScript interface, for comparison.
+ * Lists the TypeScript types of the values a shape admits other than localised text, one for each distinct
+ * alternative with the restrictions it states, linking the shapes to their documentation.
  */
-function spelled({ optional, plural, types }: ShapeMember): string {
-	return `${optional ? "?" : ""}${plural ? "[]" : ""}${types.map(({ name }) => name).join("|")}`;
-}
+function scripted(lazy: Lazy<Shape>): readonly ShapeType[] {
 
-/**
- * Lists the TypeScript types of the values a shape admits, one for each distinct alternative, linking the shapes to
- * their documentation.
- */
-function scripted(lazy: Lazy<Shape>): readonly ShapeLink[] {
-
-	const shape = eager(lazy);
-
-	const types: readonly ShapeLink[] = shape.kind === "union" ? shape.branches.flatMap(scripted)
-		: shape.kind === "reference" ? [scriptable(eager(shape.target))]
-			: shape.kind === "resource" ? [scriptable(shape)]
-				: [{
-					name: shape.kind === "dictionary" ? "Dictionary"
-						: shape.kind === "boolean" || shape.kind === "number" ? shape.kind
-							: "string",
+	const types: readonly ShapeType[] = branches(lazy).flatMap(shape => shape.kind === "dictionary" ? [] : [{
+		...shape.kind === "reference" ? scriptable(eager(shape.target))
+			: shape.kind === "resource" ? scriptable(shape)
+				: {
+					name: shape.kind === "boolean" || shape.kind === "number" ? shape.kind : "string",
 					href: undefined
-				}];
+				},
+		restrictions: restrictions(shape)
+	}]);
 
-	return types.filter(({ name }, index) => types.findIndex(type => type.name === name) === index);
+	return types.filter((type, index) => types.findIndex(other => equals(other, type)) === index);
 
 }
 
@@ -903,22 +1346,9 @@ function identifier(shape: ResourceShape): string {
 function plain(shape: Exclude<Shape, { readonly kind: "union" | "reference" | "resource" }>): string {
 	return shape.kind === "dictionary" ? "Dictionary"
 		: shape.kind === "boolean" ? "boolean"
-			: opt(shape.datatype, local) ?? shape.kind;
+			: shorthand(shape)?.name ?? opt(shape.datatype, local) ?? shape.kind;
 }
 
-/**
- * States the number of values a range admits.
- */
-function bounded(min: Optional<number>, max: Optional<number>): string {
-
-	const lower = min ?? 0;
-
-	return lower === 1 && max === 1 ? "1"
-		: lower === 0 && max === 1 ? "0‥1"
-			: lower === 0 && max === undefined ? "*"
-				: `${lower}‥${max ?? "*"}`;
-
-}
 
 
 /**
@@ -951,6 +1381,14 @@ function summarize(markdown: string): string {
  */
 function collapse(text: string): string {
 	return text.trim().replace(/\s+/g, " ");
+}
+
+/**
+ * Retrieves the IRI of a predicate a property maps to, unless it lies in the default namespace a property without an
+ * explicit mapping falls back to, where it names no term of a shared vocabulary.
+ */
+function mapped(iri: Optional<string>): Optional<string> {
+	return iri === undefined || iri.startsWith(base[""]) ? undefined : iri;
 }
 
 /**

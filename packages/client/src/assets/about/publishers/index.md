@@ -14,7 +14,7 @@ To propose a new source, or to change how an existing one is harvested, open an 
 is published, the languages it is available in and how often it is updated, along with a contact for follow-up.
 
 Each source is harvested on a schedule, mapped to a shared data model and cross-linked with the content of every other
-source. The [data models](../datasets/index.md) list the properties each dataset can hold: check them to see which of
+source. The [data models](/models/) list the properties each dataset can hold: check them to see which of
 your content the hub can carry and which details it can show to users across the alliance.
 
 # Keeping Content Accurate
