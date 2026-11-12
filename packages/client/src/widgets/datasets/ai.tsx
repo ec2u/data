@@ -44,7 +44,7 @@ export function AI({
 		<Icon.Sparkles/>
 		<span>AI-Generated Content</span>
 
-		<Link look={"subtle"} href={"/about/ai"} title={"Learn More"}><Icon.Help/></Link>
+		<Link look={"subtle"} href={"/about/legal/ai"} title={"Learn More"}><Icon.Help/></Link>
 
 	</>) : null;
 

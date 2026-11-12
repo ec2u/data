@@ -22,10 +22,10 @@ your content the hub can carry and which details it can show to users across the
 The hub mirrors your published content, so a correction made at the source reaches the hub on the next harvest. Report
 errors the hub itself introduces, such as a wrong mapping or a missing resource, as an issue on GitHub.
 
-Automated crawlers and AI enrichment may introduce errors or gaps. See [AI-Generated Content](../ai) for how AI is used
+Automated crawlers and AI enrichment may introduce errors or gaps. See [AI Use Notice](../legal/ai) for how AI is used
 on the hub, what it adds to the content you publish, and why its output may differ from your original wording.
 
 # Rights
 
 Content gathered from your sources remains subject to your rights as its original publisher. Each resource on the hub
-links back to the page it was taken from. See the [Legal Notice](../legal) for the terms the hub applies to reuse.
+links back to the page it was taken from. See [Legal Notice](../legal/) for the terms the hub applies to reuse.

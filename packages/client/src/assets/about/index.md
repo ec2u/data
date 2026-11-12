@@ -8,19 +8,13 @@ Both support faceted search and linked data navigation across every dataset and 
 The software running the hub is open source: its code, issue tracker and development history are on
 [GitHub](https://github.com/ec2u/data), where you can also report problems with the hub or with its datasets.
 
-Automated crawlers collect much of this content, and AI enriches it with descriptions, labels and classifications.
-Either step may introduce errors or gaps, so always check important information against official sources before acting
-on it. See [AI-Generated Content](ai) for details on how AI is used and how to use its output responsibly.
-
 # Data Models
 
 The [APIs & Models](/about/models/) pages document the resources each dataset holds and the properties the API returns.
 If you are new to linked data, [Linked Data Models](rdf/) introduces the graph-based models and taxonomies they use.
 
-# Legal
+# AI Content
 
-Who publishes the hub, the terms for reusing its data and software, and how it handles personal data.
-
-- [Legal Notice](legal)
-- [Privacy Notice](privacy)
-- [AI-Generated Content](ai)
+Automated crawlers collect much of this content, and AI enriches it with descriptions, labels and classifications.
+Either step may introduce errors or gaps, so always check important information against official sources before acting
+on it. See [AI Use Notice](legal/ai) for details on how AI is used and how to use its output responsibly.

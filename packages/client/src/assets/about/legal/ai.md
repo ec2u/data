@@ -1,5 +1,5 @@
 ---
-title: AI-Generated Content
+title: AI Use Notice
 ---
 
 # How We Use AI
@@ -19,9 +19,8 @@ This website uses AI-generated content (text, labels, and descriptions created b
 > **Don't rely only on AI-generated content for important decisions** - it may have errors, be incomplete, out of
 > date, or even made up. Always verify important information with official sources.
 
-**Your responsibilities**: By using this website, you agree to verify important information with official sources, use
-AI content as a starting point (not the final word), check original sources when provided, and report any problems you
-find.
+**What we recommend**: verify important information with official sources, use AI content as a starting point (not the
+final word), check original sources when provided, and report any problems you find.
 
 **Our liability**: We are not responsible for errors, omissions, or inaccuracies in automated content. You accept the
 risks of relying on this information and are responsible for verifying it before making decisions.

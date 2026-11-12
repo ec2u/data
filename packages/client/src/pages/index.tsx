@@ -151,9 +151,9 @@ export function Datasets() {
 
 		more={<Print>
 
-			<Link look={"subtle"} href={"/about/ai"}>AI Notice</Link><br/>
-			<Link look={"subtle"} href={"/about/legal"}>Legal Notice</Link><br/>
-			<Link look={"subtle"} href={"/about/privacy"}>Privacy Notice</Link>
+			<Link look={"subtle"} href={"/about/legal/"}>Legal</Link><br/>
+			<Link look={"subtle"} href={"/about/legal/privacy"}>Privacy</Link><br/>
+			<Link look={"subtle"} href={"/about/legal/ai"}>AI Content</Link>
 
 		</Print>}
 

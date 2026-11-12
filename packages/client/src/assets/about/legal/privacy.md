@@ -32,6 +32,6 @@ protection authority of the European Union country where you live or work, or wh
 
 # Contact
 
-Data controller: the EC2U Alliance, at the address given in the [Legal Notice](legal).
+Data controller: the EC2U Alliance, at the address given in the [Legal Notice](/about/legal/).
 
 Data protection contact: [to be confirmed]

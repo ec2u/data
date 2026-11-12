@@ -21,9 +21,9 @@ through a single interface, without integrating the website of each university o
 Each dataset states the licence it is published under on its info page, reached through the info icon in the page menu.
 Reuse a dataset within the terms of its licence, and credit the EC2U Alliance as its publisher. Content gathered from
 partner universities remains subject to the rights of its original publishers, as set out in the
-[Legal Notice](../legal), so check those rights through the source link of each resource before reusing it.
+[Legal Notice](../legal/), so check those rights through the source link of each resource before reusing it.
 
-Much of the content is collected by crawlers and enriched with AI. Read [AI-Generated Content](../ai) before relying on
+Much of the content is collected by crawlers and enriched with AI. Read [AI Use Notice](../legal/ai) before relying on
 generated descriptions, labels or classifications, and point your own users to it wherever you show them.
 
 # Contributing to the Hub
