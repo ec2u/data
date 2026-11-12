@@ -1,0 +1,51 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* code tokens take the colours markdown highlighting gives the same kinds of tokens in fenced code */
+
+.ec2u-shape-code {
+
+    /* the copy button sits inside the block, in its top right corner, over the end of its first line */
+
+    position: relative;
+
+    /* declarations run long, so they are set small to keep more of each line in view */
+
+    font-size: var(--skin--font-size-small);
+
+    & > clay-button > button { /* the wrapper lays out no box of its own, so the control is placed */
+        position: absolute;
+        top: var(--skin--spacing-050);
+        right: var(--skin--spacing-050);
+    }
+
+    & .ec2u-shape-keyword {
+        color: var(--skin--color-info-stroke);
+    }
+
+    & .ec2u-shape-string {
+        color: var(--skin--color-pass-stroke);
+    }
+
+    & .ec2u-shape-attr {
+        color: var(--skin--color-warn-stroke);
+    }
+
+    & .ec2u-shape-comment {
+        color: var(--skin--color-subtle);
+    }
+
+}

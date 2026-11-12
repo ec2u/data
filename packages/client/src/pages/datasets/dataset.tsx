@@ -38,8 +38,8 @@ import { ec2u } from "../../index.core.js";
 import { Failure } from "../../widgets/failure.js";
 import { address, links } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
-import { getShapeHref, getShapeName } from "../../widgets/shape.core.js";
-import "../../widgets/shape.css";
+import { getShapeHref, getShapeName } from "../../_/tile-apis/shape/index.js";
+import "./dataset.css";
 import { models } from "../models/index.js";
 
 

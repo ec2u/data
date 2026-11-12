@@ -23,7 +23,7 @@ import { email, string, url } from "@metreeca/blue/string";
 import { union } from "@metreeca/blue/union";
 import { isObject } from "@metreeca/core";
 import { describe, expect, it } from "vitest";
-import { getShapeInterface, getShapeSchema, type ShapeRow, tabulate } from "./shape.core.js";
+import { getShapeInterface, getShapeSchema, type ShapeRow, tabulate } from "./index.js";
 
 
 const terms = "https://example.org/terms#";

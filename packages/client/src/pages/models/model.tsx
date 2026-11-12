@@ -25,10 +25,13 @@ import { opt } from "@metreeca/core";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../widgets/page.js";
 import { about } from "../about/index.js";
-import { getShapeDescription, getShapeName, universe } from "../../widgets/shape.core.js";
-import { Shape, ShapeDeclaration, ShapeInfo, ShapeSchema } from "../../widgets/shape.js";
+import { getShapeDescription, getShapeName, universe } from "../../_/tile-apis/shape/index.js";
+import { ShapeDeclaration } from "../../_/tile-apis/shape/declaration.js";
+import { ShapeInfo } from "../../_/tile-apis/lineage.js";
+import { ShapeSchema } from "../../_/tile-apis/shape/schema.js";
+import { Shape } from "../../_/tile-apis/shape/table.js";
 import { Unknown } from "../unknown.js";
-import { getModel } from "./index.core.js";
+import { getModel } from "../../_/tile-apis/index.core.js";
 import { models } from "./index.js";
 
 
