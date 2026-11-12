@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.ec2u-models {
+.tile-models {
 
     /* nest each shape under the shapes it extends, one step per ancestor */
 
@@ -24,7 +24,7 @@
 
         & > span {
             display: inline-block;
-            margin-inline-start: calc(var(--ec2u-models-depth, 0) * var(--skin--spacing-100));
+            margin-inline-start: calc(var(--tile-models-depth, 0) * var(--skin--spacing-100));
         }
 
     }

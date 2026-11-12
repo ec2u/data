@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.ec2u-shape {
+.tile-shape {
 
     /*
      * The table is laid out as a grid, each row group as a subgrid sharing its columns and each row dissolved into
@@ -36,7 +36,7 @@
         display: contents;
     }
 
-    & .ec2u-shape-group {
+    & .tile-shape-group {
         grid-column: span 4;
     }
 
@@ -53,7 +53,7 @@
      * tables, leaving with the last row of the group, before the headings of the next group reach the top.
      */
 
-    & .ec2u-shape-head > th {
+    & .tile-shape-head > th {
 
         position: sticky;
         top: 0;
@@ -65,7 +65,7 @@
 
         /* the toggle folding every row is drawn at the size of the toggles in the rows it folds */
 
-        &.ec2u-shape-more {
+        &.tile-shape-more {
             font-size: var(--skin--font-size);
         }
 
@@ -73,7 +73,7 @@
 
     /* property names read as code in the default ink, so the column of linked types beside them stays the only blue one */
 
-    & .ec2u-shape-term {
+    & .tile-shape-term {
         font-family: var(--skin--font-family-mono);
         font-weight: var(--skin--font-weight-strong);
         white-space: nowrap;
@@ -81,14 +81,14 @@
 
     /* types and counts keep to one unbroken line */
 
-    & .ec2u-shape-type,
-    & .ec2u-shape-count {
+    & .tile-shape-type,
+    & .tile-shape-count {
         white-space: nowrap;
     }
 
     /* the trailing column keeps to its content and takes no room at all while empty */
 
-    & .ec2u-shape-more {
+    & .tile-shape-more {
         width: auto;
         white-space: nowrap;
         text-align: center;
@@ -100,8 +100,8 @@
 
     /* an open row reads as one block with the rows it discloses, ruled and padded only below the last of them */
 
-    & .ec2u-shape-open > td,
-    & .ec2u-shape-details:not(.ec2u-shape-end) > td {
+    & .tile-shape-open > td,
+    & .tile-shape-details:not(.tile-shape-end) > td {
         border-bottom-style: none;
     }
 
@@ -110,11 +110,11 @@
      * padding between them is reduced, the block as a whole keeping the padding above its first row and below its last.
      */
 
-    & .ec2u-shape-details:not(.ec2u-shape-end) > td {
+    & .tile-shape-details:not(.tile-shape-end) > td {
         padding-bottom: var(--skin--spacing-010);
     }
 
-    & .ec2u-shape-details + .ec2u-shape-details > td {
+    & .tile-shape-details + .tile-shape-details > td {
         padding-top: var(--skin--spacing-010);
     }
 
@@ -123,19 +123,19 @@
      * constraints below them, which they keep apart from as a block of their own.
      */
 
-    & .ec2u-shape-open:has(+ .ec2u-shape-text) > td {
+    & .tile-shape-open:has(+ .tile-shape-text) > td {
         padding-bottom: 0;
     }
 
-    & .ec2u-shape-text > td {
+    & .tile-shape-text > td {
         padding-top: var(--skin--spacing-025);
     }
 
-    & .ec2u-shape-text:not(.ec2u-shape-end) > td {
+    & .tile-shape-text:not(.tile-shape-end) > td {
         padding-bottom: var(--skin--spacing-075);
     }
 
-    & .ec2u-shape-end > td {
+    & .tile-shape-end > td {
         padding-bottom: var(--skin--spacing-150);
     }
 
@@ -146,14 +146,14 @@
      * folded rows give them instead, so unfolding a property never reflows the table.
      */
 
-    & .ec2u-shape-details > td > div {
+    & .tile-shape-details > td > div {
         width: 0;
         min-width: 100%;
     }
 
     /* constraint labels are never broken either, clipped with an ellipsis where they outrun the type column */
 
-    & .ec2u-shape-key {
+    & .tile-shape-key {
 
         font-size: var(--skin--font-size-small);
         color: var(--skin--color-label);
@@ -166,7 +166,7 @@
 
     }
 
-    & .ec2u-shape-value {
+    & .tile-shape-value {
 
         font-size: var(--skin--font-size-small);
 
@@ -176,7 +176,7 @@
          * two, but clipped with an ellipsis where it outruns the column, its title stating it whole.
          */
 
-        & .ec2u-shape-literal {
+        & .tile-shape-literal {
             display: block;
             font-family: var(--skin--font-family-mono);
             white-space: nowrap;
@@ -188,38 +188,38 @@
 
     /* counts are quiet, but for the ones requiring a value */
 
-    & .ec2u-shape-count {
+    & .tile-shape-count {
         font-family: var(--skin--font-family-mono);
         font-size: var(--skin--font-size-small);
         color: var(--skin--color-subtle);
     }
 
-    & .ec2u-shape-required {
+    & .tile-shape-required {
         font-weight: var(--skin--font-weight-strong);
         color: inherit;
     }
 
     /* union branches keep each type on its own unbroken line */
 
-    & .ec2u-shape-branch {
+    & .tile-shape-branch {
         white-space: nowrap;
     }
 
     /* inherited groups open with a label row naming the ancestor they come from, set apart from the group above */
 
-    & > .ec2u-shape-inherited > tr:first-child > th {
+    & > .tile-shape-inherited > tr:first-child > th {
         padding-top: var(--skin--spacing-250);
         padding-bottom: var(--skin--spacing-100);
     }
 
     /* the label names the ancestor as a heading, so each group reads as a section of its own */
 
-    & .ec2u-shape-group {
+    & .tile-shape-group {
         font-family: var(--skin--font-family-heading);
         font-weight: var(--skin--font-weight-strong);
     }
 
-    & .ec2u-shape-from {
+    & .tile-shape-from {
         font-weight: var(--skin--font-weight);
         color: var(--skin--color-label);
     }

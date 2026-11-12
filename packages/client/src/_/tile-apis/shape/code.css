@@ -16,7 +16,7 @@
 
 /* code tokens take the colours markdown highlighting gives the same kinds of tokens in fenced code */
 
-.ec2u-shape-code {
+.tile-shape-code {
 
     /* the copy button sits inside the block, in its top right corner, over the end of its first line */
 
@@ -32,19 +32,19 @@
         right: var(--skin--spacing-050);
     }
 
-    & .ec2u-shape-keyword {
+    & .tile-shape-keyword {
         color: var(--skin--color-info-stroke);
     }
 
-    & .ec2u-shape-string {
+    & .tile-shape-string {
         color: var(--skin--color-pass-stroke);
     }
 
-    & .ec2u-shape-attr {
+    & .tile-shape-attr {
         color: var(--skin--color-warn-stroke);
     }
 
-    & .ec2u-shape-comment {
+    & .tile-shape-comment {
         color: var(--skin--color-subtle);
     }
 

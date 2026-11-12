@@ -54,10 +54,10 @@ export function Pill({
 
 }) {
 
-	return createElement("ec2u-pill", {
+	return createElement("clay-pill", {
 		look,
 		color, // attr() can't yet portably read a colour
-		style: color === undefined ? undefined : { "--ec2u-pill-color": color }
+		style: color === undefined ? undefined : { "--clay-pill-color": color }
 	}, children);
 
 }

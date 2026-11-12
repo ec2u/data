@@ -29,7 +29,7 @@ export function Code({ children }: { children: ComponentChildren }) {
 
 	const code = useRef<HTMLElement>(null);
 
-	return <pre class={"ec2u-shape-code"}>
+	return <pre class={"tile-shape-code"}>
 
 		<Button icon={
 			<Icon.Copy/>} title={"Copy"} onClick={() => opt(code.current?.textContent ?? undefined,
@@ -46,5 +46,5 @@ export function Code({ children }: { children: ComponentChildren }) {
  * Sets out a keyword of a code block.
  */
 export function Keyword({ children }: { children: string }) {
-	return <span class={"ec2u-shape-keyword"}>{children}</span>;
+	return <span class={"tile-shape-keyword"}>{children}</span>;
 }

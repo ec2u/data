@@ -16,7 +16,7 @@
 
 /* The widest the side column grows, so the main column keeps at least two thirds of the card at any width. */
 
-@property --ec2u-card-side-max-width {
+@property --clay-card-side-max-width {
     syntax: "*";
     inherits: true;
     initial-value: min(10rem, 33%);
@@ -27,18 +27,18 @@
  * of the card rather than against that of the image where it is read.
  */
 
-@property --ec2u-card-height {
+@property --clay-card-height {
     syntax: "<length>";
     inherits: true;
     initial-value: 0px;
 }
 
-ec2u-card {
+clay-card {
 
-    --ec2u-card-height: calc(var(--ec2u-card-lines) * 1lh);
+    --clay-card-height: calc(var(--clay-card-lines) * 1lh);
 
     display: grid;
-    grid-template-columns: 1fr fit-content(var(--ec2u-card-side-max-width));
+    grid-template-columns: 1fr fit-content(var(--clay-card-side-max-width));
     grid-template-rows: min-content min-content;
     align-items: start;
     gap: var(--skin--spacing-025) var(--skin--spacing-100);
@@ -73,15 +73,15 @@ ec2u-card {
 
     /*
      * The description keeps to the main column beside a badge or an image, and spans the card otherwise, clamped to
-     * the lines the widget sets on the element through `--ec2u-card-lines`.
+     * the lines the widget sets on the element through `--clay-card-lines`.
      */
 
     & > div {
 
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: var(--ec2u-card-lines);
-        line-clamp: var(--ec2u-card-lines);
+        -webkit-line-clamp: var(--clay-card-lines);
+        line-clamp: var(--clay-card-lines);
         overflow: hidden;
 
         grid-row: 2;
@@ -105,9 +105,9 @@ ec2u-card {
 
         /* A picture is scaled down to the same height, inside the border an image draws around it. */
 
-        --clay-image-max-height: calc(var(--ec2u-card-height) - 2 * var(--skin--border-width));
+        --clay-image-max-height: calc(var(--clay-card-height) - 2 * var(--skin--border-width));
 
-        --clay-empty-icon-size: calc(var(--ec2u-card-height) - 2 * var(--skin--spacing-100) - 2 * var(--skin--border-width));
+        --clay-empty-icon-size: calc(var(--clay-card-height) - 2 * var(--skin--spacing-100) - 2 * var(--skin--border-width));
 
         min-width: 0;
         grid-row: 2;

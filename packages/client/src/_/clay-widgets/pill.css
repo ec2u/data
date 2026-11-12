@@ -16,7 +16,7 @@
 
 /* A pill outlines a short label with no fill, kept to one line and clipped with an ellipsis past its room. */
 
-ec2u-pill {
+clay-pill {
 
     display: inline-block;
     max-width: 100%;
@@ -45,7 +45,7 @@ ec2u-pill {
             margin: calc((1lh - 1cap) / 2);
             margin-inline-end: var(--skin--spacing-050);
             border-radius: 50%;
-            background-color: var(--ec2u-pill-color);
+            background-color: var(--clay-pill-color);
         }
 
     }
@@ -55,9 +55,9 @@ ec2u-pill {
         font-weight: normal;
 
         &[color] {
-            border-color: var(--ec2u-pill-color);
-            color: color-mix(in oklab, var(--ec2u-pill-color) 60%, var(--skin--color));
-            background-color: color-mix(in oklab, var(--ec2u-pill-color) 15%, var(--skin--background-color));
+            border-color: var(--clay-pill-color);
+            color: color-mix(in oklab, var(--clay-pill-color) 60%, var(--skin--color));
+            background-color: color-mix(in oklab, var(--clay-pill-color) 15%, var(--skin--background-color));
         }
 
     }
@@ -66,7 +66,7 @@ ec2u-pill {
         padding-inline: var(--skin--spacing-050);
         border-color: transparent;
         color: var(--skin--background-color);
-        background-color: var(--ec2u-pill-color, var(--skin--color));
+        background-color: var(--clay-pill-color, var(--skin--color));
     }
 
 }

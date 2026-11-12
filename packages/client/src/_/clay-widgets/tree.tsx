@@ -65,7 +65,7 @@ export function Tree({
 	}
 
 
-	return createElement("ec2u-tree", { expanded: branch && open }, <>
+	return createElement("clay-tree", { expanded: branch && open }, <>
 
 		<header>
 

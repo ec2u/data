@@ -128,7 +128,7 @@ function Comment({ indent = "", blocks }: {
 
 	const stated = blocks.filter(block => block !== undefined);
 
-	return stated.length > 0 ? <span class={"ec2u-shape-comment"}>
+	return stated.length > 0 ? <span class={"tile-shape-comment"}>
 		{`${indent}/**\n`}
 		{stated.map((lines, index) => <Fragment key={index}>
 			{index > 0 && `${indent} *\n`}

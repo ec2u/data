@@ -90,8 +90,8 @@ export function Card({
 		: isContent(children) && isContent(glyph) ? <Empty>{glyph}</Empty>
 			: undefined;
 
-	return [title, badge, side, children].some(isContent) ? createElement("ec2u-card", {
-		style: { "--ec2u-card-lines": lines }
+	return [title, badge, side, children].some(isContent) ? createElement("clay-card", {
+		style: { "--clay-card-lines": lines }
 	}, <>
 
 		{isContent(title) && <span>{title}</span>}

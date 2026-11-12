@@ -81,7 +81,7 @@ export function ShapeIndex({
 
 }) {
 
-	return <table class={"ec2u-models"}>
+	return <table class={"tile-models"}>
 
 		<thead>
 			<tr>
@@ -106,7 +106,7 @@ export function ShapeIndex({
 
 		].map(({ path, depth, label, description, model }) => <tr key={path}>
 
-			<td><span style={{ "--ec2u-models-depth": depth }}>{opt(model, ({ href, shape }) =>
+			<td><span style={{ "--tile-models-depth": depth }}>{opt(model, ({ href, shape }) =>
 				<Link href={href}>{getShapeName(shape)}</Link>
 			) ?? <strong>{label}</strong>}</span></td>
 

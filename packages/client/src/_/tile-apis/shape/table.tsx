@@ -98,7 +98,7 @@ function Table({ rows, inherited }: ShapeTable) {
 
 	return <>
 
-		{(rows.length > 0 || inherited.length > 0) && <table class={"ec2u-shape"} role={"table"}>
+		{(rows.length > 0 || inherited.length > 0) && <table class={"tile-shape"} role={"table"}>
 
 			<tbody role={"rowgroup"}>
 				<Head toggle={foldable.length > 0 && <Button look={"subtle"}
@@ -109,10 +109,10 @@ function Table({ rows, inherited }: ShapeTable) {
 				{rows.map(row => rendered("", row))}
 			</tbody>
 
-			{inherited.map(({ parent, rows }) => <tbody key={parent.name} class={"ec2u-shape-inherited"} role={"rowgroup"}>
+			{inherited.map(({ parent, rows }) => <tbody key={parent.name} class={"tile-shape-inherited"} role={"rowgroup"}>
 				<tr role={"row"}>
-					<th class={"ec2u-shape-from"} role={"rowheader"}>inherited from</th>
-					<th colSpan={4} class={"ec2u-shape-group"} role={"cell"}>
+					<th class={"tile-shape-from"} role={"rowheader"}>inherited from</th>
+					<th colSpan={4} class={"tile-shape-group"} role={"cell"}>
 						{parent.href === undefined ? parent.name : <Link href={parent.href}>{parent.name}</Link>}
 					</th>
 				</tr>
@@ -130,12 +130,12 @@ function Table({ rows, inherited }: ShapeTable) {
  * unfolding or folding all members, if given, closes the headings; only the headings opening the table carry one.
  */
 function Head({ toggle }: { toggle?: ComponentChildren }) {
-	return <tr class={"ec2u-shape-head"} role={"row"}>
+	return <tr class={"tile-shape-head"} role={"row"}>
 		<th role={"columnheader"}>property</th>
 		<th role={"columnheader"}>type</th>
 		<th role={"columnheader"}><abbr title={"Multiplicity"}>#</abbr></th>
 		<th role={"columnheader"}>description</th>
-		<th class={"ec2u-shape-more"} role={"columnheader"}>{toggle}</th>
+		<th class={"tile-shape-more"} role={"columnheader"}>{toggle}</th>
 	</tr>;
 }
 
@@ -153,14 +153,14 @@ function disclose(row: ShapeRow): readonly { label?: string, value: ComponentChi
 		...opt(label, label => [{ label: "label", value: label }]) ?? [],
 		...opt(predicate, iri => [{
 			label: "predicate",
-			value: <span class={"ec2u-shape-literal"} title={iri}><Link href={iri}>{prefixed(iri)}</Link></span>
+			value: <span class={"tile-shape-literal"} title={iri}><Link href={iri}>{prefixed(iri)}</Link></span>
 		}]) ?? [],
 		...opt(reverse, iri => [{
 			label: "inverse",
-			value: <span class={"ec2u-shape-literal"} title={iri}><Link href={iri}>{prefixed(iri)}</Link></span>
+			value: <span class={"tile-shape-literal"} title={iri}><Link href={iri}>{prefixed(iri)}</Link></span>
 		}]) ?? [],
 		...constrain(row).map(({ label, values }) => ({
-			label, value: values.map((value, index) => <span key={index} class={"ec2u-shape-literal"} title={value}>
+			label, value: values.map((value, index) => <span key={index} class={"tile-shape-literal"} title={value}>
 				{value}
 			</span>)
 		}))
@@ -201,16 +201,16 @@ function Row({ open, onToggle, ...row }: ShapeRow & {
 
 	return <>
 
-		<tr role={"row"} class={disclosed.length > 0 && open ? "ec2u-shape-open" : undefined}>
-			<td role={"cell"} class={"ec2u-shape-term"}>
+		<tr role={"row"} class={disclosed.length > 0 && open ? "tile-shape-open" : undefined}>
+			<td role={"cell"} class={"tile-shape-term"}>
 				{target === undefined ? term : <Link look={"subtle"} href={target}>{term}</Link>}
 			</td>
-			<td role={"cell"} class={"ec2u-shape-type"}><Union links={types}/></td>
-			<td role={"cell"} class={minCount > 0 ? "ec2u-shape-count ec2u-shape-required" : "ec2u-shape-count"}>
+			<td role={"cell"} class={"tile-shape-type"}><Union links={types}/></td>
+			<td role={"cell"} class={minCount > 0 ? "tile-shape-count tile-shape-required" : "tile-shape-count"}>
 				{bounded(minCount, maxCount)}
 			</td>
 			<td role={"cell"}>{brief && <Markdown>{brief}</Markdown>}</td>
-			<td role={"cell"} class={"ec2u-shape-more"}>{disclosed.length > 0 && <Button look={"subtle"}
+			<td role={"cell"} class={"tile-shape-more"}>{disclosed.length > 0 && <Button look={"subtle"}
 				controls={ids.join(" ")}
 				expanded={open}
 				icon={open ? <Icon.Fold/> : <Icon.Unfold/>}
@@ -223,15 +223,15 @@ function Row({ open, onToggle, ...row }: ShapeRow & {
 			id={ids[index]}
 			hidden={!open}
 			class={[
-				"ec2u-shape-details",
-				...(label === undefined ? ["ec2u-shape-text"] : []),
-				...(index < disclosed.length-1 ? [] : ["ec2u-shape-end"])
+				"tile-shape-details",
+				...(label === undefined ? ["tile-shape-text"] : []),
+				...(index < disclosed.length-1 ? [] : ["tile-shape-end"])
 			].join(" ")}
 		>
 			<td role={"cell"}/>
-			<td role={"cell"} class={"ec2u-shape-key"}><div title={label}>{label}</div></td>
+			<td role={"cell"} class={"tile-shape-key"}><div title={label}>{label}</div></td>
 			<td role={"cell"}/>
-			<td role={"cell"} class={label === undefined ? undefined : "ec2u-shape-value"}><div>{value}</div></td>
+			<td role={"cell"} class={label === undefined ? undefined : "tile-shape-value"}><div>{value}</div></td>
 			<td role={"cell"}/>
 		</tr>)}
 
@@ -243,7 +243,7 @@ function Row({ open, onToggle, ...row }: ShapeRow & {
  * Sets out alternative types one per line, prefixed by `|` and linked to their pages; a lone type has no prefix.
  */
 function Union({ links }: { links: readonly ShapeLink[] }) {
-	return <>{links.map(({ name, href }, index) => <div key={index} class={"ec2u-shape-branch"}>
+	return <>{links.map(({ name, href }, index) => <div key={index} class={"tile-shape-branch"}>
 		{links.length > 1 && "| "}
 		{href === undefined ? name : <Link href={href}>{name}</Link>}
 	</div>)}</>;
