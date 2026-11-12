@@ -15,7 +15,6 @@
  */
 
 import { Datasets as DatasetsShape } from "@ec2u/data-shared";
-import { app } from "@metreeca/clay";
 import { Button } from "@metreeca/clay-widgets/button";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
@@ -29,19 +28,19 @@ import { immutable } from "@metreeca/core/values";
 import { useCollection } from "@metreeca/tile/collection";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
-import { integer } from "@metreeca/tile/types/integer";
-import { type ComponentChildren, createElement } from "preact";
+import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { byDataset, ec2u, PublicDatasets } from "../index.core.js";
 import { Failure } from "../widgets/failure.js";
-import { Funding } from "../widgets/funding.js";
-import { Notices } from "../widgets/notices.js";
+import { Funded } from "../widgets/funded.js";
+import { Identity } from "../widgets/identity.js";
 import { Page } from "../widgets/page.js";
+import { Print } from "../widgets/print.js";
 import { courses } from "./courses/index.js";
-import { DatasetLinks } from "./datasets/dataset.js";
+import { DatasetLinks } from "../widgets/dataset.js";
+import { type Dataset, DatasetGrid } from "../widgets/datasets.js";
 import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
-import "./index.css";
 import { programs } from "./programs/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
@@ -69,7 +68,7 @@ const resources = immutable({
 	"References": {
 		"About the Hub": "/about/",
 		"Linked Data": "/about/rdf/",
-		"APIs & Models": "/models/",
+		"APIs & Models": "/about/models/",
 		"Taxonomies": "/taxonomies/",
 		"Open Source": "https://github.com/ec2u/data"
 	}
@@ -123,7 +122,7 @@ export function Datasets() {
 	return <Page
 
 		head={<>
-			{createElement("datasets-identity", {}, <Link href={"/"}>{ec2u(app.name ?? "")}</Link>)}
+			<Identity/>
 			{datasets.label}
 		</>}
 
@@ -150,9 +149,15 @@ export function Datasets() {
 
 		</Stack>}
 
-		more={<Notices/>}
+		more={<Print>
 
-	>{createElement("datasets-home", {}, members({
+			<Link look={"subtle"} href={"/about/ai"}>AI Notice</Link><br/>
+			<Link look={"subtle"} href={"/about/legal"}>Legal Notice</Link><br/>
+			<Link look={"subtle"} href={"/about/privacy"}>Privacy Notice</Link>
+
+		</Print>}
+
+	><Funded>{members({
 
 		blank: () => <Empty look={"subtle"}>{datasets.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{datasets.glyph}</Empty></Failure>,
@@ -160,28 +165,12 @@ export function Datasets() {
 		ready: ({ state }) => {
 
 			const rows = state.filter(isDatasetRow).sort(byDataset);
-			const width = Math.max(...rows.map(({ size }) => integer.format(size).length));
 
-			return rows.length === 0 ? <Empty>{datasets.glyph}</Empty> : createElement("datasets-grid", {
-				style: { "--datasets-size-width": `${width}ch` }
-			}, rows.map(({
-				dataset: { id, title, description },
-				size
-			}) => createElement("datasets-entry", { key: id }, <>
-
-				<span class="size">{integer.format(size)}</span>
-
-				<span class="title"><Link href={id}>{ec2u(title)}</Link></span>
-
-				<Glyph id={id}/>
-
-				<span class="description">{opt(description, ec2u)}</span>
-
-			</>)));
+			return rows.length === 0 ? <Empty>{datasets.glyph}</Empty> : <DatasetGrid datasets={rows.map(dataset)}/>;
 
 		}
 
-	}), <Funding/>)}</Page>;
+	})}</Funded></Page>;
 
 }
 
@@ -234,17 +223,17 @@ export function isDatasetRow(value: unknown): value is DatasetRow {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Creates the glyph standing for a dataset in the home page listing.
+ * Creates the grid cell listing a dataset on the home page.
  *
- * Shows the glyph of the catalogue page of the dataset, set more or less boldly according to how central the dataset
- * is to the alliance: universities first, then units, programs and courses, then everything else; an unknown dataset
- * leaves the space beside its description blank, so its description still lines up with those of the other datasets.
+ * Sets the dataset beside the glyph of its catalogue page, standing out more or less according to how central the
+ * dataset is to the alliance: universities first, then units, programs and courses, then everything else; an unknown
+ * dataset is listed without a glyph, at the lowest priority.
  */
-function Glyph({ id }: { id: string }) {
+function dataset({ dataset: { id, title, description }, size }: DatasetRow): Dataset {
 
 	const route = internalize(location.href, id);
 
-	const [glyph, priority]: readonly [ComponentChildren, 1 | 2 | 3]
+	const [glyph, priority]: readonly [ComponentChildren, Dataset["priority"]]
 		= route === universities.route ? [universities.glyph, 3]
 		: route === units.route ? [units.glyph, 2]
 			: route === programs.route ? [programs.glyph, 2]
@@ -253,6 +242,13 @@ function Glyph({ id }: { id: string }) {
 						: route === events.route ? [events.glyph, 1]
 							: [undefined, 1];
 
-	return <span class="glyph" data-priority={priority}>{glyph}</span>;
+	return {
+		href: id,
+		title: ec2u(title),
+		size,
+		glyph,
+		priority,
+		description: opt(description, ec2u)
+	};
 
 }

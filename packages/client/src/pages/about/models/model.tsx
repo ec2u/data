@@ -23,22 +23,22 @@ import { useRoute, useRouter } from "@metreeca/clay/router";
 import { useStorage } from "@metreeca/clay/storage";
 import { opt } from "@metreeca/core";
 import { useEffect } from "preact/hooks";
-import { Page } from "../../widgets/page.js";
-import { about } from "../about/index.js";
-import { getShapeDescription, getShapeName, universe } from "../../_/tile-apis/shape/index.js";
-import { ShapeDeclaration } from "../../_/tile-apis/shape/declaration.js";
-import { ShapeInfo } from "../../_/tile-apis/lineage.js";
-import { ShapeSchema } from "../../_/tile-apis/shape/schema.js";
-import { Shape } from "../../_/tile-apis/shape/table.js";
-import { Unknown } from "../unknown.js";
-import { getModel } from "../../_/tile-apis/index.core.js";
+import { Page } from "../../../widgets/page.js";
+import { about } from "../index.js";
+import { getShapeDescription, getShapeName, universe } from "../../../_/tile-apis/shape/index.js";
+import { ShapeDeclaration } from "../../../_/tile-apis/shape/declaration.js";
+import { ShapeInfo } from "../../../_/tile-apis/lineage.js";
+import { ShapeSchema } from "../../../_/tile-apis/shape/schema.js";
+import { Shape } from "../../../_/tile-apis/shape/table.js";
+import { Unknown } from "../../unknown.js";
+import { getModel } from "../../../_/tile-apis/index.core.js";
 import { models } from "./index.js";
 
 
 /**
  * Creates the documentation of a shape of the data model served by the hub.
  *
- * Documents the shape identified by the last step of the current route, as `/models/ec2u-university`, falling back
+ * Documents the shape identified by the last step of the current route, as `/about/models/ec2u-university`, falling back
  * to the not-found view if no shape of the model is identified by that step of the route.
  *
  * @returns The model page

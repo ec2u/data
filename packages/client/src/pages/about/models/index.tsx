@@ -23,7 +23,7 @@ import { ModelsPage } from "./models.js";
 
 export const models = immutable({
 
-	route: "/models/",
+	route: "/about/models/",
 	label: "APIs & Models",
 	glyph: <Icon.Package/>
 
@@ -35,7 +35,7 @@ export const models = immutable({
 /**
  * Creates the documentation of the data model served by the hub.
  *
- * Lists the documented shapes at `/models/` and documents each one on a page of its own at `/models/{id}`.
+ * Lists the documented shapes at `/about/models/` and documents each on a page of its own at `/about/models/{id}`.
  *
  * @returns The models section
  */

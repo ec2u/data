@@ -34,17 +34,18 @@ import { date } from "@metreeca/tile/types/date";
 import { integer } from "@metreeca/tile/types/integer";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { ec2u } from "../../index.core.js";
-import { Failure } from "../../widgets/failure.js";
-import { address, links } from "../../widgets/links.js";
-import { Page } from "../../widgets/page.js";
-import { getShapeHref, getShapeName } from "../../_/tile-apis/shape/index.js";
+import { getShapeHref, getShapeName } from "../_/tile-apis/shape/index.js";
+import { ec2u } from "../index.core.js";
 import "./dataset.css";
-import { models } from "../models/index.js";
+import { Failure } from "./failure.js";
+import { address, links } from "./links.js";
+import { Page } from "./page.js";
 
 
-const InfoAnnex = "info";
+const MetaAnnex = "meta";
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * The dataset metadata the client presents a dataset with, as exported by the module of each dataset catalogue.
@@ -74,8 +75,8 @@ export type About = {
 /**
  * Creates a link to the introduction to a dataset.
  *
- * Leads to the page introducing the dataset listed by a catalogue, at the catalogue route carrying the `;info` annex,
- * as `/universities/;info` or `/;info` for the hub catalogue, an address of its own the reader may bookmark.
+ * Leads to the page introducing the dataset listed by a catalogue, at the catalogue route carrying the `;meta` annex,
+ * as `/universities/;meta` or `/;meta` for the hub catalogue, an address of its own the reader may bookmark.
  *
  * @param options The link configuration
  *
@@ -94,7 +95,7 @@ export function DatasetLink({
 
 }) {
 
-	return <Link href={`${href};${InfoAnnex}`} title={"Dataset Metadata"}><Icon.Certificate/></Link>;
+	return <Link href={`${href};${MetaAnnex}`} title={"Dataset Metadata"}><Icon.Certificate/></Link>;
 
 }
 
@@ -102,7 +103,7 @@ export function DatasetLink({
 /**
  * Creates a link leading a catalogue from its data to the introduction to its dataset, or back.
  *
- * Leads from the data to the same route with the `;info` annex, and back to the plain route, where the catalogue
+ * Leads from the data to the same route with the `;meta` annex, and back to the plain route, where the catalogue
  * recovers from its stored state the filters it showed before the switch, as the annexed route leaves them behind.
  *
  * @returns The link to the view not shown
@@ -112,9 +113,9 @@ export function DatasetLinks() {
 	const route = useRoute();
 	const annex = useAnnex();
 
-	return annex === InfoAnnex
+	return annex === MetaAnnex
 		? <Link href={route} title={"Data"}><Icon.Eye/></Link>
-		: <Link href={`${route};${InfoAnnex}`} title={"Dataset Metadata"}><Icon.Certificate/></Link>;
+		: <Link href={`${route};${MetaAnnex}`} title={"Dataset Metadata"}><Icon.Certificate/></Link>;
 
 }
 
@@ -123,7 +124,7 @@ export function DatasetLinks() {
  * Creates the introduction to the dataset listed by a catalogue.
  *
  * Shows what the dataset holds, the terms it is published under and links to the models describing its resources, at
- * the catalogue route carrying the `;info` annex, where {@link DatasetLinks} leads back to the listed data.
+ * the catalogue route carrying the `;meta` annex, where {@link DatasetLinks} leads back to the listed data.
  *
  * @param options The view configuration
  *
@@ -137,7 +138,8 @@ export function DatasetPage({
 		glyph
 	},
 
-	shapes
+	shapes,
+	models
 
 }: {
 
@@ -150,6 +152,11 @@ export function DatasetPage({
 	 * The shapes describing the resources the dataset holds, linked to the pages documenting them; none if omitted.
 	 */
 	shapes?: Some<Lazy<ResourceShape>>
+
+	/**
+	 * The route of the section documenting the shapes, under which their documentation pages are linked.
+	 */
+	models: string
 
 }) {
 
@@ -259,7 +266,7 @@ export function DatasetPage({
 					"Data Model": opt(shapes, shapes => <ul class={"ec2u-shape-links"}>{some(shapes).map(shape =>
 						<li key={getShapeName(shape)}>
 							{opt(getShapeHref(shape), href =>
-								<Link href={`${models.route}${href}`}>{ec2u(getShapeName(shape))}</Link>
+								<Link href={`${models}${href}`}>{ec2u(getShapeName(shape))}</Link>
 							) ?? ec2u(getShapeName(shape))}
 						</li>
 					)}</ul>)

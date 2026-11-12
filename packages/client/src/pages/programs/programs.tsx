@@ -39,7 +39,7 @@ import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
 import { color } from "../../widgets/links.js";
-import { DatasetLinks } from "../datasets/dataset.js";
+import { DatasetLinks } from "../../widgets/dataset.js";
 import { programs } from "./index.js";
 
 

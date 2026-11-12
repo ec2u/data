@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
+import { app } from "@metreeca/clay";
 import { Link } from "@metreeca/clay-widgets/link";
-import { Print } from "./print.js";
+import { createElement } from "preact";
+import { ec2u } from "../index.core.js";
+import "./identity.css";
 
 
 /**
- * Creates the notices of the hub.
+ * Creates the site identity heading a page on narrow viewports.
  *
- * @returns The links to the notices, matching the EU funding acknowledgement at the foot of a page
+ * Shows the app name, linked to the home page, above the page title where the side column naming the site turns into
+ * a drawer, so a reader landing on the page knows at once which site it is; hidden wherever the side column shows.
+ *
+ * @returns The site identity
  */
-export function Notices() {
+export function Identity() {
 
-	return <Print>
-
-		<Link look={"subtle"} href={"/about/ai"}>AI Notice</Link><br/>
-		<Link look={"subtle"} href={"/about/legal"}>Legal Notice</Link><br/>
-		<Link look={"subtle"} href={"/about/privacy"}>Privacy Notice</Link>
-
-	</Print>;
+	return createElement("ec2u-identity", {}, <Link href={"/"}>{ec2u(app.name ?? "")}</Link>);
 
 }

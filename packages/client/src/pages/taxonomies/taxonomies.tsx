@@ -37,7 +37,7 @@ import { TallyOptions } from "../../index.core.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { Size } from "../../widgets/size.js";
-import { DatasetLinks } from "../datasets/dataset.js";
+import { DatasetLinks } from "../../widgets/dataset.js";
 import { taxonomies } from "./index.js";
 import { isTaxonomyRow, type TaxonomyRow } from "./taxonomies.core.js";
 

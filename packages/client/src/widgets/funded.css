@@ -15,9 +15,15 @@
  */
 
 /*
- * The end day of a same-day event repeats the start day, so it recedes behind the end time.
+ * The body fills the page and closes with the funding acknowledgement, resting at the bottom of a page too short to
+ * fill the body and following the content otherwise.
  */
 
-ec2u-same-day {
-    color: var(--skin--color-placeholder);
+ec2u-funded {
+
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: var(--skin--spacing-150);
+    min-block-size: 100%;
+
 }

@@ -14,7 +14,7 @@ on it. See [AI-Generated Content](ai) for details on how AI is used and how to u
 
 # Data Models
 
-The [APIs & Models](/models/) pages document the resources each dataset holds and the properties the API returns.
+The [APIs & Models](/about/models/) pages document the resources each dataset holds and the properties the API returns.
 If you are new to linked data, [Linked Data Models](rdf/) introduces the graph-based models and taxonomies they use.
 
 # Legal

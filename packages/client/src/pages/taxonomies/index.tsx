@@ -18,7 +18,8 @@ import { Taxonomies as TaxonomiesShape, Taxonomy, Topic } from "@ec2u/data-share
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Routes } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
-import { DatasetPage } from "../datasets/dataset.js";
+import { DatasetPage } from "../../widgets/dataset.js";
+import { models } from "../about/models/index.js";
 import { TaxonomiesPage } from "./taxonomies.js";
 import { TaxonomyPage } from "./taxonomy.js";
 import { TopicPage } from "./topic.js";
@@ -39,7 +40,7 @@ export function Taxonomies() {
 
 	return <Routes>{{
 
-		"/;info": <DatasetPage about={taxonomies} shapes={[TaxonomiesShape, Taxonomy, Topic]}/>,
+		"/;meta": <DatasetPage about={taxonomies} shapes={[TaxonomiesShape, Taxonomy, Topic]} models={models.route}/>,
 
 		"/": <TaxonomiesPage/>,
 		"/:taxonomy": <TaxonomyPage/>,

@@ -34,7 +34,7 @@ import { Failure } from "../../widgets/failure.js";
 import { address, filters, links, list } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
 import { blocks } from "../../widgets/sections.js";
-import { DatasetLink } from "../datasets/dataset.js";
+import { DatasetLink } from "../../widgets/dataset.js";
 import { documents } from "./index.js";
 
 

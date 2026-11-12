@@ -38,7 +38,7 @@ import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { address } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
-import { DatasetLink } from "../datasets/dataset.js";
+import { DatasetLink } from "../../widgets/dataset.js";
 import { taxonomies } from "./index.js";
 
 

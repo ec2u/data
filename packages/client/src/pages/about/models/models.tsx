@@ -18,10 +18,10 @@ import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
 import { useRouter } from "@metreeca/clay/router";
 import { useEffect } from "preact/hooks";
-import { ShapeIndex } from "../../_/tile-apis/index.js";
-import { universe } from "../../_/tile-apis/shape/index.js";
-import { Page } from "../../widgets/page.js";
-import { about } from "../about/index.js";
+import { ShapeIndex } from "../../../_/tile-apis/index.js";
+import { universe } from "../../../_/tile-apis/shape/index.js";
+import { Page } from "../../../widgets/page.js";
+import { about } from "../index.js";
 import { models } from "./index.js";
 
 

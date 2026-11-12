@@ -34,7 +34,7 @@ import { Failure } from "../../widgets/failure.js";
 import { address, links, list, local } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
 import { blocks, sections } from "../../widgets/sections.js";
-import { DatasetLink } from "../datasets/dataset.js";
+import { DatasetLink } from "../../widgets/dataset.js";
 import { credits } from "../programs/program.js";
 import { toCourseMode, toCourseTerm } from "./index.core.js";
 import { courses } from "./index.js";

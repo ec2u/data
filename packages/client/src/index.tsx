@@ -27,11 +27,11 @@ import { Store } from "@metreeca/tile";
 import { render } from "preact";
 import { About, about } from "./pages/about/index.js";
 import { Courses, courses } from "./pages/courses/index.js";
-import { DatasetPage } from "./pages/datasets/dataset.js";
+import { DatasetPage } from "./widgets/dataset.js";
+import { models } from "./pages/about/models/index.js";
 import { Documents, documents } from "./pages/documents/index.js";
 import { Events, events } from "./pages/events/index.js";
 import { Datasets, datasets } from "./pages/index.js";
-import { Models, models } from "./pages/models/index.js";
 import { Programs, programs } from "./pages/programs/index.js";
 import { Taxonomies, taxonomies } from "./pages/taxonomies/index.js";
 import { Units, units } from "./pages/units/index.js";
@@ -60,7 +60,7 @@ function Hub() {
 
 					<Routes>{{
 
-						[`${datasets.route};info`]: <DatasetPage about={datasets} shapes={[DatasetsShape, Dataset]}/>,
+						[`${datasets.route};meta`]: <DatasetPage about={datasets} shapes={[DatasetsShape, Dataset]} models={models.route}/>,
 
 						[datasets.route]: <Datasets/>,
 						[universities.route]: <Universities/>,
@@ -71,7 +71,7 @@ function Hub() {
 						[events.route]: <Events/>,
 						[taxonomies.route]: <Taxonomies/>,
 
-						[models.route]: <Models/>,
+						"/models/": "/about/models/",
 						[about.route]: <About/>,
 						[unknown.route]: <Unknown/>
 

@@ -24,6 +24,8 @@ import { Image } from "@metreeca/clay-widgets/image";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
+import { Style } from "@metreeca/clay-widgets/style";
+import { Text } from "@metreeca/clay-widgets/text";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { isArray, isNumber, isObject, isString, opt } from "@metreeca/core";
 import { nameTag } from "@metreeca/core/language";
@@ -31,14 +33,13 @@ import { useResource } from "@metreeca/tile/resource";
 import { date } from "@metreeca/tile/types/date";
 import { instant } from "@metreeca/tile/types/instant";
 import { time } from "@metreeca/tile/types/time";
-import { type ComponentChildren, createElement } from "preact";
+import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { AI } from "../../widgets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { address, filters, local } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
-import { DatasetLink } from "../datasets/dataset.js";
-import "./event.css";
+import { DatasetLink } from "../../widgets/dataset.js";
 import { toEventAttendanceMode, toEventStatus } from "./index.core.js";
 import { events } from "./index.js";
 
@@ -249,9 +250,15 @@ function period(start: string, end?: string): Readonly<Record<string, ComponentC
 
 	return {
 		Starts: `${from} ${clock(start)}`,
-		Ends: end === undefined || end === start ? undefined
-			: to === from ? <>{createElement("ec2u-same-day", {}, to)} {clock(end)}</>
-				: `${to} ${clock(end)}`
+		Ends: end === undefined || end === start ? undefined : <>
+
+			<Style css={{ textLook: to === from ? "subtle" : undefined, colorLabel: "colorPlaceholder" }}>
+				<Text>{to}</Text>
+			</Style>
+
+			{" "}{clock(end)}
+
+		</>
 	};
 
 }

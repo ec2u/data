@@ -36,7 +36,7 @@ import { byDataset, ec2u, PublicDatasets } from "../../index.core.js";
 import { Failure } from "../../widgets/failure.js";
 import { address, local } from "../../widgets/links.js";
 import { Page } from "../../widgets/page.js";
-import { DatasetLink } from "../datasets/dataset.js";
+import { DatasetLink } from "../../widgets/dataset.js";
 import { isDatasetRow } from "../index.js";
 import { universities } from "./index.js";
 

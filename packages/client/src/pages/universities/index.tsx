@@ -18,7 +18,8 @@ import { Universities as UniversitiesShape, University } from "@ec2u/data-shared
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Routes } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
-import { DatasetPage } from "../datasets/dataset.js";
+import { DatasetPage } from "../../widgets/dataset.js";
+import { models } from "../about/models/index.js";
 import { UniversitiesPage } from "./universities.js";
 import { UniversityPage } from "./university.js";
 
@@ -38,7 +39,7 @@ export function Universities() {
 
 	return <Routes>{{
 
-		"/;info": <DatasetPage about={universities} shapes={[UniversitiesShape, University]}/>,
+		"/;meta": <DatasetPage about={universities} shapes={[UniversitiesShape, University]} models={models.route}/>,
 
 		"/": <UniversitiesPage/>,
 		"/:name": <UniversityPage/>

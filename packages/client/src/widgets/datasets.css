@@ -1,0 +1,136 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Datasets fill the width of the page, one column up to a tablet and two from a laptop up, where the side column leaves
+ * cells wide enough to keep titles on one line: each cell sets its size beside its title and its glyph beside its
+ * description, and shares the rows of the grid, so that titles and descriptions line up across the cells of a row
+ * however they wrap, and cells in the same row stretch to a common height whatever the length of their descriptions.
+ */
+
+ec2u-dataset-grid {
+
+    display: grid;
+    grid-template-columns: 1fr;
+    align-content: start;
+    gap: var(--skin--spacing-100);
+
+    @container style(--skin--viewport-large: on) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+ec2u-dataset {
+
+    display: grid;
+    grid-row: span 2;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: subgrid;
+    align-items: baseline;
+    gap: var(--skin--spacing-050) var(--skin--spacing-100);
+    padding: var(--skin--spacing-100);
+    border: var(--skin--border-width) var(--skin--border-style) var(--skin--border-color);
+    border-radius: var(--skin--border-radius-075);
+    border-inline-start-width: calc(var(--skin--border-width) * 6);
+
+    /*
+     * Every size takes the width of the longest one, set on the grid as a character count, so the column holding
+     * sizes and glyphs is equally wide in every cell and titles and descriptions start at the same offset throughout.
+     */
+
+    & > .size {
+        align-self: center;
+        justify-self: center;
+        inline-size: var(--ec2u-dataset-grid-size-width);
+        text-align: center;
+        font-size: var(--skin--font-size-small);
+        font-variant-numeric: tabular-nums;
+        font-weight: var(--skin--font-weight-strong);
+        color: var(--skin--color-placeholder);
+    }
+
+    & > .glyph {
+
+        align-self: start;
+        justify-self: center;
+        display: flex;
+        padding-block-start: var(--skin--spacing-025);
+
+        & > svg {
+            inline-size: calc(var(--skin--font-size) * 2);
+            block-size: calc(var(--skin--font-size) * 2);
+        }
+
+    }
+
+    & > .description {
+        color: var(--skin--color-label);
+    }
+
+    /*
+     * Priority marks the leading edge of the cell, on the scale of the strong accent, the yellow of the EC2U logo, and
+     * sets how strongly its glyph stands out, on the scale of the subtle accent, the slate of the EC2U site: the core
+     * cell takes the solid accents, central cells a mid step, and supporting ones a neutral or faint step, so the
+     * three tiers read apart at a glance without filling the cell itself or competing with its title.
+     *
+     * The lower edge steps are mixed apart for each scheme, as the shared steps sink into the dark page, the mid one
+     * turning olive and the neutral one fading under the cell border; the dark scheme mixes them stronger, so that
+     * each tier stays clear of the cell border and of its neighbours, at these contrasts of the edge against the page:
+     *
+     *                 light on #FFF   dark on #111
+     *     core        5.33:1          8.42:1
+     *     central     2.11:1          4.35:1
+     *     supporting  1.46:1          2.58:1
+     */
+
+    &[data-priority="3"] {
+
+        border-inline-start-color: var(--skin--color-strong);
+
+        & > .glyph {
+            color: var(--skin--color-subtle);
+        }
+
+    }
+
+    &[data-priority="2"] {
+
+        border-inline-start-color: light-dark(
+            var(--skin--color-strong-050),
+            color-mix(in oklab, var(--skin--color-strong) 70%, var(--skin--background-color))
+        );
+
+        & > .glyph {
+            color: var(--skin--color-subtle-060);
+        }
+
+    }
+
+    &[data-priority="1"] {
+
+        border-inline-start-color: light-dark(
+            var(--skin--color-subtle-020),
+            color-mix(in oklab, var(--skin--color-subtle) 50%, var(--skin--background-color))
+        );
+
+        & > .glyph {
+            color: var(--skin--color-subtle-030);
+        }
+
+    }
+
+}

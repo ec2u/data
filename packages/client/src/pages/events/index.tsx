@@ -18,7 +18,8 @@ import { Event, Events as EventsShape } from "@ec2u/data-shared/events/index.js"
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Routes } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
-import { DatasetPage } from "../datasets/dataset.js";
+import { DatasetPage } from "../../widgets/dataset.js";
+import { models } from "../about/models/index.js";
 import { EventPage } from "./event.js";
 import { EventsPage } from "./events.js";
 
@@ -38,7 +39,7 @@ export function Events() {
 
 	return <Routes>{{
 
-		"/;info": <DatasetPage about={events} shapes={[EventsShape, Event]}/>,
+		"/;meta": <DatasetPage about={events} shapes={[EventsShape, Event]} models={models.route}/>,
 
 		"/": <EventsPage/>,
 		"/:event": <EventPage/>

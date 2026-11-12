@@ -18,7 +18,8 @@ import { Document, Documents as DocumentsShape } from "@ec2u/data-shared/documen
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Routes } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
-import { DatasetPage } from "../datasets/dataset.js";
+import { DatasetPage } from "../../widgets/dataset.js";
+import { models } from "../about/models/index.js";
 import { DocumentPage } from "./document.js";
 import { DocumentsPage } from "./documents.js";
 
@@ -38,7 +39,7 @@ export function Documents() {
 
 	return <Routes>{{
 
-		"/;info": <DatasetPage about={documents} shapes={[DocumentsShape, Document]}/>,
+		"/;meta": <DatasetPage about={documents} shapes={[DocumentsShape, Document]} models={models.route}/>,
 
 		"/": <DocumentsPage/>,
 		"/:document": <DocumentPage/>

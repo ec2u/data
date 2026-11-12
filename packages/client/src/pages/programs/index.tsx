@@ -18,7 +18,8 @@ import { Program, Programs as ProgramsShape } from "@ec2u/data-shared/programs/i
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Routes } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
-import { DatasetPage } from "../datasets/dataset.js";
+import { DatasetPage } from "../../widgets/dataset.js";
+import { models } from "../about/models/index.js";
 import { ProgramPage } from "./program.js";
 import { ProgramsPage } from "./programs.js";
 
@@ -38,7 +39,7 @@ export function Programs() {
 
 	return <Routes>{{
 
-		"/;info": <DatasetPage about={programs} shapes={[ProgramsShape, Program]}/>,
+		"/;meta": <DatasetPage about={programs} shapes={[ProgramsShape, Program]} models={models.route}/>,
 
 		"/": <ProgramsPage/>,
 		"/:program": <ProgramPage/>

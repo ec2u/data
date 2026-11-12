@@ -18,6 +18,7 @@ import { Icon } from "@metreeca/clay-widgets/icon";
 import { Routes } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
 import { DocumentPage } from "./document.js";
+import { Models } from "./models/index.js";
 
 
 export const about = immutable({
@@ -35,6 +36,7 @@ export function About() {
 
 	return <Routes>{{
 
+		"/models/": <Models/>,
 		"*": <DocumentPage/>
 
 	}}</Routes>;
