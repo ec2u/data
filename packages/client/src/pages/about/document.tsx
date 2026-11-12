@@ -50,9 +50,46 @@ export function DocumentPage() {
 
 			<Link href={about.route}>{about.label}</Link>
 
+			{folders(route).map(folder => <Folder key={folder} route={folder}/>)}
+
 			{title}
 
 		</Path>;
 	}
+
+}
+
+
+/**
+ * Lists the routes of the folders between the about root and a document, outermost first.
+ *
+ * @param route The route of the document, either a folder route ending with `/` or a page route
+ *
+ * @returns The folder routes enclosing `route` below {@link about}, excluding `route` itself
+ */
+function folders(route: string): readonly string[] {
+
+	const steps = route.slice(about.route.length).replace(/\/$/, "").split("/").slice(0, -1);
+
+	return steps.map((_, index) => `${about.route}${steps.slice(0, index+1).join("/")}/`);
+
+}
+
+/**
+ * Creates a breadcrumb step linking to a folder, labelled with the `label` or else the `title` of its index document.
+ */
+function Folder({
+
+	route
+
+}: {
+
+	route: string
+
+}) {
+
+	const asset = useAsset(`${route}index.md`);
+
+	return <Link href={route}>{isString(asset) ? <Markdown meta={({ label, title }) => label ?? title}>{asset}</Markdown> : null}</Link>;
 
 }
