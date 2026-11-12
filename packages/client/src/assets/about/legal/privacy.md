@@ -2,36 +2,93 @@
 title: Privacy Notice
 ---
 
-# What We Collect
+# Name of the Service
 
-The EC2U Knowledge Hub needs no account and sets no tracking or advertising cookies. It uses no analytics service.
+EC2U Knowledge Hub - University of Pavia
 
-When you browse the hub or call its API, the servers record technical data for each request: your IP address, the
-time, the address requested and the browser you use. These records serve only to keep the service secure and running.
+# Description of the Service
 
-Your browser may store your language and display preferences locally, and they never leave your device.
+The EC2U Knowledge Hub is the central knowledge sharing and semantic search facility of the EC2U Alliance. It gathers
+content from EC2U universities and external sources, and publishes it as cross-linked datasets about skills, courses,
+research, local events and other areas of common interest. The hub needs no account and has no authenticated users.
 
-# Personal Data in Datasets
+# Data Controller and Contact Point
 
-Some datasets name people in their public professional role, such as the contacts of a university unit or the
-organisers of an event. This information comes from public pages of the partner universities, and each resource links
-back to the page it was taken from, so you can always check it against the original published by the university.
+| Qualification | Name                | Details                                                                                              |
+|---------------|---------------------|------------------------------------------------------------------------------------------------------|
+| Controller    | University of Pavia | Strada Nuova, 65 - 27100 Pavia, +39 0382 989898, [amministrazione‑centrale@certunipv.it][controller] |
+| Contact Point | University of Pavia | Strada Nuova, 65 - 27100 Pavia, +39 0382 985490, [privacy@unipv.it][contact]                         |
 
-To have information about you corrected or removed, write to the contact given below.
+# Jurisdiction
 
-# Where Data Is Processed
+IT Italy
 
-The hub runs on Google Cloud in its Belgian region, inside the European Union. Technical records are deleted
-automatically 30 days after the request they record, once they are no longer needed to keep the service secure.
+# Personal Data Processed
 
-# Your Rights
+1. Following data is recorded when you browse the hub or call its API:
 
-Under the EU General Data Protection Regulation you can ask to access, correct or delete personal data about you, and
-object to its processing. If you are not satisfied with our answer, you can lodge a complaint with the national data
-protection authority of the European Union country where you live or work, or where the issue took place.
+- your IP address
+- the time of each request
+- the address requested
+- the browser you use
 
-# Contact
+1. Following data is gathered from public pages of the partner universities and other public sources:
 
-Data controller: the EC2U Alliance, at the address given in the [Legal Notice](/about/legal/).
+- the name of people mentioned in a public professional role, such as unit contacts or event organisers
+- their professional contact details, where the source page publishes them
 
-Data protection contact: [to be confirmed]
+1. Following data is gathered from yourself:
+
+- none
+
+The hub sets no tracking or advertising cookies and uses no analytics service. Your browser may store your language and
+display preferences locally: they never leave your device and stay there until you clear the data of the site.
+
+# Purpose of the Processing of Personal Data
+
+Technical records of your requests serve only to keep the service secure and running.
+
+Information about people named in datasets supports the search and discovery of the courses, research, events and other
+activities of the EC2U universities, as described by the public pages that the information is gathered from.
+
+# Third Parties to Whom Personal Data Is Disclosed
+
+We may share your personal data with third parties (or otherwise allow them access to it) in the following cases:
+
+1. to satisfy any applicable law, regulation, legal process, subpoena or governmental request;
+1. to enforce this Privacy Notice, including investigation of potential violations thereof.
+
+Datasets are public: information about people named in them is accessible to anyone who browses the hub or calls its
+API, as it already is on the public pages of the universities it was gathered from.
+
+You have a right to contact us for more information about the safeguards we have put in place to ensure the adequate
+protection of your personal data when this is disclosed or transferred as mentioned above.
+
+# How to Access, Rectify and Delete the Personal Data
+
+The EC2U Knowledge Hub doesn't collect any personal information from its visitors beyond the technical records listed
+above, and it deletes them automatically at the end of the retention period stated below.
+
+Information about people named in datasets is gathered from public pages by automated tools. These tools never alter it
+on purpose, but they may introduce errors, as explained in the [AI Content Notice](ai). Each resource links back to the
+page it was gathered from, so you can always check it against the original. To rectify information about you at its
+source, contact the university or organisation that publishes that page: the hub takes up the change at its next update.
+
+To access, rectify or delete information the hub holds about you, or to object to its use, write to our contact point.
+
+You have also the right to lodge a complaint with a supervisory authority, by writing
+to [garante@gpdp.it](mailto:garante@gpdp.it), or to [protocol@pec.gpdp.it](mailto:protocol@pec.gpdp.it).
+
+# Data Retention
+
+Technical records are kept for the standard log retention period of our hosting provider, currently 30 days.
+
+Information about people named in datasets is kept as long as the source it was gathered from publishes it. The hub
+removes it at the first update after the source withdraws it, or earlier at your request.
+
+---
+
+**Last Updated**: 2026-11-12
+
+[controller]: mailto:amministrazione-centrale@certunipv.it
+[contact]: mailto:privacy@unipv.it

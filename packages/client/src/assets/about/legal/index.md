@@ -7,15 +7,15 @@ label: Legal
 
 The EC2U Knowledge Hub is published by the [EC2U Alliance](https://www.ec2u.eu/), the European Campus of
 City-Universities, a European University alliance co-funded by the European Union under the Erasmus+ programme.
+The University of Pavia, a member of the alliance, runs the hub on its behalf and is responsible for its operation.
 
-EC2U<br>
-15, rue de l'Hôtel Dieu<br>
-TSA 71117<br>
-86073 Poitiers Cedex 9<br>
-France
+University of Pavia<br>
+Strada Nuova, 65<br>
+27100 Pavia<br>
+Italy
 
-Phone: +33 (0)5 49 45 30 00<br>
-Web: [ec2u.eu/contact-0](https://www.ec2u.eu/contact-0)
+Phone: +39 0382 989898<br>
+Email: [amministrazione‑centrale@certunipv.it](mailto:amministrazione-centrale@certunipv.it)
 
 Director of publication: [to be confirmed]
 
