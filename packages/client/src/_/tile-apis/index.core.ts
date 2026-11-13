@@ -20,7 +20,7 @@ import { eager } from "@metreeca/blue/value";
 import { type Lazy, opt, type Optional } from "@metreeca/core";
 import { some, type Some } from "@metreeca/core/arrays";
 import { by, locale } from "@metreeca/core/order";
-import { getShapeHref, getShapeId, getShapeName } from "./shape/index.js";
+import { getShapeId, getShapeName } from "./shape/index.js";
 
 
 /**
@@ -29,7 +29,7 @@ import { getShapeHref, getShapeId, getShapeName } from "./shape/index.js";
 export type Model = {
 
 	/**
-	 * The location of the page documenting the shape, as returned by {@link getShapeHref}.
+	 * The location of the page documenting the shape: its {@link getShapeId | identifier}, relative to the models section.
 	 */
 	readonly href: string
 
@@ -68,12 +68,12 @@ export type ModelNode = {
  * @param universe The entry shapes of the model, possibly deferred
  *
  * @returns The shapes of the model, each with the location of its page, sorted by name; shapes with no page
- *     located by {@link getShapeHref}, as outside the model the hub serves, are left out
+ *     located by {@link getShapeId}, as outside the model the hub serves, are left out
  */
 export function getModels(universe: Some<Lazy<ResourceShape>>): readonly Model[] {
 
 	return model(universe)
-		.flatMap(shape => opt(getShapeHref(shape), href => [{ href, shape }]) ?? [])
+		.flatMap(shape => opt(getShapeId(shape), href => [{ href, shape }]) ?? [])
 		.sort(by(({ shape }) => getShapeName(shape), locale())); // fresh array from flatMap
 
 }
@@ -90,7 +90,7 @@ export function getModelEntries(universe: Some<Lazy<ResourceShape>>): readonly M
 
 		const shape = eager(lazy);
 
-		return opt(getShapeHref(shape), href => [{ href, shape }]) ?? [];
+		return opt(getShapeId(shape), href => [{ href, shape }]) ?? [];
 
 	});
 }
@@ -138,7 +138,7 @@ function ancestors(shape: ResourceShape): readonly string[] {
 
 		const parent = eager(lazy);
 
-		return opt(getShapeHref(parent), href => [href]) ?? ancestors(parent);
+		return opt(getShapeId(parent), href => [href]) ?? ancestors(parent);
 
 	}))];
 }

@@ -35,7 +35,7 @@ import { integer } from "@metreeca/tile/types/integer";
 import { details, summary } from "@metreeca/work/core/strings.js";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
-import { getShapeHref, getShapeName } from "../../_/tile-apis/shape/index.js";
+import { getShapeId, getShapeName } from "../../_/tile-apis/shape/index.js";
 import { ec2u } from "../../index.core.js";
 import "./dataset.css";
 import { Failure } from "../failure.js";
@@ -266,7 +266,7 @@ export function DatasetPage({
 				{
 					"Data Model": opt(shapes, shapes => <ul class={"ec2u-shape-links"}>{some(shapes).map(shape =>
 						<li key={getShapeName(shape)}>
-							{opt(getShapeHref(shape), href =>
+							{opt(getShapeId(shape), href =>
 								<Link href={`${models}${href}`}>{ec2u(getShapeName(shape))}</Link>
 							) ?? ec2u(getShapeName(shape))}
 						</li>

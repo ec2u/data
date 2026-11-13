@@ -311,8 +311,8 @@ export type ShapeLink = {
 	readonly name: string
 
 	/**
-	 * The location of the documentation of the type, relative to the models section, as returned by
-	 * {@link getShapeHref}; none if the type is not a shape or its documentation is not located.
+	 * The location of the documentation of the type, relative to the models section: the {@link getShapeId | identifier}
+	 * of a shape; none if the type is not a shape or its documentation is not located.
 	 */
 	readonly href: Optional<string>
 
@@ -769,6 +769,9 @@ export function getShapeName(lazy: Lazy<ResourceShape>): string {
  * The identifier names the page documenting the shape in the models section and stays the same while the model is
  * unchanged; numbered identifiers may shift when shapes are added to or removed from the model.
  *
+ * As a location, the identifier is relative to the models section: it resolves as is from any page of the section and
+ * must be prefixed by the route of the section when linked from a page elsewhere, as the dataset pages do.
+ *
  * @param lazy The shape to be identified, possibly deferred
  *
  * @returns The identifier of `lazy`: its unique {@link getShapeName | name} as a lowercase kebab-case slug stripped of
@@ -1208,26 +1211,10 @@ export function getShapeSummary(lazy: Lazy<ResourceShape>): Optional<string> {
 }
 
 /**
- * Locates the documentation of a resource shape.
- *
- * A shape is documented on a page of its own in the models section, named after its {@link getShapeId | identifier}.
- * The location is relative to the section, so it resolves as is from any page of the section and must be prefixed by
- * the route of the section when linked from a page elsewhere, as the dataset pages do.
- *
- * @param lazy The shape to be located, possibly deferred
- *
- * @returns The location of the documentation of `lazy` relative to the models section, as `schema-organization`; none
- *     if `lazy` is outside the model reachable from {@link universe}, and so has no page of its own
- */
-export function getShapeHref(lazy: Lazy<ResourceShape>): Optional<string> {
-	return getShapeId(lazy);
-}
-
-/**
  * Links a resource shape to its documentation.
  */
 function linked(lazy: Lazy<ResourceShape>): ShapeLink {
-	return { name: getShapeName(lazy), href: getShapeHref(lazy) };
+	return { name: getShapeName(lazy), href: getShapeId(lazy) };
 }
 
 /**
