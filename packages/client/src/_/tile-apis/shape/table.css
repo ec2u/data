@@ -40,6 +40,12 @@
         grid-column: span 4;
     }
 
+    /* rows sit a little closer than in plain markup tables, so a long shape reads as one compact listing */
+
+    & td {
+        padding-block: calc(var(--skin--spacing-010) * 4);
+    }
+
     /* markdown definitions keep the spacing between their blocks, but not after the last one */
 
     & td > clay-markdown > :last-child {
