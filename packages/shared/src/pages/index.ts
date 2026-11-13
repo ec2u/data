@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base, Dataset, EC2U, ec2u, licenses } from "@ec2u/data-shared";
+import { base, Dataset, EC2U, ec2u, harvested, licenses } from "@ec2u/data-shared";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { reference } from "@metreeca/blue/reference";
 import { multiple, required, resource } from "@metreeca/blue/resource";
@@ -33,7 +33,7 @@ export const pages = immutable({
 
 	title: { en: "EC2U Source Pages" },
 	alternative: { en: "EC2U Pages" },
-	description: { en: "Web pages from which EC2U Knowledge Hub content is derived." },
+	description: { en: harvested("Web pages from which EC2U Knowledge Hub content is derived.") },
 
 	publisher: EC2U,
 

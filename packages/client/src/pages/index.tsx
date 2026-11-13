@@ -28,6 +28,7 @@ import { immutable } from "@metreeca/core/values";
 import { useCollection } from "@metreeca/tile/collection";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
+import { summary } from "@metreeca/work/core/strings.js";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { GitHub } from "../_/clay-widgets/github.js";
@@ -259,7 +260,7 @@ function dataset({ dataset: { id, title, description }, size }: DatasetRow): Dat
 		size,
 		glyph,
 		priority,
-		description: opt(description, ec2u)
+		description: opt(description, description => ec2u(summary(description)))
 	};
 
 }

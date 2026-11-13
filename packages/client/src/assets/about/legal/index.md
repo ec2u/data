@@ -40,14 +40,18 @@ the European Union nor EACEA can be held responsible for them.
 
 # Content
 
-## Data Reuse
+## Catalogue Records
 
-Each dataset states its licence on its info page, reached through the info icon in the page menu: categories, for
-instance, use [CC BY-NC-ND 4.0][cc]. Reuse a dataset under its licence, and credit the EC2U Alliance as its publisher.
+The datasets of the hub are catalogues: each record describes a course, an event, a document or another resource held
+by a partner university or an external source, and links to it. The copyright and licence stated on the info page of a
+dataset, reached through the info icon in the page menu, cover these records only. Reuse the records under that
+licence, for instance [CC BY-NC-ND 4.0][cc] for categories, and credit the EC2U Alliance as their publisher.
 
-Content gathered from partner universities and other sources remains subject to the rights of its original publishers.
-Follow the source links provided with each resource to check those rights before reusing the content. If you hold
-rights in content shown on the hub and want it corrected or removed, write to the EC2U Connect Centre.
+## Source Content
+
+The copyright and licence of a dataset never extend to the content its records describe, which stays subject to the
+rights of its original publishers: follow the source link of each resource to check those rights before reusing it. If
+you hold rights in content shown on the hub and want it corrected or removed, write to the EC2U Connect Centre.
 
 ## AI Content
 
@@ -73,7 +77,7 @@ limitations we know of, and how to tell us about anything that is hard or imposs
 
 ---
 
-*Last updated on 12 November 2026*
+*Last updated on 13 November 2026*
 
 [ec2u]: https://www.ec2u.eu/
 [issues]: https://github.com/ec2u/data/issues

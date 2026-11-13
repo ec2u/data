@@ -25,7 +25,8 @@ developers who reuse its datasets. The guides below set out the role of each gro
 
 - [Publishers](community/#publishers) — universities and partners choosing which content the hub carries
 - [Webmasters](community/#webmasters) — people running source websites, who keep their pages readable by the harvest
-- [Developers](community/#developers) — anyone reusing the datasets through the API, within the terms of their licence
+- [Developers](community/#developers) — anyone reusing the catalogue records through the API, within the terms of their
+  licence
 
 # References
 
@@ -48,9 +49,11 @@ The hub software is open source. Its code, issue tracker and development history
 
 # Legal
 
-The legal notices identify the party responsible for the hub, its handling of visitor data and the terms of content use.
+The legal notices identify who answers for the hub, how it handles visitor data, on which terms its catalogue records
+may be reused, as distinct from the content they describe, and where to turn for corrections or removals.
 
-- [Legal Notice](legal/) — the publisher of the hub, its contacts and the terms for reusing its content
+- [Legal Notice](legal/) — the publisher of the hub, its contacts, the terms for reusing its records and the rights of
+  the sources those records describe
 - [Privacy Notice](legal/privacy) — what the hub records about visitors and the rights they hold over that data
 - [Accessibility Notice](legal/accessibility) — the standard the hub works towards and how to report a barrier
 - [AI Content Notice](legal/ai) — where AI produces content on the hub and how to use that content responsibly

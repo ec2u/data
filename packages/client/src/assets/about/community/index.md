@@ -91,9 +91,10 @@ developers who reuse its datasets. This page sets out the role of each group and
 
 ### What to Know
 
-- Each dataset states its licence on its info page: reuse it within those terms and credit the EC2U Alliance
-- Content from partner universities remains subject to the rights of its original publishers, as set out in the
-  [Legal Notice](../legal/): check those rights through the source link of each resource before reusing it
+- Each dataset states its licence on its info page: it covers the catalogue records only, so reuse them within those
+  terms and credit the EC2U Alliance
+- The content those records describe remains subject to the rights of its original publishers, as set out in the
+  [Legal Notice](../legal/#content): check those rights through the source link of each resource before reusing it
 - AI-generated resources may contain errors, as described in the [AI Content Notice](../legal/ai)
 - Data is refreshed on a regular schedule: resources change or disappear when their sources do
 

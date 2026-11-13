@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base, Dataset, EC2U, ec2u, Entity, licenses } from "@ec2u/data-shared";
+import { base, Dataset, EC2U, ec2u, Entity, harvested, licenses } from "@ec2u/data-shared";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Person } from "@ec2u/data-shared/persons/index.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
@@ -45,7 +45,7 @@ export const documents = immutable({
 
 	title: { en: "EC2U Institutional Documents" },
 	alternative: { en: "EC2U Documents" },
-	description: { en: "Regulations, policies and other governance documents shared by EC2U universities." },
+	description: { en: harvested("Regulations, policies and other governance documents shared by EC2U universities.") },
 
 	publisher: EC2U,
 

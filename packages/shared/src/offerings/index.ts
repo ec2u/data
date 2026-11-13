@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base, EC2U, ec2u, licenses } from "@ec2u/data-shared";
+import { base, EC2U, ec2u, harvested, licenses } from "@ec2u/data-shared";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
@@ -45,7 +45,7 @@ export const offerings = immutable({
 
 	title: { en: "EC2U Educational Offerings" },
 	alternative: { en: "EC2U Offerings" },
-	description: { en: "Degree and vocational programs and courses offered by EC2U universities." },
+	description: { en: harvested("Degree and vocational programs and courses offered by EC2U universities.") },
 
 	publisher: EC2U,
 

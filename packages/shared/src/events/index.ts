@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base, CommentLength, Dataset, EC2U, ec2u, LabelLength, licenses } from "@ec2u/data-shared";
+import { base, CommentLength, Dataset, EC2U, ec2u, LabelLength, harvested, licenses } from "@ec2u/data-shared";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { EventTopic } from "@ec2u/data-shared/taxonomies/events.js";
@@ -41,7 +41,7 @@ export const events = immutable({
 
 	title: { en: "EC2U Academic and Local Events" },
 	alternative: { en: "EC2U Events" },
-	description: { en: "Information about events at EC2U universities and associated local organizations." },
+	description: { en: harvested("Information about events at EC2U universities and associated local organizations.") },
 
 	publisher: EC2U,
 

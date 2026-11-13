@@ -119,6 +119,8 @@ The Legal Notice and the info page of each dataset must state the reuse terms, a
 - **Rules**: Law 633/1941 art. 70-ter and 70-quater; Directives (EU) 2019/790, 96/9/EC and 2019/1024; D.Lgs. 36/2006
 - **Rules**: AgID open data guidelines
 - **Required**: a licence for each dataset; attribution of sources; a removal route for rights holders
+- **Required**: the licence and copyright of a dataset scoped to its catalogue records, in the notice and in the
+  warning `harvested()` appends to the description of every harvested dataset (`packages/shared/src/index.core.ts`)
 - **Constraint**: mining exceptions permit reproduction and extraction, and publication of new original works only
 - **Open**: republishing of gathered text and images; open data duties; third-party taxonomies; partner logos; EU emblem
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base, Dataset, EC2U, ec2u, licenses, Place } from "@ec2u/data-shared";
+import { base, Dataset, EC2U, ec2u, harvested, licenses, Place } from "@ec2u/data-shared";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { OrgFormalOrganization } from "@ec2u/data-shared/vocabularies/org.js";
 import { skos } from "@ec2u/data-shared/vocabularies/skos.js";
@@ -37,7 +37,7 @@ export const universities = immutable({
 
 	title: { en: "EC2U Partner Universities" },
 	alternative: { en: "EC2U Universities" },
-	description: { en: "Background, historical context and statistical data about EC2U universities." },
+	description: { en: harvested("Background, historical context and statistical data about EC2U universities.") },
 
 	publisher: EC2U,
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base, Dataset, EC2U, ec2u, licenses } from "@ec2u/data-shared";
+import { base, Dataset, EC2U, ec2u, harvested, licenses } from "@ec2u/data-shared";
 import { getOfferingId, Offering } from "@ec2u/data-shared/offerings/index.js";
 import { SchemaEducationalOccupationalProgram } from "@ec2u/data-shared/vocabularies/schema/learning.js";
 import { reference } from "@metreeca/blue/reference";
@@ -35,7 +35,7 @@ export const programs = immutable({
 
 	title: { en: "EC2U Degree and Occupational Programs" },
 	alternative: { en: "EC2U Programs" },
-	description: { en: "Formal degree and vocational qualification programs offered by EC2U universities." },
+	description: { en: harvested("Formal degree and vocational qualification programs offered by EC2U universities.") },
 
 	publisher: EC2U,
 

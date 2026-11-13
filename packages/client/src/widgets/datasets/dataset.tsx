@@ -32,6 +32,7 @@ import { useMembers } from "@metreeca/tile/members";
 import { useResource } from "@metreeca/tile/resource";
 import { date } from "@metreeca/tile/types/date";
 import { integer } from "@metreeca/tile/types/integer";
+import { details, summary } from "@metreeca/work/core/strings.js";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { getShapeHref, getShapeName } from "../../_/tile-apis/shape/index.js";
@@ -290,19 +291,21 @@ export function DatasetPage({
 		blank: () => <Empty look={"subtle"}>{glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{glyph}</Empty></Failure>,
 
-		ready: ({ state: { description, publisher, source, rights, license = [], accessRights } }) => <>
+		ready: ({ state: { description = "", publisher, source, rights, license = [], accessRights } }) => <>
 
-			<Markdown>{description}</Markdown>
+			<Markdown>{summary(description)}</Markdown>
 
 			<Infobox wrap>{{
 
 				Publisher: opt(publisher, ({ id, label }) => <Link href={id}>{label}</Link>),
-				Copyright: rights,
-				License: links(license),
+				"Records Copyright": rights,
+				"Records License": links(license),
 				Source: opt(source, ({ id }) => address(id)),
 				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
 
 			}}</Infobox>
+
+			{details(description) === "" ? undefined : <Markdown>{details(description)}</Markdown>}
 
 		</>
 

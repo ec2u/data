@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base, Dataset, EC2U, ec2u, licenses } from "@ec2u/data-shared";
+import { base, Dataset, EC2U, ec2u, harvested, licenses } from "@ec2u/data-shared";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { FOAFPerson } from "@ec2u/data-shared/vocabularies/foaf.js";
@@ -38,7 +38,7 @@ export const persons = immutable({
 
 	title: { en: "EC2U Faculty, Researchers and Staff" },
 	alternative: { en: "EC2U People" },
-	description: { en: "Staff involved in teaching and research activities at EC2U universities." },
+	description: { en: harvested("Staff involved in teaching and research activities at EC2U universities.") },
 
 	publisher: EC2U,
 

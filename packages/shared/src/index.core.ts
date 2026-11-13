@@ -22,6 +22,7 @@ import type { State } from "@metreeca/blue/value";
 import { assert, isDefined } from "@metreeca/core";
 import type { Tag } from "@metreeca/core/language";
 import { createNamespace, resolve } from "@metreeca/core/resource";
+import { dedent } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import type { Reference } from "@metreeca/qest/state";
 import { geo, WGSPoint } from "@metreeca/work/open/geo.js";
@@ -185,6 +186,17 @@ export const licenses = immutable({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+const coverage = dedent`
+	> [!WARNING]
+	> The copyright and licence stated for this dataset cover its catalogue records only. The content those records
+	> describe is gathered from external sources and remains subject to the rights of its original publishers: follow
+	> the source link of each resource to check those rights before reusing its content. See the
+	> [Legal Notice](/about/legal/#content) for details.
+`;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export type Partner = {
 
 	readonly id: Reference
@@ -260,4 +272,19 @@ export function getPartner(id: Reference) {
 
 	return assert(partners[id], isDefined, `unknown university <${id}>`);
 
+}
+
+/**
+ * Describes a dataset of harvested resources.
+ *
+ * The description is the summary followed, as a separate paragraph, by a warning scoping the copyright and licence of
+ * the dataset to its catalogue records, so that the rights statement travels with the dataset and is never read as
+ * covering the content it catalogues.
+ *
+ * @param summary The one-paragraph description of the dataset
+ *
+ * @returns `summary` followed by the warning on the scope of the copyright and licence of the dataset
+ */
+export function harvested(summary: string): string {
+	return `${summary}\n\n${coverage}`;
 }

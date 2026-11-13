@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base, Dataset, EC2U, ec2u, licenses } from "@ec2u/data-shared";
+import { base, Dataset, EC2U, ec2u, harvested, licenses } from "@ec2u/data-shared";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { EuroSciVocTopic } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
 import { dcat } from "@ec2u/data-shared/vocabularies/dcat.js";
@@ -40,7 +40,7 @@ export const units = immutable({
 
 	title: { en: "EC2U Research Units and Facilities" },
 	alternative: { en: "EC2U Units" },
-	description: { en: "Information about research units and supporting structures at EC2U universities." },
+	description: { en: harvested("Information about research units and supporting structures at EC2U universities.") },
 
 	publisher: EC2U,
 
