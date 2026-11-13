@@ -19,16 +19,10 @@ ec2u-ai {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: var(--skin--spacing-050);
 
     width: 100%;
 
     font-weight: var(--skin--font-weight-strong);
     color: var(--skin--color-fail-stroke);
-
-    & > clay-link {
-        display: flex;
-        margin-left: auto;
-    }
 
 }

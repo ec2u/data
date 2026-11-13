@@ -129,7 +129,7 @@ export function CoursesPage() {
 
 		</Facets>}
 
-		more={<AI>{true}</AI>}
+		more={<AI/>}
 
 		meta={<Clear collection={collection}/>}
 

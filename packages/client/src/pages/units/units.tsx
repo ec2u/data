@@ -105,7 +105,7 @@ export function UnitsPage() {
 
 		</Facets>}
 
-		more={<AI>{true}</AI>}
+		more={<AI/>}
 
 		meta={<Clear collection={collection}/>}
 
