@@ -14,25 +14,12 @@
  * limitations under the License.
  */
 
-import { Topic } from "@ec2u/data-shared/taxonomies/index.js";
 import { Link } from "@metreeca/clay-widgets/link";
-import { immutable } from "@metreeca/core/values";
-import { useResource } from "@metreeca/tile/resource";
 import { Failure } from "../../widgets/failure.js";
 import { Tree } from "../clay-widgets/tree.js";
-import { getSKOSLabel, SKOSConceptModel, type SKOSEntry, SKOSOrder } from "./concepts.core.js";
+import { getSKOSLabel, type SKOSEntry, SKOSOrder } from "./concepts.core.js";
+import { useSKOSNarrower } from "./index.js";
 
-
-const narrower = immutable({
-
-	id: {},
-
-	narrower: SKOSConceptModel
-
-});
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Creates a browsable concept hierarchy.
@@ -75,14 +62,7 @@ function SKOSNarrower({
 
 }) {
 
-	const resource = useResource({
-
-		entry: id,
-		shape: Topic,
-
-		model: narrower
-
-	});
+	const resource = useSKOSNarrower(id);
 
 	return resource({
 

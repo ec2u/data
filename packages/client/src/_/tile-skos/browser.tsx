@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-import { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
 import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Stack } from "@metreeca/clay-widgets/stack";
 import { Search } from "@metreeca/tile-widgets/search";
-import { useCollection } from "@metreeca/tile/collection";
-import { useMembers } from "@metreeca/tile/members";
-import { useEffect, useState } from "preact/hooks";
 import { Failure } from "../../widgets/failure.js";
 import { TreePlaceholder } from "../clay-widgets/tree.js";
-import { SKOSConceptModel, type SKOSEntry } from "./concepts.core.js";
+import type { SKOSEntry } from "./concepts.core.js";
 import { SKOSConcepts } from "./concepts.js";
+import { type SKOSSchemeConcepts, useSKOSConcepts, useSKOSMatches, useSKOSSearch } from "./index.js";
 
 
 /**
@@ -53,16 +50,17 @@ export function SKOSBrowser({
 
 }) {
 
-	const [keywords, setKeywords] = useState("");
+	const all = useSKOSConcepts(scheme);
+	const search = useSKOSSearch(all);
 
-	const searchable = keywords !== "" || concepts.some(({ narrower }) => narrower?.length);
+	const searchable = search.text !== "" || concepts.some(({ narrower }) => narrower?.length);
 
 	return <Stack space={"spacing100"}>
 
-		{searchable && <Search name={"Concepts"} search={{ text: keywords, submit: setKeywords }}/>}
+		{searchable && <Search name={"Concepts"} search={search}/>}
 
-		<Stack>{keywords
-			? <SKOSMatches scheme={scheme} keywords={keywords}/>
+		<Stack>{search.text
+			? <SKOSMatches concepts={all}/>
 			: <SKOSConcepts concepts={concepts}/>
 		}</Stack>
 
@@ -72,34 +70,19 @@ export function SKOSBrowser({
 
 
 /**
- * Lists the concepts of a scheme whose label matches a set of keywords.
+ * Lists the concepts of a scheme matching the search in force.
  */
 function SKOSMatches({
 
-	scheme,
-	keywords
+	concepts
 
 }: {
 
-	scheme: string
-	keywords: string
+	concepts: SKOSSchemeConcepts
 
 }) {
 
-	const collection = useCollection({
-
-		entry: scheme,
-		shape: Taxonomy,
-		field: "hasConcept",
-
-		query: { "~label": keywords }
-
-	});
-
-
-	useEffect(() => { collection.filter({ "~label": keywords }); }, [collection, keywords]);
-
-	const members = useMembers(collection, { model: SKOSConceptModel });
+	const members = useSKOSMatches(concepts);
 
 	return members({
 
