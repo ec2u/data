@@ -15,7 +15,7 @@ The hub harvests the public pages of EC2U universities and their partners on a r
 content, links related resources across datasets and uses AI to extract structured information from free text. Every
 resource links back to the page it came from, which remains the authoritative source.
 
-Content generated with AI carries a badge on the pages that show it. The [AI Content Notice](/about/legal/ai) explains
+Content generated with AI carries a badge on the pages that show it. The [AI Content Notice](legal/ai) explains
 where AI takes part in producing the hub and how to report an inaccurate or misleading item.
 
 # Get Involved
@@ -23,17 +23,16 @@ where AI takes part in producing the hub and how to report an inaccurate or misl
 The hub depends on the institutions that publish its sources, the teams that maintain the source websites and the
 developers who reuse its datasets. The guides below set out the role of each group and the support the hub provides.
 
-- [Publishers](/about/publishers) — universities and partners choosing which content the hub carries
-- [Webmasters](/about/webmasters) — people running source websites, who keep their pages readable by the harvest
-- [Developers](/about/developers) — anyone reusing the datasets through the API, within the terms of their licence
+- [Publishers](community/#publishers) — universities and partners choosing which content the hub carries
+- [Webmasters](community/#webmasters) — people running source websites, who keep their pages readable by the harvest
+- [Developers](community/#developers) — anyone reusing the datasets through the API, within the terms of their licence
 
 # References
 
 The reference pages document the content of each dataset and the structure of its data models.
 
-- [API & Models](/about/api/) — the resource types of each dataset and the properties the API returns for them
+- [API & Models](api/) — the resource types of each dataset and the properties the API returns for them
 - [Categories](/taxonomies/) — the shared taxonomies that classify resources across datasets
-
 
 # Support
 
@@ -51,7 +50,7 @@ The hub software is open source. Its code, issue tracker and development history
 
 The legal notices identify the party responsible for the hub, its handling of visitor data and the terms of content use.
 
-- [Legal Notice](/about/legal/) — the publisher of the hub, its contacts and the terms for reusing its content
-- [Privacy Notice](/about/legal/privacy) — what the hub records about visitors and the rights they hold over that data
-- [Accessibility Notice](/about/legal/accessibility) — the standard the hub works towards and how to report a barrier
-- [AI Content Notice](/about/legal/ai) — where AI produces content on the hub and how to use that content responsibly
+- [Legal Notice](legal/) — the publisher of the hub, its contacts and the terms for reusing its content
+- [Privacy Notice](legal/privacy) — what the hub records about visitors and the rights they hold over that data
+- [Accessibility Notice](legal/accessibility) — the standard the hub works towards and how to report a barrier
+- [AI Content Notice](legal/ai) — where AI produces content on the hub and how to use that content responsibly

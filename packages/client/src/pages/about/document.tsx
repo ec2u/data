@@ -38,7 +38,7 @@ export function DocumentPage() {
 	return isString(asset) ? <Page
 
 			head={head(<Markdown meta={"title"}>{asset}</Markdown>)}
-			tray={<Markdown meta={"toc"}>{asset}</Markdown>}
+			tray={<Markdown meta={"toc-2"}>{asset}</Markdown>}
 
 		><Markdown>{asset}</Markdown></Page>
 
