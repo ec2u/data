@@ -33,7 +33,8 @@ const negative = new URL("../../assets/about/legal/eu-co-funded/negative.png", i
  *
  * @returns The funding acknowledgement
  *
- * @see {@link https://www.eacea.ec.europa.eu/about-eacea/visual-identity/visual-identity-programming-period-2021-2027/european-flag-emblem-and-multilingual-disclaimer_en
+ * @see {@link
+ *     https://www.eacea.ec.europa.eu/about-eacea/visual-identity/visual-identity-programming-period-2021-2027/european-flag-emblem-and-multilingual-disclaimer_en
  *     EACEA – European Flag (Emblem) and Multilingual Disclaimer} for the source of the emblem, the wording of the
  *     disclaimer and the rules for displaying both
  */
@@ -53,7 +54,6 @@ export function Funded() {
 			those of the author(s) only and do not necessarily reflect those of the European Union.
 			Neither the European Union nor the granting authority can be held responsible for them.
 		`}</span>
-
 	);
 
 }
