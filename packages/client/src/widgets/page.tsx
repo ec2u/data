@@ -79,7 +79,16 @@ export function Page({
 
 			</Style>}
 
-			menu={menu}
+			menu={menu && <Style css={{
+
+				buttonLook: "subtle"
+
+			}}>
+
+				{menu}
+
+			</Style>}
+
 			foot={foot}
 
 		>

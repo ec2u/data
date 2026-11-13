@@ -56,7 +56,7 @@ function Hub() {
 
 				<Router>
 
-					<Toasts/>
+					<Toasts position={["bottom", "start"]}/>
 
 					<Routes>{{
 
