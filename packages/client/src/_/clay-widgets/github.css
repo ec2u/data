@@ -28,7 +28,7 @@ clay-github {
 
         /*
          * The GitHub logo guidelines forbid recolouring the mark: its fill is pinned to black or white by colour
-         * scheme, never to a design system role or to the colour of the link around it.
+         * scheme, never to a design system role or to the colour of the text or link around it.
          */
 
         & path {

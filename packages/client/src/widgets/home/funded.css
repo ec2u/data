@@ -15,71 +15,55 @@
  */
 
 /*
- * The body fills the page and closes with the funding acknowledgement, resting at the bottom of a page too short to
- * fill the body and following the content otherwise.
+ * The acknowledgement sets the emblem at its start and the disclaimer flush right at its far end, keeping its own line
+ * breaks; fine print too narrow for the two side by side stacks the disclaimer under the emblem, flush left.
  */
 
 ec2u-funded {
 
-    display: grid;
-    grid-template-rows: 1fr auto;
-    gap: var(--skin--spacing-150);
-    min-block-size: 100%;
-    container-type: inline-size;
+    --clay-link-inset: var(--skin--spacing-050);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--skin--spacing-100);
 
     /*
-     * The acknowledgement sets the emblem at the start of the foot and the disclaimer flush right at its far end,
-     * keeping its own line breaks; a foot too narrow for the two side by side stacks the disclaimer under the emblem,
-     * flush left.
+     * The emblem stands as tall as the three lines of the disclaimer, set in the same type, whatever the size of its
+     * source; its width follows from its proportions. An enlarged emblem is left to the design system rule.
      */
 
-    & > ec2u-print {
+    & picture {
+        display: contents;
+    }
 
-        --clay-link-inset: var(--skin--spacing-050);
+    & img:not([active]) {
+        flex: none;
+        display: block;
+        block-size: 3lh;
+        max-block-size: 3lh;
+        inline-size: auto;
+    }
 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: var(--skin--spacing-100);
+    & span {
+        white-space: pre;
+        text-align: end;
+    }
 
-        /*
-         * The emblem stands as tall as the three lines of the disclaimer, set in the same type, whatever the size of
-         * its source; its width follows from its proportions. An enlarged emblem is left to the design system rule.
-         */
+    /*
+     * The threshold is the room the emblem, the gap and the longest line of the disclaimer take side by side, in ems
+     * of the fine print measuring it: it is tuned to the current wording, and must be tuned again whenever the
+     * disclaimer changes.
+     */
 
-        & picture {
-            display: contents;
-        }
+    @container (width < 60em) {
 
-        & img:not([active]) {
-            flex: none;
-            display: block;
-            block-size: 3lh;
-            max-block-size: 3lh;
-            inline-size: auto;
-        }
+        flex-direction: column;
+        align-items: start;
 
         & span {
-            white-space: pre;
-            text-align: end;
-        }
-
-        /*
-         * The threshold is the room the emblem, the gap and the longest line of the disclaimer take side by side, in
-         * the type of the foot: it is tuned to the current wording, and must be tuned again whenever the disclaimer
-         * changes.
-         */
-
-        @container (width < 45em) {
-
-            flex-direction: column;
-            align-items: start;
-
-            & span {
-                white-space: normal;
-                text-align: start;
-            }
-
+            white-space: normal;
+            text-align: start;
         }
 
     }

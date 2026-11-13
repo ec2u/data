@@ -37,6 +37,7 @@ export function Page({
 
 	head,
 	menu,
+	foot,
 
 	children
 
@@ -48,6 +49,7 @@ export function Page({
 
 	head?: ComponentChildren
 	menu?: ComponentChildren
+	foot?: ComponentChildren
 
 	children?: ComponentChildren
 
@@ -89,6 +91,7 @@ export function Page({
 			</Style>}
 
 			menu={menu}
+			foot={foot}
 
 		>
 

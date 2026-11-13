@@ -125,12 +125,6 @@ export function Datasets() {
 			{datasets.label}
 		</>}
 
-		menu={members({
-
-			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
-
-		}, <DatasetLinks/>)}
-
 		tray={<Stack space={"spacing075"}>
 
 			<p style={{
@@ -152,7 +146,9 @@ export function Datasets() {
 
 			<Stack align={"start"} space={"spacing100"}>
 
-				<GitHub href={"https://github.com/ec2u/data"} size={"scaling150"}/>
+				<Link href={"https://github.com/ec2u/data"} title={"Source code on GitHub"}>
+					<GitHub size={"scaling150"}/>
+				</Link>
 
 				<div>
 					<Link look={"subtle"} href={"/about/legal/ai"}>AI Content</Link><br/>
@@ -166,7 +162,15 @@ export function Datasets() {
 
 		</Print>}
 
-	><Funded>{members({
+		menu={members({
+
+			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
+
+		}, <DatasetLinks/>)}
+
+		foot={<Print><Funded/></Print>}
+
+	>{members({
 
 		blank: () => <Empty look={"subtle"}>{datasets.glyph}</Empty>,
 		error: ({ state }) => <Failure problem={state}><Empty>{datasets.glyph}</Empty></Failure>,
@@ -175,11 +179,13 @@ export function Datasets() {
 
 			const rows = state.filter(isDatasetRow).sort(byDataset);
 
-			return rows.length === 0 ? <Empty>{datasets.glyph}</Empty> : <DatasetList datasets={rows.map(dataset)}/>;
+			return rows.length === 0
+				? <Empty>{datasets.glyph}</Empty>
+				: <DatasetList datasets={rows.map(dataset)}/>;
 
 		}
 
-	})}</Funded></Page>;
+	})}</Page>;
 
 }
 

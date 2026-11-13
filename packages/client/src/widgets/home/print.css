@@ -14,7 +14,19 @@
  * limitations under the License.
  */
 
+/*
+ * The block fills the room its foot gives it without claiming more, and rests its content at the bottom, so that fine
+ * print set in feet of different heights lines up on its last line. It measures its own width, letting its content
+ * answer to the room in the foot rather than to the viewport; a measured box takes no width from its content, so the
+ * width comes from the foot alone.
+ */
+
 ec2u-print {
-    display: block;
+    flex-grow: 1;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    container-type: inline-size;
     font-size: calc(var(--skin--font-size-small) * 0.75);
 }

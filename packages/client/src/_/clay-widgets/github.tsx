@@ -15,10 +15,10 @@
  */
 
 /**
- * Link to the GitHub repository of a project, marked with the official GitHub logo.
+ * The official GitHub logo, as a glyph marking a reference to a project hosted on GitHub.
  *
- * Keeps the mark within the GitHub logo guidelines wherever the link appears: the mark is never recoloured or
- * distorted, and it follows the colour scheme of the page rather than the colour of the surrounding links.
+ * Keeps the mark within the GitHub logo guidelines wherever it appears: the mark is never recoloured or distorted,
+ * and it follows the colour scheme of the page rather than the colour of the text or link around it.
  *
  * > [!IMPORTANT]
  * > The mark is a trademark of GitHub, Inc. and is not covered by the copyright notice and the licence of this file.
@@ -30,7 +30,6 @@
  * @see {@link https://brand.github.com/foundations/logo GitHub Logo Guidelines} for the permitted uses of the mark
  */
 
-import { Link } from "@metreeca/clay-widgets/link";
 import { css, type Scaling, skin } from "@metreeca/skin";
 import { createElement } from "preact";
 import "./github.css";
@@ -57,27 +56,24 @@ const invertocat =
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Creates a link to a GitHub repository, marked with the GitHub logo.
+ * Creates the GitHub logo glyph.
  *
- * The link shows the official Invertocat mark unaltered, as the GitHub logo guidelines permit for a link to a project.
- * The mark is black on a light colour scheme and white on a dark one, whatever colour the surrounding links take.
+ * The glyph shows the official Invertocat mark unaltered, as the GitHub logo guidelines permit for a reference to a
+ * project. The mark is black on a light colour scheme and white on a dark one, whatever the colour of nearby text.
  *
- * The mark carries no visible text, so `label` names the link to assistive technologies and shows as its tooltip. The
- * mark is as tall as an icon in the surrounding text, unless `size` selects another step of the design system scale.
+ * The glyph is decorative and hidden from assistive technologies: wherever it marks a link or a control without
+ * visible text, name that element on its own, for instance with a `title`.
  *
  * @param options The widget configuration
  *
- * @returns The GitHub link
+ * @returns The GitHub glyph
  *
  * @see {@link https://brand.github.com/foundations/logo GitHub Logo Guidelines} for the permitted uses of the mark
  * @see {@link https://brand.github.com/GitHub_Logos.zip GitHub Logo Package} for the source of the mark
  */
 export function GitHub({
 
-	size = "scaling100",
-
-	href,
-	label = "Source code on GitHub"
+	size = "scaling100"
 
 }: {
 
@@ -88,27 +84,13 @@ export function GitHub({
 	 */
 	size?: Scaling
 
-
-	/**
-	 * The address of the GitHub repository the link leads to.
-	 */
-	href: string
-
-	/**
-	 * The name of the link, read by assistive technologies and shown as its tooltip.
-	 *
-	 * @defaultValue `"Source code on GitHub"`
-	 */
-	label?: string
-
 }) {
 
-	return createElement("clay-github", {}, <Link href={href} title={label}>
+	return createElement("clay-github", {},
 
 		<svg viewBox={"0 0 98 96"} aria-hidden={"true"} focusable={"false"} style={{ blockSize: css.var(skin[size]) }}>
 			<path d={invertocat}/>
 		</svg>
-
-	</Link>);
+	);
 
 }

@@ -22,7 +22,9 @@ import "./print.css";
  * Creates a block of fine print.
  *
  * Sets its content in the reduced type shared by the notices and the funding acknowledgement at the foot of a page,
- * leaving the small print of skin-managed content elsewhere at its design system size.
+ * leaving the small print of skin-managed content elsewhere at its design system size. The block fills the foot it
+ * sits in and rests its content at the bottom, so that fine print in side by side feet ends level; content laid out
+ * by container queries, like the funding acknowledgement, responds to the width of the block.
  *
  * @param children The content to set in fine print
  *
