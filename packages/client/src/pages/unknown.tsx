@@ -19,8 +19,6 @@ import { Empty } from "@metreeca/clay-widgets/empty";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { useRouter } from "@metreeca/clay/router";
 import { immutable } from "@metreeca/core/values";
-import { NotFound } from "@metreeca/http";
-import { Failure } from "../widgets/failure.js";
 import { Page } from "../widgets/page.js";
 import { datasets } from "./index.js";
 
@@ -29,13 +27,7 @@ export const unknown = immutable({
 
 	route: "*",
 	label: "404 | Not Found",
-	glyph: <Icon.NotFound/>,
-
-	problem: {
-		status: NotFound,
-		title: "Not Found",
-		detail: "The requested page doesn't exist"
-	}
+	glyph: <Icon.NotFound/>
 
 });
 
@@ -59,14 +51,12 @@ export function Unknown() {
 
 	>
 
-		<Failure problem={unknown.problem}>
-			<Empty look={"subtle"}>
-				{unknown.glyph}
-				<span style={{ maxInlineSize: "24em", textWrap: "balance" }}>
-					The content you are looking for doesn't exist or has been moved
-				</span>
-			</Empty>
-		</Failure>
+		<Empty look={"subtle"}>
+			{unknown.glyph}
+			<span style={{ maxInlineSize: "24em", textWrap: "balance" }}>
+				The content you are looking for doesn't exist or has been moved
+			</span>
+		</Empty>
 
 	</Page>;
 
