@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-import { app } from "@metreeca/clay";
-import { Link } from "@metreeca/clay-widgets/link";
-import { Strip } from "@metreeca/clay-widgets/strip";
 import { Style } from "@metreeca/clay-widgets/style";
 import { Tool } from "@metreeca/clay-widgets/tool";
 import { useFetching } from "@metreeca/clay/fetch";
 import { type ComponentChildren, h } from "preact";
 import "./page.css";
-import { ec2u } from "../index.core.js";
-
-const logo = new URL("../index.svg", import.meta.url).href;
+import { Logo } from "./logo.js";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,15 +62,9 @@ export function Page({
 
 			busy={busy}
 
-			meta={<Strip grow place={meta ? "tail" : "start"} align={"center"}>
+			mark={<Logo/>}
 
-				<Link href={"https://ec2u.eu/"}><img class={"logo"} alt={"EC2U Alliance"} src={logo}/></Link>
-				<Link href={"/"}>{ec2u(app.name ?? "")}</Link>
-
-				{meta}
-
-			</Strip>}
-
+			meta={meta}
 			tray={tray}
 			more={more}
 

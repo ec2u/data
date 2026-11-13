@@ -34,7 +34,6 @@ import { GitHub } from "../_/clay-widgets/github.js";
 import { byDataset, ec2u, PublicDatasets } from "../index.core.js";
 import { DatasetLinks } from "../widgets/datasets/dataset.js";
 import { Failure } from "../widgets/failure.js";
-import { Brand } from "../widgets/home/brand.js";
 import { type Dataset, Datasets as DatasetList } from "../widgets/home/datasets.js";
 import { Funded } from "../widgets/home/funded.js";
 import { Print } from "../widgets/home/print.js";
@@ -120,10 +119,7 @@ export function Datasets() {
 
 	return <Page
 
-		head={<>
-			<Brand/>
-			{datasets.label}
-		</>}
+		head={datasets.label}
 
 		tray={<Stack space={"spacing075"}>
 

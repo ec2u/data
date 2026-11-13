@@ -17,20 +17,27 @@
 import { app } from "@metreeca/clay";
 import { Link } from "@metreeca/clay-widgets/link";
 import { createElement } from "preact";
-import { ec2u } from "../../index.core.js";
-import "./brand.css";
+import { ec2u } from "../index.core.js";
+import "./logo.css";
+
+const logo = new URL("../index.svg", import.meta.url).href;
 
 
 /**
- * Creates the site brand heading a page on narrow viewports.
+ * Creates the site logo marking the side column of a page.
  *
- * Shows the app name, linked to the home page, above the page title where the side column naming the site turns into
- * a drawer, so a reader landing on the page knows at once which site it is; hidden wherever the side column shows.
+ * Shows the EC2U Alliance logo, linked to the alliance website, beside the app name, linked to the home page, so a
+ * reader can always reach both the alliance behind the hub and the home page of the hub itself.
  *
- * @returns The site brand
+ * @returns The site logo
  */
-export function Brand() {
+export function Logo() {
 
-	return createElement("ec2u-brand", {}, <Link href={"/"}>{ec2u(app.name ?? "")}</Link>);
+	return createElement("ec2u-logo", {},
+
+		<Link href={"https://ec2u.eu/"}><img alt={"EC2U Alliance"} src={logo}/></Link>,
+		<Link href={"/"}>{ec2u(app.name ?? "")}</Link>
+
+	);
 
 }
