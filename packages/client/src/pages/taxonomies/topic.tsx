@@ -25,10 +25,10 @@ import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
-import { by, locale } from "@metreeca/core/order";
 import { useResource } from "@metreeca/tile/resource";
+import { date } from "@metreeca/tile/types/date";
 import { useEffect } from "preact/hooks";
-import { SKOSConcepts, SKOSLineage } from "../../_/tile-skos/concepts.js";
+import { SKOSRelations } from "../../_/tile-skos/relations.js";
 import { AI } from "../../widgets/datasets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
@@ -57,7 +57,7 @@ export function TopicPage() {
 
 			isDefinedBy: {},
 
-			inScheme: { id: {}, label: {} },
+			inScheme: { id: {}, label: {}, version: {}, created: {}, issued: {}, modified: {} },
 
 			broaderTransitive: { id: {}, notation: {}, prefLabel: {}, broader: {} },
 			narrower: { id: {}, notation: {}, prefLabel: {}, narrower: {} },
@@ -104,11 +104,20 @@ export function TopicPage() {
 
 		tray={resource({
 
-			ready: ({ state: { notation } }) => <Infobox>{{
+			ready: ({ state: { notation, inScheme: { version, created, issued, modified } } }) => <Infobox>{[
 
-				Code: notation
+				{
+					Version: version,
+					Created: opt(created, value => date.format(value)),
+					Published: opt(issued, value => date.format(value)),
+					Modified: opt(modified, value => date.format(value))
+				},
 
-			}}</Infobox>
+				{
+					Code: notation
+				}
+
+			]}</Infobox>
 
 		})}
 
@@ -135,20 +144,16 @@ export function TopicPage() {
 
 			<Infobox wrap>{{
 
-				"Source": opt(isDefinedBy, url => <Link href={url}>{url}</Link>),
-
-				"Broader Concepts": broaderTransitive.length > 0
-					? <SKOSLineage concepts={broaderTransitive}/>
-					: undefined,
-
-				"Narrower Concepts": narrower.length > 0
-					? <SKOSConcepts concepts={narrower}/>
-					: undefined,
-
-				"Related Concepts": links(related),
-				"Exact Matches": links(exactMatch)
+				"Source": opt(isDefinedBy, url => <Link href={url}>{url}</Link>)
 
 			}}</Infobox>
+
+			<SKOSRelations
+				broader={broaderTransitive}
+				narrower={narrower}
+				related={related}
+				matches={exactMatch}
+			/>
 
 		</>
 
@@ -156,20 +161,3 @@ export function TopicPage() {
 
 }
 
-
-/**
- * Lists linked concepts in alphabetical order.
- *
- * @returns The list, or `undefined` if no concept is linked, so the property panel leaves the entry out
- */
-function links(concepts: readonly { readonly id: string, readonly label: string }[] = []) {
-
-	return concepts.length > 0 ? <ul>{[...concepts] // copy, as state is shared
-
-		.sort(by(({ label }) => label, locale()))
-
-		.map(({ id, label }) => <li key={id}><Link href={id}>{label}</Link></li>)
-
-	}</ul> : undefined;
-
-}

@@ -20,7 +20,7 @@ import { immutable } from "@metreeca/core/values";
 import { useResource } from "@metreeca/tile/resource";
 import { Failure } from "../../widgets/failure.js";
 import { Tree } from "../clay-widgets/tree.js";
-import { getSKOSLabel, getSKOSLineage, type SKOSEntry, SKOSOrder } from "./concepts.core.js";
+import { getSKOSLabel, type SKOSEntry, SKOSOrder } from "./concepts.core.js";
 
 
 const narrower = immutable({
@@ -36,6 +36,8 @@ const narrower = immutable({
 
 });
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Creates a browsable concept hierarchy.
@@ -65,31 +67,8 @@ export function SKOSConcepts({
 
 }
 
-/**
- * Creates the lineage of a concept.
- *
- * Lists the broader concepts of a concept as tree nodes linking to their pages, root first, down to its parent.
- */
-export function SKOSLineage({
 
-	concepts = []
-
-}: {
-
-	/**
-	 * The broader concepts, each with the references of its own direct broader concepts; none if omitted.
-	 */
-	concepts?: readonly (SKOSEntry & { readonly broader?: readonly string[] })[]
-
-}) {
-
-	return <>{getSKOSLineage(concepts).map(concept =>
-
-		<Tree key={concept.id} label={<Link href={concept.id}>{getSKOSLabel(concept)}</Link>}/>
-	)}</>;
-
-}
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function SKOSNarrower({
 
