@@ -79,15 +79,15 @@ export function SKOSRelations({
 
 		{hierarchy && <Infobox wrap>{{
 
-			"Broader Concepts": broader.length > 0 ? <SKOSLineage concepts={broader}/> : undefined,
-			"Narrower Concepts": narrower.length > 0 ? <SKOSConcepts concepts={narrower}/> : undefined
+			"Broader": broader.length > 0 ? <SKOSLineage concepts={broader}/> : undefined,
+			"Narrower": narrower.length > 0 ? <SKOSConcepts concepts={narrower}/> : undefined
 
 		}}</Infobox>}
 
 		{associations && <Infobox wrap>{{
 
-			"Related Concepts": links(related),
-			"Exact Matches": links(matches)
+			"Related": links(related),
+			"Matches": links(matches)
 
 		}}</Infobox>}
 
