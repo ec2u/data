@@ -79,7 +79,9 @@ export function ProgramsPage() {
 
 			university: { id: {}, altLabel: {} }
 
-		}
+		},
+
+		order: { label: "asc" }
 
 	});
 

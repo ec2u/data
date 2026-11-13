@@ -79,7 +79,9 @@ export function DocumentsPage() {
 
 			university: { id: {}, altLabel: {} }
 
-		}
+		},
+
+		order: { label: "asc" }
 
 	});
 

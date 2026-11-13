@@ -91,7 +91,9 @@ export function CoursesPage() {
 
 			university: { id: {}, altLabel: {} }
 
-		}
+		},
+
+		order: { label: "asc" }
 
 	});
 

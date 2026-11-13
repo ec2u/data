@@ -76,7 +76,9 @@ export function UnitsPage() {
 
 			university: { id: {}, altLabel: {} }
 
-		}
+		},
+
+		order: { label: "asc" }
 
 	});
 
