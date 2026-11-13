@@ -60,9 +60,9 @@ export const datasets = immutable({
 const resources = immutable({
 
 	"Get Involved": {
-		"Publishers": "/about/publishers/",
-		"Webmasters": "/about/webmasters/",
-		"Developers": "/about/developers/"
+		"Publishers": "/about/publishers",
+		"Webmasters": "/about/webmasters",
+		"Developers": "/about/developers"
 	},
 
 	"References": {

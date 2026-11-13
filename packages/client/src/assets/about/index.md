@@ -20,16 +20,16 @@ where AI takes part in producing the hub and how to report an inaccurate or misl
 
 # Get Involved
 
-The hub relies on the people who publish its sources, maintain the websites it reads and reuse its datasets. Each guide
-below tells one of these groups what the hub expects from them and what it offers in return.
+The hub depends on the institutions that publish its sources, the teams that maintain the source websites and the
+developers who reuse its datasets. The guides below set out the role of each group and the support the hub provides.
 
-- [Publishers](/about/publishers/) — universities and partners choosing which content the hub carries
-- [Webmasters](/about/webmasters/) — people running source websites, who keep their pages readable by the harvest
-- [Developers](/about/developers/) — anyone reusing the datasets through the API, within the terms of their licence
+- [Publishers](/about/publishers) — universities and partners choosing which content the hub carries
+- [Webmasters](/about/webmasters) — people running source websites, who keep their pages readable by the harvest
+- [Developers](/about/developers) — anyone reusing the datasets through the API, within the terms of their licence
 
 # References
 
-The reference pages describe what each dataset holds and how to read its models.
+The reference pages document the content of each dataset and the structure of its data models.
 
 - [API & Models](/about/api/) — the resource types of each dataset and the properties the API returns for them
 - [Categories](/taxonomies/) — the shared taxonomies that classify resources across datasets
@@ -37,8 +37,8 @@ The reference pages describe what each dataset holds and how to read its models.
 
 # Support
 
-The software running the hub is open source: its code, issue tracker and development history are public on
-[GitHub](https://github.com/ec2u/data), where you can ask for help or contribute to the hub.
+The hub software is open source. Its code, issue tracker and development history are publicly available on
+[GitHub](https://github.com/ec2u/data), which is also the channel for support requests and contributions.
 
 - open an [issue][issues] to report a problem with the hub or its datasets, or to suggest a new feature
 - start a [discussion][discussions] to ask a how-to question or to share an idea
@@ -49,7 +49,7 @@ The software running the hub is open source: its code, issue tracker and develop
 
 # Legal
 
-The legal notices state who answers for the hub, how it treats visitors and what limits apply to its content.
+The legal notices identify the party responsible for the hub, its handling of visitor data and the terms of content use.
 
 - [Legal Notice](/about/legal/) — the publisher of the hub, its contacts and the terms for reusing its content
 - [Privacy Notice](/about/legal/privacy) — what the hub records about visitors and the rights they hold over that data
