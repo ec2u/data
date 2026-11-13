@@ -26,13 +26,14 @@ import { Path } from "@metreeca/clay-widgets/path";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
 import { useResource } from "@metreeca/tile/resource";
-import { date } from "@metreeca/tile/types/date";
 import { useEffect } from "preact/hooks";
+import { SKOSConceptModel, SKOSLineageModel } from "../../_/tile-skos/concepts.core.js";
 import { SKOSRelations } from "../../_/tile-skos/relations.js";
 import { AI } from "../../widgets/datasets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { Page } from "../../widgets/page.js";
 import { DatasetLink } from "../../widgets/datasets/dataset.js";
+import { getTaxonomyRelease } from "./index.core.js";
 import { taxonomies } from "./index.js";
 
 
@@ -59,8 +60,8 @@ export function TopicPage() {
 
 			inScheme: { id: {}, label: {}, version: {}, created: {}, issued: {}, modified: {} },
 
-			broaderTransitive: { id: {}, notation: {}, prefLabel: {}, broader: {} },
-			narrower: { id: {}, notation: {}, prefLabel: {}, narrower: {} },
+			broaderTransitive: SKOSLineageModel,
+			narrower: SKOSConceptModel,
 			related: { id: {}, label: {} },
 			exactMatch: { id: {}, label: {} }
 
@@ -104,14 +105,9 @@ export function TopicPage() {
 
 		tray={resource({
 
-			ready: ({ state: { notation, inScheme: { version, created, issued, modified } } }) => <Infobox>{[
+			ready: ({ state: { notation, inScheme } }) => <Infobox>{[
 
-				{
-					Version: version,
-					Created: opt(created, value => date.format(value)),
-					Published: opt(issued, value => date.format(value)),
-					Modified: opt(modified, value => date.format(value))
-				},
+				getTaxonomyRelease(inScheme),
 
 				{
 					Code: notation

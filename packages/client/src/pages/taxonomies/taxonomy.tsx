@@ -23,24 +23,21 @@ import { Icon } from "@metreeca/clay-widgets/icon";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
-import { Stack } from "@metreeca/clay-widgets/stack";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
-import { Search } from "@metreeca/tile-widgets/search";
 import { useCollection } from "@metreeca/tile/collection";
 import { useCount } from "@metreeca/tile/count";
-import { useMembers } from "@metreeca/tile/members";
 import { useResource } from "@metreeca/tile/resource";
-import { date } from "@metreeca/tile/types/date";
 import { integer } from "@metreeca/tile/types/integer";
-import { useEffect, useState } from "preact/hooks";
-import { TreePlaceholder } from "../../_/clay-widgets/tree.js";
-import { SKOSConcepts } from "../../_/tile-skos/concepts.js";
+import { useEffect } from "preact/hooks";
+import { SKOSBrowser } from "../../_/tile-skos/browser.js";
+import { SKOSConceptModel } from "../../_/tile-skos/concepts.core.js";
 import { AI } from "../../widgets/datasets/ai.js";
 import { Failure } from "../../widgets/failure.js";
 import { address } from "../../widgets/datasets/links.js";
 import { Page } from "../../widgets/page.js";
 import { DatasetLink } from "../../widgets/datasets/dataset.js";
+import { getTaxonomyRelease } from "./index.core.js";
 import { taxonomies } from "./index.js";
 
 
@@ -48,8 +45,6 @@ export function TaxonomyPage() {
 
 	const route = useRoute();
 	const router = useRouter();
-
-	const [keywords, setKeywords] = useState("");
 
 	const resource = useResource({
 
@@ -77,7 +72,7 @@ export function TaxonomyPage() {
 			license: { id: {}, label: {} },
 			accessRights: {},
 
-			hasTopConcept: { id: {}, notation: {}, prefLabel: {}, narrower: {} }
+			hasTopConcept: SKOSConceptModel
 
 		}
 
@@ -126,14 +121,9 @@ export function TaxonomyPage() {
 
 		tray={resource({
 
-			ready: ({ state: { version, created, issued, modified } }) => <Infobox>{[
+			ready: ({ state }) => <Infobox>{[
 
-				{
-					Version: version,
-					Created: opt(created, value => date.format(value)),
-					Published: opt(issued, value => date.format(value)),
-					Modified: opt(modified, value => date.format(value))
-				},
+				getTaxonomyRelease(state),
 
 				{
 					Concepts: concepts({ ready: ({ state }) => integer.format(state) })
@@ -156,7 +146,7 @@ export function TaxonomyPage() {
 
 		ready: ({
 			state: {
-				title, description, publisher, source, rights, license, accessRights, hasTopConcept = []
+				id, title, description, publisher, source, rights, license, accessRights, hasTopConcept = []
 			}
 		}) => <>
 
@@ -176,68 +166,10 @@ export function TaxonomyPage() {
 
 			}}</Infobox>
 
-			<Stack space={"spacing100"}>
-
-				{(keywords || hasTopConcept.some(({ narrower }) => narrower?.length)) && // flat schemes are browsed whole
-                    <Search name={"Concepts"} search={{ text: keywords, submit: setKeywords }}/>
-				}
-
-				<Stack>{keywords
-					? <TaxonomySearch keywords={keywords}/>
-					: <SKOSConcepts concepts={hasTopConcept}/>
-				}</Stack>
-
-			</Stack>
+			<SKOSBrowser scheme={id} concepts={hasTopConcept}/>
 
 		</>
 
 	})}</Page>;
-
-}
-
-
-/**
- * Lists the concepts of the taxonomy on show whose label matches a set of keywords.
- */
-function TaxonomySearch({
-
-	keywords
-
-}: {
-
-	keywords: string
-
-}) {
-
-	const route = useRoute();
-
-	const collection = useCollection({
-
-		entry: route,
-		shape: Taxonomy,
-		field: "hasConcept",
-
-		query: { "~label": keywords }
-
-	});
-
-
-	useEffect(() => { collection.filter({ "~label": keywords }); }, [collection, keywords]);
-
-	const members = useMembers(collection, {
-
-		model: { id: {}, notation: {}, prefLabel: {}, narrower: {} }
-
-	});
-
-	return members({
-
-		error: ({ state }) => <Failure problem={state}><Empty>{taxonomies.glyph}</Empty></Failure>,
-
-		ready: ({ state }) => state.length > 0
-			? <SKOSConcepts concepts={state}/>
-			: <TreePlaceholder>{taxonomies.glyph} No Matches</TreePlaceholder>
-
-	});
 
 }

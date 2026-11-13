@@ -20,19 +20,14 @@ import { immutable } from "@metreeca/core/values";
 import { useResource } from "@metreeca/tile/resource";
 import { Failure } from "../../widgets/failure.js";
 import { Tree } from "../clay-widgets/tree.js";
-import { getSKOSLabel, type SKOSEntry, SKOSOrder } from "./concepts.core.js";
+import { getSKOSLabel, SKOSConceptModel, type SKOSEntry, SKOSOrder } from "./concepts.core.js";
 
 
 const narrower = immutable({
 
 	id: {},
 
-	narrower: {
-		id: {},
-		notation: {},
-		prefLabel: {},
-		narrower: {}
-	}
+	narrower: SKOSConceptModel
 
 });
 

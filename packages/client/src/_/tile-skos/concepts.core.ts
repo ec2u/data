@@ -16,6 +16,7 @@
 
 import { opt } from "@metreeca/core";
 import { by, compound, locale } from "@metreeca/core/order";
+import { immutable } from "@metreeca/core/values";
 
 
 /**
@@ -29,6 +30,35 @@ export type SKOSEntry = {
 	readonly prefLabel: string
 
 }
+
+
+/**
+ * The retrieval model of the concepts listed in a concept hierarchy.
+ *
+ * Retrieves what `SKOSConcepts` shows of a concept, with the references telling whether it expands.
+ */
+export const SKOSConceptModel = immutable({
+
+	id: {},
+	notation: {},
+	prefLabel: {},
+	narrower: {}
+
+});
+
+/**
+ * The retrieval model of the broader concepts listed in a concept lineage.
+ *
+ * Retrieves what `SKOSLineage` shows of a concept, with the references placing it in the lineage.
+ */
+export const SKOSLineageModel = immutable({
+
+	id: {},
+	notation: {},
+	prefLabel: {},
+	broader: {}
+
+});
 
 
 /**
