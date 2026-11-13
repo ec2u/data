@@ -59,7 +59,14 @@ export function Unknown() {
 
 	>
 
-		<Failure problem={unknown.problem}><Empty>{unknown.glyph}</Empty></Failure>
+		<Failure problem={unknown.problem}>
+			<Empty look={"subtle"}>
+				{unknown.glyph}
+				<span style={{ maxInlineSize: "24em", textWrap: "balance" }}>
+					The content you are looking for doesn't exist or has been moved
+				</span>
+			</Empty>
+		</Failure>
 
 	</Page>;
 
