@@ -34,32 +34,12 @@ const MarkdownPattern = /^\s*([\s\S]*?)(?:[ \t]*\n[ \t]*\n\s*([\s\S]*?))?\s*$/;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// @ts-ignore
-/**
- * Summarises a markdown text.
- *
- * Following the TSDoc convention, the summary is the first paragraph of the text, ending at the first blank line.
- *
- * @param markdown The markdown text to be summarised
- *
- * @returns The first paragraph of `markdown`, trimmed; an empty string if `markdown` is blank
- */
 export function summary(markdown: Markdown): Markdown {
 
 	return markdown.match(MarkdownPattern)?.[1] ?? "";
 
 }
 
-/**
- * Details a markdown text.
- *
- * The details are what follows the {@link summary} of the text, from its second paragraph on, with the blank lines
- * separating the paragraphs kept as they are.
- *
- * @param markdown The markdown text to be detailed
- *
- * @returns The paragraphs of `markdown` following the first one, trimmed; an empty string if it states only one
- */
 export function details(markdown: Markdown): Markdown {
 
 	return markdown.match(MarkdownPattern)?.[2] ?? "";
