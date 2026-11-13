@@ -53,3 +53,18 @@ clay-tree {
     }
 
 }
+
+clay-tree-placeholder {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--skin--spacing-050);
+
+    /* matches the border and padding of a search box, so a leading glyph sits under the glyph of the box above */
+
+    padding-inline-start: calc(var(--skin--border-width) + var(--skin--spacing-050));
+
+    color: var(--skin--color-placeholder);
+
+}

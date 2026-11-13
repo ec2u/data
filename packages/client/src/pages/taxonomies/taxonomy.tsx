@@ -23,6 +23,7 @@ import { Icon } from "@metreeca/clay-widgets/icon";
 import { Infobox } from "@metreeca/clay-widgets/infobox";
 import { Link } from "@metreeca/clay-widgets/link";
 import { Path } from "@metreeca/clay-widgets/path";
+import { Stack } from "@metreeca/clay-widgets/stack";
 import { useRoute, useRouter } from "@metreeca/clay/router";
 import { opt } from "@metreeca/core";
 import { Search } from "@metreeca/tile-widgets/search";
@@ -33,6 +34,7 @@ import { useResource } from "@metreeca/tile/resource";
 import { date } from "@metreeca/tile/types/date";
 import { integer } from "@metreeca/tile/types/integer";
 import { useEffect, useState } from "preact/hooks";
+import { TreePlaceholder } from "../../_/clay-widgets/tree.js";
 import { SKOSConcepts } from "../../_/tile-skos/concepts.js";
 import { AI } from "../../widgets/datasets/ai.js";
 import { Failure } from "../../widgets/failure.js";
@@ -174,14 +176,18 @@ export function TaxonomyPage() {
 
 			}}</Infobox>
 
-			{(keywords || hasTopConcept.some(({ narrower }) => narrower?.length)) && // flat schemes are browsed whole
-                <Search name={"Concepts"} search={{ text: keywords, submit: setKeywords }}/>
-			}
+			<Stack space={"spacing100"}>
 
-			{keywords
-				? <TaxonomySearch keywords={keywords}/>
-				: <SKOSConcepts concepts={hasTopConcept}/>
-			}
+				{(keywords || hasTopConcept.some(({ narrower }) => narrower?.length)) && // flat schemes are browsed whole
+                    <Search name={"Concepts"} search={{ text: keywords, submit: setKeywords }}/>
+				}
+
+				<Stack>{keywords
+					? <TaxonomySearch keywords={keywords}/>
+					: <SKOSConcepts concepts={hasTopConcept}/>
+				}</Stack>
+
+			</Stack>
 
 		</>
 
@@ -230,7 +236,7 @@ function TaxonomySearch({
 
 		ready: ({ state }) => state.length > 0
 			? <SKOSConcepts concepts={state}/>
-			: <Empty>{taxonomies.glyph} No Matches</Empty>
+			: <TreePlaceholder>{taxonomies.glyph} No Matches</TreePlaceholder>
 
 	});
 

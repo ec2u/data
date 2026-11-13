@@ -69,7 +69,7 @@ export function Tree({
 
 		<header>
 
-			<Button disabled={!branch}
+			<Button disabled={!branch} look={"subtle"}
 
 				icon={branch && open ? <Icon.Collapse/> : <Icon.Expand/>}
 				title={branch && open ? "Collapse" : "Expand"}
@@ -85,5 +85,28 @@ export function Tree({
 		{branch && open && <section>{children}</section>}
 
 	</>);
+
+}
+
+/**
+ * Creates a tree placeholder.
+ *
+ * Shows a note standing in for tree nodes that are missing, such as "No Matches" under a search returning nothing, set
+ * in the placeholder colour, with a leading glyph lined up under the glyph of a search box placed right above it.
+ */
+export function TreePlaceholder({
+
+	children
+
+}: {
+
+	/**
+	 * The content of the note: a leading glyph followed by its wording.
+	 */
+	children: ComponentChildren
+
+}) {
+
+	return createElement("clay-tree-placeholder", {}, children);
 
 }
