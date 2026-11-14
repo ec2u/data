@@ -20,6 +20,7 @@ import { iri, text } from "@metreeca/blue/string";
 import { union } from "@metreeca/blue/union";
 import type { State } from "@metreeca/blue/value";
 import { assert, isDefined } from "@metreeca/core";
+import { unique } from "@metreeca/core/arrays";
 import type { Tag } from "@metreeca/core/language";
 import { createNamespace, resolve } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
@@ -169,6 +170,10 @@ export const partners = immutable(Object.fromEntries([
 ].map(partner =>
 	[partner.id, partner]
 )));
+
+export const languages = immutable(unique([
+	"en", ...Object.values(partners).map(({ locale }) => locale)
+]));
 
 export const licenses = immutable({
 

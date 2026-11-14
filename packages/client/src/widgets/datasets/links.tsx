@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-import { base, partners } from "@ec2u/data-shared";
+import { base, languages, partners } from "@ec2u/data-shared";
 import { Link } from "@metreeca/clay-widgets/link";
 import { opt, type Optional } from "@metreeca/core";
 import { nameTag, type Tag } from "@metreeca/core/language";
 import { by, locale } from "@metreeca/core/order";
 import { internalize, resolve } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
 import { tagURL } from "@metreeca/work/core/language.js";
 import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { type ComponentChildren, createElement } from "preact";
 import "./links.css";
 
-
-/**
- * The languages of the alliance: English and the local languages of the partner universities.
- */
-const languages = immutable([...new Set(["en", ...Object.values(partners).map(({ locale }) => locale)])]);
 
 /**
  * Identifies the local language of a partner university, to be assumed for its pages stating no language of their own.
