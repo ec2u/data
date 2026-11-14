@@ -24,6 +24,16 @@ import { immutable } from "@metreeca/core/values";
  */
 const parameters = immutable(["lang", "language", "locale", "lng", "hl"]);
 
+/**
+ * The ISO 639-2 special-purpose codes, which Intl may name although they identify no language.
+ */
+const special = immutable(["mis", "mul", "und", "zxx"]);
+
+
+/**
+ * The language names Intl displays in English, telling the codes of known languages apart.
+ */
+const english = lazy(() => new Intl.DisplayNames(["en"], { type: "language", fallback: "none" }));
 
 /**
  * The ISO 639-1 tags of the languages Intl can name, leaving out deprecated aliases such as `iw` for `he`.
@@ -31,18 +41,17 @@ const parameters = immutable(["lang", "language", "locale", "lng", "hl"]);
 const tags = lazy((): readonly Tag[] => {
 
 	const letters = [..."abcdefghijklmnopqrstuvwxyz"];
-	const english = new Intl.DisplayNames(["en"], { type: "language", fallback: "none" });
 
 	return letters
 		.flatMap(first => letters.map(second => `${first}${second}`))
-		.filter(tag => Intl.getCanonicalLocales(tag)[0] === tag && english.of(tag) !== undefined);
+		.filter(tag => Intl.getCanonicalLocales(tag)[0] === tag && english().of(tag) !== undefined);
 
 });
 
 /**
- * The normalised names of the languages in {@link tags}, in every locale Intl can name them in.
+ * The normalised names of the languages in {@link tags}, in every locale Intl holds names of its own for.
  */
-const names = lazy(() => tags()
+const names = lazy(() => Intl.DisplayNames.supportedLocalesOf(tags())
 	.map(locale => new Intl.DisplayNames([locale], { type: "language", fallback: "none" }))
 	.flatMap(display => tags().flatMap(tag => opt(display.of(tag), label => [{ label: normalize(label), tag }]) ?? []))
 );
@@ -82,15 +91,18 @@ export function tagName(name: string): Optional<Tag> {
  *
  * A language counts only when stated by a whole segment, query value or underscore- or space-separated file name word:
  * the host and the words of hyphenated slugs are never read, so that `/universite-de-paris` is not taken as German.
- * Path segments count only with two-letter codes, as `/iii/` or `/mal/` name research centres far more often than
- * Sichuan Yi or Malayalam; restrict `languages` to rule out codes such as `/id/` or `/my/`, which name records and
- * personal areas far more often than Indonesian or Burmese.
+ * Query values count with any two- or three-letter code, as in `?lang=fil`, while path segments count only with
+ * two-letter codes and file name words only with codes that have a two-letter equivalent, as `eng`: `/iii/` or `/mal/`
+ * name research centres and `new_report.pdf` a fresh report far more often than Sichuan Yi, Malayalam or Newari.
+ * Restrict `languages` to rule out codes such as `/id/` or `/my/`, which name records and personal areas far more often
+ * than Indonesian or Burmese.
  *
  * @param url The address of the page
- * @param languages The ISO 639-1 tags of the languages the page may be in; codes and names stating other languages are
- *   ignored; if omitted, any language is read
+ * @param languages The tags of the languages the page may be in, matched by base language, so that `pt-PT` admits `pt`;
+ *   codes and names stating other languages are ignored; if omitted, any language is read
  *
- * @returns The ISO 639-1 tag of the language `url` states, without region, or `undefined` if `url` states none
+ * @returns The ISO 639-1 tag of the language `url` states, or its ISO 639-2 code if it has no two-letter tag, without
+ *   region, or `undefined` if `url` states none
  *
  * @example
  *
@@ -111,28 +123,32 @@ export function tagURL(url: URLLike, languages?: readonly Tag[]): Optional<Tag> 
 	const segments = (safe(() => decodeURIComponent(path)) ?? path).split("/");
 	const file = segments.at(-1)?.match(/^(.+)\.[a-z0-9]+$/i)?.[1] ?? "";
 
+	const targets = languages?.map(language => safe(() => new Intl.Locale(language).language) ?? language);
+
 	return parsed === undefined ? undefined : [
 
-		...parameters.map(name => parsed.searchParams.get(name) ?? ""),
+		...parameters.map(name => language(parsed.searchParams.get(name) ?? "")),
 
-		...segments.filter(segment => /^[a-z]{2}(?:[-_][a-z]{2})?$/i.test(segment)),
+		...segments.filter(segment => /^[a-z]{2}(?:[-_][a-z]{2})?$/i.test(segment)).map(language),
 
-		...file.split(/[_\s]+/)
+		...file.split(/[_\s]+/).map(language).map(tag => tag?.length === 2 ? tag : undefined)
 
-	].map(value => {
+	].find(tag => {
 
-		const code = safe(() => new Intl.Locale(value.replaceAll("_", "-")).language);
-
-		return code !== undefined && tags().includes(code) ? code
-			: value.length > 3 ? tagName(value)
-				: undefined;
-
-	}).find(tag => {
-
-		return tag !== undefined && (languages === undefined || languages.includes(tag));
+		return tag !== undefined && (targets === undefined || targets.includes(tag));
 
 	});
 
+
+	function language(value: string): Optional<Tag> {
+
+		const code = safe(() => new Intl.Locale(value.replaceAll("_", "-")).language);
+
+		return code !== undefined && !special.includes(code) && english().of(code) !== undefined ? code
+			: value.length > 3 ? tagName(value)
+				: undefined;
+
+	}
 
 }
 

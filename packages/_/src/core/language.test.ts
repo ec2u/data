@@ -77,6 +77,22 @@ describe("tagURL()", () => {
 		expect(tagURL("https://example.org/page?lang=es-419")).toBe("es");
 	});
 
+	it("should read three-letter codes from query parameters", async () => {
+		expect(tagURL("https://example.org/page?lang=fil")).toBe("fil");
+		expect(tagURL("https://example.org/page?lang=haw")).toBe("haw");
+	});
+
+	it("should ignore special-purpose codes", async () => {
+		expect(tagURL("https://example.org/page?lang=und")).toBeUndefined();
+		expect(tagURL("https://example.org/page?lang=mul")).toBeUndefined();
+		expect(tagURL("https://example.org/page?lang=zxx")).toBeUndefined();
+	});
+
+	it("should ignore three-letter codes with no two-letter equivalent in file names", async () => {
+		expect(tagURL("https://example.org/new_report.pdf")).toBeUndefined(); // not Newari
+		expect(tagURL("https://example.org/report_ita.pdf")).toBe("it");
+	});
+
 	it("should read the language from language names in query parameters", async () => {
 		expect(tagURL("https://example.org/page?lang=English")).toBe("en");
 	});
@@ -140,6 +156,11 @@ describe("tagURL()", () => {
 		expect(tagURL("https://example.org/page?lang=de", ["en", "fr"])).toBeUndefined();
 		expect(tagURL("https://example.org/Versione%20Inglese.pdf", ["it"])).toBeUndefined();
 		expect(tagURL("https://example.org/de/en/page", ["en", "fr"])).toBe("en");
+	});
+
+	it("should match target languages by their base language", async () => {
+		expect(tagURL("https://example.org/pt/page", ["pt-PT"])).toBe("pt");
+		expect(tagURL("https://example.org/en/page", ["eng"])).toBe("en");
 	});
 
 	it("should return undefined for text that is no IRI", async () => {
