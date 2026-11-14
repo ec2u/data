@@ -72,6 +72,11 @@ describe("tagIRI()", () => {
 		expect(tagIRI("https://example.org/page?locale=pt_PT")).toBe("pt");
 	});
 
+	it("should read the language from full language tags in query parameters", async () => {
+		expect(tagIRI("https://example.org/page?lang=zh-Hans")).toBe("zh");
+		expect(tagIRI("https://example.org/page?lang=es-419")).toBe("es");
+	});
+
 	it("should read the language from path segments", async () => {
 		expect(tagIRI("https://www.uc.pt/en/")).toBe("en");
 		expect(tagIRI("https://www.uc.pt/pt")).toBe("pt");

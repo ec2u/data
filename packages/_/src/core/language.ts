@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { lazy, memo, opt, type Optional, safe } from "@metreeca/core";
-import type { Tag } from "@metreeca/core/language";
+import { lazy, opt, type Optional, safe } from "@metreeca/core";
+import { nameTag, type Tag } from "@metreeca/core/language";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
@@ -29,14 +29,14 @@ const tags = lazy((): readonly Tag[] => {
 
 	return letters
 		.flatMap(first => letters.map(second => `${first}${second}`))
-		.filter(tag => Intl.getCanonicalLocales(tag)[0] === tag && opt(display("en").of(tag), label => label !== tag));
+		.filter(tag => Intl.getCanonicalLocales(tag)[0] === tag && nameTag(tag) !== tag);
 
 });
 
 /**
- * The language names Intl displays in a locale.
+ * The normalised names of the languages in {@link tags}, in every locale Intl can name them in.
  */
-const display = memo((locale: Tag) => new Intl.DisplayNames([locale], { type: "language" }));
+const names = lazy(() => tags().flatMap(labels));
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +53,12 @@ const display = memo((locale: Tag) => new Intl.DisplayNames([locale], { type: "l
  * @returns The ISO 639-1 tag of the language `name` names, or `undefined` if no language is known by that name
  */
 export function tagName(name: string): Optional<Tag> {
-	return resolve(normalize(name));
+
+	const key = normalize(name);
+	const [match, ...others] = names().filter(({ label }) => label === key);
+
+	return others.length === 0 ? match?.tag : undefined;
+
 }
 
 /**
@@ -114,31 +119,24 @@ const reserved = immutable(["id", "my"]);
 
 
 /**
- * Resolves a normalised language name to the single tag it names in any locale.
+ * Lists the distinct normalised names a language is known by in the locales Intl can name it in, paired with its tag.
  */
-const resolve = memo((key: string): Optional<Tag> => {
-
-	const matches = tags().filter(tag => tags().some(locale =>
-		opt(display(locale).of(tag), label => label !== tag && normalize(label) === key)
-	));
-
-	return matches.length === 1 ? matches[0] : undefined;
-
-});
-
+function labels(tag: Tag): readonly { label: string, tag: Tag }[] {
+	return [...new Set(tags()
+		.map(locale => nameTag(tag, locale))
+		.filter(label => label !== tag)
+		.map(normalize)
+	)].map(label => ({ label, tag }));
+}
 
 /**
- * Resolves a language code, possibly ISO 639-2 and qualified by a region, as `en`, `eng`, `en-GB` or `pt_PT`, to the
- * ISO 639-1 tag of its language, or to nothing if the code names no language Intl can display.
+ * Resolves a language tag, possibly ISO 639-2 or underscore-separated, as `en`, `eng`, `en-GB`, `zh-Hans` or `pt_PT`,
+ * to the ISO 639-1 tag of its language, or to nothing if the tag names no language Intl can display.
  */
 function code(value: string): Optional<Tag> {
-
-	const language = value.match(/^([a-z]{2,3})(?:[-_][a-z]{2})?$/i)?.[1];
-
-	return opt(language, language => opt(Intl.getCanonicalLocales(language.toLowerCase())[0], tag =>
-		tags().includes(tag) ? tag : undefined
-	));
-
+	return opt(safe(() => new Intl.Locale(value.replaceAll("_", "-")).language), language =>
+		tags().includes(language) ? language : undefined
+	);
 }
 
 /**
