@@ -22,7 +22,7 @@ import { opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { immutable } from "@metreeca/core/values";
 import { string, type Target, xpath, type XPath } from "@metreeca/mime-xml";
-import { identifyTag } from "@metreeca/work/core/language.js";
+import { identifyTag } from "@metreeca/work/core/_language.js";
 import { hours } from "@metreeca/work/core/temporal.js";
 import type { CourseDraft, Dictionary, ProgramDraft } from "../sinks/sync.js";
 

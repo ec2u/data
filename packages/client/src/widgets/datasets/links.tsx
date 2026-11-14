@@ -20,7 +20,7 @@ import { opt, type Optional } from "@metreeca/core";
 import { nameTag, type Tag } from "@metreeca/core/language";
 import { by, locale } from "@metreeca/core/order";
 import { internalize, resolve } from "@metreeca/core/resource";
-import { inferTag } from "@metreeca/work/core/language.js";
+import { inferTag } from "@metreeca/work/core/_language.js";
 import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { type ComponentChildren, createElement } from "preact";
 import "./links.css";

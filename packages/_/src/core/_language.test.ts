@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { inferTag, identifyTag } from "./language.js";
+import { inferTag, identifyTag } from "./_language.js";
 
 
 describe("identifyTag()", () => {
