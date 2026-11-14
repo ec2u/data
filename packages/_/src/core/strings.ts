@@ -23,8 +23,8 @@
  * @module
  */
 
-import { type Optional } from "@metreeca/core";
-import { Markdown } from "@metreeca/core/strings";
+import { opt, type Optional } from "@metreeca/core";
+import { clip, Markdown } from "@metreeca/core/strings";
 
 
 /**
@@ -40,12 +40,27 @@ const MarkdownPattern = /^(?:[ \t]*\n)*(?:---[ \t]*\n(?:[\s\S]*?\n)?---[ \t]*(?:
  */
 const BreakPattern = /\r\n?/g;
 
+/**
+ * Matches a first paragraph eligible as a summary, being led by a letter.
+ */
+const LeadPattern = /^\p{L}/u;
+
+/**
+ * Matches the whitespace runs to be collapsed to a single space in a summary.
+ */
+const SpacePattern = /\s+/gu;
+
+/**
+ * The maximum length in code points of a summary drawn from a multi-line paragraph.
+ */
+const SummaryLength = 80;
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function summary(markdown: Markdown): Optional<Markdown> {
 
-	return split(markdown)?.[1] || undefined;
+	return opt(split(markdown)?.[1], brief);
 
 }
 
@@ -63,4 +78,13 @@ export function details(markdown: Markdown): Optional<Markdown> {
  */
 function split(markdown: Markdown): Optional<RegExpMatchArray> {
 	return markdown.replace(BreakPattern, "\n").match(MarkdownPattern) ?? undefined;
+}
+
+/**
+ * Shapes the first paragraph of a markdown text as its summary.
+ */
+function brief(paragraph: Markdown): Optional<Markdown> {
+	return !LeadPattern.test(paragraph) ? undefined
+		: paragraph.includes("\n") ? clip(paragraph.replace(SpacePattern, " "), SummaryLength)
+			: paragraph;
 }
