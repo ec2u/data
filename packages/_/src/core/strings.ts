@@ -30,21 +30,37 @@ import { Markdown } from "@metreeca/core/strings";
 /**
  * Matches a markdown text as its summary and details, the two parts trimmed of the blank lines and spaces around them.
  *
- * A front matter block opening the text, fenced by `---` lines, is skipped and belongs to neither part.
+ * A front matter block fenced by `---` lines and opening the text after any blank lines is skipped, owned by neither
+ * part; line breaks are expected as LF, so texts are {@link split} only once normalised.
  */
-const MarkdownPattern = /^(?:---[ \t]*\n(?:[\s\S]*?\n)?---[ \t]*(?:\n|$))?\s*([\s\S]*?)(?:[ \t]*\n[ \t]*\n\s*([\s\S]*?))?\s*$/;
+const MarkdownPattern = /^(?:[ \t]*\n)*(?:---[ \t]*\n(?:[\s\S]*?\n)?---[ \t]*(?:\n|$))?\s*([\s\S]*?)(?:[ \t]*\n[ \t]*\n\s*([\s\S]*?))?\s*$/;
+
+/**
+ * Matches the CRLF and lone CR line breaks to be normalised to LF.
+ */
+const BreakPattern = /\r\n?/g;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function summary(markdown: Markdown): Optional<Markdown> {
 
-	return markdown.match(MarkdownPattern)?.[1] || undefined;
+	return split(markdown)?.[1] || undefined;
 
 }
 
 export function details(markdown: Markdown): Optional<Markdown> {
 
-	return markdown.match(MarkdownPattern)?.[2] || undefined;
+	return split(markdown)?.[2] || undefined;
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Splits a markdown text into its summary and details, with its line breaks normalised to LF.
+ */
+function split(markdown: Markdown): Optional<RegExpMatchArray> {
+	return markdown.replace(BreakPattern, "\n").match(MarkdownPattern) ?? undefined;
 }

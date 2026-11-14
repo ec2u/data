@@ -49,6 +49,16 @@ describe("summary()", () => {
 		expect(summary("---\n---\nTopics.")).toBe("Topics.");
 	});
 
+	it("should skip a front matter after leading blank lines", async () => {
+		expect(summary("\n \t\n---\ntitle: Topics\n---\nTopics.")).toBe("Topics.");
+	});
+
+	it("should normalise CRLF and CR line breaks to LF", async () => {
+		expect(summary("Topics the dataset\r\nis about.\r\n \t\r\nMore.")).toBe("Topics the dataset\nis about.");
+		expect(summary("Topics the dataset\ris about.\r\rMore.")).toBe("Topics the dataset\nis about.");
+		expect(summary("---\r\ntitle: Topics\r\n---\r\n\r\nTopics.\r\n\r\nMore.")).toBe("Topics.");
+	});
+
 	it("should keep an unclosed front matter fence as text", async () => {
 		expect(summary("---\nTopics.")).toBe("---\nTopics.");
 	});
@@ -85,6 +95,16 @@ describe("details()", () => {
 	it("should skip a leading front matter", async () => {
 		expect(details("---\ntitle: Topics\n---\n\nTopics.\n\nMore.")).toBe("More.");
 		expect(details("---\ntitle: Topics\n---\nTopics.")).toBeUndefined();
+	});
+
+	it("should skip a front matter after leading blank lines", async () => {
+		expect(details("\n \t\n---\ntitle: Topics\n---\n\nTopics.\n\nMore.")).toBe("More.");
+	});
+
+	it("should normalise CRLF and CR line breaks to LF", async () => {
+		expect(details("Topics.\r\n \t\r\nDrawn.\r\n\r\nMore.\r\n")).toBe("Drawn.\n\nMore.");
+		expect(details("Topics.\r\rDrawn.\r\rMore.")).toBe("Drawn.\n\nMore.");
+		expect(details("---\r\ntitle: Topics\r\n---\r\n\r\nTopics.\r\n\r\nMore.")).toBe("More.");
 	});
 
 	it("should return undefined for a single paragraph", async () => {
