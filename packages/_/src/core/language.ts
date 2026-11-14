@@ -105,16 +105,13 @@ export function tagName(name: string): Optional<Tag> {
  */
 export function tagURL(url: URLLike, languages?: readonly Tag[]): Optional<Tag> {
 
-	const parsed = safe(() => new URL(url));
+	const parsed = opt(safe(() => new URL(url)), url => /^https?:$/.test(url.protocol) ? url : undefined);
+	const path = parsed?.pathname ?? "";
 
-	if ( parsed === undefined || !/^https?:$/.test(parsed.protocol) ) {
-		return undefined;
-	}
-
-	const segments = (safe(() => decodeURIComponent(parsed.pathname)) ?? parsed.pathname).split("/");
+	const segments = (safe(() => decodeURIComponent(path)) ?? path).split("/");
 	const file = segments.at(-1)?.match(/^(.+)\.[a-z0-9]+$/i)?.[1] ?? "";
 
-	return [
+	return parsed === undefined ? undefined : [
 
 		...parameters.map(name => parsed.searchParams.get(name) ?? ""),
 
