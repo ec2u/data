@@ -40,6 +40,23 @@ describe("summary()", () => {
 		expect(summary("\n\n  Topics.  \n\nDrawn from EuroSciVoc.")).toBe("Topics.");
 	});
 
+	it("should skip a leading front matter", async () => {
+		expect(summary("---\ntitle: Topics\n---\n\nTopics.\n\nMore.")).toBe("Topics.");
+		expect(summary("---\ntitle: Topics\n---\nTopics.")).toBe("Topics.");
+	});
+
+	it("should skip an empty front matter", async () => {
+		expect(summary("---\n---\nTopics.")).toBe("Topics.");
+	});
+
+	it("should keep an unclosed front matter fence as text", async () => {
+		expect(summary("---\nTopics.")).toBe("---\nTopics.");
+	});
+
+	it("should return undefined for front matter alone", async () => {
+		expect(summary("---\ntitle: Topics\n---\n")).toBeUndefined();
+	});
+
 	it("should return undefined for blank text", async () => {
 		expect(summary("")).toBeUndefined();
 		expect(summary(" \n\n ")).toBeUndefined();
@@ -63,6 +80,11 @@ describe("details()", () => {
 
 	it("should trim the details", async () => {
 		expect(details("Topics.\n\n\n  Drawn.  \n\n")).toBe("Drawn.");
+	});
+
+	it("should skip a leading front matter", async () => {
+		expect(details("---\ntitle: Topics\n---\n\nTopics.\n\nMore.")).toBe("More.");
+		expect(details("---\ntitle: Topics\n---\nTopics.")).toBeUndefined();
 	});
 
 	it("should return undefined for a single paragraph", async () => {

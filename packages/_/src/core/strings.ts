@@ -29,8 +29,10 @@ import { Markdown } from "@metreeca/core/strings";
 
 /**
  * Matches a markdown text as its summary and details, the two parts trimmed of the blank lines and spaces around them.
+ *
+ * A front matter block opening the text, fenced by `---` lines, is skipped and belongs to neither part.
  */
-const MarkdownPattern = /^\s*([\s\S]*?)(?:[ \t]*\n[ \t]*\n\s*([\s\S]*?))?\s*$/;
+const MarkdownPattern = /^(?:---[ \t]*\n(?:[\s\S]*?\n)?---[ \t]*(?:\n|$))?\s*([\s\S]*?)(?:[ \t]*\n[ \t]*\n\s*([\s\S]*?))?\s*$/;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
