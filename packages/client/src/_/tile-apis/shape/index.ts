@@ -49,7 +49,7 @@ import type { Some } from "@metreeca/core/arrays";
 import { base, compact } from "@metreeca/core/resource";
 import { dedent } from "@metreeca/core/strings";
 import { equals } from "@metreeca/core/values";
-import { summary } from "@metreeca/work/core/strings.js";
+import { summary } from "@metreeca/work/core/_strings.js";
 
 
 /**

@@ -28,7 +28,7 @@ import { immutable } from "@metreeca/core/values";
 import { useCollection } from "@metreeca/tile/collection";
 import { useMembers } from "@metreeca/tile/members";
 import { useQuery } from "@metreeca/tile/query";
-import { summary } from "@metreeca/work/core/strings.js";
+import { summary } from "@metreeca/work/core/_strings.js";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { GitHub } from "../_/clay-widgets/github.js";

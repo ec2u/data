@@ -20,7 +20,7 @@ import { Button } from "@metreeca/clay-widgets/button";
 import { Icon } from "@metreeca/clay-widgets/icon";
 import { Link } from "@metreeca/clay-widgets/link";
 import { type Lazy, opt } from "@metreeca/core";
-import { details, summary } from "@metreeca/work/core/strings.js";
+import { details, summary } from "@metreeca/work/core/_strings.js";
 import type { ComponentChildren } from "preact";
 import { useId, useState } from "preact/hooks";
 import { bounded, constrain } from "./constraints.js";

@@ -32,7 +32,7 @@ import { useMembers } from "@metreeca/tile/members";
 import { useResource } from "@metreeca/tile/resource";
 import { date } from "@metreeca/tile/types/date";
 import { integer } from "@metreeca/tile/types/integer";
-import { details, summary } from "@metreeca/work/core/strings.js";
+import { details, summary } from "@metreeca/work/core/_strings.js";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { getShapeId, getShapeName } from "../../_/tile-apis/shape/index.js";

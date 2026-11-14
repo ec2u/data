@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { details, summary } from "./strings.js";
+import { details, summary } from "./_strings.js";
 
 
 describe("summary()", () => {
