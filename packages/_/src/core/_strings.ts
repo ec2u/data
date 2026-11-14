@@ -37,12 +37,9 @@ import { clip, Markdown, tidy } from "@metreeca/core/strings";
 
 
 /**
- * Matches markdown content as its summary and details, the two parts trimmed of the blank lines and spaces around them.
- *
- * A front matter block fenced by `---` lines and opening the content after any blank lines is skipped, owned by neither
- * part; line terminators are expected as `\n`, so content is matched only once its line terminators are normalised.
+ * The maximum length in code points of a summary drawn from a multi-line paragraph.
  */
-const MarkdownPattern = /^(?:[ \t]*\n)*(?:---[ \t]*\n(?:[\s\S]*?\n)?---[ \t]*(?:\n|$))?\s*([\s\S]*?)(?:[ \t]*\n[ \t]*\n\s*([\s\S]*?))?\s*$/;
+const SummaryLength = 80;
 
 /**
  * Matches the `\r\n` and `\r` line terminators to be normalised to `\n`.
@@ -55,9 +52,12 @@ const BreakPattern = /\r\n?/g;
 const LeadPattern = /^\p{L}/u;
 
 /**
- * The maximum length in code points of a summary drawn from a multi-line paragraph.
+ * Matches markdown content as its summary and details, the two parts trimmed of the blank lines and spaces around them.
+ *
+ * A front matter block fenced by `---` lines and opening the content after any blank lines is skipped, owned by neither
+ * part; line terminators are expected as `\n`, so content is matched only once its line terminators are normalised.
  */
-const SummaryLength = 80;
+const MarkdownPattern = /^(?:[ \t]*\n)*(?:---[ \t]*\n(?:[\s\S]*?\n)?---[ \t]*(?:\n|$))?\s*([\s\S]*?)(?:[ \t]*\n[ \t]*\n\s*([\s\S]*?))?\s*$/;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
