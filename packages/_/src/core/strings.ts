@@ -23,6 +23,7 @@
  * @module
  */
 
+import { type Optional } from "@metreeca/core";
 import { Markdown } from "@metreeca/core/strings";
 
 
@@ -34,14 +35,14 @@ const MarkdownPattern = /^\s*([\s\S]*?)(?:[ \t]*\n[ \t]*\n\s*([\s\S]*?))?\s*$/;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function summary(markdown: Markdown): Markdown {
+export function summary(markdown: Markdown): Optional<Markdown> {
 
-	return markdown.match(MarkdownPattern)?.[1] ?? "";
+	return markdown.match(MarkdownPattern)?.[1] || undefined;
 
 }
 
-export function details(markdown: Markdown): Markdown {
+export function details(markdown: Markdown): Optional<Markdown> {
 
-	return markdown.match(MarkdownPattern)?.[2] ?? "";
+	return markdown.match(MarkdownPattern)?.[2] || undefined;
 
 }

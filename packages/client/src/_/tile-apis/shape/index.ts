@@ -1359,8 +1359,8 @@ function markup(text: ResourceShape["description"]): Optional<string> {
 /**
  * Extracts the summary of a markdown description: its first paragraph, with whitespace collapsed.
  */
-function summarize(markdown: string): string {
-	return collapse(summary(markdown));
+function summarize(markdown: string): Optional<string> {
+	return opt(summary(markdown), collapse);
 }
 
 /**

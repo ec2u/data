@@ -40,9 +40,9 @@ describe("summary()", () => {
 		expect(summary("\n\n  Topics.  \n\nDrawn from EuroSciVoc.")).toBe("Topics.");
 	});
 
-	it("should return an empty string for blank text", async () => {
-		expect(summary("")).toBe("");
-		expect(summary(" \n\n ")).toBe("");
+	it("should return undefined for blank text", async () => {
+		expect(summary("")).toBeUndefined();
+		expect(summary(" \n\n ")).toBeUndefined();
 	});
 
 });
@@ -65,13 +65,14 @@ describe("details()", () => {
 		expect(details("Topics.\n\n\n  Drawn.  \n\n")).toBe("Drawn.");
 	});
 
-	it("should return an empty string for a single paragraph", async () => {
-		expect(details("Topics the dataset\nis about.")).toBe("");
-		expect(details("Topics.\n\n  ")).toBe("");
+	it("should return undefined for a single paragraph", async () => {
+		expect(details("Topics the dataset\nis about.")).toBeUndefined();
+		expect(details("Topics.\n\n  ")).toBeUndefined();
 	});
 
-	it("should return an empty string for blank text", async () => {
-		expect(details("")).toBe("");
+	it("should return undefined for blank text", async () => {
+		expect(details("")).toBeUndefined();
+		expect(details(" \n\n ")).toBeUndefined();
 	});
 
 });

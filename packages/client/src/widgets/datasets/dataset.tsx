@@ -293,7 +293,7 @@ export function DatasetPage({
 
 		ready: ({ state: { description = "", publisher, source, rights, license = [], accessRights } }) => <>
 
-			<Markdown>{summary(description)}</Markdown>
+			{opt(summary(description), brief => <Markdown>{brief}</Markdown>)}
 
 			<Infobox wrap>{{
 
@@ -305,7 +305,7 @@ export function DatasetPage({
 
 			}}</Infobox>
 
-			{details(description) === "" ? undefined : <Markdown>{details(description)}</Markdown>}
+			{opt(details(description), more => <Markdown>{more}</Markdown>)}
 
 		</>
 

@@ -260,7 +260,7 @@ function dataset({ dataset: { id, title, description }, size }: DatasetRow): Dat
 		size,
 		glyph,
 		priority,
-		description: opt(description, description => ec2u(summary(description)))
+		description: opt(opt(description, summary), ec2u)
 	};
 
 }
