@@ -77,6 +77,10 @@ describe("tagIRI()", () => {
 		expect(tagIRI("https://example.org/page?lang=es-419")).toBe("es");
 	});
 
+	it("should read the language from language names in query parameters", async () => {
+		expect(tagIRI("https://example.org/page?lang=English")).toBe("en");
+	});
+
 	it("should read the language from path segments", async () => {
 		expect(tagIRI("https://www.uc.pt/en/")).toBe("en");
 		expect(tagIRI("https://www.uc.pt/pt")).toBe("pt");

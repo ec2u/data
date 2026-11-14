@@ -15,9 +15,21 @@
  */
 
 import { lazy, opt, type Optional, safe } from "@metreeca/core";
-import { nameTag, type Tag } from "@metreeca/core/language";
+import type { Tag } from "@metreeca/core/language";
 import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
+
+
+/**
+ * The query parameters stating the language of a page.
+ */
+const parameters = immutable(["lang", "language", "locale", "lng", "hl"]);
+
+/**
+ * The language codes that path segments far more often use for other purposes, as `/id/` for record identifiers and
+ * `/my/` for personal areas, rather than for Indonesian and Burmese, and are therefore never read as languages there.
+ */
+const reserved = immutable(["id", "my"]);
 
 
 /**
@@ -26,17 +38,21 @@ import { immutable } from "@metreeca/core/values";
 const tags = lazy((): readonly Tag[] => {
 
 	const letters = [..."abcdefghijklmnopqrstuvwxyz"];
+	const english = new Intl.DisplayNames(["en"], { type: "language", fallback: "none" });
 
 	return letters
 		.flatMap(first => letters.map(second => `${first}${second}`))
-		.filter(tag => Intl.getCanonicalLocales(tag)[0] === tag && nameTag(tag) !== tag);
+		.filter(tag => Intl.getCanonicalLocales(tag)[0] === tag && english.of(tag) !== undefined);
 
 });
 
 /**
  * The normalised names of the languages in {@link tags}, in every locale Intl can name them in.
  */
-const names = lazy(() => tags().flatMap(labels));
+const names = lazy(() => tags()
+	.map(locale => new Intl.DisplayNames([locale], { type: "language", fallback: "none" }))
+	.flatMap(display => tags().flatMap(tag => opt(display.of(tag), label => [{ label: normalize(label), tag }]) ?? []))
+);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,9 +71,9 @@ const names = lazy(() => tags().flatMap(labels));
 export function tagName(name: string): Optional<Tag> {
 
 	const key = normalize(name);
-	const [match, ...others] = names().filter(({ label }) => label === key);
+	const matches = names().filter(({ label }) => label === key).map(({ tag }) => tag);
 
-	return others.length === 0 ? match?.tag : undefined;
+	return matches.every(tag => tag === matches[0]) ? matches[0] : undefined;
 
 }
 
@@ -67,7 +83,7 @@ export function tagName(name: string): Optional<Tag> {
  * Tells apart the localised versions of a page published on the same site, as `https://www.uc.pt/en/` and
  * `https://www.uc.pt/pt`, where the host alone gives them the same label. The language is read from the first of:
  *
- * - a `lang`, `language`, `locale`, `lng` or `hl` query parameter, as in `detail.php?lang=en`
+ * - a `lang`, `language`, `locale`, `lng` or `hl` query parameter, as in `detail.php?lang=en` or `?lang=English`
  * - a path segment naming a language, as in `/en/` or `/courses/EN/course/2301`
  * - a file name naming a language, as in `home_en.htm`, `GEP_eng.pdf` or `Codice Etico – Versione Inglese.pdf`
  *
@@ -93,90 +109,40 @@ export function tagIRI(iri: IRI): Optional<Tag> {
 
 	const url = safe(() => new URL(iri));
 
-	return url === undefined || !/^https?:$/.test(url.protocol) ? undefined : [
+	if ( url === undefined || !/^https?:$/.test(url.protocol) ) {
+		return undefined;
+	}
 
-		...query(url),
-		...path(url),
-		...file(url)
+	const segments = (safe(() => decodeURIComponent(url.pathname)) ?? url.pathname).split("/");
+	const file = segments.at(-1)?.match(/^(.+)\.[a-z0-9]+$/i)?.[1] ?? "";
 
-	].find(tag => tag !== undefined);
+	return [
+
+		...parameters.map(name => url.searchParams.get(name) ?? ""),
+
+		...segments.filter(segment =>
+			/^[a-z]{2}(?:[-_][a-z]{2})?$/i.test(segment)
+			&& !reserved.includes(segment.slice(0, 2).toLowerCase())
+		),
+
+		...file.split(/[_\s]+/)
+
+	].map(language).find(tag => tag !== undefined);
+
+
+	function language(value: string): Optional<Tag> {
+
+		const code = safe(() => new Intl.Locale(value.replaceAll("_", "-")).language);
+
+		return code !== undefined && tags().includes(code) ? code
+			: value.length > 3 ? tagName(value)
+				: undefined;
+	}
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * The query parameters stating the language of a page.
- */
-const parameters = immutable(["lang", "language", "locale", "lng", "hl"]);
-
-/**
- * The language codes that path segments far more often use for other purposes, as `/id/` for record identifiers and
- * `/my/` for personal areas, rather than for Indonesian and Burmese, and are therefore never read as languages there.
- */
-const reserved = immutable(["id", "my"]);
-
-
-/**
- * Lists the distinct normalised names a language is known by in the locales Intl can name it in, paired with its tag.
- */
-function labels(tag: Tag): readonly { label: string, tag: Tag }[] {
-	return [...new Set(tags()
-		.map(locale => nameTag(tag, locale))
-		.filter(label => label !== tag)
-		.map(normalize)
-	)].map(label => ({ label, tag }));
-}
-
-/**
- * Resolves a language tag, possibly ISO 639-2 or underscore-separated, as `en`, `eng`, `en-GB`, `zh-Hans` or `pt_PT`,
- * to the ISO 639-1 tag of its language, or to nothing if the tag names no language Intl can display.
- */
-function code(value: string): Optional<Tag> {
-	return opt(safe(() => new Intl.Locale(value.replaceAll("_", "-")).language), language =>
-		tags().includes(language) ? language : undefined
-	);
-}
-
-/**
- * Lists the languages stated by the query parameters of an address, in {@link parameters} order.
- */
-function query(url: URL): readonly Optional<Tag>[] {
-	return parameters.map(name => opt(url.searchParams.get(name) ?? undefined, code));
-}
-
-/**
- * Lists the languages stated by the two-letter path segments of an address, skipping {@link reserved} codes.
- */
-function path(url: URL): readonly Optional<Tag>[] {
-	return url.pathname.split("/").map(decode)
-		.filter(segment => /^[a-z]{2}(?:[-_][a-z]{2})?$/i.test(segment)
-			&& !reserved.includes(segment.slice(0, 2).toLowerCase())
-		)
-		.map(code);
-}
-
-/**
- * Lists the languages stated by the words of the file name an address ends with, as codes or as language names, so
- * that both `home_en.htm` and `Versione Inglese.pdf` yield `en`; addresses not ending with a file name list none.
- */
-function file(url: URL): readonly Optional<Tag>[] {
-
-	const name = decode(url.pathname.split("/").at(-1) ?? "").match(/^(.+)\.[a-z0-9]+$/i)?.[1];
-
-	return name === undefined ? [] : name.split(/[_\s]+/).map(word =>
-		code(word) ?? (word.length > 3 ? tagName(word) : undefined)
-	);
-
-}
-
-/**
- * Decodes a percent-encoded address component, keeping it as it stands if malformed.
- */
-function decode(component: string): string {
-	return safe(() => decodeURIComponent(component)) ?? component;
-}
 
 /**
  * Normalises a language name for lookup, ignoring case and Latin accents.
