@@ -20,11 +20,17 @@ import { opt, type Optional } from "@metreeca/core";
 import { nameTag, type Tag } from "@metreeca/core/language";
 import { by, locale } from "@metreeca/core/order";
 import { internalize, resolve } from "@metreeca/core/resource";
-import { tagIRI } from "@metreeca/work/core/language.js";
+import { immutable } from "@metreeca/core/values";
+import { tagURL } from "@metreeca/work/core/language.js";
 import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { type ComponentChildren, createElement } from "preact";
 import "./links.css";
 
+
+/**
+ * The languages of the alliance: English and the local languages of the partner universities.
+ */
+const languages = immutable([...new Set(["en", ...Object.values(partners).map(({ locale }) => locale)])]);
 
 /**
  * Identifies the local language of a partner university, to be assumed for its pages stating no language of their own.
@@ -51,8 +57,9 @@ export function color(university: Optional<string>): Optional<string> {
 /**
  * Renders an outbound link to a web address.
  *
- * Keeps the localised versions of a page on the same site apart, setting the tag of the language the address states
- * as a small raised remark after the link and outside it, as in `www.uc.pt ᵉⁿ`, naming the language in full on hover.
+ * Keeps the localised versions of a page on the same site apart, setting the tag of the alliance language the address
+ * states as a small raised remark after the link and outside it, as in `www.uc.pt ᵉⁿ`, naming the language in full on
+ * hover; codes for other languages, as `/id/` in record addresses, are ignored as more likely naming something else.
  *
  * @param url The web address to be linked
  * @param fallback The tag of the language assumed for `url` if it states none, for instance the local language of the
@@ -65,7 +72,7 @@ export function address(url: string, fallback?: Tag): ComponentChildren {
 
 	const link = <Link href={url}>{getIRIHost(url) ?? url}</Link>;
 
-	return opt(tagIRI(url) ?? fallback, tag => createElement("ec2u-address", {},
+	return opt(tagURL(url, languages) ?? fallback, tag => createElement("ec2u-address", {},
 		link, <span title={nameTag(tag, navigator.language)}>{tag}</span>
 	)) ?? link;
 

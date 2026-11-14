@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { lazy, opt, type Optional, safe } from "@metreeca/core";
+import { lazy, opt, type Optional, safe, type URLLike } from "@metreeca/core";
 import type { Tag } from "@metreeca/core/language";
-import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
 
@@ -24,12 +23,6 @@ import { immutable } from "@metreeca/core/values";
  * The query parameters stating the language of a page.
  */
 const parameters = immutable(["lang", "language", "locale", "lng", "hl"]);
-
-/**
- * The language codes that path segments far more often use for other purposes, as `/id/` for record identifiers and
- * `/my/` for personal areas, rather than for Indonesian and Burmese, and are therefore never read as languages there.
- */
-const reserved = immutable(["id", "my"]);
 
 
 /**
@@ -80,64 +73,69 @@ export function tagName(name: string): Optional<Tag> {
 /**
  * Infers the language of a web page from its address.
  *
- * Tells apart the localised versions of a page published on the same site, as `https://www.uc.pt/en/` and
- * `https://www.uc.pt/pt`, where the host alone gives them the same label. The language is read from the first of:
+ * Tells apart the localised versions of a page published on the same site, as `https://example.org/en/` and
+ * `https://example.org/pt`, where the host alone gives them the same label. The language is read from the first of:
  *
- * - a `lang`, `language`, `locale`, `lng` or `hl` query parameter, as in `detail.php?lang=en` or `?lang=English`
+ * - a `lang`, `language`, `locale`, `lng` or `hl` query parameter, as in `page.php?lang=en` or `?lang=English`
  * - a path segment naming a language, as in `/en/` or `/courses/EN/course/2301`
- * - a file name naming a language, as in `home_en.htm`, `GEP_eng.pdf` or `Codice Etico – Versione Inglese.pdf`
+ * - a file name naming a language, as in `home_en.htm`, `report_eng.pdf` or `Guida – Versione Inglese.pdf`
  *
  * A language counts only when stated by a whole segment, query value or underscore- or space-separated file name word:
- * the host and the words of hyphenated slugs are never read, so that `/universite-de-poitiers` is not taken as German.
- * Path segments count only with two-letter codes other than `id` and `my`, as `/iii/` or `/mal/` and `/id/` or `/my/`
- * name research centres, records and personal areas far more often than Sichuan Yi, Malayalam, Indonesian or Burmese.
+ * the host and the words of hyphenated slugs are never read, so that `/universite-de-paris` is not taken as German.
+ * Path segments count only with two-letter codes, as `/iii/` or `/mal/` name research centres far more often than
+ * Sichuan Yi or Malayalam; restrict `languages` to rule out codes such as `/id/` or `/my/`, which name records and
+ * personal areas far more often than Indonesian or Burmese.
  *
- * @param iri The address of the page
+ * @param url The address of the page
+ * @param languages The ISO 639-1 tags of the languages the page may be in; codes and names stating other languages are
+ *   ignored; if omitted, any language is read
  *
- * @returns The ISO 639-1 tag of the language `iri` states, without region, or `undefined` if `iri` states none
+ * @returns The ISO 639-1 tag of the language `url` states, without region, or `undefined` if `url` states none
  *
  * @example
  *
  * ```typescript
- * tagIRI("https://www.uc.pt/en/");                        // "en"
- * tagIRI("https://studienhandbuch.jku.at/a.php?lang=de"); // "de"
- * tagIRI("http://www.ag.jku.at/home_en.htm");             // "en"
- * tagIRI("https://www.uni-jena.de/");                     // undefined
+ * tagURL("https://example.org/en/");                     // "en"
+ * tagURL("https://example.org/page.php?lang=de");         // "de"
+ * tagURL("https://example.org/home_en.htm");              // "en"
+ * tagURL("https://example.org/id/1234");                  // "id"
+ * tagURL("https://example.org/id/1234", ["en", "fr"]);    // undefined
+ * tagURL("https://www.example.de/");                      // undefined
  * ```
  */
-export function tagIRI(iri: IRI): Optional<Tag> {
+export function tagURL(url: URLLike, languages?: readonly Tag[]): Optional<Tag> {
 
-	const url = safe(() => new URL(iri));
+	const parsed = safe(() => new URL(url));
 
-	if ( url === undefined || !/^https?:$/.test(url.protocol) ) {
+	if ( parsed === undefined || !/^https?:$/.test(parsed.protocol) ) {
 		return undefined;
 	}
 
-	const segments = (safe(() => decodeURIComponent(url.pathname)) ?? url.pathname).split("/");
+	const segments = (safe(() => decodeURIComponent(parsed.pathname)) ?? parsed.pathname).split("/");
 	const file = segments.at(-1)?.match(/^(.+)\.[a-z0-9]+$/i)?.[1] ?? "";
 
 	return [
 
-		...parameters.map(name => url.searchParams.get(name) ?? ""),
+		...parameters.map(name => parsed.searchParams.get(name) ?? ""),
 
-		...segments.filter(segment =>
-			/^[a-z]{2}(?:[-_][a-z]{2})?$/i.test(segment)
-			&& !reserved.includes(segment.slice(0, 2).toLowerCase())
-		),
+		...segments.filter(segment => /^[a-z]{2}(?:[-_][a-z]{2})?$/i.test(segment)),
 
 		...file.split(/[_\s]+/)
 
-	].map(language).find(tag => tag !== undefined);
-
-
-	function language(value: string): Optional<Tag> {
+	].map(value => {
 
 		const code = safe(() => new Intl.Locale(value.replaceAll("_", "-")).language);
 
 		return code !== undefined && tags().includes(code) ? code
 			: value.length > 3 ? tagName(value)
 				: undefined;
-	}
+
+	}).find(tag => {
+
+		return tag !== undefined && (languages === undefined || languages.includes(tag));
+
+	});
+
 
 }
 
