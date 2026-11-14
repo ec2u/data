@@ -20,7 +20,7 @@ import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { immutable } from "@metreeca/core/values";
-import { tagName } from "@metreeca/work/core/language.js";
+import { identifyTag } from "@metreeca/work/core/language.js";
 import { isHTTP } from "@metreeca/work/core/resources.js";
 import { hours } from "@metreeca/work/core/temporal.js";
 import type { CourseDraft, Dictionary, Draft, ProgramDraft } from "../sinks/sync.js";
@@ -220,7 +220,7 @@ function time(duration: string): Optional<string> {
 function languages(texts: Optional<Localized>): readonly string[] {
 	return [...new Set((texts ?? [])
 		.flatMap(({ locSigla, designacao }) => locSigla === "EN" ? designacao?.split(/\P{L}+/u) ?? [] : [])
-		.map(tagName)
+		.map(identifyTag)
 		.flatMap(multiple)
 	)];
 }

@@ -20,7 +20,7 @@ import { opt, type Optional } from "@metreeca/core";
 import { nameTag, type Tag } from "@metreeca/core/language";
 import { by, locale } from "@metreeca/core/order";
 import { internalize, resolve } from "@metreeca/core/resource";
-import { tagURL } from "@metreeca/work/core/language.js";
+import { inferTag } from "@metreeca/work/core/language.js";
 import { getIRIHost } from "@metreeca/work/core/resources.js";
 import { type ComponentChildren, createElement } from "preact";
 import "./links.css";
@@ -66,7 +66,7 @@ export function address(url: string, fallback?: Tag): ComponentChildren {
 
 	const link = <Link href={url}>{getIRIHost(url) ?? url}</Link>;
 
-	return opt(tagURL(url, languages) ?? fallback, tag => createElement("ec2u-address", {},
+	return opt(inferTag(url, languages) ?? fallback, tag => createElement("ec2u-address", {},
 		link, <span title={nameTag(tag, navigator.language)}>{tag}</span>
 	)) ?? link;
 

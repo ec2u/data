@@ -70,7 +70,7 @@ const names = lazy(() => Intl.DisplayNames.supportedLocalesOf(tags())
  *
  * @returns The ISO 639-1 tag of the language `name` names, or `undefined` if no language is known by that name
  */
-export function tagName(name: string): Optional<Tag> {
+export function identifyTag(name: string): Optional<Tag> {
 
 	const key = normalize(name);
 	const matches = names().filter(({ label }) => label === key).map(({ tag }) => tag);
@@ -107,15 +107,15 @@ export function tagName(name: string): Optional<Tag> {
  * @example
  *
  * ```typescript
- * tagURL("https://example.org/en/");                     // "en"
- * tagURL("https://example.org/page.php?lang=de");         // "de"
- * tagURL("https://example.org/home_en.htm");              // "en"
- * tagURL("https://example.org/id/1234");                  // "id"
- * tagURL("https://example.org/id/1234", ["en", "fr"]);    // undefined
- * tagURL("https://www.example.de/");                      // undefined
+ * inferTag("https://example.org/en/");                      // "en"
+ * inferTag("https://example.org/page.php?lang=de");         // "de"
+ * inferTag("https://example.org/home_en.htm");              // "en"
+ * inferTag("https://example.org/id/1234");                  // "id"
+ * inferTag("https://example.org/id/1234", ["en", "fr"]);    // undefined
+ * inferTag("https://www.example.de/");                      // undefined
  * ```
  */
-export function tagURL(url: URLLike, languages?: readonly Tag[]): Optional<Tag> {
+export function inferTag(url: URLLike, languages?: readonly Tag[]): Optional<Tag> {
 
 	const parsed = opt(safe(() => new URL(url)), url => /^https?:$/.test(url.protocol) ? url : undefined);
 	const path = parsed?.pathname ?? "";
@@ -145,7 +145,7 @@ export function tagURL(url: URLLike, languages?: readonly Tag[]): Optional<Tag> 
 		const code = safe(() => new Intl.Locale(value.replaceAll("_", "-")).language);
 
 		return code !== undefined && !special.includes(code) && english().of(code) !== undefined ? code
-			: value.length > 3 ? tagName(value)
+			: value.length > 3 ? identifyTag(value)
 				: undefined;
 
 	}

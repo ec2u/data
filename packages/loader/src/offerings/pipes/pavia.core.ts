@@ -22,7 +22,7 @@ import { opt, type Optional } from "@metreeca/core";
 import { multiple } from "@metreeca/core/arrays";
 import { immutable } from "@metreeca/core/values";
 import { string, type Target, xpath, type XPath } from "@metreeca/mime-xml";
-import { tagName } from "@metreeca/work/core/language.js";
+import { identifyTag } from "@metreeca/work/core/language.js";
 import { hours } from "@metreeca/work/core/temporal.js";
 import type { CourseDraft, Dictionary, ProgramDraft } from "../sinks/sync.js";
 
@@ -316,7 +316,7 @@ function course({ code, af }: Listed, program: string, offer: number): Optional<
 		...opt(duration(value(scope, "ns2:oreStuInd")), courseWorkload => ({ courseWorkload })),
 
 		inLanguage: [...new Set(scope("ns2:linDid/ns2:linDidAf/ns2:linDidDes")
-			.map(name => tagName(string(name)))
+			.map(name => identifyTag(string(name)))
 			.flatMap(multiple)
 		)],
 
