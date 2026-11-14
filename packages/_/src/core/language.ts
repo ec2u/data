@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-import { lazy, memo, opt, type Optional } from "@metreeca/core";
+import { lazy, memo, opt, type Optional, safe } from "@metreeca/core";
 import type { Tag } from "@metreeca/core/language";
+import type { IRI } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
-
-const letters = [..."abcdefghijklmnopqrstuvwxyz"];
 
 /**
  * The ISO 639-1 tags of the languages Intl can name, leaving out deprecated aliases such as `iw` for `he`.
  */
-const tags = lazy((): readonly Tag[] => letters
-	.flatMap(first => letters.map(second => `${first}${second}`))
-	.filter(tag => Intl.getCanonicalLocales(tag)[0] === tag && opt(display("en").of(tag), label => label !== tag))
-);
+const tags = lazy((): readonly Tag[] => {
+
+	const letters = [..."abcdefghijklmnopqrstuvwxyz"];
+
+	return letters
+		.flatMap(first => letters.map(second => `${first}${second}`))
+		.filter(tag => Intl.getCanonicalLocales(tag)[0] === tag && opt(display("en").of(tag), label => label !== tag));
+
+});
 
 /**
  * The language names Intl displays in a locale.
@@ -80,19 +84,17 @@ export function tagName(name: string): Optional<Tag> {
  * tagIRI("https://www.uni-jena.de/");                     // undefined
  * ```
  */
-export function tagIRI(iri: string): Optional<Tag> {
+export function tagIRI(iri: IRI): Optional<Tag> {
 
-	const url = URL.canParse(iri) ? new URL(iri) : undefined;
+	const url = safe(() => new URL(iri));
 
 	return url === undefined || !/^https?:$/.test(url.protocol) ? undefined : [
 
-		...parameters.map(name => url.searchParams.get(name) ?? ""),
-		...url.pathname.split("/").map(decode).filter(segment => /^[a-z]{2}(?:[-_][a-z]{2})?$/i.test(segment)
-			&& !reserved.includes(segment.slice(0, 2).toLowerCase())
-		),
-		...words(url)
+		...query(url),
+		...path(url),
+		...file(url)
 
-	].map(code).find(tag => tag !== undefined);
+	].find(tag => tag !== undefined);
 
 }
 
@@ -140,15 +142,33 @@ function code(value: string): Optional<Tag> {
 }
 
 /**
- * Lists the words of the file name an address ends with, resolving those spelling a language name to its tag, so that
- * both `home_en.htm` and `Versione Inglese.pdf` yield a code; addresses not ending with a file name list none.
+ * Lists the languages stated by the query parameters of an address, in {@link parameters} order.
  */
-function words(url: URL): readonly string[] {
+function query(url: URL): readonly Optional<Tag>[] {
+	return parameters.map(name => opt(url.searchParams.get(name) ?? undefined, code));
+}
+
+/**
+ * Lists the languages stated by the two-letter path segments of an address, skipping {@link reserved} codes.
+ */
+function path(url: URL): readonly Optional<Tag>[] {
+	return url.pathname.split("/").map(decode)
+		.filter(segment => /^[a-z]{2}(?:[-_][a-z]{2})?$/i.test(segment)
+			&& !reserved.includes(segment.slice(0, 2).toLowerCase())
+		)
+		.map(code);
+}
+
+/**
+ * Lists the languages stated by the words of the file name an address ends with, as codes or as language names, so
+ * that both `home_en.htm` and `Versione Inglese.pdf` yield `en`; addresses not ending with a file name list none.
+ */
+function file(url: URL): readonly Optional<Tag>[] {
 
 	const name = decode(url.pathname.split("/").at(-1) ?? "").match(/^(.+)\.[a-z0-9]+$/i)?.[1];
 
 	return name === undefined ? [] : name.split(/[_\s]+/).map(word =>
-		code(word) === undefined && word.length > 3 ? tagName(word) ?? "" : word
+		code(word) ?? (word.length > 3 ? tagName(word) : undefined)
 	);
 
 }
@@ -157,11 +177,7 @@ function words(url: URL): readonly string[] {
  * Decodes a percent-encoded address component, keeping it as it stands if malformed.
  */
 function decode(component: string): string {
-	try {
-		return decodeURIComponent(component);
-	} catch {
-		return component;
-	}
+	return safe(() => decodeURIComponent(component)) ?? component;
 }
 
 /**
