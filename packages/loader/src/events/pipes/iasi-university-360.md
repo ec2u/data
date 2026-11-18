@@ -16,6 +16,7 @@ Event info extracted by AI from the event catalogue and linked event pages.
 |-----------------------------------------------|---------------------|
 | https://360.uaic.ro/blog/category/evenimente/ | 360 Evenimente [ro] |
 
+- **2026-11-18** – suspended: the source blocks the crawler, so its daily scheduled run stays paused meanwhile
 - **2025-05-07** – migrated to AI extraction
 
 # 2022-02-26 – Feed adapter
