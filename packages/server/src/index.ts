@@ -27,15 +27,18 @@ import { resolve } from "node:path";
 import { courses } from "./courses/index.js";
 import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
-import { execute } from "./index.core.js";
+import { environment, execute } from "./index.core.js";
 import { programs } from "./programs/index.js";
 import { resources } from "./resources/index.js";
+import { robots } from "./robots.js";
 import { taxonomies } from "./taxonomies/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
 await execute(() => server(service(createStore), { depth: 3, limit: 100 })
+
+	.use(robots(environment))
 
 	.use(client(resolve(import.meta.dirname, "static")))
 
