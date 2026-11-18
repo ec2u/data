@@ -42,7 +42,7 @@ The package is wired into the repository like its siblings:
 - `npm run serve -w packages/oracle` runs it locally in watch mode
 - the `Dockerfile` builds its image with `--target oracle`
 - `.github/workflows/deploy.yml` deploys it as `oracle-{branch}`, closed to unauthenticated callers
-- `.claude/deployment.md` describes its service, identity and grants
+- the `deployment-manager` skill describes its service, identity and grants
 
 The root `start` script does not run the oracle. Locally, both services default to port 8080, so set `PORT` when
 running the oracle alongside the server.
