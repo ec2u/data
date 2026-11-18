@@ -90,6 +90,7 @@ export function translate(university: Partner): Task<Entry, Entry> {
 
 			return source.name === undefined && source.description === undefined ? [entry] : pipe(
 				(items(await generate(id, source)))
+				(map(tidy))
 				(validate(Reported))
 				(map(translated => immutable({
 
@@ -113,6 +114,18 @@ export function translate(university: Partner): Task<Entry, Entry> {
 		})))
 	);
 
+
+	/**
+	 * Collapses the whitespace of the translated name, which the model now and then pads or doubles, so the name meets
+	 * its text shape rather than costing the draft its translation on every run.
+	 */
+	function tidy({ name, ...translated }: State<typeof Reported>): State<typeof Reported> {
+
+		const tidied = name?.replace(/\s+/g, " ").trim();
+
+		return tidied ? { ...translated, name: tidied } : translated;
+
+	}
 
 	async function generate(id: string, { name, description }: {
 
