@@ -15,8 +15,8 @@ of the stored programs and courses retracts nothing and fails, so a listing that
 the catalogue: a pruning below that share requires a forced reload, once the withdrawal is confirmed with the
 university.
 
-| Source                                     | Description          | Notes                                                             |
-|--------------------------------------------|----------------------|-------------------------------------------------------------------|
+| Source                                     | Description          | Notes                                                                  |
+|--------------------------------------------|----------------------|------------------------------------------------------------------------|
 | https://ec2u.datahub.jku.at/api/1/programs | degree programs [de] | held in GCP Secret Manager as `base-programs-linz-url`                 |
 | https://ec2u.datahub.jku.at/api/1/courses  | courses [de, en]     | held in GCP Secret Manager as `base-courses-linz-url`; no descriptions |
 

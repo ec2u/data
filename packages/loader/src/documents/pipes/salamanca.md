@@ -13,8 +13,8 @@ Documents are drawn from a manually curated Google Sheet published as CSV and re
 transaction. A sheet naming fewer than three quarters of the stored documents states nothing and fails the run, so
 pruning the sheet below that share requires a forced reload, run by an operator once the withdrawal is confirmed.
 
-| Source                    | Description                                         | Notes                                                                                       |
-|---------------------------|-----------------------------------------------------|---------------------------------------------------------------------------------------------|
+| Source                         | Description                                         | Notes                                                                                       |
+|--------------------------------|-----------------------------------------------------|---------------------------------------------------------------------------------------------|
 | `base-documents-salamanca-url` | Salamanca University documents spreadsheet [en, es] | CSV export URL held in GCP Secret Manager under this key; header row, untitled rows skipped |
 
 Each row states one document, keyed by its `Identifier` or, failing that, by its English or local title: retitling a

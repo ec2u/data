@@ -14,8 +14,8 @@ keeps the units it stated and the next one carries on; unchanged rows are skippe
 quarters of the stored units retracts nothing and fails the run, so pruning the sheet below that share requires a forced
 reload, run by an operator once the withdrawal of the missing units is confirmed with the university.
 
-| Source           | Description                                | Notes                                                                                      |
-|------------------|--------------------------------------------|--------------------------------------------------------------------------------------------|
+| Source                | Description                                | Notes                                                                                      |
+|-----------------------|--------------------------------------------|--------------------------------------------------------------------------------------------|
 | `base-units-jena-url` | Jena University units spreadsheet [en, de] | CSV export URL held in GCP Secret Manager under this key; header row, unnamed rows skipped |
 
 Each row states one unit, keyed by its `Code` or, failing that, by its English or local name: renaming a unit without a

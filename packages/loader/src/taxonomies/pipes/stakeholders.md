@@ -13,8 +13,8 @@ Concepts drawn from a manually curated Google Sheet published as CSV and replace
 transaction; a document naming fewer than three quarters of the stored concepts states nothing and fails the run, so
 pruning the sheet below that share requires a forced reload.
 
-| Source                         | Description                            | Notes                                                                                    |
-|--------------------------------|----------------------------------------|------------------------------------------------------------------------------------------|
+| Source                              | Description                            | Notes                                                                                    |
+|-------------------------------------|----------------------------------------|------------------------------------------------------------------------------------------|
 | `base-taxonomies-ec2u-stakeholders` | EC2U stakeholder type spreadsheet [en] | CSV export URL held in GCP Secret Manager under this key; header row, blank rows skipped |
 
 - **2026-10-26** – publisher and licenses stated with their labels alongside the taxonomy

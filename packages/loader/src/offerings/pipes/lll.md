@@ -14,8 +14,8 @@ the EC2U university each row names, so an interrupted run keeps the courses it s
 unchanged rows are skipped. A sheet naming fewer than three quarters of the stored offerings retracts nothing and fails,
 so pruning it below that share requires a forced reload, once the withdrawal is confirmed with the curators.
 
-| Source              | Description                         | Notes                                                                                                                 |
-|---------------------|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| Source                   | Description                         | Notes                                                                                                                 |
+|--------------------------|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | `base-offerings-lll-url` | cross-alliance LLL spreadsheet [en] | CSV export URL held in GCP Secret Manager under this key; field reference at https://ec2u.atlassian.net/wiki/x/AYDCTg |
 
 A course is keyed by its `Code` or, failing that, by its English or local title, prefixed with `LLL/` so that it never

@@ -13,9 +13,9 @@ goals of the 2030 Agenda for Sustainable Development. The most recent version is
 Goals transcribed from the UN SDG Knowledge Organization System into a manually curated Google Sheet published as CSV,
 then replaced as a whole under a single store transaction, reusing the spreadsheet and the vault key of v1 unchanged.
 
-| Source                    | Description                      | Notes                                                                                    |
-|---------------------------|----------------------------------|------------------------------------------------------------------------------------------|
-| `base-taxonomies-ec2u-sdgs`    | UN SDGs spreadsheet [en]         | CSV export URL held in GCP Secret Manager under this key; header row, blank rows skipped |
-| https://sdgs.un.org/goals | UN Sustainable Development Goals | Authority the spreadsheet transcribes; not retrieved by the pipe                         |
+| Source                      | Description                      | Notes                                                                                    |
+|-----------------------------|----------------------------------|------------------------------------------------------------------------------------------|
+| `base-taxonomies-ec2u-sdgs` | UN SDGs spreadsheet [en]         | CSV export URL held in GCP Secret Manager under this key; header row, blank rows skipped |
+| https://sdgs.un.org/goals   | UN Sustainable Development Goals | Authority the spreadsheet transcribes; not retrieved by the pipe                         |
 
 - **2026-10-26** – initial integration

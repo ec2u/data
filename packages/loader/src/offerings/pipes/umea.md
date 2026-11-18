@@ -15,8 +15,8 @@ offering extracted by model, then stated one at a time, so an interrupted run ke
 one carries on; a page whose content is unchanged is fetched but not extracted again. A run naming fewer than three
 quarters of the stored offerings retracts nothing and fails, so a listing that fails to load costs a run.
 
-| Source                                                            | Description               | Notes                                                         |
-|-------------------------------------------------------------------|---------------------------|---------------------------------------------------------------|
+| Source                                                            | Description               | Notes                                                              |
+|-------------------------------------------------------------------|---------------------------|--------------------------------------------------------------------|
 | https://www.umu.se/utbildning/valj-utbildning/program-och-kurser/ | programs and courses [sv] | search API held in GCP Secret Manager as `base-offerings-umea-url` |
 
 The API is asked for every page under the `program` and `kurs` content labels, read as programs and courses and keyed by

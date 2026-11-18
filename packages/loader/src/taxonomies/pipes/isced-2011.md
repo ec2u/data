@@ -16,7 +16,7 @@ nothing and fails the run, so pruning the sheet below that share requires a forc
 
 | Source                                          | Description                              | Notes                                                                                    |
 |-------------------------------------------------|------------------------------------------|------------------------------------------------------------------------------------------|
-| `base-taxonomies-ec2u-isced-2011`                    | ISCED 2011 level spreadsheet [en]        | CSV export URL held in GCP Secret Manager under this key; header row, blank rows skipped |
+| `base-taxonomies-ec2u-isced-2011`               | ISCED 2011 level spreadsheet [en]        | CSV export URL held in GCP Secret Manager under this key; header row, blank rows skipped |
 | [uis.unesco.org/…isced-2011-en.pdf][isced-2011] | UNESCO classification, edition 2011 [en] | Authority the spreadsheet transcribes; not retrieved by the pipe                         |
 
 - **2026-10-26** – publisher and licenses stated with their labels alongside the taxonomy

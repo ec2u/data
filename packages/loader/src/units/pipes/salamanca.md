@@ -17,9 +17,9 @@ retrieved. Group memberships of EC2U virtual institutes come from a manually cur
 
 | Source                                        | Description                               | Notes                                                                |
 |-----------------------------------------------|-------------------------------------------|----------------------------------------------------------------------|
-| `base-units-salamanca-url`                         | Salamanca GIR API [es]                    | endpoint URL held in GCP Secret Manager under this key               |
-| `base-units-salamanca-key`                         | Salamanca GIR API credentials             | `user:password`, sent base64-encoded as HTTP basic authentication    |
-| `base-units-salamanca-vis-url`                     | Group ‹› virtual institute sheet [en, es] | CSV export URL held in GCP Secret Manager under this key; header row |
+| `base-units-salamanca-url`                    | Salamanca GIR API [es]                    | endpoint URL held in GCP Secret Manager under this key               |
+| `base-units-salamanca-key`                    | Salamanca GIR API credentials             | `user:password`, sent base64-encoded as HTTP basic authentication    |
+| `base-units-salamanca-vis-url`                | Group ‹› virtual institute sheet [en, es] | CSV export URL held in GCP Secret Manager under this key; header row |
 | https://usal.es/institutos-investigacion      | research institutes [es]                  |                                                                      |
 | https://investigacion.usal.es/es/empresas/gir | GIR companies [es]                        |                                                                      |
 

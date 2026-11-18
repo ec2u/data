@@ -17,8 +17,8 @@ the run, as does a listing that fails to be retrieved or answers with an error o
 
 | Source                                                                     | Description                | Notes                                                                               |
 |----------------------------------------------------------------------------|----------------------------|-------------------------------------------------------------------------------------|
-| `base-units-coimbra-url`                                                        | Coimbra units API [en, pt] | endpoint URL held in GCP Secret Manager under this key; answers with a 301 redirect |
-| `base-units-coimbra-key`                                                        | Coimbra units API key      | sent as the `Key` request header; held in GCP Secret Manager                        |
+| `base-units-coimbra-url`                                                   | Coimbra units API [en, pt] | endpoint URL held in GCP Secret Manager under this key; answers with a 301 redirect |
+| `base-units-coimbra-key`                                                   | Coimbra units API key      | sent as the `Key` request header; held in GCP Secret Manager                        |
 | https://www.uc.pt/iii/investigacao/unidades-i-d-e-laboratorios-associados/ | R&D units [pt]             | public listing the API feeds                                                        |
 
 Each unit is keyed by its API `id`, which is also stated as its identifier. The listing repeats every unit several times
