@@ -27,7 +27,7 @@ import { resolve } from "node:path";
 import { courses } from "./courses/index.js";
 import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
-import { environment, execute } from "./index.core.js";
+import { execute } from "./index.core.js";
 import { programs } from "./programs/index.js";
 import { resources } from "./resources/index.js";
 import { robots } from "./robots.js";
@@ -38,7 +38,7 @@ import { universities } from "./universities/index.js";
 
 await execute(() => server(service(createStore), { depth: 3, limit: 100 })
 
-	.use(robots(environment))
+	.use(robots(ec2u.base))
 
 	.use(client(resolve(import.meta.dirname, "static")))
 

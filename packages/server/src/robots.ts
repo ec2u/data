@@ -18,20 +18,28 @@ import type { RequestHandler } from "express";
 
 
 /**
- * Keeps search engines away from every environment but production.
+ * Keeps search engines on the canonical address of the hub.
  *
- * Responses served by any environment other than `main` carry an `X-Robots-Tag: noindex` header, so that staging and
- * development addresses never surface in search results; production responses are left untouched.
+ * Responses to requests for any host other than the one of `base` carry an `X-Robots-Tag: noindex` header, so that
+ * staging and development deployments, their `run.app` addresses and the alternate names of production never surface
+ * in search results; responses served on the canonical host are left untouched.
  *
- * @param environment The environment the server runs in, as named by `DATA_ENVIRONMENT`
+ * @param base The canonical address of the hub, whose host alone may be indexed
  *
  * @returns A handler to install ahead of every route
  */
-export function robots(environment: string): RequestHandler {
-	return environment === "main"
-		? (_request, _response, next) => next()
-		: (_request, response, next) => {
+export function robots(base: string): RequestHandler {
+
+	const canonical = new URL(base).hostname;
+
+	return (request, response, next) => {
+
+		if ( request.hostname !== canonical ) {
 			response.set("X-Robots-Tag", "noindex");
-			next();
-		};
+		}
+
+		next();
+
+	};
+
 }

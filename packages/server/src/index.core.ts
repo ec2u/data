@@ -24,7 +24,7 @@ import { createStore } from "@metreeca/pipe-store";
 import { createHTTPRepository } from "@metreeca/wire-sparql-http";
 
 
-export const environment = process.env.DATA_ENVIRONMENT || "edge"; // !!! align default to branch
+const environment = process.env.DATA_ENVIRONMENT || "edge"; // !!! align default to branch
 
 
 export const execute = executor(
