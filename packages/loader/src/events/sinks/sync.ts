@@ -38,7 +38,7 @@ import { harvest } from "../tasks/harvest.js";
 const retrieval = 10; // the number of pages fetched at the same time from the source site // !!! as option
 const analysis = 10; // the number of pages analysed at the same time by the model // !!! as option
 
-const survival = 0.75; // the smallest fraction of the stored events a single run must leave in place // !!! as option
+const survival = 0.5; // the smallest fraction of the stored events a single run must leave in place // !!! as option
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
