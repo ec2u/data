@@ -221,6 +221,25 @@ Fast `tcp` and `tls` times followed by a `total` running out to the timeout with
 the infrastructure: the host and its TLS terminator are up and GraphDB behind them is not answering, so no change to a
 pipe or a retrieval model will move it. Reach for the two probes above only once the endpoint answers.
 
+## Keeping Runs Incremental Across Pipe Changes
+
+A pipe skips an entry only while the digest stored with it matches the one the current code computes, and finds it
+only under the identifier the current code derives. A change to what feeds either (page reading and cleaning, such as
+`denoise()`, the fields a fingerprint covers, the identity rule) leaves every stored entry looking new, so the next runs
+extract the whole source again with the model, at a cost in tokens that cut-short cloud runs pay over and over.
+
+In the same change, bring the store in line instead of letting the runs rebuild it:
+
+- **Digests**: recompute each entry's digest with the new code and replace only the stored value, in a dry run counting
+  the mismatches first; entries with no stored counterpart are left to the next run
+- **Identifiers**: move or retract entries under the old names before the new code runs, so no duplicate survives
+- **Trade-off**: an entry whose source genuinely changed since its last extraction now looks current until it changes
+  again; accept it only where the change is known to alter the computation and not the content
+
+Drive the repair from the pipe itself, so scan, fingerprint and identity are exactly those of the code: a temporary
+branch in its sink, reverted once applied, works for every source the sink serves. Stored sources are string literals,
+not IRIs, so match them with `str(?source)`.
+
 # Issue Tracking
 
 Issues live in `ec2u/data` and belong to the Knowledge Hub project (`github.com/orgs/ec2u/projects/8`).
