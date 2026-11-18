@@ -14,7 +14,7 @@
   "scripts": {},
   "dependencies": {
     "@ec2u/data-shared": "*",
-    "@metreeca/clay-widgets": "^0.2.0",
+    "@metreeca/clay-widgets": "^0.2.1",
     "@metreeca/core": "^0.14.0",
     "@metreeca/tile": "^0.7.0",
     "@metreeca/tile-widgets": "^0.7.0",

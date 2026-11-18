@@ -78,3 +78,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Home page dataset cards no longer open a gap above their descriptions in Safari
 - Dataset counts on the home page line up with the first line of the dataset names
 - Page introductions in the sidebar break at the same points in every browser
+- Icons keep the height of the text they sit in on the deployed site, where they were drawn at an oversized default
