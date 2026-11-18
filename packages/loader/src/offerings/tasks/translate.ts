@@ -19,7 +19,7 @@ import { optional, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
 import { isString, type Optional } from "@metreeca/core";
-import { markdown } from "@metreeca/core/strings";
+import { markdown, tidy } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -142,6 +142,12 @@ export function translate(): Task<Entry, Entry> {
 
 			return Object.values(source).every(value => value === undefined) ? [entry] : pipe(
 				(items(await generate(draft.key, locale, source)))
+				(map(({ name, educationalCredential, occupationalCredential, ...translated }) => ({
+					...translated,
+					name: name && tidy(name) || undefined,
+					educationalCredential: educationalCredential && tidy(educationalCredential) || undefined,
+					occupationalCredential: occupationalCredential && tidy(occupationalCredential) || undefined
+				})))
 				(validate(Reported))
 				(map(translated => immutable({ ...entry, draft: merge(draft, translated) })))
 			);

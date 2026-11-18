@@ -19,6 +19,7 @@ import { schema } from "@metreeca/blue";
 import { optional, required, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
+import { tidy } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -96,6 +97,11 @@ export function extract(university: Partner): Task<Page, Entry> {
 		(items(pages))
 		(flat(map(async ({ url, document }) => pipe(
 			(items(await generate(url, document)))
+			(map(({ name, acronym, ...reported }) => ({
+				...reported,
+				name: tidy(name),
+				acronym: acronym && tidy(acronym) || undefined
+			})))
 			(validate(Reported))
 			(map(({ name, acronym, description, language }): Entry => {
 

@@ -22,6 +22,7 @@ import { optional, required, resource } from "@metreeca/blue/resource";
 import { duration, string, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
 import { isArray, isObject, opt, type Optional } from "@metreeca/core";
+import { tidy } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -173,6 +174,12 @@ export function extract(): Task<Page, Entry> {
 		(items(pages))
 		(flat(map(async ({ lead, document, hash }) => pipe(
 			(items(await generate(lead.url, document)))
+			(map(({ name, educationalCredential, occupationalCredential, ...reported }) => ({
+				...reported,
+				name: name && tidy(name) || undefined,
+				educationalCredential: educationalCredential && tidy(educationalCredential) || undefined,
+				occupationalCredential: occupationalCredential && tidy(occupationalCredential) || undefined
+			})))
 			(validate(Reported))
 			(map((reported): Entry => immutable({ hash, draft: drafted(lead.seed, lead.url, reported) })))
 		))))

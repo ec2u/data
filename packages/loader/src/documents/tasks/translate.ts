@@ -19,7 +19,7 @@ import { schema } from "@metreeca/blue";
 import { optional, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
 import type { State } from "@metreeca/blue/value";
-import { markdown } from "@metreeca/core/strings";
+import { markdown, tidy } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { pipe, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
@@ -90,6 +90,7 @@ export function translate(university: Partner): Task<Entry, Entry> {
 
 			return source.title === undefined && source.description === undefined ? [entry] : pipe(
 				(items(await generate(id, source)))
+				(map(({ title, ...translated }) => ({ ...translated, title: title && tidy(title) || undefined })))
 				(validate(Reported))
 				(map(translated => immutable({
 
