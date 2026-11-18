@@ -19,6 +19,9 @@
   "references": [
     {
       "path": "../_/core/tsconfig.build.json"
+    },
+    {
+      "path": "../_/gate/tsconfig.build.json"
     }
   ]
 }

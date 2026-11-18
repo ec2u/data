@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2026 EC2U Alliance
+ * Copyright © 2026 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { URLLike } from "@metreeca/core";
 import express from "express";
 import { type IncomingMessage, request } from "node:http";
 import type { AddressInfo } from "node:net";
@@ -25,10 +26,13 @@ import { robots } from "./robots.js";
 const base = "https://data.ec2u.eu/";
 
 
-async function served(host: string): Promise<{ readonly tag: string | undefined, readonly body: string }> {
+async function served(host: string, canonical: URLLike = base): Promise<{
+	readonly tag: string | undefined,
+	readonly body: string
+}> {
 
 	const app = express()
-		.use(robots(base))
+		.use(robots(canonical))
 		.get("/", (_request, response) => { response.send("ok"); });
 
 	const server = app.listen(0);
@@ -61,6 +65,11 @@ describe("robots()", () => {
 
 	it("leaves the canonical host indexable", async () => {
 		expect((await served("data.ec2u.eu")).tag).toBeUndefined();
+	});
+
+	it("accepts the canonical address as a URL", async () => {
+		expect((await served("data.ec2u.eu", new URL(base))).tag).toBeUndefined();
+		expect((await served("data.ec2u.cc", new URL(base))).tag).toBe("noindex");
 	});
 
 	it("marks alternate production names as not indexable", async () => {

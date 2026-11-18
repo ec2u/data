@@ -10,6 +10,7 @@
   "dependencies": {
     "@ec2u/data-shared": "*",
     "@kxta/core": "*",
+    "@kxta/gate": "*",
     "@metreeca/blue": "^0.14.0",
     "@metreeca/core": "^0.14.0",
     "@metreeca/gate": "^0.13.0",

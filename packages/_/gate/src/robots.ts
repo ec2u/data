@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2026 EC2U Alliance
+ * Copyright © 2026 Metreeca srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
+/**
+ * Search engine indexing control for services reachable under several addresses.
+ *
+ * @module
+ */
+
+import type { URLLike } from "@metreeca/core";
 import type { RequestHandler } from "express";
 
 
 /**
- * Keeps search engines on the canonical address of the hub.
+ * Keeps search engines on the canonical address of a service.
  *
- * Responses to requests for any host other than the one of `base` carry an `X-Robots-Tag: noindex` header, so that
- * staging and development deployments, their `run.app` addresses and the alternate names of production never surface
- * in search results; responses served on the canonical host are left untouched.
+ * Responses to requests for any host other than that of `base` carry an `X-Robots-Tag: noindex` header, so that
+ * staging and development deployments, platform addresses and the alternate names of production never surface in
+ * search results; responses served on the canonical host are left untouched and indexed as usual.
  *
- * @param base The canonical address of the hub, whose host alone may be indexed
+ * @param base The canonical address of the service, whose host alone may be indexed
  *
  * @returns A handler to install ahead of every route
  */
-export function robots(base: string): RequestHandler {
+export function robots(base: URLLike): RequestHandler {
 
 	const canonical = new URL(base).hostname;
 

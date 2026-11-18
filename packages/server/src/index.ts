@@ -17,6 +17,7 @@
 import * as ec2u from "@ec2u/data-shared";
 import { Datasets } from "@ec2u/data-shared";
 import { second } from "@kxta/core/temporal.js";
+import { robots } from "@kxta/gate/robots.js";
 import { server } from "@metreeca/gate";
 import { client } from "@metreeca/gate/client";
 import { driver } from "@metreeca/gate/driver";
@@ -30,7 +31,6 @@ import { events } from "./events/index.js";
 import { execute } from "./index.core.js";
 import { programs } from "./programs/index.js";
 import { resources } from "./resources/index.js";
-import { robots } from "./robots.js";
 import { taxonomies } from "./taxonomies/index.js";
 import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
@@ -39,7 +39,6 @@ import { universities } from "./universities/index.js";
 await execute(() => server(service(createStore), { depth: 3, limit: 100 })
 
 	.use(robots(ec2u.base))
-
 	.use(client(resolve(import.meta.dirname, "static")))
 
 	.use("/", driver(Datasets).lookup())
