@@ -36,6 +36,11 @@ import { log } from "@metreeca/tape";
 
 const logger = log(import.meta.url);
 
+const models = [ // tried in order: a page the light model loops on is retried with the larger one
+	"gemini-3.5-flash-lite",
+	"gemini-3.8-flash"
+];
+
 
 /**
  * A source document together with the address the scan listed it under.
@@ -239,35 +244,7 @@ export function extract(): Task<Retrieved, State<typeof Extracted>> {
 	return retrieved => pipe(
 		(items(retrieved))
 		(flat(map(async ({ url, document }) => pipe(
-			(items([
-
-				await ai.models.generateContent({
-
-					model: "gemini-3.5-flash-lite",
-
-					contents: [
-						markdown`
-							- date: ${getDate()}
-						`,
-						document
-					],
-
-					config: {
-
-						seed: 0,
-						temperature: 0,
-						maxOutputTokens: 16384,
-
-						systemInstruction: await getResource(".sys.md", import.meta.url),
-
-						responseMimeType: "application/json",
-						responseJsonSchema: schema(Reported)
-
-					}
-
-				})
-
-			]))
+			(items([await generate(document, models)]))
 			(filter(response => isGenerated(url, response)))
 			(map(response => json<State<typeof Reported>>(response)))
 			(map(reported => ({
@@ -291,6 +268,41 @@ export function extract(): Task<Retrieved, State<typeof Extracted>> {
 			})))
 		))))
 	);
+
+
+	async function generate(document: Markdown, [model, ...fallbacks]: readonly string[]): Promise<GenerateContentResponse> {
+
+		const response = await ai.models.generateContent({
+
+			model,
+
+			contents: [
+				markdown`
+					- date: ${getDate()}
+				`,
+				document
+			],
+
+			config: {
+
+				seed: 0,
+				temperature: 0,
+				maxOutputTokens: 4096, // above any genuine extraction, so a degenerate repetition loop fails cheaply
+
+				systemInstruction: await getResource(".sys.md", import.meta.url),
+
+				responseMimeType: "application/json",
+				responseJsonSchema: schema(Reported)
+
+			}
+
+		});
+
+		return response.candidates?.[0]?.finishReason === FinishReason.MAX_TOKENS && fallbacks.length > 0
+			? generate(document, fallbacks)
+			: response;
+
+	}
 
 }
 
