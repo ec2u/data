@@ -14,9 +14,11 @@
 # limitations under the License.
 #
 
-# Configure GCP project for local testing
+# Configure GCP project for local testing, as named by the GCP_PROJECT repository variable
 
-project=ec2u-data
+gh auth status >/dev/null 2>&1 || gh auth login
+
+project=$(gh variable get GCP_PROJECT) || exit 1
 
 gcloud auth print-access-token >/dev/null 2>&1 || gcloud auth login --update-adc
 gcloud auth application-default print-access-token >/dev/null 2>&1 || gcloud auth application-default login

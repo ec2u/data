@@ -108,8 +108,9 @@ Localised text is stored and handled as language maps (qest `Dictionary`); no la
 - **`npm run check`** - Run the test suite
 - **`npm run start`** - Serve the endpoints and the web UI in parallel, in watch mode
 
-Run `sh package.sh` by hand once per workstation, and again whenever `gcloud` points elsewhere: it signs in to `gcloud`
-and selects the `ec2u-data` project, whose resources local runs reach with the developer's own credentials.
+Run `sh package.sh` by hand once per workstation, and again whenever `gcloud` points elsewhere: it signs in to `gh` and
+`gcloud` and selects the project named by the `GCP_PROJECT` repository variable, whose resources local runs reach with
+the developer's own credentials. Reading the variable takes write access to `ec2u/data`.
 
 ## Testing
 
