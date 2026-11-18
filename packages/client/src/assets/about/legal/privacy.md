@@ -82,7 +82,7 @@ Personal data is disclosed to third parties only where the law requires it, for 
 
 The hub runs on Google Cloud, which acts as processor on behalf of the University of Pavia. Google Cloud hosts the hub,
 keeps its technical records and runs the AI models that process gathered content. All personal data the hub handles is
-processed and stored within a single Google Cloud region in the European Union, and is never used to train AI models.
+processed and stored within the European Union, and is never used to train AI models.
 
 Datasets are public: information about people named in them is accessible to anyone who browses the hub or calls its
 API, as it already is on the public pages of the universities it was gathered from.
@@ -116,7 +116,7 @@ removes it at the first update after the source withdraws it, or earlier at your
 
 ---
 
-*Last updated on 17 November 2026*
+*Last updated on 18 November 2026*
 
 [controller]: mailto:amministrazione-centrale@certunipv.it
 [dpo]: mailto:privacy@unipv.it

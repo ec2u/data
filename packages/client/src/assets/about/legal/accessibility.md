@@ -28,7 +28,7 @@ appear in a language other than the one your browser requests, even after enrich
 If something on the hub is hard or impossible for you to use, report the address of the page and what went wrong.
 Mention the browser and any assistive technology you were using, as that helps reproduce the problem.
 
-- **On the hub** – select the [feedback](../community/feedback) button of the page and choose the **Bug** type
+- **On the hub** – select the [feedback](../feedback) button of the page and choose the **Bug** type
 - **On GitHub** – open a [GitHub issue](https://github.com/ec2u/data/issues)
 - **By email** – write to the EC2U Connect Centre at [cc@ml.ec2u.eu](mailto:cc@ml.ec2u.eu)
 
@@ -39,6 +39,6 @@ AgID, the [Difensore civico per il digitale][ombudsman], as provided by article 
 
 ---
 
-*Last updated on 16 November 2026*
+*Last updated on 18 November 2026*
 
 [ombudsman]: https://www.agid.gov.it/it/difensore-civico-il-digitale

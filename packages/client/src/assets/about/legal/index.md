@@ -26,7 +26,7 @@ Italy
 ## Contact
 
 For questions about the hub, write to the EC2U Connect Centre. To report an error, open a [GitHub issue][issues] or
-select the [feedback](../community/feedback) button of the page where the error appears, which names that page for you.
+select the [feedback](../feedback) button of the page where the error appears, which names that page for you.
 
 EC2U Connect Centre  
 c/o University of Pavia  
@@ -82,7 +82,7 @@ how to see, correct or remove the data it holds about you, or to object to the w
 
 ---
 
-*Last updated on 16 November 2026*
+*Last updated on 18 November 2026*
 
 [ec2u]: https://www.ec2u.eu/
 [issues]: https://github.com/ec2u/data/issues
