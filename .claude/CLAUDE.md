@@ -248,6 +248,13 @@ Issues live in `ec2u/data` and belong to the Knowledge Hub project (`github.com/
 Branch issue work off `edge` (the development branch), not `next` or `main`. Issue branches follow the
 `{type}/gh-{number}-{slug}` convention and merge back into `edge`.
 
+## Frozen Values in the Client
+
+Never place a JSX element inside `immutable(…)`: it deep-freezes the element, and Preact writes into every element it
+renders, so the page crashes with `Cannot assign to read only property '__'`. Keep a component in frozen definitions
+instead (`glyph: Icon.Landmark`) and render it where needed (`<universities.glyph/>`). Check styling and rendering on
+the output of `vite build` too, not on the dev server alone, as production builds tree-shake and lower CSS.
+
 ## Home and About Links
 
 The `resources` link groups on the home page (`packages/client/src/pages/index.tsx`) and the matching `Get Involved`
