@@ -1,0 +1,78 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * The logo sets the alliance mark and the app name in a row, apart from each other by a bar in a tint of the wordmark
+ * navy; a viewport too narrow for two columns leaves room for the app name alone, so the mark and the bar give way.
+ */
+
+ec2u-logo {
+
+    --navy: light-dark(#283169, oklch(from #283169 0.8 0.08 h)); /* the navy of the wordmark, lifted on dark */
+    --gap: .85cap; /* the room on either side of the bar */
+
+    display: flex;
+    align-items: center;
+
+    /*
+     * The mark overhangs the line without stretching it, and stands apart from the app name, through the margins
+     * of its link rather than its own, so the focus ring wraps the mark alone, clear of the bar beside it. The hover
+     * fill and the focus ring reach halfway across the gap, so they always stop short of the bar.
+     */
+
+    & > :first-child {
+
+        --clay-link-inset: calc(var(--gap) / 2);
+
+        margin-block: calc(.5lh - 1.125cap);
+        margin-inline-end: var(--gap);
+
+        & img:not([active]) {
+            display: block;
+            block-size: 2.25cap;
+        }
+
+    }
+
+    & > :last-child {
+
+        --skin--color-link: var(--navy);
+
+        & a {
+            font-family: var(--skin--font-family-heading);
+            font-weight: var(--skin--font-weight-strong);
+        }
+
+    }
+
+    @container style(--skin--viewport-medium: on) {
+
+        & > :last-child {
+            padding-inline-start: var(--gap);
+            border-inline-start: 1px solid color-mix(in srgb, var(--navy) 35%, transparent);
+        }
+
+    }
+
+    @container style(--skin--viewport-medium: off) {
+
+        & > :first-child {
+            display: none;
+        }
+
+    }
+
+}

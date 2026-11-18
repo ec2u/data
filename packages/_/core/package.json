@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "@kxta/core",
+  "description": "Incubated core utilities",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "./*.js": {
+      "@ec2u/source": "./src/*.ts",
+      "default": "./lib/*.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json"
+  }
+}

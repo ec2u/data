@@ -1,0 +1,120 @@
+/*
+ * Copyright © 2026 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* code tokens take the colours markdown highlighting gives the same kinds of tokens in fenced code */
+
+.tile-api-shape-code {
+
+    /* the copy button sits inside the block, in its top right corner, over the end of its first line */
+
+    position: relative;
+
+    /* declarations run long, so they are set small to keep more of each line in view */
+
+    font-size: var(--skin--font-size-small);
+
+    & > clay-button > button { /* the wrapper lays out no box of its own, so the control is placed */
+        position: absolute;
+        top: var(--skin--spacing-050);
+        right: var(--skin--spacing-050);
+    }
+
+    & .tile-api-shape-string {
+        color: var(--skin--color-pass-stroke);
+    }
+
+    & .tile-api-shape-attr {
+        color: var(--skin--color-warn-stroke);
+    }
+
+    & .tile-api-shape-comment {
+        color: var(--skin--color-subtle);
+    }
+
+}
+
+/*
+ * Code (routes, prefixes, namespaces, datatypes, checks, JSON forms) is set in the mono face alone, without the tint of
+ * code spans, so that it reads alike across the API docs and a column of it reads as a list.
+ */
+
+.tile-api-code {
+    font-family: var(--skin--font-family-mono);
+}
+
+/* keywords take the colour markdown highlighting gives keywords in fenced code */
+
+.tile-api-shape-keyword {
+    color: var(--skin--color-info-stroke);
+}
+
+.tile-api-index {
+
+    /*
+     * The table is laid out as a grid, each row group as a subgrid sharing its columns and each row dissolved into the
+     * group, so that the column headings opening the body are held within it as sticky headings, as in shape tables;
+     * the last row sits in a body of its own, so the headings leave as soon as its top reaches them, whatever its
+     * height. Names keep to their content, leaving the remaining width to descriptions.
+     */
+
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+
+    & > thead,
+    & > tbody {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+    }
+
+    & tr {
+        display: contents;
+    }
+
+    /* nest each shape under the shapes it extends, one step per ancestor */
+
+    & td:first-child {
+
+        white-space: nowrap;
+
+        & > span {
+            display: inline-block;
+            margin-inline-start: calc(var(--tile-api-index-depth, 0) * var(--skin--spacing-100));
+        }
+
+    }
+
+}
+
+/*
+ * Column headings stay at the top of the scrolling area while the rows of the table pass under them, and scroll away
+ * together with the last row as soon as its top rule meets theirs: the last row lends its height to the space after
+ * the body, which ends the body, and the headings held within it, at the top of that row.
+ */
+
+.tile-api-index-head > th {
+
+    position: sticky;
+    top: 0;
+    z-index: var(--skin--z-index-sticky);
+
+    /* column headings read as labels, set back from the values under them, as in shape tables */
+
+    font-size: var(--skin--font-size-small);
+    color: var(--skin--color-label);
+    vertical-align: middle;
+
+}

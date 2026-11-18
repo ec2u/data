@@ -1,0 +1,39 @@
+{
+  "private": true,
+  "name": "@ec2u/data",
+  "description": "EC2U Knowledge Hub",
+  "homepage": "https://github.com/ec2u/data",
+  "bugs": "https://github.com/ec2u/data/issues",
+  "license": "Apache-2.0",
+  "author": "EC2U Alliance",
+  "repository": "github:ec2u/data",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "packages/_/*"
+  ],
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "scripts": {
+    "clean": "ush rm 'packages/{*,_/*}/{lib,node_modules}' node_modules",
+    "prime": "npm ci",
+    "setup": "npm ci && ush ln ~/Metreeca/Packages",
+    "build": "ush rm 'packages/{*,_/*}/lib' && npm run build --workspaces --if-present",
+    "check": "vitest run",
+    "start": "concurrently 'npm run serve -w packages/server' 'npm run watch -w packages/client'"
+  },
+  "devDependencies": {
+    "@metreeca/rack": "^0.7.0",
+    "concurrently": "^10.0.5",
+    "tsx": "^4.23.12",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  },
+  "allowScripts": {
+    "@google/genai@2.30.0": true,
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.3": true,
+    "protobufjs@7.6.6": true
+  }
+}

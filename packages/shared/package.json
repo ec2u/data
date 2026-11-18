@@ -1,0 +1,31 @@
+{
+  "private": true,
+  "name": "@ec2u/data-shared",
+  "description": "Knowledge Hub shared data models",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "@ec2u/source": "./src/index.ts",
+      "default": "./lib/index.js"
+    },
+    "./*.js": {
+      "@ec2u/source": "./src/*.ts",
+      "default": "./lib/*.js"
+    },
+    "./*.json": {
+      "@ec2u/source": "./src/*.json",
+      "default": "./lib/*.json"
+    }
+  },
+  "dependencies": {
+    "@kxta/open": "*",
+    "@metreeca/blue": "^0.14.0",
+    "@metreeca/core": "^0.14.0",
+    "@metreeca/qest": "^0.14.0",
+    "uuid": "^14.0.1"
+  },
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json"
+  }
+}

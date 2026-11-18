@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "name": "@kxta/open",
+  "description": "Incubated open vocabularies",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "./*.js": {
+      "@ec2u/source": "./src/*.ts",
+      "default": "./lib/*.js"
+    }
+  },
+  "dependencies": {
+    "@metreeca/blue": "^0.14.0",
+    "@metreeca/core": "^0.14.0",
+    "@metreeca/trio": "^0.3.0"
+  },
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json"
+  }
+}

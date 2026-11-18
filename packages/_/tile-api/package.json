@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "name": "@kxta/tile-api",
+  "description": "Incubated API documentation widgets",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": {
+      "@ec2u/source": "./src/index.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@metreeca/blue": "^0.14.0",
+    "@metreeca/clay-markdown": "^0.1.0",
+    "@metreeca/clay-widgets": "^0.1.0",
+    "@metreeca/core": "^0.14.0",
+    "preact": "^10.29.8"
+  }
+}

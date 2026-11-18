@@ -1,10 +1,13 @@
-/@
+/.idea/
+/.vscode/
 
+lib/
+cache/
+node_modules/
+
+/data/
 /target/
-/overlays/
-/node_modules/
+deploy/.env
 
 *~
 ~*
-
-*.iml

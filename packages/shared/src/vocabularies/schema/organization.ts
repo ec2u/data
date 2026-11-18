@@ -1,0 +1,51 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { schema, SchemaThing } from "@ec2u/data-shared/vocabularies/schema/index.js";
+import { SchemaLocation } from "@ec2u/data-shared/vocabularies/schema/location.js";
+import { multiple, optional, resource } from "@metreeca/blue/resource";
+import { email, phone, text } from "@metreeca/blue/string";
+
+
+export function SchemaOrganization() {
+	return resource(SchemaThing, {
+
+		class: schema.Organization,
+
+		name: "Schema Organization",
+
+		description: "An organized group of people with a shared purpose."
+
+	}, {
+
+		legalName: optional(text, {
+			description: "Official registered name of the organization."
+		}),
+
+		email: multiple(email, {
+			description: "Email addresses of the organization."
+		}),
+
+		telephone: multiple(phone, {
+			description: "Telephone numbers of the organization."
+		}),
+
+		location: optional(SchemaLocation, {
+			description: "Physical or virtual location of the organization."
+		})
+
+	});
+}

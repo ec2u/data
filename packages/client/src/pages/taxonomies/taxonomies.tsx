@@ -1,0 +1,156 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { Taxonomies } from "@ec2u/data-shared/taxonomies/index.js";
+import { Button } from "@metreeca/clay-widgets/button";
+import { Card } from "@metreeca/clay-widgets/card";
+import { Empty } from "@metreeca/clay-widgets/empty";
+import { Icon } from "@metreeca/clay-widgets/icon";
+import { Link } from "@metreeca/clay-widgets/link";
+import { Pill } from "@metreeca/clay-widgets/pill";
+import { Stack } from "@metreeca/clay-widgets/stack";
+import { useRoute, useRouter } from "@metreeca/clay/router";
+import { by, locale } from "@metreeca/core/order";
+import { Clear } from "@metreeca/tile-widgets/clear";
+import { Facets } from "@metreeca/tile-widgets/facets";
+import { Search } from "@metreeca/tile-widgets/search";
+import { Tally } from "@metreeca/tile-widgets/tally";
+import { useCollection } from "@metreeca/tile/collection";
+import { useMembers } from "@metreeca/tile/members";
+import { useQuery } from "@metreeca/tile/query";
+import { useSearch } from "@metreeca/tile/search";
+import { useTally } from "@metreeca/tile/tally";
+import { integer } from "@metreeca/tile/types/integer";
+import { useEffect } from "preact/hooks";
+import { TallyOptions } from "../../index.core.js";
+import { DatasetLinks } from "../../widgets/datasets/dataset.js";
+import { Size } from "../../widgets/datasets/size.js";
+import { Failure } from "../../widgets/failure.js";
+import { Page } from "../../widgets/page.js";
+import { taxonomies } from "./index.js";
+import { isTaxonomyRow, type TaxonomyRow } from "./taxonomies.core.js";
+
+
+export function TaxonomiesPage() {
+
+	const route = useRoute();
+	const router = useRouter();
+
+	const [query, setQuery] = useQuery();
+
+	const collection = useCollection({
+
+		entry: route,
+		shape: Taxonomies,
+		field: "resources",
+
+		query,
+
+		onChange: setQuery
+
+	});
+
+
+	const search = useSearch(collection, "label");
+	const license = useTally(collection, "license", { label: "label", size: TallyOptions });
+	const publisher = useTally(collection, "publisher", { label: "label", size: TallyOptions });
+
+	const members = useMembers(collection, {
+
+		model: {
+			"taxonomy=": { id: {}, label: {}, title: {}, alternative: {}, description: {} },
+			"size=count:resources": {}
+		}
+
+	});
+
+
+	useEffect(() => router({ title: taxonomies.label }), []);
+
+
+	return <Page
+
+		head={<Size label={taxonomies.label} collection={collection}/>}
+		menu={members({
+
+			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
+
+		}, <DatasetLinks/>)}
+
+		tray={<Stack space={"spacing075"}>
+
+			<p style={{
+
+				maxWidth: "15em"
+
+			}}>
+
+				Reference definitions of the concepts used to classify hub resources, traced to their
+				sources and cross-linked to related{" "}terms.
+
+			</p>
+
+			<Facets>
+
+				<Search name={"Name"} search={search}/>
+
+				<Tally name={"License"} collapsed tally={license}/>
+				<Tally name={"Publisher"} collapsed tally={publisher}/>
+
+			</Facets>
+
+		</Stack>}
+
+		meta={<Clear collection={collection}/>}
+
+	>{members({
+
+		blank: () => <Empty look={"subtle"}>{taxonomies.glyph}</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>{taxonomies.glyph}</Empty></Failure>,
+
+		ready: ({ state }) => cards(state.filter(isTaxonomyRow))
+
+	})}</Page>;
+
+}
+
+
+/**
+ * Renders the taxonomies matching the filters in force.
+ *
+ * @param rows The taxonomies to be rendered, with their size
+ *
+ * @returns A card for each taxonomy, sorted by label, or the collection glyph if `rows` is empty
+ */
+function cards(rows: readonly TaxonomyRow[]) {
+	return rows.length === 0 ? <Empty>{taxonomies.glyph}</Empty> : <>{[...rows] // copy, as rows are shared
+
+		.sort(by(({ taxonomy }) => taxonomy.label, locale()))
+
+		.map(({ taxonomy: { id, title, alternative, description }, size }) => <Card key={id} lines={3}
+
+			title={<Link href={id}>{alternative
+				? `${alternative} / ${title}`
+				: title
+			}</Link>}
+
+			badge={<Pill>{`${integer.format(size)} concepts`}</Pill>}
+			image={description && <Empty>{taxonomies.glyph}</Empty>}
+
+		>{description}</Card>)
+
+	}</>;
+}

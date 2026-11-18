@@ -1,0 +1,76 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { base } from "@ec2u/data-shared";
+import { Concept } from "@ec2u/data-shared/taxonomies/index.js";
+import { resource } from "@metreeca/blue/resource";
+import { resolve } from "@metreeca/core/resource";
+import { dedent } from "@metreeca/core/strings";
+import { immutable } from "@metreeca/core/values";
+
+
+export const unescoStatistics = immutable({
+
+	id: "http://www.uis.unesco.org/",
+
+	dataset: resolve(base, "/organizations/"),
+
+	label: "UNESCO Institute for Statistics",
+	prefLabel: { en: "UNESCO Institute for Statistics" }
+
+});
+
+export const isced2011 = immutable({ // !!! persist
+
+	id: resolve(base, "/taxonomies/isced-2011"),
+
+	dataset: resolve(base, "/taxonomies/"),
+
+	label: "ISCED 2011",
+
+	title: { en: "International Standard Classification of Education 2011" },
+	alternative: { en: "ISCED 2011" },
+	description: {
+		en: dedent`
+		The ISCED 2011 classification was adopted by the UNESCO General Conference at its 36th session in November 2011.
+		Initially developed by UNESCO in the 1970s, and first revised in 1997, the ISCED classification serves as an
+		instrument to compile and present education statistics both nationally and internationally.
+	`
+	},
+
+	publisher: unescoStatistics.id,
+	rights: "Copyright © 2012 UNESCO Institute for Statistics",
+
+	source: "https://uis.unesco.org/sites/default/files/documents"
+		+"/international-standard-classification-of-education-isced-2011-en.pdf",
+
+	issued: "2011-11-10"
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function ISCED2011Concept() {
+	return resource(Concept, {
+
+		name: `${isced2011.label} Concept`,
+		description: `A concept of the ${isced2011.label} taxonomy.`,
+
+		pattern: `${isced2011.id}/*`
+
+	});
+}

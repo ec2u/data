@@ -1,0 +1,265 @@
+/*
+ * Copyright © 2026 Metreeca srl
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.tile-api-shape {
+
+    /*
+     * The table is laid out as a grid, each row group as a subgrid sharing its columns and each row dissolved into
+     * the group, so that a sticky heading is held within its own group, rather than within the whole table as a table
+     * cell is, and leaves as soon as the last row of the group scrolls past. Names, types, counts and the trailing
+     * toggles keep to their content, leaving the remaining width to descriptions.
+     */
+
+    display: grid;
+    grid-template-columns: max-content max-content max-content minmax(0, 1fr) max-content;
+
+    /* datatypes state neither types nor counts, so their disclosed labels sit under the names */
+
+    &.tile-api-shape-datatypes {
+
+        grid-template-columns: max-content minmax(0, 1fr) max-content;
+
+        /* group headings read as labels of the rows below them */
+
+        & .tile-api-shape-group {
+            grid-column: 1 / -1;
+            color: var(--skin--color-label);
+        }
+
+        /* each group opens with a heading row, set apart from the group above as the inherited groups of a shape are */
+
+        & > tbody > tr:first-child > th {
+            padding-bottom: var(--skin--spacing-050);
+        }
+
+        & > tbody + tbody > tr:first-child > th {
+            padding-top: var(--skin--spacing-150);
+        }
+
+        /* datatypes reached by their anchors come to rest below the sticky column headings of their group */
+
+        & td[id] {
+            scroll-margin-top: calc(1lh + var(--skin--spacing-050) * 2);
+        }
+
+    }
+
+    & > tbody {
+
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+    }
+
+    & tr:not([hidden]) {
+        display: contents;
+    }
+
+    & .tile-api-shape-group {
+        grid-column: span 4;
+    }
+
+    /* rows sit a little closer than in plain markup tables, so a long shape reads as one compact listing */
+
+    & td {
+        padding-block: calc(var(--skin--spacing-010) * 4);
+    }
+
+    /* markdown definitions keep the spacing between their blocks, but not after the last one */
+
+    & td > clay-markdown > :last-child {
+        margin-bottom: 0;
+    }
+
+    /* column headings read as labels, set back from the values under them */
+
+    /*
+     * Column headings stay at the top of the scrolling area while the rows of their group pass under them, as in tile
+     * tables, leaving with the last row of the group, before the headings of the next group reach the top.
+     */
+
+    & .tile-api-shape-head > th {
+
+        position: sticky;
+        top: 0;
+        z-index: var(--skin--z-index-sticky);
+
+        font-size: var(--skin--font-size-small);
+        color: var(--skin--color-label);
+        vertical-align: middle;
+
+        /* the toggle folding every row is drawn at the size of the toggles in the rows it folds */
+
+        &.tile-api-shape-more {
+            font-size: var(--skin--font-size);
+        }
+
+    }
+
+    /* property names read as code in the default ink, so the column of linked types beside them stays the only blue one */
+
+    & .tile-api-shape-term {
+        font-family: var(--skin--font-family-mono);
+        font-weight: var(--skin--font-weight-strong);
+        white-space: nowrap;
+    }
+
+    /* types and counts keep to one unbroken line */
+
+    & .tile-api-shape-type,
+    & .tile-api-shape-count {
+        white-space: nowrap;
+    }
+
+    /* the trailing column keeps to its content and takes no room at all while empty */
+
+    & .tile-api-shape-more {
+        width: auto;
+        white-space: nowrap;
+        text-align: center;
+
+        &:empty {
+            padding: 0;
+        }
+    }
+
+    /* an open row reads as one block with the rows it discloses, ruled and padded only below the last of them */
+
+    & .tile-api-shape-open > td,
+    & .tile-api-shape-details:not(.tile-api-shape-end) > td {
+        border-bottom-style: none;
+    }
+
+    /*
+     * Disclosed rows sit close together, read as the lines of one block rather than as rows of their own: only the
+     * padding between them is reduced, the block as a whole keeping the padding above its first row and below its last.
+     */
+
+    & .tile-api-shape-details:not(.tile-api-shape-end) > td {
+        padding-bottom: var(--skin--spacing-010);
+    }
+
+    & .tile-api-shape-details + .tile-api-shape-details > td {
+        padding-top: var(--skin--spacing-010);
+    }
+
+    /*
+     * The details of a description read on from its summary as a further paragraph, closer to it than to the
+     * constraints below them, which they keep apart from as a block of their own.
+     */
+
+    & .tile-api-shape-open:has(+ .tile-api-shape-text) > td {
+        padding-bottom: 0;
+    }
+
+    & .tile-api-shape-text > td {
+        padding-top: var(--skin--spacing-025);
+    }
+
+    & .tile-api-shape-text:not(.tile-api-shape-end) > td {
+        padding-bottom: var(--skin--spacing-075);
+    }
+
+    & .tile-api-shape-end > td {
+        padding-bottom: var(--skin--spacing-150);
+    }
+
+    /* disclosed constraints read as label and value, the label under the type and the value under the description */
+
+    /*
+     * Disclosed rows claim no width of their own when the columns are sized, filling and wrapping within the widths the
+     * folded rows give them instead, so unfolding a property never reflows the table.
+     */
+
+    & .tile-api-shape-details > td > div {
+        width: 0;
+        min-width: 100%;
+    }
+
+    /* constraint labels are never broken either, clipped with an ellipsis where they outrun the type column */
+
+    & .tile-api-shape-key {
+
+        font-size: var(--skin--font-size-small);
+        color: var(--skin--color-label);
+
+        & > div {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    }
+
+    & .tile-api-shape-value {
+
+        font-size: var(--skin--font-size-small);
+
+        /*
+         * Constraint values are set in the mono face alone, without the tint code spans sit on, as a column of them
+         * reads as a list rather than as one token apart; a value is never broken, as a broken IRI or list reads as
+         * two, but clipped with an ellipsis where it outruns the column, its title stating it whole.
+         */
+
+        & .tile-api-shape-literal {
+            display: block;
+            font-family: var(--skin--font-family-mono);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    }
+
+    /* counts are quiet, but for the ones requiring a value */
+
+    & .tile-api-shape-count {
+        font-family: var(--skin--font-family-mono);
+        font-size: var(--skin--font-size-small);
+        color: var(--skin--color-subtle);
+    }
+
+    & .tile-api-shape-required {
+        font-weight: var(--skin--font-weight-strong);
+        color: inherit;
+    }
+
+    /* union branches keep each type on its own unbroken line */
+
+    & .tile-api-shape-branch {
+        white-space: nowrap;
+    }
+
+    /* inherited groups open with a label row naming the ancestor they come from, set apart from the group above */
+
+    & > .tile-api-shape-inherited > tr:first-child > th {
+        padding-top: var(--skin--spacing-250);
+        padding-bottom: var(--skin--spacing-100);
+    }
+
+    /* the label names the ancestor as a heading, so each group reads as a section of its own */
+
+    & .tile-api-shape-group {
+        font-family: var(--skin--font-family-heading);
+        font-weight: var(--skin--font-weight-strong);
+    }
+
+    & .tile-api-shape-from {
+        font-weight: var(--skin--font-weight);
+        color: var(--skin--color-label);
+    }
+
+}

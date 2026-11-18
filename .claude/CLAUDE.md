@@ -1,0 +1,334 @@
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+| Skill                | Purpose                                                                       |
+|----------------------|-------------------------------------------------------------------------------|
+| `pipe-designer`      | Design and review of source ingestion pipes under `packages/loader`           |
+| `deployment-manager` | Google Cloud and GraphDB resources of each environment, grants, current state |
+| `legal-keeper`       | Rules, required content and open questions of the legal notices of the hub    |
+
+`deployment-manager` lives in a private repository and is linked here, gitignored; never commit deployment details
+(organisation and project ids, account names, grants, the inventory of secrets) to this public repository. The secret
+names code reads are exempt: IAM grants, not hidden names, keep secrets closed.
+
+---
+
+# References
+
+## Utilities
+
+- [@metreeca/flow](https://github.com/metreeca/flow) - TypeScript library for processing async iterables with
+	composable, type-safe pipelines
+
+## Google Cloud Platform
+
+- [Google GenAI SDK](https://googleapis.github.io/js-genai/release_docs/index.html) - Google Generative AI SDK for
+	JavaScript/TypeScript
+- [Google Cloud Datastore](https://cloud.google.com/nodejs/docs/reference/datastore/latest) - Google Cloud Datastore
+	client library
+- [Google Cloud Secret Manager](https://cloud.google.com/nodejs/docs/reference/secret-manager/latest) - Google Cloud
+	Secret Manager client library
+- [Gemini API Documentation](https://ai.google.dev/gemini-api/docs)
+	- [API Keys and Authentication](https://ai.google.dev/gemini-api/docs/api-key)
+	- [Gemini Models](https://ai.google.dev/models)
+	- [API Pricing](https://ai.google.dev/pricing)
+	- [Rate Limits](https://ai.google.dev/rate-limits)
+
+# Data Source Integration Notes
+
+Each pipe carries a standalone integration-notes Markdown file alongside it (for example,
+`packages/loader/src/events/pipes/turku-university.md` next to `turku-university.ts`). A pipe kept in a folder of its
+own, together with the source-specific readers it alone uses, carries its notes as `index.md` next to its `index.ts`
+(for example, `packages/loader/src/<dataset>/pipes/<source>/index.md`). The file is the authoritative, non-technical
+status record for that source and must read as a brief standalone document.
+
+## Structure
+
+- **Front matter** — YAML with `title`, `summary`, `description`, and `status` (`active`, or `planned` for a source not
+	yet integrated). The `title` is a breadcrumb following the pipe name segments, `Dataset › University` (e.g.
+	`Events › Turku › University`, `Events › Iași › University › 360`, `Events › Pavia › Ghislieri`). No H1 heading: the
+	title lives in the front matter. Do not duplicate the university or dataset (already in the title) or a version date
+	(already the newest version section) as separate keys.
+- **Intro** — one short paragraph noting that the most recent version is listed first and superseded versions are kept
+	below (drop the superseded clause when there is only one version).
+- **One section per major version**, newest first, headed `# <YYYY-MM-DD> – <name>` where the date is the version's
+	start. A new **major** version means the source was completely changed; **minor** reworks (tweaking the source set,
+	adjusting the data model) and **patches** (bug fixes) stay as change-log entries within the current version. Each
+	section holds, in order:
+	- a one-line description of the integration approach (no `Integration` heading);
+	- a sources table (no `Sources` heading), **one row per URL**, with columns:
+		- `Source` — the full URL **inline** (no reference links);
+		- `Description` — the source name followed by a lowercase ISO language tag in brackets, e.g.
+			`General university events [de]`, `International Office [en]`;
+		- `Notes` — optional, included only when a row needs an extra remark;
+	- a change log: a plain bullet list (no heading), newest first, each `- **<YYYY-MM-DD>** – <change>`, ending with an
+		`initial integration` entry dated to the version's start.
+- Record what a maintainer must respect to re-derive the crawl: the endpoints and selectors the pipe depends on, and the
+	quirks that forced them (a form post where a page renders nothing of its own, a pager stating fragments rather than
+	addresses, a card linking its event more than once).
+- Use en dashes (`–`) as the date/label separator; ISO dates and list bullets keep hyphens; no em dashes.
+- Inline source URLs make some table rows exceed 120 columns; that is accepted for these reports. Run the IDE formatter
+	(`mcp__idea__reformat_file`) after editing rather than hand-aligning.
+- Preserve the whole source URL. Show it inline when it has no query string. When a URL has a query string (regardless
+	of length) or is otherwise overly long, use a Markdown **reference-style link**: a shortened display label (host +
+	path + `…`) as the link text and the complete, unaltered URL in a `[id]: <full-url>` definition collected at the
+	bottom of the file. Only the displayed label is shortened, never the actual URL.
+- Do not keep sample payloads, pending/TODO sections (track those as issues), or a separate `Legacy` block (superseded
+	versions are their own sections). A retired alternative source that never had its own version may be noted as a
+	struck-through entry under a short trailing `## Notes`.
+
+## Maintenance
+
+- Keep the relevant `.md` up to date after every change that affects how a source is harvested (source URLs, selectors,
+	mapped fields, known issues).
+- Keep the consolidated summary in sync: the **Knowledge Hub - Status** page on Confluence
+	(https://ec2u.atlassian.net/wiki/x/b4FKF, space *Infrastructure*, page id `340427119`), a dataset × university
+	integration matrix.
+- Confluence is reachable through the Atlassian Rovo MCP connector (read/write page scopes; available from the desktop
+	app). Fetch and update pages with the `mcp__claude_ai_Atlassian_Rovo__*` tools, using cloud id
+	`d5be8c79-ba10-4633-b4c5-f9ccaae17563`.
+
+**Commit checklist**: when a commit changes how a source is harvested, update that source's integration-notes `.md` and
+the Confluence **Knowledge Hub - Status** page in the same change before committing.
+
+# Internationalisation
+
+Localised text is stored and handled as language maps (qest `Dictionary`); no language is privileged by default.
+
+- **Server side** (loader, server): keep localised values whole as language maps. English has no privileged role, except
+	as the target or source language of an explicit translation step. Never pick one language out of a map with a fallback
+  to whatever else is stated (the retired `english()` helper did this).
+- **Client side**: let language negotiation select the text. Ask for a localised property with the atomic placeholder
+	`{}` to get its coalesced label, resolved under the request's negotiated language priority (`Accept-Language`, set
+	from the store `locale` scope). Ask for a `Locale` map (`{ "*": {} }`, `{ en: {}, fr: {} }`) only where the view
+	really needs several languages side by side. See `@metreeca/qest/model` §Localised Properties for the definitions.
+
+# AI-Generated Content
+
+The `generated` flag is decided **resource by resource**. Mark a resource `generated: true` **if and only if** an AI
+tool produced some of its own content, even a small part: text it wrote or translated, a value it extracted or inferred,
+a classification it assigned.
+
+- **Judge each resource on its own content alone**: the dataset it belongs to, the pipe stating it and the resources
+	linked to it never decide its flag. A resource copied verbatim from its source stays unflagged, even when the pipe
+	stating it, or the resource linking it, is flagged.
+- **Never flag a resource whose content no AI tool touched**, and never leave one unflagged when an AI tool touched any
+  of it.
+- **Set the flag in the step that brings in the AI content**: a step that adds AI output to a resource flags it. Leave
+  the flag alone where an AI step adds nothing.
+- **Keep the flag consistent for shared resources**: a resource stated by several entries must get the same flag from
+	each of them, or it flips between runs.
+
+# Task Workflows
+
+## NPM Scripts
+
+- **`npm run clean`** - Remove dependencies and build artefacts
+- **`npm run prime`** - Install dependencies from the lockfile
+- **`npm run setup`** - Install dependencies and link local `@metreeca/*` checkouts
+- **`npm run build`** - Compile sources and copy `*.sys.md` prompts alongside their modules
+- **`npm run check`** - Run the test suite
+- **`npm run start`** - Serve the endpoints and the web UI in parallel, in watch mode
+
+Run `sh package.sh` by hand once per workstation, and again whenever `gcloud` points elsewhere: it signs in to `gh` and
+`gcloud` and selects the project named by the `GCP_PROJECT` repository variable, whose resources local runs reach with
+the developer's own credentials. Reading the variable takes write access to `ec2u/data`.
+
+## Testing
+
+- **Run a single test file**: `npm run check -- path/to/test.ts`
+
+## Probing the Store
+
+To check what a pipe actually committed, write a throwaway script under `packages/loader/src/` named `~probe.ts` (the
+`~*` pattern is gitignored) and run it with `npx tsx --import @metreeca/rack/node "$PWD/~probe.ts"`, then delete it.
+Never run it with bare `npx tsx` or `node`: without the rack hooks, linked `@metreeca/*` checkouts resolve to their
+`dist` builds, which may predate the source and silently return stale results. Pass the absolute path, as `npx` runs
+from the workspace root. Pipe logs are not evidence: writes are buffered and flushed as a single update when the
+transaction commits, so an `inserted resource` line only records that the delta was queued.
+
+Two levels of probe are available, and they answer different questions.
+
+**Shape level** - what the application sees. Bind the services through the loader's `execute()` and read through
+`store.lookup()`:
+
+```ts
+import { createStore } from "@metreeca/pipe-store";
+import { execute } from "./index.core.js";
+import { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
+import { service } from "@metreeca/gear";
+
+await execute(async () => {
+
+	const stated = await service(createStore).lookup({
+		entry: "https://data.ec2u.eu/taxonomies/isced-2011",
+		shape: Taxonomy,
+		model: { label: {}, resources: { id: {}, digest: {} } }
+	});
+
+	console.log(JSON.stringify(stated, null, 2));
+
+});
+```
+
+Every leaf is the empty object `{}`, and a collection carries its criteria on the entry naming it rather than in a tuple
+beside it: a model states which values are wanted and never what they are, leaving type and cardinality to the shape.
+The model is still validated against the shape, so a property the shape does not declare fails the call with a
+`TraceError [RangeError]: invalid model` naming the offending path. A property that comes back absent means the shape
+did not resolve it, not that the data is missing: confirm at the triple level before concluding anything.
+
+**Triple level** - what the repository holds. Open the RDF4J repository of the environment directly, taking the
+read-only server credentials from the vault (`edge` below; see the `deployment-manager` skill for the others):
+
+```ts
+import { createGCPVault } from "@metreeca/gear-gcp/secrets";
+import { createFetch } from "@metreeca/http";
+import { basic } from "@metreeca/http/basic";
+import { createRDF4JRepository } from "@metreeca/wire-sparql-rdf4j";
+
+const vault = createGCPVault();
+
+const repository = createRDF4JRepository({
+	server: "https://graphdb.ec2u.net",
+	repository: "data-edge",
+	fetch: createFetch(basic(await vault("edge-gdb-server-usr"), await vault("edge-gdb-server-pwd")))
+});
+
+for (const tuple of await repository.select(`select ?p (count(*) as ?n) where { <…> ?p ?o } group by ?p`)) {
+	console.log(JSON.stringify(tuple));
+}
+```
+
+Query the repository directly, never inside `repository.execute()`: `execute()` opens a transaction, which GraphDB
+refuses to read-only users with a `403 Forbidden`. `select()` resolves to an array of tuples, not an async iterable, and
+the companion `ask()` and `construct()` take the same form. Counting predicates forward from a resource and reverse into
+it is enough to settle whether a run committed and which links it left behind.
+
+## Diagnosing a Stalled Pipe
+
+A pipe that logs its crawl and then parks, with no error and nothing further printed, is waiting on the store rather
+than on the source: a sink settles its retrievals before it processes the first page, so an unanswered `lookup()`
+holds the whole pipeline with nothing to show for it. Cached pages make this look like progress, since the crawl
+completes without touching the network.
+
+Check the endpoint before reading any code, as it costs seconds and needs no credentials:
+
+```sh
+curl -sS -o /dev/null -w "tcp=%{time_connect}s tls=%{time_appconnect}s total=%{time_total}s\n" \
+	--max-time 20 https://graphdb.ec2u.net/
+```
+
+Fast `tcp` and `tls` times followed by a `total` running out to the timeout with zero bytes received place the fault in
+the infrastructure: the host and its TLS terminator are up and GraphDB behind them is not answering, so no change to a
+pipe or a retrieval model will move it. Reach for the two probes above only once the endpoint answers.
+
+# Issue Tracking
+
+Issues live in `ec2u/data` and belong to the Knowledge Hub project (`github.com/orgs/ec2u/projects/8`).
+
+## Titles
+
+- No type prefix: the kind of work is carried by the GitHub **Type** field (Feature/Task/Bug), never repeated in the
+	title.
+- No dataset or university breadcrumb prefixes (for example `Events › Pavia › …`): that scope is carried by labels.
+- Write each title as a readable, standalone description of the work.
+
+## Labels
+
+- **Type** is set via the GitHub **Type** field, not via labels.
+- `set:<dataset>` (light green `c2e0c6`) tags the major KH dataset (s) an issue touches: `set:courses`,
+	`set:programs`, `set:events`, `set:documents`, `set:persons`, `set:units`, `set:organizations`,
+	`set:universities`. Apply one per affected dataset.
+- `uni:<city>` (light blue `c5def5`) tags university-specific issues: `uni:coimbra`, `uni:iasi`, `uni:jena`,
+	`uni:linz`, `uni:pavia`, `uni:poitiers`, `uni:salamanca`, `uni:turku`, `uni:umea`. Omit for cross-university work.
+
+# Development
+
+## Branching
+
+Branch issue work off `edge` (the development branch), not `next` or `main`. Issue branches follow the
+`{type}/gh-{number}-{slug}` convention and merge back into `edge`.
+
+## Home and About Links
+
+The `resources` link groups on the home page (`packages/client/src/pages/index.tsx`) and the matching `Get Involved`
+and `References` sections of the about page (`packages/client/src/assets/about/index.md`) list the same pages, in the
+same order and under the same labels; the home `About the Hub` entry, pointing at the about page itself, is the only
+exception. Update both in the same change whenever a link is added, moved or renamed in either.
+
+## Feedback
+
+Every page but the home page carries an icon-only feedback button (`Feedback` in
+`packages/client/src/widgets/feedback.tsx`, the default `more` of the page template, at the start of the side column
+foot before the optional AI notice), opening the feedback page (`packages/client/src/pages/about/feedback.tsx`, at
+`/about/feedback`) in a new tab with the address and title of the page it came from.
+
+- **Delivery**: the hub runs no service for feedback. Submitting opens the reader's email client through a `mailto:`
+	link, with the type, the source page, the message and, for bugs, browser and system in subject and body; the reader
+  sends it from their own account, so the hub neither stores nor transmits anything.
+- **Recipient**: the `hub` alias of the `ec2u.cc` domain, kept in the page as separate parts (`Recipient`) and assembled
+  only on submission, so the address never stands whole in the page or its scripts; never write it whole in client code
+  or in the repository.
+- **Forwarding**: the alias is an email forwarding rule of the `ec2u.cc` domain, managed in Squarespace Domains
+	(`ec2u.cc` › Email › Email Forwarding, behind passkey verification), and forwards to the maintainer of the hub. The
+	domain's MX and SPF records belong to this forwarding service: leave them alone.
+- **Filtering**: the forwarder cannot filter senders, so the "partner university accounts only" rule stated on the page
+	is enforced, if at all, by the mailbox receiving the forwarded mail.
+- **Rotation**: if the alias draws spam, add a new rule, switch `Recipient` to it, deploy, then delete the old rule.
+- **Privacy**: the Privacy Notice and the `legal-keeper` skill describe what the email carries; update both whenever the
+  fields, the recipient or the delivery channel change.
+
+## Resource Info Boxes
+
+The tray `Infobox` of every resource detail page under `packages/client/src/pages` follows one layout, so that readers
+find the same kind of fact in the same place on every page. Groups come in a fixed order and a group with nothing to
+state is dropped; within a group, fields keep the order below.
+
+<!-- the layout is a fenced block on purpose: the markdown formatter leaves it alone, keeping its columns aligned -->
+
+```text
+                University    Unit          Program       Course        Document      Event
+--------------  ------------  ------------  ------------  ------------  ------------  ------------
+Context         Country       University    University    University    University    University
+                City          Short         Code          Code          Code
+                              Code
+
+Classification                Type                                      Type          Topics
+                                                                        Audience
+                                                                        Topics
+
+Time            Inception                                 Year          Issued        Starts
+                                                          Term          Updated       Ends
+                                                                        Valid
+
+Attributes      Students                    Credits       Language      Language      Language
+                                            Duration      Attendance                  Attendance
+                                                          Fees                        Fees
+                                                          Credits                     Status
+                                                          Duration                    Location
+                                                          Workload
+
+People                        Head          Provider      Provider      Publisher     Publisher
+                                                          Instructor    Contact
+                                                                        Contributor
+
+Links           Web           Web           Web           Web           Web           Web
+                                                                        License
+                                                                        Copyright
+
+Datasets        <counts>
+```
+
+- **Context** identifies the resource: the owning university first, then its short name and code.
+- **Classification** holds filter links leading to the catalogue narrowed on the value and on the owning university,
+	never plain links to the term: the tray answers "what else is like this".
+- **Time**, **Attributes** and **People** keep dates, measurable or enumerated properties, and responsible parties
+	apart, so that pages with more fields only grow groups rather than reshuffle them.
+- **Links** closes the box with outbound references; `Web` is guarded on an empty list like every other entry.
+- **Labels** are shared across pages: `Web` (not `Home`/`Info`), `Fees` (not `Fees for Externals`/`Entry`),
+	`Copyright` (not `Rights`), matching the dataset and taxonomy pages.
+- Only the body infobox wraps; tray infoboxes clip each value to one line, so long addresses never break mid-word.
+- The body infobox keeps what reads poorly in the tray or belongs with the description: properties with long labels or
+  many values (unit `Topics`, program and course `Subjects`, levels, audiences, keywords) and links to related resources
+  (courses, programs, organisational units). Do not move them into the tray.
+
+Update the table in the same change whenever a page adds, moves or renames a tray entry.

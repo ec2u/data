@@ -1,0 +1,109 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { base, Dataset, EC2U, ec2u, harvested, licenses } from "@ec2u/data-shared";
+import { getOfferingId, Offering } from "@ec2u/data-shared/offerings/index.js";
+import { SchemaEducationalOccupationalProgram } from "@ec2u/data-shared/vocabularies/schema/learning.js";
+import { reference } from "@metreeca/blue/reference";
+import { multiple, resource } from "@metreeca/blue/resource";
+import type { State } from "@metreeca/blue/value";
+import { resolve } from "@metreeca/core/resource";
+import { immutable } from "@metreeca/core/values";
+import type { Reference } from "@metreeca/qest/state";
+
+
+export const programs = immutable({
+
+	id: resolve(base, "/programs/"),
+
+	dataset: base,
+
+	label: "EC2U Programs",
+
+	title: { en: "EC2U Degree and Occupational Programs" },
+	alternative: { en: "EC2U Programs" },
+	description: { en: harvested("Formal degree and vocational qualification programs offered by EC2U universities.") },
+
+	publisher: EC2U,
+
+	rights: "Copyright © 2022-2025 EC2U Alliance",
+	license: [licenses.CCBYNCND40.id],
+
+	created: "2023-01-19",
+	issued: "2023-01-19"
+
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type Programs = State<typeof Programs>;
+export type Program = State<typeof Program>;
+
+
+export function Programs() {
+	return resource(Dataset, {
+
+		name: programs.alternative,
+		description: programs.description
+
+	}, {
+
+		resources: multiple(reference(Program))
+
+	});
+}
+
+export function Program() {
+	return resource(Offering, SchemaEducationalOccupationalProgram, {
+
+		space: ec2u,
+		class: ec2u.Program,
+
+		name: "EC2U Program",
+		description: "A formal degree or vocational qualification program offered by an EC2U university."
+
+	});
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Identifies a program listed by an EC2U university.
+ *
+ * A program is named by the key the source lists it under together with the academic year it is delivered in, so that
+ * the same key delivered in different years names distinct programs; a program with no stated year never shares its
+ * identifier with one delivered in a stated year, even when both are listed under the same key.
+ *
+ * @param university The identifier of the university listing the program
+ * @param key The key the source lists the program with
+ * @param period The academic period the program is delivered in
+ * @param period.year The academic year, formatted as `YYYY/YYYY`
+ *
+ * @returns The identifier of the program listed under `key` by `university` for the given academic year
+ *
+ * @throws {@link !RangeError RangeError} If `key` is blank or `year` is malformed
+ */
+export function getProgramId(university: Reference, key: string, period: {
+
+	readonly year?: string
+
+} = {}): Reference {
+
+	return getOfferingId(programs.id, university, key, period);
+
+}

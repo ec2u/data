@@ -1,0 +1,220 @@
+/*
+ * Copyright © 2020-2026 EC2U Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { dictionary } from "@metreeca/blue/dictionary";
+import { multiple, nonempty, optional, resource } from "@metreeca/blue/resource";
+import { iri, string, text } from "@metreeca/blue/string";
+import { union } from "@metreeca/blue/union";
+import { createNamespace } from "@metreeca/core/resource";
+import { markdown } from "@metreeca/core/strings";
+
+
+export const schema = createNamespace("https://schema.org/", [
+
+	"Thing",
+	"ImageObject",
+
+	"Place",
+	"PostalAddress",
+	"VirtualLocation",
+
+	"Organization",
+
+	"Event",
+
+	"LearningResource",
+	"EducationalOccupationalProgram",
+	"Course",
+	"CourseInstance",
+	"EducationalOccupationalCredential",
+
+	"url",
+	"identifier",
+
+	"name",
+	"description",
+	"disambiguatingDescription",
+
+	"image",
+	"caption",
+	"author",
+	"copyrightNotice",
+
+	"address",
+	"latitude",
+	"longitude",
+
+	"addressCountry",
+	"addressRegion",
+	"addressLocality",
+	"postalCode",
+	"streetAddress",
+
+	"email",
+	"telephone",
+
+	"legalName",
+	"location",
+
+	"startDate",
+	"endDate",
+	"inLanguage",
+	"isAccessibleForFree",
+	"eventStatus",
+	"eventAttendanceMode",
+	"publisher",
+	"about",
+	"audience",
+	"keywords",
+
+	"numberOfCredits",
+	"teaches",
+	"assesses",
+	"competencyRequired",
+	"educationalCredentialAwarded",
+	"occupationalCredentialAwarded",
+	"provider",
+	"educationalLevel",
+
+	"credentialCategory",
+
+	"courseCode",
+	"timeRequired",
+	"coursePrerequisites",
+
+	"courseWorkload",
+	"courseMode",
+	"instructor",
+	"hasCourse",
+
+	"timeToComplete",
+	"programPrerequisites"
+
+]);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function SchemaEntity() {
+	return resource({
+
+		space: schema,
+
+		name: "Schema Entity",
+
+		description: markdown`
+			A Schema.org resource of any kind.
+
+			> [!IMPORTANT]
+			> Not intended for use in isolation: it states the properties shared by every Schema.org model.
+
+			> [!WARNING]
+			> Deviates from Schema.org, where \`Schema Image Object\` extends \`Schema Thing\`. Here it extends this
+			> model instead, as inheriting \`image\` from \`Schema Thing\` would make images embed themselves endlessly.
+		`
+
+	}, {
+
+		url: multiple(iri, {
+			description: "Web pages describing the resource."
+		}),
+
+		identifier: optional(string, { // ;( single plain string: the standard range is Text | URL | PropertyValue
+			description: "Code identifying the resource within an identification scheme."
+		}),
+
+		name: optional(union(text, dictionary({ uniqueLang: true })), {
+			description: "Human-readable name of the resource."
+		}),
+
+		description: optional(dictionary({ uniqueLang: true }), {
+			description: "Human-readable account of the resource."
+		}),
+
+		disambiguatingDescription: optional(dictionary({ uniqueLang: true }), {
+			description: "Short account telling the resource apart from similar ones."
+		})
+
+	});
+}
+
+export function SchemaThing() {
+	return resource(SchemaEntity, {
+
+		class: schema.Thing,
+
+		name: "Schema Thing",
+
+		description: markdown`
+			An item of any kind.
+
+			> [!IMPORTANT]
+			> Not intended for use in isolation: it factors the properties shared by the specialised dataset models.
+
+			> [!WARNING]
+			> Deviates from Schema.org to simplify interoperation with other vocabularies:
+			>
+			> - \`identifier\` values are stated as plain strings rather than as \`PropertyValue\` resources or URLs
+		`
+
+	}, {
+
+		image: optional(SchemaImageObject, {
+			description: "Image depicting the resource."
+		})
+
+	});
+}
+
+export function SchemaImageObject() {
+	return resource(SchemaEntity, {
+
+		class: schema.ImageObject,
+
+		name: "Schema Image Object",
+
+		description: markdown`
+			An image file.
+
+			> [!TIP]
+			> The \`description\` of the image may provide the text alternative accessibility support requires, such
+			> as the \`alt\` attribute of HTML \`img\` elements.
+
+			> [!WARNING]
+			> Deviates from Schema.org:
+			>
+			> - \`author\` values are stated as plain strings rather than as \`schema:Person\` or \`schema:Organization\`
+			>   resources
+		`
+
+	}, {
+
+		url: nonempty(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
+
+		caption: optional(dictionary({ uniqueLang: true }), {
+			description: "Text accompanying the image."
+		}),
+
+		author: optional(text, {
+			description: "Creator of the image."
+		}),
+
+		copyrightNotice: optional(text, {
+			description: "Statement of the copyright held over the image."
+		})
+
+	});
+}

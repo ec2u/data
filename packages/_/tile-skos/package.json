@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "name": "@kxta/tile-skos",
+  "description": "Incubated SKOS concept scheme widgets",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": {
+      "@ec2u/source": "./src/index.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@ec2u/data-shared": "*",
+    "@metreeca/clay-widgets": "^0.1.0",
+    "@metreeca/core": "^0.14.0",
+    "@metreeca/tile": "^0.7.0",
+    "@metreeca/tile-widgets": "^0.7.0",
+    "preact": "^10.29.8"
+  }
+}
