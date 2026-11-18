@@ -22,9 +22,11 @@
     "@metreeca/pipe-store": "^0.12.0",
     "@metreeca/qest": "^0.14.0",
     "@metreeca/wire-sparql-http": "^0.13.0",
+    "cors": "^2.8.6",
     "express": "^5.2.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6"
   }
 }

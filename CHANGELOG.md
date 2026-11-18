@@ -64,6 +64,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   cloud and GraphDB resources bound to it
 - Services read their environment from `DATA_ENVIRONMENT` in place of `PIPE_ENVIRONMENT` and run on Cloud Run, one
 	service per environment and role, each bound only to the resources of its own environment
+- Data endpoints accept cross-origin requests, so browser applications on other sites can query the hub directly
 
 ### Removed
 

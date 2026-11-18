@@ -24,6 +24,7 @@ import { driver } from "@metreeca/gate/driver";
 import { service } from "@metreeca/gear";
 import { gcp } from "@metreeca/gear-gcp";
 import { createStore } from "@metreeca/pipe-store";
+import cors from "cors";
 import { resolve } from "node:path";
 import { courses } from "./courses/index.js";
 import { documents } from "./documents/index.js";
@@ -38,6 +39,7 @@ import { universities } from "./universities/index.js";
 
 await execute(() => server(service(createStore), { depth: 3, limit: 100 })
 
+	.use(cors())
 	.use(robots(ec2u.base))
 	.use(client(resolve(import.meta.dirname, "static")))
 
