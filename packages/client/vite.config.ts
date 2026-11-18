@@ -32,7 +32,8 @@ export default defineConfig({ // https://vite.dev/config/
 	build: {
 		outDir: "../../server/lib/static", // deployed with the server
 		assetsDir: ".",
-		emptyOutDir: true
+		emptyOutDir: true,
+		cssTarget: "esnext" // keeps light-dark() in the design tokens, which lowering would leave unresolved
 	},
 
 	server: {
