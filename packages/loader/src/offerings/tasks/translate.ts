@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { FinishReason, type GenerateContentResponse } from "@google/genai";
 import { schema } from "@metreeca/blue";
 import { optional, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
@@ -33,6 +34,11 @@ import type { Dictionary, Draft, Entry } from "../sinks/sync.js";
 
 
 const logger = log(import.meta.url);
+
+const models = [ // tried in order: a text the first model loops on is retried with the next
+	"gemini-3.8-flash",
+	"gemini-3.5-flash-lite"
+];
 
 
 type Texts = State<typeof Reported>;
@@ -214,36 +220,7 @@ export function translate(): Task<Entry, Entry> {
 	async function generate(key: string, locale: string, source: Texts): Promise<readonly Texts[]> {
 		try {
 
-			return [json<Texts>(await ai.models.generateContent({
-
-				model: "gemini-3.8-flash",
-
-				contents: markdown`
-					- language: ${locale}
-					- name: ${source.name ?? ""}
-					- description: ${source.description ?? ""}
-					- summary: ${source.summary ?? ""}
-					- contents: ${source.contents ?? ""}
-					- outcomes: ${source.outcomes ?? ""}
-					- requirements: ${source.requirements ?? ""}
-					- prerequisites: ${source.prerequisites ?? ""}
-					- educational credential: ${source.educationalCredential ?? ""}
-					- occupational credential: ${source.occupationalCredential ?? ""}
-				`,
-
-				config: {
-
-					seed: 0,
-					temperature: 0,
-
-					systemInstruction: await getResource(".sys.md", import.meta.url),
-
-					responseMimeType: "application/json",
-					responseJsonSchema: schema(Reported)
-
-				}
-
-			}))];
+			return [json<Texts>(await request(locale, source, models))];
 
 		} catch ( error ) {
 
@@ -252,6 +229,48 @@ export function translate(): Task<Entry, Entry> {
 			return [];
 
 		}
+	}
+
+	async function request(
+		locale: string, source: Texts, [model, ...fallbacks]: readonly string[]
+	): Promise<GenerateContentResponse> {
+
+		const response = await ai.models.generateContent({
+
+			model,
+
+			contents: markdown`
+				- language: ${locale}
+				- name: ${source.name ?? ""}
+				- description: ${source.description ?? ""}
+				- summary: ${source.summary ?? ""}
+				- contents: ${source.contents ?? ""}
+				- outcomes: ${source.outcomes ?? ""}
+				- requirements: ${source.requirements ?? ""}
+				- prerequisites: ${source.prerequisites ?? ""}
+				- educational credential: ${source.educationalCredential ?? ""}
+				- occupational credential: ${source.occupationalCredential ?? ""}
+			`,
+
+			config: {
+
+				seed: 0,
+				temperature: 0,
+				maxOutputTokens: 8192, // above any genuine translation, so a degenerate repetition loop fails in seconds
+
+				systemInstruction: await getResource(".sys.md", import.meta.url),
+
+				responseMimeType: "application/json",
+				responseJsonSchema: schema(Reported)
+
+			}
+
+		});
+
+		return response.candidates?.[0]?.finishReason === FinishReason.MAX_TOKENS && fallbacks.length > 0
+			? request(locale, source, fallbacks)
+			: response;
+
 	}
 
 }
