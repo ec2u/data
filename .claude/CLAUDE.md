@@ -3,7 +3,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | Skill       | Purpose                                                |
 |-------------|--------------------------------------------------------|
 | `modelling` | Standards for documenting and structuring data models  |
-| `deploying` | Procedures for Google App Engine deployment            |
 
 ---
 
