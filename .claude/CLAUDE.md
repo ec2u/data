@@ -6,7 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `deployment-manager` | Google Cloud and GraphDB resources of each environment, grants, current state |
 
 `deployment-manager` lives in a private repository and is linked here, gitignored; never commit deployment details
-(organisation and project ids beyond `deploy.yml`, account names, grants, secret names) to this public repository.
+(organisation and project ids, account names, grants, the inventory of secrets) to this public repository. The secret
+names code reads are exempt: IAM grants, not hidden names, keep secrets closed.
 
 ---
 
