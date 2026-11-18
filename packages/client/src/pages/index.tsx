@@ -126,12 +126,15 @@ export function Datasets() {
 
 			<p style={{
 
-				maxWidth: "15em"
+				whiteSpace: "pre-line"
 
 			}}>
 
-				Open data on the universities of{"\u00A0"}the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European
-				University alliance and their local partners, harmonised and cross-linked for{"\u00A0"}search and reuse.
+				Open data on the universities{"\n"}
+				of the <Link href={"https://www.ec2u.eu/"}>EC2U</Link> European University{"\n"}
+				alliance and their local partners,{"\n"}
+				harmonised and cross-linked{"\n"}
+				for search and reuse.
 
 			</p>
 

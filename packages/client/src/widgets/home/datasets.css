@@ -40,7 +40,7 @@ ec2u-dataset {
     grid-row: span 2;
     grid-template-columns: auto 1fr;
     grid-template-rows: subgrid;
-    align-items: baseline;
+    align-items: start;
     gap: var(--skin--spacing-050) var(--skin--spacing-100);
     padding: var(--skin--spacing-100);
     border: var(--skin--border-width) var(--skin--border-style) var(--skin--border-color);
@@ -53,7 +53,7 @@ ec2u-dataset {
      */
 
     & > .size {
-        align-self: center;
+        align-self: first baseline;
         justify-self: center;
         inline-size: var(--ec2u-datasets-size-width);
         text-align: center;
@@ -61,6 +61,10 @@ ec2u-dataset {
         font-variant-numeric: tabular-nums;
         font-weight: var(--skin--font-weight-strong);
         color: var(--skin--color-placeholder);
+    }
+
+    & > .name {
+        align-self: first baseline;
     }
 
     & > .glyph {

@@ -49,12 +49,13 @@ export function APIPage() {
 
 		<p style={{
 
-			maxWidth: "15em"
+			whiteSpace: "pre-line"
 
 		}}>
 
-			Reference documentation for the{" "}REST/JSON-LD API exposed by the hub and its
-			data{" "}model.
+			Reference documentation for{"\n"}
+			the REST/JSON-LD API exposed{"\n"}
+			by the hub and its data model.
 
 		</p>
 

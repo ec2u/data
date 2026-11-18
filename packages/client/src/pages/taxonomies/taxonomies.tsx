@@ -94,12 +94,14 @@ export function TaxonomiesPage() {
 
 			<p style={{
 
-				maxWidth: "15em"
+				whiteSpace: "pre-line"
 
 			}}>
 
-				Reference definitions of the concepts used to classify hub resources, traced to their
-				sources and cross-linked to related{" "}terms.
+				Reference definitions of the{"\n"}
+				concepts used to classify hub{"\n"}
+				resources, traced to their sources{"\n"}
+				and cross-linked to related terms.
 
 			</p>
 

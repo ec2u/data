@@ -203,12 +203,15 @@ export function Feedback() {
 
             <p style={{
 
-				maxWidth: "15em"
+				whiteSpace: "pre-line"
 
 			}}>
 
-                Submitting opens your email client with the feedback ready to send to the hub team. Feedback is
-                accepted only from EC2U partner university accounts.
+                Submitting opens your email{"\n"}
+                client with the feedback ready to{"\n"}
+                send to the hub team. Feedback{"\n"}
+                is accepted only from EC2U{"\n"}
+                partner university accounts.
 
             </p>
 

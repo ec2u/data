@@ -60,6 +60,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - SPARQL queries and store steps come from the released `@metreeca/pipe-sparql` and `@metreeca/pipe-store` packages,
 	replacing the copies incubated in `@metreeca/work`, which no longer carries them or their dependencies
 - Upgrade `@metreeca/pipe-url` to `^0.11.1`
+- Upgrade `@metreeca/clay`, `@metreeca/clay-markdown` and `@metreeca/clay-widgets` to `^0.2.0`
 - The development environment is named `edge` in place of `yard`, across its branch, its default environment and the
   cloud and GraphDB resources bound to it
 - Services read their environment from `DATA_ENVIRONMENT` in place of `PIPE_ENVIRONMENT` and run on Cloud Run, one
@@ -71,3 +72,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - The Java harvesters, server and React UI deployed to App Engine, superseded by the pipe loader, server and client; the
   last Java state stays reachable at the `java-legacy` tag for reference and for backports to `main` and `next`
 - Dataset metadata links (`rdfs:isDefinedBy`) to the dataset docs pages, superseded by the dataset introductions
+
+### Fixed
+
+- Home page dataset cards no longer open a gap above their descriptions in Safari
+- Dataset counts on the home page line up with the first line of the dataset names
+- Page introductions in the sidebar break at the same points in every browser
