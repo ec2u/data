@@ -16,7 +16,8 @@ Event info extracted by AI from the event catalogue and linked event pages.
 |-----------------------------------------------|---------------------|
 | https://360.uaic.ro/blog/category/evenimente/ | 360 Evenimente [ro] |
 
-- **2026-11-18** – suspended: the source blocks the crawler, so its daily scheduled run stays paused meanwhile
+- **2026-11-18** – the source host drops connections from some networks, workstations included, but answers Cloud Run:
+  local test runs time out, while the scheduled run in the cloud harvests as usual
 - **2025-05-07** – migrated to AI extraction
 
 # 2022-02-26 – Feed adapter
