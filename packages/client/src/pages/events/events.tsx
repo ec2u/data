@@ -104,6 +104,7 @@ export function EventsPage() {
 	return <Page
 
 		head={<Size label={events.label} collection={collection}/>}
+
 		menu={members({
 
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
@@ -122,9 +123,9 @@ export function EventsPage() {
 
 		</Facets>}
 
-		more={<Feedback ai/>}
-
 		meta={<Clear collection={collection}/>}
+
+		more={<Feedback ai/>}
 
 	>{members({
 

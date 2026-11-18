@@ -74,7 +74,7 @@ export function Feedback({
 
 	}}>
 
-		<Strip grow place={ai ? "tail" : "start"} align={"center"}>
+		<Strip space={"spacing050"} align={"center"}>
 
 			<Button
 				look={"subtle"}
