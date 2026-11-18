@@ -208,10 +208,14 @@ export function Feedback() {
 			}}>
 
                 Submitting opens your email{"\n"}
-                client with the feedback ready to{"\n"}
-                send to the hub team. Feedback{"\n"}
-                is accepted only from EC2U{"\n"}
-                partner university accounts.
+                client with the feedback ready{"\n"}
+                to send to the hub team.{"\n"}
+				{"\n"}
+                We cannot always reply,{"\n"}
+                but we will get back to you{"\n"}
+                should we need more details.{"\n"}
+				{"\n"}
+                Thank you!{"\n"}
 
             </p>
 

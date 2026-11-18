@@ -297,8 +297,6 @@ foot before the optional AI notice), opening the feedback page (`packages/client
 - **Forwarding**: the alias is an email forwarding rule of the `ec2u.cc` domain, managed in Squarespace Domains
 	(`ec2u.cc` › Email › Email Forwarding, behind passkey verification), and forwards to the maintainer of the hub. The
 	domain's MX and SPF records belong to this forwarding service: leave them alone.
-- **Filtering**: the forwarder cannot filter senders, so the "partner university accounts only" rule stated on the page
-	is enforced, if at all, by the mailbox receiving the forwarded mail.
 - **Rotation**: if the alias draws spam, add a new rule, switch `Recipient` to it, deploy, then delete the old rule.
 - **Privacy**: the Privacy Notice and the `legal-keeper` skill describe what the email carries; update both whenever the
   fields, the recipient or the delivery channel change.
