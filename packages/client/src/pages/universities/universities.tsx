@@ -109,10 +109,10 @@ export function UniversitiesPage() {
 
 	>{members({
 
-		blank: () => <Empty look={"subtle"}>{universities.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{universities.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><universities.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><universities.glyph/></Empty></Failure>,
 
-		ready: ({ state }) => state.length === 0 ? <Empty>{universities.glyph}</Empty> : <>{[...state]
+		ready: ({ state }) => state.length === 0 ? <Empty><universities.glyph/></Empty> : <>{[...state]
 
 			.sort(by(({ city }) => city.label, locale())) // copy, as state is shared
 
@@ -120,7 +120,7 @@ export function UniversitiesPage() {
 
 				title={<Link href={id}>{label}</Link>}
 				badge={<Pill color={color(id)}>{country.label}</Pill>}
-				image={opt(depiction[0], src => <Image src={src}/>) ?? (comment && <Empty>{universities.glyph}</Empty>)}
+				image={opt(depiction[0], src => <Image src={src}/>) ?? (comment && <Empty><universities.glyph/></Empty>)}
 
 			>{comment}</Card>)
 

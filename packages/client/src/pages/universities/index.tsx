@@ -27,7 +27,7 @@ export const universities = immutable({
 
 	route: "/universities/",
 	label: "Universities",
-	glyph: <Icon.Landmark/>
+	glyph: Icon.Landmark
 
 });
 

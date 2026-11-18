@@ -27,7 +27,7 @@ export const documents = immutable({
 
 	route: "/documents/",
 	label: "Documents",
-	glyph: <Icon.Files/>
+	glyph: Icon.Files
 
 });
 

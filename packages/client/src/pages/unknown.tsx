@@ -27,7 +27,7 @@ export const unknown = immutable({
 
 	route: "*",
 	label: "404 | Not Found",
-	glyph: <Icon.NotFound/>
+	glyph: Icon.NotFound
 
 });
 
@@ -52,7 +52,7 @@ export function Unknown() {
 	>
 
 		<Empty look={"subtle"}>
-			{unknown.glyph}
+			<unknown.glyph/>
 			<span style={{ maxInlineSize: "24em", textWrap: "balance" }}>
 				The content you are looking for doesn't exist or has been moved
 			</span>

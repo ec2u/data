@@ -196,8 +196,8 @@ export function DocumentPage() {
 
 	>{resource({
 
-		blank: () => <Empty look={"subtle"}>{documents.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{documents.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><documents.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><documents.glyph/></Empty></Failure>,
 
 		ready: ({ state: { title, description, relation = [] } }) => <>
 

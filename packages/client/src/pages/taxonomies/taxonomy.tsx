@@ -136,8 +136,8 @@ export function TaxonomyPage() {
 
 	>{resource({
 
-		blank: () => <Empty look={"subtle"}>{taxonomies.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{taxonomies.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><taxonomies.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><taxonomies.glyph/></Empty></Failure>,
 
 		ready: ({
 			state: {

@@ -145,8 +145,8 @@ export function UnitPage() {
 
 	>{resource({
 
-		blank: () => <Empty look={"subtle"}>{units.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{units.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><units.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><units.glyph/></Empty></Failure>,
 
 		ready: ({ state: { prefLabel, definition, university, unitOf, hasUnit = [], subject = [], keyword = [] } }) =>
 			<>

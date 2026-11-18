@@ -156,8 +156,8 @@ export function ProgramPage() {
 
 	>{resource({
 
-		blank: () => <Empty look={"subtle"}>{programs.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{programs.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><programs.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><programs.glyph/></Empty></Failure>,
 
 		ready: ({
 

@@ -27,7 +27,7 @@ export const units = immutable({
 
 	route: "/units/",
 	label: "Units",
-	glyph: <Icon.FlaskConical/>
+	glyph: Icon.FlaskConical
 
 });
 

@@ -39,7 +39,7 @@ export const feedback = immutable({
 
 	route: "/about/feedback",
 	label: "Feedback",
-	glyph: <Icon.MessageSquare/>
+	glyph: Icon.MessageSquare
 
 });
 

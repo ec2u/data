@@ -25,7 +25,7 @@ export const api = immutable({
 
 	route: "/api/",
 	label: "API & Data Model",
-	glyph: <Icon.Package/>
+	glyph: Icon.Package
 
 });
 

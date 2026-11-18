@@ -128,10 +128,10 @@ export function EventsPage() {
 
 	>{members({
 
-		blank: () => <Empty look={"subtle"}>{events.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{events.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><events.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><events.glyph/></Empty></Failure>,
 
-		ready: ({ state, load }) => state.length === 0 ? <Empty>{events.glyph}</Empty> : <>
+		ready: ({ state, load }) => state.length === 0 ? <Empty><events.glyph/></Empty> : <>
 
 			{state.map(({ id, label, disambiguatingDescription, startDate, endDate, image, university }) =>
 				<Card key={id} lines={3}
@@ -139,7 +139,7 @@ export function EventsPage() {
 					title={<Link href={id}>{`${schedule(startDate, endDate)} / ${label}`}</Link>}
 					badge={opt(university?.altLabel, label => <Pill color={color(university?.id)}>{label}</Pill>)}
 					image={opt(image, ({ url }) => <Image src={url[0]}/>)
-						?? (disambiguatingDescription && <Empty>{events.glyph}</Empty>)}
+						?? (disambiguatingDescription && <Empty><events.glyph/></Empty>)}
 
 				>{disambiguatingDescription}</Card>)}
 

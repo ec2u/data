@@ -137,16 +137,16 @@ export function CoursesPage() {
 
 	>{members({
 
-		blank: () => <Empty look={"subtle"}>{courses.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{courses.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><courses.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><courses.glyph/></Empty></Failure>,
 
-		ready: ({ state, load }) => state.length === 0 ? <Empty>{courses.glyph}</Empty> : <>
+		ready: ({ state, load }) => state.length === 0 ? <Empty><courses.glyph/></Empty> : <>
 
 			{state.map(({ id, label, comment, university }) => <Card key={id} lines={3}
 
 				title={<Link href={id}>{label}</Link>}
 				badge={opt(university?.altLabel, label => <Pill color={color(university?.id)}>{label}</Pill>)}
-				image={comment && <Empty>{courses.glyph}</Empty>}
+				image={comment && <Empty><courses.glyph/></Empty>}
 
 			>{comment}</Card>)}
 

@@ -185,8 +185,8 @@ export function CoursePage() {
 
 	>{resource({
 
-		blank: () => <Empty look={"subtle"}>{courses.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{courses.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><courses.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><courses.glyph/></Empty></Failure>,
 
 		ready: ({
 

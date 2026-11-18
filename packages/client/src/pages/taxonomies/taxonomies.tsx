@@ -118,8 +118,8 @@ export function TaxonomiesPage() {
 
 	>{members({
 
-		blank: () => <Empty look={"subtle"}>{taxonomies.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{taxonomies.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><taxonomies.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><taxonomies.glyph/></Empty></Failure>,
 
 		ready: ({ state }) => cards(state.filter(isTaxonomyRow))
 
@@ -136,7 +136,7 @@ export function TaxonomiesPage() {
  * @returns A card for each taxonomy, sorted by label, or the collection glyph if `rows` is empty
  */
 function cards(rows: readonly TaxonomyRow[]) {
-	return rows.length === 0 ? <Empty>{taxonomies.glyph}</Empty> : <>{[...rows] // copy, as rows are shared
+	return rows.length === 0 ? <Empty><taxonomies.glyph/></Empty> : <>{[...rows] // copy, as rows are shared
 
 		.sort(by(({ taxonomy }) => taxonomy.label, locale()))
 
@@ -148,7 +148,7 @@ function cards(rows: readonly TaxonomyRow[]) {
 			}</Link>}
 
 			badge={<Pill>{`${integer.format(size)} concepts`}</Pill>}
-			image={description && <Empty>{taxonomies.glyph}</Empty>}
+			image={description && <Empty><taxonomies.glyph/></Empty>}
 
 		>{description}</Card>)
 

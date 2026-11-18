@@ -112,16 +112,16 @@ export function UnitsPage() {
 
 	>{members({
 
-		blank: () => <Empty look={"subtle"}>{units.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{units.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><units.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><units.glyph/></Empty></Failure>,
 
-		ready: ({ state, load }) => state.length === 0 ? <Empty>{units.glyph}</Empty> : <>
+		ready: ({ state, load }) => state.length === 0 ? <Empty><units.glyph/></Empty> : <>
 
 			{state.map(({ id, label, comment, university }) => <Card key={id} lines={3}
 
 				title={<Link href={id}>{label}</Link>}
 				badge={<Pill color={color(university?.id)}>{university?.altLabel ?? "EC2U Alliance"}</Pill>}
-				image={comment && <Empty>{units.glyph}</Empty>}
+				image={comment && <Empty><units.glyph/></Empty>}
 
 			>{comment}</Card>)}
 

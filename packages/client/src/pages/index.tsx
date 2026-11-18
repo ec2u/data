@@ -51,7 +51,7 @@ export const datasets = immutable({
 
 	route: "/",
 	label: "The European Campus of City-Universities",
-	glyph: <Icon.Package/>
+	glyph: Icon.Package
 
 });
 
@@ -168,15 +168,21 @@ export function Datasets() {
 
 	>{members({
 
-		blank: () => <Empty look={"subtle"}>{datasets.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{datasets.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}>
+			<datasets.glyph/>
+		</Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty>
+			<datasets.glyph/>
+		</Empty></Failure>,
 
 		ready: ({ state }) => {
 
 			const rows = state.filter(isDatasetRow).sort(byDataset);
 
 			return rows.length === 0
-				? <Empty>{datasets.glyph}</Empty>
+				? <Empty>
+					<datasets.glyph/>
+				</Empty>
 				: <DatasetList datasets={rows.map(dataset)}/>;
 
 		}
@@ -244,14 +250,14 @@ function dataset({ dataset: { id, title, description }, size }: DatasetRow): Dat
 
 	const route = internalize(location.href, id);
 
-	const [glyph, priority]: readonly [ComponentChildren, Dataset["priority"]]
-		= route === universities.route ? [universities.glyph, 3]
-		: route === units.route ? [units.glyph, 2]
-			: route === programs.route ? [programs.glyph, 2]
-				: route === courses.route ? [courses.glyph, 2]
-					: route === documents.route ? [documents.glyph, 1]
-						: route === events.route ? [events.glyph, 1]
-							: [undefined, 1];
+	const [glyph, priority]: readonly [ComponentChildren, Dataset["priority"]] =
+		route === universities.route ? [<universities.glyph/>, 3]
+			: route === units.route ? [<units.glyph/>, 2]
+				: route === programs.route ? [<programs.glyph/>, 2]
+					: route === courses.route ? [<courses.glyph/>, 2]
+						: route === documents.route ? [<documents.glyph/>, 1]
+							: route === events.route ? [<events.glyph/>, 1]
+								: [undefined, 1];
 
 	return {
 		href: id,

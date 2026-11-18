@@ -118,16 +118,16 @@ export function ProgramsPage() {
 
 	>{members({
 
-		blank: () => <Empty look={"subtle"}>{programs.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{programs.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><programs.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><programs.glyph/></Empty></Failure>,
 
-		ready: ({ state, load }) => state.length === 0 ? <Empty>{programs.glyph}</Empty> : <>
+		ready: ({ state, load }) => state.length === 0 ? <Empty><programs.glyph/></Empty> : <>
 
 			{state.map(({ id, label, comment, university }) => <Card key={id} lines={3}
 
 				title={<Link href={id}>{label}</Link>}
 				badge={opt(university?.altLabel, label => <Pill color={color(university?.id)}>{label}</Pill>)}
-				image={comment && <Empty>{programs.glyph}</Empty>}
+				image={comment && <Empty><programs.glyph/></Empty>}
 
 			>{comment}</Card>)}
 

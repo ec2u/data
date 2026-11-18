@@ -27,7 +27,7 @@ export const events = immutable({
 
 	route: "/events/",
 	label: "Events",
-	glyph: <Icon.Calendar/>
+	glyph: Icon.Calendar
 
 });
 

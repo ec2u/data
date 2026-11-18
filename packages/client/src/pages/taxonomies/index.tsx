@@ -28,7 +28,7 @@ export const taxonomies = immutable({
 
 	route: "/taxonomies/",
 	label: "Taxonomies",
-	glyph: <Icon.Tags/>
+	glyph: Icon.Tags
 
 });
 

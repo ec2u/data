@@ -167,8 +167,8 @@ export function UniversityPage() {
 
 	>{resource({
 
-		blank: () => <Empty look={"subtle"}>{universities.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{universities.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><universities.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><universities.glyph/></Empty></Failure>,
 
 		ready: ({ state: { prefLabel, depiction, definition } }) => <>
 

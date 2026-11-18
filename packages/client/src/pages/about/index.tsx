@@ -25,7 +25,7 @@ export const about = immutable({
 
 	route: "/about/",
 	label: "About",
-	glyph: <Icon.Help/>
+	glyph: Icon.Help
 
 });
 

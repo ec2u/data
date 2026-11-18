@@ -116,16 +116,16 @@ export function DocumentsPage() {
 
 	>{members({
 
-		blank: () => <Empty look={"subtle"}>{documents.glyph}</Empty>,
-		error: ({ state }) => <Failure problem={state}><Empty>{documents.glyph}</Empty></Failure>,
+		blank: () => <Empty look={"subtle"}><documents.glyph/></Empty>,
+		error: ({ state }) => <Failure problem={state}><Empty><documents.glyph/></Empty></Failure>,
 
-		ready: ({ state, load }) => state.length === 0 ? <Empty>{documents.glyph}</Empty> : <>
+		ready: ({ state, load }) => state.length === 0 ? <Empty><documents.glyph/></Empty> : <>
 
 			{state.map(({ id, label, comment, university }) => <Card key={id} lines={3}
 
 				title={<Link href={id}>{label}</Link>}
 				badge={<Pill color={color(university?.id)}>{university?.altLabel ?? "EC2U Alliance"}</Pill>}
-				image={comment && <Empty>{documents.glyph}</Empty>}
+				image={comment && <Empty><documents.glyph/></Empty>}
 
 			>{comment}</Card>)}
 
