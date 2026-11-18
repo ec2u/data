@@ -74,7 +74,10 @@ export const execute = executor(
 	bind(createGoogleAI, async () => createGoogleAI({
 		vertexai: true,
 		project: await gcp.project,
-		location: "eu"
+		location: "eu",
+		httpOptions: {
+			timeout: 2*minute // well above any genuine call, so a request the service never answers costs a page, not the run
+		}
 	}))
 );
 
