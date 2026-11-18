@@ -46,7 +46,6 @@ export function Failure({
 
 		const post = board.post({
 			status: "failure",
-			message: problem.detail ?? problem.title ?? "Unexpected error",
 			problem
 		});
 
