@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "@kxta/open": "*",
-    "@metreeca/blue": "^0.14.0",
+    "@metreeca/blue": "^0.15.0",
     "@metreeca/core": "^0.14.0",
-    "@metreeca/qest": "^0.14.0",
+    "@metreeca/qest": "^0.15.0",
     "uuid": "^14.0.1"
   },
   "scripts": {

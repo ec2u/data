@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { symlinks } from "@metreeca/rack/vite";
+import { backend, symlinks } from "@metreeca/rack/vite";
 import preact from "@preact/preset-vite";
 import { defineConfig } from "vite";
 
@@ -26,6 +26,7 @@ export default defineConfig({ // https://vite.dev/config/
 
 	plugins: [
 		symlinks({ conditions: ["@ec2u/source", "@metreeca/source"] }), // bundle linked packages from their sources
+		backend(), // open the first page once the proxied data server accepts connections
 		preact()
 	],
 

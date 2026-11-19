@@ -13,9 +13,9 @@
   },
   "scripts": {},
   "dependencies": {
-    "@metreeca/blue": "^0.14.0",
-    "@metreeca/clay-markdown": "^0.2.1",
-    "@metreeca/clay-widgets": "^0.2.1",
+    "@metreeca/blue": "^0.15.0",
+    "@metreeca/clay-markdown": "^0.3.0",
+    "@metreeca/clay-widgets": "^0.3.0",
     "@metreeca/core": "^0.14.0",
     "preact": "^10.29.8"
   }

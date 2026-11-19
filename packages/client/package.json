@@ -5,30 +5,29 @@
   "type": "module",
   "scripts": {
     "build": "tsc --noEmit && vite build",
-    "watch": "wait-on tcp:8080 && vite --open --host"
+    "watch": "vite --open --host"
   },
   "dependencies": {
     "@ec2u/data-shared": "*",
     "@kxta/tile-api": "*",
     "@kxta/tile-skos": "*",
-    "@metreeca/blue": "^0.14.0",
-    "@metreeca/clay": "^0.2.1",
-    "@metreeca/clay-markdown": "^0.2.1",
-    "@metreeca/clay-widgets": "^0.2.1",
+    "@metreeca/blue": "^0.15.0",
+    "@metreeca/clay": "^0.3.0",
+    "@metreeca/clay-markdown": "^0.3.0",
+    "@metreeca/clay-widgets": "^0.3.0",
     "@metreeca/core": "^0.14.0",
     "@metreeca/http": "^0.6.0",
-    "@metreeca/keep": "^0.13.0",
-    "@metreeca/keep-rest": "^0.13.0",
+    "@metreeca/keep": "^0.14.0",
+    "@metreeca/keep-rest": "^0.14.0",
     "@metreeca/skin": "^0.3.0",
-    "@metreeca/tile": "^0.7.0",
-    "@metreeca/tile-widgets": "^0.7.0",
+    "@metreeca/tile": "^0.9.0",
+    "@metreeca/tile-widgets": "^0.9.0",
     "lucide-preact": "^1.71.0",
     "preact": "^10.29.8"
   },
   "devDependencies": {
-    "@metreeca/rack": "^0.7.0",
+    "@metreeca/rack": "^0.8.0",
     "@preact/preset-vite": "^2.10.6",
-    "vite": "^8.3.0",
-    "wait-on": "^9.5.1"
+    "vite": "^8.3.0"
   }
 }
