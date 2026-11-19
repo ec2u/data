@@ -35,7 +35,6 @@ chosen as type. It then sits at the end of the bar, next to an **AI-Generated Co
 
 # What to Know
 
-- Feedback is accepted only from EC2U partner university accounts
 - The email carries the subject, the type, the message, any details filled in and the page it is about; a bug report
 	also carries the browser and the operating system, as described in the [Privacy Notice](../legal/privacy)
 - The feedback page sends and stores nothing on its own: nothing reaches the hub team until you send the email
