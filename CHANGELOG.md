@@ -50,6 +50,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Catalogue facets other than the university one open compact, and links across the hub take their strong look from the
   shared page style rather than from each view
 - Taxonomy pages gather the concept count, version and dates in a single sidebar panel
+- Event summaries run to 250–300 characters, filling the three lines catalogue cards show of them without being clipped;
+	events extracted before the change keep their shorter summaries until their source page changes
 
 - Shape definitions, vocabularies and dataset metadata moved from `@ec2u/data-loader` to `@ec2u/data-shared`, so that
 	endpoints and clients state a resource without pulling in the ingestion machinery; the topic retrieval and embedding

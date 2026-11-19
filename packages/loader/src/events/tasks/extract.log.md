@@ -193,6 +193,19 @@ as an exhausted output budget before suspecting the prompt. A reply that did not
 `RECITATION`, cut short as `MAX_TOKENS`) is logged as an incomplete generation naming its finish reason, and the page is
 skipped without a digest, so it is offered again on the next run.
 
+## Summary Length
+
+The summary fills the three lines a catalogue card shows of it, without spilling past them.
+
+A card holds about 310 to 330 characters on three lines at the usual list width. Asked for "less than 500 characters",
+the model answered well short of it on the 75 pages of the classification sample (2026-11-19): `summary` median 183, max
+306, and `localSummary` median 199, so most cards showed two lines. Asked for "250 to 300 characters and never more",
+the same pages answered with `summary` median 231 (151 to 282) and `localSummary` median 243 (157 to 296), none over
+300, and with no change in how many pages were read as events.
+
+CRITICAL: the model lands below the range it is given rather than inside it. Raise the lower bound before blaming the
+wording, and NEVER the upper one: a summary over the card capacity is clipped mid-sentence.
+
 ## Postal Code
 
 No postal code is asked for.

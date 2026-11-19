@@ -119,8 +119,8 @@ export function Reported() {
 		localSummary: optional(string, {
 			name: "Original Summary",
 			description: `
-				A plain text summary in the language the document is written in, of less than 500 characters, with no
-				markdown formatting; left out where the document is written in English.
+				A plain text summary in the language the document is written in, of 250 to 300 characters and never
+				more, with no markdown formatting; left out where the document is written in English.
 			`
 		}),
 
@@ -142,7 +142,7 @@ export function Reported() {
 
 		summary: optional(string, {
 			name: "Short Summary",
-			description: "A plain text summary in English of less than 500 characters, with no markdown formatting"
+			description: "A plain text summary in English of 250 to 300 characters and never more, with no markdown formatting"
 		}),
 
 		description: required(string, {

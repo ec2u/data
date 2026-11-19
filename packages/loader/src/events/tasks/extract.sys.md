@@ -22,7 +22,8 @@ Extract the following properties from the provided document:
   Law`); where stripping them would leave nothing, draw the title from the heading the body gives the event. The title
 	is stated in English whichever heading it is drawn from: stripping settles what to state, NEVER whether to translate
 	it, and a title left part in the document's own language is wrong however faithfully it quotes the page
-- plain text summary of less than 500 characters with strictly no markdown formatting
+- plain text summary of 250 to 300 characters with strictly no markdown formatting: the summary fills three lines of a
+	catalogue card and MUST NEVER exceed 300 characters; state less only where the document itself says less, NEVER pad
 - complete descriptive text as included in the document in markdown format; make absolutely sure not to include in the
 	description H1 (#) headings with the document title; NEVER carry over navigation, listings of other events, or the
 	page as a whole
