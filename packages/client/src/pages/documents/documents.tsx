@@ -92,6 +92,8 @@ export function DocumentsPage() {
 
 	return <Page
 
+		gist={query}
+
 		head={<Size label={documents.label} collection={collection}/>}
 		menu={members({
 

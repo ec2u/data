@@ -89,6 +89,8 @@ export function UniversitiesPage() {
 
 	return <Page
 
+		gist={query}
+
 		head={<Size label={universities.label} collection={collection}/>}
 		menu={members({
 

@@ -27,6 +27,8 @@ import { Logo } from "./logo.js";
 
 export function Page({
 
+	gist,
+
 	more = <Feedback/>,
 	tray,
 	meta,
@@ -38,6 +40,12 @@ export function Page({
 	children
 
 }: {
+
+	/**
+	 * What the page body shows, such as the criteria a catalogue narrows its results by; a change brings the body back
+	 * to its top, so the reader never lands halfway down results they have not read.
+	 */
+	gist?: unknown
 
 	meta?: ComponentChildren
 	tray?: ComponentChildren
@@ -66,6 +74,7 @@ export function Page({
 		<Tool
 
 			busy={busy}
+			gist={gist}
 
 			mark={<Logo/>}
 

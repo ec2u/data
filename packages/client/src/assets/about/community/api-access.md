@@ -29,7 +29,7 @@ description through the API. Datasets and their resources follow the address lay
 | Address                                 | Resource                                           | Reference                      |
 |-----------------------------------------|----------------------------------------------------|--------------------------------|
 | `https://data.ec2u.eu/`                 | the catalogue of the datasets published by the hub | [Datasets](/api/ec2u-datasets) |
-| `https://data.ec2u.eu/{dataset}/`       | a dataset, listing its member resources            | [Dataset](/api/ec2u.dataset)   |
+| `https://data.ec2u.eu/{dataset}/`       | a dataset, listing its member resources            | [Dataset](/api/ec2u-dataset)   |
 | `https://data.ec2u.eu/{dataset}/{code}` | a single resource of the dataset                   | [API & Data Model](/api/)      |
 
 Discover datasets from the catalogue rather than assuming a fixed set: it lists the address of every dataset the hub
@@ -91,7 +91,7 @@ identifiers rather than expanded. A dataset lists its members in `resources` as 
 curl --header 'Accept-Language: en' 'https://data.ec2u.eu/universities/pavia'
 ```
 
-The response below is abridged to a few properties of the university: the [University](/api/ec2u.university)
+The response below is abridged to a few properties of the university: the [University](/api/ec2u-university)
 reference lists them in full, stating the type of each and whether it holds a single value or several.
 
 ```json

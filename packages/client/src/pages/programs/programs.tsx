@@ -93,6 +93,8 @@ export function ProgramsPage() {
 
 	return <Page
 
+		gist={query}
+
 		head={<Size label={programs.label} collection={collection}/>}
 		menu={members({
 

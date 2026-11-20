@@ -103,6 +103,8 @@ export function EventsPage() {
 
 	return <Page
 
+		gist={query}
+
 		head={<Size label={events.label} collection={collection}/>}
 
 		menu={members({

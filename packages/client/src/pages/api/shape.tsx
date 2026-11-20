@@ -50,7 +50,7 @@ type Format =
 /**
  * Creates the documentation of a shape of the data model served by the hub.
  *
- * Documents the shape identified by the last step of the current route, as `/api/ec2u.university`, falling back to the
+ * Documents the shape identified by the last step of the current route, as `/api/ec2u-university`, falling back to the
  * not-found view if no shape of the model is identified by that step of the route.
  *
  * @returns The model page

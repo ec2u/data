@@ -53,8 +53,8 @@ describe("getShapeId()", () => {
 
 	const endpoints: Endpoints = { "/items/": Items, "/items/:code": Item };
 
-	it("identifies classed shapes by the lowercase prefixed name of their class, with a dot for the colon", async () => {
-		expect(getShapeId(endpoints, lexicon, Item)).toBe("ex.item");
+	it("identifies classed shapes by the slug of the prefixed name of their class", async () => {
+		expect(getShapeId(endpoints, lexicon, Item)).toBe("ex-item");
 	});
 
 	it("identifies labelled class-less shapes by their label", async () => {
@@ -78,6 +78,30 @@ describe("getShapeId()", () => {
 		expect(getShape(endpoints, lexicon, "stray")).toBeUndefined();
 	});
 
+	it("rejects class-less shapes whose label would identify them as a classed shape", async () => {
+
+		const Clash = resource({ name: "Ex Item" }, { items: multiple(reference(Item)) });
+
+		expect(() => getShapeId({ "/clash/": Clash }, lexicon, Clash)).toThrow(RangeError);
+
+	});
+
+	it("rejects class-less shapes whose label would identify them as a numbered peer", async () => {
+
+		const First = resource({ name: "Entry" }, {});
+		const Second = resource({ name: "Entry" }, {});
+		const Third = resource({ name: "Entry 1" }, {});
+
+		const Clash = resource({ name: "Entries" }, {
+			first: optional(reference(First)),
+			second: optional(reference(Second)),
+			third: optional(reference(Third))
+		});
+
+		expect(() => getShapeId({ "/clash/": Clash }, lexicon, Clash)).toThrow(RangeError);
+
+	});
+
 });
 
 describe("getShapeName()", () => {
@@ -88,15 +112,15 @@ describe("getShapeName()", () => {
 	const endpoints: Endpoints = { "/targets/": Target, "/things/": Thing };
 
 	it("names the shape identified in the model by its English label", async () => {
-		expect(getShapeName(endpoints, lexicon, "ex.target")).toBe("Target");
+		expect(getShapeName(endpoints, lexicon, "ex-target")).toBe("Target");
 	});
 
 	it("names label-less classed shapes by the prefixed name of their class under the lexicon", async () => {
-		expect(getShapeName(endpoints, lexicon, "ex.thing")).toBe("ex:Thing");
+		expect(getShapeName(endpoints, lexicon, "ex-thing")).toBe("ex:Thing");
 	});
 
 	it("names nothing for identifiers no shape of the model carries", async () => {
-		expect(getShapeName(endpoints, lexicon, "ex.unknown")).toBeUndefined();
+		expect(getShapeName(endpoints, lexicon, "ex-unknown")).toBeUndefined();
 	});
 
 });
@@ -135,19 +159,19 @@ describe("getShapeChecks()", () => {
 
 describe("classify()", () => {
 
-	it("identifies classed shapes by the lowercase prefixed name of their class, with a dot for the colon", async () => {
+	it("identifies classed shapes by the slug of the prefixed name of their class", async () => {
 
-		const Course = resource({ class: `${terms}Course` }, {});
+		const Course = resource({ class: `${terms}CourseUnit` }, {});
 
-		expect(classify([Course], lexicon).get(Course)).toBe("ex.course");
+		expect(classify([Course], lexicon).get(Course)).toBe("ex-courseunit");
 
 	});
 
-	it("identifies classes in the default namespace by their lowercase local name after a dot", async () => {
+	it("identifies classes in the default namespace by the slug of their local name", async () => {
 
 		const Course = resource({ class: `${terms}Course` }, {});
 
-		expect(classify([Course], createLexicon({ "": terms })).get(Course)).toBe(".course");
+		expect(classify([Course], createLexicon({ "": terms })).get(Course)).toBe("course");
 
 	});
 
@@ -163,7 +187,7 @@ describe("classify()", () => {
 
 		const Course = resource({ class: `${terms}Course` }, {});
 
-		expect([...classify([() => Course], lexicon).values()]).toEqual(["ex.course"]);
+		expect([...classify([() => Course], lexicon).values()]).toEqual(["ex-course"]);
 
 	});
 
@@ -171,7 +195,7 @@ describe("classify()", () => {
 
 		const Course = resource({ class: `${terms}Course` }, {});
 
-		expect(classify([Course, Course], lexicon).get(Course)).toBe("ex.course");
+		expect(classify([Course, Course], lexicon).get(Course)).toBe("ex-course");
 
 	});
 
@@ -190,6 +214,24 @@ describe("classify()", () => {
 		const Lower = resource({ class: `${terms}course` }, {});
 
 		expect(() => classify([Course, Lower], lexicon)).toThrow(RangeError);
+
+	});
+
+	it("rejects shapes stating classes whose prefixed names share a slug", async () => {
+
+		const Underscored = resource({ class: `${terms}Course_Unit` }, {});
+		const Hyphenated = resource({ class: `${terms}Course-Unit` }, {});
+
+		expect(() => classify([Underscored, Hyphenated], lexicon)).toThrow(RangeError);
+
+	});
+
+	it("rejects shapes stating classes whose prefix and local name share a slug across the colon", async () => {
+
+		const Prefixed = resource({ class: `${other}Unit` }, {});
+		const Local = resource({ class: `${terms}Vocab-Unit` }, {});
+
+		expect(() => classify([Prefixed, Local], createLexicon({ ex: terms, "ex-vocab": other }))).toThrow(RangeError);
 
 	});
 

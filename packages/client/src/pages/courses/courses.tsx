@@ -105,6 +105,8 @@ export function CoursesPage() {
 
 	return <Page
 
+		gist={query}
+
 		head={<Size label={courses.label} collection={collection}/>}
 		menu={members({
 

@@ -120,6 +120,8 @@ export function Datasets() {
 
 	return <Page
 
+		gist={query}
+
 		head={datasets.label}
 
 		tray={<Stack space={"spacing075"}>

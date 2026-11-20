@@ -89,6 +89,8 @@ export function UnitsPage() {
 
 	return <Page
 
+		gist={query}
+
 		head={<Size label={units.label} collection={collection}/>}
 		menu={members({
 

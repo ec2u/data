@@ -83,6 +83,8 @@ export function TaxonomiesPage() {
 
 	return <Page
 
+		gist={query}
+
 		head={<Size label={taxonomies.label} collection={collection}/>}
 		menu={members({
 

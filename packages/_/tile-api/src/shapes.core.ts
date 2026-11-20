@@ -98,12 +98,11 @@ export function getShape(endpoints: Endpoints, lexicon: Lexicon, id: string): Op
 /**
  * Identifies a resource shape.
  *
- * The identifier names the page documenting the shape in the models section. Classed shapes are identified by the
- * lowercase prefixed name of their class under `lexicon`, with a dot for the colon, as
- * `ex.item`, which stays the same while the class does. Class-less shapes are identified, until stable identities are
- * available for them, by their English label as a lowercase kebab-case slug, as `example-items`, or as `shape-n` if
- * they state none; numbered identifiers may shift when shapes are added to or removed from the model, breaking links
- * to their pages.
+ * The identifier names the page documenting the shape in the models section, as a lowercase kebab-case slug. Classed
+ * shapes are identified by the prefixed name of their class under `lexicon`, as `ex-item`, which stays the same while
+ * the class does. Class-less shapes are identified, until stable identities are available for them, by their English
+ * label, as `example-items`, or as `shape-n` if they state none; numbered identifiers may shift when shapes are added
+ * to or removed from the model, breaking any link to their pages that readers have saved or shared.
  *
  * As a location, the identifier is relative to the models section: it resolves as is from any page of the section and
  * must be prefixed by the route of the section when linked from a page elsewhere.
@@ -114,6 +113,9 @@ export function getShape(endpoints: Endpoints, lexicon: Lexicon, id: string): Op
  *
  * @returns The identifier of `lazy`; none if `lazy` is outside the model or is an anonymous shape used at a single
  *     site, documented where it is used rather than on a page of its own
+ *
+ * @throws RangeError If two shapes of the model would share an identifier, as a class-less shape labelled `Ex Item`
+ *     beside a shape of class `ex:Item`, so that no page of the models section ever documents the wrong shape
  */
 export function getShapeId(endpoints: Endpoints, lexicon: Lexicon, lazy: Lazy<ResourceShape>): Optional<string> {
 	return catalogue(endpoints, lexicon).identities.get(eager(lazy));
@@ -371,19 +373,20 @@ export function prefixed(lexicon: Lexicon, iri: string): string {
 /**
  * Identifies the classed shapes of a model.
  *
- * Each shape stating a class is identified by the prefixed name of its class under `lexicon`, lowercased and with the
- * colon replaced by a dot, as `ex.course` for `https://example.org/terms#Course` under the `ex` prefix. The
- * identifier is the same wherever a model is published, as a description key, an OpenAPI schema name, a `$ref` target
- * or the last step of a documentation route, and it stays the same while the class does, however the shape is labelled
- * or reached. Shapes stating no class are left unidentified, as no class gives them an identity of their own.
+ * Each shape stating a class is identified by the prefixed name of its class under `lexicon` as a lowercase kebab-case
+ * slug, as `ex-course` for `https://example.org/terms#Course` under the `ex` prefix, the same style class-less shapes
+ * are identified in. The identifier is the same wherever a model is published, as a description key, an OpenAPI schema
+ * name, a `$ref` target or the last step of a documentation route, and it stays the same while the class does, however
+ * the shape is labelled or reached. Shapes stating no class are left unidentified, as no class gives them an identity.
  *
  * @param shapes The shapes of the model to be identified, possibly deferred
  * @param lexicon The prefixes the classes of the model are named under
  *
  * @returns The identifier of each shape of `shapes` stating a class; shapes stating no class are absent
  *
- * @throws RangeError If two shapes of `shapes` state the same class, or classes differing in case alone, or if
- *     `lexicon` has no prefix for the namespace of a class stated by a shape of `shapes`
+ * @throws RangeError If two shapes of `shapes` state classes whose prefixed names share a slug, as the same class,
+ *     classes differing in case or punctuation alone, or `ex-a:B` and `ex:A-B`, or if `lexicon` has no prefix for
+ *     the namespace of a class stated by a shape of `shapes`, as no prefixed name then exists to identify it by
  */
 export function classify(
 	shapes: readonly Lazy<ResourceShape>[],
@@ -397,12 +400,12 @@ export function classify(
 	const duplicate = classed.find(({ id }, index) => classed.findIndex(peer => peer.id === id) !== index);
 
 	return duplicate !== undefined
-		? error(new RangeError(`duplicated class <${duplicate.iri}>`))
+		? error(new RangeError(`duplicated identifier <${duplicate.id}> of class <${duplicate.iri}>`))
 		: new Map(classed.map(({ shape, id }) => [shape, id]));
 
 
 	function identifier(iri: string): string {
-		return opt(compact(lexicon, iri), name => name.replace(":", ".").toLowerCase())
+		return opt(compact(lexicon, iri), slug)
 			?? error(new RangeError(`unprefixed class <${iri}>`));
 	}
 
@@ -655,10 +658,12 @@ function collapse(text: string): string {
 }
 
 /**
- * Identifies each shape of a model: classed shapes by the prefixed name of their class, with a dot for the colon;
- * class-less shapes, until digest identities land, by the slug of their English label, or of `Shape` if they state
- * none, numbering from 1 in model order the ones whose slugs would clash; anonymous shapes used at a single site are
- * left out, as they are documented where they are used.
+ * Identifies each shape of a model by a slug: classed shapes by the prefixed name of their class; class-less shapes,
+ * until digest identities land, by their English label, or by `Shape` if they state none, numbering from 1 in model
+ * order the ones whose labels would clash; anonymous shapes used at a single site are left out, as the page of the
+ * shape using them documents them in place, where readers meet them, rather than on a page of their own.
+ *
+ * @throws RangeError If two shapes would still share an identifier, as a label slugged like a class or a numbered peer
  */
 function identify(lexicon: Lexicon, shapes: readonly ResourceShape[]): ReadonlyMap<ResourceShape, string> {
 
@@ -672,14 +677,20 @@ function identify(lexicon: Lexicon, shapes: readonly ResourceShape[]): ReadonlyM
 		.map(shape => ({ shape, base: english(shape.name) }))
 		.filter(({ shape, base }) => base !== undefined || uses.filter(use => use === shape).length > 1);
 
-	return new Map([...classed, ...bases.map(({ shape, base }): [ResourceShape, string] => {
+	const identities = [...classed, ...bases.map(({ shape, base }): [ResourceShape, string] => {
 
 		const label = base ?? anonymous;
 		const peers = bases.filter(peer => slug(peer.base ?? anonymous) === slug(label)).map(peer => peer.shape);
 
 		return [shape, slug(base !== undefined && peers.length === 1 ? label : `${label} ${peers.indexOf(shape)+1}`)];
 
-	})]);
+	})];
+
+	const duplicate = identities.find(([, id], index) => identities.findIndex(([, peer]) => peer === id) !== index);
+
+	return duplicate !== undefined
+		? error(new RangeError(`duplicated identifier <${duplicate[1]}> of shape <${nameShape(duplicate[0], lexicon)}>`))
+		: new Map(identities);
 
 }
 
