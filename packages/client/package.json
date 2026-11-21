@@ -15,7 +15,7 @@
     "@metreeca/clay": "^0.4.0",
     "@metreeca/clay-markdown": "^0.4.0",
     "@metreeca/clay-widgets": "^0.4.0",
-    "@metreeca/core": "^0.14.0",
+    "@metreeca/core": "^0.14.1",
     "@metreeca/http": "^0.6.0",
     "@metreeca/keep": "^0.14.0",
     "@metreeca/keep-rest": "^0.14.0",

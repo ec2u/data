@@ -82,6 +82,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Data pages load in Chrome and Edge on Windows, where every data request failed with HTTP status 404 and left panels
+  and facets empty
 - Home page dataset cards no longer open a gap above their descriptions in Safari
 - Dataset counts on the home page line up with the first line of the dataset names
 - Page introductions in the sidebar break at the same points in every browser

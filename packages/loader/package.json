@@ -12,7 +12,7 @@
     "@kxta/core": "*",
     "@kxta/open": "*",
     "@metreeca/blue": "^0.15.0",
-    "@metreeca/core": "^0.14.0",
+    "@metreeca/core": "^0.14.1",
     "@metreeca/flow": "^0.13.0",
     "@metreeca/gate": "^0.14.0",
     "@metreeca/gear": "^0.6.0",
