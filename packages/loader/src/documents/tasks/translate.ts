@@ -69,9 +69,10 @@ function Reported() {
  *
  * @param university The university the drafts are listed by, supplying the language their local texts are written in
  *
+ * @param pipeline The name of the pipe running the task, labelling its model calls so their cost is charged to it
  * @returns A task completing the English texts of a feed of draft entries
  */
-export function translate(university: Partner): Task<Entry, Entry> {
+export function translate(university: Partner, pipeline: string): Task<Entry, Entry> {
 
 	const ai = service(createGoogleAI);
 
@@ -134,6 +135,8 @@ export function translate(university: Partner): Task<Entry, Entry> {
 				`,
 
 				config: {
+
+					labels: { pipe: pipeline },
 
 					seed: 0,
 					temperature: 0,

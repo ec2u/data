@@ -26,6 +26,8 @@ import { execute } from "../../index.core.js";
 import { sync } from "../sinks/sync.js";
 
 
+const Pipeline = "/events/coimbra-university";
+
 const Search = "https://content.fw.uc.pt/v1/agenda/events/search";
 const Events = "https://agenda.coimbra.pt/event";
 
@@ -74,7 +76,10 @@ export async function CoimbraUniversity() {
 				(map(key => `${Events}/${key}`))
 			)
 		))
-		(sync({ publisher: Publisher }))
+		(sync({
+			pipeline: Pipeline,
+			publisher: Publisher
+		}))
 	);
 
 }

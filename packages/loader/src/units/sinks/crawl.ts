@@ -67,6 +67,7 @@ export type Page = {
  * @param options The options governing how pages are stated
  * @param options.force Whether every page is extracted afresh, ignoring the digests of stored units, as needed after a
  * change to the extraction prompt that unchanged pages would otherwise never pick up; defaults to `false`
+ * @param options.pipeline The name of the pipe running the sink, labelling its model calls so their cost is charged to it
  *
  * @returns A sink drawing a feed of unit page addresses and resolving to a tally of what it did
  *
@@ -75,13 +76,15 @@ export type Page = {
  */
 export function crawl(university: Partner, {
 
-	force = false
+	force = false,
+	pipeline
 
 }: {
 
 	readonly force?: boolean
+	readonly pipeline: string
 
-} = {}): Sink<string, Tally> {
+}): Sink<string, Tally> {
 
 	return urls => pipe(
 		(items(urls))
@@ -99,9 +102,9 @@ export function crawl(university: Partner, {
 					(filter(async ({ document }) => !(await digests).has(digest(document))))
 					(fork(analysis, pages => pipe(
 						(items(pages))
-						(extract(university))
+						(extract(university, pipeline))
 					)))
-					(complete(university))
+					(complete(university, pipeline))
 				);
 
 			},

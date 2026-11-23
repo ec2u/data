@@ -24,6 +24,8 @@ import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 
 
+const Pipeline = "/documents/coimbra";
+
 const DataURL = "base-documents-coimbra-url";
 
 
@@ -43,7 +45,9 @@ export async function Coimbra() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv(coimbra))
-		(sync(coimbra))
+		(sync(coimbra, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

@@ -54,10 +54,8 @@ export const execute = executor(
 		: getPackage(import.meta.dirname)
 	),
 	bind(createVault, createGCPVault),
-	bind(createCache, () => createFileCache({
-		bytes: 256*1024**2 // held in memory on Cloud Run, within the default 512 MiB of the loader
-	})),
-	bind(createFetch, () => createFetch(cache({
+	bind(createCache, createFileCache),
+	bind(createFetch, () => gcp.cloud ? createFetch() : createFetch(cache({ // replays pages across local reruns
 		ttl: 60*minute,
 		store: service(createCache),
 		avoid: "https://docs.google.com/**",
@@ -75,8 +73,9 @@ export const execute = executor(
 		vertexai: true,
 		project: await gcp.project,
 		location: "eu",
+		labels: { origin: gcp.cloud ? "cloud" : "local", environment },
 		httpOptions: {
-			timeout: 2*minute // well above any genuine call, so a request the service never answers costs a page, not the run
+			timeout: 2*minute // well above any genuine call, so a hung request fails its page, not the run
 		}
 	}))
 );

@@ -84,6 +84,7 @@ export type Page = {
  * @param options The options governing how pages are stated
  * @param options.force Whether every page is extracted afresh, ignoring stored digests, as needed after a change to
  * the extraction prompt that unchanged pages would otherwise never pick up; defaults to `false`
+ * @param options.pipeline The name of the pipe running the sink, labelling its model calls so their cost is charged to it
  *
  * @returns A sink drawing a feed of offering leads and resolving to a tally of what it did
  *
@@ -93,13 +94,15 @@ export type Page = {
  */
 export function crawl(source: Reference, {
 
-	force = false
+	force = false,
+	pipeline
 
 }: {
 
 	readonly force?: boolean
+	readonly pipeline: string
 
-} = {}): Sink<Lead, Tally> {
+}): Sink<Lead, Tally> {
 
 	const year = getAcademicYear(new Date()); // taken once, so a run straddling the rollover dates all leads alike
 
@@ -121,9 +124,9 @@ export function crawl(source: Reference, {
 					(filter(async ({ hash }) => !(await digests).has(hash)))
 					(fork(analysis, pages => pipe(
 						(items(pages))
-						(extract())
+						(extract(pipeline))
 					)))
-					(complete(source))
+					(complete(source, pipeline))
 				);
 
 			},

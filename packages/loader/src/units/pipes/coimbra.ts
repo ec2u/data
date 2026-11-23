@@ -29,6 +29,8 @@ import { execute } from "../../index.core.js";
 import { type Draft, sync } from "../sinks/sync.js";
 
 
+const Pipeline = "/units/coimbra";
+
 const DataURL = "base-units-coimbra-url";
 const DataKey = "base-units-coimbra-key";
 
@@ -92,7 +94,9 @@ export async function Coimbra() {
 	return pipe(
 		(items(new Request(await vault(DataURL), { headers: { Key: await vault(DataKey) } })))
 		(records())
-		(sync(coimbra))
+		(sync(coimbra, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

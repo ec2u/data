@@ -28,6 +28,8 @@ import { identify, sync } from "../sinks/sync.js";
 import { row } from "./lll.core.js";
 
 
+const Pipeline = "/offerings/lll";
+
 const Source = resolve(offerings.id, "lll");
 
 const DataURL = "base-offerings-lll-url";
@@ -52,7 +54,9 @@ export async function LLL() {
 		(csv({ header: true, skip: true, trim: true }))
 		(flat(map(row)))
 		(distinct(draft => identify(draft) ?? draft.key))
-		(sync(Source))
+		(sync(Source, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

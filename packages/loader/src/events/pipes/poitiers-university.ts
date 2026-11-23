@@ -26,6 +26,8 @@ import { execute } from "../../index.core.js";
 import { sync } from "../sinks/sync.js";
 
 
+const Pipeline = "/events/poitiers-university";
+
 const concurrency = 10; // the number of index pages read at the same time from the source site
 
 // the events are listed by a search page of their own, while the publisher is the news and events section as a whole
@@ -74,7 +76,10 @@ export async function PoitiersUniversity() {
 				(map(link))
 			)
 		))
-		(sync({ publisher: Publisher }))
+		(sync({
+			pipeline: Pipeline,
+			publisher: Publisher
+		}))
 	);
 
 }

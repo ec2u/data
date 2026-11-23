@@ -24,6 +24,8 @@ import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 
 
+const Pipeline = "/documents/umea";
+
 const DataURL = "base-documents-umea-url";
 
 
@@ -43,7 +45,9 @@ export async function Umea() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv(umea))
-		(sync(umea))
+		(sync(umea, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

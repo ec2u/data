@@ -32,6 +32,8 @@ import { type CourseDraft, type Draft, type ProgramDraft, sync } from "../sinks/
 import { courses, type OfferRecord, type Page, pages, program, programs, qualify } from "./pavia.core.js";
 
 
+const Pipeline = "/offerings/pavia";
+
 const Source = resolve(offerings.id, "pavia");
 
 const OfferURL = "https://studentionline.unipv.it/e3rest/api/offerta-service-v1/offerte/";
@@ -91,7 +93,9 @@ export async function Pavia() {
 
 	return pipe(
 		(items<Draft>([...stated, ...taught]))
-		(sync(Source))
+		(sync(Source, {
+			pipeline: Pipeline
+		}))
 	);
 
 

@@ -24,6 +24,8 @@ import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 
 
+const Pipeline = "/documents/pavia";
+
 const DataURL = "base-documents-pavia-url";
 
 
@@ -43,7 +45,9 @@ export async function Pavia() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv(pavia))
-		(sync(pavia))
+		(sync(pavia, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

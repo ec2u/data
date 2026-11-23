@@ -25,6 +25,8 @@ import { lead } from "./pavia-masters.core.js";
 import { catalogue } from "./pavia-portal.core.js";
 
 
+const Pipeline = "/offerings/pavia-masters";
+
 const Source = resolve(offerings.id, "pavia-masters");
 
 const CatalogueURL = "https://portale.unipv.it/it/didattica/post-laurea/master-universitari/offerta-didattica";
@@ -54,6 +56,8 @@ export async function PaviaMasters() {
 		(catalogue())
 		(map(lead))
 		(trim())
-		(crawl(Source))
+		(crawl(Source, {
+			pipeline: Pipeline
+		}))
 	);
 }

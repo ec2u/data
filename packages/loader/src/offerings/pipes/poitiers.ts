@@ -27,6 +27,8 @@ import { type Entry, program } from "./poitiers.core.js";
 import snapshot from "./poitiers.json" with { type: "json" };
 
 
+const Pipeline = "/offerings/poitiers";
+
 const Source = resolve(offerings.id, "poitiers");
 
 
@@ -55,7 +57,9 @@ export async function Poitiers() {
 	return pipe(
 		(items(Object.values(snapshot)))
 		(flat(map(read)))
-		(sync(Source))
+		(sync(Source, {
+			pipeline: Pipeline
+		}))
 	);
 }
 

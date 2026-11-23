@@ -26,7 +26,7 @@ import { pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
 import { toSet } from "@metreeca/flow/sinks";
 import { filter, fork, map, mix, tee } from "@metreeca/flow/tasks";
-import { compress, synopsis } from "@metreeca/llms";
+import { compress, synopsis } from "@metreeca/llms/vectors";
 import { digest } from "@metreeca/mime-json";
 import { validate } from "@metreeca/mime-jsonld";
 import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";

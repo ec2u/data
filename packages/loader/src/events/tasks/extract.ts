@@ -15,7 +15,6 @@
  */
 
 import { isStaleEvent } from "@ec2u/data-shared/events/index.js";
-import { FinishReason, type GenerateContentResponse } from "@google/genai";
 import { getDate } from "@kxta/core/temporal.js";
 import { schema } from "@metreeca/blue";
 import { boolean } from "@metreeca/blue/boolean";
@@ -28,7 +27,7 @@ import { items } from "@metreeca/flow/feeds";
 import { filter, flat, map, when } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { getResource } from "@metreeca/gear/space";
-import { createGoogleAI, json } from "@metreeca/llms-google";
+import { createGoogleAI, FinishReason, type GenerateContentResponse, json } from "@metreeca/llms-google";
 import { digest } from "@metreeca/mime-json";
 import { validate } from "@metreeca/mime-jsonld";
 import { log } from "@metreeca/tape";
@@ -237,7 +236,7 @@ export function Reported() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function extract(): Task<Retrieved, State<typeof Extracted>> {
+export function extract(pipeline: string): Task<Retrieved, State<typeof Extracted>> {
 
 	const ai = service(createGoogleAI);
 
@@ -284,6 +283,8 @@ export function extract(): Task<Retrieved, State<typeof Extracted>> {
 			],
 
 			config: {
+
+				labels: { pipe: pipeline },
 
 				seed: 0,
 				temperature: 0,

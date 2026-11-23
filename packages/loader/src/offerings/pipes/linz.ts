@@ -30,6 +30,8 @@ import { type Draft, sync } from "../sinks/sync.js";
 import { course, program } from "./linz.core.js";
 
 
+const Pipeline = "/offerings/linz";
+
 const Source = resolve(offerings.id, "linz");
 
 const ProgramsURL = "base-programs-linz-url";
@@ -67,7 +69,9 @@ export async function Linz() {
 			listing(await vault(ProgramsURL), program),
 			listing(await vault(CoursesURL), course)
 		])))
-		(sync(Source))
+		(sync(Source, {
+			pipeline: Pipeline
+		}))
 	);
 
 

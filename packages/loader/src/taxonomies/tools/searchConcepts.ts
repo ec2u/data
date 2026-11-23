@@ -41,8 +41,8 @@
  */
 
 import type { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
-import { CallableTool, FunctionCall, Part, Tool, Type } from "@google/genai";
 import { clip, dedent } from "@metreeca/core/strings";
+import { CallableTool, FunctionCall, Part, Tool, Type } from "@metreeca/llms-google";
 import { log, report } from "@metreeca/tape";
 import { getConceptMatches } from "../index.core.js";
 

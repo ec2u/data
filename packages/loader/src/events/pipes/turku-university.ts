@@ -26,6 +26,8 @@ import { execute } from "../../index.core.js";
 import { sync } from "../sinks/sync.js";
 
 
+const Pipeline = "/events/turku-university";
+
 const concurrency = 10; // the number of index pages read at the same time from the source site
 
 const Publisher = immutable({
@@ -70,7 +72,10 @@ export async function TurkuUniversity() {
 				(map(link))
 			)
 		))
-		(sync({ publisher: Publisher }))
+		(sync({
+			pipeline: Pipeline,
+			publisher: Publisher
+		}))
 	);
 
 }

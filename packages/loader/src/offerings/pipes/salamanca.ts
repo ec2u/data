@@ -31,6 +31,8 @@ import { type Draft, sync } from "../sinks/sync.js";
 import { course, type CourseRecord, program, type ProgramRecord, text } from "./salamanca.core.js";
 
 
+const Pipeline = "/offerings/salamanca";
+
 const Source = resolve(offerings.id, "salamanca");
 
 const ProgramsURL = "base-offerings-salamanca-programs-url";
@@ -94,7 +96,9 @@ export async function Salamanca() {
 
 	return pipe(
 		(flat(items([items<Draft>(listed), taught])))
-		(sync(Source))
+		(sync(Source, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

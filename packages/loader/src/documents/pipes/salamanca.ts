@@ -24,6 +24,8 @@ import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 
 
+const Pipeline = "/documents/salamanca";
+
 const DataURL = "base-documents-salamanca-url";
 
 
@@ -43,7 +45,9 @@ export async function Salamanca() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv(salamanca))
-		(sync(salamanca))
+		(sync(salamanca, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

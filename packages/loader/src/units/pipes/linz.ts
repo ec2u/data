@@ -24,6 +24,8 @@ import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 
 
+const Pipeline = "/units/linz";
+
 const DataURL = "base-units-linz-url";
 
 
@@ -43,7 +45,9 @@ export async function Linz() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv(linz))
-		(sync(linz))
+		(sync(linz, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

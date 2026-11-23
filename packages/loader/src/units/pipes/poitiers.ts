@@ -27,6 +27,8 @@ import { execute } from "../../index.core.js";
 import { type Draft, type Name, sync } from "../sinks/sync.js";
 
 
+const Pipeline = "/units/poitiers";
+
 const DataURL = "https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets"
 	+"/fr-esr-structures-recherche-publiques-actives/exports/json"
 	+"?where=%22Universit%C3%A9%20de%20Poitiers%22%20in%20tutelles";
@@ -75,7 +77,9 @@ export async function Poitiers() {
 	return pipe(
 		(items(DataURL))
 		(structures())
-		(sync(poitiers))
+		(sync(poitiers, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

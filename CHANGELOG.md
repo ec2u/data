@@ -73,6 +73,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Services read their environment from `DATA_ENVIRONMENT` in place of `PIPE_ENVIRONMENT` and run on Cloud Run, one
 	service per environment and role, each bound only to the resources of its own environment
 - Data endpoints accept cross-origin requests, so browser applications on other sites can query the hub directly
+- Model calls of the loader are labelled with the pipe issuing them and the origin and environment of the run, so
+	billing and usage reports split model costs by pipe and tell cloud runs from local ones on every environment
+- Loader runs on Cloud Run fetch source pages uncached, sparing instance memory; local runs keep pages on disk to
+	replay them across reruns without reaching the sources again
 
 ### Removed
 

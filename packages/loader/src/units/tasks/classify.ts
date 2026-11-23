@@ -98,9 +98,10 @@ function Reported() {
  * draft the model fails on is logged and dropped rather than handed on untagged, and records no digest downstream, so
  * that it is classified again on the next run, while the unit the store holds for it stays as it was.
  *
+ * @param pipeline The name of the pipe running the task, labelling its model calls so their cost is charged to it
  * @returns A task tagging a feed of draft entries with their concepts
  */
-export function classify(): Task<Entry, Classified> {
+export function classify(pipeline: string): Task<Entry, Classified> {
 
 	const ai = service(createGoogleAI);
 
@@ -143,6 +144,8 @@ export function classify(): Task<Entry, Classified> {
 				`,
 
 				config: {
+
+					labels: { pipe: pipeline },
 
 					seed: 0,
 					temperature: 0,

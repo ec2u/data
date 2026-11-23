@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "@ec2u/data-shared": "*",
-    "@google/genai": "^2.28.0",
     "@kxta/core": "*",
     "@kxta/open": "*",
     "@metreeca/blue": "^0.15.0",

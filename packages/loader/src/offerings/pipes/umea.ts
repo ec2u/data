@@ -28,6 +28,8 @@ import type { Draft } from "../sinks/sync.js";
 import { leads } from "./umea.core.js";
 
 
+const Pipeline = "/offerings/umea";
+
 const Source = resolve(offerings.id, "umea");
 
 const DataURL = "base-offerings-umea-url";
@@ -60,7 +62,9 @@ export async function Umea() {
 			listing(url, "program", "program"),
 			listing(url, "kurs", "course")
 		])))
-		(crawl(Source))
+		(crawl(Source, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

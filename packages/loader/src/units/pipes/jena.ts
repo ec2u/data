@@ -24,6 +24,8 @@ import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 
 
+const Pipeline = "/units/jena";
+
 const DataURL = "base-units-jena-url";
 
 
@@ -43,7 +45,9 @@ export async function Jena() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv(jena))
-		(sync(jena))
+		(sync(jena, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

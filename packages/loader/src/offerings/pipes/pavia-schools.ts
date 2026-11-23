@@ -25,6 +25,8 @@ import { catalogue } from "./pavia-portal.core.js";
 import { lead } from "./pavia-schools.core.js";
 
 
+const Pipeline = "/offerings/pavia-schools";
+
 const Source = resolve(offerings.id, "pavia-schools");
 
 const CatalogueURL = "https://portale.unipv.it/it/didattica/post-laurea/scuole-di-specializzazione/scuole-di-specializzazione-di-area-sanitaria/offerta-didattica";
@@ -54,6 +56,8 @@ export async function PaviaSchools() {
 		(catalogue())
 		(map(lead))
 		(trim())
-		(crawl(Source))
+		(crawl(Source, {
+			pipeline: Pipeline
+		}))
 	);
 }

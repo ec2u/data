@@ -24,6 +24,8 @@ import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 
 
+const Pipeline = "/documents/iasi";
+
 const DataURL = "base-documents-iasi-url";
 
 
@@ -43,7 +45,9 @@ export async function Iasi() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv(iasi))
-		(sync(iasi))
+		(sync(iasi, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

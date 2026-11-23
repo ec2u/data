@@ -87,9 +87,10 @@ function Reported() {
  *
  * @param university The university the pages are listed by, supplying the fallback language of their content
  *
+ * @param pipeline The name of the pipe running the task, labelling its model calls so their cost is charged to it
  * @returns A task converting a feed of unit pages into a feed of draft entries
  */
-export function extract(university: Partner): Task<Page, Entry> {
+export function extract(university: Partner, pipeline: string): Task<Page, Entry> {
 
 	const ai = service(createGoogleAI);
 
@@ -146,6 +147,8 @@ export function extract(university: Partner): Task<Page, Entry> {
 				contents: document,
 
 				config: {
+
+					labels: { pipe: pipeline },
 
 					seed: 0,
 					temperature: 0,

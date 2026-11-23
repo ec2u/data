@@ -33,6 +33,8 @@ import { VirtualInstitutes } from "../index.core.js";
 import { type Draft, type Name, sync } from "../sinks/sync.js";
 
 
+const Pipeline = "/units/salamanca";
+
 const DataURL = "base-units-salamanca-url";
 const DataKey = "base-units-salamanca-key";
 const MembershipsURL = "base-units-salamanca-vis-url";
@@ -92,7 +94,9 @@ export async function Salamanca() {
 	return pipe(
 		(items(new Request(await vault(DataURL), { headers: { Authorization: authorization } })))
 		(groups(await memberships(await vault(MembershipsURL))))
-		(sync(salamanca))
+		(sync(salamanca, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

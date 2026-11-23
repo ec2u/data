@@ -26,6 +26,8 @@ import { execute } from "../../index.core.js";
 import { sync } from "../sinks/sync.js";
 
 
+const Pipeline = "/events/umea-university";
+
 const Publisher = immutable({
 
 	id: "https://www.umu.se/en/events/",
@@ -59,7 +61,10 @@ export async function UmeaUniversity() {
 			items(path("//a[@class='eventlink']/@href"))
 			(map(link))
 		))))
-		(sync({ publisher: Publisher }))
+		(sync({
+			pipeline: Pipeline,
+			publisher: Publisher
+		}))
 	);
 
 }

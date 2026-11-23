@@ -24,6 +24,8 @@ import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 
 
+const Pipeline = "/documents/poitiers";
+
 const DataURL = "base-documents-poitiers-url";
 
 
@@ -43,7 +45,9 @@ export async function Poitiers() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv(poitiers))
-		(sync(poitiers))
+		(sync(poitiers, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

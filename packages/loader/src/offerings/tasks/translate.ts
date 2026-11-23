@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { FinishReason, type GenerateContentResponse } from "@google/genai";
 import { schema } from "@metreeca/blue";
 import { optional, resource } from "@metreeca/blue/resource";
 import { string, text } from "@metreeca/blue/string";
@@ -27,7 +26,7 @@ import { items } from "@metreeca/flow/feeds";
 import { flat, map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
 import { getResource } from "@metreeca/gear/space";
-import { createGoogleAI, json } from "@metreeca/llms-google";
+import { createGoogleAI, FinishReason, type GenerateContentResponse, json } from "@metreeca/llms-google";
 import { validate } from "@metreeca/mime-jsonld";
 import { log, report } from "@metreeca/tape";
 import type { Dictionary, Draft, Entry } from "../sinks/sync.js";
@@ -115,9 +114,10 @@ function Reported() {
  * generated. A draft the model fails on is logged and dropped rather than handed on untranslated, so that it records
  * no digest downstream and is translated again on the next run, its stored offering left as the last run stated it.
  *
+ * @param pipeline The name of the pipe running the task, labelling its model calls so their cost is charged to it
  * @returns A task completing the English texts of a feed of draft entries
  */
-export function translate(): Task<Entry, Entry> {
+export function translate(pipeline: string): Task<Entry, Entry> {
 
 	const ai = service(createGoogleAI);
 
@@ -253,6 +253,8 @@ export function translate(): Task<Entry, Entry> {
 			`,
 
 			config: {
+
+				labels: { pipe: pipeline },
 
 				seed: 0,
 				temperature: 0,

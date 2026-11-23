@@ -47,13 +47,17 @@ export function sync({
 
 	force = false,
 
-	publisher
+	publisher,
+
+	pipeline
 
 }: {
 
 	readonly force?: boolean
 
 	readonly publisher: Publisher
+
+	readonly pipeline: string
 
 }): Sink<URLLike, Tally> {
 
@@ -138,8 +142,8 @@ export function sync({
 				)))
 				(fork(analysis, retrieved => pipe(
 					(items(retrieved))
-					(extract())
-					(classify()) // a payload the classifier drops records no digest, so its page is read again
+					(extract(pipeline))
+					(classify(pipeline)) // a payload the classifier drops records no digest, so its page is read again
 						(tee(
 							payloads => pipe( // every page states its digest, so the crawl won't offer it again
 								(items(payloads))

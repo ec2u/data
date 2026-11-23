@@ -25,6 +25,8 @@ import { execute } from "../../index.core.js";
 import { crawl } from "../sinks/crawl.js";
 
 
+const Pipeline = "/units/umea";
+
 /**
  * The index pages listing Umeå units, each with the XPath selectors leading from it to the unit pages, one hop each.
  */
@@ -80,7 +82,9 @@ export async function Umea() {
 		(filter(url => /^https?:/.test(url)))
 		(map(url => url.replace(/#.*$/, "")))
 		(distinct())
-		(crawl(umea))
+		(crawl(umea, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

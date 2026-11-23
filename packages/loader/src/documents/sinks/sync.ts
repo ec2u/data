@@ -150,6 +150,7 @@ type Attached = Classified & {
  * @param options The options governing how drafts are stated
  * @param options.force Whether every draft is stated afresh, ignoring the digests of stored documents; defaults to
  * `false`
+ * @param options.pipeline The name of the pipe running the sink, labelling its model calls so their cost is charged to it
  *
  * @returns A sink drawing a feed of document drafts and resolving to a tally of what it did
  *
@@ -160,13 +161,15 @@ type Attached = Classified & {
  */
 export function sync(university: Partner, {
 
-	force = false
+	force = false,
+	pipeline
 
 }: {
 
 	readonly force?: boolean
+	readonly pipeline: string
 
-} = {}): Sink<Draft, Tally> {
+}): Sink<Draft, Tally> {
 
 	return drafts => pipe(
 		(items(drafts))
@@ -201,8 +204,8 @@ export function sync(university: Partner, {
 				(filter(async ({ hash }) => !(await digests).has(hash)))
 				(fork(analysis, drafts => pipe(
 					(items(drafts))
-					(translate(university))
-					(classify())
+					(translate(university, pipeline))
+					(classify(pipeline))
 				)))
 				(map(attach))
 				(tee(

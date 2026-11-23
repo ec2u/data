@@ -23,7 +23,7 @@ import { items } from "@metreeca/flow/feeds";
 import { toArray } from "@metreeca/flow/sinks";
 import { map } from "@metreeca/flow/tasks";
 import { service } from "@metreeca/gear";
-import { cosine, decompress, type Distance, type Vector } from "@metreeca/llms";
+import { cosine, decompress, type Distance, type Vector } from "@metreeca/llms/vectors";
 import { createGoogleAI, embedding } from "@metreeca/llms-google";
 import { validate } from "@metreeca/mime-jsonld";
 import { delta, lookup, settle } from "@metreeca/pipe-store";

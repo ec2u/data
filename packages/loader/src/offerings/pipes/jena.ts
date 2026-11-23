@@ -29,6 +29,8 @@ import { type ProgramDraft, sync } from "../sinks/sync.js";
 import { program } from "./jena.core.js";
 
 
+const Pipeline = "/offerings/jena";
+
 const Source = resolve(offerings.id, "jena");
 
 const CatalogueURL = "https://www.uni-jena.de/en/study-programme";
@@ -70,7 +72,9 @@ export async function Jena() {
 			(items(urls))
 			(flat(map(async url => opt(await embedded(url), values => read(values, url)) ?? [])))
 		)))
-		(sync(Source))
+		(sync(Source, {
+			pipeline: Pipeline
+		}))
 	);
 }
 

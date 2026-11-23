@@ -212,6 +212,7 @@ export type Attached = Entry & {
  *
  * @param options The options governing how drafts are stated
  * @param options.force Whether every draft is stated afresh, ignoring stored digests; defaults to `false`
+ * @param options.pipeline The name of the pipe running the sink, labelling its model calls so their cost is charged to it
  *
  * @returns A sink drawing a feed of offering drafts and resolving to a tally of what it did
  *
@@ -221,13 +222,15 @@ export type Attached = Entry & {
  */
 export function sync(source: Reference, {
 
-	force = false
+	force = false,
+	pipeline
 
 }: {
 
 	readonly force?: boolean
+	readonly pipeline: string
 
-} = {}): Sink<Draft, Tally> {
+}): Sink<Draft, Tally> {
 
 	const year = getAcademicYear(new Date()); // taken once, so a run straddling the rollover dates all drafts alike
 
@@ -244,7 +247,7 @@ export function sync(source: Reference, {
 					(filter(identified))
 					(map((draft): Entry => ({ hash: digest(draft), draft })))
 					(filter(async ({ hash }) => !(await digests).has(hash)))
-					(complete(source))
+					(complete(source, pipeline))
 				);
 
 			},
@@ -336,17 +339,18 @@ export async function stated(source: Reference): Promise<ReadonlySet<string>> {
  * without linking it, so that no offering ever links a provider or instructor the store doesn't hold.
  *
  * @param source The identifier of the source listing the offerings
+ * @param pipeline The name of the pipe running the task, labelling its model calls so their cost is charged to it
  *
  * @returns A task converting a feed of entries into a feed of deltas stating their offerings, providers and instructors
  */
-export function complete(source: Reference): Task<Entry, Delta> {
+export function complete(source: Reference, pipeline: string): Task<Entry, Delta> {
 
 	return entries => pipe(
 		(items(entries))
 		(fork(analysis, entries => pipe(
 			(items(entries))
-			(translate())
-			(classify())
+			(translate(pipeline))
+			(classify(pipeline))
 		)))
 		(map(attach))
 		(tee(

@@ -29,6 +29,8 @@ import { type Draft, sync } from "../sinks/sync.js";
 import { offering, type OfferingRecord } from "./coimbra.core.js";
 
 
+const Pipeline = "/offerings/coimbra";
+
 const Source = resolve(offerings.id, "coimbra");
 
 const DataURL = "base-offerings-coimbra-url";
@@ -113,7 +115,9 @@ export async function Coimbra() {
 
 		})))
 		(flat(map(read)))
-		(sync(Source))
+		(sync(Source, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

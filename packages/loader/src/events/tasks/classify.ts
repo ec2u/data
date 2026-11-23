@@ -84,7 +84,7 @@ function Reported() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function classify(): Task<State<typeof Extracted>, State<typeof Classified>> {
+export function classify(pipeline: string): Task<State<typeof Extracted>, State<typeof Classified>> {
 
 	const ai = service(createGoogleAI);
 
@@ -145,6 +145,8 @@ export function classify(): Task<State<typeof Extracted>, State<typeof Classifie
 			`,
 
 				config: {
+
+					labels: { pipe: pipeline },
 
 					seed: 0,
 					temperature: 0,

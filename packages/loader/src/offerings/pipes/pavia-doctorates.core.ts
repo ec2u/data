@@ -91,9 +91,10 @@ function Reported() {
  *
  * An index the model fails to read is logged and lists nothing.
  *
+ * @param pipeline The name of the pipe running the task, labelling its model calls so their cost is charged to it
  * @returns A task converting a feed of index documents, as plain text, into a feed of the doctorates they list
  */
-export function doctorates(): Task<string, Listed> {
+export function doctorates(pipeline: string): Task<string, Listed> {
 
 	const ai = service(createGoogleAI);
 
@@ -117,6 +118,8 @@ export function doctorates(): Task<string, Listed> {
 				contents: document,
 
 				config: {
+
+					labels: { pipe: pipeline },
 
 					seed: 0,
 					temperature: 0,

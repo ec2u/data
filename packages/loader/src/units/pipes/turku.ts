@@ -24,6 +24,8 @@ import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";
 
 
+const Pipeline = "/units/turku";
+
 const DataURL = "base-units-turku-url";
 
 
@@ -43,7 +45,9 @@ export async function Turku() {
 	return pipe(
 		(items(await vault(DataURL)))
 		(csv(turku))
-		(sync(turku))
+		(sync(turku, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

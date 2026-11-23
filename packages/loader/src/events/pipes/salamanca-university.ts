@@ -27,6 +27,8 @@ import { execute } from "../../index.core.js";
 import { sync } from "../sinks/sync.js";
 
 
+const Pipeline = "/events/salamanca-university";
+
 const concurrency = 10; // the number of index pages read at the same time from the source site
 
 // the search page assembles its results from this endpoint, which answers a page of event cards to a form post; the
@@ -88,7 +90,10 @@ export async function SalamancaUniversity() {
 				(map(link))
 			)
 		))
-		(sync({ publisher: Publisher }))
+		(sync({
+			pipeline: Pipeline,
+			publisher: Publisher
+		}))
 	);
 
 }

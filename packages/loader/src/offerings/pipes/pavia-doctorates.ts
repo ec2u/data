@@ -26,6 +26,8 @@ import { crawl } from "../sinks/crawl.js";
 import { doctorates, lead } from "./pavia-doctorates.core.js";
 
 
+const Pipeline = "/offerings/pavia-doctorates";
+
 const Source = resolve(offerings.id, "pavia-doctorates");
 
 const IndexURL = "https://phd.unipv.it/la-scuola-di-alta-formazione-dottorale-di-pavia-safd/";
@@ -58,10 +60,12 @@ export async function PaviaDoctorates() {
 		(denoise())
 		(focus())
 		(untag())
-		(doctorates())
+		(doctorates(Pipeline))
 		(map(lead))
 		(trim())
-		(crawl(Source))
+		(crawl(Source, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

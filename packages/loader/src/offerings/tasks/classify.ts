@@ -88,9 +88,10 @@ function Reported() {
  * handed on untagged, and records no digest downstream, so that it is classified again on the next run, while the
  * offering the store holds for it stays exactly as the last successful run stated it, concepts and flag included.
  *
+ * @param pipeline The name of the pipe running the task, labelling its model calls so their cost is charged to it
  * @returns A task completing the educational level and field of a feed of draft entries
  */
-export function classify(): Task<Entry, Entry> {
+export function classify(pipeline: string): Task<Entry, Entry> {
 
 	const ai = service(createGoogleAI);
 
@@ -163,6 +164,8 @@ export function classify(): Task<Entry, Entry> {
 				`,
 
 				config: {
+
+					labels: { pipe: pipeline },
 
 					seed: 0,
 					temperature: 0,

@@ -141,6 +141,7 @@ export type Staffed = Classified & {
  *
  * @param options The options governing how drafts are stated
  * @param options.force Whether every draft is stated afresh, ignoring the digests of stored units; defaults to `false`
+ * @param options.pipeline The name of the pipe running the sink, labelling its model calls so their cost is charged to it
  *
  * @returns A sink drawing a feed of unit drafts and resolving to a tally of what it did
  *
@@ -149,13 +150,15 @@ export type Staffed = Classified & {
  */
 export function sync(university: Partner, {
 
-	force = false
+	force = false,
+	pipeline
 
 }: {
 
 	readonly force?: boolean
+	readonly pipeline: string
 
-} = {}): Sink<Draft, Tally> {
+}): Sink<Draft, Tally> {
 
 	return drafts => pipe(
 		(items(drafts))
@@ -168,7 +171,7 @@ export function sync(university: Partner, {
 					(items(drafts))
 					(map((draft): Entry => ({ hash: digest(draft), draft })))
 					(filter(async ({ hash }) => !(await digests).has(hash)))
-					(complete(university))
+					(complete(university, pipeline))
 				);
 
 			},
@@ -222,17 +225,18 @@ export function stated(university: Partner): Promise<ReadonlySet<string>> {
  * so no unit links a person the store lacks, whatever the source states about its heads.
  *
  * @param university The university the units are attributed to
+ * @param pipeline The name of the pipe running the task, labelling its model calls so their cost is charged to it
  *
  * @returns A task converting a feed of entries into a feed of deltas stating their units and heads
  */
-export function complete(university: Partner): Task<Entry, Delta> {
+export function complete(university: Partner, pipeline: string): Task<Entry, Delta> {
 
 	return entries => pipe(
 		(items(entries))
 		(fork(analysis, entries => pipe(
 			(items(entries))
-			(translate(university))
-			(classify())
+			(translate(university, pipeline))
+			(classify(pipeline))
 		)))
 		(map(staff))
 		(tee(

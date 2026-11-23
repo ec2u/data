@@ -27,6 +27,8 @@ import { execute } from "../../index.core.js";
 import { sync } from "../sinks/sync.js";
 
 
+const Pipeline = "/events/jena-university";
+
 const concurrency = 10; // the number of index pages read at the same time from the source site
 
 
@@ -123,7 +125,10 @@ export async function JenaUniversity() {
 				(map(link))
 			)
 		))
-		(sync({ publisher }))
+		(sync({
+			pipeline: Pipeline,
+			publisher
+		}))
 	)));
 
 }

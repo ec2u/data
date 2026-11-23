@@ -24,6 +24,8 @@ import { execute } from "../../index.core.js";
 import { crawl } from "../sinks/crawl.js";
 
 
+const Pipeline = "/units/pavia";
+
 /**
  * The catalogue pages listing Pavia units, each a list of links to the homepages of the units it catalogues.
  */
@@ -62,7 +64,9 @@ export async function Pavia() {
 		(filter(url => /^https?:/.test(url) && !/\.pdf$/i.test(new URL(url).pathname)))
 		(map(url => url.replace(/#.*$/, "")))
 		(distinct())
-		(crawl(pavia))
+		(crawl(pavia, {
+			pipeline: Pipeline
+		}))
 	);
 
 }

@@ -164,9 +164,10 @@ export function Reported() {
  * digest, so it is extracted again only once the page or its seed changes. A page the model fails on is logged and
  * dropped rather than drafted incomplete, so that it is extracted again on the next run.
  *
+ * @param pipeline The name of the pipe running the task, labelling its model calls so their cost is charged to it
  * @returns A task converting a feed of offering pages into a feed of draft entries
  */
-export function extract(): Task<Page, Entry> {
+export function extract(pipeline: string): Task<Page, Entry> {
 
 	const ai = service(createGoogleAI);
 
@@ -196,6 +197,8 @@ export function extract(): Task<Page, Entry> {
 				contents: document,
 
 				config: {
+
+					labels: { pipe: pipeline },
 
 					seed: 0,
 					temperature: 0,
