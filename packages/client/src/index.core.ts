@@ -61,6 +61,24 @@ export function ec2u(label: string): string {
 }
 
 /**
+ * Retrieves the colour scheme a page address pins for testing.
+ *
+ * Test sessions that cannot set the system appearance load a page with `?scheme=dark` or `?scheme=light` to render it
+ * in that scheme; any other value, or none, leaves the scheme to the reader's system setting.
+ *
+ * @param search The query string of the page address, as `location.search` holds it
+ *
+ * @returns The scheme the address pins, or `undefined` if it pins none
+ */
+export function pinnedScheme(search: string): undefined | "light" | "dark" {
+
+	const scheme = new URLSearchParams(search).get("scheme");
+
+	return scheme === "light" || scheme === "dark" ? scheme : undefined;
+
+}
+
+/**
  * Orders dataset rows as the hub lists them, following the display order of {@link PublicDatasets}.
  */
 export const byDataset = by(({ dataset }: { readonly dataset: { readonly id: IRI } }) =>

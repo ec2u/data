@@ -24,6 +24,7 @@ import "@metreeca/skin/presets/roboto.css";
 import { createCachingStore } from "@metreeca/keep/caching";
 import { Store } from "@metreeca/tile";
 import { render } from "preact";
+import { pinnedScheme } from "./index.core.js";
 import { About, about } from "./pages/about/index.js";
 import { API, api } from "./pages/api/index.js";
 import { Courses, courses } from "./pages/courses/index.js";
@@ -37,6 +38,12 @@ import { Universities, universities } from "./pages/universities/index.js";
 import { Unknown, unknown } from "./pages/unknown.js";
 import { DatasetPage } from "./widgets/datasets/dataset.js";
 
+
+const scheme = pinnedScheme(location.search);
+
+if ( scheme !== undefined ) {
+	document.documentElement.dataset.scheme = scheme;
+}
 
 render(<Hub/>, host("ec2u-hub"));
 
