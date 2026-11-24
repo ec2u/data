@@ -239,12 +239,13 @@ costs no tokens, leaves the store untouched and needs no change to the pipe. Cha
 - **Checking the outcome**: the first deployed run of the change should extract about as many entries as the census
   counted, less any repaired; a wide gap means the census and the deployed pipe read different pages
 - **Limits**: it runs on the workstation, so it estimates the cost of a change and never stands in for the stability gate
-  of `pipe-designer`; a sink letting a refused model call abort its run stops at the first one, so its count is a floor
+  of `pipe-designer`; a site that blocks the workstation, as `360.uaic.ro` does, leaves its pages out of the count
 
 Write it as `~census.ts` under `packages/loader/src/`, import the changed pipe in place of `UmeaUniversity`, run it as
-[Probing the Store](#probing-the-store) prescribes, then delete it. It reads through the loader credentials of the
-environment, as the store reads within transactions, which GraphDB refuses to read-only users; the dry store is what
-keeps the run from writing, so never pass the pipe a store of its own.
+[Probing the Store](#probing-the-store) prescribes, then delete it. It reads through the server credentials, without
+transactions, as the server does, so the store refuses any write that escapes the dry wrapper. Refused calls get an
+empty answer rather than an error, as an error aborts the whole run; the extractor logs each one as an incomplete
+generation naming its page, which tells which entries the count covers.
 
 ```ts
 import { bind, executor } from "@metreeca/gear";
@@ -254,9 +255,9 @@ import { createFetch } from "@metreeca/http";
 import { basic } from "@metreeca/http/basic";
 import type { Store, StoreClient } from "@metreeca/keep";
 import { createSPARQLStore } from "@metreeca/keep-sparql";
-import { createGoogleAI } from "@metreeca/llms-google";
+import { createGoogleAI, GenerateContentResponse } from "@metreeca/llms-google";
 import { createStore } from "@metreeca/pipe-store";
-import { createRDF4JRepository } from "@metreeca/wire-sparql-rdf4j";
+import { createHTTPRepository } from "@metreeca/wire-sparql-http";
 import { UmeaUniversity as pipe } from "./events/pipes/umea-university.js";
 
 const vault = createGCPVault();
@@ -264,16 +265,15 @@ const requests = new Set<string>(); // keyed on contents, so fallback models ret
 
 await executor( // no cache binding: pages are fetched fresh, as the deployed pipe fetches them
 	bind(getPath, () => getPackage(import.meta.dirname)),
-	bind(createStore, async () => dry(createSPARQLStore(createRDF4JRepository({
-		server: "https://graphdb.ec2u.net",
-		repository: "data-edge",
-		fetch: createFetch(basic(await vault("edge-gdb-loader-usr"), await vault("edge-gdb-loader-pwd")))
+	bind(createStore, async () => dry(createSPARQLStore(createHTTPRepository({
+		query: "https://graphdb.ec2u.net/repositories/data-edge",
+		fetch: createFetch(basic(await vault("edge-gdb-server-usr"), await vault("edge-gdb-server-pwd")))
 	})))),
 	bind(createGoogleAI, () => {
 		const ai = createGoogleAI({ apiKey: "census" });
 		ai.models.generateContent = async ({ contents }) => {
 			requests.add(JSON.stringify(contents));
-			throw new Error("refused model call");
+			return new GenerateContentResponse();
 		};
 		return ai;
 	})
