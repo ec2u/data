@@ -123,6 +123,7 @@ export function doctorates(pipeline: string): Task<string, Listed> {
 
 					seed: 0,
 					temperature: 0,
+					maxOutputTokens: 16384,
 
 					systemInstruction: await getResource(".sys.md", import.meta.url),
 

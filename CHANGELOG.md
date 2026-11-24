@@ -77,6 +77,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 	billing and usage reports split model costs by pipe and tell cloud runs from local ones on every environment
 - Loader runs on Cloud Run fetch source pages uncached, sparing instance memory; local runs keep pages on disk to
 	replay them across reruns without reaching the sources again
+- Every model call of the loader caps its output, so runaway reasoning fails its entry rather than run up the bill
 
 ### Removed
 

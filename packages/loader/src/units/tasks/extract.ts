@@ -152,6 +152,7 @@ export function extract(university: Partner, pipeline: string): Task<Page, Entry
 
 					seed: 0,
 					temperature: 0,
+					maxOutputTokens: 16384,
 
 					systemInstruction: await getResource(".sys.md", import.meta.url),
 

@@ -139,6 +139,7 @@ export function classify(pipeline: string): Task<Entry, Classified> {
 
 					seed: 0,
 					temperature: 0,
+					maxOutputTokens: 8192,
 
 					systemInstruction: await getResource(".sys.md", import.meta.url),
 
