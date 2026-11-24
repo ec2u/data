@@ -79,7 +79,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 	replay them across reruns without reaching the sources again
 - Every model call of the loader caps its output, so runaway reasoning fails its entry rather than run up the bill
 - Event pages the model fails to extract are tried again after as many days as the failure has lasted, from one to
-	seven, rather than on every run; pages record the days of their last extraction attempt and of their last success
+	thirty, rather than on every run; pages record the days of their last extraction attempt and of their last success
 
 ### Removed
 

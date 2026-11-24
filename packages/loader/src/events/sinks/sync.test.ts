@@ -58,14 +58,14 @@ describe("isPending()", () => {
 			expect(isPending({ digest: "a", fetched: "2026-11-20", crawled: "2026-11-16" }, "a", today)).toBe(true);
 		});
 
-		it("waits at most 7 days", async () => {
-			expect(isPending({ digest: "a", fetched: "2026-11-18", crawled: "2026-10-01" }, "a", today)).toBe(false);
-			expect(isPending({ digest: "a", fetched: "2026-11-17", crawled: "2026-10-01" }, "a", today)).toBe(true);
+		it("waits at most 30 days", async () => {
+			expect(isPending({ digest: "a", fetched: "2026-10-26", crawled: "2026-08-01" }, "a", today)).toBe(false);
+			expect(isPending({ digest: "a", fetched: "2026-10-25", crawled: "2026-08-01" }, "a", today)).toBe(true);
 		});
 
-		it("waits 7 days for a page that never succeeded", async () => {
-			expect(isPending({ digest: "a", fetched: "2026-11-18" }, "a", today)).toBe(false);
-			expect(isPending({ digest: "a", fetched: "2026-11-17" }, "a", today)).toBe(true);
+		it("waits 30 days for a page that never succeeded", async () => {
+			expect(isPending({ digest: "a", fetched: "2026-10-26" }, "a", today)).toBe(false);
+			expect(isPending({ digest: "a", fetched: "2026-10-25" }, "a", today)).toBe(true);
 		});
 
 		it("waits whether or not the document changed", async () => {

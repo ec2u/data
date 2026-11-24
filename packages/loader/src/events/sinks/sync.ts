@@ -40,7 +40,7 @@ const analysis = 10; // the number of pages analysed at the same time by the mod
 
 const survival = 0.5; // the smallest fraction of the stored events a single run must leave in place // !!! as option
 
-const backoff = 7; // the most days a failing page waits before it is read again
+const backoff = 30; // the most days a failing page waits before it is read again
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -274,8 +274,8 @@ export function sync({
  *
  * A page is current, and skipped, while its last reading succeeded and the digest stored with it matches its document.
  * A page whose last reading failed is read again once the days since that reading reach the days the failure has lasted
- * since the last success, kept between 1 and 7, so a page failing on every run is read at growing intervals and one
- * that never succeeded is read once a week; a transient failure clears on the next reading.
+ * since the last success, kept between 1 and 30, so a page failing on every run is read at growing intervals and one
+ * that never succeeded is read once a month; a transient failure clears on the next reading.
  *
  * @param page The state stored for the page, if any
  * @param digest The digest of the document the page carries now
