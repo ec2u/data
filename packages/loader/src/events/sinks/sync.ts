@@ -24,7 +24,7 @@ import { clip } from "@metreeca/core/strings";
 import { immutable } from "@metreeca/core/values";
 import { type Feed, pipe, type Sink, type Task } from "@metreeca/flow";
 import { items } from "@metreeca/flow/feeds";
-import { find, toSet } from "@metreeca/flow/sinks";
+import { find, toArray, toMap } from "@metreeca/flow/sinks";
 import { filter, flat, fork, map, mix, tee, when } from "@metreeca/flow/tasks";
 import { digest } from "@metreeca/mime-json";
 import { validate } from "@metreeca/mime-jsonld";
@@ -39,6 +39,8 @@ const retrieval = 10; // the number of pages fetched at the same time from the s
 const analysis = 10; // the number of pages analysed at the same time by the model // !!! as option
 
 const survival = 0.5; // the smallest fraction of the stored events a single run must leave in place // !!! as option
+
+const backoff = 7; // the most days a failing page waits before it is read again
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,22 +110,53 @@ export function sync({
 
 		return urls => {
 
-			const digests = force ? new Set<string>() : pipe(
+			const today = new Date().toISOString().slice(0, 10);
+
+			const stored = force ? new Map<string, never>() : pipe(
 				(lookup({
 
 					entry: directory.id,
 					shape: Pages,
 
-					model: { resources: { digest: {}, "?source": [publisher.id] } } // !!! DSL
+					model: { resources: { id: {}, digest: {}, fetched: {}, crawled: {}, "?source": [publisher.id] } } // !!! DSL
 
 				}))
-				(map(page => page.digest))
-				(toSet())
+				(toMap(page => page.id))
 			);
 
 
-			async function modified({ document }: Retrieved) {
-				return !(await digests).has(digest(document));
+			async function pending({ url, document }: Retrieved) {
+				return isPending((await stored).get(url), digest(document), today);
+			}
+
+			async function attempt(page: Retrieved) {
+				return {
+					page,
+					payloads: await pipe(
+						(items([page]))
+						(extract(pipeline))
+						(classify(pipeline))
+						(toArray())
+					)
+				};
+			}
+
+			async function record({ page: { url, document }, payloads }: Awaited<ReturnType<typeof attempt>>): Promise<Delta> {
+
+				// a page yielding nothing keeps the day of its last success, so it waits before it is read again
+
+				const crawled = payloads.length > 0 ? today : (await stored).get(url)?.crawled;
+
+				return delta(url, Page, immutable({
+					id: url,
+					label: clip(url, LabelLength),
+					dataset: directory.id,
+					source: publisher.id,
+					digest: digest(document),
+					fetched: today,
+					...(crawled === undefined ? {} : { crawled })
+				}));
+
 			}
 
 
@@ -138,27 +171,19 @@ export function sync({
 						(harvest())
 						(map(document => ({ url: String(url), document })))
 					))))
-					(filter(modified))
+					(filter(pending))
 				)))
 				(fork(analysis, retrieved => pipe(
 					(items(retrieved))
-					(extract(pipeline))
-					(classify(pipeline)) // a payload the classifier drops records no digest, so its page is read again
+					(map(attempt))
 						(tee(
-							payloads => pipe( // every page states its digest, so the crawl won't offer it again
-								(items(payloads))
-								(map(({ url, digest }): Delta =>
-									delta(url, Page, immutable({
-										id: url,
-										label: clip(url, LabelLength),
-										dataset: directory.id,
-										source: publisher.id,
-										digest
-									}))
-								))
+							attempts => pipe( // every page read states its digest, so the crawl won't offer it again
+								(items(attempts))
+								(map(record))
 							),
-							payloads => pipe(
-								(items(payloads))
+							attempts => pipe(
+								(items(attempts))
+								(flat(map(({ payloads }) => items(payloads))))
 								(when(payload => payload.publishable,
 									publishable => pipe(
 										(items(publishable))
@@ -242,4 +267,49 @@ export function sync({
 
 	}
 
+}
+
+/**
+ * Checks whether a page is to be read again.
+ *
+ * A page is current, and skipped, while its last reading succeeded and the digest stored with it matches its document.
+ * A page whose last reading failed is read again once the days since that reading reach the days the failure has lasted
+ * since the last success, kept between 1 and 7, so a page failing on every run is read at growing intervals and one
+ * that never succeeded is read once a week; a transient failure clears on the next reading.
+ *
+ * @param page The state stored for the page, if any
+ * @param digest The digest of the document the page carries now
+ * @param today The day of the run, as an ISO date
+ *
+ * @returns `true` if the page is to be read
+ */
+export function isPending(page: undefined | Readonly<{
+
+	digest: string
+	fetched?: string
+	crawled?: string
+
+}>, digest: string, today: string): boolean {
+
+	if ( page === undefined ) {
+
+		return true;
+
+	} else if ( page.fetched === undefined || page.fetched === page.crawled ) {
+
+		return page.digest !== digest;
+
+	} else {
+
+		const lasted = page.crawled === undefined ? backoff : days(page.crawled, page.fetched);
+
+		return days(page.fetched, today) >= Math.min(Math.max(lasted, 1), backoff);
+
+	}
+
+}
+
+
+function days(from: string, to: string): number {
+	return Math.round((Date.parse(to)-Date.parse(from))/(24*60*60*1000));
 }

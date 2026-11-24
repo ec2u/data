@@ -59,6 +59,8 @@ export const ec2u = createNamespace(resolve(base, "terms#"), [
 	"version",
 	"source",
 	"digest",
+	"fetched",
+	"crawled",
 	"embedding",
 
 	"year",

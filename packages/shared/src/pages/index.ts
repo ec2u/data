@@ -17,8 +17,8 @@
 import { base, Dataset, EC2U, ec2u, harvested, licenses } from "@ec2u/data-shared";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { reference } from "@metreeca/blue/reference";
-import { multiple, required, resource } from "@metreeca/blue/resource";
-import { iri, string } from "@metreeca/blue/string";
+import { multiple, optional, required, resource } from "@metreeca/blue/resource";
+import { date, iri, string } from "@metreeca/blue/string";
 import { resolve } from "@metreeca/core/resource";
 import { immutable } from "@metreeca/core/values";
 
@@ -82,6 +82,20 @@ export function Page() {
 
 			name: "Page Digest",
 			description: "A unique identification of the content the page carried when it was read."
+
+		}),
+
+		fetched: optional(date, {
+
+			name: "Page Fetched",
+			description: "The day content was last extracted from the page, whether the extraction succeeded or not."
+
+		}),
+
+		crawled: optional(date, {
+
+			name: "Page Crawled",
+			description: "The day content was last extracted from the page successfully."
 
 		})
 

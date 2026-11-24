@@ -191,10 +191,12 @@ an atomic source there is nothing left to read, and the branch only converts and
 	Nothing here retires an entry the index still lists, and delisting rests on the scan alone. Telling the two apart
 	would take a retrieval reporting its own outcome, which nothing else in the branch has any use for.
 
-- **Only a successful write advances the evidence for skipping** — the state and the digest justifying it are recorded
-	together, so a read that dies leaves its entry to be read again, and re-reading an entry already current costs a
-	comparison and no write. The digest is held per source page, which makes the skip a property of the page rather than
-	of the entry drawn from it.
+- **Every extraction attempt is recorded, and only a success clears it** — a page sent to the model records its digest
+	and the day it was tried (`fetched`), and a success also the day it succeeded (`crawled`). A page tried since its
+	last success is failing, and waits as many days as its failure has lasted, between 1 and 7, before it is read again:
+	a transient failure clears on the next run, a lasting one stops costing a model call every night. A read that dies
+	before reaching the model records nothing, and re-reading an entry already current costs a comparison and no write.
+	The record is held per source page, making the skip a property of the page, not of the entry drawn from it.
 
 - **The digest covers what the source authored, and nothing that varies per fetch** — a skip is only as good as the
 	equality of two fetches of an unchanged page; anything the site redraws on every request is stripped before the
