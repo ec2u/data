@@ -26,8 +26,8 @@
  * Validate points on their own, or mix geographic coordinates into other resource shapes:
  *
  * ```typescript
- * import { required, resource } from "@metreeca/blue/resource";
- * import { text } from "@metreeca/blue/string";
+ * import { required, resource } from "@grafctory/blue/resource";
+ * import { text } from "@grafctory/blue/string";
  * import { WGSPoint } from "@kxta/open/wgs.js";
  *
  * export function Place() {
@@ -61,11 +61,11 @@
  * @see {@link https://docs.ogc.org/is/22-047r1/22-047r1.html GeoSPARQL 1.1}
  */
 
-import { decimal } from "@metreeca/blue/number";
-import { optional, required, resource } from "@metreeca/blue/resource";
-import type { State } from "@metreeca/blue/value";
-import type { Optional } from "@metreeca/core";
-import { createNamespace } from "@metreeca/core/resource";
+import { decimal } from "@grafctory/blue/number";
+import { optional, required, resource } from "@grafctory/blue/resource";
+import type { State } from "@grafctory/blue/value";
+import type { Optional } from "@grafctory/core";
+import { createNamespace } from "@grafctory/core/resource";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

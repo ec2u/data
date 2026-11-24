@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { email, iri, phone, text } from "@metreeca/blue/string";
-import { createNamespace } from "@metreeca/core/resource";
-import { markdown } from "@metreeca/core/strings";
+import { multiple, optional, required, resource } from "@grafctory/blue/resource";
+import { email, iri, phone, text } from "@grafctory/blue/string";
+import { createNamespace } from "@grafctory/core/resource";
+import { markdown } from "@grafctory/core/strings";
 
 
 export const foaf = createNamespace("http://xmlns.com/foaf/0.1/", [

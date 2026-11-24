@@ -20,13 +20,13 @@ import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { Concept } from "@ec2u/data-shared/taxonomies/index.js";
 import { ISCED2011Concept } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { SchemaLearningResource } from "@ec2u/data-shared/vocabularies/schema/learning.js";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, resource } from "@metreeca/blue/resource";
-import { iri, string } from "@metreeca/blue/string";
-import { resolve } from "@metreeca/core/resource";
-import { markdown } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
-import type { Reference } from "@metreeca/qest/state";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, optional, resource } from "@grafctory/blue/resource";
+import { iri, string } from "@grafctory/blue/string";
+import { resolve } from "@grafctory/core/resource";
+import { markdown } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
+import type { Reference } from "@grafctory/qest/state";
 import * as uuid from "uuid";
 
 

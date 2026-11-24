@@ -23,15 +23,15 @@ import { EuroSciVocConcept } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
 import { StakeholderConcept } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
 import { schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
-import { dictionary } from "@metreeca/blue/dictionary";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { date, iri, string, tag, text } from "@metreeca/blue/string";
-import type { State } from "@metreeca/blue/value";
-import { resolve } from "@metreeca/core/resource";
-import { markdown } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
-import type { Reference } from "@metreeca/qest/state";
+import { dictionary } from "@grafctory/blue/dictionary";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, optional, required, resource } from "@grafctory/blue/resource";
+import { date, iri, string, tag, text } from "@grafctory/blue/string";
+import type { State } from "@grafctory/blue/value";
+import { resolve } from "@grafctory/core/resource";
+import { markdown } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
+import type { Reference } from "@grafctory/qest/state";
 import * as uuid from "uuid";
 
 

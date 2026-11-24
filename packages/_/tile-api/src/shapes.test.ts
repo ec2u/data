@@ -15,10 +15,10 @@
  */
 
 
-import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { string } from "@metreeca/blue/string";
-import { createLexicon } from "@metreeca/core/resource";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, optional, required, resource } from "@grafctory/blue/resource";
+import { string } from "@grafctory/blue/string";
+import { createLexicon } from "@grafctory/core/resource";
 import { describe, expect, it } from "vitest";
 import type { Endpoints } from "./endpoints.core.js";
 import {

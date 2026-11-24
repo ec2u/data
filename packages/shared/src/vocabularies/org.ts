@@ -16,12 +16,12 @@
 
 import { FOAFOrganization, FOAFPerson } from "@ec2u/data-shared/vocabularies/foaf.js";
 import { skos, SKOSConcept } from "@ec2u/data-shared/vocabularies/skos.js";
-import { dictionary } from "@metreeca/blue/dictionary";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, nonempty, optional, required, resource } from "@metreeca/blue/resource";
-import { text } from "@metreeca/blue/string";
-import { union } from "@metreeca/blue/union";
-import { createNamespace } from "@metreeca/core/resource";
+import { dictionary } from "@grafctory/blue/dictionary";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, nonempty, optional, required, resource } from "@grafctory/blue/resource";
+import { text } from "@grafctory/blue/string";
+import { union } from "@grafctory/blue/union";
+import { createNamespace } from "@grafctory/core/resource";
 
 
 export const org = createNamespace("http://www.w3.org/ns/org#", [

@@ -16,13 +16,13 @@
 
 import { salamanca } from "@ec2u/data-shared/index.core.js";
 import { organizations } from "@ec2u/data-shared/organizations/index.js";
-import { isString } from "@metreeca/core";
-import { immutable } from "@metreeca/core/values";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { filter, fork, map } from "@metreeca/flow/tasks";
-import { html, link, string, xpath } from "@metreeca/mime-xml";
-import { crawl, fetch } from "@metreeca/pipe-url";
+import { isString } from "@grafctory/core";
+import { immutable } from "@grafctory/core/values";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { filter, fork, map } from "@grafctory/flow/tasks";
+import { html, link, string, xpath } from "@grafctory/mime-xml";
+import { crawl, fetch } from "@grafctory/pipe-url";
 import { execute } from "../../index.core.js";
 import { sync } from "../sinks/sync.js";
 

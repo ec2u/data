@@ -17,10 +17,10 @@
 import { licenses } from "@ec2u/data-shared";
 import { alliance } from "@ec2u/data-shared/organizations/index.js";
 import { services } from "@ec2u/data-shared/taxonomies/services.js";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { service } from "@metreeca/gear";
-import { createVault } from "@metreeca/gear/vault";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { service } from "@grafctory/gear";
+import { createVault } from "@grafctory/gear/vault";
 import { execute } from "../../index.core.js";
 import { sync } from "../sinks/sync.js";
 import { csv } from "../tasks/csv.js";

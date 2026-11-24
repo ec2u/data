@@ -17,21 +17,21 @@
 import { pavia } from "@ec2u/data-shared/index.core.js";
 import { getConceptId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { schema } from "@metreeca/blue";
-import { multiple, required, resource } from "@metreeca/blue/resource";
-import { string, text } from "@metreeca/blue/string";
-import type { State } from "@metreeca/blue/value";
-import type { Optional } from "@metreeca/core";
-import { isIRI } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
-import { pipe, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { flat, map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { getResource } from "@metreeca/gear/space";
-import { createGoogleAI, json } from "@metreeca/llms-google";
-import { validate } from "@metreeca/mime-jsonld";
-import { log, report } from "@metreeca/tape";
+import { schema } from "@grafctory/blue";
+import { multiple, required, resource } from "@grafctory/blue/resource";
+import { string, text } from "@grafctory/blue/string";
+import type { State } from "@grafctory/blue/value";
+import type { Optional } from "@grafctory/core";
+import { isIRI } from "@grafctory/core/resource";
+import { immutable } from "@grafctory/core/values";
+import { pipe, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { flat, map } from "@grafctory/flow/tasks";
+import { service } from "@grafctory/gear";
+import { getResource } from "@grafctory/gear/space";
+import { createGoogleAI, json } from "@grafctory/llms-google";
+import { validate } from "@grafctory/mime-jsonld";
+import { log, report } from "@grafctory/tape";
 import type { Lead } from "../sinks/crawl.js";
 
 

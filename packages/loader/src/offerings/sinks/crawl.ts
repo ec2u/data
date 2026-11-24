@@ -15,17 +15,17 @@
  */
 
 import { getAcademicYear } from "@ec2u/data-shared/offerings/index.js";
-import type { Markdown } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
-import { pipe, type Sink } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { filter, flat, fork, map, tee } from "@metreeca/flow/tasks";
-import { digest } from "@metreeca/mime-json";
-import { denoise, focus, html, untag } from "@metreeca/mime-xml";
-import { settle, type Tally } from "@metreeca/pipe-store";
-import { fetch } from "@metreeca/pipe-url";
-import type { Reference } from "@metreeca/qest/state";
-import { log } from "@metreeca/tape";
+import type { Markdown } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
+import { pipe, type Sink } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { filter, flat, fork, map, tee } from "@grafctory/flow/tasks";
+import { digest } from "@grafctory/mime-json";
+import { denoise, focus, html, untag } from "@grafctory/mime-xml";
+import { settle, type Tally } from "@grafctory/pipe-store";
+import { fetch } from "@grafctory/pipe-url";
+import type { Reference } from "@grafctory/qest/state";
+import { log } from "@grafctory/tape";
 import { extract } from "../tasks/extract.js";
 import { complete, date, type Draft, identify, named, retract, stated } from "./sync.js";
 

@@ -16,12 +16,12 @@
 
 import { base, Dataset, ec2u, Entity, rdfs } from "@ec2u/data-shared";
 import { University } from "@ec2u/data-shared/universities/index.js";
-import { boolean } from "@metreeca/blue/boolean";
-import { reference } from "@metreeca/blue/reference";
-import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { resolve } from "@metreeca/core/resource";
-import { markdown } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
+import { boolean } from "@grafctory/blue/boolean";
+import { reference } from "@grafctory/blue/reference";
+import { id, multiple, optional, required, resource } from "@grafctory/blue/resource";
+import { resolve } from "@grafctory/core/resource";
+import { markdown } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
 
 
 export const resources = immutable({

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { opt } from "@metreeca/core";
-import { by, compound, locale } from "@metreeca/core/order";
-import { immutable } from "@metreeca/core/values";
+import { opt } from "@grafctory/core";
+import { by, compound, locale } from "@grafctory/core/order";
+import { immutable } from "@grafctory/core/values";
 
 
 /**

@@ -19,16 +19,16 @@ import { Event, events, getEventId, type Publisher } from "@ec2u/data-shared/eve
 import { getPartner } from "@ec2u/data-shared/index.core.js";
 import { SchemaEventAttendanceModeEnumeration } from "@ec2u/data-shared/vocabularies/schema/event.js";
 import { SchemaLocation } from "@ec2u/data-shared/vocabularies/schema/location.js";
-import type { State } from "@metreeca/blue/value";
-import { opt, type Optional } from "@metreeca/core";
-import { multiple, nonempty, optional } from "@metreeca/core/arrays";
-import type { Awaitable } from "@metreeca/core/async";
-import { clip, tidy } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
-import { pipe, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { filter, map } from "@metreeca/flow/tasks";
-import { validate } from "@metreeca/mime-jsonld";
+import type { State } from "@grafctory/blue/value";
+import { opt, type Optional } from "@grafctory/core";
+import { multiple, nonempty, optional } from "@grafctory/core/arrays";
+import type { Awaitable } from "@grafctory/core/async";
+import { clip, tidy } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
+import { pipe, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { filter, map } from "@grafctory/flow/tasks";
+import { validate } from "@grafctory/mime-jsonld";
 import type { Classified } from "./classify.js";
 
 export function convert(

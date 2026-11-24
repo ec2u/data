@@ -15,20 +15,20 @@
  */
 
 import { taxonomies, Taxonomies, Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
-import { memo } from "@metreeca/core";
-import { by } from "@metreeca/core/order";
-import type { Markdown, Text } from "@metreeca/core/strings";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { toArray } from "@metreeca/flow/sinks";
-import { map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { cosine, decompress, type Distance, type Vector } from "@metreeca/llms/vectors";
-import { createGoogleAI, embedding } from "@metreeca/llms-google";
-import { validate } from "@metreeca/mime-jsonld";
-import { delta, lookup, settle } from "@metreeca/pipe-store";
-import type { Reference } from "@metreeca/qest/state";
-import { log, report, time } from "@metreeca/tape";
+import { memo } from "@grafctory/core";
+import { by } from "@grafctory/core/order";
+import type { Markdown, Text } from "@grafctory/core/strings";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { toArray } from "@grafctory/flow/sinks";
+import { map } from "@grafctory/flow/tasks";
+import { service } from "@grafctory/gear";
+import { cosine, decompress, type Distance, type Vector } from "@grafctory/llms/vectors";
+import { createGoogleAI, embedding } from "@grafctory/llms-google";
+import { validate } from "@grafctory/mime-jsonld";
+import { delta, lookup, settle } from "@grafctory/pipe-store";
+import type { Reference } from "@grafctory/qest/state";
+import { log, report, time } from "@grafctory/tape";
 import { execute } from "../index.core.js";
 
 

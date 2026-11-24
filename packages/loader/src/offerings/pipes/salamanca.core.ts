@@ -15,10 +15,10 @@
  */
 
 import { salamanca } from "@ec2u/data-shared/index.core.js";
-import { isNumber, opt, type Optional } from "@metreeca/core";
-import { multiple } from "@metreeca/core/arrays";
-import { isIRI } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
+import { isNumber, opt, type Optional } from "@grafctory/core";
+import { multiple } from "@grafctory/core/arrays";
+import { isIRI } from "@grafctory/core/resource";
+import { immutable } from "@grafctory/core/values";
 import type { CourseDraft, ProgramDraft } from "../sinks/sync.js";
 
 

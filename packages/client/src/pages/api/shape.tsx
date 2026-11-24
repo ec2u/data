@@ -23,12 +23,12 @@ import {
 	ShapeProperties,
 	ShapeSchema
 } from "@kxta/tile-api";
-import { Choice } from "@metreeca/clay-widgets/choice";
-import { Icon } from "@metreeca/clay-widgets/icon";
-import { Link } from "@metreeca/clay-widgets/link";
-import { Path } from "@metreeca/clay-widgets/path";
-import { useRoute, useRouter } from "@metreeca/clay/router";
-import { useStorage } from "@metreeca/clay/storage";
+import { Choice } from "@grafctory/clay-widgets/choice";
+import { Icon } from "@grafctory/clay-widgets/icon";
+import { Link } from "@grafctory/clay-widgets/link";
+import { Path } from "@grafctory/clay-widgets/path";
+import { useRoute, useRouter } from "@grafctory/clay/router";
+import { useStorage } from "@grafctory/clay/storage";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../widgets/page.js";
 import { Unknown } from "../unknown.js";

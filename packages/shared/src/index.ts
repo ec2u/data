@@ -20,13 +20,13 @@ import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { EuroSciVocConcept } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
 import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
-import { dictionary } from "@metreeca/blue/dictionary";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { date, text } from "@metreeca/blue/string";
-import type { State } from "@metreeca/blue/value";
-import { markdown } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
+import { dictionary } from "@grafctory/blue/dictionary";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, optional, required, resource } from "@grafctory/blue/resource";
+import { date, text } from "@grafctory/blue/string";
+import type { State } from "@grafctory/blue/value";
+import { markdown } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
 import { base, EC2U, ec2u, Entity, licenses } from "./index.core.js";
 
 

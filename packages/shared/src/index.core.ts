@@ -15,18 +15,18 @@
  */
 
 import { geo, WGSPoint } from "@kxta/open/geo.js";
-import { dictionary } from "@metreeca/blue/dictionary";
-import { id, multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { iri, text } from "@metreeca/blue/string";
-import { union } from "@metreeca/blue/union";
-import type { State } from "@metreeca/blue/value";
-import { assert, isDefined } from "@metreeca/core";
-import { unique } from "@metreeca/core/arrays";
-import type { Tag } from "@metreeca/core/language";
-import { createNamespace, resolve } from "@metreeca/core/resource";
-import { dedent } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
-import type { Reference } from "@metreeca/qest/state";
+import { dictionary } from "@grafctory/blue/dictionary";
+import { id, multiple, optional, required, resource } from "@grafctory/blue/resource";
+import { iri, text } from "@grafctory/blue/string";
+import { union } from "@grafctory/blue/union";
+import type { State } from "@grafctory/blue/value";
+import { assert, isDefined } from "@grafctory/core";
+import { unique } from "@grafctory/core/arrays";
+import type { Tag } from "@grafctory/core/language";
+import { createNamespace, resolve } from "@grafctory/core/resource";
+import { dedent } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
+import type { Reference } from "@grafctory/qest/state";
 
 
 export const LabelLength = 100;

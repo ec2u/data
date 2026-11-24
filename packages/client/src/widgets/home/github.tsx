@@ -30,7 +30,7 @@
  * @see {@link https://brand.github.com/foundations/logo GitHub Logo Guidelines} for the permitted uses of the mark
  */
 
-import { css, type Scaling, skin } from "@metreeca/skin";
+import { css, type Scaling, skin } from "@grafctory/skin";
 import { createElement } from "preact";
 import "./github.css";
 

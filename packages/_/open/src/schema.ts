@@ -22,7 +22,7 @@
  * `https://schema.org/` namespace, so that harvested data matches the terms used in shapes and queries.
  *
  * ```typescript
- * import { named, tagged, triple } from "@metreeca/trio";
+ * import { named, tagged, triple } from "@grafctory/trio";
  * import { Schema, schema } from "@kxta/open/schema.js";
  *
  * schema.Event;                                     // "https://schema.org/Event"
@@ -42,8 +42,8 @@
  * @see {@link https://schema.org/ Schema.org}
  */
 
-import { createNamespace } from "@metreeca/core/resource";
-import { type Graph, graph, type Named, named, type Subject, type Term, type Triple, triple } from "@metreeca/trio";
+import { createNamespace } from "@grafctory/core/resource";
+import { type Graph, graph, type Named, named, type Subject, type Term, type Triple, triple } from "@grafctory/trio";
 
 
 const LegacyTerm = /^http:\/\/schema\.org\/([^/#]*)$/; // legacy namespace + local name, as split by RDF4J

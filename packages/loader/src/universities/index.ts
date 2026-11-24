@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { worker } from "@metreeca/gate/worker";
+import { worker } from "@grafctory/gate/worker";
 import { Router } from "express";
 import { Wikidata } from "./pipes/wikidata.js";
 

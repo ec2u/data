@@ -16,10 +16,10 @@
 
 import { base, EC2U, licenses } from "@ec2u/data-shared";
 import { Concept } from "@ec2u/data-shared/taxonomies/index.js";
-import { resource } from "@metreeca/blue/resource";
-import { resolve } from "@metreeca/core/resource";
-import { dedent } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
+import { resource } from "@grafctory/blue/resource";
+import { resolve } from "@grafctory/core/resource";
+import { dedent } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
 
 
 export const stakeholders = immutable({ // !!! sync from `taxonomies-ec2u-stakeholders`

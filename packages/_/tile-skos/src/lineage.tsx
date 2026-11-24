@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Link } from "@metreeca/clay-widgets/link";
-import { Tree } from "@metreeca/clay-widgets/tree";
+import { Link } from "@grafctory/clay-widgets/link";
+import { Tree } from "@grafctory/clay-widgets/tree";
 import { getSKOSLabel, getSKOSLineage, type SKOSEntry } from "./concepts.core.js";
 
 

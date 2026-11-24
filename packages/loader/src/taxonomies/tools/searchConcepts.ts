@@ -41,9 +41,9 @@
  */
 
 import type { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
-import { clip, dedent } from "@metreeca/core/strings";
-import { CallableTool, FunctionCall, Part, Tool, Type } from "@metreeca/llms-google";
-import { log, report } from "@metreeca/tape";
+import { clip, dedent } from "@grafctory/core/strings";
+import { CallableTool, FunctionCall, Part, Tool, Type } from "@grafctory/llms-google";
+import { log, report } from "@grafctory/tape";
 import { getConceptMatches } from "../index.core.js";
 
 

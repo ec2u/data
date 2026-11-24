@@ -16,7 +16,7 @@ names code reads are exempt: IAM grants, not hidden names, keep secrets closed.
 
 ## Utilities
 
-- [@metreeca/flow](https://github.com/metreeca/flow) - TypeScript library for processing async iterables with
+- [@grafctory/flow](https://github.com/grafctory/flow) - TypeScript library for processing async iterables with
 	composable, type-safe pipelines
 
 ## Google Cloud Platform
@@ -100,7 +100,7 @@ Localised text is stored and handled as language maps (qest `Dictionary`); no la
 - **Client side**: let language negotiation select the text. Ask for a localised property with the atomic placeholder
 	`{}` to get its coalesced label, resolved under the request's negotiated language priority (`Accept-Language`, set
 	from the store `locale` scope). Ask for a `Locale` map (`{ "*": {} }`, `{ en: {}, fr: {} }`) only where the view
-	really needs several languages side by side. See `@metreeca/qest/model` §Localised Properties for the definitions.
+	really needs several languages side by side. See `@grafctory/qest/model` §Localised Properties for the definitions.
 
 # AI-Generated Content
 
@@ -124,7 +124,7 @@ a classification it assigned.
 
 - **`npm run clean`** - Remove dependencies and build artefacts
 - **`npm run prime`** - Install dependencies from the lockfile
-- **`npm run setup`** - Install dependencies and link local `@metreeca/*` checkouts
+- **`npm run setup`** - Install dependencies and link local `@grafctory/*` checkouts
 - **`npm run build`** - Compile sources and copy `*.sys.md` prompts alongside their modules
 - **`npm run check`** - Run the test suite
 - **`npm run start`** - Serve the endpoints and the web UI in parallel, in watch mode
@@ -140,8 +140,8 @@ the developer's own credentials. Reading the variable takes write access to `ec2
 ## Probing the Store
 
 To check what a pipe actually committed, write a throwaway script under `packages/loader/src/` named `~probe.ts` (the
-`~*` pattern is gitignored) and run it with `npx tsx --import @metreeca/rack/node "$PWD/~probe.ts"`, then delete it.
-Never run it with bare `npx tsx` or `node`: without the rack hooks, linked `@metreeca/*` checkouts resolve to their
+`~*` pattern is gitignored) and run it with `npx tsx --import @grafctory/rack/node "$PWD/~probe.ts"`, then delete it.
+Never run it with bare `npx tsx` or `node`: without the rack hooks, linked `@grafctory/*` checkouts resolve to their
 `dist` builds, which may predate the source and silently return stale results. Pass the absolute path, as `npx` runs
 from the workspace root. Pipe logs are not evidence: writes are buffered and flushed as a single update when the
 transaction commits, so an `inserted resource` line only records that the delta was queued.
@@ -152,10 +152,10 @@ Two levels of probe are available, and they answer different questions.
 `store.lookup()`:
 
 ```ts
-import { createStore } from "@metreeca/pipe-store";
+import { createStore } from "@grafctory/pipe-store";
 import { execute } from "./index.core.js";
 import { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
-import { service } from "@metreeca/gear";
+import { service } from "@grafctory/gear";
 
 await execute(async () => {
 
@@ -180,10 +180,10 @@ did not resolve it, not that the data is missing: confirm at the triple level be
 read-only server credentials from the vault (`edge` below; see the `deployment-manager` skill for the others):
 
 ```ts
-import { createGCPVault } from "@metreeca/gear-gcp/secrets";
-import { createFetch } from "@metreeca/http";
-import { basic } from "@metreeca/http/basic";
-import { createRDF4JRepository } from "@metreeca/wire-sparql-rdf4j";
+import { createGCPVault } from "@grafctory/gear-gcp/secrets";
+import { createFetch } from "@grafctory/http";
+import { basic } from "@grafctory/http/basic";
+import { createRDF4JRepository } from "@grafctory/wire-sparql-rdf4j";
 
 const vault = createGCPVault();
 
@@ -248,16 +248,16 @@ empty answer rather than an error, as an error aborts the whole run; the extract
 generation naming its page, which tells which entries the count covers.
 
 ```ts
-import { bind, executor } from "@metreeca/gear";
-import { createGCPVault } from "@metreeca/gear-gcp/secrets";
-import { getPackage, getPath } from "@metreeca/gear/space";
-import { createFetch } from "@metreeca/http";
-import { basic } from "@metreeca/http/basic";
-import type { Store, StoreClient } from "@metreeca/keep";
-import { createSPARQLStore } from "@metreeca/keep-sparql";
-import { createGoogleAI, GenerateContentResponse } from "@metreeca/llms-google";
-import { createStore } from "@metreeca/pipe-store";
-import { createHTTPRepository } from "@metreeca/wire-sparql-http";
+import { bind, executor } from "@grafctory/gear";
+import { createGCPVault } from "@grafctory/gear-gcp/secrets";
+import { getPackage, getPath } from "@grafctory/gear/space";
+import { createFetch } from "@grafctory/http";
+import { basic } from "@grafctory/http/basic";
+import type { Store, StoreClient } from "@grafctory/keep";
+import { createSPARQLStore } from "@grafctory/keep-sparql";
+import { createGoogleAI, GenerateContentResponse } from "@grafctory/llms-google";
+import { createStore } from "@grafctory/pipe-store";
+import { createHTTPRepository } from "@grafctory/wire-sparql-http";
 import { UmeaUniversity as pipe } from "./events/pipes/umea-university.js";
 
 const vault = createGCPVault();

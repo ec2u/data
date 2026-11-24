@@ -15,7 +15,7 @@
  */
 
 import { Document, Documents } from "@ec2u/data-shared/documents/index.js";
-import { driver } from "@metreeca/gate/driver";
+import { driver } from "@grafctory/gate/driver";
 import { Router } from "express";
 
 

@@ -18,11 +18,11 @@ import { linz } from "@ec2u/data-shared/index.core.js";
 import { getConceptId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
-import { opt, type Optional } from "@metreeca/core";
-import { multiple } from "@metreeca/core/arrays";
-import { isIRI } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
-import type { Reference } from "@metreeca/qest/state";
+import { opt, type Optional } from "@grafctory/core";
+import { multiple } from "@grafctory/core/arrays";
+import { isIRI } from "@grafctory/core/resource";
+import { immutable } from "@grafctory/core/values";
+import type { Reference } from "@grafctory/qest/state";
 import type { CourseDraft, Dictionary, ProgramDraft } from "../sinks/sync.js";
 
 

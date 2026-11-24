@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { host } from "@metreeca/clay";
-import { Toasts } from "@metreeca/clay-widgets/toasts";
-import { Board } from "@metreeca/clay/board";
-import { Fetch } from "@metreeca/clay/fetch";
-import { Router, Routes } from "@metreeca/clay/router";
-import { createRESTStore } from "@metreeca/keep-rest";
-import "@metreeca/skin/presets/roboto.css";
-import { createCachingStore } from "@metreeca/keep/caching";
-import { Store } from "@metreeca/tile";
+import { host } from "@grafctory/clay";
+import { Toasts } from "@grafctory/clay-widgets/toasts";
+import { Board } from "@grafctory/clay/board";
+import { Fetch } from "@grafctory/clay/fetch";
+import { Router, Routes } from "@grafctory/clay/router";
+import { createRESTStore } from "@grafctory/keep-rest";
+import "@grafctory/skin/presets/roboto.css";
+import { createCachingStore } from "@grafctory/keep/caching";
+import { Store } from "@grafctory/tile";
 import { render } from "preact";
 import { About, about } from "./pages/about/index.js";
 import { API, api } from "./pages/api/index.js";

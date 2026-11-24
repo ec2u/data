@@ -16,10 +16,10 @@
 
 import { lexicon } from "@ec2u/data-shared/vocabularies/index.js";
 import { APIDatatypes, APIEndpoints, APIPrefixes, APIShapes } from "@kxta/tile-api";
-import { Path } from "@metreeca/clay-widgets/path";
-import { Stack } from "@metreeca/clay-widgets/stack";
-import { TOC } from "@metreeca/clay-widgets/toc";
-import { useRouter } from "@metreeca/clay/router";
+import { Path } from "@grafctory/clay-widgets/path";
+import { Stack } from "@grafctory/clay-widgets/stack";
+import { TOC } from "@grafctory/clay-widgets/toc";
+import { useRouter } from "@grafctory/clay/router";
 import { useEffect } from "preact/hooks";
 import { Page } from "../../widgets/page.js";
 import { endpoints } from "./_.js";

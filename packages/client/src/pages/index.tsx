@@ -15,20 +15,20 @@
  */
 
 import { Datasets as DatasetsShape } from "@ec2u/data-shared";
-import { Button } from "@metreeca/clay-widgets/button";
-import { Empty } from "@metreeca/clay-widgets/empty";
-import { Icon } from "@metreeca/clay-widgets/icon";
-import { Link } from "@metreeca/clay-widgets/link";
-import { Stack } from "@metreeca/clay-widgets/stack";
-import { TOC } from "@metreeca/clay-widgets/toc";
-import { useRoute, useRouter } from "@metreeca/clay/router";
-import { isNumber, isObject, isOptional, isString, opt } from "@metreeca/core";
-import { internalize } from "@metreeca/core/resource";
-import { summary } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
-import { useCollection } from "@metreeca/tile/collection";
-import { useMembers } from "@metreeca/tile/members";
-import { useQuery } from "@metreeca/tile/query";
+import { Button } from "@grafctory/clay-widgets/button";
+import { Empty } from "@grafctory/clay-widgets/empty";
+import { Icon } from "@grafctory/clay-widgets/icon";
+import { Link } from "@grafctory/clay-widgets/link";
+import { Stack } from "@grafctory/clay-widgets/stack";
+import { TOC } from "@grafctory/clay-widgets/toc";
+import { useRoute, useRouter } from "@grafctory/clay/router";
+import { isNumber, isObject, isOptional, isString, opt } from "@grafctory/core";
+import { internalize } from "@grafctory/core/resource";
+import { summary } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
+import { useCollection } from "@grafctory/tile/collection";
+import { useMembers } from "@grafctory/tile/members";
+import { useQuery } from "@grafctory/tile/query";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { byDataset, ec2u, PublicDatasets } from "../index.core.js";

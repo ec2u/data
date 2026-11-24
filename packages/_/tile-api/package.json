@@ -13,10 +13,10 @@
   },
   "scripts": {},
   "dependencies": {
-    "@metreeca/blue": "^0.15.0",
-    "@metreeca/clay-markdown": "^0.4.0",
-    "@metreeca/clay-widgets": "^0.4.0",
-    "@metreeca/core": "^0.14.0",
+    "@grafctory/blue": "^0.15.0",
+    "@grafctory/clay-markdown": "^0.4.0",
+    "@grafctory/clay-widgets": "^0.4.0",
+    "@grafctory/core": "^0.14.0",
     "preact": "^10.29.8"
   }
 }

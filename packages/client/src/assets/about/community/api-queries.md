@@ -18,7 +18,7 @@ events datasets, from single resources to filtered, sorted and computed dataset 
 > [!NOTE]
 > Using the API takes no linked data knowledge, but its JSON is a view of a linked data graph: the
 > [Linked Data](linked-data/) primer explains how the two relate, for clients integrating the hub with other linked
-> data sources. The API is built on the open-source [QEST](https://github.com/metreeca/qest) framework, whose
+> data sources. The API is built on the open-source [QEST](https://github.com/grafctory/qest) framework, whose
 > documentation fully specifies the data model and the query language these guides introduce by example, including the
 > formal grammar of every query.
 

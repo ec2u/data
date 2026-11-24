@@ -15,20 +15,20 @@
  */
 
 import type { Partner } from "@ec2u/data-shared/index.core.js";
-import { schema } from "@metreeca/blue";
-import { optional, resource } from "@metreeca/blue/resource";
-import { string, text } from "@metreeca/blue/string";
-import type { State } from "@metreeca/blue/value";
-import { markdown, tidy } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
-import { pipe, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { flat, map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { getResource } from "@metreeca/gear/space";
-import { createGoogleAI, json } from "@metreeca/llms-google";
-import { validate } from "@metreeca/mime-jsonld";
-import { log, report } from "@metreeca/tape";
+import { schema } from "@grafctory/blue";
+import { optional, resource } from "@grafctory/blue/resource";
+import { string, text } from "@grafctory/blue/string";
+import type { State } from "@grafctory/blue/value";
+import { markdown, tidy } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
+import { pipe, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { flat, map } from "@grafctory/flow/tasks";
+import { service } from "@grafctory/gear";
+import { getResource } from "@grafctory/gear/space";
+import { createGoogleAI, json } from "@grafctory/llms-google";
+import { validate } from "@grafctory/mime-jsonld";
+import { log, report } from "@grafctory/tape";
 import type { Entry } from "../sinks/sync.js";
 
 

@@ -18,13 +18,13 @@
   "scripts": {
     "clean": "ush rm 'packages/{*,_/*}/{lib,node_modules}' node_modules",
     "prime": "npm ci",
-    "setup": "npm ci && ush ln ~/Metreeca/Packages",
+    "setup": "npm ci && ush ln ~/Metreeca/Grafctory",
     "build": "ush rm 'packages/{*,_/*}/lib' && npm run build --workspaces --if-present",
     "check": "vitest run",
     "start": "ush up npm run serve -w packages/server + npm run watch -w packages/client"
   },
   "devDependencies": {
-    "@metreeca/rack": "^0.8.0",
+    "@grafctory/rack": "^0.8.0",
     "tsx": "^4.23.12",
     "typescript": "^6.0.3",
     "vitest": "^4.1.10"

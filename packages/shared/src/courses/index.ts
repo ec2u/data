@@ -21,14 +21,14 @@ import { Program } from "@ec2u/data-shared/programs/index.js";
 import { StakeholderConcept } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
 import { SchemaCourse, SchemaCourseInstance } from "@ec2u/data-shared/vocabularies/schema/learning.js";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, resource } from "@metreeca/blue/resource";
-import { string } from "@metreeca/blue/string";
-import type { State } from "@metreeca/blue/value";
-import { resolve } from "@metreeca/core/resource";
-import { markdown } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
-import type { Reference } from "@metreeca/qest/state";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, resource } from "@grafctory/blue/resource";
+import { string } from "@grafctory/blue/string";
+import type { State } from "@grafctory/blue/value";
+import { resolve } from "@grafctory/core/resource";
+import { markdown } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
+import type { Reference } from "@grafctory/qest/state";
 
 
 export const courses = immutable({

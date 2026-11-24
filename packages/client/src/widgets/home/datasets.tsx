@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Link } from "@metreeca/clay-widgets/link";
-import { integer } from "@metreeca/tile/types/integer";
+import { Link } from "@grafctory/clay-widgets/link";
+import { integer } from "@grafctory/tile/types/integer";
 import { type ComponentChildren, createElement } from "preact";
 import "./datasets.css";
 

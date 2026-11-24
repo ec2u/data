@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { bind, executor, service } from "@metreeca/gear";
-import { createGCPVault } from "@metreeca/gear-gcp/secrets";
-import { createVault } from "@metreeca/gear/vault";
-import { createFetch } from "@metreeca/http";
-import { basic } from "@metreeca/http/basic";
-import { createSPARQLStore } from "@metreeca/keep-sparql";
-import { createStore } from "@metreeca/pipe-store";
-import { createHTTPRepository } from "@metreeca/wire-sparql-http";
+import { bind, executor, service } from "@grafctory/gear";
+import { createGCPVault } from "@grafctory/gear-gcp/secrets";
+import { createVault } from "@grafctory/gear/vault";
+import { createFetch } from "@grafctory/http";
+import { basic } from "@grafctory/http/basic";
+import { createSPARQLStore } from "@grafctory/keep-sparql";
+import { createStore } from "@grafctory/pipe-store";
+import { createHTTPRepository } from "@grafctory/wire-sparql-http";
 
 
 const environment = process.env.DATA_ENVIRONMENT || "edge"; // !!! align default to branch

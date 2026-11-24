@@ -17,8 +17,8 @@
 import { jena } from "@ec2u/data-shared/index.core.js";
 import { getConceptId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { isObject, opt, type Optional, type Value } from "@metreeca/core";
-import { immutable } from "@metreeca/core/values";
+import { isObject, opt, type Optional, type Value } from "@grafctory/core";
+import { immutable } from "@grafctory/core/values";
 import type { ProgramDraft } from "../sinks/sync.js";
 
 

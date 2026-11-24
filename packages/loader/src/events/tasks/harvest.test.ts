@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import type { Optional } from "@metreeca/core";
-import type { Markdown } from "@metreeca/core/strings";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { toArray } from "@metreeca/flow/sinks";
-import { bind, executor } from "@metreeca/gear";
-import { createFetch, type Fetch } from "@metreeca/http";
+import type { Optional } from "@grafctory/core";
+import type { Markdown } from "@grafctory/core/strings";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { toArray } from "@grafctory/flow/sinks";
+import { bind, executor } from "@grafctory/gear";
+import { createFetch, type Fetch } from "@grafctory/http";
 import { describe, expect, it } from "vitest";
 import { harvest } from "./harvest.js";
 

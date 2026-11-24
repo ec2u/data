@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Markdown } from "@metreeca/clay-markdown/markdown";
-import { opt } from "@metreeca/core";
-import type { Lexicon } from "@metreeca/core/resource";
+import { Markdown } from "@grafctory/clay-markdown/markdown";
+import { opt } from "@grafctory/core";
+import type { Lexicon } from "@grafctory/core/resource";
 import type { Endpoints } from "./endpoints.core.js";
 import { getShape, getShapeDescription } from "./shapes.core.js";
 

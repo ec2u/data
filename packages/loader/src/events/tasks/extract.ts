@@ -16,21 +16,21 @@
 
 import { isStaleEvent } from "@ec2u/data-shared/events/index.js";
 import { getDate } from "@kxta/core/temporal.js";
-import { schema } from "@metreeca/blue";
-import { boolean } from "@metreeca/blue/boolean";
-import { optional, required, resource } from "@metreeca/blue/resource";
-import { date, string, tag, time, url } from "@metreeca/blue/string";
-import type { State } from "@metreeca/blue/value";
-import { type Markdown, markdown } from "@metreeca/core/strings";
-import { pipe, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { filter, flat, map, when } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { getResource } from "@metreeca/gear/space";
-import { createGoogleAI, FinishReason, type GenerateContentResponse, json } from "@metreeca/llms-google";
-import { digest } from "@metreeca/mime-json";
-import { validate } from "@metreeca/mime-jsonld";
-import { log } from "@metreeca/tape";
+import { schema } from "@grafctory/blue";
+import { boolean } from "@grafctory/blue/boolean";
+import { optional, required, resource } from "@grafctory/blue/resource";
+import { date, string, tag, time, url } from "@grafctory/blue/string";
+import type { State } from "@grafctory/blue/value";
+import { type Markdown, markdown } from "@grafctory/core/strings";
+import { pipe, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { filter, flat, map, when } from "@grafctory/flow/tasks";
+import { service } from "@grafctory/gear";
+import { getResource } from "@grafctory/gear/space";
+import { createGoogleAI, FinishReason, type GenerateContentResponse, json } from "@grafctory/llms-google";
+import { digest } from "@grafctory/mime-json";
+import { validate } from "@grafctory/mime-jsonld";
+import { log } from "@grafctory/tape";
 
 
 const logger = log(import.meta.url);

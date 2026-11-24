@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import type { DictionaryShape } from "@metreeca/blue/dictionary";
-import type { Property, ResourceShape } from "@metreeca/blue/resource";
-import { eager, type Shape } from "@metreeca/blue/value";
-import { isString, type Lazy, opt, type Optional } from "@metreeca/core";
-import type { Lexicon } from "@metreeca/core/resource";
-import { equals } from "@metreeca/core/values";
+import type { DictionaryShape } from "@grafctory/blue/dictionary";
+import type { Property, ResourceShape } from "@grafctory/blue/resource";
+import { eager, type Shape } from "@grafctory/blue/value";
+import { isString, type Lazy, opt, type Optional } from "@grafctory/core";
+import type { Lexicon } from "@grafctory/core/resource";
+import { equals } from "@grafctory/core/values";
 import { getShapeInterface, scriptable, type ShapeSignature } from "./declaration.core.js";
 import type { Endpoints } from "./endpoints.core.js";
 import { branches, shorthand } from "./index.core.js";

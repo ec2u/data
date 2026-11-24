@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { boolean } from "@metreeca/blue/boolean";
-import { dictionary } from "@metreeca/blue/dictionary";
-import { decimal, integer } from "@metreeca/blue/number";
-import { reference } from "@metreeca/blue/reference";
-import { id, type Members, multiple, optional, property, required, resource, type } from "@metreeca/blue/resource";
-import { email, string, url } from "@metreeca/blue/string";
-import { isObject } from "@metreeca/core";
-import { createLexicon } from "@metreeca/core/resource";
+import { boolean } from "@grafctory/blue/boolean";
+import { dictionary } from "@grafctory/blue/dictionary";
+import { decimal, integer } from "@grafctory/blue/number";
+import { reference } from "@grafctory/blue/reference";
+import { id, type Members, multiple, optional, property, required, resource, type } from "@grafctory/blue/resource";
+import { email, string, url } from "@grafctory/blue/string";
+import { isObject } from "@grafctory/core";
+import { createLexicon } from "@grafctory/core/resource";
 import { describe, expect, it } from "vitest";
 import type { Endpoints } from "./endpoints.core.js";
 import { getShapeSchema } from "./schema.core.js";

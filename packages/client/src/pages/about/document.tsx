@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { Markdown } from "@metreeca/clay-markdown/markdown";
-import { Link } from "@metreeca/clay-widgets/link";
-import { Path } from "@metreeca/clay-widgets/path";
-import { Style } from "@metreeca/clay-widgets/style";
-import { Text } from "@metreeca/clay-widgets/text";
-import { useAsset } from "@metreeca/clay/asset";
-import { useRoute, useRouter } from "@metreeca/clay/router";
-import { isNumber, isString } from "@metreeca/core";
-import { NotFound } from "@metreeca/http";
+import { Markdown } from "@grafctory/clay-markdown/markdown";
+import { Link } from "@grafctory/clay-widgets/link";
+import { Path } from "@grafctory/clay-widgets/path";
+import { Style } from "@grafctory/clay-widgets/style";
+import { Text } from "@grafctory/clay-widgets/text";
+import { useAsset } from "@grafctory/clay/asset";
+import { useRoute, useRouter } from "@grafctory/clay/router";
+import { isNumber, isString } from "@grafctory/core";
+import { NotFound } from "@grafctory/http";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { Failure } from "../../widgets/failure.js";

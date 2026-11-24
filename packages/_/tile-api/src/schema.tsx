@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import type { ResourceShape } from "@metreeca/blue/resource";
-import { Link } from "@metreeca/clay-widgets/link";
-import { isArray, isString, opt } from "@metreeca/core";
-import type { Lexicon } from "@metreeca/core/resource";
+import type { ResourceShape } from "@grafctory/blue/resource";
+import { Link } from "@grafctory/clay-widgets/link";
+import { isArray, isString, opt } from "@grafctory/core";
+import type { Lexicon } from "@grafctory/core/resource";
 import { Fragment } from "preact";
 import type { Endpoints } from "./endpoints.core.js";
 import { Code, Keyword } from "./index.core.js";

@@ -24,11 +24,11 @@
  */
 
 import { Concept, Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
-import { immutable } from "@metreeca/core/values";
-import { type Collection, useCollection } from "@metreeca/tile/collection";
-import { useMembers } from "@metreeca/tile/members";
-import { useResource } from "@metreeca/tile/resource";
-import { type Search, useSearch } from "@metreeca/tile/search";
+import { immutable } from "@grafctory/core/values";
+import { type Collection, useCollection } from "@grafctory/tile/collection";
+import { useMembers } from "@grafctory/tile/members";
+import { useResource } from "@grafctory/tile/resource";
+import { type Search, useSearch } from "@grafctory/tile/search";
 import { SKOSConceptModel } from "./concepts.core.js";
 
 

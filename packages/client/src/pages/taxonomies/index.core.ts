@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { opt } from "@metreeca/core";
-import { date } from "@metreeca/tile/types/date";
+import { opt } from "@grafctory/core";
+import { date } from "@grafctory/tile/types/date";
 
 
 /**

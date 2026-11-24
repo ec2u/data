@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { opt, type Optional } from "@metreeca/core";
-import { pipe, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { distinct, fork } from "@metreeca/flow/tasks";
-import { html, link, string, type Target, xpath, type XPath } from "@metreeca/mime-xml";
-import { crawl, fetch } from "@metreeca/pipe-url";
+import { opt, type Optional } from "@grafctory/core";
+import { pipe, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { distinct, fork } from "@grafctory/flow/tasks";
+import { html, link, string, type Target, xpath, type XPath } from "@grafctory/mime-xml";
+import { crawl, fetch } from "@grafctory/pipe-url";
 
 
 const retrieval = 4; // the number of catalogue pages fetched at the same time from the portal // !!! as option

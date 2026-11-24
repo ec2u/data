@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { dictionary } from "@metreeca/blue/dictionary";
-import { multiple, nonempty, optional, resource } from "@metreeca/blue/resource";
-import { iri, string, text } from "@metreeca/blue/string";
-import { union } from "@metreeca/blue/union";
-import { createNamespace } from "@metreeca/core/resource";
-import { markdown } from "@metreeca/core/strings";
+import { dictionary } from "@grafctory/blue/dictionary";
+import { multiple, nonempty, optional, resource } from "@grafctory/blue/resource";
+import { iri, string, text } from "@grafctory/blue/string";
+import { union } from "@grafctory/blue/union";
+import { createNamespace } from "@grafctory/core/resource";
+import { markdown } from "@grafctory/core/strings";
 
 
 export const schema = createNamespace("https://schema.org/", [

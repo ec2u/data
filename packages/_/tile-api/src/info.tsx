@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import type { ResourceShape } from "@metreeca/blue/resource";
-import { eager } from "@metreeca/blue/value";
-import { TOC, type TOCEntry } from "@metreeca/clay-widgets/toc";
-import { opt } from "@metreeca/core";
-import type { Lexicon } from "@metreeca/core/resource";
+import type { ResourceShape } from "@grafctory/blue/resource";
+import { eager } from "@grafctory/blue/value";
+import { TOC, type TOCEntry } from "@grafctory/clay-widgets/toc";
+import { opt } from "@grafctory/core";
+import type { Lexicon } from "@grafctory/core/resource";
 import type { Endpoints } from "./endpoints.core.js";
 import { getEndpointAnchor, getShapeEndpoints } from "./endpoints.core.js";
 import {

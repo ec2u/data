@@ -22,8 +22,8 @@ import { org } from "@ec2u/data-shared/vocabularies/org.js";
 import { schema } from "@ec2u/data-shared/vocabularies/schema/index.js";
 import { skos } from "@ec2u/data-shared/vocabularies/skos.js";
 import { geo } from "@kxta/open/geo.js";
-import { xsd } from "@metreeca/core/datatype";
-import { createLexicon } from "@metreeca/core/resource";
+import { xsd } from "@grafctory/core/datatype";
+import { createLexicon } from "@grafctory/core/resource";
 
 
 /**

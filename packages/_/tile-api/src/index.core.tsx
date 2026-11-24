@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { byte, decimal, double, float, int, integer, long, type NumberShape, short } from "@metreeca/blue/number";
-import { type Id, type Member, type ResourceShape, type Type } from "@metreeca/blue/resource";
+import { byte, decimal, double, float, int, integer, long, type NumberShape, short } from "@grafctory/blue/number";
+import { type Id, type Member, type ResourceShape, type Type } from "@grafctory/blue/resource";
 import {
 	date,
 	duration,
@@ -31,14 +31,14 @@ import {
 	timestamp,
 	url,
 	year
-} from "@metreeca/blue/string";
-import { eager, type Shape } from "@metreeca/blue/value";
-import { Button } from "@metreeca/clay-widgets/button";
-import { Icon } from "@metreeca/clay-widgets/icon";
-import { Link } from "@metreeca/clay-widgets/link";
-import { isArray, isString, type Lazy, opt, type Optional } from "@metreeca/core";
-import { base, type Lexicon } from "@metreeca/core/resource";
-import { equals } from "@metreeca/core/values";
+} from "@grafctory/blue/string";
+import { eager, type Shape } from "@grafctory/blue/value";
+import { Button } from "@grafctory/clay-widgets/button";
+import { Icon } from "@grafctory/clay-widgets/icon";
+import { Link } from "@grafctory/clay-widgets/link";
+import { isArray, isString, type Lazy, opt, type Optional } from "@grafctory/core";
+import { base, type Lexicon } from "@grafctory/core/resource";
+import { equals } from "@grafctory/core/values";
 import { type ComponentChildren } from "preact";
 import { useRef } from "preact/hooks";
 import { getDatatype, getDatatypeAnchor } from "./datatypes.core.js";

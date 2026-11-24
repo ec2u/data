@@ -15,17 +15,17 @@
  */
 
 import { offerings } from "@ec2u/data-shared/offerings/index.js";
-import { isArray, opt, type Optional } from "@metreeca/core";
-import { resolve } from "@metreeca/core/resource";
-import { clip } from "@metreeca/core/strings";
-import { type Feed, pipe, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { toArray } from "@metreeca/flow/sinks";
-import { flat, map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { createVault } from "@metreeca/gear/vault";
-import { fetch } from "@metreeca/pipe-url";
-import { log } from "@metreeca/tape";
+import { isArray, opt, type Optional } from "@grafctory/core";
+import { resolve } from "@grafctory/core/resource";
+import { clip } from "@grafctory/core/strings";
+import { type Feed, pipe, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { toArray } from "@grafctory/flow/sinks";
+import { flat, map } from "@grafctory/flow/tasks";
+import { service } from "@grafctory/gear";
+import { createVault } from "@grafctory/gear/vault";
+import { fetch } from "@grafctory/pipe-url";
+import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";
 import { type Draft, sync } from "../sinks/sync.js";
 import { course, type CourseRecord, program, type ProgramRecord, text } from "./salamanca.core.js";

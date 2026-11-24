@@ -15,18 +15,18 @@
  */
 
 import { getAcademicYear, offerings } from "@ec2u/data-shared/offerings/index.js";
-import { isArray, opt, type Optional } from "@metreeca/core";
-import { resolve } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { toArray } from "@metreeca/flow/sinks";
-import { flat, fork, map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { createVault } from "@metreeca/gear/vault";
-import { xml, xpath, type XPath } from "@metreeca/mime-xml";
-import { fetch } from "@metreeca/pipe-url";
-import { log } from "@metreeca/tape";
+import { isArray, opt, type Optional } from "@grafctory/core";
+import { resolve } from "@grafctory/core/resource";
+import { immutable } from "@grafctory/core/values";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { toArray } from "@grafctory/flow/sinks";
+import { flat, fork, map } from "@grafctory/flow/tasks";
+import { service } from "@grafctory/gear";
+import { createVault } from "@grafctory/gear/vault";
+import { xml, xpath, type XPath } from "@grafctory/mime-xml";
+import { fetch } from "@grafctory/pipe-url";
+import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";
 import { type CourseDraft, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";
 import { courses, type OfferRecord, type Page, pages, program, programs, qualify } from "./pavia.core.js";

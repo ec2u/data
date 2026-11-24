@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createNamespace } from "@metreeca/core/resource";
+import { createNamespace } from "@grafctory/core/resource";
 
 
 export const dct = createNamespace("http://purl.org/dc/terms/", [

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { opt } from "@metreeca/core";
-import type { Lexicon } from "@metreeca/core/resource";
+import { opt } from "@grafctory/core";
+import type { Lexicon } from "@grafctory/core/resource";
 import { type ComponentChildren, Fragment } from "preact";
 import { useId } from "preact/hooks";
 import { type Datatype, datatypes, getDatatypeAnchor } from "./datatypes.core.js";

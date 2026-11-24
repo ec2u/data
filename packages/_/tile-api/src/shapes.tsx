@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Lexicon } from "@metreeca/core/resource";
+import type { Lexicon } from "@grafctory/core/resource";
 import type { Endpoints } from "./endpoints.core.js";
 import { Models } from "./index.core.js";
 import { getModelHierarchy } from "./shapes.core.js";

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Icon } from "@metreeca/clay-widgets/icon";
-import { Routes } from "@metreeca/clay/router";
-import { immutable } from "@metreeca/core/values";
+import { Icon } from "@grafctory/clay-widgets/icon";
+import { Routes } from "@grafctory/clay/router";
+import { immutable } from "@grafctory/core/values";
 import { DocumentPage } from "./document.js";
 import { Feedback } from "./feedback.js";
 

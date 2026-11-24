@@ -20,14 +20,14 @@ import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { EventConcept } from "@ec2u/data-shared/taxonomies/events.js";
 import { University } from "@ec2u/data-shared/universities/index.js";
 import { SchemaEvent } from "@ec2u/data-shared/vocabularies/schema/event.js";
-import { dictionary } from "@metreeca/blue/dictionary";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import type { State } from "@metreeca/blue/value";
-import type { URLLike } from "@metreeca/core";
-import { resolve } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
-import type { Reference } from "@metreeca/qest/state";
+import { dictionary } from "@grafctory/blue/dictionary";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, optional, required, resource } from "@grafctory/blue/resource";
+import type { State } from "@grafctory/blue/value";
+import type { URLLike } from "@grafctory/core";
+import { resolve } from "@grafctory/core/resource";
+import { immutable } from "@grafctory/core/values";
+import type { Reference } from "@grafctory/qest/state";
 import * as uuid from "uuid";
 
 

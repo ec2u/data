@@ -14,10 +14,10 @@
   "scripts": {},
   "dependencies": {
     "@ec2u/data-shared": "*",
-    "@metreeca/clay-widgets": "^0.4.0",
-    "@metreeca/core": "^0.14.0",
-    "@metreeca/tile": "^0.10.0",
-    "@metreeca/tile-widgets": "^0.10.0",
+    "@grafctory/clay-widgets": "^0.4.0",
+    "@grafctory/core": "^0.14.0",
+    "@grafctory/tile": "^0.10.0",
+    "@grafctory/tile-widgets": "^0.10.0",
     "preact": "^10.29.8"
   }
 }

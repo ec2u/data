@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import type { ResourceShape } from "@metreeca/blue/resource";
-import { eager } from "@metreeca/blue/value";
-import { Link } from "@metreeca/clay-widgets/link";
-import { opt, type Optional } from "@metreeca/core";
-import type { Lexicon } from "@metreeca/core/resource";
+import type { ResourceShape } from "@grafctory/blue/resource";
+import { eager } from "@grafctory/blue/value";
+import { Link } from "@grafctory/clay-widgets/link";
+import { opt, type Optional } from "@grafctory/core";
+import type { Lexicon } from "@grafctory/core/resource";
 import { type ComponentChildren, Fragment } from "preact";
 import { getShapeInterface, type ShapeSignature } from "./declaration.core.js";
 import type { Endpoints } from "./endpoints.core.js";

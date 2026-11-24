@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { toArray } from "@metreeca/flow/sinks";
-import { flat, map } from "@metreeca/flow/tasks";
-import { html, xpath } from "@metreeca/mime-xml";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { toArray } from "@grafctory/flow/sinks";
+import { flat, map } from "@grafctory/flow/tasks";
+import { html, xpath } from "@grafctory/mime-xml";
 import { describe, expect, it } from "vitest";
 import { card, credits, period } from "./pavia-portal.core.js";
 

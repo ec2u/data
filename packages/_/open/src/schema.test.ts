@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { blank, graph, named, tagged, triple, typed } from "@metreeca/trio";
+import { blank, graph, named, tagged, triple, typed } from "@grafctory/trio";
 import { describe, expect, it } from "vitest";
 import { Schema, schema } from "./schema.js";
 

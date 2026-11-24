@@ -25,14 +25,14 @@ import {
 	opt,
 	type Optional,
 	type URLLike
-} from "@metreeca/core";
-import { type Some, some } from "@metreeca/core/arrays";
-import { type Markdown, markdown } from "@metreeca/core/strings";
-import { pipe, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { coalesce, map, trim } from "@metreeca/flow/tasks";
-import { denoise, focus, html, untag, unwrap } from "@metreeca/mime-xml";
-import { fetch } from "@metreeca/pipe-url";
+} from "@grafctory/core";
+import { type Some, some } from "@grafctory/core/arrays";
+import { type Markdown, markdown } from "@grafctory/core/strings";
+import { pipe, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { coalesce, map, trim } from "@grafctory/flow/tasks";
+import { denoise, focus, html, untag, unwrap } from "@grafctory/mime-xml";
+import { fetch } from "@grafctory/pipe-url";
 import { type AnyNode, cloneNode, type Element } from "domhandler";
 import { findAll } from "domutils";
 

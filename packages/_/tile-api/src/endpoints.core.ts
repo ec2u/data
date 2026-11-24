@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import type { ResourceShape } from "@metreeca/blue/resource";
-import { eager } from "@metreeca/blue/value";
-import type { Lazy } from "@metreeca/core";
+import type { ResourceShape } from "@grafctory/blue/resource";
+import { eager } from "@grafctory/blue/value";
+import type { Lazy } from "@grafctory/core";
 
 
 /**

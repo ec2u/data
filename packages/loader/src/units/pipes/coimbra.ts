@@ -15,16 +15,16 @@
  */
 
 import { coimbra } from "@ec2u/data-shared/index.core.js";
-import { isAny, isArray, isObject, isString, key, opt } from "@metreeca/core";
-import { multiple } from "@metreeca/core/arrays";
-import { immutable } from "@metreeca/core/values";
-import { pipe, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { distinct, flat, map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { createVault } from "@metreeca/gear/vault";
-import { fetch } from "@metreeca/pipe-url";
-import { log } from "@metreeca/tape";
+import { isAny, isArray, isObject, isString, key, opt } from "@grafctory/core";
+import { multiple } from "@grafctory/core/arrays";
+import { immutable } from "@grafctory/core/values";
+import { pipe, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { distinct, flat, map } from "@grafctory/flow/tasks";
+import { service } from "@grafctory/gear";
+import { createVault } from "@grafctory/gear/vault";
+import { fetch } from "@grafctory/pipe-url";
+import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";
 import { type Draft, sync } from "../sinks/sync.js";
 

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Link } from "@metreeca/clay-widgets/link";
-import { dedent } from "@metreeca/core/strings";
+import { Link } from "@grafctory/clay-widgets/link";
+import { dedent } from "@grafctory/core/strings";
 import { createElement } from "preact";
 import "./funded.css";
 

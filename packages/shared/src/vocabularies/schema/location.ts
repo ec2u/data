@@ -15,10 +15,10 @@
  */
 
 import { schema, SchemaThing } from "@ec2u/data-shared/vocabularies/schema/index.js";
-import { decimal } from "@metreeca/blue/number";
-import { nonempty, optional, required, resource } from "@metreeca/blue/resource";
-import { email, iri, phone, text } from "@metreeca/blue/string";
-import { union } from "@metreeca/blue/union";
+import { decimal } from "@grafctory/blue/number";
+import { nonempty, optional, required, resource } from "@grafctory/blue/resource";
+import { email, iri, phone, text } from "@grafctory/blue/string";
+import { union } from "@grafctory/blue/union";
 
 
 export function SchemaLocation() {

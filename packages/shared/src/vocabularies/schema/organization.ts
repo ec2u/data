@@ -16,8 +16,8 @@
 
 import { schema, SchemaThing } from "@ec2u/data-shared/vocabularies/schema/index.js";
 import { SchemaLocation } from "@ec2u/data-shared/vocabularies/schema/location.js";
-import { multiple, optional, resource } from "@metreeca/blue/resource";
-import { email, phone, text } from "@metreeca/blue/string";
+import { multiple, optional, resource } from "@grafctory/blue/resource";
+import { email, phone, text } from "@grafctory/blue/string";
 
 
 export function SchemaOrganization() {

@@ -15,19 +15,19 @@
  */
 
 import { Document } from "@ec2u/data-shared/documents/index.js";
-import { Markdown } from "@metreeca/clay-markdown/markdown";
-import { Button } from "@metreeca/clay-widgets/button";
-import { Empty } from "@metreeca/clay-widgets/empty";
-import { Heading } from "@metreeca/clay-widgets/heading";
-import { Icon } from "@metreeca/clay-widgets/icon";
-import { Infobox } from "@metreeca/clay-widgets/infobox";
-import { Link } from "@metreeca/clay-widgets/link";
-import { Path } from "@metreeca/clay-widgets/path";
-import { useRoute, useRouter } from "@metreeca/clay/router";
-import { opt } from "@metreeca/core";
-import { nameTag } from "@metreeca/core/language";
-import { useResource } from "@metreeca/tile/resource";
-import { date } from "@metreeca/tile/types/date";
+import { Markdown } from "@grafctory/clay-markdown/markdown";
+import { Button } from "@grafctory/clay-widgets/button";
+import { Empty } from "@grafctory/clay-widgets/empty";
+import { Heading } from "@grafctory/clay-widgets/heading";
+import { Icon } from "@grafctory/clay-widgets/icon";
+import { Infobox } from "@grafctory/clay-widgets/infobox";
+import { Link } from "@grafctory/clay-widgets/link";
+import { Path } from "@grafctory/clay-widgets/path";
+import { useRoute, useRouter } from "@grafctory/clay/router";
+import { opt } from "@grafctory/core";
+import { nameTag } from "@grafctory/core/language";
+import { useResource } from "@grafctory/tile/resource";
+import { date } from "@grafctory/tile/types/date";
 import { useEffect } from "preact/hooks";
 import { DatasetLink } from "../../widgets/datasets/dataset.js";
 import { address, filters, links, list } from "../../widgets/datasets/links.js";

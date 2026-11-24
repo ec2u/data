@@ -15,21 +15,21 @@
  */
 
 import { LabelLength } from "@ec2u/data-shared";
-import { Button } from "@metreeca/clay-widgets/button";
-import { Form } from "@metreeca/clay-widgets/form";
-import { Icon } from "@metreeca/clay-widgets/icon";
-import { Infobox } from "@metreeca/clay-widgets/infobox";
-import { Input } from "@metreeca/clay-widgets/input";
-import { Label } from "@metreeca/clay-widgets/label";
-import { Note } from "@metreeca/clay-widgets/note";
-import { Select } from "@metreeca/clay-widgets/select";
-import { Stack } from "@metreeca/clay-widgets/stack";
-import { Strip } from "@metreeca/clay-widgets/strip";
-import { Textarea } from "@metreeca/clay-widgets/textarea";
-import { useRouter } from "@metreeca/clay/router";
-import { opt } from "@metreeca/core";
-import { clip } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
+import { Button } from "@grafctory/clay-widgets/button";
+import { Form } from "@grafctory/clay-widgets/form";
+import { Icon } from "@grafctory/clay-widgets/icon";
+import { Infobox } from "@grafctory/clay-widgets/infobox";
+import { Input } from "@grafctory/clay-widgets/input";
+import { Label } from "@grafctory/clay-widgets/label";
+import { Note } from "@grafctory/clay-widgets/note";
+import { Select } from "@grafctory/clay-widgets/select";
+import { Stack } from "@grafctory/clay-widgets/stack";
+import { Strip } from "@grafctory/clay-widgets/strip";
+import { Textarea } from "@grafctory/clay-widgets/textarea";
+import { useRouter } from "@grafctory/clay/router";
+import { opt } from "@grafctory/core";
+import { clip } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
 import { useEffect, useState } from "preact/hooks";
 import { Page } from "../../widgets/page.js";
 import { datasets } from "../index.js";

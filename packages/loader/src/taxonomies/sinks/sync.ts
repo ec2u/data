@@ -17,19 +17,19 @@
 import { CommentLength, Entity, LabelLength } from "@ec2u/data-shared";
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Concept, getConceptId, Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
-import type { State } from "@metreeca/blue/value";
-import { opt } from "@metreeca/core";
-import { multiple, type Some } from "@metreeca/core/arrays";
-import { clip } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
-import { pipe, type Sink, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { toSet } from "@metreeca/flow/sinks";
-import { filter, fork, map, mix, tee } from "@metreeca/flow/tasks";
-import { compress, synopsis } from "@metreeca/llms/vectors";
-import { digest } from "@metreeca/mime-json";
-import { validate } from "@metreeca/mime-jsonld";
-import { delta, type Delta, lookup, retire, settle, type Tally } from "@metreeca/pipe-store";
+import type { State } from "@grafctory/blue/value";
+import { opt } from "@grafctory/core";
+import { multiple, type Some } from "@grafctory/core/arrays";
+import { clip } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
+import { pipe, type Sink, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { toSet } from "@grafctory/flow/sinks";
+import { filter, fork, map, mix, tee } from "@grafctory/flow/tasks";
+import { compress, synopsis } from "@grafctory/llms/vectors";
+import { digest } from "@grafctory/mime-json";
+import { validate } from "@grafctory/mime-jsonld";
+import { delta, type Delta, lookup, retire, settle, type Tally } from "@grafctory/pipe-store";
 import { getConceptEmbedding } from "../index.core.js";
 
 

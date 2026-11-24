@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import type { ResourceShape } from "@metreeca/blue/resource";
-import { eager } from "@metreeca/blue/value";
-import { type Lazy, opt, type Optional } from "@metreeca/core";
-import type { Lexicon } from "@metreeca/core/resource";
-import { equals } from "@metreeca/core/values";
+import type { ResourceShape } from "@grafctory/blue/resource";
+import { eager } from "@grafctory/blue/value";
+import { type Lazy, opt, type Optional } from "@grafctory/core";
+import type { Lexicon } from "@grafctory/core/resource";
+import { equals } from "@grafctory/core/values";
 import type { Endpoints } from "./endpoints.core.js";
 import { described, type ShapeMember, type ShapeType } from "./index.core.js";
 import { documented, linked, nameShape, type ShapeLink, shown, summarize } from "./shapes.core.js";

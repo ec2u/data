@@ -19,11 +19,11 @@ import { getConceptId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
 import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
 import { hours } from "@kxta/core/temporal.js";
-import { opt, type Optional } from "@metreeca/core";
-import { multiple } from "@metreeca/core/arrays";
-import { identifyTag } from "@metreeca/core/language";
-import { immutable } from "@metreeca/core/values";
-import { string, type Target, xpath, type XPath } from "@metreeca/mime-xml";
+import { opt, type Optional } from "@grafctory/core";
+import { multiple } from "@grafctory/core/arrays";
+import { identifyTag } from "@grafctory/core/language";
+import { immutable } from "@grafctory/core/values";
+import { string, type Target, xpath, type XPath } from "@grafctory/mime-xml";
 import type { CourseDraft, Dictionary, ProgramDraft } from "../sinks/sync.js";
 
 

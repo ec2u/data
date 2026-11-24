@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isNumber, isObject, isOptional, isString } from "@metreeca/core";
+import { isNumber, isObject, isOptional, isString } from "@grafctory/core";
 
 
 /**

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { worker } from "@metreeca/gate/worker";
+import { worker } from "@grafctory/gate/worker";
 import { Router } from "express";
 import { CoimbraUniversity } from "./pipes/coimbra-university.js";
 import { IasiUniversity360 } from "./pipes/iasi-university-360.js";

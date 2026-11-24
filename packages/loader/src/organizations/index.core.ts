@@ -15,11 +15,11 @@
  */
 
 import { organizations, Organizations } from "@ec2u/data-shared/organizations/index.js";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { map } from "@metreeca/flow/tasks";
-import { validate } from "@metreeca/mime-jsonld";
-import { delta, settle } from "@metreeca/pipe-store";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { map } from "@grafctory/flow/tasks";
+import { validate } from "@grafctory/mime-jsonld";
+import { delta, settle } from "@grafctory/pipe-store";
 import { execute } from "../index.core.js";
 
 

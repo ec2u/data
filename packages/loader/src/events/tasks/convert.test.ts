@@ -16,11 +16,11 @@
 
 import type { Event } from "@ec2u/data-shared/events/index.js";
 import { universities } from "@ec2u/data-shared/universities/index.js";
-import type { State } from "@metreeca/blue/value";
-import { resolve } from "@metreeca/core/resource";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { toArray } from "@metreeca/flow/sinks";
+import type { State } from "@grafctory/blue/value";
+import { resolve } from "@grafctory/core/resource";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { toArray } from "@grafctory/flow/sinks";
 import { describe, expect, it } from "vitest";
 import type { Classified } from "./classify.js";
 import { convert } from "./convert.js";

@@ -18,13 +18,13 @@ import { base, Dataset, EC2U, ec2u, harvested, licenses, Place } from "@ec2u/dat
 import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { OrgFormalOrganization } from "@ec2u/data-shared/vocabularies/org.js";
 import { skos } from "@ec2u/data-shared/vocabularies/skos.js";
-import { int } from "@metreeca/blue/number";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, nonempty, required, resource } from "@metreeca/blue/resource";
-import { iri, text, year } from "@metreeca/blue/string";
-import type { State } from "@metreeca/blue/value";
-import { resolve } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
+import { int } from "@grafctory/blue/number";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, nonempty, required, resource } from "@grafctory/blue/resource";
+import { iri, text, year } from "@grafctory/blue/string";
+import type { State } from "@grafctory/blue/value";
+import { resolve } from "@grafctory/core/resource";
+import { immutable } from "@grafctory/core/values";
 
 
 export const universities = immutable({

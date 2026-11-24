@@ -22,11 +22,11 @@ import { iscedf2013 } from "@ec2u/data-shared/taxonomies/isced-f-2013.js";
 import { sdgs } from "@ec2u/data-shared/taxonomies/sdgs.js";
 import { stakeholders } from "@ec2u/data-shared/taxonomies/stakeholders.js";
 import { hours } from "@kxta/core/temporal.js";
-import { opt, type Optional } from "@metreeca/core";
-import { multiple } from "@metreeca/core/arrays";
-import { isIRI, resolve } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
-import { log } from "@metreeca/tape";
+import { opt, type Optional } from "@grafctory/core";
+import { multiple } from "@grafctory/core/arrays";
+import { isIRI, resolve } from "@grafctory/core/resource";
+import { immutable } from "@grafctory/core/values";
+import { log } from "@grafctory/tape";
 import type { CourseDraft, Dictionary, Draft, ProgramDraft } from "../sinks/sync.js";
 
 

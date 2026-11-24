@@ -15,7 +15,7 @@
  */
 
 import { Concept, Taxonomies, Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
-import { driver } from "@metreeca/gate/driver";
+import { driver } from "@grafctory/gate/driver";
 import { Router } from "express";
 
 

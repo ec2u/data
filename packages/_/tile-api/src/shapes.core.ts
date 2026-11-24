@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { model } from "@metreeca/blue";
-import type { Member, Members, ResourceShape } from "@metreeca/blue/resource";
-import { eager, type Shape } from "@metreeca/blue/value";
-import { error, isString, type Lazy, opt, type Optional } from "@metreeca/core";
-import type { Tag } from "@metreeca/core/language";
-import { by, locale } from "@metreeca/core/order";
-import { compact, type Lexicon } from "@metreeca/core/resource";
-import { dedent, summary } from "@metreeca/core/strings";
-import { equals } from "@metreeca/core/values";
+import { model } from "@grafctory/blue";
+import type { Member, Members, ResourceShape } from "@grafctory/blue/resource";
+import { eager, type Shape } from "@grafctory/blue/value";
+import { error, isString, type Lazy, opt, type Optional } from "@grafctory/core";
+import type { Tag } from "@grafctory/core/language";
+import { by, locale } from "@grafctory/core/order";
+import { compact, type Lexicon } from "@grafctory/core/resource";
+import { dedent, summary } from "@grafctory/core/strings";
+import { equals } from "@grafctory/core/values";
 import { type Endpoints, getContainers } from "./endpoints.core.js";
 
 
@@ -572,7 +572,7 @@ type Declared = readonly [term: string, member: Member];
 
 /**
  * The documented model served at a set of routes: the shapes reachable from the route shapes, as listed by their
- * {@link @metreeca/blue!model model}, and the identifier of each of them documented on a page of its own.
+ * {@link @grafctory/blue!model model}, and the identifier of each of them documented on a page of its own.
  */
 type Catalogue = {
 

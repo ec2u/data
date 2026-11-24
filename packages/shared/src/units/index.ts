@@ -20,13 +20,13 @@ import { EuroSciVocConcept } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
 import { dcat } from "@ec2u/data-shared/vocabularies/dcat.js";
 import { dct } from "@ec2u/data-shared/vocabularies/dct.js";
 import { OrgOrganizationalUnit } from "@ec2u/data-shared/vocabularies/org.js";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, nonempty, optional, resource } from "@metreeca/blue/resource";
-import { string, text } from "@metreeca/blue/string";
-import { resolve } from "@metreeca/core/resource";
-import { markdown } from "@metreeca/core/strings";
-import { immutable } from "@metreeca/core/values";
-import type { Reference } from "@metreeca/qest/state";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, nonempty, optional, resource } from "@grafctory/blue/resource";
+import { string, text } from "@grafctory/blue/string";
+import { resolve } from "@grafctory/core/resource";
+import { markdown } from "@grafctory/core/strings";
+import { immutable } from "@grafctory/core/values";
+import type { Reference } from "@grafctory/qest/state";
 import * as uuid from "uuid";
 
 

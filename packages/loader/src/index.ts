@@ -16,10 +16,10 @@
 
 import * as ec2u from "@ec2u/data-shared";
 import { second } from "@kxta/core/temporal.js";
-import { server } from "@metreeca/gate";
-import { service } from "@metreeca/gear";
-import { gcp } from "@metreeca/gear-gcp";
-import { createStore } from "@metreeca/pipe-store";
+import { server } from "@grafctory/gate";
+import { service } from "@grafctory/gear";
+import { gcp } from "@grafctory/gear-gcp";
+import { createStore } from "@grafctory/pipe-store";
 import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
 import { execute } from "./index.core.js";

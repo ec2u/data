@@ -15,11 +15,11 @@
  */
 
 import { base, languages, partners } from "@ec2u/data-shared";
-import { Link } from "@metreeca/clay-widgets/link";
-import { opt, type Optional } from "@metreeca/core";
-import { inferTag, nameTag, type Tag } from "@metreeca/core/language";
-import { by, locale } from "@metreeca/core/order";
-import { getIRIHost, internalize, resolve } from "@metreeca/core/resource";
+import { Link } from "@grafctory/clay-widgets/link";
+import { opt, type Optional } from "@grafctory/core";
+import { inferTag, nameTag, type Tag } from "@grafctory/core/language";
+import { by, locale } from "@grafctory/core/order";
+import { getIRIHost, internalize, resolve } from "@grafctory/core/resource";
 import { type ComponentChildren, createElement } from "preact";
 import "./links.css";
 

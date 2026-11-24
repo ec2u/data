@@ -15,14 +15,14 @@
  */
 
 import { poitiers } from "@ec2u/data-shared/index.core.js";
-import { isAny, isArray, isObject, isString, key, opt, type URLLike } from "@metreeca/core";
-import { multiple } from "@metreeca/core/arrays";
-import { immutable } from "@metreeca/core/values";
-import { pipe, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { flat, map } from "@metreeca/flow/tasks";
-import { fetch } from "@metreeca/pipe-url";
-import { log } from "@metreeca/tape";
+import { isAny, isArray, isObject, isString, key, opt, type URLLike } from "@grafctory/core";
+import { multiple } from "@grafctory/core/arrays";
+import { immutable } from "@grafctory/core/values";
+import { pipe, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { flat, map } from "@grafctory/flow/tasks";
+import { fetch } from "@grafctory/pipe-url";
+import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";
 import { type Draft, type Name, sync } from "../sinks/sync.js";
 

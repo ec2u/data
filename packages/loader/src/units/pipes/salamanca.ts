@@ -15,19 +15,19 @@
  */
 
 import { salamanca } from "@ec2u/data-shared/index.core.js";
-import { isAny, isArray, isNumber, isObject, isString, key, opt } from "@metreeca/core";
-import { multiple } from "@metreeca/core/arrays";
-import { immutable } from "@metreeca/core/values";
-import { pipe, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { toArray } from "@metreeca/flow/sinks";
-import { distinct, flat, map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { createVault } from "@metreeca/gear/vault";
-import { csv } from "@metreeca/mime-csv";
-import { fetch } from "@metreeca/pipe-url";
-import type { Reference } from "@metreeca/qest/state";
-import { log } from "@metreeca/tape";
+import { isAny, isArray, isNumber, isObject, isString, key, opt } from "@grafctory/core";
+import { multiple } from "@grafctory/core/arrays";
+import { immutable } from "@grafctory/core/values";
+import { pipe, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { toArray } from "@grafctory/flow/sinks";
+import { distinct, flat, map } from "@grafctory/flow/tasks";
+import { service } from "@grafctory/gear";
+import { createVault } from "@grafctory/gear/vault";
+import { csv } from "@grafctory/mime-csv";
+import { fetch } from "@grafctory/pipe-url";
+import type { Reference } from "@grafctory/qest/state";
+import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";
 import { VirtualInstitutes } from "../index.core.js";
 import { type Draft, type Name, sync } from "../sinks/sync.js";

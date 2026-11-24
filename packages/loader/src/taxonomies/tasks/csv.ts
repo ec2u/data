@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { opt, type URLLike } from "@metreeca/core";
-import { multiple, optional, required } from "@metreeca/core/arrays";
-import { immutable } from "@metreeca/core/values";
-import { pipe, type Task } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { map } from "@metreeca/flow/tasks";
-import { csv as parse, type Record } from "@metreeca/mime-csv";
-import { fetch } from "@metreeca/pipe-url";
+import { opt, type URLLike } from "@grafctory/core";
+import { multiple, optional, required } from "@grafctory/core/arrays";
+import { immutable } from "@grafctory/core/values";
+import { pipe, type Task } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { map } from "@grafctory/flow/tasks";
+import { csv as parse, type Record } from "@grafctory/mime-csv";
+import { fetch } from "@grafctory/pipe-url";
 import type { Draft } from "../sinks/sync.js";
 
 

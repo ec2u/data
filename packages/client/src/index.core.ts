@@ -21,8 +21,8 @@ import { events } from "@ec2u/data-shared/events/index.js";
 import { programs } from "@ec2u/data-shared/programs/index.js";
 import { units } from "@ec2u/data-shared/units/index.js";
 import { universities } from "@ec2u/data-shared/universities/index.js";
-import { by } from "@metreeca/core/order";
-import { internalize, type IRI } from "@metreeca/core/resource";
+import { by } from "@grafctory/core/order";
+import { internalize, type IRI } from "@grafctory/core/resource";
 
 
 /**

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { worker } from "@metreeca/gate/worker";
+import { worker } from "@grafctory/gate/worker";
 import { Router } from "express";
 import { Coimbra } from "./pipes/coimbra.js";
 import { Jena } from "./pipes/jena.js";

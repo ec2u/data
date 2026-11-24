@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Link } from "@metreeca/clay-widgets/link";
-import { opt } from "@metreeca/core";
-import type { Lexicon } from "@metreeca/core/resource";
+import { Link } from "@grafctory/clay-widgets/link";
+import { opt } from "@grafctory/core";
+import type { Lexicon } from "@grafctory/core/resource";
 import type { Endpoints } from "./endpoints.core.js";
 import { getEndpointAnchor, getEndpointDepth } from "./endpoints.core.js";
 import { Listing } from "./index.core.js";

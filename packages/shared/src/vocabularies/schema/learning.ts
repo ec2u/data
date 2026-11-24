@@ -20,13 +20,13 @@ import { SchemaEventAttendanceModeEnumeration } from "@ec2u/data-shared/vocabula
 import { schema, SchemaThing } from "@ec2u/data-shared/vocabularies/schema/index.js";
 import { SchemaOrganization } from "@ec2u/data-shared/vocabularies/schema/organization.js";
 import { SKOSConcept } from "@ec2u/data-shared/vocabularies/skos.js";
-import { boolean } from "@metreeca/blue/boolean";
-import { dictionary } from "@metreeca/blue/dictionary";
-import { decimal } from "@metreeca/blue/number";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { duration, string, tag, text } from "@metreeca/blue/string";
-import { markdown } from "@metreeca/core/strings";
+import { boolean } from "@grafctory/blue/boolean";
+import { dictionary } from "@grafctory/blue/dictionary";
+import { decimal } from "@grafctory/blue/number";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, optional, required, resource } from "@grafctory/blue/resource";
+import { duration, string, tag, text } from "@grafctory/blue/string";
+import { markdown } from "@grafctory/core/strings";
 
 
 export function SchemaCredentialCategory() {

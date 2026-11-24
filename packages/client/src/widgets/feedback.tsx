@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Button } from "@metreeca/clay-widgets/button";
-import { Icon } from "@metreeca/clay-widgets/icon";
-import { Link } from "@metreeca/clay-widgets/link";
-import { Strip } from "@metreeca/clay-widgets/strip";
-import { Style } from "@metreeca/clay-widgets/style";
-import { useTitle } from "@metreeca/clay/router";
+import { Button } from "@grafctory/clay-widgets/button";
+import { Icon } from "@grafctory/clay-widgets/icon";
+import { Link } from "@grafctory/clay-widgets/link";
+import { Strip } from "@grafctory/clay-widgets/strip";
+import { Style } from "@grafctory/clay-widgets/style";
+import { useTitle } from "@grafctory/clay/router";
 import { feedback } from "../pages/about/feedback.js";
 
 

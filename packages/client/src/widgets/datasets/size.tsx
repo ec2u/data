@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import type { ResourceShape } from "@metreeca/blue/resource";
-import { Path } from "@metreeca/clay-widgets/path";
-import { Style } from "@metreeca/clay-widgets/style";
-import type { Lazy } from "@metreeca/core";
-import { Count } from "@metreeca/tile-widgets/count";
-import type { Collection, Collections } from "@metreeca/tile/collection";
-import { useCount } from "@metreeca/tile/count";
+import type { ResourceShape } from "@grafctory/blue/resource";
+import { Path } from "@grafctory/clay-widgets/path";
+import { Style } from "@grafctory/clay-widgets/style";
+import type { Lazy } from "@grafctory/core";
+import { Count } from "@grafctory/tile-widgets/count";
+import type { Collection, Collections } from "@grafctory/tile/collection";
+import { useCount } from "@grafctory/tile/count";
 
 
 /**

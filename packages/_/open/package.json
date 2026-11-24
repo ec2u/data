@@ -11,9 +11,9 @@
     }
   },
   "dependencies": {
-    "@metreeca/blue": "^0.15.0",
-    "@metreeca/core": "^0.14.0",
-    "@metreeca/trio": "^0.3.0"
+    "@grafctory/blue": "^0.15.0",
+    "@grafctory/core": "^0.14.0",
+    "@grafctory/trio": "^0.3.0"
   },
   "scripts": {
     "build": "tsc -b tsconfig.build.json"

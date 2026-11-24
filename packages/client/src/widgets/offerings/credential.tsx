@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Markdown } from "@metreeca/clay-markdown/markdown";
-import { Stack } from "@metreeca/clay-widgets/stack";
+import { Markdown } from "@grafctory/clay-markdown/markdown";
+import { Stack } from "@grafctory/clay-widgets/stack";
 import { address } from "../datasets/links.js";
 
 

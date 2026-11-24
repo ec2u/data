@@ -15,7 +15,7 @@
  */
 
 
-import { resource } from "@metreeca/blue/resource";
+import { resource } from "@grafctory/blue/resource";
 import { describe, expect, it } from "vitest";
 import {
 	type Endpoints,

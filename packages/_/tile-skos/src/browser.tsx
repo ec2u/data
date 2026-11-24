@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Icon } from "@metreeca/clay-widgets/icon";
-import { Stack } from "@metreeca/clay-widgets/stack";
-import { Search } from "@metreeca/tile-widgets/search";
+import { Icon } from "@grafctory/clay-widgets/icon";
+import { Stack } from "@grafctory/clay-widgets/stack";
+import { Search } from "@grafctory/tile-widgets/search";
 import { createElement } from "preact";
 import type { SKOSEntry } from "./concepts.core.js";
 import { SKOSConcepts } from "./concepts.js";

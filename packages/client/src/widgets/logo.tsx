@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { app } from "@metreeca/clay";
-import { Link } from "@metreeca/clay-widgets/link";
+import { app } from "@grafctory/clay";
+import { Link } from "@grafctory/clay-widgets/link";
 import { createElement } from "preact";
 import { ec2u } from "../index.core.js";
 import "./logo.css";

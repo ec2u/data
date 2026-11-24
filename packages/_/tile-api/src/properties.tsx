@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import type { ResourceShape } from "@metreeca/blue/resource";
-import { Markdown } from "@metreeca/clay-markdown/markdown";
-import { Button } from "@metreeca/clay-widgets/button";
-import { Icon } from "@metreeca/clay-widgets/icon";
-import { Link } from "@metreeca/clay-widgets/link";
-import { opt } from "@metreeca/core";
-import type { Lexicon } from "@metreeca/core/resource";
-import { details, summary } from "@metreeca/core/strings";
+import type { ResourceShape } from "@grafctory/blue/resource";
+import { Markdown } from "@grafctory/clay-markdown/markdown";
+import { Button } from "@grafctory/clay-widgets/button";
+import { Icon } from "@grafctory/clay-widgets/icon";
+import { Link } from "@grafctory/clay-widgets/link";
+import { opt } from "@grafctory/core";
+import type { Lexicon } from "@grafctory/core/resource";
+import { details, summary } from "@grafctory/core/strings";
 import { type ComponentChildren, Fragment } from "preact";
 import { useId, useState } from "preact/hooks";
 import { getDatatype } from "./datatypes.core.js";

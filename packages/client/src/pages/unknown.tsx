@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Button } from "@metreeca/clay-widgets/button";
-import { Empty } from "@metreeca/clay-widgets/empty";
-import { Icon } from "@metreeca/clay-widgets/icon";
-import { useRouter } from "@metreeca/clay/router";
-import { immutable } from "@metreeca/core/values";
+import { Button } from "@grafctory/clay-widgets/button";
+import { Empty } from "@grafctory/clay-widgets/empty";
+import { Icon } from "@grafctory/clay-widgets/icon";
+import { useRouter } from "@grafctory/clay/router";
+import { immutable } from "@grafctory/core/values";
 import { Page } from "../widgets/page.js";
 import { datasets } from "./index.js";
 

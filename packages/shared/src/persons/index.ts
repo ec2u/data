@@ -19,12 +19,12 @@ import { Organization } from "@ec2u/data-shared/organizations/index.js";
 import { Resource } from "@ec2u/data-shared/resources/index.js";
 import { FOAFPerson } from "@ec2u/data-shared/vocabularies/foaf.js";
 import { org } from "@ec2u/data-shared/vocabularies/org.js";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, resource } from "@metreeca/blue/resource";
-import { iri } from "@metreeca/blue/string";
-import { resolve } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
-import type { Reference } from "@metreeca/qest/state";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, optional, resource } from "@grafctory/blue/resource";
+import { iri } from "@grafctory/blue/string";
+import { resolve } from "@grafctory/core/resource";
+import { immutable } from "@grafctory/core/values";
+import type { Reference } from "@grafctory/qest/state";
 import * as uuid from "uuid";
 
 

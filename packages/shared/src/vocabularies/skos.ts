@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { dictionary } from "@metreeca/blue/dictionary";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, optional, required, resource } from "@metreeca/blue/resource";
-import { string } from "@metreeca/blue/string";
-import { createNamespace } from "@metreeca/core/resource";
-import { markdown } from "@metreeca/core/strings";
+import { dictionary } from "@grafctory/blue/dictionary";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, optional, required, resource } from "@grafctory/blue/resource";
+import { string } from "@grafctory/blue/string";
+import { createNamespace } from "@grafctory/core/resource";
+import { markdown } from "@grafctory/core/strings";
 
 
 export const skos = createNamespace("http://www.w3.org/2004/02/skos/core#", [

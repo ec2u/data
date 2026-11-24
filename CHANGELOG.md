@@ -66,6 +66,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Upgrade `@metreeca/blue` and `@metreeca/qest` to `^0.15.0`, `@metreeca/clay*` to `^0.4.0`, `@metreeca/gate` to
   `^0.14.0`, `@metreeca/gear*` to `^0.6.0`, `@metreeca/mime-*` to `^0.5.0`, `@metreeca/pipe-*` to `^0.14.0` and
   `@metreeca/tile*` to `^0.10.0`, each installed as a single copy shared by the client, the server and the loader
+- Framework packages come from the `@grafctory` scope, where the `@metreeca` packages moved under the same versions;
+	local development links the checkouts held under `~/Metreeca/Grafctory`
 - Catalogue addresses carry their filters in plain form, without quoting, so shared links read as they are typed;
   addresses bookmarked or shared earlier keep opening the same filtered catalogue
 - The development environment is named `edge` in place of `yard`, across its branch, its default environment and the

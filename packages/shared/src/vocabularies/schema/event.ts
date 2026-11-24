@@ -18,10 +18,10 @@ import { schema, SchemaThing } from "@ec2u/data-shared/vocabularies/schema/index
 import { SchemaLocation } from "@ec2u/data-shared/vocabularies/schema/location.js";
 import { SchemaOrganization } from "@ec2u/data-shared/vocabularies/schema/organization.js";
 import { SKOSConcept } from "@ec2u/data-shared/vocabularies/skos.js";
-import { boolean } from "@metreeca/blue/boolean";
-import { reference } from "@metreeca/blue/reference";
-import { multiple, nonempty, optional, required, resource } from "@metreeca/blue/resource";
-import { instant, iri, string, tag } from "@metreeca/blue/string";
+import { boolean } from "@grafctory/blue/boolean";
+import { reference } from "@grafctory/blue/reference";
+import { multiple, nonempty, optional, required, resource } from "@grafctory/blue/resource";
+import { instant, iri, string, tag } from "@grafctory/blue/string";
 
 
 export function SchemaEventStatusType() {

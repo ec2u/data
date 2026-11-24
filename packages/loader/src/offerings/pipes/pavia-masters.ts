@@ -15,10 +15,10 @@
  */
 
 import { offerings } from "@ec2u/data-shared/offerings/index.js";
-import { resolve } from "@metreeca/core/resource";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { map, trim } from "@metreeca/flow/tasks";
+import { resolve } from "@grafctory/core/resource";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { map, trim } from "@grafctory/flow/tasks";
 import { execute } from "../../index.core.js";
 import { crawl } from "../sinks/crawl.js";
 import { lead } from "./pavia-masters.core.js";

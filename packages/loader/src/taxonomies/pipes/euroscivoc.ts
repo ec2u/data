@@ -15,8 +15,8 @@
  */
 
 import { euroscivoc, publicationsOffice } from "@ec2u/data-shared/taxonomies/euroscivoc.js";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
 import { execute } from "../../index.core.js";
 import { sync } from "../sinks/sync.js";
 import { fill } from "../tasks/fill.js";

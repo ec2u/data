@@ -15,8 +15,8 @@
  */
 
 import { umea } from "@ec2u/data-shared/index.core.js";
-import { isIRI } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
+import { isIRI } from "@grafctory/core/resource";
+import { immutable } from "@grafctory/core/values";
 import type { Lead } from "../sinks/crawl.js";
 import type { Draft } from "../sinks/sync.js";
 

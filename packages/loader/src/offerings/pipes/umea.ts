@@ -15,13 +15,13 @@
  */
 
 import { offerings } from "@ec2u/data-shared/offerings/index.js";
-import { resolve } from "@metreeca/core/resource";
-import { type Feed, pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { flat, map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { createVault } from "@metreeca/gear/vault";
-import { fetch } from "@metreeca/pipe-url";
+import { resolve } from "@grafctory/core/resource";
+import { type Feed, pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { flat, map } from "@grafctory/flow/tasks";
+import { service } from "@grafctory/gear";
+import { createVault } from "@grafctory/gear/vault";
+import { fetch } from "@grafctory/pipe-url";
 import { execute } from "../../index.core.js";
 import { crawl, type Lead } from "../sinks/crawl.js";
 import type { Draft } from "../sinks/sync.js";

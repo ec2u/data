@@ -17,8 +17,8 @@
 import { pavia } from "@ec2u/data-shared/index.core.js";
 import { getConceptId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { opt, type Optional } from "@metreeca/core";
-import { immutable } from "@metreeca/core/values";
+import { opt, type Optional } from "@grafctory/core";
+import { immutable } from "@grafctory/core/values";
 import type { Lead } from "../sinks/crawl.js";
 import { type Card, credits } from "./pavia-portal.core.js";
 

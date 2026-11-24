@@ -15,14 +15,14 @@
  */
 
 import { offerings } from "@ec2u/data-shared/offerings/index.js";
-import { resolve } from "@metreeca/core/resource";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { distinct, flat, map } from "@metreeca/flow/tasks";
-import { service } from "@metreeca/gear";
-import { createVault } from "@metreeca/gear/vault";
-import { csv } from "@metreeca/mime-csv";
-import { fetch } from "@metreeca/pipe-url";
+import { resolve } from "@grafctory/core/resource";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { distinct, flat, map } from "@grafctory/flow/tasks";
+import { service } from "@grafctory/gear";
+import { createVault } from "@grafctory/gear/vault";
+import { csv } from "@grafctory/mime-csv";
+import { fetch } from "@grafctory/pipe-url";
 import { execute } from "../../index.core.js";
 import { identify, sync } from "../sinks/sync.js";
 import { row } from "./lll.core.js";

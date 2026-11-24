@@ -36,8 +36,8 @@
  * @see {@link https://www.mediawiki.org/wiki/Wikibase/Indexing/RDF_Dump_Format Wikibase RDF Dump Format}
  */
 
-import { createNamespace, type IRI } from "@metreeca/core/resource";
-import { rdfs } from "@metreeca/trio";
+import { createNamespace, type IRI } from "@grafctory/core/resource";
+import { rdfs } from "@grafctory/trio";
 import { skos } from "./skos.js";
 
 

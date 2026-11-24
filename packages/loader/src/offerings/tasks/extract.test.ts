@@ -17,10 +17,10 @@
 import { umea } from "@ec2u/data-shared/index.core.js";
 import { getConceptId } from "@ec2u/data-shared/taxonomies/index.js";
 import { isced2011 } from "@ec2u/data-shared/taxonomies/isced-2011.js";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { toArray } from "@metreeca/flow/sinks";
-import { validate } from "@metreeca/mime-jsonld";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { toArray } from "@grafctory/flow/sinks";
+import { validate } from "@grafctory/mime-jsonld";
 import { describe, expect, it } from "vitest";
 import type { CourseDraft, ProgramDraft } from "../sinks/sync.js";
 import { drafted, Reported } from "./extract.js";

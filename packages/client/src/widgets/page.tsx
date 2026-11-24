@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Style } from "@metreeca/clay-widgets/style";
-import { Tool } from "@metreeca/clay-widgets/tool";
-import { useFetching } from "@metreeca/clay/fetch";
+import { Style } from "@grafctory/clay-widgets/style";
+import { Tool } from "@grafctory/clay-widgets/tool";
+import { useFetching } from "@grafctory/clay/fetch";
 import { type ComponentChildren, h } from "preact";
 import "./page.css";
 import { Feedback } from "./feedback.js";

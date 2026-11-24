@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Link } from "@metreeca/clay-widgets/link";
-import type { Lexicon } from "@metreeca/core/resource";
+import { Link } from "@grafctory/clay-widgets/link";
+import type { Lexicon } from "@grafctory/core/resource";
 import { Listing } from "./index.core.js";
 import "./index.css";
 

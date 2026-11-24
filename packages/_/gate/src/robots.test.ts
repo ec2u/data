@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { URLLike } from "@metreeca/core";
+import type { URLLike } from "@grafctory/core";
 import express from "express";
 import { type IncomingMessage, request } from "node:http";
 import type { AddressInfo } from "node:net";

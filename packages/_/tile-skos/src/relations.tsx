@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { Infobox } from "@metreeca/clay-widgets/infobox";
-import { Link } from "@metreeca/clay-widgets/link";
-import { Strip } from "@metreeca/clay-widgets/strip";
-import { by, locale } from "@metreeca/core/order";
+import { Infobox } from "@grafctory/clay-widgets/infobox";
+import { Link } from "@grafctory/clay-widgets/link";
+import { Strip } from "@grafctory/clay-widgets/strip";
+import { by, locale } from "@grafctory/core/order";
 import type { SKOSEntry } from "./concepts.core.js";
 import { SKOSConcepts } from "./concepts.js";
 import { SKOSLineage } from "./lineage.js";

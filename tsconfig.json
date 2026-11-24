@@ -22,7 +22,7 @@
     "skipLibCheck": true,
     "customConditions": [
       "@ec2u/source",
-      "@metreeca/source"
+      "@grafctory/source"
     ],
     "noEmit": true
   },

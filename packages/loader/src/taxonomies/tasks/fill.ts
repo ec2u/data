@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { opt } from "@metreeca/core";
-import type { Task } from "@metreeca/flow";
-import { map } from "@metreeca/flow/tasks";
+import { opt } from "@grafctory/core";
+import type { Task } from "@grafctory/flow";
+import { map } from "@grafctory/flow/tasks";
 import type { Draft } from "../sinks/sync.js";
 
 

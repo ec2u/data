@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import { symlinks } from "@metreeca/rack/vite";
+import { symlinks } from "@grafctory/rack/vite";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
 
 	plugins: [ // linked packages from their sources, so tests need no prior build
-		symlinks({ conditions: ["@ec2u/source", "@metreeca/source"] })
+		symlinks({ conditions: ["@ec2u/source", "@grafctory/source"] })
 	],
 
 	test: {
 
 		server: {
 			deps: {
-				inline: [/@metreeca\/(clay|tile)-/] // published widget builds import their stylesheets, which Node
+				inline: [/@grafctory\/(clay|tile)-/] // published widget builds import their stylesheets, which Node
 													// cannot load
 			}
 		},

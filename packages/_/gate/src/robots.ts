@@ -20,7 +20,7 @@
  * @module
  */
 
-import type { URLLike } from "@metreeca/core";
+import type { URLLike } from "@grafctory/core";
 import type { RequestHandler } from "express";
 
 

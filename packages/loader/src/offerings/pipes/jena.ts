@@ -15,15 +15,15 @@
  */
 
 import { offerings } from "@ec2u/data-shared/offerings/index.js";
-import { opt, type Optional, type Value } from "@metreeca/core";
-import { resolve } from "@metreeca/core/resource";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { toArray } from "@metreeca/flow/sinks";
-import { distinct, flat, fork, map } from "@metreeca/flow/tasks";
-import { html, link, unwrap, xpath } from "@metreeca/mime-xml";
-import { fetch } from "@metreeca/pipe-url";
-import { log } from "@metreeca/tape";
+import { opt, type Optional, type Value } from "@grafctory/core";
+import { resolve } from "@grafctory/core/resource";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { toArray } from "@grafctory/flow/sinks";
+import { distinct, flat, fork, map } from "@grafctory/flow/tasks";
+import { html, link, unwrap, xpath } from "@grafctory/mime-xml";
+import { fetch } from "@grafctory/pipe-url";
+import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";
 import { type ProgramDraft, sync } from "../sinks/sync.js";
 import { program } from "./jena.core.js";

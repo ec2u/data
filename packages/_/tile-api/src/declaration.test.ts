@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { dictionary } from "@metreeca/blue/dictionary";
-import { reference } from "@metreeca/blue/reference";
-import { id, multiple, property, required, resource, type } from "@metreeca/blue/resource";
-import { string } from "@metreeca/blue/string";
-import { createLexicon } from "@metreeca/core/resource";
+import { dictionary } from "@grafctory/blue/dictionary";
+import { reference } from "@grafctory/blue/reference";
+import { id, multiple, property, required, resource, type } from "@grafctory/blue/resource";
+import { string } from "@grafctory/blue/string";
+import { createLexicon } from "@grafctory/core/resource";
 import { describe, expect, it } from "vitest";
 import { getShapeInterface } from "./declaration.core.js";
 import type { Endpoints } from "./endpoints.core.js";

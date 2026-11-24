@@ -15,12 +15,12 @@
  */
 
 import { offerings } from "@ec2u/data-shared/offerings/index.js";
-import { resolve } from "@metreeca/core/resource";
-import { clip } from "@metreeca/core/strings";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { flat, map } from "@metreeca/flow/tasks";
-import { log } from "@metreeca/tape";
+import { resolve } from "@grafctory/core/resource";
+import { clip } from "@grafctory/core/strings";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { flat, map } from "@grafctory/flow/tasks";
+import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";
 import { type ProgramDraft, sync } from "../sinks/sync.js";
 import { type Entry, program } from "./poitiers.core.js";

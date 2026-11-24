@@ -16,12 +16,12 @@
 
 import { turku } from "@ec2u/data-shared/index.core.js";
 import { organizations } from "@ec2u/data-shared/organizations/index.js";
-import { immutable } from "@metreeca/core/values";
-import { pipe } from "@metreeca/flow";
-import { items } from "@metreeca/flow/feeds";
-import { fork, map } from "@metreeca/flow/tasks";
-import { html, link, xpath } from "@metreeca/mime-xml";
-import { crawl, fetch } from "@metreeca/pipe-url";
+import { immutable } from "@grafctory/core/values";
+import { pipe } from "@grafctory/flow";
+import { items } from "@grafctory/flow/feeds";
+import { fork, map } from "@grafctory/flow/tasks";
+import { html, link, xpath } from "@grafctory/mime-xml";
+import { crawl, fetch } from "@grafctory/pipe-url";
 import { execute } from "../../index.core.js";
 import { sync } from "../sinks/sync.js";
 
