@@ -99,6 +99,39 @@ describe("harvest()", () => {
 
 		});
 
+		describe("image cache busters", () => {
+
+			function photo(src: string): string {
+				return `<html><body><main><h1>Seminar</h1><img alt="Staff photo" src="${src}"></main></body></html>`;
+			}
+
+			it("drops the version a known site rotates on image addresses", async () => {
+
+				const document = await render(photo(
+					"https://www.umu.se/contentassets/0be7/Profilbild.jpg?v=64322406&amp;width=80&amp;quality=90"
+				));
+
+				expect(document).toContain("https://www.umu.se/contentassets/0be7/Profilbild.jpg?width=80&quality=90");
+				expect(document).not.toContain("v=64322406");
+
+			});
+
+			it("yields the same document whatever version a known site states", async () => {
+
+				expect(await render(photo("https://www.umu.se/contentassets/0be7/Profilbild.jpg?v=64322406")))
+					.toEqual(await render(photo("https://www.umu.se/contentassets/0be7/Profilbild.jpg?v=50160992")));
+
+			});
+
+			it("keeps the version on image addresses of other sites", async () => {
+
+				expect(await render(photo("https://example.org/photo.jpg?v=64322406")))
+					.toContain("https://example.org/photo.jpg?v=64322406");
+
+			});
+
+		});
+
 	});
 
 

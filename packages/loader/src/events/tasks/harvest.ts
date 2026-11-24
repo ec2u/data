@@ -33,7 +33,17 @@ import { items } from "@metreeca/flow/feeds";
 import { coalesce, map, trim } from "@metreeca/flow/tasks";
 import { denoise, focus, html, untag, unwrap } from "@metreeca/mime-xml";
 import { fetch } from "@metreeca/pipe-url";
+import { type AnyNode, cloneNode, type Element } from "domhandler";
+import { findAll } from "domutils";
 
+
+/**
+ * Image addresses of sites that state a version drawn anew for each page view as their `v` query parameter.
+ */
+const CacheBusted = /^https:\/\/www\.umu\.se\//;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * A schema.org `Event` embedded in a page as JSON-LD.
@@ -80,7 +90,8 @@ type EmbeddedEvent = {
  * structured data for it. A page yielding neither is skipped and left to the next run.
  *
  * Pages are cleared of the noise that changes on every request before they are read, so an unchanged page yields the
- * same document on every run, and addresses a site obfuscates reach the extractor in plain form.
+ * same document on every run, and addresses a site obfuscates reach the extractor in plain form. Image addresses drop
+ * the version known sites draw anew for each page view, so a rotating cache buster never passes for a content change.
  *
  * The rendered event is the first stating a name, a web address and a description. Its document opens with a
  * frontmatter block stating its title and web address. Blocks that fail to parse are skipped, so a malformed block
@@ -97,7 +108,7 @@ export function harvest(): Task<URLLike, Markdown> {
 		(items(urls))
 		(fetch())
 		(html())
-		(denoise())
+		(denoise(unbust))
 		(coalesce(
 			trees => pipe(
 				items(trees)
@@ -113,6 +124,42 @@ export function harvest(): Task<URLLike, Markdown> {
 		))
 	);
 
+
+	function unbust(tree: AnyNode): AnyNode {
+
+		// domhandler offers no persistent construction API: edit a private deep copy, as denoise() rules must
+		// leave their input tree as it stands for the caller still holding it and for the rules applied after
+
+		const copy = cloneNode(tree, true);
+
+		findAll(isBusted, [copy]).forEach(image => {
+			image.attribs = { ...image.attribs, src: unversioned(image.attribs["src"] ?? "") };
+		});
+
+		return copy;
+
+
+		function isBusted(element: Element): boolean {
+
+			const src = element.attribs["src"] ?? "";
+
+			return element.name === "img"
+				&& CacheBusted.test(src)
+				&& URL.parse(src)?.searchParams.has("v") === true;
+
+		}
+
+		function unversioned(src: string): string {
+
+			const url = new URL(src);
+
+			url.searchParams.delete("v");
+
+			return url.href;
+
+		}
+
+	}
 
 	function isEvent(value: unknown): value is EmbeddedEvent {
 		return isObject(value, {

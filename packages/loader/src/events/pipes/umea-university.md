@@ -15,4 +15,8 @@ Event info extracted by AI from the event catalogue and linked event pages.
 |-------------------------------|-------------|
 | https://www.umu.se/en/events/ | events [en] |
 
+- **2026-11-24** – staff photo addresses on event pages carry a `v` query parameter that changes every day; it is now
+	dropped before pages are compared, so unchanged events are no longer extracted again on every run ([#119])
 - **2025-05-16** – initial integration
+
+[#119]: https://github.com/ec2u/data/issues/119
