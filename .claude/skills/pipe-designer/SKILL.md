@@ -73,7 +73,8 @@ desirable; not fetching is what makes it affordable.
 	Over the run's window, count the model `request attempt` lines of the loader, one per extracted entry per model, and
 	run the pipes one at a time so that windows never overlap; `deployment-manager` names the project to read from
 3. **Expect a first run that may extract**: a change to what feeds the digest leaves stored digests stale once, unless
-	they were repaired as the project `CLAUDE.md` prescribes (§Keeping Runs Incremental Across Pipe Changes)
+	they were repaired as the project `CLAUDE.md` prescribes (§Keeping Runs Incremental Across Pipe Changes); it should
+	extract about as many entries as the census taken before the change counted
 4. **Require the second run to extract nothing**: any entry it extracts must be shown to have changed at the source
 	between the two runs, by diffing the two documents the pipe produced; an entry nobody can account for fails the gate
 5. **Record the evidence**: the call counts of both runs go in the change's issue or pull request, never only in chat
@@ -293,8 +294,9 @@ Both branches close on one sink, and how that sink commits is the only place the
 
 ## For a Pipe Change
 
-1. **Check What Feeds the Digest**: if the change touches reading, cleaning, the digest or identity, plan the digest or
-	identifier repair the project `CLAUDE.md` prescribes, in the same change
+1. **Check What Feeds the Digest**: if the change touches reading, cleaning, the digest or identity, run a census before
+	committing and, where its count calls for it, the digest or identifier repair, in the same change, both as the project
+	`CLAUDE.md` prescribes (§Keeping Runs Incremental Across Pipe Changes)
 2. **Pass the Stability Gate**: deploy, then run the [Stability](#stability) gate; the change is not done until it passes
 
 ## For a Pipe Review

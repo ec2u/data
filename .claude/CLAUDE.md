@@ -228,10 +228,80 @@ only under the identifier the current code derives. A change to what feeds eithe
 `denoise()`, the fields a fingerprint covers, the identity rule) leaves every stored entry looking new, so the next runs
 extract the whole source again with the model, at a cost in tokens that cut-short cloud runs pay over and over.
 
-In the same change, bring the store in line instead of letting the runs rebuild it:
+### Counting Re-Extractions
+
+Before committing a change to what feeds the digest or the identity, run a **census**: the changed pipe run locally with
+every model call refused and every store write dropped, counting the entries its next real run would extract again. It
+costs no tokens, leaves the store untouched and needs no change to the pipe. Changes leaving both alone need no census.
+
+- **Reading the count**: zero confirms the stored digests still hold; a handful may be left to the next run; anything a
+  cut-short cloud run would pay for over and over calls for the repair below
+- **Checking the outcome**: the first deployed run of the change should extract about as many entries as the census
+  counted, less any repaired; a wide gap means the census and the deployed pipe read different pages
+- **Limits**: it runs on the workstation, so it estimates the cost of a change and never stands in for the stability gate
+  of `pipe-designer`; a sink letting a refused model call abort its run stops at the first one, so its count is a floor
+
+Write it as `~census.ts` under `packages/loader/src/`, import the changed pipe in place of `UmeaUniversity`, run it as
+[Probing the Store](#probing-the-store) prescribes, then delete it. It reads through the loader credentials of the
+environment, as the store reads within transactions, which GraphDB refuses to read-only users; the dry store is what
+keeps the run from writing, so never pass the pipe a store of its own.
+
+```ts
+import { bind, executor } from "@metreeca/gear";
+import { createGCPVault } from "@metreeca/gear-gcp/secrets";
+import { getPackage, getPath } from "@metreeca/gear/space";
+import { createFetch } from "@metreeca/http";
+import { basic } from "@metreeca/http/basic";
+import type { Store, StoreClient } from "@metreeca/keep";
+import { createSPARQLStore } from "@metreeca/keep-sparql";
+import { createGoogleAI } from "@metreeca/llms-google";
+import { createStore } from "@metreeca/pipe-store";
+import { createRDF4JRepository } from "@metreeca/wire-sparql-rdf4j";
+import { UmeaUniversity as pipe } from "./events/pipes/umea-university.js";
+
+const vault = createGCPVault();
+const requests = new Set<string>(); // keyed on contents, so fallback models retrying a request count it once
+
+await executor( // no cache binding: pages are fetched fresh, as the deployed pipe fetches them
+	bind(getPath, () => getPackage(import.meta.dirname)),
+	bind(createStore, async () => dry(createSPARQLStore(createRDF4JRepository({
+		server: "https://graphdb.ec2u.net",
+		repository: "data-edge",
+		fetch: createFetch(basic(await vault("edge-gdb-loader-usr"), await vault("edge-gdb-loader-pwd")))
+	})))),
+	bind(createGoogleAI, () => {
+		const ai = createGoogleAI({ apiKey: "census" });
+		ai.models.generateContent = async ({ contents }) => {
+			requests.add(JSON.stringify(contents));
+			throw new Error("refused model call");
+		};
+		return ai;
+	})
+)(pipe);
+
+console.log(`census: ${requests.size} entries to extract`);
+
+function dry(store: Store): Store {
+	const client: StoreClient = {
+		lookup: (request, scope) => store.lookup(request, scope),
+		create: async ({ entry }) => entry,
+		update: async ({ entry }) => entry,
+		delete: async ({ entry }) => entry,
+		insert: async ({ entry }) => entry,
+		remove: async ({ entry }) => entry
+	};
+	return { ...client, observe: () => () => {}, execute: async task => task(client), close: () => store.close() };
+}
+```
+
+The `settle` log lines of a census record what a real run would write, not what was written.
+
+### Repairing the Store
+
+Where the census calls for it, bring the store in line in the same change instead of letting the runs rebuild it:
 
 - **Digests**: recompute each entry's digest with the new code and replace only the stored value, in a dry run counting
-  the mismatches first; entries with no stored counterpart are left to the next run
+  the mismatches first, which should match the census; entries with no stored counterpart are left to the next run
 - **Identifiers**: move or retract entries under the old names before the new code runs, so no duplicate survives
 - **Trade-off**: an entry whose source genuinely changed since its last extraction now looks current until it changes
   again; accept it only where the change is known to alter the computation and not the content
