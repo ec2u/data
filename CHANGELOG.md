@@ -93,3 +93,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Page introductions in the sidebar break at the same points in every browser
 - Icons keep the height of the text they sit in on the deployed site, where they were drawn at an oversized default
 - Catalogue filters set on one page no longer carry over to other pages of the deployed site, such as the home page
+- Umeå events are no longer extracted again on every run: staff photo addresses carry a version the site draws anew for
+  each page view, now dropped before pages are compared ([#119](https://github.com/ec2u/data/issues/119))
