@@ -34,6 +34,8 @@ description in the language of the page, translated to English where it isn't En
 stays in the crawl, so its unit is not retracted, and is left as it was until the page can be read again. Every unit
 stands directly under the university and is classified against the EC2U organisation taxonomy and EuroSciVoc.
 
+- **2026-11-26** – image addresses under `www.umu.se` drop the `v` version the site draws anew on every page view, as
+	funder logos carry one, so that unchanged pages are no longer extracted again on every run
 - **2026-10-28** – ported to the TypeScript loader: unchanged pages skipped before extraction, names and descriptions
 	translated to English, types and subjects classified against the taxonomies, unreadable pages kept in the crawl
 - **2025-05-28** – initial integration

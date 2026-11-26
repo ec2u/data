@@ -112,8 +112,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - The sidebar widens with the text on the widest screens, so page introductions keep their line breaks there
 - Icons keep the height of the text they sit in on the deployed site, where they were drawn at an oversized default
 - Catalogue filters set on one page no longer carry over to other pages of the deployed site, such as the home page
-- Umeå events are no longer extracted again on every run: staff photo addresses carry a version the site draws anew for
-  each page view, now dropped before pages are compared ([#119](https://github.com/ec2u/data/issues/119))
+- Umeå events, units, programs and courses are no longer extracted again on every run: image addresses, such as staff
+  photos and funder logos, carry a version the site draws anew for each page view, now dropped before a page is
+  compared with the copy read on the previous run ([#119](https://github.com/ec2u/data/issues/119))
 - The EU funding emblem follows the colour scheme pinned on the page, taking its negative version on a pinned dark
   scheme whatever the system setting ([#104](https://github.com/ec2u/data/issues/104))
 - The EC2U logo keeps standing out on a dark colour scheme, pinned or taken from the system, framed by a white border

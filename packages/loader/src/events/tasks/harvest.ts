@@ -33,14 +33,7 @@ import { items } from "@grafctory/flow/feeds";
 import { coalesce, map, trim } from "@grafctory/flow/tasks";
 import { denoise, focus, html, untag, unwrap } from "@grafctory/mime-xml";
 import { fetch } from "@grafctory/pipe-url";
-import { type AnyNode, cloneNode, type Element } from "domhandler";
-import { findAll } from "domutils";
-
-
-/**
- * Image addresses of sites that state a version drawn anew for each page view as their `v` query parameter.
- */
-const CacheBusted = /^https:\/\/www\.umu\.se\//;
+import { unbust } from "../../pages/umea.js";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,42 +117,6 @@ export function harvest(): Task<URLLike, Markdown> {
 		))
 	);
 
-
-	function unbust(tree: AnyNode): AnyNode {
-
-		// domhandler offers no persistent construction API: edit a private deep copy, as denoise() rules must
-		// leave their input tree as it stands for the caller still holding it and for the rules applied after
-
-		const copy = cloneNode(tree, true);
-
-		findAll(isBusted, [copy]).forEach(image => {
-			image.attribs = { ...image.attribs, src: unversioned(image.attribs["src"] ?? "") };
-		});
-
-		return copy;
-
-
-		function isBusted(element: Element): boolean {
-
-			const src = element.attribs["src"] ?? "";
-
-			return element.name === "img"
-				&& CacheBusted.test(src)
-				&& URL.parse(src)?.searchParams.has("v") === true;
-
-		}
-
-		function unversioned(src: string): string {
-
-			const url = new URL(src);
-
-			url.searchParams.delete("v");
-
-			return url.href;
-
-		}
-
-	}
 
 	function isEvent(value: unknown): value is EmbeddedEvent {
 		return isObject(value, {

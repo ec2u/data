@@ -24,6 +24,7 @@ import { digest } from "@grafctory/mime-json";
 import { denoise, focus, html, untag } from "@grafctory/mime-xml";
 import { settle, type Tally } from "@grafctory/pipe-store";
 import { fetch } from "@grafctory/pipe-url";
+import { unbust } from "../../pages/umea.js";
 import { extract } from "../tasks/extract.js";
 import { complete, retract, stated } from "./sync.js";
 
@@ -122,7 +123,7 @@ export function crawl(university: Partner, {
 			(items([url]))
 			(fetch())
 			(html())
-			(denoise())
+			(denoise(unbust))
 			(focus())
 			(untag())
 			(map((document): Page => immutable({ url, document })))

@@ -26,6 +26,7 @@ import { settle, type Tally } from "@grafctory/pipe-store";
 import { fetch } from "@grafctory/pipe-url";
 import type { Reference } from "@grafctory/qest/state";
 import { log } from "@grafctory/tape";
+import { unbust } from "../../pages/umea.js";
 import { extract } from "../tasks/extract.js";
 import { complete, date, type Draft, identify, named, retract, stated } from "./sync.js";
 
@@ -161,7 +162,7 @@ export function crawl(source: Reference, {
 			(items([lead.url]))
 			(fetch())
 			(html())
-			(denoise())
+			(denoise(unbust))
 			(focus())
 			(untag())
 			(map((document): Page => immutable({ lead, document, hash: fingerprint(lead.seed, document) })))
