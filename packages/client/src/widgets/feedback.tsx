@@ -33,8 +33,7 @@ import { feedback } from "../pages/about/feedback.js";
  * turns to the fail colour, the action opens the feedback page set to report AI content, and a notice links to the
  * page explaining how such content is produced and why it may contain errors.
  *
- * The bar fills the width of the row holding it, with the feedback action at its start; where AI tools generated the
- * content, the feedback action moves to the end of the bar, next to the AI notice, so that the two read together.
+ * The feedback action leads the bar, with the AI notice right after it where AI tools generated the content.
  *
  * @param options The widget configuration
  *
