@@ -39,7 +39,9 @@ const logger = log(import.meta.url);
 const LanguagePattern = /^[a-z]{2}$/;
 
 
-function Reported() {
+export type Reported = State<typeof Reported>;
+
+export function Reported() {
 	return resource({
 
 		name: "Extracted Unit",
@@ -96,51 +98,23 @@ export function extract(university: Partner, pipeline: string): Task<Page, Entry
 
 	return pages => pipe(
 		(items(pages))
-		(flat(map(async ({ url, document }) => pipe(
-			(items(await generate(url, document)))
+		(flat(map(async page => pipe(
+			(items(await generate(page.url, page.document)))
 			(map(({ name, acronym, ...reported }) => ({
 				...reported,
 				name: tidy(name),
 				acronym: acronym && tidy(acronym) || undefined
 			})))
 			(validate(Reported))
-			(map(({ name, acronym, description, language }): Entry => {
-
-				const tag = LanguagePattern.test(language) ? language : university.locale;
-
-				return immutable({
-
-					hash: digest(document),
-
-					draft: {
-
-						id: url,
-
-						prefLabel: { [tag]: name },
-						altLabel: acronym,
-						definition: { [tag]: description },
-
-						homepage: [url],
-						mbox: [],
-
-						unitOf: [],
-						institutes: [],
-
-						heads: []
-
-					}
-
-				});
-
-			}))
+			(map(reported => drafted(university, page, reported)))
 		))))
 	);
 
 
-	async function generate(id: string, document: string): Promise<readonly State<typeof Reported>[]> {
+	async function generate(id: string, document: string): Promise<readonly Reported[]> {
 		try {
 
-			return [json<State<typeof Reported>>(await ai.models.generateContent({
+			return [json<Reported>(await ai.models.generateContent({
 
 				model: "gemini-3.8-flash",
 
@@ -171,5 +145,48 @@ export function extract(university: Partner, pipeline: string): Task<Page, Entry
 
 		}
 	}
+
+}
+
+
+/**
+ * Drafts the unit a page describes from the facts a model extracted from it.
+ *
+ * @param university The university the page is listed by, supplying the fallback language of its content
+ * @param page The page describing the unit
+ * @param reported The facts extracted from the page, with name and acronym already tidied
+ *
+ * @returns The draft entry of the unit, recorded with the digest of the page content and stating no definition where
+ *     the extracted description is blank
+ */
+export function drafted(university: Partner, { url, document }: Page, {
+	name, acronym, description, language
+}: Reported): Entry {
+
+	const tag = LanguagePattern.test(language) ? language : university.locale;
+
+	return immutable({
+
+		hash: digest(document),
+
+		draft: {
+
+			id: url,
+
+			prefLabel: { [tag]: name },
+			altLabel: acronym,
+			...(description.trim() ? { definition: { [tag]: description } } : {}),
+
+			homepage: [url],
+			mbox: [],
+
+			unitOf: [],
+			institutes: [],
+
+			heads: []
+
+		}
+
+	});
 
 }

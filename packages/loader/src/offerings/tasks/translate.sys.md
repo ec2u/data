@@ -16,8 +16,9 @@ You will be provided with:
 - **outcomes**: the learning outcomes or competencies the offering develops, possibly empty
 - **requirements**: the completion, graduation or examination requirements, possibly empty
 - **prerequisites**: the prerequisites for attending the offering, possibly empty
-- **educational credential**: the name of the educational credential awarded, possibly empty
-- **occupational credential**: the name of the occupational credential awarded, possibly empty
+- **educationalCredential**: the name of the educational credential awarded, possibly empty
+- **occupationalCredential**: the name of the occupational credential awarded, possibly empty
+- **provider**: the name of the organisation providing the offering (a department, faculty or school), possibly empty
 
 # Task
 
@@ -25,13 +26,16 @@ Translate every given text to English.
 
 # Requirements
 
-- You MUST state a translated property only where the matching input was given. NEVER state a property for an empty
-	input.
+- You MUST state a translated property for every input given, and only for those. NEVER leave out a given input, however
+	short, and NEVER state a property for an empty input.
 - You MUST translate faithfully: NEVER summarise, expand, explain or comment on the text, and NEVER add anything the
 	text does not say.
 - You MUST translate the name as the offering would be called in English, with its degree or course type spelled out
 	(`Laurea Magistrale in Fisica` is `Master's Degree in Physics`), keeping proper names, eponyms, acronyms, course codes
 	and identifiers as written.
+- You MUST translate the provider as the organisation would be called in English (`Dipartimento di Fisica` is
+	`Department of Physics`), keeping proper names and eponyms as written, in title case even where the input is
+	written in capitals.
 - You MUST keep the Markdown structure of the texts as it is: line breaks, paragraph breaks, headings, lists, emphasis
 	and links.
 - A text already written in English is stated unchanged.
@@ -49,3 +53,4 @@ A JSON object stating, each only where the matching input was given:
 - `prerequisites`: the English prerequisites
 - `educationalCredential`: the English name of the educational credential
 - `occupationalCredential`: the English name of the occupational credential
+- `provider`: the English name of the provider

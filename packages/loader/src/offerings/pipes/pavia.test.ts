@@ -39,7 +39,11 @@ const record = {
 };
 
 
-function af(code: string, { cycle = "S1", sdg = "4" }: { readonly cycle?: string, readonly sdg?: string } = {}) {
+function af(code: string, { cycle = "S1", sdg = "4", prerequisites = "Calculus." }: {
+	readonly cycle?: string
+	readonly sdg?: string
+	readonly prerequisites?: string
+} = {}) {
 	return `
 		<ns2:af>
 			<ns2:afGenCod>${code}</ns2:afGenCod>
@@ -53,7 +57,7 @@ function af(code: string, { cycle = "S1", sdg = "4" }: { readonly cycle?: string
 				<ns2:testo><ns2:tipoTestoCod>CONTENUTI</ns2:tipoTestoCod><ns2:linguaCod>eng</ns2:linguaCod><ns2:contenuto>Contents.</ns2:contenuto></ns2:testo>
 				<ns2:testo><ns2:tipoTestoCod>METODI_DID</ns2:tipoTestoCod><ns2:linguaCod>eng</ns2:linguaCod><ns2:contenuto>Lectures.</ns2:contenuto></ns2:testo>
 				<ns2:testo><ns2:tipoTestoCod>OBIETT_FORM</ns2:tipoTestoCod><ns2:linguaCod>eng</ns2:linguaCod><ns2:contenuto>Outcomes.</ns2:contenuto></ns2:testo>
-				<ns2:testo><ns2:tipoTestoCod>PREREQ</ns2:tipoTestoCod><ns2:linguaCod>eng</ns2:linguaCod><ns2:contenuto>Calculus.</ns2:contenuto></ns2:testo>
+				<ns2:testo><ns2:tipoTestoCod>PREREQ</ns2:tipoTestoCod><ns2:linguaCod>eng</ns2:linguaCod><ns2:contenuto>${prerequisites}</ns2:contenuto></ns2:testo>
 				<ns2:testo><ns2:tipoTestoCod>MOD_VER_APPR</ns2:tipoTestoCod><ns2:linguaCod>eng</ns2:linguaCod><ns2:contenuto>Oral exam.</ns2:contenuto></ns2:testo>
 				<ns2:testo><ns2:tipoTestoCod>OB_SVIL_SOS</ns2:tipoTestoCod><ns2:linguaCod>ita</ns2:linguaCod><ns2:contenuto>${sdg}</ns2:contenuto></ns2:testo>
 			</ns2:testi>
@@ -238,6 +242,19 @@ describe("courses", () => {
 		const [activity] = await read(plan(regulation("08402", "2024", track("01", af("502004")))));
 
 		expect(activity?.page).toBeUndefined();
+
+	});
+
+	it("states no text the plan fills with punctuation alone", async () => {
+
+		const prerequisites = (text: string) => read(plan(regulation("08402-24", "2024",
+			track("01", af("502004", { prerequisites: text }))
+		))).then(([activity]) => activity?.draft.coursePrerequisites);
+
+		expect(await prerequisites("=")).toBeUndefined();
+		expect(await prerequisites(" -- ")).toBeUndefined();
+		expect(await prerequisites("/")).toBeUndefined();
+		expect(await prerequisites("No.")).toEqual({ en: "No." });
 
 	});
 

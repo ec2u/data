@@ -33,6 +33,8 @@ outcomes (`OBIETT_FORM`), prerequisites (`PREREQ`) and examination requirements 
 it states, and `OB_SVIL_SOS` is read for the SDGs it numbers. Names shared by several programs are qualified with the
 cohort of their catalogue page, names shared by several courses with the name of their program.
 
+- **2026-11-26** – UGov text sections holding punctuation alone (`=`, `--`, `/`) are read as stating nothing; names of
+	departments and credentials are translated to English along with the other texts, every given text or none
 - **2026-10-29** – ported to the TypeScript loader: offerings stated one at a time with unchanged ones skipped and a
 	retraction floor; the offer year switches in August; a teaching plan failing to load is logged like any other failure
 - **2026-09-21** – link programs and courses to their pages on the CINECA course catalogue, composing the address from

@@ -17,6 +17,9 @@ Extract the facts the page states about the offering it describes.
 - You MUST respond in the language the page is written in. NEVER translate.
 - You MUST state only facts the page states explicitly. NEVER infer, guess or complete a fact the page leaves out:
 	leave the property out instead.
+- You MUST take every text from the page itself. NEVER state a section heading (`Om kursen`), a placeholder or a note
+	of your own about what the page states or leaves out (`No prerequisites are stated on the page`) as the content of a
+	property: leave the property out instead.
 - You MUST include full descriptions verbatim from the page, in markdown format, removing H1 headings that state the
 	name of the offering, any account of ongoing or upcoming events, and personal email addresses.
 - You MUST state the `summary` as plain text of about 500 characters, drawn from the description.

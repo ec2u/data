@@ -54,6 +54,8 @@ its field of education against ISCED-F 2013. The snapshot states no academic yea
 academic year current at retrieval, switching in August. The `options` and the pedagogical elements they list are not
 read.
 
+- **2026-11-26** – faculty (`composante`) names are translated to English along with the other texts, while the French
+	name keeps identifying the faculty, so that translating it never states the faculty again as a new organisation
 - **2026-10-29** – ported to the TypeScript loader, with the snapshot moved into the loader sources; programs dated with
 	the academic year current at retrieval and fields of education classified from the stated discipline
 - **2022-11-18** – reshape the snapshot to the program/course data model, adding options and pedagogical elements

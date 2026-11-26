@@ -360,7 +360,11 @@ function texts(scope: XPath, ...types: readonly string[]): Optional<Dictionary> 
 			/^[a-z]{2,3}$/.test(code) ? new Intl.Locale(code).maximize().language : undefined
 		);
 
-		return opt(value(text, "ns2:contenuto"), content => opt(language, language => [{ language, content }])) ?? [];
+		// a text made of punctuation alone (`=`, `--`, `/`) is a placeholder the plan states where it holds nothing
+
+		const content = opt(value(text, "ns2:contenuto"), content => /[\p{L}\p{N}]/u.test(content) ? content : undefined);
+
+		return opt(content, content => opt(language, language => [{ language, content }])) ?? [];
 
 	}));
 

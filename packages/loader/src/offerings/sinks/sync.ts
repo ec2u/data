@@ -156,11 +156,15 @@ export type Name = {
 
 /**
  * An organisation as named by a source, in English, in the local language or both.
+ *
+ * An organisation flagged as `generated` carries an English name a model translated from the one its source states,
+ * so that it keeps the identity its source name gives it and is flagged as generated once stated.
  */
 export type Agency = {
 
 	readonly name: Dictionary
 	readonly homepage?: string
+	readonly generated?: boolean
 
 }
 
@@ -704,7 +708,8 @@ export function state(source: Reference, {
  *
  * The organisation is owned by the source, keyed within it by its home page, falling back to its English name and then
  * to any of its names, so that every offering of the source naming it states the same organisation, which the source
- * alone states and withdraws, apart from the organisations other sources state under the same key.
+ * alone states and withdraws, apart from the organisations other sources state under the same key. An English name a
+ * model translated never keys it, and flags it as generated, so translating a name never changes its identity.
  *
  * @param source The identifier of the source naming the organisation
  * @param university The university naming the organisation
@@ -715,16 +720,22 @@ export function state(source: Reference, {
 export function organization(source: Reference, university: Partner, {
 
 	name,
-	homepage
+	homepage,
+	generated
 
 }: Agency): State<typeof Organization> {
+
+	const stated = Object.entries(name).find(([tag]) => tag !== "en")?.[1];
+
 	return immutable({
 
-		id: getOrganizationId(university.id, required(homepage ?? name.en ?? Object.values(name)[0]), source),
+		id: getOrganizationId(university.id, required(homepage ?? (generated ? stated : name.en ?? stated)), source),
 
 		dataset: organizations.id,
 		university: university.id,
 		source,
+
+		...(generated ? { generated } : {}),
 
 		label: clipped(name, LabelLength),
 

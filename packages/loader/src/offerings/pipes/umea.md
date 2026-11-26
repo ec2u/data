@@ -26,6 +26,8 @@ and attendance mode are extracted from the page in its language, then translated
 Pages state no academic year or term: offerings are dated with the academic year current at retrieval, switching in
 August. A page that fails to load is skipped and stays listed, so it is never retracted for it.
 
+- **2026-11-26** – extraction leaves out section headings and notes about the page rather than stating them as the
+	content of a text; translations missing any given text are retried with the fallback model, then dropped
 - **2026-10-29** – pages whose extracted code is blank or padded are kept rather than dropped, so they are no longer
 	extracted again on every run; a blank code is left out of the course, and programs never state one
 - **2026-10-29** – ported to the TypeScript loader, programs and courses harvested by a single pipe: pages are read on

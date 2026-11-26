@@ -215,6 +215,11 @@ an atomic source there is nothing left to read, and the branch only converts and
 	prescribes, with tool loops bounded by `maximumRemoteCalls`; a cut-off answer fails to parse and costs its entry,
 	never the run.
 
+- **Every answer accounts for what it was given** — a translation or extraction leaving out a text it was handed is
+	stored as if complete, and the digest skip then keeps the gap for good. The task checks each answer covers every
+	value it was given, retries a gap with the fallback model, and drops the entry when none fills it, so it is tried
+	again on a later run; the response schema states its property order as `gemini-developer:generate` prescribes.
+
 ## Remove
 
 Draw what the store holds for the source, watch the scan go by, and retract at the end what the entries' own state

@@ -338,6 +338,21 @@ describe("organization", () => {
 			.toBe(getOrganizationId(pavia.id, "Ingegneria", source));
 	});
 
+	it("keys a translated organisation by the name its source states", async () => {
+		expect(organization(source, pavia, { name: { it: "Ingegneria", en: "Engineering" }, generated: true }).id)
+			.toBe(getOrganizationId(pavia.id, "Ingegneria", source));
+	});
+
+	it("flags an organisation whose name a model translated", async () => {
+		expect(organization(source, pavia, { name: { it: "Ingegneria", en: "Engineering" }, generated: true }))
+			.toMatchObject({ generated: true });
+	});
+
+	it("leaves unflagged an organisation named by its source alone", async () => {
+		expect(organization(source, pavia, { name: { it: "Ingegneria", en: "Engineering" } }))
+			.not.toHaveProperty("generated");
+	});
+
 	it("states the organisation owned by the source under its names", async () => {
 		expect(organization(source, pavia, {
 			name: { it: "Ingegneria" },
