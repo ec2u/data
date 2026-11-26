@@ -31,7 +31,6 @@ import { isArray, isNumber, isObject, isString, opt } from "@grafctory/core";
 import { nameTag } from "@grafctory/core/language";
 import { useResource } from "@grafctory/tile/resource";
 import { date } from "@grafctory/tile/types/date";
-import { instant } from "@grafctory/tile/types/instant";
 import { time } from "@grafctory/tile/types/time";
 import type { ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
@@ -42,12 +41,6 @@ import { Feedback } from "../../widgets/feedback.js";
 import { Page } from "../../widgets/page.js";
 import { toEventAttendanceMode, toEventStatus } from "./index.core.js";
 import { events } from "./index.js";
-
-
-/**
- * The day an instant falls on.
- */
-const day = instant.as(date);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -241,8 +234,8 @@ export function EventPage() {
  */
 function period(start: string, end?: string): Readonly<Record<string, ComponentChildren>> {
 
-	const from = day.format(start);
-	const to = opt(end, value => day.format(value));
+	const from = day(start);
+	const to = opt(end, day);
 
 	return {
 		Starts: `${from} ${clock(start)}`,
@@ -260,14 +253,25 @@ function period(start: string, end?: string): Readonly<Record<string, ComponentC
 }
 
 /**
- * Formats the time of day an instant falls on for display.
+ * Formats the time of day an instant states for display.
  *
  * @param value The instant to be formatted
  *
- * @returns The wall-clock time of `value` in the runtime time zone, in the reader's locale
+ * @returns The wall-clock time `value` states at the event's location, in the reader's locale, whatever their zone
  */
 function clock(value: string): string {
-	return time.format(instant.write(value).slice("YYYY-MM-DDT".length)); // the local wall-clock time of the instant
+	return time.format(`${value.slice("YYYY-MM-DDT".length, "YYYY-MM-DDTHH:MM".length)}:00`);
+}
+
+/**
+ * Formats the day an instant states for display.
+ *
+ * @param value The instant to be formatted
+ *
+ * @returns The day `value` states at the event's location, in the reader's locale, whatever their time zone
+ */
+function day(value: string): string {
+	return date.format(value.slice(0, "YYYY-MM-DD".length));
 }
 
 
@@ -284,8 +288,8 @@ function clock(value: string): string {
  */
 export function schedule(start: string, end?: string): string {
 
-	const from = day.format(start);
-	const to = opt(end, value => day.format(value));
+	const from = day(start);
+	const to = opt(end, day);
 
 	return to === undefined || to === from ? from : `${from} › ${to}`;
 

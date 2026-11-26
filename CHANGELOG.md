@@ -32,7 +32,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 	carries a definition, recovered from the dataset and vocabulary docs pages where they gave one
 - Dataset and vocabulary docs pages state the types, cardinalities, definitions and properties the shapes declare
 - Views show values formatted for the reader: durations, credits, counts, years and dates localised, event days and
-	times by the instant they fall on, and language tags, course terms and attendance modes, and event statuses by name
+	times at the event's location, and language tags, course terms, attendance modes and event statuses by name
 - Detail views follow the layout of the legacy client: long descriptions rendered as Markdown, labelled blocks for
 	credentials, links and sections, and catalogue links filtered on the university and the value shown
 - Universities are named by their short name, as `Coimbra`, in views, catalogue cards and facets; the `University`
