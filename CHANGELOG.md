@@ -63,9 +63,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 	configuration
 - SPARQL queries and store steps come from the released `@grafctory/pipe-sparql` and `@grafctory/pipe-store` packages,
 	replacing the copies incubated in `@grafctory/work`, which no longer carries them or their dependencies
-- Upgrade `@grafctory/blue` and `@grafctory/qest` to `^0.15.0`, `@grafctory/clay*` to `^0.4.0`, `@grafctory/gate` to
-  `^0.14.0`, `@grafctory/gear*` to `^0.6.0`, `@grafctory/mime-*` to `^0.5.0`, `@grafctory/pipe-*` to `^0.14.0` and
-  `@grafctory/tile*` to `^0.10.0`, each installed as a single copy shared by the client, the server and the loader
+- Upgrade `@grafctory/blue` to `^0.16.0`, `@grafctory/qest` to `^0.15.0`, `@grafctory/clay*` to `^0.5.0`,
+  `@grafctory/gate`, `@grafctory/keep*` and `@grafctory/pipe-*` to `^0.15.0`, `@grafctory/gear*`, `@grafctory/llms*`
+  and `@grafctory/mime-*` to `^0.6.0` and `@grafctory/tile*` to `^0.11.0`, each installed as a single copy shared by
+  the client, the server and the loader, so that shapes, stores and views all validate against the same definitions
 - Framework packages come from the `@grafctory` scope, where the `@metreeca` packages moved under the same versions;
 	local development links the checkouts held under `~/Metreeca/Grafctory`
 - Catalogue addresses carry their filters in plain form, without quoting, so shared links read as they are typed;
@@ -93,6 +94,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Links and images in harvested event, unit, program and course descriptions lead back to the pages they were taken
+  from, rather than to addresses on the hub that do not exist, wherever the source page linked them by a relative path
+- Facet values hold still while their counts are recomputed, so values ticked in quick succession no longer land on
+  another value sliding under the pointer, and pressing the name of a value ticks it rather than leaving the catalogue
 - Names and texts held only in the language of a partner university reach readers whose browser accepts any language
 	after their own, instead of showing an empty field or a bare address in their place
 - Programs and courses carry English names for their providers and credentials, and no longer lose a translated text

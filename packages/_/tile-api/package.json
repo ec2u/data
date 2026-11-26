@@ -13,9 +13,9 @@
   },
   "scripts": {},
   "dependencies": {
-    "@grafctory/blue": "^0.15.0",
-    "@grafctory/clay-markdown": "^0.4.0",
-    "@grafctory/clay-widgets": "^0.4.0",
+    "@grafctory/blue": "^0.16.0",
+    "@grafctory/clay-markdown": "^0.5.0",
+    "@grafctory/clay-widgets": "^0.5.0",
     "@grafctory/core": "^0.14.0",
     "preact": "^10.29.8"
   }

@@ -11,7 +11,7 @@
     }
   },
   "dependencies": {
-    "@grafctory/blue": "^0.15.0",
+    "@grafctory/blue": "^0.16.0",
     "@grafctory/core": "^0.14.0",
     "@grafctory/trio": "^0.3.0"
   },

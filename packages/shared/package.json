@@ -19,10 +19,10 @@
     }
   },
   "dependencies": {
-    "@kxta/open": "*",
-    "@grafctory/blue": "^0.15.0",
+    "@grafctory/blue": "^0.16.0",
     "@grafctory/core": "^0.14.1",
     "@grafctory/qest": "^0.15.0",
+    "@kxta/open": "*",
     "uuid": "^14.0.1"
   },
   "scripts": {
