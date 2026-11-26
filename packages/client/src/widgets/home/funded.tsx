@@ -29,7 +29,7 @@ const negative = new URL("../../assets/about/legal/eu-co-funded/negative.png", i
  * Shows the EU emblem and the disclaimer the grant agreement requires on the communication of a funded action, to be
  * set in the fine print at the foot of a page. The disclaimer faces the emblem where the fine print is
  * wide enough, and drops under it otherwise; the emblem takes its official negative version, with the funding
- * statement set in white, on a dark colour scheme.
+ * statement set in white, wherever a dark colour scheme is in force, whether pinned or taken from the platform.
  *
  * @returns The funding acknowledgement
  *
@@ -43,10 +43,8 @@ export function Funded() {
 	return createElement("ec2u-funded", {},
 
 		<Link href={"https://education.ec.europa.eu/education-levels/higher-education/european-universities-initiative"}>
-			<picture>
-				<source media={"(prefers-color-scheme: dark)"} srcset={negative}/>
-				<img alt={"Co-funded by the European Union"} src={positive}/>
-			</picture>
+			<img class={"positive"} alt={"Co-funded by the European Union"} src={positive}/>
+			<img class={"negative"} alt={"Co-funded by the European Union"} src={negative}/>
 		</Link>,
 
 		<span>{dedent`
