@@ -45,6 +45,23 @@ ec2u-logo {
             block-size: 2.25cap;
         }
 
+        /*
+         * The mark follows the platform scheme unless one is pinned around it, where the pinned rules closing the
+         * sheet win by scope proximity alone, as their selectors weigh exactly the same as these platform rules.
+         */
+
+        @media (prefers-color-scheme: light) {
+            & img.negative:not([active]) {
+                display: none;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            & img.positive:not([active]) {
+                display: none;
+            }
+        }
+
     }
 
     & > :last-child {
@@ -73,6 +90,35 @@ ec2u-logo {
             display: none;
         }
 
+    }
+
+}
+
+/*
+ * A scheme pinned on an ancestor, as on the root by a theme switch or on an island, overrides the platform. Each pin
+ * shows one version and hides the other, so that where pins nest, the nearest one decides both images.
+ */
+
+@scope ([data-scheme="light"]) {
+
+    ec2u-logo > :first-child img.positive:not([active]) {
+        display: block;
+    }
+
+    ec2u-logo > :first-child img.negative:not([active]) {
+        display: none;
+    }
+
+}
+
+@scope ([data-scheme="dark"]) {
+
+    ec2u-logo > :first-child img.positive:not([active]) {
+        display: none;
+    }
+
+    ec2u-logo > :first-child img.negative:not([active]) {
+        display: block;
     }
 
 }

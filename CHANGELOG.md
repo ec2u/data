@@ -103,3 +103,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   each page view, now dropped before pages are compared ([#119](https://github.com/ec2u/data/issues/119))
 - The EU funding emblem follows the colour scheme pinned on the page, taking its negative version on a pinned dark
   scheme whatever the system setting ([#104](https://github.com/ec2u/data/issues/104))
+- The EC2U logo keeps standing out on a dark colour scheme, pinned or taken from the system, framed by a white border
+  tracing the outline of its flag as the EU emblem is ([#105](https://github.com/ec2u/data/issues/105))

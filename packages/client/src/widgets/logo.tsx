@@ -20,14 +20,16 @@ import { createElement } from "preact";
 import { ec2u } from "../index.core.js";
 import "./logo.css";
 
-const logo = new URL("../index.svg", import.meta.url).href;
+const positive = new URL("../index.svg", import.meta.url).href;
+const negative = new URL("../index-negative.svg", import.meta.url).href;
 
 
 /**
  * Creates the site logo marking the side column of a page.
  *
  * Shows the EC2U Alliance logo, linked to the alliance website, beside the app name, linked to the home page, so a
- * reader can always reach both the alliance behind the hub and the home page of the hub itself.
+ * reader can always reach both the alliance behind the hub and the home page of the hub itself. The logo takes a white
+ * border tracing the flag wherever a dark colour scheme is in force, whether pinned or taken from the platform.
  *
  * @returns The site logo
  */
@@ -35,7 +37,10 @@ export function Logo() {
 
 	return createElement("ec2u-logo", {},
 
-		<Link href={"https://ec2u.eu/"}><img alt={"EC2U Alliance"} src={logo}/></Link>,
+		<Link href={"https://ec2u.eu/"}>
+			<img class={"positive"} alt={"EC2U Alliance"} src={positive}/>
+			<img class={"negative"} alt={"EC2U Alliance"} src={negative}/>
+		</Link>,
 		<Link href={"/"}>{ec2u(app.name ?? "")}</Link>
 	);
 
