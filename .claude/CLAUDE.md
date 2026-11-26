@@ -248,10 +248,16 @@ transactions, as the server does, so the store refuses any write that escapes th
 empty answer rather than an error, as an error aborts the whole run; the extractor logs each one as an incomplete
 generation naming its page, which tells which entries the count covers.
 
+The census replaces the bindings of `src/index.core.ts` rather than extending them: it must restate every service the
+pipes read there (paths, secrets), swapping only the store, the model and the cache. When a binding is added to
+`index.core.ts`, add it here too, or the census fails on the pipes using it (`undefined secret <…>` for a missing
+vault).
+
 ```ts
 import { bind, executor } from "@grafctory/gear";
 import { createGCPVault } from "@grafctory/gear-gcp/secrets";
 import { getPackage, getPath } from "@grafctory/gear/space";
+import { createVault } from "@grafctory/gear/vault";
 import { createFetch } from "@grafctory/http";
 import { basic } from "@grafctory/http/basic";
 import type { Store, StoreClient } from "@grafctory/keep";
@@ -266,6 +272,7 @@ const requests = new Set<string>(); // keyed on contents, so fallback models ret
 
 await executor( // no cache binding: pages are fetched fresh, as the deployed pipe fetches them
 	bind(getPath, () => getPackage(import.meta.dirname)),
+	bind(createVault, createGCPVault), // pipes read their source endpoints and credentials from Secret Manager
 	bind(createStore, async () => dry(createSPARQLStore(createHTTPRepository({
 		query: "https://graphdb.ec2u.net/repositories/data-edge",
 		fetch: createFetch(basic(await vault("edge-gdb-server-usr"), await vault("edge-gdb-server-pwd")))
