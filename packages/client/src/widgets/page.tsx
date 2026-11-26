@@ -35,6 +35,7 @@ export function Page({
 
 	head,
 	menu,
+	copy,
 	foot,
 
 	children
@@ -57,6 +58,13 @@ export function Page({
 
 	head?: ComponentChildren
 	menu?: ComponentChildren
+
+	/**
+	 * The closing notice of the page, such as the funding acknowledgement, after the content; it scrolls with the
+	 * content rather than standing in view, and rests at the bottom of a page too short to fill the window.
+	 */
+	copy?: ComponentChildren
+
 	foot?: ComponentChildren
 
 	children?: ComponentChildren
@@ -113,6 +121,7 @@ export function Page({
 
             </Style>}
 
+			copy={copy}
 			foot={foot}
 
 		>

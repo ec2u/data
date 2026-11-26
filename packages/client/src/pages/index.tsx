@@ -169,7 +169,7 @@ export function Datasets() {
 			error: ({ reload }) => <Button icon={<Icon.Reload/>} title={"Reload"} onClick={reload}/>
 
 		}, <DatasetLinks/>)}
-		foot={<Print><Funded/></Print>}
+		copy={<Print><Funded/></Print>}
 
 	>{members({
 
