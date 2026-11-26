@@ -84,7 +84,7 @@ export function APIDatatypes({
 				<tbody role={"rowgroup"}>
 
 					<tr role={"row"}>
-						<th class={"tile-api-shape-group"} role={"rowheader"}>{headings[group]}</th>
+						<th colSpan={3} class={"tile-api-shape-group"} role={"cell"}>{headings[group]}</th>
 					</tr>
 
 					<tr class={"tile-api-shape-head"} role={"row"}>

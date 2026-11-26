@@ -107,3 +107,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   tracing the outline of its flag as the EU emblem is ([#105](https://github.com/ec2u/data/issues/105))
 - The EU funding acknowledgement closes the home page after the dataset cards, scrolling with them rather than standing
   in view, and rests at the bottom of the window when the page is too short to fill it
+- Screen readers no longer announce the group headings of the API datatypes table as row headers relating to no data,
+  as the headings of the properties table already read ([#108](https://github.com/ec2u/data/issues/108))
