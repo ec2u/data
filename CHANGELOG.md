@@ -61,11 +61,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Workspace packages declare the dependencies they import, in place of a single dependency set on the workspace root
 - Test projects are discovered from `packages/*`, each package stating its own resolution conditions and typecheck
 	configuration
-- SPARQL queries and store steps come from the released `@metreeca/pipe-sparql` and `@metreeca/pipe-store` packages,
-	replacing the copies incubated in `@metreeca/work`, which no longer carries them or their dependencies
-- Upgrade `@metreeca/blue` and `@metreeca/qest` to `^0.15.0`, `@metreeca/clay*` to `^0.4.0`, `@metreeca/gate` to
-  `^0.14.0`, `@metreeca/gear*` to `^0.6.0`, `@metreeca/mime-*` to `^0.5.0`, `@metreeca/pipe-*` to `^0.14.0` and
-  `@metreeca/tile*` to `^0.10.0`, each installed as a single copy shared by the client, the server and the loader
+- SPARQL queries and store steps come from the released `@grafctory/pipe-sparql` and `@grafctory/pipe-store` packages,
+	replacing the copies incubated in `@grafctory/work`, which no longer carries them or their dependencies
+- Upgrade `@grafctory/blue` and `@grafctory/qest` to `^0.15.0`, `@grafctory/clay*` to `^0.4.0`, `@grafctory/gate` to
+  `^0.14.0`, `@grafctory/gear*` to `^0.6.0`, `@grafctory/mime-*` to `^0.5.0`, `@grafctory/pipe-*` to `^0.14.0` and
+  `@grafctory/tile*` to `^0.10.0`, each installed as a single copy shared by the client, the server and the loader
 - Framework packages come from the `@grafctory` scope, where the `@metreeca` packages moved under the same versions;
 	local development links the checkouts held under `~/Metreeca/Grafctory`
 - Catalogue addresses carry their filters in plain form, without quoting, so shared links read as they are typed;
