@@ -17,7 +17,7 @@
 clay-tool {
 
     --clay-tool-head-font-size: var(--skin--scaling-125);
-    --clay-tool-side-width: 20rem;
+    --clay-tool-side-width: 20em;
 
     --clay-tool-frame-gutter: var(--skin--spacing-050);
 

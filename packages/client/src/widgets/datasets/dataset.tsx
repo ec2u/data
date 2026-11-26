@@ -286,8 +286,8 @@ export function DatasetPage({
 			<Infobox wrap>{{
 
 				Publisher: opt(publisher, ({ id, label }) => <Link href={id}>{label}</Link>),
-				"Records Copyright": rights,
-				"Records License": links(license),
+				Copyright: rights,
+				License: links(license),
 				Source: opt(source, ({ id }) => address(id)),
 				Access: opt(accessRights, text => <Markdown>{text}</Markdown>)
 

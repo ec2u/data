@@ -96,6 +96,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Home page dataset cards no longer open a gap above their descriptions in Safari
 - Dataset counts on the home page line up with the first line of the dataset names
 - Page introductions in the sidebar break at the same points in every browser
+- The sidebar widens with the text on the widest screens, so page introductions keep their line breaks there
 - Icons keep the height of the text they sit in on the deployed site, where they were drawn at an oversized default
 - Catalogue filters set on one page no longer carry over to other pages of the deployed site, such as the home page
 - Umeå events are no longer extracted again on every run: staff photo addresses carry a version the site draws anew for
