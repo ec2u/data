@@ -16,14 +16,14 @@
 
 import * as ec2u from "@ec2u/data-shared";
 import { Datasets } from "@ec2u/data-shared";
-import { second } from "@kxta/core/temporal.js";
-import { robots } from "@kxta/gate/robots.js";
 import { server } from "@grafctory/gate";
 import { client } from "@grafctory/gate/client";
 import { driver } from "@grafctory/gate/driver";
 import { service } from "@grafctory/gear";
 import { gcp } from "@grafctory/gear-gcp";
 import { createStore } from "@grafctory/pipe-store";
+import { second } from "@kxta/core/temporal.js";
+import { robots } from "@kxta/gate/robots.js";
 import cors from "cors";
 import { resolve } from "node:path";
 import { courses } from "./courses/index.js";
@@ -37,31 +37,39 @@ import { units } from "./units/index.js";
 import { universities } from "./universities/index.js";
 
 
-await execute(() => server(service(createStore), { depth: 3, limit: 100 })
+await execute(() => server(service(createStore), {
 
-	.use(cors())
-	.use(robots(ec2u.base))
-	.use(client(resolve(import.meta.dirname, "static")))
+		plain: false,
+		depth: 3,
+		limit: 100,
 
-	.use("/", driver(Datasets).lookup())
-
-	.use("/universities/", universities())
-	.use("/units/", units())
-	.use("/programs/", programs())
-	.use("/courses/", courses())
-	.use("/documents/", documents())
-	.use("/events/", events())
-
-	.use("/resources/", resources())
-	.use("/taxonomies/", taxonomies())
-
-	.listen({
-
-		base: ec2u.base,
-		port: gcp.port,
-
-		proxies: gcp.cloud ? 1 : 0, // trust the Cloud Run front end
-		grace: 8*second // below the 10s Cloud Run grace period before SIGKILL
+		locale: ["en"]
 
 	})
+
+		.use(cors())
+		.use(robots(ec2u.base))
+		.use(client(resolve(import.meta.dirname, "static")))
+
+		.use("/", driver(Datasets).lookup())
+
+		.use("/universities/", universities())
+		.use("/units/", units())
+		.use("/programs/", programs())
+		.use("/courses/", courses())
+		.use("/documents/", documents())
+		.use("/events/", events())
+
+		.use("/resources/", resources())
+		.use("/taxonomies/", taxonomies())
+
+		.listen({
+
+			base: ec2u.base,
+			port: gcp.port,
+
+			proxies: gcp.cloud ? 1 : 0, // trust the Cloud Run front end
+			grace: 8*second // below the 10s Cloud Run grace period before SIGKILL
+
+		})
 );
