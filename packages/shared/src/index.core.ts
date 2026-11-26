@@ -255,6 +255,7 @@ export function Entity() {
 			}),
 			dictionary({
 				uniqueLang: true,
+				hasLanguage: ["en"],
 				maxLength: LabelLength
 			})
 		), {
@@ -263,6 +264,7 @@ export function Entity() {
 
 		comment: optional(dictionary({
 			uniqueLang: true,
+			hasLanguage: ["en"],
 			maxLength: CommentLength
 		}), {
 			description: "Human-readable account of the entity."

@@ -57,15 +57,24 @@ export function SchemaLearningResource() {
 			description: "Number of academic credits awarded for the learning resource."
 		}),
 
-		teaches: optional(dictionary({ uniqueLang: true }), {
+		teaches: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Goals, structure and contents of the learning resource."
 		}),
 
-		assesses: optional(dictionary({ uniqueLang: true }), {
+		assesses: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Competences acquired through the learning resource."
 		}),
 
-		competencyRequired: optional(dictionary({ uniqueLang: true }), {
+		competencyRequired: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Competences to be demonstrated to complete the learning resource."
 		}),
 
@@ -107,7 +116,10 @@ export function SchemaEducationalOccupationalProgram() {
 			description: "Expected time to complete the program."
 		}),
 
-		programPrerequisites: optional(dictionary({ uniqueLang: true }), {
+		programPrerequisites: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Requirements a candidate must satisfy to be admitted to the program."
 		}),
 
@@ -145,7 +157,10 @@ export function SchemaCourse() {
 			description: "Typical time required to work through the course."
 		}),
 
-		coursePrerequisites: optional(dictionary({ uniqueLang: true }), {
+		coursePrerequisites: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Requirements a candidate must satisfy to be admitted to the course."
 		})
 

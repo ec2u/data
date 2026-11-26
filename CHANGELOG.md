@@ -82,6 +82,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Every model call of the loader caps its output, so runaway reasoning fails its entry rather than run up the bill
 - Event pages the model fails to extract are tried again after as many days as the failure has lasted, from one to
 	thirty, rather than on every run; pages record the days of their last extraction attempt and of their last success
+- Shapes require an English entry in every localised name and text a resource states, alternative and hidden concept
+	labels aside, so a pipe storing one without English fails its run instead of leaving English readers with nothing
 
 ### Removed
 

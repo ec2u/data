@@ -89,15 +89,24 @@ export function Dataset() {
 
 	}, {
 
-		title: required(dictionary({ uniqueLang: true }), {
+		title: required(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Formal title of the dataset."
 		}),
 
-		alternative: optional(dictionary({ uniqueLang: true }), {
+		alternative: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Short title the dataset is also known by."
 		}),
 
-		description: required(dictionary({ uniqueLang: true }), {
+		description: required(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Account of the content of the dataset."
 		}),
 
@@ -129,7 +138,10 @@ export function Dataset() {
 			description: "Legal documents granting permission to use the dataset."
 		}),
 
-		accessRights: optional(dictionary({ uniqueLang: true }), {
+		accessRights: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Statement of who may access the dataset and under which conditions."
 		}),
 

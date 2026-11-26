@@ -136,15 +136,24 @@ export function SchemaEntity() {
 			description: "Code identifying the resource within an identification scheme."
 		}),
 
-		name: optional(union(text, dictionary({ uniqueLang: true })), {
+		name: optional(union(text, dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		})), {
 			description: "Human-readable name of the resource."
 		}),
 
-		description: optional(dictionary({ uniqueLang: true }), {
+		description: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Human-readable account of the resource."
 		}),
 
-		disambiguatingDescription: optional(dictionary({ uniqueLang: true }), {
+		disambiguatingDescription: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Short account telling the resource apart from similar ones."
 		})
 
@@ -204,7 +213,10 @@ export function SchemaImageObject() {
 
 		url: nonempty(iri), // ;( MaxCount(1) would switch the inherited set to a scalar value
 
-		caption: optional(dictionary({ uniqueLang: true }), {
+		caption: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Text accompanying the image."
 		}),
 

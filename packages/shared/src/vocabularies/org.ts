@@ -87,7 +87,10 @@ export function OrgOrganization() {
 
 		// ;( `identifier` omitted: it would clash with `schema:identifier`, the term EC2U `Organization` publishes
 
-		prefLabel: required(union(text, dictionary({ uniqueLang: true })), {
+		prefLabel: required(union(text, dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		})), {
 
 			forward: skos,
 
@@ -103,7 +106,10 @@ export function OrgOrganization() {
 
 		}),
 
-		definition: optional(dictionary({ uniqueLang: true }), {
+		definition: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 
 			forward: skos,
 

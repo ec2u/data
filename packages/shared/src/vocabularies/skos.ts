@@ -107,7 +107,10 @@ export function SKOSConcept() {
 			description: "Code uniquely identifying the concept within its concept scheme."
 		}),
 
-		prefLabel: required(dictionary({ uniqueLang: true }), {
+		prefLabel: required(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Preferred lexical label of the concept."
 		}),
 
@@ -119,7 +122,10 @@ export function SKOSConcept() {
 			description: "Lexical labels of the concept excluded from visual displays."
 		}),
 
-		definition: optional(dictionary({ uniqueLang: true }), {
+		definition: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Formal explanation of the meaning of the concept."
 		}),
 

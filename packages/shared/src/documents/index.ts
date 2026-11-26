@@ -106,11 +106,17 @@ export function Document() {
 			description: "Languages the document is written in."
 		}),
 
-		title: required(dictionary({ uniqueLang: true }), {
+		title: required(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Official title of the document."
 		}),
 
-		description: optional(dictionary({ uniqueLang: true }), {
+		description: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Summary of the content of the document."
 		}),
 
@@ -146,7 +152,10 @@ export function Document() {
 			description: "Statement of the copyright held over the document."
 		}),
 
-		accessRights: optional(dictionary({ uniqueLang: true }), {
+		accessRights: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"]
+		}), {
 			description: "Statement of who may access the document and under which conditions."
 		}),
 

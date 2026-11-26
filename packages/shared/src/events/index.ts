@@ -86,8 +86,17 @@ export function Event() {
 
 	}, {
 
-		name: optional(dictionary({ uniqueLang: true, maxLength: LabelLength })),
-		disambiguatingDescription: optional(dictionary({ uniqueLang: true, maxLength: CommentLength })),
+		name: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"],
+			maxLength: LabelLength
+		})),
+
+		disambiguatingDescription: optional(dictionary({
+			uniqueLang: true,
+			hasLanguage: ["en"],
+			maxLength: CommentLength
+		})),
 
 		publisher: optional(reference(Organization)),
 
