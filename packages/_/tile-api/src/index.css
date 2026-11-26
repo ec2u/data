@@ -71,7 +71,24 @@
      */
 
     display: grid;
-    grid-template-columns: max-content minmax(0, 1fr);
+    grid-template-columns: max-content minmax(var(--tile-api-index-floor), 1fr);
+
+    /*
+     * On narrow screens descriptions never narrow below half the reading measure, and a table outgrowing its column
+     * scrolls sideways on its own, as base tables do, holding its headings within itself as it does.
+     */
+
+    --tile-api-index-floor: calc(var(--skin--inline-size-prose) / 2);
+
+    /*
+     * From laptops up, the column leaves descriptions room enough to read, so they give way to keep the table within
+     * it, and the table hands its overflow back to the page, which keeps the headings pinned while the rows pass by.
+     */
+
+    @container style(--skin--viewport-large: on) {
+        --tile-api-index-floor: 0;
+        overflow: visible;
+    }
 
     & > thead,
     & > tbody {

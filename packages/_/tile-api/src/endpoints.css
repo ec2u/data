@@ -24,7 +24,7 @@
 
 .tile-api-index-routes {
 
-    grid-template-columns: max-content max-content minmax(0, 1fr);
+    grid-template-columns: max-content max-content minmax(var(--tile-api-index-floor), 1fr);
 
     /* routes reached by their anchors come to rest below the sticky column headings */
 

@@ -24,13 +24,37 @@
      */
 
     display: grid;
-    grid-template-columns: max-content max-content max-content minmax(0, 1fr) max-content;
+    grid-template-columns: max-content max-content max-content minmax(var(--tile-api-shape-floor), 1fr) max-content;
+
+    /*
+     * On narrow screens descriptions never narrow below half the reading measure, and a table outgrowing its column
+     * scrolls sideways on its own, as base tables do, holding its headings within itself as it does.
+     */
+
+    --tile-api-shape-floor: calc(var(--skin--inline-size-prose) / 2);
+
+    /*
+     * On desktops, property tables leave descriptions room enough to read, so they give way to keep the table within
+     * its column, and the table hands its overflow back to the page, which keeps the headings pinned as rows pass by.
+     */
+
+    @container style(--skin--viewport-xlarge: on) {
+        --tile-api-shape-floor: 0;
+        overflow: visible;
+    }
 
     /* datatypes state neither types nor counts, so their disclosed labels sit under the names */
 
     &.tile-api-shape-datatypes {
 
-        grid-template-columns: max-content minmax(0, 1fr) max-content;
+        grid-template-columns: max-content minmax(var(--tile-api-shape-floor), 1fr) max-content;
+
+        /* datatypes state fewer columns, so they fit their column, and keep their headings pinned, from laptops up */
+
+        @container style(--skin--viewport-large: on) {
+            --tile-api-shape-floor: 0;
+            overflow: visible;
+        }
 
         /* group headings read as labels of the rows below them */
 

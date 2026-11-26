@@ -91,6 +91,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- API reference tables stay readable in narrow windows, scrolling sideways rather than crushing their descriptions to
+  one word per line, and keep their column headings pinned on laptops and desktops
 - Data pages load in Chrome and Edge on Windows, where every data request failed with HTTP status 404 and left panels
   and facets empty
 - Home page dataset cards no longer open a gap above their descriptions in Safari
