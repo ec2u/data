@@ -95,6 +95,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Cloud runs of the loader log the source pages they are refused, with the status the site answered, and the mass
+  retractions the safety floor blocks, so a pipe a site shuts out no longer ends quietly with nothing harvested
 - Harvested pages embedding a large inline image, such as a photo pasted into a Umeå research group page, are read
   without exhausting the memory of the loader or sending the image to the model, which sees a placeholder in its place;
   the loader also runs with 1 GiB, as 512 MiB left too little room for the largest source pages it reads

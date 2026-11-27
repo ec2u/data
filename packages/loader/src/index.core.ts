@@ -32,6 +32,7 @@ import { createSPARQLStore } from "@grafctory/keep-sparql";
 import { createGoogleAI } from "@grafctory/llms-google";
 import { validate } from "@grafctory/mime-jsonld";
 import { createStore, delta, settle } from "@grafctory/data-store";
+import { log } from "@grafctory/tape";
 import { createRDF4JRepository } from "@grafctory/wire-sparql-rdf4j";
 import { Metadata as courses } from "./courses/index.core.js";
 import { Metadata as documents } from "./documents/index.core.js";
@@ -46,6 +47,11 @@ import { Metadata as universities } from "./universities/index.core.js";
 
 
 const environment = process.env.DATA_ENVIRONMENT || "edge"; // !!! align default to branch
+
+
+log({ // installed packages log nothing by default, hiding refused fetches and refused retractions in the cloud
+	"@grafctory": "warning"
+});
 
 
 export const execute = executor(
