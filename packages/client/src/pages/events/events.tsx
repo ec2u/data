@@ -115,7 +115,7 @@ export function EventsPage() {
 
 		tray={<Facets>
 
-			<Search name={"Name"} search={search}/>
+			<Search name={"Title"} search={search}/>
 
 			<Tally name={"University"} tally={university}/>
 			<Range name={"Date"} collapsed type={instant.as(date)} range={startDate}/>

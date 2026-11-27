@@ -103,7 +103,7 @@ export function DocumentsPage() {
 
 		tray={<Facets>
 
-			<Search name={"Name"} search={search}/>
+			<Search name={"Title"} search={search}/>
 
 			<Tally name={"University"} tally={university}/>
 			<Tally name={"Type"} collapsed tally={type}/>

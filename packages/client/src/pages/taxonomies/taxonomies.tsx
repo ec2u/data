@@ -109,7 +109,7 @@ export function TaxonomiesPage() {
 
 			<Facets>
 
-				<Search name={"Name"} search={search}/>
+				<Search name={"Title"} search={search}/>
 
 				<Tally name={"License"} collapsed tally={license}/>
 				<Tally name={"Publisher"} collapsed tally={publisher}/>

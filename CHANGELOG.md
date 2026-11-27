@@ -17,7 +17,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Catalogue pages for units, programs, courses, documents and events are filtered by the criteria their address carries,
   and count matches rather than items while filtered
 - Catalogue pages for datasets, universities, units, programs, courses, documents, events and taxonomies offer a name
-	search and the facets of the legacy client through the shared facet widgets, with a reset clearing every filter
+	or title search and the facets of the legacy client through shared facet widgets, with a reset clearing all filters
 - Datasets are introduced at an address of their own under their catalogue, as `/universities/~`, with description,
 	publisher, license and dates, linked from the info icon on the catalogue and on the pages of its resources
 - Dataset introductions are headed by the dataset title and document its data model for each entry shape, outlined in
