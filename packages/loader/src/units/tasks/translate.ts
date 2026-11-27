@@ -26,14 +26,20 @@ import { items } from "@grafctory/flow/feeds";
 import { flat, map } from "@grafctory/flow/tasks";
 import { service } from "@grafctory/gear";
 import { getResource } from "@grafctory/gear/space";
-import { createGoogleAI, json } from "@grafctory/llms-google";
+import { createGoogleAI, json, ThinkingLevel } from "@grafctory/llms-google";
 import { validate } from "@grafctory/mime-jsonld";
 import { log, report } from "@grafctory/tape";
 import type { Entry } from "../sinks/sync.js";
 
 
+const Reserve = 1024; // output tokens left for reasoning and the JSON frame
+const Density = 3 / 4; // output tokens per source character, as link-heavy markdown runs to ~1.6 characters a token
+
+
 const logger = log(import.meta.url);
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function Reported() {
 	return resource({
@@ -48,9 +54,9 @@ function Reported() {
 			description: "The name of the unit translated to English; stated only where a source name was given"
 		}),
 
-		description: optional(string, { // ;( multi-line: descriptions keep the line and paragraph breaks of the source
+		description: optional(string, {
 			name: "Description",
-			description: "The description of the unit translated to English; stated only where a source description was given"
+			description: "English translation of the source description of the unit, where one was given"
 		})
 
 	});
@@ -80,40 +86,51 @@ export function translate(university: Partner, pipeline: string): Task<Entry, En
 
 	return entries => pipe(
 		(items(entries))
-		(flat(map(async entry => {
-
-			const { draft: { id, prefLabel, definition } } = entry;
-
-			const source = {
-				name: prefLabel.en === undefined ? prefLabel[locale] : undefined,
-				description: definition?.en === undefined ? definition?.[locale] : undefined
-			};
-
-			return source.name === undefined && source.description === undefined ? [entry] : pipe(
-				(items(await generate(id, source)))
-				(map(({ name, ...translated }) => ({ ...translated, name: name && tidy(name) || undefined })))
-				(validate(Reported))
-				(map(translated => immutable({
-
-					...entry,
-
-					draft: {
-
-						...entry.draft,
-
-						prefLabel: { ...prefLabel, ...(translated.name === undefined ? {} : { en: translated.name }) },
-
-						definition: definition === undefined ? undefined : {
-							...definition, ...(translated.description === undefined ? {} : { en: translated.description })
-						}
-
-					}
-
-				})))
-			);
-
-		})))
+		(flat(map(complete)))
 	);
+
+
+	async function complete(entry: Entry) {
+
+		const { draft: { id, prefLabel, definition } } = entry;
+
+		const source = {
+			name: prefLabel.en === undefined ? prefLabel[locale] : undefined,
+			description: definition?.en === undefined ? definition?.[locale] : undefined
+		};
+
+		return source.name === undefined && source.description === undefined ? [entry] : pipe(
+			(items(await generate(id, source)))
+			(map(({ name, ...translated }) => ({ ...translated, name: name && tidy(name) || undefined })))
+			(validate(Reported))
+			(map(translated => merge(entry, translated)))
+		);
+
+	}
+
+	function merge(entry: Entry, { name, description }: State<typeof Reported>) {
+
+		const { draft: { prefLabel, definition } } = entry;
+
+		return immutable({
+
+			...entry,
+
+			draft: {
+
+				...entry.draft,
+
+				prefLabel: { ...prefLabel, ...(name === undefined ? {} : { en: name }) },
+
+				definition: definition === undefined ? undefined : {
+					...definition, ...(description === undefined ? {} : { en: description })
+				}
+
+			}
+
+		});
+
+	}
 
 
 	async function generate(id: string, { name, description }: {
@@ -140,7 +157,8 @@ export function translate(university: Partner, pipeline: string): Task<Entry, En
 
 					seed: 0,
 					temperature: 0,
-					maxOutputTokens: 8192,
+					maxOutputTokens: Reserve + Math.ceil(Density * ((name?.length ?? 0) + (description?.length ?? 0))),
+					thinkingConfig: { thinkingLevel: ThinkingLevel.LOW }, // the lowest the model accepts
 
 					systemInstruction: await getResource(".sys.md", import.meta.url),
 

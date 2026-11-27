@@ -100,6 +100,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Harvested pages embedding a large inline image, such as a photo pasted into a Umeå research group page, are read
   without exhausting the memory of the loader or sending the image to the model, which sees a placeholder in its place;
   the loader also runs with 1 GiB, as 512 MiB left too little room for the largest source pages it reads
+- Units with long descriptions, such as the Umeå University Library, get their English translation instead of failing
+  on every run with an answer cut short, while short ones stop early should the model fall into repeating itself
 - Links and images in harvested event, unit, program and course descriptions lead back to the pages they were taken
   from, rather than to addresses on the hub that do not exist, wherever the source page linked them by a relative path
 - Facet values hold still while their counts are recomputed, so values ticked in quick succession no longer land on
