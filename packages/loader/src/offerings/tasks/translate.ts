@@ -58,7 +58,7 @@ function Reported() {
 			description: "The name of the offering translated to English"
 		}),
 
-		description: optional(string, { // ;( multi-line: texts keep the Markdown structure of the source
+		description: optional(string, {
 			name: "Description",
 			description: "The description of the offering translated to English"
 		}),

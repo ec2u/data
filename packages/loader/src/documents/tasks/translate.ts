@@ -48,7 +48,7 @@ function Reported() {
 			description: "The title of the document translated to English; stated only where a source title was given"
 		}),
 
-		description: optional(string, { // ;( multi-line: descriptions keep the line and paragraph breaks of the source
+		description: optional(string, {
 			name: "Description",
 			description: "The description of the document translated to English; stated only where a source description was given"
 		})
