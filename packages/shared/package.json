@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@grafctory/blue": "^0.16.0",
-    "@grafctory/core": "^0.14.1",
-    "@grafctory/qest": "^0.15.0",
+    "@grafctory/core": "^0.14.3",
+    "@grafctory/qest": "^0.15.2",
     "@kxta/open": "*",
     "uuid": "^14.0.1"
   },

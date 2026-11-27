@@ -13,11 +13,11 @@
     "@grafctory/clay": "^0.5.0",
     "@grafctory/clay-markdown": "^0.5.0",
     "@grafctory/clay-widgets": "^0.5.0",
-    "@grafctory/core": "^0.14.1",
-    "@grafctory/http": "^0.6.0",
+    "@grafctory/core": "^0.14.3",
+    "@grafctory/http": "^0.6.2",
     "@grafctory/keep": "^0.15.0",
     "@grafctory/keep-rest": "^0.15.0",
-    "@grafctory/skin": "^0.3.0",
+    "@grafctory/skin": "^0.3.2",
     "@grafctory/tile": "^0.11.0",
     "@grafctory/tile-widgets": "^0.11.0",
     "@kxta/tile-api": "*",
@@ -26,7 +26,7 @@
     "preact": "^10.29.8"
   },
   "devDependencies": {
-    "@grafctory/rack": "^0.8.0",
+    "@grafctory/rack": "^0.8.3",
     "@preact/preset-vite": "^2.10.6",
     "vite": "^8.3.0"
   }
