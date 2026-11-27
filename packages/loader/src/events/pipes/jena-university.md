@@ -32,6 +32,10 @@ form buttons of the `pagination` block, which state the page as a value and disa
 Every page declares the site root as its base URL, so an event is named from the listed address and never from what the
 page states about itself. A page listed by both the German and the English calendar yields one event per calendar.
 
+Event pages still embed the schema.org `Event` that the 2022 version read, as JSON-LD in the page head. It reliably
+states the name, the dates with their offset, the language, the attendance mode, the image and the organising unit. Its
+description is only a teaser and its online location points back to the page, so the page text supplies both.
+
 - **2026-10-26** – events named from the listed address: read from the page base URL, every Jena event had been keyed to
 	the site root
 - **2025-05-08** – migrated to AI extraction

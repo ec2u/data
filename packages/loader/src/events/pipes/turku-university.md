@@ -16,6 +16,10 @@ Event info extracted by AI from the event catalogue and linked event pages.
 |---------------------------------|-------------------|
 | https://www.utu.fi/event-search | event search [fi] |
 
+Event pages embed a schema.org `Event` as JSON-LD in the page head, with name, dates, venue and a registration link. Its
+description stops mid-sentence after a few hundred characters, and its dates carry no time zone. The venue is sometimes
+missing and the organiser names the university as a whole, so the page text stays the source for these facts.
+
 - **2025-05-07** – initial integration
 
 # 2022-03-19 – Events API

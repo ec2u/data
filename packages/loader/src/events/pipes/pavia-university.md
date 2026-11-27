@@ -16,6 +16,8 @@ Event info extracted by AI from the event catalogue and linked event pages.
 |-------------------------------|------------------------|
 | https://www.unipv.news/eventi | unipv.news eventi [it] |
 
+Event pages embed no structured metadata such as schema.org JSON-LD, so every fact comes from the page text.
+
 - **2024-11-07** – migrated to AI extraction
 
 # 2021-07-17 – Feed adapter

@@ -28,6 +28,10 @@ name, description, dates, attendance mode, venue and image. A page whose markup 
 still read as that text, and yields an event stated by its title and categories alone. The page address answers a
 `301` to the same path without the `event_detail` segment; the listed address stays the identity of the event.
 
+The embedded event is thinner than the page a reader sees. Its description often holds only the subtitle of a series,
+not the text of the event. Its venue states the building as the place name and the room as the locality. Its name may
+carry vertical tab characters where the title breaks lines, and its organiser is always the university as a whole.
+
 - **2026-10-27** – embedded events stating a malformed fact rejected as a whole; venue addresses stated as text and
 	images stated as schema.org `ImageObject` accepted
 - **2026-10-26** – event pages read from their embedded schema.org description, as the markup renders client-side and
