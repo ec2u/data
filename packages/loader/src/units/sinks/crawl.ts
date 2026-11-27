@@ -24,6 +24,7 @@ import { digest } from "@grafctory/mime-json";
 import { denoise, focus, html, untag } from "@grafctory/mime-xml";
 import { settle, type Tally } from "@grafctory/data-store";
 import { fetch } from "@grafctory/data-url";
+import { Embedded } from "../../pages/render.js";
 import { unbust } from "../../pages/umea.js";
 import { extract } from "../tasks/extract.js";
 import { complete, retract, stated } from "./sync.js";
@@ -125,7 +126,7 @@ export function crawl(university: Partner, {
 			(html())
 			(denoise(unbust))
 			(focus())
-			(untag())
+			(untag({ embedded: Embedded }))
 			(map((document): Page => immutable({ url, document })))
 		);
 	}

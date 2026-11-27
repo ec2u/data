@@ -33,6 +33,7 @@ import { items } from "@grafctory/flow/feeds";
 import { coalesce, map, trim } from "@grafctory/flow/tasks";
 import { denoise, focus, html, untag, unwrap } from "@grafctory/mime-xml";
 import { fetch } from "@grafctory/data-url";
+import { Embedded } from "../../pages/render.js";
 import { unbust } from "../../pages/umea.js";
 
 
@@ -106,7 +107,7 @@ export function harvest(): Task<URLLike, Markdown> {
 			trees => pipe(
 				items(trees)
 				(focus())
-				(untag())
+				(untag({ embedded: Embedded }))
 			),
 			trees => pipe(
 				items(trees)

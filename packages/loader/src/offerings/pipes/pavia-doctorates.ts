@@ -22,6 +22,7 @@ import { map, trim } from "@grafctory/flow/tasks";
 import { denoise, focus, html, untag } from "@grafctory/mime-xml";
 import { fetch } from "@grafctory/data-url";
 import { execute } from "../../index.core.js";
+import { Embedded } from "../../pages/render.js";
 import { crawl } from "../sinks/crawl.js";
 import { doctorates, lead } from "./pavia-doctorates.core.js";
 
@@ -59,7 +60,7 @@ export async function PaviaDoctorates() {
 		(html())
 		(denoise())
 		(focus())
-		(untag())
+		(untag({ embedded: Embedded }))
 		(doctorates(Pipeline))
 		(map(lead))
 		(trim())

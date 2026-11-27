@@ -22,6 +22,7 @@ import { toArray } from "@grafctory/flow/sinks";
 import { bind, executor } from "@grafctory/gear";
 import { createFetch, type Fetch } from "@grafctory/http";
 import { describe, expect, it } from "vitest";
+import { Embedded } from "../../pages/render.js";
 import { harvest } from "./harvest.js";
 
 
@@ -127,6 +128,31 @@ describe("harvest()", () => {
 
 				expect(await render(photo("https://example.org/photo.jpg?v=64322406")))
 					.toContain("https://example.org/photo.jpg?v=64322406");
+
+			});
+
+		});
+
+		describe("embedded assets", () => {
+
+			function photo(src: string): string {
+				return `<html><body><main><h1>Seminar</h1><p>Before <img alt="Group photo" src="${src}"> after</p></main></body></html>`;
+			}
+
+			it("reduces an image embedded beyond the limit to a placeholder, keeping it in place", async () => {
+
+				const document = await render(photo(`data:image/jpeg;base64,${"A".repeat(Embedded)}`));
+
+				expect(document).toContain("Before ![Group photo](data:,) after");
+				expect(document).not.toContain("AAAA");
+
+			});
+
+			it("keeps an image embedded within the limit as stated", async () => {
+
+				const src = `data:image/png;base64,${"A".repeat(Embedded - "data:image/png;base64,".length)}`;
+
+				expect(await render(photo(src))).toContain(`![Group photo](${src})`);
 
 			});
 

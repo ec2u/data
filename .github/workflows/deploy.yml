@@ -60,7 +60,7 @@ jobs:
             flags: --allow-unauthenticated
           - service: loader # invoked only by Cloud Scheduler, with the attempt deadline of its jobs
             vars: ""
-            flags: --no-allow-unauthenticated --timeout=30m
+            flags: --no-allow-unauthenticated --timeout=30m --memory=1Gi
 
     env:
       IMAGE: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT }}/images/${{ github.ref_name }}-${{ matrix.service }}
