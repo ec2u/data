@@ -215,6 +215,12 @@ an atomic source there is nothing left to read, and the branch only converts and
 	prescribes, with tool loops bounded by `maximumRemoteCalls`; a cut-off answer fails to parse and costs its entry,
 	never the run.
 
+- **An answer restating its input gets a cap sized on it** — a translation or extraction runs as long as the text it
+	is given, and reasoning shares the cap with the answer: a fixed cap fits the usual entry but cuts the longest off on
+	every run, while one sized for the longest lets a short entry loop for thousands of tokens. Size such caps on the
+	input, a reserve plus a share of its length checked against the longest entries (link-heavy Markdown runs to about
+	1.6 characters a token), and hold reasoning at the lowest level the model accepts where the task needs none.
+
 - **Every answer accounts for what it was given** — a translation or extraction leaving out a text it was handed is
 	stored as if complete, and the digest skip then keeps the gap for good. The task checks each answer covers every
 	value it was given, retries a gap with the fallback model, and drops the entry when none fills it, so it is tried
