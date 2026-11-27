@@ -28,7 +28,7 @@ import { find, toArray, toMap } from "@grafctory/flow/sinks";
 import { filter, flat, fork, map, mix, tee, when } from "@grafctory/flow/tasks";
 import { digest } from "@grafctory/mime-json";
 import { validate } from "@grafctory/mime-jsonld";
-import { delta, type Delta, lookup, retire, settle, type Tally } from "@grafctory/pipe-store";
+import { delta, type Delta, lookup, retire, settle, type Tally } from "@grafctory/data-store";
 import { classify } from "../tasks/classify.js";
 import { convert } from "../tasks/convert.js";
 import { extract, type Retrieved } from "../tasks/extract.js";

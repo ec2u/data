@@ -21,7 +21,7 @@ import { items } from "@grafctory/flow/feeds";
 import { flat, map } from "@grafctory/flow/tasks";
 import { service } from "@grafctory/gear";
 import { createVault } from "@grafctory/gear/vault";
-import { fetch } from "@grafctory/pipe-url";
+import { fetch } from "@grafctory/data-url";
 import { execute } from "../../index.core.js";
 import { crawl, type Lead } from "../sinks/crawl.js";
 import type { Draft } from "../sinks/sync.js";

@@ -19,7 +19,7 @@ import { second } from "@kxta/core/temporal.js";
 import { server } from "@grafctory/gate";
 import { service } from "@grafctory/gear";
 import { gcp } from "@grafctory/gear-gcp";
-import { createStore } from "@grafctory/pipe-store";
+import { createStore } from "@grafctory/data-store";
 import { documents } from "./documents/index.js";
 import { events } from "./events/index.js";
 import { execute } from "./index.core.js";

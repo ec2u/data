@@ -31,7 +31,7 @@ import { cache } from "@grafctory/http/cache";
 import { createSPARQLStore } from "@grafctory/keep-sparql";
 import { createGoogleAI } from "@grafctory/llms-google";
 import { validate } from "@grafctory/mime-jsonld";
-import { createStore, delta, settle } from "@grafctory/pipe-store";
+import { createStore, delta, settle } from "@grafctory/data-store";
 import { createRDF4JRepository } from "@grafctory/wire-sparql-rdf4j";
 import { Metadata as courses } from "./courses/index.core.js";
 import { Metadata as documents } from "./documents/index.core.js";

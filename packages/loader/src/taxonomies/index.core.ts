@@ -26,7 +26,7 @@ import { service } from "@grafctory/gear";
 import { cosine, decompress, type Distance, type Vector } from "@grafctory/llms/vectors";
 import { createGoogleAI, embedding } from "@grafctory/llms-google";
 import { validate } from "@grafctory/mime-jsonld";
-import { delta, lookup, settle } from "@grafctory/pipe-store";
+import { delta, lookup, settle } from "@grafctory/data-store";
 import type { Reference } from "@grafctory/qest/state";
 import { log, report, time } from "@grafctory/tape";
 import { execute } from "../index.core.js";

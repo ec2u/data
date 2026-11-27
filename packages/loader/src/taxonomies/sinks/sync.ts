@@ -29,7 +29,7 @@ import { filter, fork, map, mix, tee } from "@grafctory/flow/tasks";
 import { compress, synopsis } from "@grafctory/llms/vectors";
 import { digest } from "@grafctory/mime-json";
 import { validate } from "@grafctory/mime-jsonld";
-import { delta, type Delta, lookup, retire, settle, type Tally } from "@grafctory/pipe-store";
+import { delta, type Delta, lookup, retire, settle, type Tally } from "@grafctory/data-store";
 import { getConceptEmbedding } from "../index.core.js";
 
 

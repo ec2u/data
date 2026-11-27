@@ -21,7 +21,7 @@ import { immutable } from "@grafctory/core/values";
 import { pipe, type Task } from "@grafctory/flow";
 import { items } from "@grafctory/flow/feeds";
 import { flat, map } from "@grafctory/flow/tasks";
-import { fetch } from "@grafctory/pipe-url";
+import { fetch } from "@grafctory/data-url";
 import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";
 import { type Draft, type Name, sync } from "../sinks/sync.js";

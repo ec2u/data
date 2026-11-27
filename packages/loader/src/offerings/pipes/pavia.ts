@@ -25,7 +25,7 @@ import { flat, fork, map } from "@grafctory/flow/tasks";
 import { service } from "@grafctory/gear";
 import { createVault } from "@grafctory/gear/vault";
 import { xml, xpath, type XPath } from "@grafctory/mime-xml";
-import { fetch } from "@grafctory/pipe-url";
+import { fetch } from "@grafctory/data-url";
 import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";
 import { type CourseDraft, type Draft, type ProgramDraft, sync } from "../sinks/sync.js";

@@ -20,7 +20,7 @@ import { createVault } from "@grafctory/gear/vault";
 import { createFetch } from "@grafctory/http";
 import { basic } from "@grafctory/http/basic";
 import { createSPARQLStore } from "@grafctory/keep-sparql";
-import { createStore } from "@grafctory/pipe-store";
+import { createStore } from "@grafctory/data-store";
 import { createHTTPRepository } from "@grafctory/wire-sparql-http";
 
 

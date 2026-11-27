@@ -21,7 +21,7 @@ import { pipe, type Task } from "@grafctory/flow";
 import { items } from "@grafctory/flow/feeds";
 import { map } from "@grafctory/flow/tasks";
 import { csv as parse, type Record } from "@grafctory/mime-csv";
-import { fetch } from "@grafctory/pipe-url";
+import { fetch } from "@grafctory/data-url";
 import type { Draft } from "../sinks/sync.js";
 
 

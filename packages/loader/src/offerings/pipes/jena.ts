@@ -22,7 +22,7 @@ import { items } from "@grafctory/flow/feeds";
 import { toArray } from "@grafctory/flow/sinks";
 import { distinct, flat, fork, map } from "@grafctory/flow/tasks";
 import { html, link, unwrap, xpath } from "@grafctory/mime-xml";
-import { fetch } from "@grafctory/pipe-url";
+import { fetch } from "@grafctory/data-url";
 import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";
 import { type ProgramDraft, sync } from "../sinks/sync.js";

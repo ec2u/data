@@ -25,7 +25,7 @@ import { distinct, flat, map } from "@grafctory/flow/tasks";
 import { service } from "@grafctory/gear";
 import { createVault } from "@grafctory/gear/vault";
 import { csv } from "@grafctory/mime-csv";
-import { fetch } from "@grafctory/pipe-url";
+import { fetch } from "@grafctory/data-url";
 import type { Reference } from "@grafctory/qest/state";
 import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";

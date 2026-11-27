@@ -24,7 +24,7 @@ import { toArray } from "@grafctory/flow/sinks";
 import { flat, map } from "@grafctory/flow/tasks";
 import { service } from "@grafctory/gear";
 import { createVault } from "@grafctory/gear/vault";
-import { fetch } from "@grafctory/pipe-url";
+import { fetch } from "@grafctory/data-url";
 import { log } from "@grafctory/tape";
 import { execute } from "../../index.core.js";
 import { type Draft, sync } from "../sinks/sync.js";

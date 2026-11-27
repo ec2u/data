@@ -30,7 +30,7 @@ import { toArray, toSet } from "@grafctory/flow/sinks";
 import { distinct, filter, flat, fork, map, tee, trim } from "@grafctory/flow/tasks";
 import { digest } from "@grafctory/mime-json";
 import { validate } from "@grafctory/mime-jsonld";
-import { delta, type Delta, lookup, retire, settle, type Tally } from "@grafctory/pipe-store";
+import { delta, type Delta, lookup, retire, settle, type Tally } from "@grafctory/data-store";
 import { type Classified, classify } from "../tasks/classify.js";
 import { translate } from "../tasks/translate.js";
 

@@ -21,7 +21,7 @@ import { pipe } from "@grafctory/flow";
 import { items, range } from "@grafctory/flow/feeds";
 import { flat, fork, map } from "@grafctory/flow/tasks";
 import { jpath, json, number, string } from "@grafctory/mime-json";
-import { crawl, fetch } from "@grafctory/pipe-url";
+import { crawl, fetch } from "@grafctory/data-url";
 import { execute } from "../../index.core.js";
 import { sync } from "../sinks/sync.js";
 

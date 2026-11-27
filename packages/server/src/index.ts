@@ -21,7 +21,7 @@ import { client } from "@grafctory/gate/client";
 import { driver } from "@grafctory/gate/driver";
 import { service } from "@grafctory/gear";
 import { gcp } from "@grafctory/gear-gcp";
-import { createStore } from "@grafctory/pipe-store";
+import { createStore } from "@grafctory/data-store";
 import { second } from "@kxta/core/temporal.js";
 import { robots } from "@kxta/gate/robots.js";
 import cors from "cors";

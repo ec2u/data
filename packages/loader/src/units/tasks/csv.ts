@@ -23,7 +23,7 @@ import { items } from "@grafctory/flow/feeds";
 import { toArray } from "@grafctory/flow/sinks";
 import { filter, flat, map } from "@grafctory/flow/tasks";
 import { csv as parse, type Record } from "@grafctory/mime-csv";
-import { fetch } from "@grafctory/pipe-url";
+import { fetch } from "@grafctory/data-url";
 import { log } from "@grafctory/tape";
 import { VirtualInstitutes } from "../index.core.js";
 import type { Dictionary, Draft, Name } from "../sinks/sync.js";

@@ -19,7 +19,7 @@ import { pipe, type Task } from "@grafctory/flow";
 import { items } from "@grafctory/flow/feeds";
 import { distinct, fork } from "@grafctory/flow/tasks";
 import { html, link, string, type Target, xpath, type XPath } from "@grafctory/mime-xml";
-import { crawl, fetch } from "@grafctory/pipe-url";
+import { crawl, fetch } from "@grafctory/data-url";
 
 
 const retrieval = 4; // the number of catalogue pages fetched at the same time from the portal // !!! as option

@@ -24,7 +24,7 @@ import { pipe } from "@grafctory/flow";
 import { items } from "@grafctory/flow/feeds";
 import { map, mix } from "@grafctory/flow/tasks";
 import { validate } from "@grafctory/mime-jsonld";
-import { delta, settle } from "@grafctory/pipe-store";
+import { delta, settle } from "@grafctory/data-store";
 import { execute } from "../index.core.js";
 import institutes from "./index.json" with { type: "json" };
 

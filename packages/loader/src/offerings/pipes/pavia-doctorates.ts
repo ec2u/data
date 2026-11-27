@@ -20,7 +20,7 @@ import { pipe } from "@grafctory/flow";
 import { items } from "@grafctory/flow/feeds";
 import { map, trim } from "@grafctory/flow/tasks";
 import { denoise, focus, html, untag } from "@grafctory/mime-xml";
-import { fetch } from "@grafctory/pipe-url";
+import { fetch } from "@grafctory/data-url";
 import { execute } from "../../index.core.js";
 import { crawl } from "../sinks/crawl.js";
 import { doctorates, lead } from "./pavia-doctorates.core.js";

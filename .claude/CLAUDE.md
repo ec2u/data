@@ -153,7 +153,7 @@ Two levels of probe are available, and they answer different questions.
 `store.lookup()`:
 
 ```ts
-import { createStore } from "@grafctory/pipe-store";
+import { createStore } from "@grafctory/data-store";
 import { execute } from "./index.core.js";
 import { Taxonomy } from "@ec2u/data-shared/taxonomies/index.js";
 import { service } from "@grafctory/gear";
@@ -254,6 +254,7 @@ pipes read there (paths, secrets), swapping only the store, the model and the ca
 vault).
 
 ```ts
+import { createStore } from "@grafctory/data-store";
 import { bind, executor } from "@grafctory/gear";
 import { createGCPVault } from "@grafctory/gear-gcp/secrets";
 import { getPackage, getPath } from "@grafctory/gear/space";
@@ -263,7 +264,6 @@ import { basic } from "@grafctory/http/basic";
 import type { Store, StoreClient } from "@grafctory/keep";
 import { createSPARQLStore } from "@grafctory/keep-sparql";
 import { createGoogleAI, GenerateContentResponse } from "@grafctory/llms-google";
-import { createStore } from "@grafctory/pipe-store";
 import { createHTTPRepository } from "@grafctory/wire-sparql-http";
 import { UmeaUniversity as pipe } from "./events/pipes/umea-university.js";
 

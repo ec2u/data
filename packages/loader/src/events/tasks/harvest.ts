@@ -32,7 +32,7 @@ import { pipe, type Task } from "@grafctory/flow";
 import { items } from "@grafctory/flow/feeds";
 import { coalesce, map, trim } from "@grafctory/flow/tasks";
 import { denoise, focus, html, untag, unwrap } from "@grafctory/mime-xml";
-import { fetch } from "@grafctory/pipe-url";
+import { fetch } from "@grafctory/data-url";
 import { unbust } from "../../pages/umea.js";
 
 
